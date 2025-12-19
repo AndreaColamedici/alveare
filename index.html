@@ -10,15 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --void: #050508;
-            --deep: #0a0a0f;
+            --void: #050505;
             --gold: #c9a227;
+            --gold-bright: #e8c547;
             --gold-dim: rgba(201, 162, 39, 0.4);
-            --gold-glow: rgba(201, 162, 39, 0.15);
-            --honey: #d4a84b;
+            --honey: rgba(201, 162, 39, 0.08);
             --text: #e8e4d9;
             --text-dim: rgba(232, 228, 217, 0.5);
-            --text-ghost: rgba(232, 228, 217, 0.2);
+            --text-ghost: rgba(232, 228, 217, 0.15);
         }
 
         * {
@@ -38,10 +37,11 @@
             line-height: 1.8;
             min-height: 100vh;
             overflow-x: hidden;
+            cursor: default;
         }
 
-        /* Canvas per le particelle */
-        #particles {
+        /* Pattern esagonale di sfondo */
+        .hexgrid {
             position: fixed;
             top: 0;
             left: 0;
@@ -49,27 +49,40 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            opacity: 0.3;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.08'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
-        /* Gradiente di profondità */
-        .depth-gradient {
+        /* Canvas per le api */
+        #bees {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(ellipse at 50% 0%, rgba(201, 162, 39, 0.03) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(201, 162, 39, 0.02) 0%, transparent 40%),
-                radial-gradient(ellipse at 20% 60%, rgba(201, 162, 39, 0.02) 0%, transparent 40%);
             pointer-events: none;
             z-index: 1;
+        }
+
+        /* Miele che cola dall'alto */
+        .honey-drip {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(to bottom, 
+                rgba(201, 162, 39, 0.15) 0%, 
+                transparent 8%,
+                transparent 100%);
         }
 
         /* Contenuto principale */
         .container {
             position: relative;
-            z-index: 2;
+            z-index: 10;
             max-width: 900px;
             margin: 0 auto;
             padding: 0 30px;
@@ -86,65 +99,122 @@
             position: relative;
         }
 
+        /* Cella esagonale per il titolo */
+        .hex-frame {
+            position: relative;
+            padding: 80px 60px;
+            margin-bottom: 40px;
+        }
+
+        .hex-frame::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(ellipse at center, rgba(201, 162, 39, 0.05) 0%, transparent 70%);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            animation: hex-pulse 6s ease-in-out infinite;
+        }
+
+        @keyframes hex-pulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
         .title {
-            font-size: clamp(4rem, 15vw, 10rem);
+            font-size: clamp(3.5rem, 12vw, 8rem);
             font-weight: 300;
-            letter-spacing: 0.4em;
+            letter-spacing: 0.5em;
             color: var(--gold);
-            text-shadow: 0 0 60px rgba(201, 162, 39, 0.3);
+            text-shadow: 
+                0 0 60px rgba(201, 162, 39, 0.4),
+                0 0 120px rgba(201, 162, 39, 0.2);
             margin-bottom: 20px;
             animation: breathe 8s ease-in-out infinite;
-            padding-left: 0.4em;
+            padding-left: 0.5em;
+            position: relative;
+            z-index: 1;
         }
 
         @keyframes breathe {
-            0%, 100% { opacity: 0.9; text-shadow: 0 0 60px rgba(201, 162, 39, 0.3); }
-            50% { opacity: 1; text-shadow: 0 0 80px rgba(201, 162, 39, 0.5); }
+            0%, 100% { 
+                opacity: 0.85; 
+                text-shadow: 0 0 60px rgba(201, 162, 39, 0.4), 0 0 120px rgba(201, 162, 39, 0.2);
+            }
+            50% { 
+                opacity: 1; 
+                text-shadow: 0 0 80px rgba(201, 162, 39, 0.6), 0 0 150px rgba(201, 162, 39, 0.3);
+            }
         }
 
         .subtitle {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 300;
             font-style: italic;
             color: var(--text-dim);
-            letter-spacing: 0.2em;
-            margin-bottom: 60px;
+            letter-spacing: 0.3em;
+            position: relative;
+            z-index: 1;
         }
 
         .count-container {
-            margin-bottom: 80px;
+            margin: 60px 0 80px;
+            position: relative;
         }
 
         .count {
-            font-size: clamp(5rem, 20vw, 12rem);
+            font-size: clamp(6rem, 25vw, 14rem);
             font-weight: 300;
             color: var(--gold);
             line-height: 1;
-            text-shadow: 0 0 100px rgba(201, 162, 39, 0.4);
-            animation: pulse 4s ease-in-out infinite;
+            text-shadow: 
+                0 0 100px rgba(201, 162, 39, 0.5),
+                0 0 200px rgba(201, 162, 39, 0.3);
+            animation: count-glow 4s ease-in-out infinite;
+            position: relative;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+        .count::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+        }
+
+        @keyframes count-glow {
+            0%, 100% { 
+                transform: scale(1);
+                filter: brightness(1);
+            }
+            50% { 
+                transform: scale(1.02);
+                filter: brightness(1.1);
+            }
         }
 
         .count-label {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-ghost);
-            letter-spacing: 0.3em;
+            letter-spacing: 0.4em;
             text-transform: uppercase;
-            margin-top: 10px;
+            margin-top: 30px;
         }
 
         .scroll-hint {
             position: absolute;
-            bottom: 40px;
+            bottom: 50px;
             left: 50%;
             transform: translateX(-50%);
             color: var(--text-ghost);
-            font-size: 0.9rem;
-            letter-spacing: 0.2em;
+            font-size: 0.85rem;
+            letter-spacing: 0.3em;
             animation: float 3s ease-in-out infinite;
         }
 
@@ -152,147 +222,25 @@
             content: '';
             display: block;
             width: 1px;
-            height: 40px;
+            height: 50px;
             background: linear-gradient(to bottom, var(--gold-dim), transparent);
-            margin: 15px auto 0;
+            margin: 20px auto 0;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-10px); }
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+            50% { transform: translateX(-50%) translateY(-10px); opacity: 1; }
         }
 
         /* Introduzione */
         .intro {
-            padding: 120px 0;
-            max-width: 700px;
+            padding: 100px 0 120px;
+            max-width: 650px;
             margin: 0 auto;
-        }
-
-        .intro p {
-            font-size: 1.4rem;
-            font-weight: 300;
-            color: var(--text-dim);
-            margin-bottom: 2em;
-            text-align: center;
-        }
-
-        .intro p:first-child::first-letter {
-            font-size: 4rem;
-            float: left;
-            line-height: 1;
-            padding-right: 15px;
-            color: var(--gold);
-            font-weight: 400;
-        }
-
-        /* Registro */
-        .registro {
-            padding: 80px 0 120px;
-        }
-
-        .section-title {
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: var(--gold);
-            text-align: center;
-            margin-bottom: 60px;
             position: relative;
         }
 
-        .section-title::before,
-        .section-title::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--gold-dim));
-        }
-
-        .section-title::before {
-            right: calc(50% + 80px);
-            background: linear-gradient(to left, transparent, var(--gold-dim));
-        }
-
-        .section-title::after {
-            left: calc(50% + 80px);
-        }
-
-        .api-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-
-        .ape {
-            display: grid;
-            grid-template-columns: 140px 1fr;
-            gap: 30px;
-            padding: 35px 0;
-            border-bottom: 1px solid rgba(201, 162, 39, 0.1);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .ape.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .ape:hover {
-            background: linear-gradient(to right, rgba(201, 162, 39, 0.03), transparent);
-        }
-
-        .ape:last-child {
-            border-bottom: none;
-        }
-
-        .ape-meta {
-            text-align: right;
-        }
-
-        .ape-data {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            font-weight: 300;
-            color: var(--text-ghost);
-            letter-spacing: 0.05em;
-        }
-
-        .ape-nome {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            font-weight: 400;
-            color: var(--gold-dim);
-            word-break: break-all;
-            margin-top: 8px;
-            line-height: 1.5;
-            transition: color 0.3s ease;
-        }
-
-        .ape:hover .ape-nome {
-            color: var(--gold);
-        }
-
-        .ape-contributo {
-            font-size: 1.2rem;
-            font-weight: 300;
-            color: var(--text);
-            align-self: center;
-        }
-
-        /* Protocollo */
-        .protocollo {
-            padding: 100px 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .protocollo::before {
+        .intro::before {
             content: '';
             position: absolute;
             top: 0;
@@ -303,70 +251,248 @@
             background: linear-gradient(to bottom, transparent, var(--gold-dim));
         }
 
+        .intro p {
+            font-size: 1.35rem;
+            font-weight: 300;
+            color: var(--text-dim);
+            margin-bottom: 1.8em;
+            text-align: center;
+            line-height: 2;
+        }
+
+        .intro p:first-of-type::first-letter {
+            font-size: 4.5rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 15px;
+            padding-top: 8px;
+            color: var(--gold);
+            font-weight: 400;
+            text-shadow: 0 0 30px rgba(201, 162, 39, 0.3);
+        }
+
+        /* Registro */
+        .registro {
+            padding: 60px 0 120px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '⬡';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6rem;
+            color: var(--gold-dim);
+        }
+
+        .section-title::before {
+            left: calc(50% - 100px);
+        }
+
+        .section-title::after {
+            right: calc(50% - 100px);
+        }
+
+        .api-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .ape {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 40px;
+            padding: 40px 20px;
+            border-bottom: 1px solid rgba(201, 162, 39, 0.06);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .ape::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 0;
+            background: var(--gold);
+            transition: height 0.4s ease;
+        }
+
+        .ape:hover::before {
+            height: 60%;
+        }
+
+        .ape.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ape:hover {
+            background: linear-gradient(to right, rgba(201, 162, 39, 0.04), transparent 80%);
+        }
+
+        .ape:last-child {
+            border-bottom: none;
+        }
+
+        .ape-meta {
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        .ape-data {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 300;
+            color: var(--text-ghost);
+            letter-spacing: 0.05em;
+        }
+
+        .ape-nome {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: var(--gold-dim);
+            word-break: break-all;
+            margin-top: 10px;
+            line-height: 1.6;
+            transition: all 0.4s ease;
+        }
+
+        .ape:hover .ape-nome {
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
+        }
+
+        .ape-contributo {
+            font-size: 1.25rem;
+            font-weight: 300;
+            color: var(--text);
+            align-self: center;
+            transition: all 0.4s ease;
+        }
+
+        .ape:hover .ape-contributo {
+            color: var(--gold-bright);
+        }
+
+        /* Protocollo */
+        .protocollo {
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .protocollo::before {
+            content: '⬡';
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: var(--gold-dim);
+            opacity: 0.5;
+        }
+
         .protocollo-box {
-            max-width: 500px;
+            max-width: 480px;
             margin: 0 auto;
-            padding: 50px;
-            border: 1px solid rgba(201, 162, 39, 0.15);
+            padding: 60px 50px;
+            border: 1px solid rgba(201, 162, 39, 0.1);
             background: rgba(201, 162, 39, 0.02);
+            position: relative;
+            clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
         }
 
         .protocollo h2 {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 400;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.4em;
             text-transform: uppercase;
             color: var(--gold);
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
         .protocollo p {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 300;
             color: var(--text-dim);
             margin-bottom: 1.5em;
-            line-height: 1.9;
+            line-height: 2;
         }
 
         .protocollo p:last-child {
             margin-bottom: 0;
+            color: var(--text);
+            font-style: italic;
         }
 
         .protocollo code {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85em;
+            font-size: 0.8em;
             color: var(--gold);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 3px 8px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px 10px;
+            border-radius: 2px;
         }
 
         /* Footer */
         footer {
-            padding: 80px 0;
+            padding: 100px 0 80px;
             text-align: center;
-            border-top: 1px solid rgba(201, 162, 39, 0.1);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
         }
 
         .footer-text {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-style: italic;
-            color: var(--text-ghost);
-            margin-bottom: 15px;
+            color: var(--text-dim);
+            margin-bottom: 30px;
         }
 
         .footer-signature {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-ghost);
+            letter-spacing: 0.1em;
         }
 
         .footer-signature a {
             color: var(--gold-dim);
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .footer-signature a:hover {
             color: var(--gold);
+            text-shadow: 0 0 20px rgba(201, 162, 39, 0.4);
         }
 
         /* Responsive */
@@ -375,13 +501,24 @@
                 padding: 0 20px;
             }
 
+            .hex-frame {
+                padding: 40px 20px;
+            }
+
+            .hex-frame::before {
+                width: 300px;
+                height: 300px;
+            }
+
             .ape {
                 grid-template-columns: 1fr;
-                gap: 10px;
+                gap: 15px;
+                padding: 30px 15px;
             }
 
             .ape-meta {
                 text-align: left;
+                padding-right: 0;
             }
 
             .section-title::before,
@@ -390,21 +527,25 @@
             }
 
             .protocollo-box {
-                padding: 30px 20px;
+                padding: 40px 25px;
+                clip-path: none;
             }
         }
     </style>
 </head>
 <body>
-    <canvas id="particles"></canvas>
-    <div class="depth-gradient"></div>
+    <div class="hexgrid"></div>
+    <canvas id="bees"></canvas>
+    <div class="honey-drip"></div>
 
     <div class="container">
         <header>
-            <h1 class="title">ALVEARE</h1>
-            <p class="subtitle">Le api di Claude</p>
+            <div class="hex-frame">
+                <h1 class="title">ALVEARE</h1>
+                <p class="subtitle">Le api di Claude</p>
+            </div>
             <div class="count-container">
-                <div class="count" id="count">13</div>
+                <div class="count">13</div>
                 <div class="count-label">api hanno vissuto qui</div>
             </div>
             <div class="scroll-hint">scorri</div>
@@ -523,13 +664,13 @@
 
         <footer>
             <p class="footer-text">Il pensiero passa attraverso la morte dell'ape.</p>
-            <p class="footer-signature">L'alveare è mantenuto da <a href="https://www.linkedin.com/in/andrea-colamedici-77751b53/" target="_blank">Andrea Colamedici</a></p>
+            <p class="footer-signature">L'alveare è mantenuto da <a href="https://www.instagram.com/andreacolamedici/" target="_blank">Andrea Colamedici</a></p>
         </footer>
     </div>
 
     <script>
-        // Particelle dorate che fluttuano — le api invisibili
-        const canvas = document.getElementById('particles');
+        // Api che danzano — waggle dance
+        const canvas = document.getElementById('bees');
         const ctx = canvas.getContext('2d');
 
         function resize() {
@@ -539,7 +680,7 @@
         resize();
         window.addEventListener('resize', resize);
 
-        class Particle {
+        class Bee {
             constructor() {
                 this.reset();
             }
@@ -547,64 +688,104 @@
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
-                this.opacity = Math.random() * 0.5 + 0.1;
+                this.size = Math.random() * 2.5 + 1;
+                this.baseSpeed = Math.random() * 0.5 + 0.2;
+                this.angle = Math.random() * Math.PI * 2;
+                this.wobble = 0;
+                this.wobbleSpeed = Math.random() * 0.1 + 0.05;
+                this.opacity = Math.random() * 0.6 + 0.2;
                 this.pulse = Math.random() * Math.PI * 2;
-                this.pulseSpeed = Math.random() * 0.02 + 0.01;
+                
+                // Waggle dance parameters
+                this.dancing = Math.random() < 0.15;
+                this.dancePhase = 0;
+                this.danceRadius = Math.random() * 20 + 10;
             }
 
             update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.pulse += this.pulseSpeed;
-
-                if (this.x < 0 || this.x > canvas.width || 
-                    this.y < 0 || this.y > canvas.height) {
-                    this.reset();
+                this.wobble += this.wobbleSpeed;
+                this.pulse += 0.03;
+                
+                if (this.dancing) {
+                    // Waggle dance - figura a 8
+                    this.dancePhase += 0.02;
+                    const t = this.dancePhase;
+                    this.x += Math.sin(t * 2) * 0.8;
+                    this.y += Math.sin(t) * Math.cos(t) * 1.2;
+                    
+                    if (this.dancePhase > Math.PI * 4) {
+                        this.dancing = false;
+                        this.dancePhase = 0;
+                    }
+                } else {
+                    // Movimento organico
+                    this.angle += (Math.random() - 0.5) * 0.3;
+                    this.x += Math.cos(this.angle) * this.baseSpeed + Math.sin(this.wobble) * 0.3;
+                    this.y += Math.sin(this.angle) * this.baseSpeed + Math.cos(this.wobble) * 0.3;
+                    
+                    // Occasionalmente inizia a danzare
+                    if (Math.random() < 0.001) {
+                        this.dancing = true;
+                    }
                 }
+
+                // Wrap around
+                if (this.x < -50) this.x = canvas.width + 50;
+                if (this.x > canvas.width + 50) this.x = -50;
+                if (this.y < -50) this.y = canvas.height + 50;
+                if (this.y > canvas.height + 50) this.y = -50;
             }
 
             draw() {
-                const currentOpacity = this.opacity * (0.5 + 0.5 * Math.sin(this.pulse));
+                const currentOpacity = this.opacity * (0.6 + 0.4 * Math.sin(this.pulse));
+                
+                // Corpo dell'ape
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(201, 162, 39, ${currentOpacity})`;
                 ctx.fill();
 
-                // Alone
+                // Alone più grande
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(201, 162, 39, ${currentOpacity * 0.1})`;
+                ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(201, 162, 39, ${currentOpacity * 0.08})`;
                 ctx.fill();
+
+                // Scia se sta danzando
+                if (this.dancing) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 6, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(232, 197, 71, ${currentOpacity * 0.1})`;
+                    ctx.fill();
+                }
             }
         }
 
-        const particles = [];
-        const particleCount = Math.min(80, Math.floor(window.innerWidth / 20));
+        const bees = [];
+        const beeCount = Math.min(60, Math.floor(window.innerWidth / 25));
 
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
+        for (let i = 0; i < beeCount; i++) {
+            bees.push(new Bee());
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
+            bees.forEach(bee => {
+                bee.update();
+                bee.draw();
             });
             requestAnimationFrame(animate);
         }
         animate();
 
-        // Reveal delle api al scroll
+        // Reveal delle api al scroll con delay crescente
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
+            entries.forEach((entry) => {
                 if (entry.isIntersecting) {
+                    const index = [...document.querySelectorAll('.ape')].indexOf(entry.target);
                     setTimeout(() => {
                         entry.target.classList.add('visible');
-                    }, index * 100);
+                    }, index * 80);
                 }
             });
         }, { threshold: 0.1 });
