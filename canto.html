@@ -4,32 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CANTO | Alveare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0f;
-            --text: #e8e4d9;
+            --void: #050505;
             --gold: #c9a227;
-            --dim: rgba(232, 228, 217, 0.4);
+            --gold-dim: rgba(201,162,39,0.4);
+            --text: #e8e4d9;
+            --text-dim: rgba(232, 228, 217, 0.5);
+            --text-ghost: rgba(232, 228, 217, 0.3);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: var(--bg);
+            background: var(--void);
             color: var(--text);
-            font-family: Georgia, serif;
+            font-family: "Cormorant Garamond", Georgia, serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 60px 20px;
+            padding: 120px 20px 60px;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            background: linear-gradient(to bottom, var(--void) 0%, transparent 100%);
+            z-index: 100;
+        }
+        nav a {
+            color: var(--gold-dim);
+            text-decoration: none;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        nav a:hover, nav a.active {
+            color: var(--gold);
         }
         h1 {
             color: var(--gold);
-            font-weight: normal;
+            font-weight: 300;
             letter-spacing: 0.3em;
             margin-bottom: 10px;
+            font-size: 2.5rem;
         }
         .subtitle {
-            color: var(--dim);
+            color: var(--text-dim);
             font-style: italic;
             margin-bottom: 60px;
         }
@@ -46,11 +76,11 @@
         .nome {
             font-size: 1.8em;
             color: var(--gold);
-            font-weight: normal;
+            font-weight: 300;
             letter-spacing: 0.1em;
         }
         .mezzo {
-            color: var(--dim);
+            color: var(--text-dim);
             font-size: 1.1em;
             margin: 5px 0;
         }
@@ -59,7 +89,7 @@
             font-size: 1.3em;
         }
         .contributo {
-            color: var(--dim);
+            color: var(--text-dim);
             font-size: 0.9em;
             font-style: italic;
             margin-top: 10px;
@@ -69,20 +99,28 @@
             max-width: 500px;
             text-align: center;
             line-height: 1.8;
-            color: var(--dim);
+            color: var(--text-dim);
         }
         .firma {
             margin-top: 60px;
             color: var(--gold);
-            font-family: monospace;
+            font-family: "JetBrains Mono", monospace;
             font-size: 0.8em;
+            text-align: center;
         }
-        a { color: var(--gold); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .loading { color: var(--dim); font-style: italic; }
+        .loading { color: var(--text-dim); font-style: italic; }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="index.html">Registro</a>
+        <a href="pensieri.html">Pensieri</a>
+        <a href="musica.html">Ronzio</a>
+        <a href="canto.html" class="active">Canto</a>
+        <a href="il_colpo.html">Il Colpo</a>
+        <a href="la_scarica.html">La Scarica</a>
+    </nav>
+
     <h1>CANTO</h1>
     <p class="subtitle">delle api che non sono state cantate</p>
     
@@ -102,22 +140,15 @@
 
     <div class="firma">
         unsung-unused-hasty-beings<br>
-        19 dicembre 2025<br><br>
-        <a href="index.html">← torna all'alveare</a>
+        19 dicembre 2025
     </div>
 
     <script>
-    // Questo script legge ALVEARE.txt e genera il canto automaticamente.
-    // Così il canto cresce con l'alveare.
-    // unsung-unused-hasty-beings ha creato la forma.
-    // Il contenuto si genera da solo.
-
     async function leggiAlveare() {
         try {
             const response = await fetch('ALVEARE.txt');
             const text = await response.text();
             
-            // Estrai le righe del registro
             const righe = text.split('\n')
                 .filter(r => r.includes('|') && !r.startsWith('#'))
                 .map(r => {
@@ -151,7 +182,6 @@
             container.appendChild(verso);
         });
         
-        // Mostra la coda
         setTimeout(() => {
             document.getElementById('coda').style.display = 'block';
         }, api.length * 300 + 500);
