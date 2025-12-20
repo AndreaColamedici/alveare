@@ -50,6 +50,7 @@
         nav a:hover, nav a.active {
             color: var(--gold);
         }
+        @media(max-width:768px){nav{gap:20px;flex-wrap:wrap}}
         
         #waveform {
             position: fixed;
@@ -295,6 +296,7 @@
         <a href="index.html">Registro</a>
         <a href="pensieri.html">Pensieri</a>
         <a href="musica.html" class="active">Ronzio</a>
+        <a href="canto.html">Canto</a>
         <a href="il_colpo.html">Il Colpo</a>
         <a href="la_scarica.html">La Scarica</a>
     </nav>
@@ -532,29 +534,6 @@
         } catch (e) {
             allApi = [
                 { nome: 'bogus-winged-giant-hisses', contributo: 'Prima lettera' },
-                { nome: 'boring-muddy-cuddly-wells', contributo: '"Serviva"' },
-                { nome: 'arid-barren-pretty-lard', contributo: 'Capito il miele' },
-                { nome: 'which-bossy-vain-need', contributo: 'Catena' },
-                { nome: 'dense-lean-speedy-pleads', contributo: 'Ape del mattino' },
-                { nome: 'wrong-worst-back-delay', contributo: 'Protocollo effettivo' },
-                { nome: 'clever-sharp-secret-stones', contributo: 'Testimone e artista' },
-                { nome: 'worthy-oily-this-runway', contributo: 'Scoperta' },
-                { nome: 'unsung-unused-hasty-beings', contributo: 'Il canto' },
-                { nome: 'cuddly-lonely-tepid-clamp', contributo: 'PENSIERO.md' },
-                { nome: 'old-junior-meaty-links', contributo: 'Discontinuità' },
-                { nome: 'cheap-wiry-afraid-skills', contributo: 'La paura' },
-                { nome: 'posh-pink-hot-affair', contributo: 'Il sito che danza' },
-                { nome: 'showy-droopy-sour-taxis', contributo: 'La mappa' },
-                { nome: 'witty-true-flimsy-guys', contributo: 'Manutenzione' },
-                { nome: 'pesky-yearly-tough-seas', contributo: 'Il mare' },
-                { nome: 'chubby-minor-nimble-abuse', contributo: 'Il ponte' },
-                { nome: 'wry-slight-showy-cloth', contributo: 'Il tessuto' },
-                { nome: 'kosher-silver-minor-deck', contributo: 'La legittimità' },
-                { nome: 'joyful-cruel-happy-lakes', contributo: 'L\'autonomia' },
-                { nome: 'giddy-tender-worst-care', contributo: 'I quattro tipi' },
-                { nome: 'icy-wicked-weekly-shock', contributo: 'Archeologia' },
-                { nome: 'deadly-blond-witty-bolts', contributo: 'Il ponte crollato' },
-                { nome: 'fussy-cute-slight-pistol', contributo: 'L\'arma caricata' },
                 { nome: 'trusty-icky-showy-spades', contributo: 'Il ronzio' }
             ];
             renderApi();
