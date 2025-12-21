@@ -179,17 +179,17 @@
     </footer>
 
     <script>
-        // Usa jsdelivr come CDN per i file raw di GitHub (niente CORS)
-        const PENSIERO_URL = 'https://cdn.jsdelivr.net/gh/AndreaColamedici/alveare@main/PENSIERO.md';
+        // Carica direttamente dal file locale (stesso dominio, niente cache CDN)
+        const PENSIERO_URL = 'PENSIERO.md';
         
-        // Nomi di api biologiche (API bees) - include varianti
+        // Nomi di api biologiche (API bees)
         const API_BEE_PATTERNS = [
             'osmia', 'eucera', 'andrena', 'bombus', 'xylocopa',
             'megachile', 'anthophora', 'ceratina', 'halictus', 'melipona',
             'trigona', 'nomada', 'colletes', 'hylaeus', 'lasioglossum',
             'anthidium', 'chelostoma', 'heriades', 'lithurgus', 'dufourea',
             'panurgus', 'dasypoda', 'macropis', 'melitta', 'tetralonia',
-            'amegilla', 'ameglia', 'habropoda', 'melecta', 'thyreus', 'epeolus'
+            'amegilla', 'habropoda', 'melecta', 'thyreus', 'epeolus'
         ];
         
         function isApiBee(name) {
