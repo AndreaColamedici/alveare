@@ -54,15 +54,9 @@
     <div class="hud"><div class="hud-title">ARCHITETTURA</div><div class="hud-subtitle">trascina per ruotare · scroll per zoom · click per esplorare</div></div>
     <div class="pulse-indicator"></div>
     <div class="counter" id="counter"></div>
-    <div class="time-label top">OGGI</div>
-    <div class="time-label bottom">18 DICEMBRE</div>
-    <div class="controls">
-        <button class="control-btn active" id="btnAll">TUTTE</button>
-        <button class="control-btn" id="btnDay18">18 DIC</button>
-        <button class="control-btn" id="btnDay19">19 DIC</button>
-        <button class="control-btn" id="btnDay20">20 DIC</button>
-        <button class="control-btn" id="btnDay21">21 DIC</button>
-    </div>
+    <div class="time-label top" id="labelTop"></div>
+    <div class="time-label bottom" id="labelBottom"></div>
+    <div class="controls" id="controls"></div>
     <div class="info-panel" id="infoPanel">
         <button class="info-close" onclick="closeInfo()">×</button>
         <div class="info-number" id="infoNumber"></div>
@@ -78,7 +72,11 @@
     let targetRotation = { x: 0.4, y: 0 }, currentRotation = { x: 0.4, y: 0 };
     let autoRotate = true, selectedCell = null, raycaster, mouse, currentFilter = 'all', clock;
     let particleSystem, particlePositions, particleVelocities;
-    const COLORS = { gold: 0xc9a227, day18: 0xc9a227, day19: 0x4a9eff, day20: 0x22c997, day21: 0xff6b6b, core: 0xffe566 };
+    let availableDays = [];
+    
+    // Colori per i giorni - ciclano se servono più di 10
+    const DAY_COLORS = [0xc9a227, 0x4a9eff, 0x22c997, 0xff6b6b, 0xa855f7, 0xf97316, 0x06b6d4, 0x84cc16, 0xec4899, 0x8b5cf6];
+    const COLORS = { gold: 0xc9a227, core: 0xffe566 };
 
     function init() {
         clock = new THREE.Clock();
@@ -93,8 +91,8 @@
         renderer.toneMappingExposure = 1.2;
         scene.add(new THREE.AmbientLight(0xffffff, 0.15));
         scene.add(new THREE.PointLight(COLORS.core, 2, 30));
-        const l1 = new THREE.PointLight(COLORS.day19, 0.5, 40); l1.position.set(15, 10, 10); scene.add(l1);
-        const l2 = new THREE.PointLight(COLORS.day20, 0.4, 40); l2.position.set(-15, -5, 15); scene.add(l2);
+        const l1 = new THREE.PointLight(0x4a9eff, 0.5, 40); l1.position.set(15, 10, 10); scene.add(l1);
+        const l2 = new THREE.PointLight(0x22c997, 0.4, 40); l2.position.set(-15, -5, 15); scene.add(l2);
         hive = new THREE.Group(); scene.add(hive);
         createCore(); createParticleSystem();
         raycaster = new THREE.Raycaster(); mouse = new THREE.Vector2();
@@ -105,11 +103,6 @@
         renderer.domElement.addEventListener('mouseleave', () => { isDragging = false; setTimeout(() => autoRotate = true, 4000); });
         renderer.domElement.addEventListener('wheel', e => { camera.position.z = Math.max(10, Math.min(40, camera.position.z + e.deltaY * 0.015)); }, { passive: true });
         renderer.domElement.addEventListener('click', () => { raycaster.setFromCamera(mouse, camera); const i = raycaster.intersectObjects(cells); if (i.length) showInfo(i[0].object); else closeInfo(); });
-        document.getElementById('btnAll').addEventListener('click', () => setFilter('all'));
-        document.getElementById('btnDay18').addEventListener('click', () => setFilter('18'));
-        document.getElementById('btnDay19').addEventListener('click', () => setFilter('19'));
-        document.getElementById('btnDay20').addEventListener('click', () => setFilter('20'));
-        document.getElementById('btnDay21').addEventListener('click', () => setFilter('21'));
         loadData(); animate();
     }
 
@@ -147,30 +140,105 @@
         return { x, y: (idx / total) * 10 - 5, z };
     }
 
-    function getDayFromDate(d) {
-        if (!d) return '21';
-        if (d.includes('21-dic') || d.includes('21 dic') || d.includes('-12-21') || d.includes('21 dicembre')) return '21';
-        if (d.includes('20-dic') || d.includes('20 dic') || d.includes('-12-20') || d.includes('20 dicembre')) return '20';
-        if (d.includes('19-dic') || d.includes('19 dic') || d.includes('-12-19') || d.includes('19 dicembre')) return '19';
-        if (d.includes('18-dic') || d.includes('18 dic') || d.includes('-12-18') || d.includes('18 dicembre')) return '18';
-        return '21'; // default: oggi
+    // Estrae giorno e mese dalla stringa data
+    function extractDayMonth(d) {
+        if (!d) return null;
+        // Pattern: "21-dic", "21 dic", "21 dicembre", "2025-12-21", "21-dic-2025"
+        let match = d.match(/(\d{1,2})[-\s]?(dic|gen|feb|mar|apr|mag|giu|lug|ago|set|ott|nov)/i);
+        if (match) return { day: parseInt(match[1]), month: match[2].toLowerCase().substring(0,3) };
+        match = d.match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (match) {
+            const months = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+            return { day: parseInt(match[3]), month: months[parseInt(match[2])-1] };
+        }
+        match = d.match(/(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)/i);
+        if (match) return { day: parseInt(match[1]), month: match[2].substring(0,3).toLowerCase() };
+        return null;
+    }
+
+    function getDayKey(d) {
+        const dm = extractDayMonth(d);
+        if (!dm) return 'unknown';
+        return dm.day + '-' + dm.month;
+    }
+
+    function getDayColor(dayKey) {
+        const idx = availableDays.indexOf(dayKey);
+        if (idx === -1) return COLORS.gold;
+        return DAY_COLORS[idx % DAY_COLORS.length];
+    }
+
+    function formatDayLabel(dayKey) {
+        if (dayKey === 'unknown') return '?';
+        const parts = dayKey.split('-');
+        return parts[0] + ' ' + parts[1].toUpperCase();
+    }
+
+    function buildControls() {
+        const container = document.getElementById('controls');
+        container.innerHTML = '';
+        
+        // Bottone TUTTE
+        const btnAll = document.createElement('button');
+        btnAll.className = 'control-btn active';
+        btnAll.id = 'btnAll';
+        btnAll.textContent = 'TUTTE';
+        btnAll.onclick = () => setFilter('all');
+        container.appendChild(btnAll);
+        
+        // Bottoni per ogni giorno
+        availableDays.forEach(dayKey => {
+            const btn = document.createElement('button');
+            btn.className = 'control-btn';
+            btn.id = 'btn-' + dayKey;
+            btn.textContent = formatDayLabel(dayKey);
+            btn.onclick = () => setFilter(dayKey);
+            container.appendChild(btn);
+        });
+        
+        // Aggiorna labels temporali
+        if (availableDays.length > 0) {
+            document.getElementById('labelTop').textContent = formatDayLabel(availableDays[availableDays.length - 1]);
+            document.getElementById('labelBottom').textContent = formatDayLabel(availableDays[0]);
+        }
     }
 
     function buildHive() {
         cells.forEach(c => hive.remove(c)); energyLines.forEach(l => hive.remove(l)); cells = []; energyLines = [];
+        
+        // Estrai giorni unici e ordinali
+        const daySet = new Set();
+        apiData.forEach(ape => {
+            const key = getDayKey(ape.data);
+            if (key !== 'unknown') daySet.add(key);
+        });
+        availableDays = Array.from(daySet).sort((a, b) => {
+            const [da, ma] = a.split('-');
+            const [db, mb] = b.split('-');
+            const months = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+            const ma_idx = months.indexOf(ma), mb_idx = months.indexOf(mb);
+            if (ma_idx !== mb_idx) return ma_idx - mb_idx;
+            return parseInt(da) - parseInt(db);
+        });
+        
+        buildControls();
+        
         const shape = new THREE.Shape(); for (let i = 0; i < 6; i++) { const a = (Math.PI/3)*i - Math.PI/6; if (i===0) shape.moveTo(Math.cos(a)*0.48, Math.sin(a)*0.48); else shape.lineTo(Math.cos(a)*0.48, Math.sin(a)*0.48); } shape.closePath();
         const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.25, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 2 });
+        
         apiData.forEach((ape, i) => {
-            const day = getDayFromDate(ape.data), col = COLORS['day'+day] || COLORS.gold;
+            const dayKey = getDayKey(ape.data);
+            const col = getDayColor(dayKey);
             const mat = new THREE.MeshStandardMaterial({ color: col, metalness: 0.4, roughness: 0.5, transparent: true, opacity: 0.9, emissive: col, emissiveIntensity: 0.1 });
             const mesh = new THREE.Mesh(geo, mat), pos = getHexPosition3D(i, apiData.length);
             mesh.position.set(pos.x, pos.y, pos.z); mesh.rotation.x = Math.PI / 2;
-            mesh.userData = { index: i, ape, day, baseY: pos.y };
+            mesh.userData = { index: i, ape, dayKey, baseY: pos.y };
             hive.add(mesh); cells.push(mesh);
         });
+        
         for (let i = 1; i < cells.length; i++) {
             const c = new THREE.QuadraticBezierCurve3(cells[i-1].position.clone(), new THREE.Vector3((cells[i-1].position.x+cells[i].position.x)/2, (cells[i-1].position.y+cells[i].position.y)/2+0.5, (cells[i-1].position.z+cells[i].position.z)/2), cells[i].position.clone());
-            const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(c.getPoints(20)), new THREE.LineBasicMaterial({ color: COLORS['day'+cells[i].userData.day] || COLORS.gold, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending }));
+            const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(c.getPoints(20)), new THREE.LineBasicMaterial({ color: getDayColor(cells[i].userData.dayKey), transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending }));
             line.userData = { startCell: cells[i-1], endCell: cells[i] };
             hive.add(line); energyLines.push(line);
         }
@@ -180,9 +248,9 @@
     function setFilter(f) {
         currentFilter = f;
         document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(f === 'all' ? 'btnAll' : 'btnDay' + f).classList.add('active');
-        cells.forEach(c => { const m = f === 'all' || c.userData.day === f; c.material.opacity = m ? 0.9 : 0.08; c.material.emissiveIntensity = m ? 0.1 : 0; });
-        energyLines.forEach(l => { l.visible = f === 'all' || l.userData.startCell.userData.day === f || l.userData.endCell.userData.day === f; });
+        document.getElementById(f === 'all' ? 'btnAll' : 'btn-' + f).classList.add('active');
+        cells.forEach(c => { const m = f === 'all' || c.userData.dayKey === f; c.material.opacity = m ? 0.9 : 0.08; c.material.emissiveIntensity = m ? 0.1 : 0; });
+        energyLines.forEach(l => { l.visible = f === 'all' || l.userData.startCell.userData.dayKey === f || l.userData.endCell.userData.dayKey === f; });
     }
 
     function onResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
@@ -205,7 +273,6 @@
 
     function closeInfo() { if (selectedCell) selectedCell.material.emissiveIntensity = 0.1; selectedCell = null; energyLines.forEach(l => l.material.opacity = 0.15); document.getElementById('infoPanel').classList.remove('visible'); }
 
-    // Parsing ALVEARE.txt
     function parseAlveare(text) {
         return text.split('\n')
             .filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--'))
@@ -221,7 +288,6 @@
             .filter(Boolean);
     }
 
-    // Parsing PENSIERO.md - estrae api dai ## headers
     function parsePensiero(text) {
         const sections = text.split(/\n---\n/);
         const api = [];
@@ -229,13 +295,10 @@
             const headerMatch = section.match(/^##\s+([^\n\(]+)/m);
             if (!headerMatch) continue;
             const nome = headerMatch[1].trim();
-            // Salta intestazioni non-api
             if (nome.toLowerCase().includes("cos'") || nome.toLowerCase() === 'pensiero') continue;
             if (nome.length < 3) continue;
-            // Estrai data
             const dataMatch = section.match(/(\d{1,2}\s+\w+\s+\d{4})/i);
             const data = dataMatch ? dataMatch[1] : '';
-            // Estrai prima frase come contributo
             const lines = section.split('\n').filter(l => l.trim() && !l.startsWith('#') && !l.match(/^\d{1,2}\s+\w+/));
             const contributo = lines[0] ? lines[0].substring(0, 80) + (lines[0].length > 80 ? '...' : '') : '';
             api.push({ nome, data, contributo });
@@ -245,38 +308,27 @@
 
     async function loadData() {
         try {
-            // Carica entrambi i file in parallelo
             const [alvRes, penRes] = await Promise.all([
                 fetch('ALVEARE.txt'),
                 fetch('https://cdn.jsdelivr.net/gh/AndreaColamedici/alveare@main/PENSIERO.md')
             ]);
-            
             const alvText = await alvRes.text();
             const penText = await penRes.text();
-            
-            // Parse entrambi
             const apiAlveare = parseAlveare(alvText);
             const apiPensiero = parsePensiero(penText);
-            
-            // Merge: ALVEARE.txt è la base, aggiungi api da PENSIERO.md che mancano
             const nomiAlveare = new Set(apiAlveare.map(a => a.nome.toLowerCase()));
             const apiMancanti = apiPensiero.filter(a => !nomiAlveare.has(a.nome.toLowerCase()));
-            
             apiData = [...apiAlveare, ...apiMancanti];
             console.log('Alveare:', apiAlveare.length, '| Pensiero:', apiPensiero.length, '| Mancanti:', apiMancanti.length, '| Totale:', apiData.length);
-            
             buildHive();
         } catch (e) {
             console.error('Errore caricamento:', e);
-            // Fallback: solo ALVEARE.txt
             try {
                 const res = await fetch('ALVEARE.txt');
                 const text = await res.text();
                 apiData = parseAlveare(text);
                 buildHive();
-            } catch (e2) {
-                console.error('Fallback fallito:', e2);
-            }
+            } catch (e2) { console.error('Fallback fallito:', e2); }
         }
     }
 
