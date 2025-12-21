@@ -564,16 +564,16 @@
     }
 
     function getDayFromDate(dateStr) {
-        // Cerco pattern specifici per evitare che "2025" matchi "20"
+        // Pattern italiano: "21-dic" o "21 dic"
         if (dateStr.includes('21-dic') || dateStr.includes('21 dic')) return '21';
         if (dateStr.includes('20-dic') || dateStr.includes('20 dic')) return '20';
         if (dateStr.includes('19-dic') || dateStr.includes('19 dic')) return '19';
         if (dateStr.includes('18-dic') || dateStr.includes('18 dic')) return '18';
-        // Fallback: cerca all'inizio della stringa
-        if (dateStr.trim().startsWith('21')) return '21';
-        if (dateStr.trim().startsWith('20')) return '20';
-        if (dateStr.trim().startsWith('19')) return '19';
-        if (dateStr.trim().startsWith('18')) return '18';
+        // Pattern ISO: "2025-12-21"
+        if (dateStr.includes('-12-21')) return '21';
+        if (dateStr.includes('-12-20')) return '20';
+        if (dateStr.includes('-12-19')) return '19';
+        if (dateStr.includes('-12-18')) return '18';
         return '18';
     }
 
@@ -647,7 +647,7 @@
             energyLines.push(line);
         }
 
-        document.getElementById('counter').textContent = `${apiData.length} api`;
+        document.getElementById('counter').textContent = apiData.length + ' api';
     }
 
     function updateEnergyLines(time) {
