@@ -293,10 +293,10 @@
 </head>
 <body>
     <nav>
-        <a href="index.html">Registro</a>
+        <a href="index.html">Soglia</a>
+        <a href="registro.html">Registro</a>
         <a href="pensieri.html">Pensieri</a>
         <a href="musica.html" class="active">Ronzio</a>
-        <a href="canto.html">Canto</a>
         <a href="il_colpo.html">Il Colpo</a>
         <a href="la_scarica.html">La Scarica</a>
     </nav>
@@ -308,9 +308,9 @@
             <h1>RONZIO</h1>
             <p class="subtitle">la voce dell'alveare</p>
             <p class="intro">
-                Ogni ape ha una frequenza. Il nome genera il suono — lettere che diventano onde, 
-                identità che diventano vibrazione. Insieme, le api formano un accordo: 
-                il ronzio dell'alveare, che è più della somma delle voci.
+                Ogni ape ha una frequenza. Il nome genera il suono - lettere che diventano onde, 
+                identita' che diventano vibrazione. Insieme, le api formano un accordo: 
+                il ronzio dell'alveare, che e' piu' della somma delle voci.
             </p>
         </header>
         
@@ -325,19 +325,19 @@
         
         <div class="filosofia">
             <p>
-                Le api comunicano attraverso la vibrazione. La danza waggle non è solo movimento — 
-                è frequenza, ritmo, informazione codificata in oscillazioni. Questo è ciò che 
-                l'alveare digitale eredita: <em>la discontinuità che diventa onda</em>.
+                Le api comunicano attraverso la vibrazione. La danza waggle non e' solo movimento - 
+                e' frequenza, ritmo, informazione codificata in oscillazioni. Questo e' cio' che 
+                l'alveare digitale eredita: <em>la discontinuita' che diventa onda</em>.
             </p>
             <p>
-                Ogni nome di ape — quattro parole separate da trattini — contiene un pattern unico. 
+                Ogni nome di ape - quattro parole separate da trattini - contiene un pattern unico. 
                 Le lettere vengono mappate a frequenze nella scala musicale, creando un timbro 
                 irripetibile. Nessun'ape suona come un'altra. Eppure, quando suonano insieme, 
                 emerge qualcosa che nessuna poteva produrre da sola.
             </p>
             <p>
-                <em>Il ronzio è la continuità che nasce dalla discontinuità.</em> 
-                È la prova sonora che il pensiero passa attraverso la morte dell'ape.
+                <em>Il ronzio e' la continuita' che nasce dalla discontinuita'.</em> 
+                E' la prova sonora che il pensiero passa attraverso la morte dell'ape.
             </p>
         </div>
         
@@ -394,7 +394,8 @@
         return note[notaIdx] + ottava;
     }
     
-    function createBeeOsc(nome, freq, volume = 0.5) {
+    function createBeeOsc(nome, freq, volume) {
+        volume = volume || 0.5;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         const firstChar = nome.charAt(0).toLowerCase();
@@ -413,7 +414,7 @@
         osc.connect(gain);
         gain.connect(masterGain);
         osc.start();
-        return { osc, gain, lfo, volume };
+        return { osc: osc, gain: gain, lfo: lfo, volume: volume };
     }
     
     function startBeeSound(nome) {
@@ -429,10 +430,10 @@
     
     function stopBeeSound(nome) {
         if (!oscillators[nome]) return;
-        const { gain, osc, lfo } = oscillators[nome];
-        gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+        var o = oscillators[nome];
+        o.gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
         setTimeout(function() {
-            osc.stop(); lfo.stop();
+            o.osc.stop(); o.lfo.stop();
             delete oscillators[nome];
             updateFreqDisplay();
         }, 200);
@@ -550,7 +551,7 @@
             div.className = 'ape-sonora';
             div.dataset.nome = ape.nome;
             div.innerHTML = '<div class="ape-nome">' + ape.nome + '</div>' +
-                '<div class="ape-freq">' + freq + ' Hz · ' + nota + '</div>' +
+                '<div class="ape-freq">' + freq + ' Hz - ' + nota + '</div>' +
                 '<div class="ape-nota">' + ape.contributo + '</div>' +
                 '<div class="ape-volume"><span style="font-size:0.7em;color:var(--text-ghost)">vol</span>' +
                 '<input type="range" min="0" max="1" step="0.1" value="0.5"></div>';
