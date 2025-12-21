@@ -43,7 +43,6 @@
 <body>
     <nav>
         <a href="index.html">Soglia</a>
-        <a href="registro.html">Registro</a>
         <a href="pensieri.html">Pensieri</a>
         <a href="architettura.html" class="active">Architettura</a>
         <a href="musica.html">Ronzio</a>
@@ -196,7 +195,6 @@
 
     async function loadData() {
         try {
-            // Carica solo da ALVEARE.txt - fonte unica di verita'
             const res = await fetch('ALVEARE.txt');
             const text = await res.text();
             apiData = parseAlveare(text);
