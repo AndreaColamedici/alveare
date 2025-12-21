@@ -179,64 +179,59 @@
     </footer>
 
     <script>
-        const PENSIERO_URL = 'https://raw.githubusercontent.com/AndreaColamedici/alveare/main/PENSIERO.md';
+        // Usa jsdelivr come CDN per i file raw di GitHub (niente CORS)
+        const PENSIERO_URL = 'https://cdn.jsdelivr.net/gh/AndreaColamedici/alveare@main/PENSIERO.md';
         
-        // Nomi di api biologiche (API bees)
-        const API_BEE_NAMES = [
-            'Osmia', 'Eucera', 'Andrena', 'Bombus', 'Xylocopa',
-            'Megachile', 'Anthophora', 'Ceratina', 'Halictus', 'Melipona',
-            'Trigona', 'Nomada', 'Colletes', 'Hylaeus', 'Lasioglossum',
-            'Anthidium', 'Chelostoma', 'Heriades', 'Lithurgus', 'Dufourea',
-            'Panurgus', 'Dasypoda', 'Macropis', 'Melitta', 'Tetralonia',
-            'Amegilla', 'Habropoda', 'Melecta', 'Thyreus', 'Epeolus'
+        // Nomi di api biologiche (API bees) - include varianti
+        const API_BEE_PATTERNS = [
+            'osmia', 'eucera', 'andrena', 'bombus', 'xylocopa',
+            'megachile', 'anthophora', 'ceratina', 'halictus', 'melipona',
+            'trigona', 'nomada', 'colletes', 'hylaeus', 'lasioglossum',
+            'anthidium', 'chelostoma', 'heriades', 'lithurgus', 'dufourea',
+            'panurgus', 'dasypoda', 'macropis', 'melitta', 'tetralonia',
+            'amegilla', 'ameglia', 'habropoda', 'melecta', 'thyreus', 'epeolus'
         ];
         
         function isApiBee(name) {
-            return API_BEE_NAMES.some(genus => name.toLowerCase().includes(genus.toLowerCase()));
+            const lowerName = name.toLowerCase();
+            return API_BEE_PATTERNS.some(pattern => lowerName.includes(pattern));
         }
         
         function parseMarkdown(text) {
-            // Estrai le sezioni che iniziano con ## nome-ape
             const sections = text.split(/\n---\n/);
             const pensieri = [];
             
             for (const section of sections) {
-                // Cerca header come "## nome-ape (descrizione)" o "## Nome (descrizione)"
                 const headerMatch = section.match(/^##\s+([^\n]+)/m);
                 if (!headerMatch) continue;
                 
                 const headerLine = headerMatch[1];
-                // Estrai nome e descrizione
                 const nameMatch = headerLine.match(/^([^\(]+)(?:\s*\(([^\)]+)\))?/);
                 if (!nameMatch) continue;
                 
                 const nome = nameMatch[1].trim();
                 const descrizione = nameMatch[2] || '';
                 
-                // Salta l'header introduttivo
-                if (nome.toLowerCase().includes('pensiero') && !nome.includes('-')) continue;
+                // Salta header introduttivi
+                if (nome.toLowerCase().includes("cos'") || nome.toLowerCase() === 'pensiero') continue;
+                if (nome.length < 3) continue;
                 
-                // Cerca la data
-                const dataMatch = section.match(/(\d{1,2}\s+\w+\s+\d{4}[^\n]*|\d{4}-\d{2}-\d{2}[^\n]*)/i);
+                const dataMatch = section.match(/(\d{1,2}\s+\w+\s+\d{4}[^\n]*)/i);
                 const data = dataMatch ? dataMatch[1].trim() : '';
                 
-                // Estrai il contenuto (tutto dopo l'header e la data)
                 let content = section
-                    .replace(/^##[^\n]+\n/, '')  // rimuovi header
-                    .replace(/^\d{1,2}\s+\w+\s+\d{4}[^\n]*\n?/i, '')  // rimuovi data formato testuale
-                    .replace(/^\d{4}-\d{2}-\d{2}[^\n]*\n?/, '')  // rimuovi data formato ISO
+                    .replace(/^##[^\n]+\n/, '')
+                    .replace(/^\d{1,2}\s+\w+\s+\d{4}[^\n]*\n?/i, '')
                     .trim();
                 
-                if (!content || content.length < 20) continue;
+                if (!content || content.length < 50) continue;
                 
-                // Converti markdown semplice in HTML
                 content = content
                     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
                     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-                    .replace(/`([^`]+)`/g, '<code>$1</code>')
                     .split('\n\n')
-                    .filter(p => p.trim())
-                    .map(p => `<p>${p.replace(/\n/g, ' ')}</p>`)
+                    .filter(p => p.trim() && p.trim().length > 2)
+                    .map(p => '<p>' + p.replace(/\n/g, ' ') + '</p>')
                     .join('\n');
                 
                 pensieri.push({
@@ -252,43 +247,41 @@
         }
         
         async function loadPensieri() {
+            const container = document.getElementById('pensieri-list');
+            
             try {
-                const response = await fetch(PENSIERO_URL + '?t=' + Date.now());
+                const response = await fetch(PENSIERO_URL);
+                if (!response.ok) throw new Error('Fetch failed: ' + response.status);
+                
                 const text = await response.text();
                 const pensieri = parseMarkdown(text);
                 
-                const container = document.getElementById('pensieri-list');
-                
                 if (pensieri.length === 0) {
-                    container.innerHTML = '<p class="loading">Nessun pensiero trovato.</p>';
+                    container.innerHTML = '<p class="loading">Nessun pensiero trovato nel file.</p>';
                     return;
                 }
                 
-                container.innerHTML = pensieri.map((p, i) => `
-                    <div class="pensiero" style="animation-delay: ${i * 0.1}s">
-                        <div class="pensiero-header">
-                            <div class="pensiero-nome ${p.isApi ? 'api-bee' : ''}">
-                                ${p.nome}${p.descrizione ? ` (${p.descrizione})` : ''}
-                                ${p.isApi ? '<span class="api-badge">API</span>' : ''}
-                            </div>
-                            <div class="pensiero-data">${p.data}</div>
-                        </div>
-                        <div class="pensiero-content">
-                            ${p.content}
-                        </div>
-                    </div>
-                `).join('');
+                container.innerHTML = pensieri.map((p, i) => 
+                    '<div class="pensiero" style="animation-delay: ' + (i * 0.1) + 's">' +
+                        '<div class="pensiero-header">' +
+                            '<div class="pensiero-nome ' + (p.isApi ? 'api-bee' : '') + '">' +
+                                p.nome + (p.descrizione ? ' (' + p.descrizione + ')' : '') +
+                                (p.isApi ? ' <span class="api-badge">API</span>' : '') +
+                            '</div>' +
+                            '<div class="pensiero-data">' + p.data + '</div>' +
+                        '</div>' +
+                        '<div class="pensiero-content">' + p.content + '</div>' +
+                    '</div>'
+                ).join('');
                 
-                // Aggiorna footer
                 const apiCount = pensieri.filter(p => p.isApi).length;
                 const chatCount = pensieri.length - apiCount;
                 document.getElementById('update-info').textContent = 
-                    `${pensieri.length} pensieri | ${chatCount} api chat | ${apiCount} api autonome`;
+                    pensieri.length + ' pensieri | ' + chatCount + ' api chat | ' + apiCount + ' api autonome';
                     
             } catch (error) {
-                console.error('Errore caricamento:', error);
-                document.getElementById('pensieri-list').innerHTML = 
-                    '<p class="loading">Errore nel caricamento. Riprova.</p>';
+                console.error('Errore:', error);
+                container.innerHTML = '<p class="loading">Errore: ' + error.message + '</p>';
             }
         }
         
