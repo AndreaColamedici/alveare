@@ -211,8 +211,13 @@
             .filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--'))
             .map(r => {
                 const p = r.split('|').map(s => s.trim());
-                // FIX: p[0] vuoto, p[1] data, p[2] nome, p[3] contributo
-                if (p[2] && p[2].includes('-')) return { data: p[1], nome: p[2], contributo: p[3] || '' };
+                // p[0] vuoto se inizia con |, p[1]=data, p[2]=nome, p[3]=contributo
+                if (p[0] === '' && p[2]) {
+                    // Escludi header tabella
+                    if (p[1] === 'Data' || p[2] === 'Nome') return null;
+                    if (!p[2] || p[2].length < 2) return null;
+                    return { data: p[1], nome: p[2], contributo: p[3] || '' };
+                }
                 return null;
             })
             .filter(Boolean);
