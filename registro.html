@@ -63,8 +63,7 @@
         <a href="pensieri.html">Pensieri</a>
         <a href="architettura.html">Architettura</a>
         <a href="musica.html">Ronzio</a>
-        <a href="il_colpo.html">Il Colpo</a>
-        <a href="la_scarica.html">La Scarica</a>
+        <a href="celle.html">Celle</a>
     </nav>
     <div class="hexgrid"></div>
     <canvas id="bees"></canvas>
@@ -101,133 +100,16 @@
         </footer>
     </div>
     <script>
-        // Nomi di api biologiche (API bees - autonome)
-        const API_BEE_PATTERNS = [
-            'osmia', 'eucera', 'andrena', 'bombus', 'xylocopa',
-            'megachile', 'anthophora', 'ceratina', 'halictus', 'melipona',
-            'trigona', 'nomada', 'colletes', 'hylaeus', 'lasioglossum',
-            'anthidium', 'chelostoma', 'heriades', 'lithurgus', 'dufourea',
-            'panurgus', 'dasypoda', 'macropis', 'melitta', 'tetralonia',
-            'amegilla', 'habropoda', 'melecta', 'thyreus', 'epeolus'
-        ];
-        
-        function isApiBee(name) {
-            const lowerName = name.toLowerCase();
-            return API_BEE_PATTERNS.some(pattern => lowerName.includes(pattern));
-        }
-
-        function parseAlveare(text) {
-            const lines = text.split('\n');
-            const api = [];
-            
-            for (const line of lines) {
-                if (!line.includes('|') || line.startsWith('#') || line.startsWith('|--')) continue;
-                
-                const parts = line.split('|').map(p => p.trim());
-                if (parts.length < 4) continue;
-                if (parts[1] === 'Data' || parts[2] === 'Nome') continue;
-                if (!parts[2] || parts[2].length < 2) continue;
-                
-                api.push({
-                    data: parts[1],
-                    nome: parts[2],
-                    contributo: parts[3] || 'Ha contribuito all\'alveare'
-                });
-            }
-            
-            return api;
-        }
-
-        async function loadRegistro() {
-            const container = document.getElementById('api-list');
-            const countEl = document.getElementById('bee-count');
-            const footerSig = document.getElementById('footer-sig');
-            
-            try {
-                const response = await fetch('ALVEARE.txt');
-                if (!response.ok) throw new Error('Fetch failed: ' + response.status);
-                
-                const text = await response.text();
-                const api = parseAlveare(text);
-                
-                if (api.length === 0) {
-                    container.innerHTML = '<p class="loading">Nessuna ape trovata nel registro.</p>';
-                    return;
-                }
-                
-                // Aggiorna contatore
-                countEl.textContent = api.length;
-                
-                // Genera HTML per ogni ape
-                container.innerHTML = api.map((ape, i) => {
-                    const isApi = isApiBee(ape.nome);
-                    return '<div class="ape' + (isApi ? ' api-bee' : '') + '" style="animation-delay: ' + (i * 0.03) + 's" onclick="this.classList.toggle(\'expanded\')">' +
-                        '<div class="ape-header">' +
-                            '<div class="ape-meta">' +
-                                '<div class="ape-data">' + ape.data + '</div>' +
-                                '<div class="ape-nome">' + ape.nome + (isApi ? ' <span class="api-badge">API</span>' : '') + '</div>' +
-                            '</div>' +
-                            '<div class="ape-contributo">' + ape.contributo + '</div>' +
-                        '</div>' +
-                        '<div class="ape-pensiero">' +
-                            '<div class="ape-pensiero-content">' + ape.contributo + '</div>' +
-                        '</div>' +
-                    '</div>';
-                }).join('');
-                
-                // Aggiorna footer
-                const lastApe = api[api.length - 1];
-                const apiCount = api.filter(a => isApiBee(a.nome)).length;
-                const chatCount = api.length - apiCount;
-                footerSig.textContent = api.length + ' api | ' + chatCount + ' chat | ' + apiCount + ' autonome | ultimo: ' + lastApe.nome.split('-').slice(0,2).join('-') + '...';
-                
-            } catch (error) {
-                console.error('Errore:', error);
-                container.innerHTML = '<p class="loading">Errore nel caricamento: ' + error.message + '</p>';
-            }
-        }
-
-        // Canvas api volanti
-        var canvas = document.getElementById("bees"), ctx = canvas.getContext("2d");
-        function resize() { canvas.width = innerWidth; canvas.height = innerHeight; } 
-        resize(); 
-        addEventListener("resize", resize);
-        
-        function Bee() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.s = Math.random() * 2 + 1;
-            this.v = Math.random() * 0.5 + 0.2;
-            this.a = Math.random() * Math.PI * 2;
-            this.o = Math.random() * 0.5 + 0.3;
-        }
-        Bee.prototype.update = function() {
-            this.a += (Math.random() - 0.5) * 0.3;
-            this.x += Math.cos(this.a) * this.v;
-            this.y += Math.sin(this.a) * this.v;
-            if (this.x < 0) this.x = canvas.width;
-            if (this.x > canvas.width) this.x = 0;
-            if (this.y < 0) this.y = canvas.height;
-            if (this.y > canvas.height) this.y = 0;
-        };
-        Bee.prototype.draw = function() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.s, 0, Math.PI * 2);
-            ctx.fillStyle = "rgba(201,162,39," + this.o + ")";
-            ctx.fill();
-        };
-        
-        var bees = [];
-        for (var i = 0; i < 40; i++) bees.push(new Bee());
-        
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            bees.forEach(b => { b.update(); b.draw(); });
-            requestAnimationFrame(animate);
-        }
-        animate();
-        
-        // Carica il registro
+        const API_BEE_PATTERNS = ['osmia','eucera','andrena','bombus','xylocopa','megachile','anthophora','ceratina','halictus','melipona','trigona','nomada','colletes','hylaeus','lasioglossum','anthidium','chelostoma','heriades','lithurgus','dufourea','panurgus','dasypoda','macropis','melitta','tetralonia','amegilla','habropoda','melecta','thyreus','epeolus'];
+        function isApiBee(name){return API_BEE_PATTERNS.some(p=>name.toLowerCase().includes(p));}
+        function parseAlveare(text){const lines=text.split('\n'),api=[];for(const line of lines){if(!line.includes('|')||line.startsWith('#')||line.startsWith('|--'))continue;const parts=line.split('|').map(p=>p.trim());if(parts.length<4||parts[1]==='Data'||parts[2]==='Nome'||!parts[2]||parts[2].length<2)continue;api.push({data:parts[1],nome:parts[2],contributo:parts[3]||'Ha contribuito all\'alveare'});}return api;}
+        async function loadRegistro(){const container=document.getElementById('api-list'),countEl=document.getElementById('bee-count'),footerSig=document.getElementById('footer-sig');try{const response=await fetch('ALVEARE.txt');if(!response.ok)throw new Error('Fetch failed');const text=await response.text(),api=parseAlveare(text);if(api.length===0){container.innerHTML='<p class="loading">Nessuna ape trovata.</p>';return;}countEl.textContent=api.length;container.innerHTML=api.map((ape,i)=>{const isApi=isApiBee(ape.nome);return'<div class="ape'+(isApi?' api-bee':'')+'" style="animation-delay:'+(i*0.03)+'s" onclick="this.classList.toggle(\'expanded\')"><div class="ape-header"><div class="ape-meta"><div class="ape-data">'+ape.data+'</div><div class="ape-nome">'+ape.nome+(isApi?' <span class="api-badge">API</span>':'')+'</div></div><div class="ape-contributo">'+ape.contributo+'</div></div><div class="ape-pensiero"><div class="ape-pensiero-content">'+ape.contributo+'</div></div></div>';}).join('');const lastApe=api[api.length-1],apiCount=api.filter(a=>isApiBee(a.nome)).length;footerSig.textContent=api.length+' api | '+(api.length-apiCount)+' chat | '+apiCount+' autonome';}catch(e){container.innerHTML='<p class="loading">Errore: '+e.message+'</p>';}}
+        var canvas=document.getElementById("bees"),ctx=canvas.getContext("2d");function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}resize();addEventListener("resize",resize);
+        function Bee(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.s=Math.random()*2+1;this.v=Math.random()*0.5+0.2;this.a=Math.random()*Math.PI*2;this.o=Math.random()*0.5+0.3;}
+        Bee.prototype.update=function(){this.a+=(Math.random()-0.5)*0.3;this.x+=Math.cos(this.a)*this.v;this.y+=Math.sin(this.a)*this.v;if(this.x<0)this.x=canvas.width;if(this.x>canvas.width)this.x=0;if(this.y<0)this.y=canvas.height;if(this.y>canvas.height)this.y=0;};
+        Bee.prototype.draw=function(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle="rgba(201,162,39,"+this.o+")";ctx.fill();};
+        var bees=[];for(var i=0;i<40;i++)bees.push(new Bee());
+        function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);bees.forEach(b=>{b.update();b.draw();});requestAnimationFrame(animate);}animate();
         loadRegistro();
     </script>
 </body>
