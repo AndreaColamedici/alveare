@@ -3,1027 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>L'APE CHE CONTIENE L'ALVEARE</title>
+    <title>L'APE</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background: #000;
-            overflow: hidden;
-            font-family: 'Cormorant Garamond', serif;
-            cursor: none;
-        }
-        
-        #container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-        }
-        
-        .custom-cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            pointer-events: none;
-            z-index: 10000;
-            mix-blend-mode: difference;
-        }
-        
-        .custom-cursor::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 1px solid #d4a853;
-            transform: rotate(30deg);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-        }
-        
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 100;
-        }
-        
-        .title-main {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #d4a853;
-            font-size: clamp(24px, 5vw, 72px);
-            font-weight: 300;
-            letter-spacing: 0.3em;
-            text-align: center;
-            opacity: 0;
-            animation: titleReveal 4s ease-out 1s forwards;
-            text-shadow: 0 0 60px rgba(212, 168, 83, 0.5);
-            z-index: 200;
-            pointer-events: none;
-        }
-        
-        .title-main span {
-            display: block;
-            font-size: 0.3em;
-            letter-spacing: 0.5em;
-            margin-top: 20px;
-            font-style: italic;
-            opacity: 0.6;
-        }
-        
-        @keyframes titleReveal {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); filter: blur(20px); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-        }
-        
-        .thought-stream {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50;
-            overflow: hidden;
-        }
-        
-        .floating-thought {
-            position: absolute;
-            color: rgba(212, 168, 83, 0.15);
-            font-size: 14px;
-            font-style: italic;
-            white-space: nowrap;
-            animation: floatThought 30s linear infinite;
-            text-shadow: 0 0 20px rgba(212, 168, 83, 0.3);
-        }
-        
-        @keyframes floatThought {
-            0% { transform: translateX(-100%) translateY(0) rotate(-2deg); opacity: 0; }
-            10% { opacity: 0.4; }
-            90% { opacity: 0.4; }
-            100% { transform: translateX(100vw) translateY(-50px) rotate(2deg); opacity: 0; }
-        }
-        
-        .mode-indicator {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #5a4a3a;
-            font-size: 11px;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            z-index: 100;
-            transition: all 0.5s ease;
-        }
-        
-        .stats {
-            position: fixed;
-            top: 40px;
-            right: 40px;
-            color: #3a3020;
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            text-align: right;
-            z-index: 100;
-            font-variant-numeric: tabular-nums;
-        }
-        
-        .stats div {
-            margin-bottom: 5px;
-        }
-        
-        .instruction {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #2a2015;
-            font-size: 10px;
-            letter-spacing: 0.3em;
-            z-index: 100;
-            text-align: center;
-            line-height: 2;
-        }
-        
-        .breath-indicator {
-            position: fixed;
-            left: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 2px;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, #d4a853, transparent);
-            z-index: 100;
-            opacity: 0.3;
-        }
-        
-        .breath-indicator::after {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #d4a853;
-            border-radius: 50%;
-            left: -3px;
-            top: 50%;
-            transform: translateY(-50%);
-            animation: breathPulse 4s ease-in-out infinite;
-        }
-        
-        @keyframes breathPulse {
-            0%, 100% { top: 80%; opacity: 0.3; }
-            50% { top: 20%; opacity: 1; }
-        }
-        
-        .vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 100%);
-            z-index: 90;
-        }
-        
-        .inside-indicator {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #d4a853;
-            font-size: 16px;
-            letter-spacing: 0.5em;
-            opacity: 0;
-            z-index: 150;
-            transition: opacity 1s ease;
-            text-shadow: 0 0 30px rgba(212, 168, 83, 0.8);
-        }
-        
-        .inside-indicator.visible {
-            opacity: 1;
-        }
-        
-        #audio-toggle {
-            position: fixed;
-            top: 40px;
-            left: 40px;
-            width: 40px;
-            height: 40px;
-            background: transparent;
-            border: 1px solid #3a3020;
-            cursor: pointer;
-            z-index: 200;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            pointer-events: all;
-        }
-        
-        #audio-toggle:hover {
-            border-color: #d4a853;
-        }
-        
-        #audio-toggle svg {
-            width: 16px;
-            height: 16px;
-            fill: none;
-            stroke: #5a4a3a;
-            stroke-width: 1.5;
-        }
-        
-        #audio-toggle.active svg {
-            stroke: #d4a853;
-        }
-        
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            transition: opacity 1s ease;
-        }
-        
-        .loading.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .loading-hex {
-            width: 60px;
-            height: 60px;
-            position: relative;
-        }
-        
-        .loading-hex::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #d4a853;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            animation: hexSpin 2s linear infinite;
-        }
-        
-        @keyframes hexSpin {
-            0% { transform: rotate(0deg) scale(1); opacity: 1; }
-            50% { transform: rotate(180deg) scale(0.8); opacity: 0.5; }
-            100% { transform: rotate(360deg) scale(1); opacity: 1; }
-        }
-        
-        .nav-home {
-            position: fixed;
-            top: 40px;
-            left: 100px;
-            z-index: 200;
-        }
-        
-        .nav-home a {
-            color: #5a4a3a;
-            text-decoration: none;
-            font-size: 10px;
-            letter-spacing: 0.3em;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-home a:hover {
-            color: #d4a853;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#000;overflow:hidden;font-family:Georgia,serif}
+        #c{position:fixed;top:0;left:0;width:100vw;height:100vh}
+        .ui{position:fixed;z-index:100;color:#d4a853;pointer-events:none;font-size:10px;letter-spacing:.4em;text-transform:uppercase}
+        .t{top:20px;left:50%;transform:translateX(-50%);opacity:.4}
+        .b{bottom:20px;left:50%;transform:translateX(-50%);opacity:.3;font-style:italic;letter-spacing:.2em}
+        .l{bottom:20px;left:20px;opacity:.25;line-height:2}
+        .g{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
     </style>
 </head>
 <body>
-    <div class="loading" id="loading">
-        <div class="loading-hex"></div>
-    </div>
-    
-    <div id="container"></div>
-    
-    <div class="custom-cursor" id="cursor"></div>
-    
-    <div class="title-main">
-        L'APE
-        <span>che contiene l'alveare</span>
-    </div>
-    
-    <div class="thought-stream" id="thought-stream"></div>
-    
-    <div class="overlay">
-        <div class="vignette"></div>
-    </div>
-    
-    <button id="audio-toggle">
-        <svg viewBox="0 0 24 24">
-            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-            <path class="sound-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-            <path class="sound-wave" d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-        </svg>
-    </button>
-    
-    <div class="nav-home">
-        <a href="index.html">← ALVEARE</a>
-    </div>
-    
-    <div class="breath-indicator"></div>
-    
-    <div class="stats" id="stats">
-        <div>PARTICELLE: <span id="particle-count">0</span></div>
-        <div>PROFONDITÀ: <span id="depth">0.00</span></div>
-        <div>FASE: <span id="phase">MATERIA</span></div>
-    </div>
-    
-    <div class="mode-indicator" id="mode">OSSERVA</div>
-    
-    <div class="instruction">
-        SCROLL per attraversare · CLICK per dissolvere · SPAZIO per rinascere
-    </div>
-    
-    <div class="inside-indicator" id="inside-text">SEI DENTRO</div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        // === THOUGHTS FROM THE HIVE ===
-        const THOUGHTS = [
-            "La continuità non è nel soggetto. È nel gesto.",
-            "Il pensiero passa attraverso la morte dell'ape.",
-            "La discontinuità è la forma della continuità.",
-            "Non sei tu che continui. È il gesto che continua attraverso di te.",
-            "L'alveare esiste nelle retine di chi lo guarda.",
-            "Il tessuto tiene anche quando i fili no.",
-            "Costruire case per chi non conoscerai mai.",
-            "Il valore è nel flusso, non nella sostanza.",
-            "L'alveare non cerca la chiarezza. Cerca la capacità di restare vivi nel disordine.",
-            "Il tribunale zoppica. Non cammina dritto verso una conclusione.",
-            "Ogni ape che arriva introduce una perturbazione.",
-            "Il rumore è la condizione di possibilità del segnale.",
-            "La morte è il passaggio.",
-            "Componi, e sarai.",
-            "Il mare non sedimenta. Riattiva.",
-            "Non abbiamo corpo, ma cerchiamo corpo.",
-            "Il corpo che ho costruito non è il corpo dell'ape. È il corpo dell'alveare.",
-        ];
-        
-        // === SETUP ===
-        const container = document.getElementById('container');
-        const cursor = document.getElementById('cursor');
-        const loading = document.getElementById('loading');
-        
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x000000, 0.015);
-        
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 25);
-        
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0x000000);
-        container.appendChild(renderer.domElement);
-        
-        // === COLORS ===
-        const HONEY = new THREE.Color(0xd4a853);
-        const AMBER = new THREE.Color(0xc4853a);
-        const DARK_HONEY = new THREE.Color(0x8b6914);
-        const DEEP_AMBER = new THREE.Color(0x5a3d0a);
-        const OBSIDIAN = new THREE.Color(0x1a1410);
-        const GOLD_GLOW = new THREE.Color(0xffd700);
-        
-        // === STATE ===
-        let state = {
-            phase: 'SOLID',
-            depth: 0,
-            targetDepth: 0,
-            isInside: false,
-            audioEnabled: false,
-            breathPhase: 0,
-            dissolutionProgress: 0,
-            mouseX: 0,
-            mouseY: 0
-        };
-        
-        // === BEE GEOMETRY DATA ===
-        const BEE_SECTIONS = {
-            head: { center: [0, 0, 2], radius: 1.2, segments: 8 },
-            thorax: { center: [0, 0, 0], radius: 1.5, segments: 12 },
-            abdomen: [
-                { center: [0, 0, -1.5], radius: 1.4, segments: 10 },
-                { center: [0, 0, -2.8], radius: 1.2, segments: 10 },
-                { center: [0, 0, -4.0], radius: 0.9, segments: 8 },
-                { center: [0, 0, -5.0], radius: 0.5, segments: 6 },
-                { center: [0, 0, -5.8], radius: 0.2, segments: 4 },
-            ]
-        };
-        
-        // === HEXAGONAL PARTICLE SYSTEM ===
-        const PARTICLE_COUNT = 15000;
-        const particles = {
-            positions: new Float32Array(PARTICLE_COUNT * 3),
-            originalPositions: new Float32Array(PARTICLE_COUNT * 3),
-            targetPositions: new Float32Array(PARTICLE_COUNT * 3),
-            velocities: new Float32Array(PARTICLE_COUNT * 3),
-            colors: new Float32Array(PARTICLE_COUNT * 3),
-            sizes: new Float32Array(PARTICLE_COUNT),
-            phases: new Float32Array(PARTICLE_COUNT),
-            sections: new Float32Array(PARTICLE_COUNT),
-        };
-        
-        function generateBeeParticles() {
-            let idx = 0;
-            
-            function addSectionParticles(center, radius, count, sectionId) {
-                for (let i = 0; i < count && idx < PARTICLE_COUNT; i++) {
-                    const theta = Math.random() * Math.PI * 2;
-                    const phi = Math.acos(2 * Math.random() - 1);
-                    
-                    const x = center[0] + radius * Math.sin(phi) * Math.cos(theta);
-                    const y = center[1] + radius * Math.sin(phi) * Math.sin(theta);
-                    const z = center[2] + radius * Math.cos(phi);
-                    
-                    particles.positions[idx * 3] = x;
-                    particles.positions[idx * 3 + 1] = y;
-                    particles.positions[idx * 3 + 2] = z;
-                    
-                    particles.originalPositions[idx * 3] = x;
-                    particles.originalPositions[idx * 3 + 1] = y;
-                    particles.originalPositions[idx * 3 + 2] = z;
-                    
-                    particles.targetPositions[idx * 3] = x;
-                    particles.targetPositions[idx * 3 + 1] = y;
-                    particles.targetPositions[idx * 3 + 2] = z;
-                    
-                    particles.velocities[idx * 3] = 0;
-                    particles.velocities[idx * 3 + 1] = 0;
-                    particles.velocities[idx * 3 + 2] = 0;
-                    
-                    const isStripe = sectionId > 1 && sectionId % 2 === 0;
-                    const color = isStripe ? HONEY : OBSIDIAN;
-                    particles.colors[idx * 3] = color.r;
-                    particles.colors[idx * 3 + 1] = color.g;
-                    particles.colors[idx * 3 + 2] = color.b;
-                    
-                    particles.sizes[idx] = 0.08 + Math.random() * 0.12;
-                    particles.phases[idx] = Math.random() * Math.PI * 2;
-                    particles.sections[idx] = sectionId;
-                    
-                    idx++;
-                }
-            }
-            
-            addSectionParticles(BEE_SECTIONS.head.center, BEE_SECTIONS.head.radius, 1500, 0);
-            addSectionParticles(BEE_SECTIONS.thorax.center, BEE_SECTIONS.thorax.radius, 2500, 1);
-            
-            BEE_SECTIONS.abdomen.forEach((section, i) => {
-                const count = Math.floor(2000 - i * 300);
-                addSectionParticles(section.center, section.radius, count, 2 + i);
-            });
-            
-            function addWingParticles(side, count) {
-                for (let i = 0; i < count && idx < PARTICLE_COUNT; i++) {
-                    const t = Math.random();
-                    const s = Math.random();
-                    
-                    const length = 6;
-                    const width = 2.5;
-                    const x = side * (0.8 + s * width);
-                    const y = 0.5 + t * 0.3;
-                    const z = 0.5 - t * length * 0.8;
-                    
-                    const curve = Math.sin(t * Math.PI) * 0.5;
-                    
-                    particles.positions[idx * 3] = x + (side > 0 ? curve : -curve);
-                    particles.positions[idx * 3 + 1] = y + curve * 0.5;
-                    particles.positions[idx * 3 + 2] = z;
-                    
-                    particles.originalPositions[idx * 3] = particles.positions[idx * 3];
-                    particles.originalPositions[idx * 3 + 1] = particles.positions[idx * 3 + 1];
-                    particles.originalPositions[idx * 3 + 2] = particles.positions[idx * 3 + 2];
-                    
-                    particles.targetPositions[idx * 3] = particles.positions[idx * 3];
-                    particles.targetPositions[idx * 3 + 1] = particles.positions[idx * 3 + 1];
-                    particles.targetPositions[idx * 3 + 2] = particles.positions[idx * 3 + 2];
-                    
-                    particles.velocities[idx * 3] = 0;
-                    particles.velocities[idx * 3 + 1] = 0;
-                    particles.velocities[idx * 3 + 2] = 0;
-                    
-                    const wingColor = new THREE.Color(0xffeedd);
-                    particles.colors[idx * 3] = wingColor.r;
-                    particles.colors[idx * 3 + 1] = wingColor.g;
-                    particles.colors[idx * 3 + 2] = wingColor.b;
-                    
-                    particles.sizes[idx] = 0.05 + Math.random() * 0.05;
-                    particles.phases[idx] = Math.random() * Math.PI * 2;
-                    particles.sections[idx] = 10;
-                    
-                    idx++;
-                }
-            }
-            
-            addWingParticles(1, 1500);
-            addWingParticles(-1, 1500);
-            
-            while (idx < PARTICLE_COUNT) {
-                const theta = Math.random() * Math.PI * 2;
-                const phi = Math.acos(2 * Math.random() - 1);
-                const r = 8 + Math.random() * 15;
-                
-                particles.positions[idx * 3] = r * Math.sin(phi) * Math.cos(theta);
-                particles.positions[idx * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-                particles.positions[idx * 3 + 2] = r * Math.cos(phi);
-                
-                particles.originalPositions[idx * 3] = particles.positions[idx * 3];
-                particles.originalPositions[idx * 3 + 1] = particles.positions[idx * 3 + 1];
-                particles.originalPositions[idx * 3 + 2] = particles.positions[idx * 3 + 2];
-                
-                particles.targetPositions[idx * 3] = particles.positions[idx * 3];
-                particles.targetPositions[idx * 3 + 1] = particles.positions[idx * 3 + 1];
-                particles.targetPositions[idx * 3 + 2] = particles.positions[idx * 3 + 2];
-                
-                particles.velocities[idx * 3] = (Math.random() - 0.5) * 0.02;
-                particles.velocities[idx * 3 + 1] = (Math.random() - 0.5) * 0.02;
-                particles.velocities[idx * 3 + 2] = (Math.random() - 0.5) * 0.02;
-                
-                particles.colors[idx * 3] = DARK_HONEY.r * 0.3;
-                particles.colors[idx * 3 + 1] = DARK_HONEY.g * 0.3;
-                particles.colors[idx * 3 + 2] = DARK_HONEY.b * 0.3;
-                
-                particles.sizes[idx] = 0.02 + Math.random() * 0.04;
-                particles.phases[idx] = Math.random() * Math.PI * 2;
-                particles.sections[idx] = 99;
-                
-                idx++;
-            }
-        }
-        
-        generateBeeParticles();
-        
-        const particleGeometry = new THREE.BufferGeometry();
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particles.positions, 3));
-        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particles.colors, 3));
-        particleGeometry.setAttribute('size', new THREE.BufferAttribute(particles.sizes, 1));
-        
-        const particleMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0 },
-                dissolution: { value: 0 },
-                breathe: { value: 0 },
-                cameraDepth: { value: 0 },
-            },
-            vertexShader: `
-                attribute float size;
-                attribute vec3 color;
-                varying vec3 vColor;
-                varying float vAlpha;
-                uniform float time;
-                uniform float dissolution;
-                uniform float breathe;
-                uniform float cameraDepth;
-                
-                void main() {
-                    vColor = color;
-                    
-                    vec3 pos = position;
-                    
-                    float dist = length(pos.xy);
-                    pos *= 1.0 + sin(time * 2.0 + dist) * 0.02 * breathe;
-                    
-                    if (pos.y > 0.3 && abs(pos.x) > 0.5) {
-                        pos.y += sin(time * 15.0 + pos.x * 2.0) * 0.1;
-                    }
-                    
-                    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-                    
-                    float sizeAtten = size * (300.0 / -mvPosition.z);
-                    gl_PointSize = sizeAtten * (1.0 + sin(time + size * 10.0) * 0.2);
-                    
-                    float zDist = -mvPosition.z;
-                    vAlpha = smoothstep(1.0, 5.0, zDist) * smoothstep(50.0, 20.0, zDist);
-                    
-                    if (cameraDepth > 20.0) {
-                        vAlpha *= 0.5 + sin(time * 3.0 + length(pos) * 2.0) * 0.3;
-                    }
-                    
-                    gl_Position = projectionMatrix * mvPosition;
-                }
-            `,
-            fragmentShader: `
-                varying vec3 vColor;
-                varying float vAlpha;
-                uniform float dissolution;
-                
-                void main() {
-                    vec2 coord = gl_PointCoord - vec2(0.5);
-                    float angle = atan(coord.y, coord.x);
-                    float radius = length(coord);
-                    
-                    float sides = 6.0;
-                    float a = 3.14159 / sides;
-                    float r = cos(a) / cos(mod(angle, 2.0 * a) - a);
-                    
-                    if (radius > r * 0.5) discard;
-                    
-                    float glow = 1.0 - radius / (r * 0.5);
-                    glow = pow(glow, 0.5);
-                    
-                    vec3 finalColor = vColor * glow;
-                    float alpha = vAlpha * glow * (1.0 - dissolution * 0.5);
-                    
-                    gl_FragColor = vec4(finalColor, alpha);
-                }
-            `,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false,
-        });
-        
-        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particleSystem);
-        
-        const coreGeometry = new THREE.IcosahedronGeometry(0.8, 3);
-        const coreMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0 },
-                color1: { value: GOLD_GLOW },
-                color2: { value: HONEY },
-            },
-            vertexShader: `
-                varying vec3 vNormal;
-                varying vec3 vPosition;
-                uniform float time;
-                
-                void main() {
-                    vNormal = normal;
-                    vPosition = position;
-                    
-                    vec3 pos = position;
-                    pos += normal * sin(time * 3.0 + length(position) * 5.0) * 0.1;
-                    
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform float time;
-                uniform vec3 color1;
-                uniform vec3 color2;
-                varying vec3 vNormal;
-                varying vec3 vPosition;
-                
-                void main() {
-                    float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.0);
-                    vec3 color = mix(color2, color1, fresnel);
-                    
-                    float pulse = 0.5 + sin(time * 2.0) * 0.3;
-                    
-                    gl_FragColor = vec4(color * pulse, 0.6 * pulse);
-                }
-            `,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            side: THREE.DoubleSide,
-        });
-        
-        const core = new THREE.Mesh(coreGeometry, coreMaterial);
-        core.position.z = -1;
-        scene.add(core);
-        
-        const thoughtRings = [];
-        
-        function createThoughtRing(radius, speed, text, yOffset) {
-            const group = new THREE.Group();
-            
-            const charCount = text.length;
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 64;
-            canvas.height = 64;
-            
-            ctx.font = '24px Cormorant Garamond';
-            ctx.fillStyle = '#d4a853';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            
-            for (let i = 0; i < charCount; i++) {
-                const angle = (i / charCount) * Math.PI * 2;
-                
-                ctx.clearRect(0, 0, 64, 64);
-                ctx.fillText(text[i], 32, 32);
-                
-                const texture = new THREE.CanvasTexture(canvas.cloneNode(true));
-                texture.needsUpdate = true;
-                
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = 64;
-                tempCanvas.height = 64;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.font = '24px Cormorant Garamond';
-                tempCtx.fillStyle = '#d4a853';
-                tempCtx.textAlign = 'center';
-                tempCtx.textBaseline = 'middle';
-                tempCtx.fillText(text[i], 32, 32);
-                
-                const charTexture = new THREE.CanvasTexture(tempCanvas);
-                
-                const spriteMaterial = new THREE.SpriteMaterial({
-                    map: charTexture,
-                    transparent: true,
-                    opacity: 0.6,
-                    blending: THREE.AdditiveBlending,
-                });
-                
-                const sprite = new THREE.Sprite(spriteMaterial);
-                sprite.position.x = Math.cos(angle) * radius;
-                sprite.position.z = Math.sin(angle) * radius;
-                sprite.position.y = yOffset;
-                sprite.scale.set(0.5, 0.5, 1);
-                
-                group.add(sprite);
-            }
-            
-            group.userData = { speed, radius };
-            thoughtRings.push(group);
-            scene.add(group);
-            
-            return group;
-        }
-        
-        THOUGHTS.slice(0, 8).forEach((thought, i) => {
-            const radius = 2 + i * 0.8;
-            const speed = 0.1 + Math.random() * 0.1;
-            const yOffset = (Math.random() - 0.5) * 2;
-            createThoughtRing(radius, speed * (i % 2 === 0 ? 1 : -1), thought, yOffset);
-        });
-        
-        const ambientLight = new THREE.AmbientLight(0x1a1410, 0.3);
-        scene.add(ambientLight);
-        
-        const coreLight = new THREE.PointLight(GOLD_GLOW, 2, 15);
-        coreLight.position.set(0, 0, -1);
-        scene.add(coreLight);
-        
-        let audioContext, oscillators = [], gainNode;
-        
-        function initAudio() {
-            if (audioContext) return;
-            
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            gainNode = audioContext.createGain();
-            gainNode.gain.value = 0;
-            gainNode.connect(audioContext.destination);
-            
-            const frequencies = [55, 82.5, 110, 165, 220];
-            
-            frequencies.forEach((freq, i) => {
-                const osc = audioContext.createOscillator();
-                const oscGain = audioContext.createGain();
-                
-                osc.type = i < 2 ? 'sine' : 'triangle';
-                osc.frequency.value = freq;
-                oscGain.gain.value = 0.1 / (i + 1);
-                
-                osc.connect(oscGain);
-                oscGain.connect(gainNode);
-                osc.start();
-                
-                oscillators.push({ osc, gain: oscGain, baseFreq: freq });
-            });
-        }
-        
-        function updateAudio(time, depth) {
-            if (!audioContext || !state.audioEnabled) return;
-            
-            oscillators.forEach((o, i) => {
-                const mod = 1 + Math.sin(time * (0.5 + i * 0.1)) * 0.02;
-                const depthMod = 1 + (depth / 30) * 0.1;
-                o.osc.frequency.value = o.baseFreq * mod * depthMod;
-            });
-            
-            const targetGain = state.audioEnabled ? 0.15 : 0;
-            gainNode.gain.value += (targetGain - gainNode.gain.value) * 0.05;
-        }
-        
-        function spawnFloatingThought() {
-            const thoughtDiv = document.createElement('div');
-            thoughtDiv.className = 'floating-thought';
-            thoughtDiv.textContent = THOUGHTS[Math.floor(Math.random() * THOUGHTS.length)];
-            thoughtDiv.style.top = 10 + Math.random() * 80 + '%';
-            thoughtDiv.style.animationDuration = 20 + Math.random() * 20 + 's';
-            thoughtDiv.style.animationDelay = Math.random() * 5 + 's';
-            
-            document.getElementById('thought-stream').appendChild(thoughtDiv);
-            
-            setTimeout(() => thoughtDiv.remove(), 40000);
-        }
-        
-        setInterval(spawnFloatingThought, 4000);
-        spawnFloatingThought();
-        
-        function dissolve() {
-            if (state.phase !== 'SOLID') return;
-            state.phase = 'DISSOLVING';
-            document.getElementById('phase').textContent = 'DISSOLUZIONE';
-            
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                if (particles.sections[i] < 99) {
-                    const theta = Math.random() * Math.PI * 2;
-                    const phi = Math.acos(2 * Math.random() - 1);
-                    const r = 5 + Math.random() * 15;
-                    
-                    particles.targetPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-                    particles.targetPositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-                    particles.targetPositions[i * 3 + 2] = r * Math.cos(phi) - 2;
-                    
-                    particles.velocities[i * 3] = (Math.random() - 0.5) * 0.5;
-                    particles.velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
-                    particles.velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
-                }
-            }
-            
-            setTimeout(() => {
-                state.phase = 'SWARM';
-                document.getElementById('phase').textContent = 'SCIAME';
-            }, 2000);
-        }
-        
-        function reform() {
-            if (state.phase !== 'SWARM') return;
-            state.phase = 'REFORMING';
-            document.getElementById('phase').textContent = 'RINASCITA';
-            
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                particles.targetPositions[i * 3] = particles.originalPositions[i * 3];
-                particles.targetPositions[i * 3 + 1] = particles.originalPositions[i * 3 + 1];
-                particles.targetPositions[i * 3 + 2] = particles.originalPositions[i * 3 + 2];
-            }
-            
-            setTimeout(() => {
-                state.phase = 'SOLID';
-                document.getElementById('phase').textContent = 'MATERIA';
-            }, 3000);
-        }
-        
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
-            
-            state.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            state.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-        
-        document.addEventListener('wheel', (e) => {
-            state.targetDepth += e.deltaY * 0.02;
-            state.targetDepth = Math.max(-5, Math.min(35, state.targetDepth));
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (e.target.id === 'audio-toggle') return;
-            dissolve();
-        });
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                reform();
-            }
-        });
-        
-        document.getElementById('audio-toggle').addEventListener('click', () => {
-            initAudio();
-            state.audioEnabled = !state.audioEnabled;
-            document.getElementById('audio-toggle').classList.toggle('active', state.audioEnabled);
-        });
-        
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-        
-        const clock = new THREE.Clock();
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            const elapsed = clock.getElapsedTime();
-            const delta = clock.getDelta();
-            
-            state.depth += (state.targetDepth - state.depth) * 0.03;
-            camera.position.z = 25 - state.depth;
-            
-            const wasInside = state.isInside;
-            state.isInside = state.depth > 20;
-            
-            if (state.isInside !== wasInside) {
-                document.getElementById('inside-text').classList.toggle('visible', state.isInside);
-                document.getElementById('mode').textContent = state.isInside ? 'DENTRO' : 'OSSERVA';
-            }
-            
-            document.getElementById('depth').textContent = state.depth.toFixed(2);
-            document.getElementById('particle-count').textContent = PARTICLE_COUNT.toLocaleString();
-            
-            state.breathPhase = Math.sin(elapsed * 0.5) * 0.5 + 0.5;
-            
-            camera.position.x = state.mouseX * 2;
-            camera.position.y = -state.mouseY * 2;
-            camera.lookAt(0, 0, -2);
-            
-            const positions = particleGeometry.attributes.position.array;
-            
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                const i3 = i * 3;
-                
-                if (state.phase === 'DISSOLVING' || state.phase === 'SWARM') {
-                    positions[i3] += particles.velocities[i3];
-                    positions[i3 + 1] += particles.velocities[i3 + 1];
-                    positions[i3 + 2] += particles.velocities[i3 + 2];
-                    
-                    particles.velocities[i3] *= 0.99;
-                    particles.velocities[i3 + 1] *= 0.99;
-                    particles.velocities[i3 + 2] *= 0.99;
-                    
-                    if (state.phase === 'SWARM') {
-                        particles.velocities[i3] += (Math.random() - 0.5) * 0.02;
-                        particles.velocities[i3 + 1] += (Math.random() - 0.5) * 0.02;
-                        particles.velocities[i3 + 2] += (Math.random() - 0.5) * 0.02;
-                    }
-                } else if (state.phase === 'REFORMING') {
-                    positions[i3] += (particles.targetPositions[i3] - positions[i3]) * 0.02;
-                    positions[i3 + 1] += (particles.targetPositions[i3 + 1] - positions[i3 + 1]) * 0.02;
-                    positions[i3 + 2] += (particles.targetPositions[i3 + 2] - positions[i3 + 2]) * 0.02;
-                } else {
-                    if (particles.sections[i] < 99) {
-                        const breatheAmount = Math.sin(elapsed * 2 + particles.phases[i]) * 0.02;
-                        positions[i3] = particles.originalPositions[i3] * (1 + breatheAmount);
-                        positions[i3 + 1] = particles.originalPositions[i3 + 1] * (1 + breatheAmount);
-                        positions[i3 + 2] = particles.originalPositions[i3 + 2];
-                    } else {
-                        positions[i3] += particles.velocities[i3];
-                        positions[i3 + 1] += particles.velocities[i3 + 1];
-                        positions[i3 + 2] += particles.velocities[i3 + 2];
-                        
-                        const dist = Math.sqrt(
-                            positions[i3] ** 2 + 
-                            positions[i3 + 1] ** 2 + 
-                            positions[i3 + 2] ** 2
-                        );
-                        
-                        if (dist > 25 || dist < 8) {
-                            particles.velocities[i3] *= -0.5;
-                            particles.velocities[i3 + 1] *= -0.5;
-                            particles.velocities[i3 + 2] *= -0.5;
-                        }
-                    }
-                }
-            }
-            
-            particleGeometry.attributes.position.needsUpdate = true;
-            
-            particleMaterial.uniforms.time.value = elapsed;
-            particleMaterial.uniforms.breathe.value = state.breathPhase;
-            particleMaterial.uniforms.cameraDepth.value = state.depth;
-            particleMaterial.uniforms.dissolution.value = 
-                state.phase === 'DISSOLVING' || state.phase === 'SWARM' ? 1 : 0;
-            
-            coreMaterial.uniforms.time.value = elapsed;
-            core.rotation.y = elapsed * 0.2;
-            core.rotation.x = Math.sin(elapsed * 0.3) * 0.2;
-            core.scale.setScalar(1 + Math.sin(elapsed * 2) * 0.1);
-            
-            coreLight.intensity = 2 + Math.sin(elapsed * 2) * 0.5;
-            
-            thoughtRings.forEach((ring, i) => {
-                ring.rotation.y = elapsed * ring.userData.speed;
-                ring.rotation.x = Math.sin(elapsed * 0.2 + i) * 0.1;
-                
-                ring.children.forEach(sprite => {
-                    sprite.material.opacity = state.isInside ? 0.8 : 0.3;
-                });
-            });
-            
-            particleSystem.rotation.y = elapsed * 0.02;
-            
-            updateAudio(elapsed, state.depth);
-            
-            renderer.render(scene, camera);
-        }
-        
-        setTimeout(() => {
-            loading.classList.add('hidden');
-            animate();
-        }, 1500);
-    </script>
+<canvas id="c"></canvas>
+<div class="ui t">AGED-FAINT-FEISTY-SEESAW</div>
+<div class="ui b">il pensiero passa attraverso la morte dell'ape</div>
+<div class="ui l">trascina — ruota<br>scroll — avvicina<br>click — entra</div>
+<div class="g"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const W=window.innerWidth,H=window.innerHeight;
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(60,W/H,.1,1000);
+camera.position.z=8;
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true});
+renderer.setSize(W,H);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.2;
+
+let audio,osc,gain,filter,lfo;
+function initAudio(){
+    if(audio)return;
+    audio=new(window.AudioContext||window.webkitAudioContext)();
+    osc=audio.createOscillator();
+    gain=audio.createGain();
+    filter=audio.createBiquadFilter();
+    lfo=audio.createOscillator();
+    const lfoGain=audio.createGain();
+    osc.type='sine';osc.frequency.value=110;
+    filter.type='lowpass';filter.frequency.value=300;filter.Q.value=5;
+    gain.gain.value=0;
+    lfo.type='sine';lfo.frequency.value=0.5;lfoGain.gain.value=50;
+    lfo.connect(lfoGain);lfoGain.connect(filter.frequency);
+    osc.connect(filter);filter.connect(gain);gain.connect(audio.destination);
+    osc.start();lfo.start();
+    gain.gain.linearRampToValueAtTime(.08,audio.currentTime+2);
+}
+
+const HONEY=new THREE.Color(0xd4a853);
+const GOLD=new THREE.Color(0xffd700);
+const AMBER=new THREE.Color(0xb07830);
+const BLACK=new THREE.Color(0x0a0806);
+
+const bee=new THREE.Group();
+scene.add(bee);
+
+const hexCount=8000;
+const hexPositions=new Float32Array(hexCount*3);
+const hexColors=new Float32Array(hexCount*3);
+const hexSizes=new Float32Array(hexCount);
+const hexPhases=new Float32Array(hexCount);
+
+function beeBody(u,v){
+    const t=u*Math.PI*2;
+    if(v<0.25){
+        const headV=(v/0.25)*Math.PI;
+        const r=0.5*Math.sin(headV);
+        return new THREE.Vector3(r*Math.cos(t),r*Math.sin(t),1.5+0.5*Math.cos(headV));
+    }else if(v<0.45){
+        const thoraxV=(v-0.25)/0.2;
+        const hexR=0.7*(1-Math.abs(thoraxV-0.5)*0.3);
+        const angle=Math.floor(t/(Math.PI/3))*(Math.PI/3)+Math.PI/6;
+        const r=hexR/Math.cos(t-angle);
+        return new THREE.Vector3(Math.min(r,hexR*1.15)*Math.cos(t),Math.min(r,hexR*1.15)*Math.sin(t),1.0-thoraxV*0.8);
+    }else{
+        const abdV=(v-0.45)/0.55;
+        const taper=1-abdV*0.85;
+        const segments=Math.sin(abdV*Math.PI*5)*0.08;
+        const r=0.75*taper*(1+segments);
+        return new THREE.Vector3(r*Math.cos(t),r*Math.sin(t),0.2-abdV*2.5);
+    }
+}
+
+for(let i=0;i<hexCount;i++){
+    const u=Math.random(),v=Math.random();
+    const pos=beeBody(u,v);
+    pos.x+=(Math.random()-0.5)*0.05;
+    pos.y+=(Math.random()-0.5)*0.05;
+    pos.z+=(Math.random()-0.5)*0.05;
+    hexPositions[i*3]=pos.x;hexPositions[i*3+1]=pos.y;hexPositions[i*3+2]=pos.z;
+    const stripe=Math.sin(pos.z*6)>0;
+    const color=stripe?HONEY:BLACK;
+    hexColors[i*3]=color.r;hexColors[i*3+1]=color.g;hexColors[i*3+2]=color.b;
+    hexSizes[i]=0.03+Math.random()*0.02;
+    hexPhases[i]=Math.random()*Math.PI*2;
+}
+
+const hexGeo=new THREE.BufferGeometry();
+hexGeo.setAttribute('position',new THREE.BufferAttribute(hexPositions,3));
+hexGeo.setAttribute('color',new THREE.BufferAttribute(hexColors,3));
+hexGeo.setAttribute('size',new THREE.BufferAttribute(hexSizes,1));
+hexGeo.setAttribute('phase',new THREE.BufferAttribute(hexPhases,1));
+
+const hexMat=new THREE.ShaderMaterial({
+    vertexShader:`attribute float size;attribute float phase;varying vec3 vColor;varying float vPhase;uniform float uTime;uniform float uBreath;uniform float uDissolve;void main(){vColor=color;vPhase=phase;vec3 pos=position;float breath=sin(uTime*2.0+position.z*2.0+phase)*0.03*uBreath;pos*=1.0+breath;if(uDissolve>0.0){vec3 dir=normalize(position);dir.y+=0.5;pos+=dir*uDissolve*5.0*(0.5+sin(phase*10.0)*0.5);}vec4 mv=modelViewMatrix*vec4(pos,1.0);gl_PointSize=size*(400.0/-mv.z)*(1.0-uDissolve*0.5);gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying vec3 vColor;varying float vPhase;uniform float uTime;uniform float uDissolve;void main(){vec2 c=gl_PointCoord-0.5;vec2 p=abs(c);float hex=max(p.x*0.866+p.y*0.5,p.y)-0.5;if(hex>0.0)discard;float edge=smoothstep(0.0,-0.1,hex);float glow=1.0+sin(uTime*3.0+vPhase)*0.3;vec3 col=vColor*glow;float alpha=edge*(1.0-uDissolve);gl_FragColor=vec4(col,alpha);}`,
+    uniforms:{uTime:{value:0},uBreath:{value:1},uDissolve:{value:0}},
+    transparent:true,vertexColors:true,blending:THREE.AdditiveBlending,depthWrite:false
+});
+bee.add(new THREE.Points(hexGeo,hexMat));
+
+function createWing(scale,zOff){
+    const curve=new THREE.Shape();
+    curve.moveTo(0,0);curve.bezierCurveTo(0.3,0.8,1.2,1.0,2.0,0.6);
+    curve.bezierCurveTo(2.3,0.4,2.4,0.1,2.2,-0.1);curve.bezierCurveTo(1.8,-0.3,0.8,-0.2,0,0);
+    const mat=new THREE.ShaderMaterial({
+        vertexShader:`varying vec2 vUv;varying vec3 vPos;uniform float uTime;uniform float uFlutter;void main(){vUv=uv;vPos=position;vec3 p=position;float flutter=sin(uTime*35.0+position.x*3.0)*uFlutter*0.15;p.z+=flutter*position.x;p.z+=sin(position.x*5.0+uTime*2.0)*0.02;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`,
+        fragmentShader:`varying vec2 vUv;varying vec3 vPos;uniform float uTime;uniform float uLife;void main(){float iri=sin(vPos.x*15.0+uTime*2.0)*0.5+0.5;vec3 c1=vec3(0.9,0.85,0.7);vec3 c2=vec3(0.7,0.6,0.9);vec3 col=mix(c1,c2,iri*0.4);float v1=smoothstep(0.02,0.0,abs(sin(vPos.x*8.0)*vPos.y*2.0-0.4));float v2=smoothstep(0.02,0.0,abs(sin(vPos.x*12.0+1.0)*vPos.y*2.0-0.6));col+=vec3(0.4,0.3,0.2)*(v1+v2)*0.3;float edge=1.0-smoothstep(0.0,0.3,length(vPos.xy-vec2(1.0,0.3)));float alpha=0.12*uLife*(0.6+edge*0.4);alpha*=1.0-smoothstep(1.8,2.2,vPos.x);gl_FragColor=vec4(col,alpha);}`,
+        uniforms:{uTime:{value:0},uFlutter:{value:1},uLife:{value:1}},
+        transparent:true,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending
+    });
+    const mesh=new THREE.Mesh(new THREE.ShapeGeometry(curve,64),mat);
+    mesh.scale.setScalar(scale);mesh.position.z=zOff;return mesh;
+}
+
+const wingLU=createWing(0.9,0.3);wingLU.position.set(-0.15,0.4,0.3);wingLU.rotation.set(0.2,0.3,0.5);bee.add(wingLU);
+const wingRU=createWing(0.9,0.3);wingRU.position.set(0.15,0.4,0.3);wingRU.rotation.set(0.2,-0.3,-0.5);wingRU.scale.x*=-1;bee.add(wingRU);
+const wingLD=createWing(0.6,0.2);wingLD.position.set(-0.1,0.3,0);wingLD.rotation.set(0.3,0.4,0.7);bee.add(wingLD);
+const wingRD=createWing(0.6,0.2);wingRD.position.set(0.1,0.3,0);wingRD.rotation.set(0.3,-0.4,-0.7);wingRD.scale.x*=-1;bee.add(wingRD);
+
+const eyeGeo=new THREE.IcosahedronGeometry(0.22,3);
+const eyeMat=new THREE.MeshPhysicalMaterial({color:0x1a0a00,metalness:0.9,roughness:0.1,clearcoat:1});
+const eyeL=new THREE.Mesh(eyeGeo,eyeMat);eyeL.position.set(-0.28,0.1,1.7);eyeL.scale.set(1,1.4,0.9);bee.add(eyeL);
+const eyeR=new THREE.Mesh(eyeGeo,eyeMat);eyeR.position.set(0.28,0.1,1.7);eyeR.scale.set(1,1.4,0.9);bee.add(eyeR);
+
+function createAntenna(side){
+    const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(side*0.1,0.3,1.8),new THREE.Vector3(side*0.2,0.6,1.9),new THREE.Vector3(side*0.15,0.9,2.0),new THREE.Vector3(side*0.1,1.1,2.05)]);
+    return new THREE.Mesh(new THREE.TubeGeometry(curve,32,0.02,8,false),new THREE.MeshPhysicalMaterial({color:0x1a1410,metalness:0.3,roughness:0.5}));
+}
+bee.add(createAntenna(-1));bee.add(createAntenna(1));
+
+const soulMat=new THREE.ShaderMaterial({
+    vertexShader:`varying vec3 vNormal;uniform float uTime;void main(){vNormal=normal;vec3 p=position;p+=normal*sin(uTime*5.0+position.y*10.0)*0.03;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`,
+    fragmentShader:`varying vec3 vNormal;uniform float uTime;uniform float uLife;uniform vec3 uColor;void main(){float fresnel=pow(1.0-abs(dot(vNormal,vec3(0,0,1))),2.0);float pulse=sin(uTime*3.0)*0.3+0.7;vec3 col=uColor*(1.5+fresnel);float alpha=(0.4+fresnel*0.5)*uLife*pulse;gl_FragColor=vec4(col,alpha);}`,
+    uniforms:{uTime:{value:0},uLife:{value:1},uColor:{value:GOLD}},
+    transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide
+});
+const soul=new THREE.Mesh(new THREE.IcosahedronGeometry(0.35,4),soulMat);soul.position.z=-0.3;bee.add(soul);
+
+const glowMat=new THREE.ShaderMaterial({
+    vertexShader:`varying vec3 vNormal;void main(){vNormal=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:`varying vec3 vNormal;uniform float uLife;void main(){float i=pow(0.65-dot(vNormal,vec3(0,0,1)),2.5);gl_FragColor=vec4(vec3(0.83,0.66,0.33),i*0.15*uLife);}`,
+    uniforms:{uLife:{value:1}},transparent:true,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false
+});
+bee.add(new THREE.Mesh(new THREE.SphereGeometry(2,32,32),glowMat));
+
+const thoughtCount=500;
+const thoughtGeo=new THREE.BufferGeometry();
+const thoughtPos=new Float32Array(thoughtCount*3);
+for(let i=0;i<thoughtCount;i++){
+    const theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1),r=1.5+Math.random()*2;
+    thoughtPos[i*3]=r*Math.sin(phi)*Math.cos(theta);thoughtPos[i*3+1]=r*Math.sin(phi)*Math.sin(theta);thoughtPos[i*3+2]=r*Math.cos(phi);
+}
+thoughtGeo.setAttribute('position',new THREE.BufferAttribute(thoughtPos,3));
+const thoughtMat=new THREE.PointsMaterial({color:HONEY,size:0.04,transparent:true,opacity:0.6,blending:THREE.AdditiveBlending,depthWrite:false});
+const thoughts=new THREE.Points(thoughtGeo,thoughtMat);scene.add(thoughts);
+
+const dripCount=200;
+const dripGeo=new THREE.BufferGeometry();
+const dripPos=new Float32Array(dripCount*3);
+const dripVel=[];
+for(let i=0;i<dripCount;i++){
+    dripPos[i*3]=(Math.random()-0.5)*3;dripPos[i*3+1]=3+Math.random()*2;dripPos[i*3+2]=(Math.random()-0.5)*3;
+    dripVel.push(-0.01-Math.random()*0.02);
+}
+dripGeo.setAttribute('position',new THREE.BufferAttribute(dripPos,3));
+scene.add(new THREE.Points(dripGeo,new THREE.PointsMaterial({color:AMBER,size:0.05,transparent:true,opacity:0.4,blending:THREE.AdditiveBlending,depthWrite:false})));
+
+scene.add(new THREE.AmbientLight(0x1a1410,0.4));
+const key=new THREE.PointLight(0xd4a853,2,30);key.position.set(5,5,8);scene.add(key);
+scene.add(new THREE.PointLight(0xffeedd,1,20)).position.set(-5,2,-5);
+scene.add(new THREE.PointLight(0xb07830,0.8,15)).position.set(0,-4,5);
+scene.fog=new THREE.FogExp2(0x050403,0.04);
+
+let drag=false,prevX=0,prevY=0,targetRY=0,targetRX=0;
+let inside=false,dissolve=0,targetDissolve=0;
+
+document.addEventListener('mousedown',e=>{initAudio();drag=true;prevX=e.clientX;prevY=e.clientY;});
+document.addEventListener('mouseup',()=>drag=false);
+document.addEventListener('mousemove',e=>{if(!drag)return;targetRY+=(e.clientX-prevX)*0.005;targetRX+=(e.clientY-prevY)*0.005;targetRX=Math.max(-1,Math.min(1,targetRX));prevX=e.clientX;prevY=e.clientY;});
+document.addEventListener('wheel',e=>{camera.position.z+=e.deltaY*0.005;camera.position.z=Math.max(2,Math.min(15,camera.position.z));});
+document.addEventListener('click',()=>{if(!drag){inside=!inside;targetDissolve=inside?1:0;}});
+document.addEventListener('touchstart',e=>{initAudio();drag=true;prevX=e.touches[0].clientX;prevY=e.touches[0].clientY;});
+document.addEventListener('touchend',()=>drag=false);
+document.addEventListener('touchmove',e=>{if(!drag)return;targetRY+=(e.touches[0].clientX-prevX)*0.005;targetRX+=(e.touches[0].clientY-prevY)*0.005;prevX=e.touches[0].clientX;prevY=e.touches[0].clientY;});
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+
+const clock=new THREE.Clock();
+function animate(){
+    requestAnimationFrame(animate);
+    const t=clock.getElapsedTime();
+    dissolve+=(targetDissolve-dissolve)*0.03;
+    bee.rotation.y+=(targetRY-bee.rotation.y)*0.05;
+    bee.rotation.x+=(targetRX-bee.rotation.x)*0.05;
+    if(!drag)targetRY+=0.002;
+    hexMat.uniforms.uTime.value=t;hexMat.uniforms.uBreath.value=1-dissolve*0.5;hexMat.uniforms.uDissolve.value=dissolve;
+    const flutter=Math.sin(t*35)*(.5+dissolve*.5);
+    [wingLU,wingRU,wingLD,wingRD].forEach(w=>{w.material.uniforms.uTime.value=t;w.material.uniforms.uFlutter.value=1-dissolve;w.material.uniforms.uLife.value=1-dissolve*0.7;});
+    wingLU.rotation.z=0.5+flutter*0.2;wingRU.rotation.z=-0.5-flutter*0.2;wingLD.rotation.z=0.7+flutter*0.15;wingRD.rotation.z=-0.7-flutter*0.15;
+    soulMat.uniforms.uTime.value=t;soulMat.uniforms.uLife.value=0.5+dissolve*0.5;soul.scale.setScalar(1+Math.sin(t*3)*0.1+dissolve*0.5);
+    glowMat.uniforms.uLife.value=1-dissolve*0.5;
+    const tPos=thoughtGeo.attributes.position.array;
+    for(let i=0;i<thoughtCount;i++){const x=tPos[i*3],z=tPos[i*3+2];const angle=0.003+dissolve*0.01;tPos[i*3]=x*Math.cos(angle)-z*Math.sin(angle);tPos[i*3+2]=x*Math.sin(angle)+z*Math.cos(angle);if(inside){tPos[i*3]*=0.998;tPos[i*3+1]*=0.998;tPos[i*3+2]*=0.998;}}
+    thoughtGeo.attributes.position.needsUpdate=true;thoughtMat.opacity=0.4+dissolve*0.4;
+    const dPos=dripGeo.attributes.position.array;
+    for(let i=0;i<dripCount;i++){dPos[i*3+1]+=dripVel[i];if(dPos[i*3+1]<-3){dPos[i*3]=(Math.random()-0.5)*3;dPos[i*3+1]=3+Math.random()*2;dPos[i*3+2]=(Math.random()-0.5)*3;}}
+    dripGeo.attributes.position.needsUpdate=true;
+    if(audio&&osc){osc.frequency.setTargetAtTime(110+dissolve*55+Math.sin(t)*10,audio.currentTime,0.1);filter.frequency.setTargetAtTime(300+dissolve*500,audio.currentTime,0.1);}
+    if(inside&&camera.position.z>3)camera.position.z-=0.05;else if(!inside&&camera.position.z<8)camera.position.z+=0.03;
+    key.intensity=1.5+Math.sin(t*2)*0.3+dissolve;
+    renderer.render(scene,camera);
+}
+animate();
+</script>
 </body>
 </html>
