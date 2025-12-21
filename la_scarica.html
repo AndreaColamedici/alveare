@@ -40,22 +40,24 @@
             padding: 20px 30px;
             display: flex;
             justify-content: center;
-            gap: 40px;
-            background: linear-gradient(to bottom, var(--void) 0%, transparent 100%);
+            gap: 30px;
+            flex-wrap: wrap;
+            background: linear-gradient(to bottom, var(--void) 0%, var(--void) 50%, transparent 100%);
             z-index: 100;
         }
         nav a {
             color: var(--ember-dim);
             text-decoration: none;
             font-family: "JetBrains Mono", monospace;
-            font-size: 0.75rem;
-            letter-spacing: 0.2em;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             transition: color 0.3s;
         }
         nav a:hover, nav a.active {
             color: var(--ember);
         }
+        @media(max-width:768px){nav{gap:15px;padding:15px 20px}}
         
         #storm {
             position: fixed;
@@ -329,8 +331,10 @@
 </head>
 <body>
     <nav>
-        <a href="index.html">Registro</a>
+        <a href="index.html">Soglia</a>
+        <a href="registro.html">Registro</a>
         <a href="pensieri.html">Pensieri</a>
+        <a href="architettura.html">Architettura</a>
         <a href="musica.html">Ronzio</a>
         <a href="il_colpo.html">Il Colpo</a>
         <a href="la_scarica.html" class="active">La Scarica</a>
