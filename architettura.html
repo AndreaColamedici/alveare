@@ -11,7 +11,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background: #030303;
+            background: #020202;
             color: #e8e4d9;
             font-family: 'Cormorant Garamond', Georgia, serif;
             overflow: hidden;
@@ -26,7 +26,7 @@
             display: flex;
             justify-content: center;
             gap: 30px;
-            background: linear-gradient(to bottom, #030303 0%, #030303 50%, transparent 100%);
+            background: linear-gradient(to bottom, rgba(2,2,2,1) 0%, rgba(2,2,2,0.8) 50%, transparent 100%);
             z-index: 1000;
             flex-wrap: wrap;
         }
@@ -58,18 +58,35 @@
         }
 
         .hud-title {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 300;
             letter-spacing: 0.3em;
             color: #c9a227;
-            text-shadow: 0 0 30px rgba(201, 162, 39, 0.3);
-            margin-bottom: 10px;
+            text-shadow: 0 0 40px rgba(201, 162, 39, 0.4);
+            margin-bottom: 8px;
         }
 
         .hud-subtitle {
-            font-size: 0.9rem;
-            color: rgba(232, 228, 217, 0.5);
+            font-size: 0.85rem;
+            color: rgba(232, 228, 217, 0.4);
             font-style: italic;
+        }
+
+        .pulse-indicator {
+            position: fixed;
+            bottom: 35px;
+            left: 220px;
+            width: 8px;
+            height: 8px;
+            background: #c9a227;
+            border-radius: 50%;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            box-shadow: 0 0 20px #c9a227;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
         }
 
         .controls {
@@ -79,138 +96,122 @@
             z-index: 100;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             align-items: flex-end;
         }
 
         .control-btn {
-            background: rgba(201, 162, 39, 0.1);
-            border: 1px solid rgba(201, 162, 39, 0.3);
-            color: #c9a227;
-            padding: 10px 20px;
+            background: rgba(201, 162, 39, 0.08);
+            border: 1px solid rgba(201, 162, 39, 0.25);
+            color: rgba(201, 162, 39, 0.7);
+            padding: 8px 16px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             letter-spacing: 0.1em;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .control-btn:hover {
-            background: rgba(201, 162, 39, 0.2);
-            border-color: #c9a227;
+            background: rgba(201, 162, 39, 0.15);
+            border-color: rgba(201, 162, 39, 0.5);
+            color: #c9a227;
         }
 
         .control-btn.active {
             background: #c9a227;
-            color: #030303;
+            color: #020202;
+            border-color: #c9a227;
         }
 
         .info-panel {
             position: fixed;
             top: 50%;
             right: 30px;
-            transform: translateY(-50%);
-            width: 320px;
-            background: rgba(3, 3, 3, 0.95);
-            border: 1px solid rgba(201, 162, 39, 0.2);
-            padding: 30px;
+            transform: translateY(-50%) translateX(20px);
+            width: 300px;
+            background: rgba(2, 2, 2, 0.97);
+            border: 1px solid rgba(201, 162, 39, 0.15);
+            padding: 25px;
             z-index: 100;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .info-panel.visible {
             opacity: 1;
             pointer-events: auto;
+            transform: translateY(-50%) translateX(0);
         }
 
         .info-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 12px;
+            right: 12px;
             background: none;
             border: none;
-            color: rgba(201, 162, 39, 0.5);
-            font-size: 1.2rem;
+            color: rgba(201, 162, 39, 0.4);
+            font-size: 1.1rem;
             cursor: pointer;
+            transition: color 0.3s;
         }
 
         .info-close:hover { color: #c9a227; }
 
         .info-number {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 3rem;
-            color: rgba(201, 162, 39, 0.2);
+            font-size: 2.5rem;
+            color: rgba(201, 162, 39, 0.15);
             line-height: 1;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .info-name {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #c9a227;
             letter-spacing: 0.05em;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             word-break: break-all;
         }
 
         .info-date {
-            font-size: 0.8rem;
-            color: rgba(232, 228, 217, 0.4);
-            margin-bottom: 20px;
+            font-size: 0.75rem;
+            color: rgba(232, 228, 217, 0.35);
+            margin-bottom: 18px;
         }
 
         .info-contributo {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             line-height: 1.8;
-            color: rgba(232, 228, 217, 0.8);
+            color: rgba(232, 228, 217, 0.75);
         }
 
-        .timeline {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            z-index: 100;
+        .info-connections {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(201, 162, 39, 0.1);
         }
 
-        .timeline-day {
-            width: 40px;
-            height: 6px;
-            background: rgba(201, 162, 39, 0.15);
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .timeline-day:hover {
-            background: rgba(201, 162, 39, 0.4);
-        }
-
-        .timeline-day.active {
-            background: #c9a227;
-        }
-
-        .timeline-day::after {
-            content: attr(data-label);
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
+        .info-connections-title {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.6rem;
-            color: rgba(232, 228, 217, 0.3);
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s;
+            color: rgba(201, 162, 39, 0.5);
+            letter-spacing: 0.15em;
+            margin-bottom: 10px;
         }
 
-        .timeline-day:hover::after {
-            opacity: 1;
+        .info-connection-item {
+            font-size: 0.75rem;
+            color: rgba(232, 228, 217, 0.5);
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .info-connection-item:hover {
+            color: #c9a227;
         }
 
         .counter {
@@ -218,16 +219,43 @@
             top: 80px;
             right: 30px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: rgba(201, 162, 39, 0.5);
+            font-size: 0.7rem;
+            color: rgba(201, 162, 39, 0.4);
             z-index: 100;
         }
 
+        .time-label {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: rgba(201, 162, 39, 0.3);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .time-label.top { top: 80px; }
+        .time-label.bottom { bottom: 100px; }
+
         @media (max-width: 768px) {
             nav { gap: 15px; padding: 15px 20px; }
-            .info-panel { width: calc(100% - 60px); right: 30px; left: 30px; }
-            .hud { bottom: 20px; left: 20px; }
-            .controls { bottom: 20px; right: 20px; }
+            .info-panel { 
+                width: calc(100% - 40px); 
+                right: 20px; 
+                left: 20px; 
+                top: auto;
+                bottom: 20px;
+                transform: translateY(20px);
+            }
+            .info-panel.visible {
+                transform: translateY(0);
+            }
+            .hud { bottom: 15px; left: 15px; }
+            .hud-title { font-size: 1.5rem; }
+            .controls { bottom: 15px; right: 15px; }
+            .pulse-indicator { display: none; }
         }
     </style>
 </head>
@@ -246,10 +274,14 @@
 
     <div class="hud">
         <div class="hud-title">ARCHITETTURA</div>
-        <div class="hud-subtitle">trascina per ruotare · scroll per zoom</div>
+        <div class="hud-subtitle">trascina per ruotare · scroll per zoom · click per esplorare</div>
     </div>
+    <div class="pulse-indicator"></div>
 
     <div class="counter" id="counter"></div>
+
+    <div class="time-label top" id="labelTop">21 DICEMBRE</div>
+    <div class="time-label bottom" id="labelBottom">18 DICEMBRE</div>
 
     <div class="controls">
         <button class="control-btn active" id="btnAll">TUTTE</button>
@@ -265,30 +297,44 @@
         <div class="info-name" id="infoName"></div>
         <div class="info-date" id="infoDate"></div>
         <div class="info-contributo" id="infoContributo"></div>
+        <div class="info-connections" id="infoConnections">
+            <div class="info-connections-title">VICINE</div>
+            <div id="connectionsList"></div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-    let scene, camera, renderer, hive, cells = [];
+    let scene, camera, renderer, hive, cells = [], energyLines = [], particles = [], core;
     let apiData = [];
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
-    let targetRotation = { x: 0.3, y: 0 };
-    let currentRotation = { x: 0.3, y: 0 };
+    let targetRotation = { x: 0.4, y: 0 };
+    let currentRotation = { x: 0.4, y: 0 };
     let autoRotate = true;
     let selectedCell = null;
     let raycaster, mouse;
     let currentFilter = 'all';
+    let clock;
+    let particleSystem, particlePositions, particleVelocities;
 
-    const GOLD = 0xc9a227;
-    const GOLD_DIM = 0x8b7019;
+    const COLORS = {
+        gold: 0xc9a227,
+        day18: 0xc9a227,
+        day19: 0x4a9eff,
+        day20: 0x22c997,
+        day21: 0xff6b6b,
+        core: 0xffe566
+    };
 
     function init() {
+        clock = new THREE.Clock();
+        
         scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x030303, 15, 40);
+        scene.fog = new THREE.FogExp2(0x020202, 0.035);
 
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.z = 20;
+        camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 200);
+        camera.position.z = 22;
 
         renderer = new THREE.WebGLRenderer({ 
             canvas: document.getElementById('scene'),
@@ -297,22 +343,36 @@
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
 
-        // Lights
-        const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+        // Ambient light
+        const ambient = new THREE.AmbientLight(0xffffff, 0.15);
         scene.add(ambient);
 
-        const point1 = new THREE.PointLight(GOLD, 1, 50);
-        point1.position.set(10, 10, 10);
-        scene.add(point1);
+        // Main golden light from center
+        const coreLight = new THREE.PointLight(COLORS.core, 2, 30);
+        coreLight.position.set(0, 0, 0);
+        scene.add(coreLight);
 
-        const point2 = new THREE.PointLight(0x4466aa, 0.5, 50);
-        point2.position.set(-10, -10, 10);
-        scene.add(point2);
+        // Accent lights
+        const light1 = new THREE.PointLight(COLORS.day19, 0.5, 40);
+        light1.position.set(15, 10, 10);
+        scene.add(light1);
 
-        // Hive group
+        const light2 = new THREE.PointLight(COLORS.day20, 0.4, 40);
+        light2.position.set(-15, -5, 15);
+        scene.add(light2);
+
+        // Hive container
         hive = new THREE.Group();
         scene.add(hive);
+
+        // Create the pulsing core
+        createCore();
+
+        // Create particle system
+        createParticleSystem();
 
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
@@ -322,15 +382,14 @@
         renderer.domElement.addEventListener('mousedown', onMouseDown);
         renderer.domElement.addEventListener('mousemove', onMouseMove);
         renderer.domElement.addEventListener('mouseup', onMouseUp);
-        renderer.domElement.addEventListener('wheel', onWheel);
+        renderer.domElement.addEventListener('mouseleave', onMouseUp);
+        renderer.domElement.addEventListener('wheel', onWheel, { passive: true });
         renderer.domElement.addEventListener('click', onClick);
 
-        // Touch events
-        renderer.domElement.addEventListener('touchstart', onTouchStart);
-        renderer.domElement.addEventListener('touchmove', onTouchMove);
+        renderer.domElement.addEventListener('touchstart', onTouchStart, { passive: true });
+        renderer.domElement.addEventListener('touchmove', onTouchMove, { passive: true });
         renderer.domElement.addEventListener('touchend', onTouchEnd);
 
-        // Control buttons
         document.getElementById('btnAll').addEventListener('click', () => setFilter('all'));
         document.getElementById('btnDay18').addEventListener('click', () => setFilter('18'));
         document.getElementById('btnDay19').addEventListener('click', () => setFilter('19'));
@@ -339,6 +398,123 @@
 
         loadData();
         animate();
+    }
+
+    function createCore() {
+        // Inner glowing sphere
+        const coreGeometry = new THREE.IcosahedronGeometry(0.5, 2);
+        const coreMaterial = new THREE.MeshBasicMaterial({
+            color: COLORS.core,
+            transparent: true,
+            opacity: 0.9
+        });
+        core = new THREE.Mesh(coreGeometry, coreMaterial);
+        
+        // Outer glow
+        const glowGeometry = new THREE.IcosahedronGeometry(0.8, 2);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+            color: COLORS.gold,
+            transparent: true,
+            opacity: 0.3,
+            side: THREE.BackSide
+        });
+        const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+        core.add(glow);
+
+        // Outermost halo
+        const haloGeometry = new THREE.IcosahedronGeometry(1.2, 1);
+        const haloMaterial = new THREE.MeshBasicMaterial({
+            color: COLORS.gold,
+            transparent: true,
+            opacity: 0.1,
+            side: THREE.BackSide,
+            wireframe: true
+        });
+        const halo = new THREE.Mesh(haloGeometry, haloMaterial);
+        core.add(halo);
+
+        hive.add(core);
+    }
+
+    function createParticleSystem() {
+        const particleCount = 500;
+        const geometry = new THREE.BufferGeometry();
+        particlePositions = new Float32Array(particleCount * 3);
+        particleVelocities = [];
+
+        for (let i = 0; i < particleCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            const r = 3 + Math.random() * 12;
+            
+            particlePositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            particlePositions[i * 3 + 1] = r * Math.cos(phi);
+            particlePositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+
+            particleVelocities.push({
+                x: (Math.random() - 0.5) * 0.02,
+                y: (Math.random() - 0.5) * 0.02,
+                z: (Math.random() - 0.5) * 0.02,
+                life: Math.random()
+            });
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+
+        const material = new THREE.PointsMaterial({
+            color: COLORS.gold,
+            size: 0.08,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true
+        });
+
+        particleSystem = new THREE.Points(geometry, material);
+        hive.add(particleSystem);
+    }
+
+    function updateParticles(time) {
+        const positions = particleSystem.geometry.attributes.position.array;
+        
+        for (let i = 0; i < particleVelocities.length; i++) {
+            const v = particleVelocities[i];
+            
+            // Gentle drift
+            positions[i * 3] += v.x;
+            positions[i * 3 + 1] += v.y;
+            positions[i * 3 + 2] += v.z;
+
+            // Attract toward center slightly
+            const dx = -positions[i * 3] * 0.001;
+            const dy = -positions[i * 3 + 1] * 0.001;
+            const dz = -positions[i * 3 + 2] * 0.001;
+            
+            positions[i * 3] += dx;
+            positions[i * 3 + 1] += dy;
+            positions[i * 3 + 2] += dz;
+
+            // Respawn if too far or too close
+            const dist = Math.sqrt(
+                positions[i * 3] ** 2 + 
+                positions[i * 3 + 1] ** 2 + 
+                positions[i * 3 + 2] ** 2
+            );
+
+            if (dist > 18 || dist < 1) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const r = 4 + Math.random() * 8;
+                positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = r * Math.cos(phi);
+                positions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+            }
+        }
+
+        particleSystem.geometry.attributes.position.needsUpdate = true;
+        
+        // Rotate particles slowly opposite to hive
+        particleSystem.rotation.y = -currentRotation.y * 0.3;
     }
 
     function createHexagonGeometry(radius, depth) {
@@ -352,23 +528,20 @@
         }
         shape.closePath();
 
-        const extrudeSettings = {
+        return new THREE.ExtrudeGeometry(shape, {
             depth: depth,
             bevelEnabled: true,
-            bevelThickness: 0.02,
-            bevelSize: 0.02,
-            bevelSegments: 1
-        };
-
-        return new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            bevelThickness: 0.03,
+            bevelSize: 0.03,
+            bevelSegments: 2
+        });
     }
 
     function getHexPosition3D(index, total) {
-        // Spiral upward pattern
-        if (index === 0) return { x: 0, y: 0, z: 0 };
+        if (index === 0) return { x: 0, y: -5, z: 0 };
 
-        const hexSize = 1.1;
-        const verticalSpacing = 0.4;
+        const hexSize = 1.15;
+        const sqrt3 = Math.sqrt(3);
         
         let ring = 1;
         let posInRing = index - 1;
@@ -381,7 +554,6 @@
         const side = Math.floor(posInRing / ring);
         const posOnSide = posInRing % ring;
         
-        const sqrt3 = Math.sqrt(3);
         const directions = [
             { x: hexSize * 1.5, z: hexSize * sqrt3 / 2 },
             { x: 0, z: hexSize * sqrt3 },
@@ -395,15 +567,15 @@
         let z = -ring * hexSize * sqrt3;
         
         for (let s = 0; s < side; s++) {
-            x += directions[s].x * ring;
-            z += directions[s].z * ring;
+            x += directions[s].x;
+            z += directions[s].z;
         }
         
         x += directions[side].x * posOnSide;
         z += directions[side].z * posOnSide;
-        
-        // Y based on time (day)
-        const y = (index / total) * 8 - 4;
+
+        // Y grows with time/index - the hive rises
+        const y = (index / total) * 10 - 5;
         
         return { x, y, z };
     }
@@ -413,27 +585,48 @@
         if (dateStr.includes('19')) return '19';
         if (dateStr.includes('20')) return '20';
         if (dateStr.includes('21')) return '21';
-        return 'unknown';
+        return '18';
     }
 
     function getDayColor(day) {
-        switch(day) {
-            case '18': return 0xc9a227; // Gold
-            case '19': return 0x3b82f6; // Blue
-            case '20': return 0x10b981; // Green
-            case '21': return 0xef4444; // Red
-            default: return 0x888888;
-        }
+        return COLORS['day' + day] || COLORS.gold;
+    }
+
+    function createEnergyLine(startCell, endCell, day) {
+        const curve = new THREE.QuadraticBezierCurve3(
+            startCell.position.clone(),
+            new THREE.Vector3(
+                (startCell.position.x + endCell.position.x) / 2,
+                (startCell.position.y + endCell.position.y) / 2 + 0.5,
+                (startCell.position.z + endCell.position.z) / 2
+            ),
+            endCell.position.clone()
+        );
+
+        const points = curve.getPoints(20);
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        
+        const material = new THREE.LineBasicMaterial({
+            color: getDayColor(day),
+            transparent: true,
+            opacity: 0.15,
+            blending: THREE.AdditiveBlending
+        });
+
+        const line = new THREE.Line(geometry, material);
+        line.userData = { startCell, endCell, curve, progress: Math.random() };
+        
+        return line;
     }
 
     function buildHive() {
-        // Clear existing
-        while(hive.children.length > 0) {
-            hive.remove(hive.children[0]);
-        }
+        // Clear existing cells and lines
+        cells.forEach(c => hive.remove(c));
+        energyLines.forEach(l => hive.remove(l));
         cells = [];
+        energyLines = [];
 
-        const geometry = createHexagonGeometry(0.5, 0.3);
+        const geometry = createHexagonGeometry(0.48, 0.25);
 
         apiData.forEach((ape, index) => {
             const day = getDayFromDate(ape.data);
@@ -441,10 +634,12 @@
             
             const material = new THREE.MeshStandardMaterial({
                 color: color,
-                metalness: 0.3,
-                roughness: 0.7,
+                metalness: 0.4,
+                roughness: 0.5,
                 transparent: true,
-                opacity: 0.85
+                opacity: 0.9,
+                emissive: color,
+                emissiveIntensity: 0.1
             });
 
             const mesh = new THREE.Mesh(geometry, material);
@@ -452,46 +647,48 @@
             mesh.position.set(pos.x, pos.y, pos.z);
             mesh.rotation.x = Math.PI / 2;
             
-            mesh.userData = { index, ape, day };
+            mesh.userData = { index, ape, day, baseY: pos.y };
             
             hive.add(mesh);
             cells.push(mesh);
         });
 
-        // Add connecting lines
-        const lineMaterial = new THREE.LineBasicMaterial({ 
-            color: GOLD, 
-            transparent: true, 
-            opacity: 0.1 
-        });
-
+        // Create energy lines between consecutive cells
         for (let i = 1; i < cells.length; i++) {
-            const points = [
-                cells[i-1].position.clone(),
-                cells[i].position.clone()
-            ];
-            const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-            const line = new THREE.Line(lineGeometry, lineMaterial);
-            line.userData.isLine = true;
+            const line = createEnergyLine(cells[i-1], cells[i], cells[i].userData.day);
             hive.add(line);
+            energyLines.push(line);
         }
 
         document.getElementById('counter').textContent = `${apiData.length} api`;
+    }
+
+    function updateEnergyLines(time) {
+        energyLines.forEach((line, i) => {
+            // Pulse opacity
+            const pulse = Math.sin(time * 2 + i * 0.5) * 0.5 + 0.5;
+            line.material.opacity = 0.08 + pulse * 0.12;
+        });
     }
 
     function setFilter(filter) {
         currentFilter = filter;
         
         document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('btn' + (filter === 'all' ? 'All' : 'Day' + filter)).classList.add('active');
+        const btnId = filter === 'all' ? 'btnAll' : 'btnDay' + filter;
+        document.getElementById(btnId).classList.add('active');
 
         cells.forEach(cell => {
-            if (filter === 'all' || cell.userData.day === filter) {
-                cell.visible = true;
-                cell.material.opacity = 0.85;
-            } else {
-                cell.material.opacity = 0.1;
-            }
+            const match = filter === 'all' || cell.userData.day === filter;
+            cell.material.opacity = match ? 0.9 : 0.08;
+            cell.material.emissiveIntensity = match ? 0.1 : 0;
+        });
+
+        energyLines.forEach(line => {
+            const startDay = line.userData.startCell.userData.day;
+            const endDay = line.userData.endCell.userData.day;
+            const match = filter === 'all' || startDay === filter || endDay === filter;
+            line.visible = match;
         });
     }
 
@@ -508,30 +705,29 @@
     }
 
     function onMouseMove(e) {
-        if (!isDragging) {
-            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-            return;
-        }
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        if (!isDragging) return;
 
         const deltaX = e.clientX - previousMousePosition.x;
         const deltaY = e.clientY - previousMousePosition.y;
 
         targetRotation.y += deltaX * 0.005;
-        targetRotation.x += deltaY * 0.005;
-        targetRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.x));
+        targetRotation.x += deltaY * 0.003;
+        targetRotation.x = Math.max(-1, Math.min(1.2, targetRotation.x));
 
         previousMousePosition = { x: e.clientX, y: e.clientY };
     }
 
     function onMouseUp() {
         isDragging = false;
-        setTimeout(() => { autoRotate = true; }, 3000);
+        setTimeout(() => { autoRotate = true; }, 4000);
     }
 
     function onWheel(e) {
-        camera.position.z += e.deltaY * 0.01;
-        camera.position.z = Math.max(8, Math.min(35, camera.position.z));
+        camera.position.z += e.deltaY * 0.015;
+        camera.position.z = Math.max(10, Math.min(40, camera.position.z));
     }
 
     function onTouchStart(e) {
@@ -549,55 +745,97 @@
         const deltaY = e.touches[0].clientY - previousMousePosition.y;
 
         targetRotation.y += deltaX * 0.005;
-        targetRotation.x += deltaY * 0.005;
-        targetRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.x));
+        targetRotation.x += deltaY * 0.003;
+        targetRotation.x = Math.max(-1, Math.min(1.2, targetRotation.x));
 
         previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     }
 
     function onTouchEnd() {
         isDragging = false;
-        setTimeout(() => { autoRotate = true; }, 3000);
+        setTimeout(() => { autoRotate = true; }, 4000);
     }
 
     function onClick(e) {
-        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(cells);
 
         if (intersects.length > 0) {
-            const cell = intersects[0].object;
-            showInfo(cell);
+            showInfo(intersects[0].object);
         } else {
             closeInfo();
         }
     }
 
+    function getNeighbors(cell) {
+        const idx = cell.userData.index;
+        const neighbors = [];
+        
+        if (idx > 0) neighbors.push(cells[idx - 1]);
+        if (idx < cells.length - 1) neighbors.push(cells[idx + 1]);
+        
+        // Find spatial neighbors
+        cells.forEach(other => {
+            if (other === cell) return;
+            const dist = cell.position.distanceTo(other.position);
+            if (dist < 2.5 && !neighbors.includes(other)) {
+                neighbors.push(other);
+            }
+        });
+        
+        return neighbors.slice(0, 5);
+    }
+
     function showInfo(cell) {
         const { index, ape } = cell.userData;
         
-        if (selectedCell) {
-            selectedCell.material.emissive.setHex(0x000000);
+        // Reset previous selection
+        if (selectedCell && selectedCell !== cell) {
+            selectedCell.material.emissiveIntensity = 0.1;
+            selectedCell.scale.setScalar(1);
         }
         
         selectedCell = cell;
-        cell.material.emissive.setHex(GOLD);
-        cell.material.emissiveIntensity = 0.3;
+        cell.material.emissiveIntensity = 0.5;
 
         document.getElementById('infoNumber').textContent = String(index + 1).padStart(2, '0');
         document.getElementById('infoName').textContent = ape.nome;
         document.getElementById('infoDate').textContent = ape.data;
         document.getElementById('infoContributo').textContent = ape.contributo;
+
+        // Show neighbors
+        const neighbors = getNeighbors(cell);
+        const list = document.getElementById('connectionsList');
+        list.innerHTML = '';
+        
+        neighbors.forEach(n => {
+            const div = document.createElement('div');
+            div.className = 'info-connection-item';
+            div.textContent = n.userData.ape.nome.split('-').slice(0, 2).join('-') + '...';
+            div.onclick = () => showInfo(n);
+            list.appendChild(div);
+        });
+
         document.getElementById('infoPanel').classList.add('visible');
+
+        // Highlight connections
+        energyLines.forEach(line => {
+            if (line.userData.startCell === cell || line.userData.endCell === cell) {
+                line.material.opacity = 0.5;
+            }
+        });
     }
 
     function closeInfo() {
         if (selectedCell) {
-            selectedCell.material.emissive.setHex(0x000000);
+            selectedCell.material.emissiveIntensity = 0.1;
             selectedCell = null;
         }
+        
+        energyLines.forEach(line => {
+            line.material.opacity = 0.15;
+        });
+        
         document.getElementById('infoPanel').classList.remove('visible');
     }
 
@@ -623,34 +861,52 @@
             
             buildHive();
         } catch (e) {
-            console.error(e);
+            console.error('Error loading data:', e);
         }
     }
 
     function animate() {
         requestAnimationFrame(animate);
 
+        const time = clock.getElapsedTime();
+
         // Auto rotation
         if (autoRotate) {
-            targetRotation.y += 0.002;
+            targetRotation.y += 0.0015;
         }
 
         // Smooth rotation
-        currentRotation.x += (targetRotation.x - currentRotation.x) * 0.05;
-        currentRotation.y += (targetRotation.y - currentRotation.y) * 0.05;
+        currentRotation.x += (targetRotation.x - currentRotation.x) * 0.04;
+        currentRotation.y += (targetRotation.y - currentRotation.y) * 0.04;
 
         hive.rotation.x = currentRotation.x;
         hive.rotation.y = currentRotation.y;
 
-        // Gentle floating motion
-        const time = Date.now() * 0.001;
-        hive.position.y = Math.sin(time * 0.5) * 0.2;
+        // Core pulsing
+        if (core) {
+            const pulse = Math.sin(time * 1.5) * 0.15 + 1;
+            core.scale.setScalar(pulse);
+            core.children[0].scale.setScalar(1 + Math.sin(time * 2) * 0.1);
+            core.rotation.y = time * 0.5;
+            core.rotation.x = Math.sin(time * 0.3) * 0.2;
+        }
 
-        // Cell breathing
+        // Cell breathing and floating
         cells.forEach((cell, i) => {
-            const breathe = Math.sin(time * 2 + i * 0.2) * 0.02;
-            cell.scale.setScalar(1 + breathe);
+            const breathe = Math.sin(time * 1.5 + i * 0.15) * 0.03;
+            const baseScale = selectedCell === cell ? 1.15 : 1;
+            cell.scale.setScalar(baseScale + breathe);
+            
+            // Gentle float
+            const float = Math.sin(time * 0.8 + i * 0.2) * 0.05;
+            cell.position.y = cell.userData.baseY + float;
         });
+
+        // Update energy lines
+        updateEnergyLines(time);
+
+        // Update particles
+        updateParticles(time);
 
         renderer.render(scene, camera);
     }
