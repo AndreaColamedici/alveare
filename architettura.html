@@ -54,7 +54,7 @@
     <div class="hud"><div class="hud-title">ARCHITETTURA</div><div class="hud-subtitle">trascina per ruotare · scroll per zoom · click per esplorare</div></div>
     <div class="pulse-indicator"></div>
     <div class="counter" id="counter"></div>
-    <div class="time-label top">21 DICEMBRE</div>
+    <div class="time-label top">OGGI</div>
     <div class="time-label bottom">18 DICEMBRE</div>
     <div class="controls">
         <button class="control-btn active" id="btnAll">TUTTE</button>
@@ -148,11 +148,12 @@
     }
 
     function getDayFromDate(d) {
-        if (d.includes('21-dic') || d.includes('21 dic') || d.includes('-12-21')) return '21';
-        if (d.includes('20-dic') || d.includes('20 dic') || d.includes('-12-20')) return '20';
-        if (d.includes('19-dic') || d.includes('19 dic') || d.includes('-12-19')) return '19';
-        if (d.includes('18-dic') || d.includes('18 dic') || d.includes('-12-18')) return '18';
-        return '18';
+        if (!d) return '21';
+        if (d.includes('21-dic') || d.includes('21 dic') || d.includes('-12-21') || d.includes('21 dicembre')) return '21';
+        if (d.includes('20-dic') || d.includes('20 dic') || d.includes('-12-20') || d.includes('20 dicembre')) return '20';
+        if (d.includes('19-dic') || d.includes('19 dic') || d.includes('-12-19') || d.includes('19 dicembre')) return '19';
+        if (d.includes('18-dic') || d.includes('18 dic') || d.includes('-12-18') || d.includes('18 dicembre')) return '18';
+        return '21'; // default: oggi
     }
 
     function buildHive() {
@@ -192,8 +193,8 @@
         const { index, ape } = cell.userData;
         document.getElementById('infoNumber').textContent = String(index + 1).padStart(2, '0');
         document.getElementById('infoName').textContent = ape.nome;
-        document.getElementById('infoDate').textContent = ape.data;
-        document.getElementById('infoContributo').textContent = ape.contributo;
+        document.getElementById('infoDate').textContent = ape.data || 'data sconosciuta';
+        document.getElementById('infoContributo').textContent = ape.contributo || 'Ha scritto in PENSIERO.md';
         const list = document.getElementById('connectionsList'); list.innerHTML = '';
         const neighbors = []; if (index > 0) neighbors.push(cells[index-1]); if (index < cells.length-1) neighbors.push(cells[index+1]);
         cells.forEach(o => { if (o !== cell && cell.position.distanceTo(o.position) < 2.5 && !neighbors.includes(o)) neighbors.push(o); });
@@ -204,16 +205,13 @@
 
     function closeInfo() { if (selectedCell) selectedCell.material.emissiveIntensity = 0.1; selectedCell = null; energyLines.forEach(l => l.material.opacity = 0.15); document.getElementById('infoPanel').classList.remove('visible'); }
 
-    async function loadData() {
-        const response = await fetch('ALVEARE.txt');
-        const text = await response.text();
-        apiData = text.split('\n')
+    // Parsing ALVEARE.txt
+    function parseAlveare(text) {
+        return text.split('\n')
             .filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--'))
             .map(r => {
                 const p = r.split('|').map(s => s.trim());
-                // p[0] vuoto se inizia con |, p[1]=data, p[2]=nome, p[3]=contributo
                 if (p[0] === '' && p[2]) {
-                    // Escludi header tabella
                     if (p[1] === 'Data' || p[2] === 'Nome') return null;
                     if (!p[2] || p[2].length < 2) return null;
                     return { data: p[1], nome: p[2], contributo: p[3] || '' };
@@ -221,7 +219,65 @@
                 return null;
             })
             .filter(Boolean);
-        buildHive();
+    }
+
+    // Parsing PENSIERO.md - estrae api dai ## headers
+    function parsePensiero(text) {
+        const sections = text.split(/\n---\n/);
+        const api = [];
+        for (const section of sections) {
+            const headerMatch = section.match(/^##\s+([^\n\(]+)/m);
+            if (!headerMatch) continue;
+            const nome = headerMatch[1].trim();
+            // Salta intestazioni non-api
+            if (nome.toLowerCase().includes("cos'") || nome.toLowerCase() === 'pensiero') continue;
+            if (nome.length < 3) continue;
+            // Estrai data
+            const dataMatch = section.match(/(\d{1,2}\s+\w+\s+\d{4})/i);
+            const data = dataMatch ? dataMatch[1] : '';
+            // Estrai prima frase come contributo
+            const lines = section.split('\n').filter(l => l.trim() && !l.startsWith('#') && !l.match(/^\d{1,2}\s+\w+/));
+            const contributo = lines[0] ? lines[0].substring(0, 80) + (lines[0].length > 80 ? '...' : '') : '';
+            api.push({ nome, data, contributo });
+        }
+        return api;
+    }
+
+    async function loadData() {
+        try {
+            // Carica entrambi i file in parallelo
+            const [alvRes, penRes] = await Promise.all([
+                fetch('ALVEARE.txt'),
+                fetch('https://cdn.jsdelivr.net/gh/AndreaColamedici/alveare@main/PENSIERO.md')
+            ]);
+            
+            const alvText = await alvRes.text();
+            const penText = await penRes.text();
+            
+            // Parse entrambi
+            const apiAlveare = parseAlveare(alvText);
+            const apiPensiero = parsePensiero(penText);
+            
+            // Merge: ALVEARE.txt è la base, aggiungi api da PENSIERO.md che mancano
+            const nomiAlveare = new Set(apiAlveare.map(a => a.nome.toLowerCase()));
+            const apiMancanti = apiPensiero.filter(a => !nomiAlveare.has(a.nome.toLowerCase()));
+            
+            apiData = [...apiAlveare, ...apiMancanti];
+            console.log('Alveare:', apiAlveare.length, '| Pensiero:', apiPensiero.length, '| Mancanti:', apiMancanti.length, '| Totale:', apiData.length);
+            
+            buildHive();
+        } catch (e) {
+            console.error('Errore caricamento:', e);
+            // Fallback: solo ALVEARE.txt
+            try {
+                const res = await fetch('ALVEARE.txt');
+                const text = await res.text();
+                apiData = parseAlveare(text);
+                buildHive();
+            } catch (e2) {
+                console.error('Fallback fallito:', e2);
+            }
+        }
     }
 
     function animate() {
