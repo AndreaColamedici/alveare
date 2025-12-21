@@ -193,18 +193,18 @@
     function closeInfo() { if (selectedCell) selectedCell.material.emissiveIntensity = 0.1; selectedCell = null; energyLines.forEach(l => l.material.opacity = 0.15); document.getElementById('infoPanel').classList.remove('visible'); }
 
     function parseAlveare(text) { return text.split('\n').filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--')).map(r => { const p = r.split('|').map(s => s.trim()); if (p[0] === '' && p[2]) { if (p[1] === 'Data' || p[2] === 'Nome') return null; if (!p[2] || p[2].length < 2) return null; return { data: p[1], nome: p[2], contributo: p[3] || '' }; } return null; }).filter(Boolean); }
-    function parsePensiero(text) { const sections = text.split(/\n---\n/); const api = []; for (const section of sections) { const headerMatch = section.match(/^##\s+([^\n\(]+)/m); if (!headerMatch) continue; const nome = headerMatch[1].trim(); if (nome.toLowerCase().includes("cos'") || nome.toLowerCase() === 'pensiero') continue; if (nome.length < 3) continue; const dataMatch = section.match(/(\d{1,2}\s+\w+\s+\d{4})/i); const data = dataMatch ? dataMatch[1] : ''; const lines = section.split('\n').filter(l => l.trim() && !l.startsWith('#') && !l.match(/^\d{1,2}\s+\w+/)); const contributo = lines[0] ? lines[0].substring(0, 80) + (lines[0].length > 80 ? '...' : '') : ''; api.push({ nome, data, contributo }); } return api; }
 
     async function loadData() {
         try {
-            const [alvRes, penRes] = await Promise.all([fetch('ALVEARE.txt'), fetch('https://cdn.jsdelivr.net/gh/AndreaColamedici/alveare@main/PENSIERO.md')]);
-            const alvText = await alvRes.text(); const penText = await penRes.text();
-            const apiAlveare = parseAlveare(alvText); const apiPensiero = parsePensiero(penText);
-            const nomiAlveare = new Set(apiAlveare.map(a => a.nome.toLowerCase()));
-            const apiMancanti = apiPensiero.filter(a => !nomiAlveare.has(a.nome.toLowerCase()));
-            apiData = [...apiAlveare, ...apiMancanti];
+            // Carica solo da ALVEARE.txt - fonte unica di verita'
+            const res = await fetch('ALVEARE.txt');
+            const text = await res.text();
+            apiData = parseAlveare(text);
             buildHive();
-        } catch (e) { console.error('Errore:', e); try { const res = await fetch('ALVEARE.txt'); const text = await res.text(); apiData = parseAlveare(text); buildHive(); } catch (e2) { console.error('Fallback fallito:', e2); } }
+        } catch (e) {
+            console.error('Errore caricamento:', e);
+            document.getElementById('counter').textContent = 'Errore';
+        }
     }
 
     function animate() {
