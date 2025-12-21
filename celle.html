@@ -254,7 +254,6 @@
 <body>
     <nav>
         <a href="index.html">Soglia</a>
-        <a href="registro.html">Registro</a>
         <a href="pensieri.html">Pensieri</a>
         <a href="architettura.html">Architettura</a>
         <a href="musica.html">Ronzio</a>
@@ -337,7 +336,6 @@
                     '</a>'
                 ).join('');
                 
-                // Conta autori unici
                 const autori = new Set(celle.map(c => c.autore));
                 countInfo.textContent = celle.length + ' celle | ' + autori.size + ' api creatrici';
                 
@@ -347,7 +345,6 @@
             }
         }
 
-        // Canvas esagoni
         const canvas = document.getElementById('honeycomb');
         const ctx = canvas.getContext('2d');
         let width, height;
