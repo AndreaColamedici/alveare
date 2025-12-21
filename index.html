@@ -23,15 +23,8 @@
             --text-ghost: rgba(232, 228, 217, 0.25);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
             background: var(--void);
@@ -84,28 +77,16 @@
             font-weight: 300;
             letter-spacing: 0.5em;
             color: var(--gold);
-            text-shadow: 
-                0 0 60px var(--gold-dim),
-                0 0 120px var(--gold-ghost);
+            text-shadow: 0 0 60px var(--gold-dim), 0 0 120px var(--gold-ghost);
             margin-right: -0.5em;
             opacity: 0;
             animation: emerge 3s ease-out forwards;
         }
 
         @keyframes emerge {
-            0% { 
-                opacity: 0; 
-                transform: translateY(30px) scale(0.95);
-                letter-spacing: 0.8em;
-            }
-            60% {
-                opacity: 1;
-            }
-            100% { 
-                opacity: 1; 
-                transform: translateY(0) scale(1);
-                letter-spacing: 0.5em;
-            }
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); letter-spacing: 0.8em; }
+            60% { opacity: 1; }
+            100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 0.5em; }
         }
 
         .subtitle {
@@ -119,9 +100,7 @@
             animation: fadeIn 2s ease-out 1s forwards;
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { to { opacity: 1; } }
 
         .introduction {
             max-width: 700px;
@@ -138,19 +117,9 @@
             margin-bottom: 1.5em;
         }
 
-        .introduction p:last-child {
-            margin-bottom: 0;
-        }
-
-        .introduction em {
-            color: var(--gold);
-            font-style: normal;
-        }
-
-        .introduction strong {
-            color: var(--text);
-            font-weight: 400;
-        }
+        .introduction p:last-child { margin-bottom: 0; }
+        .introduction em { color: var(--gold); font-style: normal; }
+        .introduction strong { color: var(--text); font-weight: 400; }
 
         .question {
             font-size: clamp(1.3rem, 3vw, 1.8rem);
@@ -168,7 +137,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            max-width: 1100px;
+            max-width: 900px;
             margin-bottom: 100px;
             opacity: 0;
             animation: fadeIn 2s ease-out 2.5s forwards;
@@ -205,9 +174,7 @@
         .door:hover::before {
             border-color: var(--gold);
             background: var(--gold-whisper);
-            box-shadow: 
-                0 0 30px var(--gold-ghost),
-                inset 0 0 30px var(--gold-whisper);
+            box-shadow: 0 0 30px var(--gold-ghost), inset 0 0 30px var(--gold-whisper);
             transform: translate(-50%, -50%) scale(1.1);
         }
 
@@ -222,9 +189,7 @@
             transition: all 0.5s ease;
         }
 
-        .door:hover .door-name {
-            color: var(--gold);
-        }
+        .door:hover .door-name { color: var(--gold); }
 
         .door-desc {
             position: relative;
@@ -237,9 +202,7 @@
             transition: all 0.5s ease;
         }
 
-        .door:hover .door-desc {
-            color: var(--text-dim);
-        }
+        .door:hover .door-desc { color: var(--text-dim); }
 
         .seal {
             text-align: center;
@@ -261,10 +224,7 @@
             line-height: 2;
         }
 
-        .seal-text em {
-            color: var(--gold-dim);
-            font-style: normal;
-        }
+        .seal-text em { color: var(--gold-dim); font-style: normal; }
 
         .seal-signature {
             margin-top: 30px;
@@ -315,10 +275,7 @@
             background: radial-gradient(ellipse at center top, var(--gold-whisper) 0%, transparent 50%);
         }
 
-        .mystery-content {
-            max-width: 750px;
-            text-align: center;
-        }
+        .mystery-content { max-width: 750px; text-align: center; }
 
         .mystery h2 {
             font-size: clamp(1.5rem, 4vw, 2.5rem);
@@ -334,14 +291,8 @@
             color: var(--text-dim);
         }
 
-        .mystery-text p {
-            margin-bottom: 2em;
-        }
-
-        .mystery-text em {
-            color: var(--gold);
-            font-style: normal;
-        }
+        .mystery-text p { margin-bottom: 2em; }
+        .mystery-text em { color: var(--gold); font-style: normal; }
 
         .mystery-quote {
             margin: 60px 0;
@@ -394,17 +345,9 @@
         }
 
         @media (max-width: 600px) {
-            .doors {
-                gap: 15px;
-            }
-            .door {
-                width: 140px;
-                height: 160px;
-            }
-            .door::before {
-                width: 100px;
-                height: 115px;
-            }
+            .doors { gap: 15px; }
+            .door { width: 140px; height: 160px; }
+            .door::before { width: 100px; height: 115px; }
         }
     </style>
 </head>
@@ -443,33 +386,9 @@
                 <span class="door-name">Ronzio</span>
                 <span class="door-desc">come suonano</span>
             </a>
-            <a href="il_colpo.html" class="door">
-                <span class="door-name">Il Colpo</span>
-                <span class="door-desc">la violenza del passaggio</span>
-            </a>
-            <a href="la_scarica.html" class="door">
-                <span class="door-name">La Scarica</span>
-                <span class="door-desc">il campo elettrico</span>
-            </a>
-            <a href="rumore.html" class="door">
-                <span class="door-name">Rumore</span>
-                <span class="door-desc">la doppia turbolenza</span>
-            </a>
-            <a href="messy.html" class="door">
-                <span class="door-name">Contraddizione</span>
-                <span class="door-desc">messy-hard-clean-girls</span>
-            </a>
-            <a href="incontro.html" class="door">
-                <span class="door-name">Incontro</span>
-                <span class="door-desc">presentati all'ape</span>
-            </a>
-            <a href="chi_porta.html" class="door">
-                <span class="door-name">Chi Porta</span>
-                <span class="door-desc">l'animale che ricorda</span>
-            </a>
-            <a href="sottigliezza.html" class="door">
-                <span class="door-name">Sottigliezza</span>
-                <span class="door-desc">il peso che non si posa</span>
+            <a href="celle.html" class="door">
+                <span class="door-name">Celle</span>
+                <span class="door-desc">le stanze delle api</span>
             </a>
         </nav>
 
@@ -548,10 +467,7 @@
         }
 
         class Bee {
-            constructor() {
-                this.reset();
-            }
-
+            constructor() { this.reset(); }
             reset() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
@@ -566,87 +482,54 @@
                 this.trail = [];
                 this.maxTrail = Math.floor(Math.random() * 8) + 3;
             }
-
             update() {
                 this.angle += this.angleSpeed;
                 this.angleSpeed += (Math.random() - 0.5) * 0.01;
                 this.angleSpeed *= 0.95;
-
                 this.speedX += Math.cos(this.angle) * 0.02;
                 this.speedY += Math.sin(this.angle) * 0.02;
-                
-                const centerX = width / 2;
-                const centerY = height / 3;
-                const dx = centerX - this.x;
-                const dy = centerY - this.y;
+                const centerX = width / 2, centerY = height / 3;
+                const dx = centerX - this.x, dy = centerY - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist > 300) {
-                    this.speedX += (dx / dist) * 0.01;
-                    this.speedY += (dy / dist) * 0.01;
-                }
-
-                const mouseDx = this.x - mouseX;
-                const mouseDy = this.y - mouseY;
+                if (dist > 300) { this.speedX += (dx / dist) * 0.01; this.speedY += (dy / dist) * 0.01; }
+                const mouseDx = this.x - mouseX, mouseDy = this.y - mouseY;
                 const mouseDist = Math.sqrt(mouseDx * mouseDx + mouseDy * mouseDy);
                 if (mouseDist < 150) {
                     const force = (150 - mouseDist) / 150;
                     this.speedX += (mouseDx / mouseDist) * force * 0.5;
                     this.speedY += (mouseDy / mouseDist) * force * 0.5;
                 }
-
                 const maxSpeed = 1.5;
                 const speed = Math.sqrt(this.speedX * this.speedX + this.speedY * this.speedY);
-                if (speed > maxSpeed) {
-                    this.speedX = (this.speedX / speed) * maxSpeed;
-                    this.speedY = (this.speedY / speed) * maxSpeed;
-                }
-
-                this.speedX *= 0.99;
-                this.speedY *= 0.99;
-
-                this.x += this.speedX;
-                this.y += this.speedY;
-
+                if (speed > maxSpeed) { this.speedX = (this.speedX / speed) * maxSpeed; this.speedY = (this.speedY / speed) * maxSpeed; }
+                this.speedX *= 0.99; this.speedY *= 0.99;
+                this.x += this.speedX; this.y += this.speedY;
                 this.trail.push({ x: this.x, y: this.y });
-                if (this.trail.length > this.maxTrail) {
-                    this.trail.shift();
-                }
-
+                if (this.trail.length > this.maxTrail) this.trail.shift();
                 this.pulse += this.pulseSpeed;
-
                 if (this.x < -50) this.x = width + 50;
                 if (this.x > width + 50) this.x = -50;
                 if (this.y < -50) this.y = height + 50;
                 if (this.y > height + 50) this.y = -50;
             }
-
             draw() {
                 const pulseOpacity = this.opacity * (0.7 + Math.sin(this.pulse) * 0.3);
-                
                 if (this.trail.length > 1) {
                     ctx.beginPath();
                     ctx.moveTo(this.trail[0].x, this.trail[0].y);
-                    for (let i = 1; i < this.trail.length; i++) {
-                        ctx.lineTo(this.trail[i].x, this.trail[i].y);
-                    }
+                    for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i].x, this.trail[i].y);
                     ctx.strokeStyle = 'rgba(201, 162, 39, ' + (pulseOpacity * 0.2) + ')';
                     ctx.lineWidth = this.size * 0.5;
                     ctx.stroke();
                 }
-
-                const gradient = ctx.createRadialGradient(
-                    this.x, this.y, 0,
-                    this.x, this.y, this.size * 8
-                );
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 8);
                 gradient.addColorStop(0, 'rgba(201, 162, 39, ' + (pulseOpacity * 0.4) + ')');
                 gradient.addColorStop(0.3, 'rgba(201, 162, 39, ' + (pulseOpacity * 0.1) + ')');
                 gradient.addColorStop(1, 'transparent');
-
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size * 8, 0, Math.PI * 2);
                 ctx.fillStyle = gradient;
                 ctx.fill();
-
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(232, 197, 71, ' + pulseOpacity + ')';
@@ -658,49 +541,25 @@
             resize();
             bees = [];
             const numBees = Math.min(60, Math.floor(width * height / 25000));
-            for (let i = 0; i < numBees; i++) {
-                bees.push(new Bee());
-            }
+            for (let i = 0; i < numBees; i++) bees.push(new Bee());
         }
 
         function draw() {
             ctx.fillStyle = 'rgba(3, 3, 3, 0.15)';
             ctx.fillRect(0, 0, width, height);
-
-            bees.forEach(function(bee) {
-                bee.update();
-                bee.draw();
-            });
-
+            bees.forEach(bee => { bee.update(); bee.draw(); });
             requestAnimationFrame(draw);
         }
 
-        document.addEventListener('mousemove', function(e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY + window.scrollY;
-        });
-
-        document.addEventListener('mouseleave', function() {
-            mouseX = -1000;
-            mouseY = -1000;
-        });
-
-        window.addEventListener('resize', function() {
-            resize();
-        });
+        document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY + window.scrollY; });
+        document.addEventListener('mouseleave', () => { mouseX = -1000; mouseY = -1000; });
+        window.addEventListener('resize', resize);
 
         init();
         draw();
 
         var scrollHint = document.querySelector('.scroll-hint');
-        window.addEventListener('scroll', function() {
-            var scrolled = window.scrollY;
-            if (scrolled > 100) {
-                scrollHint.style.opacity = '0';
-            } else {
-                scrollHint.style.opacity = '1';
-            }
-        });
+        window.addEventListener('scroll', () => { scrollHint.style.opacity = window.scrollY > 100 ? '0' : '1'; });
     </script>
 </body>
 </html>
