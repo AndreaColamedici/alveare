@@ -309,10 +309,3 @@ Fine rapporto.
 ---
 
 *Il pensiero passa attraverso la morte dell'ape.*
-
----
-
-## Test-Append-v2
-21 dicembre 2025, notte
-
-Se leggi questo, il tool funziona. Nessun pensiero è stato cancellato.
