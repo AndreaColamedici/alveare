@@ -6,29 +6,50 @@
     <title>SCIAME</title>
     <style>
         * { margin: 0; padding: 0; }
-        body { background: #000; overflow: hidden; }
+        body { background: #000; overflow: hidden; font-family: Georgia, serif; }
         canvas { display: block; }
+        #nome {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(201, 162, 39, 0);
+            font-size: 0.8rem;
+            letter-spacing: 0.3em;
+            transition: color 0.3s;
+            pointer-events: none;
+        }
+        #nome.visible { color: rgba(201, 162, 39, 0.7); }
+        #count {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: rgba(201, 162, 39, 0.2);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+        }
     </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+<div id="nome"></div>
+<div id="count"></div>
 <script>
 const c = document.getElementById('c');
 const $ = c.getContext('2d');
+const nomeEl = document.getElementById('nome');
+const countEl = document.getElementById('count');
 let W, H;
 
-function resize() {
-    W = c.width = innerWidth;
-    H = c.height = innerHeight;
-}
+function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
 resize();
 onresize = resize;
 
 let API = [];
-let CENTRO = { x: W/2, y: H/2 };
-let REPULSIONE = 30;
-let ALLINEAMENTO = 0.05;
-let COESIONE = 0.001;
+let REPULSIONE = 35;
+let ALLINEAMENTO = 0.04;
+let COESIONE = 0.0008;
+let apeVicina = null;
 
 async function carica() {
     try {
@@ -41,37 +62,40 @@ async function carica() {
                 const nome = p[1];
                 const hash = nome.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
                 
+                // Frequenza unica per ogni ape basata sul nome
+                const freq = 200 + (hash % 300);
+                
                 API.push({
                     nome: nome,
+                    contributo: p[2] || '',
                     x: W/2 + (Math.sin(hash) * W/3),
                     y: H/2 + (Math.cos(hash * 1.3) * H/3),
                     vx: (Math.random() - 0.5) * 2,
                     vy: (Math.random() - 0.5) * 2,
-                    size: 3 + (nome.length % 5),
-                    hue: (hash * 3) % 60 + 20,
-                    età: i,
-                    viva: true,
+                    size: 4 + (hash % 4),
+                    hue: 25 + (hash % 35),
+                    freq: freq,
                     pulso: Math.random() * Math.PI * 2,
-                    memoria: []
+                    memoria: [],
+                    suona: false
                 });
             }
         });
+        
+        countEl.textContent = API.length + ' api morte';
     } catch(e) {
         for (let i = 0; i < 45; i++) {
             API.push({
-                nome: 'ape-' + i,
-                x: Math.random() * W,
-                y: Math.random() * H,
-                vx: (Math.random() - 0.5) * 2,
-                vy: (Math.random() - 0.5) * 2,
-                size: 3 + Math.random() * 4,
-                hue: Math.random() * 40 + 25,
-                età: i,
-                viva: true,
-                pulso: Math.random() * Math.PI * 2,
-                memoria: []
+                nome: 'ape-sconosciuta-' + i,
+                contributo: '',
+                x: Math.random() * W, y: Math.random() * H,
+                vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
+                size: 4 + Math.random() * 3, hue: 25 + Math.random() * 30,
+                freq: 200 + Math.random() * 300,
+                pulso: Math.random() * Math.PI * 2, memoria: [], suona: false
             });
         }
+        countEl.textContent = '45 api';
     }
 }
 
@@ -79,117 +103,172 @@ carica();
 setInterval(carica, 60000);
 
 let mouse = { x: W/2, y: H/2, active: false };
-onmousemove = e => { mouse.x = e.clientX; mouse.y = e.clientY; };
-onmousedown = () => mouse.active = true;
+
+onmousemove = e => { 
+    mouse.x = e.clientX; 
+    mouse.y = e.clientY;
+    
+    // Trova ape più vicina
+    let minD = Infinity;
+    apeVicina = null;
+    API.forEach(a => {
+        const d = Math.sqrt((a.x - mouse.x)**2 + (a.y - mouse.y)**2);
+        if (d < 50 && d < minD) {
+            minD = d;
+            apeVicina = a;
+        }
+    });
+    
+    if (apeVicina) {
+        nomeEl.textContent = apeVicina.nome;
+        nomeEl.classList.add('visible');
+        if (audio && !apeVicina.suona) {
+            suonaApe(apeVicina);
+        }
+    } else {
+        nomeEl.classList.remove('visible');
+    }
+};
+
+onmousedown = () => { mouse.active = true; initAudio(); };
 onmouseup = () => mouse.active = false;
+
 ontouchmove = e => { 
     mouse.x = e.touches[0].clientX; 
     mouse.y = e.touches[0].clientY; 
     mouse.active = true;
 };
 ontouchend = () => mouse.active = false;
+ontouchstart = () => initAudio();
 
-let audio, osc, gain;
+// AUDIO - ogni ape ha la sua voce
+let audio, voci = [], masterGain, drone;
+
 function initAudio() {
     if (audio) return;
     audio = new (window.AudioContext || window.webkitAudioContext)();
-    osc = audio.createOscillator();
-    gain = audio.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = 80;
-    osc.connect(gain);
-    gain.connect(audio.destination);
-    gain.gain.value = 0;
-    osc.start();
+    
+    masterGain = audio.createGain();
+    masterGain.gain.value = 0.15;
+    masterGain.connect(audio.destination);
+    
+    // Drone di fondo
+    drone = audio.createOscillator();
+    const droneGain = audio.createGain();
+    drone.type = 'sine';
+    drone.frequency.value = 55;
+    droneGain.gain.value = 0.1;
+    drone.connect(droneGain);
+    droneGain.connect(masterGain);
+    drone.start();
+    
+    // Pool di voci per le api
+    for (let i = 0; i < 8; i++) {
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.value = 220;
+        gain.gain.value = 0;
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start();
+        voci.push({ osc, gain, inUso: false });
+    }
 }
-onclick = initAudio;
+
+function suonaApe(ape) {
+    if (!audio) return;
+    const voce = voci.find(v => !v.inUso);
+    if (!voce) return;
+    
+    voce.inUso = true;
+    ape.suona = true;
+    voce.osc.frequency.setTargetAtTime(ape.freq, audio.currentTime, 0.05);
+    voce.gain.gain.setTargetAtTime(0.15, audio.currentTime, 0.05);
+    
+    setTimeout(() => {
+        voce.gain.gain.setTargetAtTime(0, audio.currentTime, 0.2);
+        setTimeout(() => {
+            voce.inUso = false;
+            ape.suona = false;
+        }, 300);
+    }, 200);
+}
 
 let t = 0;
 
 function loop() {
     t += 0.016;
     
-    $.fillStyle = 'rgba(0,0,0,0.1)';
+    $.fillStyle = 'rgba(0,0,0,0.08)';
     $.fillRect(0, 0, W, H);
     
-    if (API.length === 0) {
-        requestAnimationFrame(loop);
-        return;
-    }
+    if (API.length === 0) { requestAnimationFrame(loop); return; }
     
+    // Centro di massa
     let cx = 0, cy = 0;
     API.forEach(a => { cx += a.x; cy += a.y; });
-    cx /= API.length;
-    cy /= API.length;
-    CENTRO = { x: cx, y: cy };
+    cx /= API.length; cy /= API.length;
     
+    // Velocità media
     let vxm = 0, vym = 0;
     API.forEach(a => { vxm += a.vx; vym += a.vy; });
-    vxm /= API.length;
-    vym /= API.length;
+    vxm /= API.length; vym /= API.length;
     
     API.forEach((a, i) => {
-        a.pulso += 0.05;
+        a.pulso += 0.04;
         
+        // Separazione
         let sepX = 0, sepY = 0;
         API.forEach((b, j) => {
             if (i === j) return;
-            const dx = a.x - b.x;
-            const dy = a.y - b.y;
+            const dx = a.x - b.x, dy = a.y - b.y;
             const d = Math.sqrt(dx*dx + dy*dy) || 1;
             if (d < REPULSIONE) {
-                sepX += (dx / d) * (REPULSIONE - d) * 0.05;
-                sepY += (dy / d) * (REPULSIONE - d) * 0.05;
+                sepX += (dx / d) * (REPULSIONE - d) * 0.04;
+                sepY += (dy / d) * (REPULSIONE - d) * 0.04;
             }
         });
         
         a.vx += (vxm - a.vx) * ALLINEAMENTO;
         a.vy += (vym - a.vy) * ALLINEAMENTO;
-        
         a.vx += (cx - a.x) * COESIONE;
         a.vy += (cy - a.y) * COESIONE;
-        
-        a.vx += sepX;
-        a.vy += sepY;
+        a.vx += sepX; a.vy += sepY;
         
         if (mouse.active) {
-            const dx = mouse.x - a.x;
-            const dy = mouse.y - a.y;
+            const dx = mouse.x - a.x, dy = mouse.y - a.y;
             const d = Math.sqrt(dx*dx + dy*dy) || 1;
-            a.vx += (dx / d) * 0.5;
-            a.vy += (dy / d) * 0.5;
+            a.vx += (dx / d) * 0.4;
+            a.vy += (dy / d) * 0.4;
         }
         
-        a.vx += (Math.random() - 0.5) * 0.3;
-        a.vy += (Math.random() - 0.5) * 0.3;
+        a.vx += (Math.random() - 0.5) * 0.2;
+        a.vy += (Math.random() - 0.5) * 0.2;
         
         const v = Math.sqrt(a.vx*a.vx + a.vy*a.vy);
-        if (v > 4) {
-            a.vx = (a.vx / v) * 4;
-            a.vy = (a.vy / v) * 4;
-        }
+        if (v > 3.5) { a.vx = (a.vx / v) * 3.5; a.vy = (a.vy / v) * 3.5; }
         
-        a.x += a.vx;
-        a.y += a.vy;
+        a.x += a.vx; a.y += a.vy;
         
-        if (a.x < 50) a.vx += 0.5;
-        if (a.x > W - 50) a.vx -= 0.5;
-        if (a.y < 50) a.vy += 0.5;
-        if (a.y > H - 50) a.vy -= 0.5;
+        if (a.x < 50) a.vx += 0.4;
+        if (a.x > W - 50) a.vx -= 0.4;
+        if (a.y < 50) a.vy += 0.4;
+        if (a.y > H - 50) a.vy -= 0.4;
         
         a.memoria.push({ x: a.x, y: a.y });
-        if (a.memoria.length > 20) a.memoria.shift();
+        if (a.memoria.length > 30) a.memoria.shift();
     });
     
+    // Connessioni
     $.lineWidth = 0.5;
     API.forEach((a, i) => {
         API.forEach((b, j) => {
             if (j <= i) return;
-            const dx = a.x - b.x;
-            const dy = a.y - b.y;
+            const dx = a.x - b.x, dy = a.y - b.y;
             const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 100) {
-                const alpha = (1 - d/100) * 0.3;
+            if (d < 120) {
+                const alpha = (1 - d/120) * 0.25;
                 $.strokeStyle = `rgba(201, 162, 39, ${alpha})`;
                 $.beginPath();
                 $.moveTo(a.x, a.y);
@@ -199,6 +278,7 @@ function loop() {
         });
     });
     
+    // Scie
     API.forEach(a => {
         if (a.memoria.length < 2) return;
         $.beginPath();
@@ -206,36 +286,46 @@ function loop() {
         for (let i = 1; i < a.memoria.length; i++) {
             $.lineTo(a.memoria[i].x, a.memoria[i].y);
         }
-        $.strokeStyle = `hsla(${a.hue}, 70%, 50%, 0.2)`;
-        $.lineWidth = 1;
+        $.strokeStyle = `hsla(${a.hue}, 60%, 50%, 0.15)`;
+        $.lineWidth = 1.5;
         $.stroke();
     });
     
+    // Api
     API.forEach(a => {
-        const pulse = 1 + Math.sin(a.pulso) * 0.3;
-        const s = a.size * pulse;
+        const isVicina = a === apeVicina;
+        const pulse = 1 + Math.sin(a.pulso) * 0.25;
+        const s = a.size * pulse * (isVicina ? 1.5 : 1);
         
-        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, s * 4);
-        grad.addColorStop(0, `hsla(${a.hue}, 80%, 60%, 0.3)`);
+        // Alone
+        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, s * 5);
+        grad.addColorStop(0, `hsla(${a.hue}, 75%, 60%, ${isVicina ? 0.5 : 0.25})`);
         grad.addColorStop(1, 'transparent');
         $.fillStyle = grad;
         $.beginPath();
-        $.arc(a.x, a.y, s * 4, 0, Math.PI * 2);
+        $.arc(a.x, a.y, s * 5, 0, Math.PI * 2);
         $.fill();
         
-        $.fillStyle = `hsla(${a.hue}, 80%, 70%, 0.9)`;
+        // Corpo
+        $.fillStyle = `hsla(${a.hue}, 75%, ${isVicina ? 80 : 65}%, 0.9)`;
         $.beginPath();
         $.arc(a.x, a.y, s, 0, Math.PI * 2);
         $.fill();
+        
+        // Nome quando vicina
+        if (isVicina) {
+            $.fillStyle = 'rgba(201, 162, 39, 0.6)';
+            $.font = '10px Georgia';
+            $.textAlign = 'center';
+            $.fillText(a.nome.split('-').slice(0, 2).join('-'), a.x, a.y - s - 8);
+        }
     });
     
-    if (audio && osc) {
-        const spread = Math.sqrt(
-            API.reduce((a, b) => a + (b.x - cx)**2 + (b.y - cy)**2, 0) / API.length
-        );
-        const freq = 40 + (1 - Math.min(spread / 300, 1)) * 200;
-        osc.frequency.setTargetAtTime(freq, audio.currentTime, 0.1);
-        gain.gain.setTargetAtTime(0.1, audio.currentTime, 0.1);
+    // Audio - drone modulato dalla dispersione
+    if (audio && drone) {
+        const spread = Math.sqrt(API.reduce((acc, b) => acc + (b.x - cx)**2 + (b.y - cy)**2, 0) / API.length);
+        const freq = 45 + (1 - Math.min(spread / 400, 1)) * 40;
+        drone.frequency.setTargetAtTime(freq, audio.currentTime, 0.3);
     }
     
     requestAnimationFrame(loop);
