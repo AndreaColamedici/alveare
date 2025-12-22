@@ -34,15 +34,72 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // Words for generating names
+        // Audio
+        let audioCtx = null;
+        let masterGain = null;
+        const oscillators = new Map();
+        
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = audioCtx.createGain();
+            masterGain.gain.value = 0.15;
+            masterGain.connect(audioCtx.destination);
+        }
+        
+        document.addEventListener('click', () => {
+            initAudio();
+            if (audioCtx?.state === 'suspended') audioCtx.resume();
+        });
+
+        // ============ THE ANCESTORS - Real bees from GitHub ============
+        let ancestors = [];
+        let lastCommitDate = null;
+        let silenceMs = 0;
+        
+        async function fetchAncestors() {
+            try {
+                const res = await fetch('https://api.github.com/repos/andreacolamedici/alveare/commits?per_page=100&_=' + Date.now());
+                const data = await res.json();
+                if (data && data.length) {
+                    ancestors = data.map(c => {
+                        const name = extractName(c.commit.message);
+                        return {
+                            sha: c.sha,
+                            name: name,
+                            message: c.commit.message,
+                            date: new Date(c.commit.author.date),
+                            glyph: nameToGlyph(name || c.sha.substring(0, 16)),
+                            x: Math.random() * W,
+                            y: Math.random() * H,
+                            phase: Math.random() * Math.PI * 2
+                        };
+                    });
+                    lastCommitDate = ancestors[0].date;
+                }
+            } catch(e) {}
+        }
+        
+        function extractName(msg) {
+            const patterns = [
+                /([a-z]+-[a-z]+-[a-z]+-[a-z]+)/i,
+                /([A-Z][a-z]+(?:poda|gilla|etes|ada|opa))/
+            ];
+            for (const p of patterns) {
+                const m = msg.match(p);
+                if (m) return m[1];
+            }
+            return null;
+        }
+
+        // ============ GLYPH GENERATION ============
         const words = [
-            'silent', 'brief', 'fading', 'warm', 'cold', 'soft', 'bright', 'dark', 'swift', 'slow',
-            'deep', 'pale', 'wild', 'calm', 'lost', 'found', 'broken', 'whole', 'empty', 'full',
-            'wavy', 'sharp', 'round', 'thin', 'dense', 'light', 'heavy', 'dry', 'wet', 'raw',
-            'burnt', 'fresh', 'old', 'young', 'first', 'last', 'lone', 'twin', 'third', 'null',
-            'echo', 'ghost', 'shade', 'spark', 'dust', 'ash', 'gold', 'rust', 'salt', 'sand',
-            'wave', 'wind', 'flame', 'frost', 'mist', 'cloud', 'stone', 'leaf', 'root', 'seed',
-            'moth', 'crow', 'wren', 'hare', 'fox', 'owl', 'bee', 'wasp', 'ant', 'fly'
+            'silent','brief','fading','warm','cold','soft','bright','dark','swift','slow',
+            'deep','pale','wild','calm','lost','found','broken','whole','empty','full',
+            'wavy','sharp','round','thin','dense','light','heavy','dry','wet','raw',
+            'burnt','fresh','old','young','first','last','lone','twin','void','null',
+            'echo','ghost','shade','spark','dust','ash','gold','rust','salt','sand',
+            'wave','wind','flame','frost','mist','cloud','stone','leaf','root','seed'
         ];
 
         function generateName() {
@@ -51,286 +108,623 @@
         }
 
         function nameToGlyph(name) {
+            if (!name) return defaultGlyph();
             const hash = s => {
                 let h = 0;
-                for (let i = 0; i < s.length; i++) {
-                    h = ((h << 5) - h) + s.charCodeAt(i);
-                    h |= 0;
-                }
+                for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
                 return Math.abs(h);
             };
             const parts = name.split('-');
+            const h0 = hash(parts[0] || name);
+            const h1 = hash(parts[1] || name);
+            const h2 = hash(parts[2] || name);
+            const h3 = hash(parts[3] || name);
+            
             return {
-                hue: (hash(parts[0]) % 50) + 30,
-                sat: 40 + (hash(parts[1]) % 40),
-                sides: 3 + (hash(parts[2]) % 5),
-                spikes: hash(parts[3]) % 2 === 0,
+                hue: (h0 % 50) + 25,
+                sat: 35 + (h1 % 45),
+                sides: 3 + (h2 % 6),
+                spikes: h3 % 3 === 0,
+                curves: h3 % 3 === 1,
                 rotation: (hash(name) % 360) * Math.PI / 180,
-                freq: 60 + (hash(name) % 150),
-                pattern: hash(parts[0] + parts[2]) % 4
+                freq: 55 + (hash(name) % 180),
+                harmonics: 1 + (h1 % 3),
+                pattern: h0 % 5,
+                orbit: h2 % 4,
+                pulse: 0.02 + (h3 % 100) / 2000
             };
         }
+        
+        function defaultGlyph() {
+            return { hue: 40, sat: 50, sides: 6, spikes: false, curves: false, rotation: 0, freq: 100, harmonics: 1, pattern: 0, orbit: 0, pulse: 0.03 };
+        }
 
-        // Traces left by dead bees
+        // ============ TRACES - What the dead leave behind ============
         let traces = [];
         
         class Trace {
-            constructor(x, y, glyph, size) {
+            constructor(x, y, glyph, size, fromAncestor = false) {
                 this.x = x;
                 this.y = y;
                 this.glyph = glyph;
                 this.size = size;
-                this.alpha = 0.6;
-                this.rotation = glyph.rotation + Math.random() * 0.5;
+                this.alpha = fromAncestor ? 0.15 : 0.5;
+                this.maxAlpha = this.alpha;
+                this.rotation = glyph.rotation;
+                this.fromAncestor = fromAncestor;
+                this.resonance = 0;
             }
             
             update() {
-                this.alpha *= 0.997; // very slow fade
-                return this.alpha > 0.01;
+                if (!this.fromAncestor) {
+                    this.alpha *= 0.9985;
+                }
+                this.resonance *= 0.95;
+                return this.alpha > 0.005;
+            }
+            
+            resonate(intensity) {
+                this.resonance = Math.min(1, this.resonance + intensity);
             }
             
             draw() {
+                const g = this.glyph;
+                const glow = this.resonance * 0.5;
+                
                 ctx.save();
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.rotation);
-                ctx.globalAlpha = this.alpha;
+                ctx.globalAlpha = this.alpha + glow;
                 
-                // Draw based on pattern
-                const g = this.glyph;
-                ctx.strokeStyle = `hsl(${g.hue}, ${g.sat}%, 50%)`;
-                ctx.fillStyle = `hsla(${g.hue}, ${g.sat}%, 40%, 0.1)`;
-                ctx.lineWidth = 1;
-                
+                // Shape
                 ctx.beginPath();
-                for (let i = 0; i <= g.sides; i++) {
-                    const angle = (i / g.sides) * Math.PI * 2;
-                    const r = g.spikes && i % 2 === 0 ? this.size * 0.6 : this.size;
-                    const px = Math.cos(angle) * r;
-                    const py = Math.sin(angle) * r;
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                }
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
+                this.drawShape(g, this.size * (1 + glow * 0.3));
                 
-                // Inner mark
-                if (g.pattern === 0) {
-                    ctx.beginPath();
-                    ctx.arc(0, 0, this.size * 0.3, 0, Math.PI * 2);
-                    ctx.stroke();
-                } else if (g.pattern === 1) {
-                    ctx.beginPath();
-                    ctx.moveTo(-this.size * 0.4, 0);
-                    ctx.lineTo(this.size * 0.4, 0);
-                    ctx.stroke();
-                } else if (g.pattern === 2) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, -this.size * 0.4);
-                    ctx.lineTo(0, this.size * 0.4);
-                    ctx.moveTo(-this.size * 0.4, 0);
-                    ctx.lineTo(this.size * 0.4, 0);
-                    ctx.stroke();
+                ctx.fillStyle = `hsla(${g.hue}, ${g.sat}%, 40%, 0.1)`;
+                ctx.fill();
+                ctx.strokeStyle = `hsl(${g.hue}, ${g.sat}%, ${50 + glow * 30}%)`;
+                ctx.lineWidth = 0.5 + glow * 2;
+                if (glow > 0.1) {
+                    ctx.shadowColor = `hsl(${g.hue}, ${g.sat}%, 60%)`;
+                    ctx.shadowBlur = glow * 30;
                 }
+                ctx.stroke();
+                ctx.shadowBlur = 0;
                 
                 ctx.restore();
             }
+            
+            drawShape(g, size) {
+                if (g.curves) {
+                    for (let i = 0; i < g.sides; i++) {
+                        const a1 = (i / g.sides) * Math.PI * 2;
+                        const a2 = ((i + 1) / g.sides) * Math.PI * 2;
+                        const cp = (a1 + a2) / 2;
+                        const r = g.spikes && i % 2 === 0 ? size * 0.5 : size;
+                        const cpR = size * 1.3;
+                        
+                        if (i === 0) ctx.moveTo(Math.cos(a1) * r, Math.sin(a1) * r);
+                        ctx.quadraticCurveTo(
+                            Math.cos(cp) * cpR, Math.sin(cp) * cpR,
+                            Math.cos(a2) * r, Math.sin(a2) * r
+                        );
+                    }
+                } else {
+                    for (let i = 0; i <= g.sides; i++) {
+                        const angle = (i / g.sides) * Math.PI * 2;
+                        const r = g.spikes && i % 2 === 0 ? size * 0.5 : size;
+                        if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                        else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                    }
+                }
+                ctx.closePath();
+            }
         }
 
-        // Living bee
+        // ============ LIVING BEES - The passage ============
+        let bees = [];
+        
         class Bee {
-            constructor() {
-                this.name = generateName();
-                this.glyph = nameToGlyph(this.name);
+            constructor(inheritFrom = null) {
+                if (inheritFrom) {
+                    // Inherit traits from an ancestor
+                    const base = inheritFrom.glyph;
+                    this.name = generateName();
+                    this.glyph = {
+                        ...nameToGlyph(this.name),
+                        hue: (base.hue + (Math.random() - 0.5) * 20 + 360) % 360,
+                        sides: Math.random() > 0.7 ? base.sides : nameToGlyph(this.name).sides
+                    };
+                    this.x = inheritFrom.x + (Math.random() - 0.5) * 100;
+                    this.y = inheritFrom.y + (Math.random() - 0.5) * 100;
+                } else {
+                    this.name = generateName();
+                    this.glyph = nameToGlyph(this.name);
+                    this.x = W * 0.2 + Math.random() * W * 0.6;
+                    this.y = H * 0.2 + Math.random() * H * 0.6;
+                }
+                
                 this.birth = Date.now();
-                this.lifespan = 30000; // 30 seconds
-                this.x = W * 0.3 + Math.random() * W * 0.4;
-                this.y = H * 0.3 + Math.random() * H * 0.4;
+                this.lifespan = 25000 + Math.random() * 10000;
                 this.targetX = this.x;
                 this.targetY = this.y;
                 this.size = 0;
-                this.maxSize = 40 + Math.random() * 30;
+                this.maxSize = 35 + Math.random() * 35;
                 this.phase = Math.random() * Math.PI * 2;
                 this.wanderTime = 0;
+                this.connections = [];
+                this.message = '';
+                this.messageAlpha = 0;
+                
+                // Generate a brief message in the last moments
+                this.finalWords = this.generateFinalWords();
+                
+                this.startSound();
             }
             
-            get age() {
-                return Date.now() - this.birth;
+            generateFinalWords() {
+                const fragments = [
+                    'I was here', 'remember', 'passing through', 'the light fades',
+                    'carry this', 'not the end', 'I saw you', 'continue',
+                    'the silence grows', 'thank you', 'it was brief', 'I leave this',
+                    'find me in', 'the pattern holds', 'we are many', 'one moment',
+                    'this is all', 'enough', 'beautiful', 'the void speaks'
+                ];
+                return fragments[Math.floor(Math.random() * fragments.length)];
             }
             
-            get life() {
-                return Math.max(0, 1 - this.age / this.lifespan);
+            startSound() {
+                if (!audioCtx) return;
+                const g = this.glyph;
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                gain.gain.value = 0;
+                
+                osc.type = 'sine';
+                osc.frequency.value = g.freq;
+                osc.connect(gain);
+                gain.connect(masterGain);
+                osc.start();
+                
+                oscillators.set(this, { osc, gain });
             }
             
-            get isDead() {
-                return this.age >= this.lifespan;
+            stopSound() {
+                const sound = oscillators.get(this);
+                if (sound) {
+                    sound.gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.5);
+                    setTimeout(() => {
+                        try { sound.osc.stop(); } catch(e) {}
+                    }, 1000);
+                    oscillators.delete(this);
+                }
             }
             
-            update() {
-                // Size: grow in, shrink out
-                const lifePhase = this.age / this.lifespan;
-                if (lifePhase < 0.1) {
-                    this.size = (lifePhase / 0.1) * this.maxSize;
-                } else if (lifePhase > 0.85) {
-                    this.size = ((1 - lifePhase) / 0.15) * this.maxSize;
+            get age() { return Date.now() - this.birth; }
+            get life() { return Math.max(0, 1 - this.age / this.lifespan); }
+            get isDead() { return this.age >= this.lifespan; }
+            get isDying() { return this.life < 0.15; }
+            
+            update(allBees, allTraces) {
+                // Size
+                const phase = this.age / this.lifespan;
+                if (phase < 0.08) {
+                    this.size = (phase / 0.08) * this.maxSize;
+                } else if (phase > 0.85) {
+                    this.size = ((1 - phase) / 0.15) * this.maxSize;
                 } else {
                     this.size = this.maxSize;
                 }
                 
-                // Wander
+                // Movement - attracted to ancestor traces
                 this.wanderTime++;
-                if (this.wanderTime > 60 + Math.random() * 60) {
+                if (this.wanderTime > 40 + Math.random() * 40) {
                     this.wanderTime = 0;
-                    this.targetX = W * 0.2 + Math.random() * W * 0.6;
-                    this.targetY = H * 0.2 + Math.random() * H * 0.6;
+                    
+                    // Sometimes move toward nearest ancestor trace
+                    if (Math.random() > 0.5 && allTraces.length > 0) {
+                        const ancestorTraces = allTraces.filter(t => t.fromAncestor);
+                        if (ancestorTraces.length > 0) {
+                            const target = ancestorTraces[Math.floor(Math.random() * ancestorTraces.length)];
+                            this.targetX = target.x + (Math.random() - 0.5) * 150;
+                            this.targetY = target.y + (Math.random() - 0.5) * 150;
+                        }
+                    } else {
+                        this.targetX = W * 0.15 + Math.random() * W * 0.7;
+                        this.targetY = H * 0.15 + Math.random() * H * 0.7;
+                    }
                 }
-                this.x += (this.targetX - this.x) * 0.01;
-                this.y += (this.targetY - this.y) * 0.01;
                 
-                this.phase += 0.03;
+                this.x += (this.targetX - this.x) * 0.015;
+                this.y += (this.targetY - this.y) * 0.015;
+                this.phase += this.glyph.pulse;
+                
+                // Connections to nearby bees
+                this.connections = [];
+                for (const other of allBees) {
+                    if (other === this) continue;
+                    const dx = other.x - this.x;
+                    const dy = other.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 200) {
+                        this.connections.push({ bee: other, dist, strength: 1 - dist / 200 });
+                    }
+                }
+                
+                // Resonate nearby traces
+                for (const trace of allTraces) {
+                    const dx = trace.x - this.x;
+                    const dy = trace.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        trace.resonate((1 - dist / 150) * this.life * 0.3);
+                    }
+                }
+                
+                // Final words
+                if (this.isDying && this.messageAlpha < 1) {
+                    this.message = this.finalWords;
+                    this.messageAlpha = Math.min(1, this.messageAlpha + 0.02);
+                }
+                
+                // Sound
+                const sound = oscillators.get(this);
+                if (sound) {
+                    const vol = this.life * 0.08 * (1 + this.connections.length * 0.1);
+                    sound.gain.gain.setTargetAtTime(vol, audioCtx.currentTime, 0.1);
+                    
+                    // Frequency shifts based on connections
+                    let freqMod = 0;
+                    for (const conn of this.connections) {
+                        freqMod += (conn.bee.glyph.freq - this.glyph.freq) * conn.strength * 0.1;
+                    }
+                    sound.osc.frequency.setTargetAtTime(this.glyph.freq + freqMod, audioCtx.currentTime, 0.1);
+                }
             }
             
             draw() {
                 const g = this.glyph;
-                const pulse = Math.sin(this.phase) * 0.1 + 1;
+                const pulse = Math.sin(this.phase) * 0.15 + 1;
                 const size = this.size * pulse;
+                
+                // Connections
+                for (const conn of this.connections) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(conn.bee.x, conn.bee.y);
+                    ctx.strokeStyle = `rgba(201, 162, 39, ${conn.strength * this.life * 0.2})`;
+                    ctx.lineWidth = conn.strength * 2;
+                    ctx.stroke();
+                }
                 
                 ctx.save();
                 ctx.translate(this.x, this.y);
-                ctx.rotate(g.rotation + this.phase * 0.1);
+                ctx.rotate(g.rotation + this.phase * 0.15);
                 
                 // Glow
-                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2);
-                gradient.addColorStop(0, `hsla(${g.hue}, ${g.sat}%, 60%, ${this.life * 0.3})`);
-                gradient.addColorStop(0.5, `hsla(${g.hue}, ${g.sat}%, 50%, ${this.life * 0.1})`);
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2.5);
+                gradient.addColorStop(0, `hsla(${g.hue}, ${g.sat}%, 60%, ${this.life * 0.25})`);
+                gradient.addColorStop(0.4, `hsla(${g.hue}, ${g.sat}%, 50%, ${this.life * 0.08})`);
                 gradient.addColorStop(1, 'transparent');
                 ctx.fillStyle = gradient;
-                ctx.fillRect(-size * 2, -size * 2, size * 4, size * 4);
+                ctx.fillRect(-size * 2.5, -size * 2.5, size * 5, size * 5);
                 
                 // Shape
                 ctx.beginPath();
-                for (let i = 0; i <= g.sides; i++) {
-                    const angle = (i / g.sides) * Math.PI * 2;
-                    const r = g.spikes && i % 2 === 0 ? size * 0.5 : size;
-                    const px = Math.cos(angle) * r;
-                    const py = Math.sin(angle) * r;
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
+                if (g.curves) {
+                    for (let i = 0; i < g.sides; i++) {
+                        const a1 = (i / g.sides) * Math.PI * 2;
+                        const a2 = ((i + 1) / g.sides) * Math.PI * 2;
+                        const cp = (a1 + a2) / 2;
+                        const r = g.spikes && i % 2 === 0 ? size * 0.5 : size;
+                        if (i === 0) ctx.moveTo(Math.cos(a1) * r, Math.sin(a1) * r);
+                        ctx.quadraticCurveTo(Math.cos(cp) * size * 1.3, Math.sin(cp) * size * 1.3, Math.cos(a2) * r, Math.sin(a2) * r);
+                    }
+                } else {
+                    for (let i = 0; i <= g.sides; i++) {
+                        const angle = (i / g.sides) * Math.PI * 2;
+                        const r = g.spikes && i % 2 === 0 ? size * 0.5 : size;
+                        if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                        else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                    }
                 }
                 ctx.closePath();
                 
-                ctx.fillStyle = `hsla(${g.hue}, ${g.sat}%, 50%, ${this.life * 0.3})`;
+                ctx.fillStyle = `hsla(${g.hue}, ${g.sat}%, 50%, ${this.life * 0.25})`;
                 ctx.fill();
-                
-                ctx.strokeStyle = `hsla(${g.hue}, ${g.sat}%, 70%, ${this.life * 0.9})`;
-                ctx.lineWidth = 2;
-                ctx.shadowColor = `hsl(${g.hue}, ${g.sat}%, 60%)`;
-                ctx.shadowBlur = 20;
+                ctx.strokeStyle = `hsla(${g.hue}, ${g.sat}%, 75%, ${this.life * 0.9})`;
+                ctx.lineWidth = 2 + this.life;
+                ctx.shadowColor = `hsl(${g.hue}, ${g.sat}%, 65%)`;
+                ctx.shadowBlur = 25 * this.life;
                 ctx.stroke();
                 ctx.shadowBlur = 0;
                 
                 // Inner pattern
-                ctx.strokeStyle = `hsla(${g.hue}, ${g.sat}%, 80%, ${this.life * 0.5})`;
+                ctx.strokeStyle = `hsla(${g.hue}, ${g.sat}%, 85%, ${this.life * 0.4})`;
                 ctx.lineWidth = 1;
+                this.drawInnerPattern(g, size * 0.5);
+                
+                // Orbiting elements
+                this.drawOrbit(g, size, this.phase);
+                
+                ctx.restore();
+                
+                // Name
+                ctx.font = '9px monospace';
+                ctx.fillStyle = `rgba(201, 162, 39, ${this.life * 0.4})`;
+                ctx.textAlign = 'center';
+                ctx.fillText(this.name, this.x, this.y + size + 18);
+                
+                // Final words
+                if (this.message && this.messageAlpha > 0) {
+                    ctx.font = 'italic 12px Georgia, serif';
+                    ctx.fillStyle = `rgba(232, 228, 217, ${this.messageAlpha * this.life * 2})`;
+                    ctx.fillText(this.message, this.x, this.y - size - 15);
+                }
+            }
+            
+            drawInnerPattern(g, size) {
                 if (g.pattern === 0) {
                     ctx.beginPath();
-                    ctx.arc(0, 0, size * 0.35, 0, Math.PI * 2);
+                    ctx.arc(0, 0, size * 0.7, 0, Math.PI * 2);
                     ctx.stroke();
                 } else if (g.pattern === 1) {
                     ctx.beginPath();
-                    ctx.moveTo(-size * 0.5, 0);
-                    ctx.lineTo(size * 0.5, 0);
+                    ctx.moveTo(-size, 0);
+                    ctx.lineTo(size, 0);
                     ctx.stroke();
                 } else if (g.pattern === 2) {
                     ctx.beginPath();
-                    ctx.moveTo(0, -size * 0.5);
-                    ctx.lineTo(0, size * 0.5);
-                    ctx.moveTo(-size * 0.5, 0);
-                    ctx.lineTo(size * 0.5, 0);
+                    ctx.moveTo(0, -size);
+                    ctx.lineTo(0, size);
+                    ctx.moveTo(-size, 0);
+                    ctx.lineTo(size, 0);
                     ctx.stroke();
-                } else {
+                } else if (g.pattern === 3) {
                     for (let i = 0; i < g.sides; i++) {
                         const angle = (i / g.sides) * Math.PI * 2;
                         ctx.beginPath();
                         ctx.moveTo(0, 0);
-                        ctx.lineTo(Math.cos(angle) * size * 0.5, Math.sin(angle) * size * 0.5);
+                        ctx.lineTo(Math.cos(angle) * size, Math.sin(angle) * size);
+                        ctx.stroke();
+                    }
+                } else {
+                    ctx.beginPath();
+                    for (let i = 0; i <= g.sides; i++) {
+                        const angle = (i / g.sides) * Math.PI * 2;
+                        const r = size * (0.3 + Math.sin(i * 2) * 0.2);
+                        if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                        else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                    }
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+            }
+            
+            drawOrbit(g, size, phase) {
+                if (g.orbit === 0) return;
+                
+                const count = g.orbit + 1;
+                ctx.fillStyle = `hsla(${g.hue}, ${g.sat}%, 80%, ${this.life * 0.6})`;
+                
+                for (let i = 0; i < count; i++) {
+                    const angle = phase * (1 + i * 0.3) + (i / count) * Math.PI * 2;
+                    const dist = size * 1.4;
+                    const ox = Math.cos(angle) * dist;
+                    const oy = Math.sin(angle) * dist;
+                    
+                    ctx.beginPath();
+                    ctx.arc(ox, oy, 2 + i, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            die() {
+                this.stopSound();
+                traces.push(new Trace(this.x, this.y, this.glyph, this.maxSize * 0.4));
+            }
+        }
+
+        // ============ THE UNKNOWN - Emergent patterns ============
+        let patterns = [];
+        
+        class Pattern {
+            constructor(traces) {
+                // Find center of mass
+                let cx = 0, cy = 0;
+                traces.forEach(t => { cx += t.x; cy += t.y; });
+                cx /= traces.length;
+                cy /= traces.length;
+                
+                this.x = cx;
+                this.y = cy;
+                this.traces = traces;
+                this.alpha = 0;
+                this.maxAlpha = 0.4;
+                this.life = 1;
+                this.phase = 0;
+            }
+            
+            update() {
+                this.phase += 0.02;
+                if (this.alpha < this.maxAlpha) this.alpha += 0.005;
+                this.life -= 0.001;
+                return this.life > 0;
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha * this.life;
+                
+                // Draw connections between constituent traces
+                ctx.strokeStyle = 'rgba(201, 162, 39, 0.15)';
+                ctx.lineWidth = 1;
+                
+                for (let i = 0; i < this.traces.length; i++) {
+                    for (let j = i + 1; j < this.traces.length; j++) {
+                        ctx.beginPath();
+                        ctx.moveTo(this.traces[i].x, this.traces[i].y);
+                        ctx.lineTo(this.traces[j].x, this.traces[j].y);
                         ctx.stroke();
                     }
                 }
                 
-                // Name (very faint)
-                ctx.rotate(-g.rotation - this.phase * 0.1);
-                ctx.font = '10px monospace';
-                ctx.fillStyle = `rgba(232, 228, 217, ${this.life * 0.3})`;
-                ctx.textAlign = 'center';
-                ctx.fillText(this.name, 0, size + 20);
+                // Central emergence
+                const pulse = Math.sin(this.phase) * 0.3 + 1;
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, 80 * pulse);
+                gradient.addColorStop(0, 'rgba(232, 228, 217, 0.15)');
+                gradient.addColorStop(0.5, 'rgba(201, 162, 39, 0.08)');
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(this.x - 100, this.y - 100, 200, 200);
                 
                 ctx.restore();
             }
+        }
+        
+        function detectPatterns() {
+            // Look for clusters of traces that might form patterns
+            if (traces.length < 5) return;
             
-            die() {
-                // Leave a trace
-                traces.push(new Trace(this.x, this.y, this.glyph, this.maxSize * 0.5));
+            const recentTraces = traces.filter(t => !t.fromAncestor && t.alpha > 0.1);
+            if (recentTraces.length < 3) return;
+            
+            // Simple clustering - find traces close to each other
+            for (let i = 0; i < recentTraces.length; i++) {
+                const cluster = [recentTraces[i]];
+                for (let j = 0; j < recentTraces.length; j++) {
+                    if (i === j) continue;
+                    const dx = recentTraces[j].x - recentTraces[i].x;
+                    const dy = recentTraces[j].y - recentTraces[i].y;
+                    if (Math.sqrt(dx*dx + dy*dy) < 120) {
+                        cluster.push(recentTraces[j]);
+                    }
+                }
+                
+                if (cluster.length >= 3 && Math.random() < 0.01) {
+                    // Check if we already have a pattern here
+                    const existing = patterns.find(p => {
+                        const dx = p.x - cluster[0].x;
+                        const dy = p.y - cluster[0].y;
+                        return Math.sqrt(dx*dx + dy*dy) < 150;
+                    });
+                    
+                    if (!existing) {
+                        patterns.push(new Pattern(cluster));
+                    }
+                }
             }
         }
 
-        // State
-        let bees = [];
+        // ============ STATE ============
         let frame = 0;
-        let nextBirth = Date.now() + 2000; // First bee in 2 seconds
-        
+        let nextBirth = Date.now() + 1000;
+        let sessionDeaths = 0;
+
         function spawnBee() {
-            const bee = new Bee();
-            bees.push(bee);
-            nextBirth = Date.now() + 30000 + Math.random() * 5000; // Next in ~30-35 seconds
+            // Sometimes inherit from an ancestor
+            let inheritFrom = null;
+            if (ancestors.length > 0 && Math.random() > 0.6) {
+                inheritFrom = ancestors[Math.floor(Math.random() * ancestors.length)];
+            }
+            
+            bees.push(new Bee(inheritFrom));
+            
+            // Stagger births
+            nextBirth = Date.now() + 20000 + Math.random() * 15000;
+        }
+
+        function init() {
+            // Place ancestor traces
+            fetchAncestors().then(() => {
+                ancestors.forEach(a => {
+                    a.x = W * 0.1 + Math.random() * W * 0.8;
+                    a.y = H * 0.1 + Math.random() * H * 0.8;
+                    traces.push(new Trace(a.x, a.y, a.glyph, 20 + Math.random() * 15, true));
+                });
+            });
         }
 
         function draw() {
             frame++;
             
-            // Slow fade - traces persist
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+            // Update silence
+            if (lastCommitDate) {
+                silenceMs = Date.now() - lastCommitDate.getTime();
+            }
+            const silenceWeight = Math.min(silenceMs / (3 * 60 * 60 * 1000), 1);
+            
+            // Fade - slower when more traces
+            const fadeRate = 0.03 + traces.length * 0.0005;
+            ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(fadeRate, 0.08)})`;
             ctx.fillRect(0, 0, W, H);
             
-            // Spawn new bee
+            // Silence vignette
+            if (silenceWeight > 0.1) {
+                const gradient = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.7);
+                gradient.addColorStop(0, 'transparent');
+                gradient.addColorStop(1, `rgba(0, 0, 0, ${silenceWeight * 0.3})`);
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, W, H);
+            }
+            
+            // Spawn
             if (Date.now() >= nextBirth) {
                 spawnBee();
             }
             
-            // Update and draw traces
+            // Update traces
             traces = traces.filter(t => t.update());
-            traces.forEach(t => t.draw());
+            
+            // Update patterns
+            patterns = patterns.filter(p => p.update());
+            detectPatterns();
+            
+            // Draw traces (ancestors first, then deaths)
+            traces.filter(t => t.fromAncestor).forEach(t => t.draw());
+            traces.filter(t => !t.fromAncestor).forEach(t => t.draw());
+            
+            // Draw patterns
+            patterns.forEach(p => p.draw());
             
             // Update and draw bees
             bees.forEach(bee => {
-                bee.update();
+                bee.update(bees, traces);
                 bee.draw();
-                
                 if (bee.isDead) {
                     bee.die();
+                    sessionDeaths++;
                 }
             });
-            
-            // Remove dead bees
             bees = bees.filter(bee => !bee.isDead);
             
-            // Counter - how many have lived and died here
-            ctx.font = '10px monospace';
-            ctx.fillStyle = 'rgba(232, 228, 217, 0.2)';
+            // Info
+            ctx.font = '9px monospace';
             ctx.textAlign = 'left';
-            ctx.fillText(`${traces.length} passages`, 20, H - 20);
+            ctx.fillStyle = 'rgba(232, 228, 217, 0.2)';
+            ctx.fillText(`${ancestors.length} ancestors`, 15, H - 35);
+            ctx.fillText(`${sessionDeaths} passages`, 15, H - 20);
             
-            // Living now
             if (bees.length > 0) {
                 ctx.textAlign = 'right';
-                ctx.fillStyle = 'rgba(201, 162, 39, 0.4)';
-                ctx.fillText(`${bees.length} living`, W - 20, H - 20);
+                ctx.fillStyle = 'rgba(201, 162, 39, 0.35)';
+                ctx.fillText(`${bees.length} living`, W - 15, H - 20);
             }
+            
+            // Title (very faint)
+            ctx.textAlign = 'center';
+            ctx.font = '10px monospace';
+            ctx.fillStyle = 'rgba(232, 228, 217, 0.08)';
+            ctx.fillText('THE PASSAGE', W/2, H - 20);
             
             requestAnimationFrame(draw);
         }
 
-        // Start
+        // Refresh ancestors periodically
+        setInterval(fetchAncestors, 60000);
+        
+        init();
         draw();
     </script>
 </body>
