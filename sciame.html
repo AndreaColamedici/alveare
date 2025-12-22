@@ -32,390 +32,209 @@
     </style>
 </head>
 <body>
-<div id="start">SCIAME<span>clicca per entrare<br>muovi per suonare<br>clicca per trasformare</span></div>
+<div id="start">SCIAME<span>clicca per entrare</span></div>
 <canvas id="c"></canvas>
 <script>
 const c = document.getElementById('c');
 const $ = c.getContext('2d');
-let W, H;
-function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
+let W, H, cx, cy;
+
+function resize() { 
+    W = c.width = innerWidth; 
+    H = c.height = innerHeight; 
+    cx = W / 2;
+    cy = H / 2;
+}
 resize();
 onresize = resize;
 
 // ═══════════════════════════════════════════════════════════════
-// TUNNEL DELL'ALVEARE
+// TUNNEL - anelli esagonali che si espandono
 // ═══════════════════════════════════════════════════════════════
 
-let tunnelOffset = 0;
-let tunnelSpeed = 0.5;
-let tunnelDirection = { x: 0, y: 0 };
+const rings = [];
+const NUM_RINGS = 12;
 
-// Celle esagonali del tunnel
-const HEX_SIZE = 60;
-const HEX_DEPTH = 8; // quanti strati di profondità
-
-function drawHexagon(x, y, size, depth) {
-    $.beginPath();
-    for (let i = 0; i < 6; i++) {
-        const angle = (Math.PI / 3) * i - Math.PI / 6;
-        const px = x + Math.cos(angle) * size;
-        const py = y + Math.sin(angle) * size;
-        if (i === 0) $.moveTo(px, py);
-        else $.lineTo(px, py);
-    }
-    $.closePath();
+for (let i = 0; i < NUM_RINGS; i++) {
+    rings.push({ z: i / NUM_RINGS });
 }
+
+let tunnelSpeed = 0.008;
+let tunnelOffsetX = 0, tunnelOffsetY = 0;
 
 function drawTunnel() {
-    const cx = W / 2;
-    const cy = H / 2;
+    // Aggiorna anelli
+    rings.forEach(ring => {
+        ring.z += tunnelSpeed;
+        if (ring.z > 1) ring.z -= 1;
+    });
     
-    // Movimento del tunnel basato sulla direzione
-    tunnelOffset += tunnelSpeed;
+    // Ordina per profondità (lontani prima)
+    const sorted = [...rings].sort((a, b) => a.z - b.z);
     
-    // Disegna strati di profondità (dal più lontano al più vicino)
-    for (let depth = HEX_DEPTH; depth >= 0; depth--) {
-        const scale = 0.3 + (depth / HEX_DEPTH) * 0.7;
-        const alpha = 0.03 + (depth / HEX_DEPTH) * 0.12;
-        const size = HEX_SIZE * scale;
+    sorted.forEach(ring => {
+        const z = ring.z;
+        const scale = 0.1 + z * 2.5; // da piccolo a grande
+        const size = Math.max(W, H) * scale;
+        const alpha = z * 0.4; // più vicino = più visibile
         
-        // Offset per l'effetto di movimento nel tunnel
-        const depthOffset = (tunnelOffset * (1 - depth / HEX_DEPTH)) % (size * 2);
-        const dirOffsetX = tunnelDirection.x * depth * 3;
-        const dirOffsetY = tunnelDirection.y * depth * 3;
+        // Offset basato sulla posizione del mouse
+        const ox = tunnelOffsetX * (1 - z) * 100;
+        const oy = tunnelOffsetY * (1 - z) * 100;
         
-        // Griglia esagonale
-        const h = size * Math.sqrt(3);
-        const cols = Math.ceil(W / (size * 1.5)) + 4;
-        const rows = Math.ceil(H / h) + 4;
+        // Disegna esagono
+        $.strokeStyle = `rgba(201, 162, 39, ${alpha})`;
+        $.lineWidth = 1 + z * 2;
+        $.beginPath();
+        for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI / 3) * i - Math.PI / 6;
+            const px = cx + ox + Math.cos(angle) * size;
+            const py = cy + oy + Math.sin(angle) * size;
+            if (i === 0) $.moveTo(px, py);
+            else $.lineTo(px, py);
+        }
+        $.closePath();
+        $.stroke();
         
-        for (let row = -2; row < rows; row++) {
-            for (let col = -2; col < cols; col++) {
-                let x = col * size * 1.5 + depthOffset + dirOffsetX;
-                let y = row * h + (col % 2 ? h / 2 : 0) + depthOffset * 0.5 + dirOffsetY;
-                
-                // Wrap
-                x = ((x % (W + size * 3)) + W + size * 3) % (W + size * 3) - size;
-                y = ((y % (H + h * 2)) + H + h * 2) % (H + h * 2) - h;
-                
-                // Distanza dal centro per effetto vignette
-                const dx = x - cx;
-                const dy = y - cy;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const maxDist = Math.sqrt(cx * cx + cy * cy);
-                const vignette = 1 - (dist / maxDist) * 0.5;
-                
-                // Colore basato sulla profondità
-                const brightness = 25 + depth * 3;
-                const saturation = 50 + depth * 5;
-                
-                $.strokeStyle = `hsla(40, ${saturation}%, ${brightness}%, ${alpha * vignette})`;
-                $.lineWidth = 0.5 + depth * 0.15;
-                
-                drawHexagon(x, y, size * 0.95, depth);
+        // Linee di connessione ai vertici (struttura del tunnel)
+        if (z > 0.3) {
+            $.strokeStyle = `rgba(201, 162, 39, ${alpha * 0.3})`;
+            $.lineWidth = 0.5;
+            for (let i = 0; i < 6; i++) {
+                const angle = (Math.PI / 3) * i - Math.PI / 6;
+                $.beginPath();
+                $.moveTo(cx + ox * 0.5, cy + oy * 0.5);
+                $.lineTo(cx + ox + Math.cos(angle) * size, cy + oy + Math.sin(angle) * size);
                 $.stroke();
-                
-                // Luce interna delle celle più vicine
-                if (depth > HEX_DEPTH - 3) {
-                    const glowAlpha = (depth - HEX_DEPTH + 3) / 3 * 0.02 * vignette;
-                    $.fillStyle = `hsla(45, 70%, 50%, ${glowAlpha})`;
-                    $.fill();
-                }
             }
         }
-    }
-    
-    // Bordi del tunnel centrale (l'apertura dove volano le api)
-    const gradient = $.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.7);
-    gradient.addColorStop(0, 'transparent');
-    gradient.addColorStop(0.5, 'transparent');
-    gradient.addColorStop(0.8, 'rgba(20, 15, 5, 0.3)');
-    gradient.addColorStop(1, 'rgba(10, 8, 3, 0.7)');
-    $.fillStyle = gradient;
-    $.fillRect(0, 0, W, H);
+    });
 }
 
 // ═══════════════════════════════════════════════════════════════
-// TEORIA MUSICALE
+// MUSICA
 // ═══════════════════════════════════════════════════════════════
 
 const ROOT = 110;
-
 const PROGRESSIONS = [
     [[0,4,7,11], [9,12,16,19], [5,9,12,17], [7,11,14,19]],
     [[0,4,7,11], [7,11,14,19], [9,12,16,19], [5,9,12,17]],
     [[2,5,9,12], [7,11,14,17], [0,4,7,11], [0,4,7,11]],
     [[0,4,7,11], [5,9,12,17], [9,12,16,19], [7,11,14,19]],
-    [[9,12,16,19], [5,9,12,17], [0,4,7,11], [7,11,14,19]],
-    [[0,4,7,11], [4,7,11,14], [5,9,12,17], [5,8,12,17]],
 ];
-
-const SCALES = {
-    major: [0, 2, 4, 5, 7, 9, 11],
-    minor: [0, 2, 3, 5, 7, 8, 10],
-    dorian: [0, 2, 3, 5, 7, 9, 10],
-    mixolydian: [0, 2, 4, 5, 7, 9, 10],
-    lydian: [0, 2, 4, 6, 7, 9, 11],
-};
+const SCALES = { major: [0,2,4,5,7,9,11], minor: [0,2,3,5,7,8,10], dorian: [0,2,3,5,7,9,10] };
 
 let currentScale = SCALES.major;
 let currentProgression = 0;
 let chordIndex = 0;
-
-function midiToFreq(midi) { return ROOT * Math.pow(2, midi / 12); }
-
-function quantize(degree) {
-    const octave = Math.floor(degree / 12);
-    const note = ((degree % 12) + 12) % 12;
-    let closest = currentScale[0], minDist = 12;
-    for (const s of currentScale) {
-        const dist = Math.min(Math.abs(s - note), Math.abs(s - note + 12), Math.abs(s - note - 12));
-        if (dist < minDist) { minDist = dist; closest = s; }
-    }
-    return octave * 12 + closest;
-}
-
-// ═══════════════════════════════════════════════════════════════
-// AUDIO ENGINE
-// ═══════════════════════════════════════════════════════════════
-
-let ctx, masterGain, reverbGain, delayNode, compressor;
-let isPlaying = false;
-let padVoices = [], bassOsc, bassGain;
+let ctx, masterGain, isPlaying = false;
+let padVoices = [], bassOsc;
 let tension = 0.5, energy = 0.5, brightness = 0.5, tempo = 0.5;
 
-function createReverb(duration = 2.5, decay = 2) {
-    const length = ctx.sampleRate * duration;
-    const impulse = ctx.createBuffer(2, length, ctx.sampleRate);
-    for (let ch = 0; ch < 2; ch++) {
-        const data = impulse.getChannelData(ch);
-        for (let i = 0; i < length; i++) {
-            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
-        }
+function midiToFreq(midi) { return ROOT * Math.pow(2, midi / 12); }
+function quantize(degree) {
+    const oct = Math.floor(degree / 12), note = ((degree % 12) + 12) % 12;
+    let closest = 0, minD = 12;
+    for (const s of currentScale) {
+        const d = Math.min(Math.abs(s - note), 12 - Math.abs(s - note));
+        if (d < minD) { minD = d; closest = s; }
     }
-    const conv = ctx.createConvolver();
-    conv.buffer = impulse;
-    return conv;
+    return oct * 12 + closest;
 }
 
 function initAudio() {
     if (ctx) return;
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     
-    compressor = ctx.createDynamicsCompressor();
-    compressor.threshold.value = -20;
-    compressor.knee.value = 20;
-    compressor.ratio.value = 6;
-    compressor.connect(ctx.destination);
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -20; comp.ratio.value = 6;
+    comp.connect(ctx.destination);
     
     masterGain = ctx.createGain();
     masterGain.gain.value = 0;
-    masterGain.connect(compressor);
+    masterGain.connect(comp);
     
-    const reverb = createReverb(3, 2);
-    reverbGain = ctx.createGain();
-    reverbGain.gain.value = 0.3;
-    reverb.connect(reverbGain);
-    reverbGain.connect(compressor);
-    masterGain.connect(reverb);
+    const reverb = ctx.createConvolver();
+    const len = ctx.sampleRate * 2;
+    const imp = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+        const d = imp.getChannelData(ch);
+        for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i/len, 2);
+    }
+    reverb.buffer = imp;
+    const revGain = ctx.createGain(); revGain.gain.value = 0.25;
+    masterGain.connect(reverb); reverb.connect(revGain); revGain.connect(comp);
     
-    delayNode = ctx.createDelay(2);
-    delayNode.delayTime.value = 0.375;
-    const delayFeedback = ctx.createGain();
-    delayFeedback.gain.value = 0.25;
-    const delayFilter = ctx.createBiquadFilter();
-    delayFilter.type = 'lowpass';
-    delayFilter.frequency.value = 2500;
-    delayNode.connect(delayFilter);
-    delayFilter.connect(delayFeedback);
-    delayFeedback.connect(delayNode);
-    const delayOut = ctx.createGain();
-    delayOut.gain.value = 0.2;
-    delayNode.connect(delayOut);
-    delayOut.connect(compressor);
-    masterGain.connect(delayNode);
+    masterGain.gain.setTargetAtTime(0.7, ctx.currentTime, 2);
     
-    masterGain.gain.setTargetAtTime(0.8, ctx.currentTime, 3);
+    // Bass
+    bassOsc = ctx.createOscillator();
+    const bassGain = ctx.createGain();
+    const bassFilter = ctx.createBiquadFilter();
+    bassOsc.type = 'sine';
+    bassFilter.type = 'lowpass'; bassFilter.frequency.value = 200;
+    bassGain.gain.value = 0.2;
+    bassOsc.connect(bassFilter); bassFilter.connect(bassGain); bassGain.connect(masterGain);
+    bassOsc.frequency.value = midiToFreq(PROGRESSIONS[0][0][0] - 12);
+    bassOsc.start();
     
-    startBass();
-    startPad();
-    scheduleChordChange();
-    startArpeggio();
+    // Pad
+    for (let i = 0; i < 4; i++) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        osc.type = 'sawtooth';
+        filter.type = 'lowpass'; filter.frequency.value = 600 + i * 150;
+        gain.gain.value = 0.04;
+        osc.connect(filter); filter.connect(gain); gain.connect(masterGain);
+        osc.frequency.value = midiToFreq(PROGRESSIONS[0][0][i]);
+        osc.start();
+        padVoices.push({ osc, gain, filter });
+    }
+    
+    // Chord changes
+    setInterval(() => {
+        chordIndex = (chordIndex + 1) % 4;
+        const chord = PROGRESSIONS[currentProgression][chordIndex];
+        bassOsc.frequency.setTargetAtTime(midiToFreq(chord[0] - 12), ctx.currentTime, 0.3);
+        padVoices.forEach((v, i) => {
+            v.osc.frequency.setTargetAtTime(midiToFreq(chord[i]), ctx.currentTime, 0.4);
+            v.filter.frequency.setTargetAtTime(400 + brightness * 1500, ctx.currentTime, 0.2);
+        });
+    }, 2500);
+    
+    // Arpeggio
+    let arpIdx = 0;
+    setInterval(() => {
+        const chord = PROGRESSIONS[currentProgression][chordIndex];
+        const pattern = [0, 2, 1, 3, 2, 0];
+        const note = chord[pattern[arpIdx % pattern.length] % 4] + 12;
+        playNote(note, 0.08 * energy);
+        arpIdx++;
+    }, 200);
+    
+    // Melody
+    setInterval(() => {
+        if (Math.random() > energy * 0.7) return;
+        const chord = PROGRESSIONS[currentProgression][chordIndex];
+        const note = quantize(chord[0] + 12 + Math.floor(Math.random() * 14));
+        playNote(note + 12, 0.1 * energy, 0.4);
+    }, 400);
     
     isPlaying = true;
 }
 
-function startBass() {
-    bassOsc = ctx.createOscillator();
-    const bassOsc2 = ctx.createOscillator();
-    bassGain = ctx.createGain();
-    const bassFilter = ctx.createBiquadFilter();
-    
-    bassOsc.type = 'sine';
-    bassOsc2.type = 'triangle';
-    bassOsc2.detune.value = -1200;
-    bassFilter.type = 'lowpass';
-    bassFilter.frequency.value = 300;
-    bassGain.gain.value = 0.25;
-    
-    const bassOsc2Gain = ctx.createGain();
-    bassOsc2Gain.gain.value = 0.15;
-    
-    bassOsc.connect(bassFilter);
-    bassOsc2.connect(bassOsc2Gain);
-    bassOsc2Gain.connect(bassFilter);
-    bassFilter.connect(bassGain);
-    bassGain.connect(masterGain);
-    
-    const chord = PROGRESSIONS[currentProgression][chordIndex];
-    bassOsc.frequency.value = midiToFreq(chord[0] - 12);
-    bassOsc2.frequency.value = midiToFreq(chord[0] - 12);
-    
-    bassOsc.start();
-    bassOsc2.start();
-}
-
-function updateBass(notes) {
-    if (!bassOsc) return;
-    bassOsc.frequency.setTargetAtTime(midiToFreq(notes[0] - 12), ctx.currentTime, 0.3);
-}
-
-function startPad() {
-    for (let i = 0; i < 4; i++) {
-        const osc1 = ctx.createOscillator();
-        const osc2 = ctx.createOscillator();
-        const gain = ctx.createGain();
-        const filter = ctx.createBiquadFilter();
-        const lfo = ctx.createOscillator();
-        const lfoGain = ctx.createGain();
-        
-        osc1.type = 'sawtooth';
-        osc2.type = 'sawtooth';
-        osc2.detune.value = 7 + i * 2;
-        filter.type = 'lowpass';
-        filter.frequency.value = 800 + i * 200;
-        lfo.type = 'sine';
-        lfo.frequency.value = 0.1 + i * 0.05;
-        lfoGain.gain.value = 3;
-        lfo.connect(lfoGain);
-        lfoGain.connect(osc1.detune);
-        lfoGain.connect(osc2.detune);
-        gain.gain.value = 0.06;
-        
-        osc1.connect(filter);
-        osc2.connect(filter);
-        filter.connect(gain);
-        gain.connect(masterGain);
-        
-        const chord = PROGRESSIONS[currentProgression][chordIndex];
-        osc1.frequency.value = midiToFreq(chord[i] || chord[0]);
-        osc2.frequency.value = midiToFreq(chord[i] || chord[0]);
-        
-        osc1.start(); osc2.start(); lfo.start();
-        padVoices.push({ osc1, osc2, gain, filter });
-    }
-}
-
-function updatePad(notes) {
-    padVoices.forEach((voice, i) => {
-        const freq = midiToFreq(notes[i] || notes[0]);
-        voice.osc1.frequency.setTargetAtTime(freq, ctx.currentTime, 0.4);
-        voice.osc2.frequency.setTargetAtTime(freq, ctx.currentTime, 0.4);
-        voice.filter.frequency.setTargetAtTime(400 + brightness * 2000, ctx.currentTime, 0.2);
-    });
-}
-
-let arpIndex = 0, arpInterval;
-
-function startArpeggio() {
-    function playArpNote() {
-        if (!ctx || !isPlaying) return;
-        const chord = PROGRESSIONS[currentProgression][chordIndex];
-        let pattern = tension < 0.3 ? [0, 1, 2, 3, 2, 1] : 
-                      tension < 0.6 ? [0, 2, 1, 3, 2, 0, 3, 1] : [0, 3, 1, 2, 3, 0, 2, 1, 3, 2];
-        const noteIdx = pattern[arpIndex % pattern.length];
-        const baseNote = chord[noteIdx % chord.length];
-        const octaveShift = energy > 0.7 && Math.random() > 0.5 ? 12 : 0;
-        const accent = arpIndex % pattern.length === 0 ? 1.2 : 0.8;
-        playMelodyNote(baseNote + 12 + octaveShift, 0.08 * energy * accent, getArpDuration() * 0.8);
-        arpIndex++;
-        arpInterval = setTimeout(playArpNote, getArpDuration());
-    }
-    playArpNote();
-}
-
-function getArpDuration() { return (400 - tempo * 250) / (1 + energy * 0.5); }
-
-function playMelodyNote(midi, volume, duration) {
+function playNote(midi, vol, dur = 0.2) {
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-    
-    osc.type = brightness > 0.6 ? 'sawtooth' : brightness > 0.3 ? 'triangle' : 'sine';
+    osc.type = brightness > 0.5 ? 'triangle' : 'sine';
     osc.frequency.value = midiToFreq(midi);
-    filter.type = 'lowpass';
-    filter.frequency.value = 1000 + brightness * 4000;
-    filter.Q.value = 1 + tension * 3;
-    
-    const now = ctx.currentTime;
     gain.gain.value = 0;
-    gain.gain.linearRampToValueAtTime(volume, now + 0.01);
-    gain.gain.linearRampToValueAtTime(volume * 0.6, now + duration * 0.3);
-    gain.gain.linearRampToValueAtTime(0, now + duration + duration * 0.5);
-    
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterGain);
-    osc.start(now);
-    osc.stop(now + duration * 1.6);
-}
-
-function scheduleChordChange() {
-    function changeChord() {
-        if (!ctx || !isPlaying) return;
-        chordIndex = (chordIndex + 1) % 4;
-        const chord = PROGRESSIONS[currentProgression][chordIndex];
-        updatePad(chord);
-        updateBass(chord);
-        setTimeout(changeChord, 2000 + (1 - tempo) * 2000);
-    }
-    changeChord();
-}
-
-let lastMelodyNote = 12, melodyRest = 0;
-
-function generateMelodyPhrase() {
-    if (!ctx || !isPlaying) return;
-    if (Math.random() > energy * 0.8) {
-        melodyRest++;
-        if (melodyRest < 3) { setTimeout(generateMelodyPhrase, 500 + Math.random() * 500); return; }
-    }
-    melodyRest = 0;
-    
-    const chord = PROGRESSIONS[currentProgression][chordIndex];
-    const phraseLength = 3 + Math.floor(Math.random() * 5);
-    let time = 0;
-    
-    for (let i = 0; i < phraseLength; i++) {
-        const r = Math.random();
-        let interval = r < 0.4 ? (Math.random() > 0.5 ? 1 : -1) : 
-                       r < 0.7 ? (Math.random() > 0.5 ? 2 : -2) : 
-                       r < 0.85 ? 0 : Math.floor(Math.random() * 5) - 2;
-        let nextNote = lastMelodyNote + interval;
-        if (Math.random() < 0.3) {
-            const chordTone = chord[Math.floor(Math.random() * chord.length)] + 12;
-            if (Math.abs(chordTone - nextNote) <= 4) nextNote = chordTone;
-        }
-        nextNote = quantize(nextNote);
-        if (nextNote < 7) nextNote += 12;
-        if (nextNote > 31) nextNote -= 12;
-        lastMelodyNote = nextNote;
-        
-        const duration = (200 + Math.random() * 300) / (1 + tempo * 0.5);
-        setTimeout(() => playMelodyNote(nextNote + 12, 0.12 * energy * (i === 0 ? 1.2 : 0.9), duration / 1000), time);
-        time += duration;
-    }
-    setTimeout(generateMelodyPhrase, time + 500 + Math.random() * 1500 * (1 - energy));
+    gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.01);
+    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + dur);
+    osc.connect(gain); gain.connect(masterGain);
+    osc.start(); osc.stop(ctx.currentTime + dur + 0.1);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -435,32 +254,24 @@ async function loadApi() {
                 const hash = nome.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
                 API.push({
                     nome, hash,
-                    x: W/2 + (Math.random() - 0.5) * W * 0.5,
-                    y: H/2 + (Math.random() - 0.5) * H * 0.5,
-                    z: Math.random(), // profondità nel tunnel
+                    x: cx + (Math.random() - 0.5) * 300,
+                    y: cy + (Math.random() - 0.5) * 300,
                     vx: (Math.random() - 0.5) * 2,
                     vy: (Math.random() - 0.5) * 2,
-                    vz: (Math.random() - 0.5) * 0.02,
-                    size: 2 + (hash % 3),
-                    hue: 35 + (hash % 20),
-                    phase: Math.random() * Math.PI * 2,
-                    wingPhase: Math.random() * Math.PI * 2,
+                    size: 3 + (hash % 3),
+                    hue: 38 + (hash % 15),
                     trail: []
                 });
             }
         });
     } catch(e) {
-        for (let i = 0; i < 40; i++) {
+        for (let i = 0; i < 35; i++) {
             API.push({
                 nome: 'ape-' + i, hash: i * 17,
-                x: W/2 + (Math.random() - 0.5) * W * 0.5,
-                y: H/2 + (Math.random() - 0.5) * H * 0.5,
-                z: Math.random(),
+                x: cx + (Math.random() - 0.5) * 300,
+                y: cy + (Math.random() - 0.5) * 300,
                 vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
-                vz: (Math.random() - 0.5) * 0.02,
-                size: 2 + Math.random() * 2, hue: 35 + Math.random() * 15,
-                phase: Math.random() * Math.PI * 2,
-                wingPhase: Math.random() * Math.PI * 2,
+                size: 3 + Math.random() * 2, hue: 38 + Math.random() * 12,
                 trail: []
             });
         }
@@ -472,236 +283,134 @@ loadApi();
 // INTERAZIONE
 // ═══════════════════════════════════════════════════════════════
 
-let lastX = W/2, lastY = H/2, mouseSpeed = 0;
-let clickCount = 0, lastClickTime = 0;
+let lastX = W/2, lastY = H/2;
 
 onmousemove = e => {
-    const dx = e.clientX - lastX;
-    const dy = e.clientY - lastY;
-    mouseSpeed = Math.sqrt(dx*dx + dy*dy);
-    
-    // Direzione del tunnel
-    tunnelDirection.x = (e.clientX - W/2) / W * 2;
-    tunnelDirection.y = (e.clientY - H/2) / H * 2;
-    tunnelSpeed = 0.5 + mouseSpeed * 0.05;
-    
+    const speed = Math.sqrt((e.clientX - lastX) ** 2 + (e.clientY - lastY) ** 2);
     lastX = mouse.x = e.clientX;
     lastY = mouse.y = e.clientY;
     
-    brightness = 1 - (e.clientY / H);
+    // Tunnel segue il mouse
+    tunnelOffsetX = (e.clientX - cx) / cx;
+    tunnelOffsetY = (e.clientY - cy) / cy;
+    tunnelSpeed = 0.005 + speed * 0.0005;
+    
+    brightness = 1 - e.clientY / H;
     tempo = e.clientX / W;
-    energy = Math.min(1, energy * 0.95 + mouseSpeed * 0.01);
-    if (mouseSpeed > 30) tension = Math.min(1, tension + 0.02);
-    else tension = Math.max(0, tension - 0.005);
+    energy = Math.min(1, energy * 0.95 + speed * 0.008);
 };
 
 onclick = e => {
     if (!ctx) return;
-    const now = Date.now();
-    if (now - lastClickTime < 500) clickCount++;
-    else clickCount = 1;
-    lastClickTime = now;
+    currentProgression = (currentProgression + 1) % PROGRESSIONS.length;
+    currentScale = [SCALES.major, SCALES.minor, SCALES.dorian][currentProgression % 3];
     
-    if (clickCount >= 2) {
-        currentProgression = (currentProgression + 1) % PROGRESSIONS.length;
-        currentScale = SCALES[Object.keys(SCALES)[currentProgression % 5]];
-        clickCount = 0;
-        
-        API.forEach(a => {
-            const dx = a.x - e.clientX, dy = a.y - e.clientY;
-            const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 300) { a.vx += (dx/d) * 8; a.vy += (dy/d) * 8; a.vz += 0.05; }
-        });
-        
-        const chord = PROGRESSIONS[currentProgression][chordIndex];
-        chord.forEach((note, i) => setTimeout(() => playMelodyNote(note + 24, 0.15, 0.5), i * 50));
-    } else {
-        const note = Math.floor((1 - e.clientY / H) * 24) + 12;
-        playMelodyNote(quantize(note) + 12, 0.2, 0.4);
-        API.forEach(a => {
-            const dx = a.x - e.clientX, dy = a.y - e.clientY;
-            const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 150) { a.vx += (dx/d) * 3; a.vy += (dy/d) * 3; }
-        });
-    }
+    // Esplosione api
+    API.forEach(a => {
+        const dx = a.x - e.clientX, dy = a.y - e.clientY;
+        const d = Math.sqrt(dx*dx + dy*dy) || 1;
+        if (d < 250) { a.vx += (dx/d) * 6; a.vy += (dy/d) * 6; }
+    });
+    
+    // Accordo forte
+    const chord = PROGRESSIONS[currentProgression][chordIndex];
+    chord.forEach((n, i) => setTimeout(() => playNote(n + 24, 0.15, 0.5), i * 40));
 };
 
 // ═══════════════════════════════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════════════════════════════
 
-let t = 0;
-
-function drawBee(a, scale) {
-    const s = a.size * scale * (1 + energy * 0.2);
-    const alpha = 0.4 + scale * 0.6;
-    
-    // Ali
-    a.wingPhase += 0.3 + energy * 0.2;
-    const wingSpan = Math.sin(a.wingPhase) * s * 1.5;
-    
-    $.save();
-    $.translate(a.x, a.y);
-    
-    // Alone di luce
-    const glowSize = s * (4 + energy * 2);
-    const glow = $.createRadialGradient(0, 0, 0, 0, 0, glowSize);
-    glow.addColorStop(0, `hsla(${a.hue}, 70%, ${55 + brightness * 25}%, ${0.3 * alpha})`);
-    glow.addColorStop(0.5, `hsla(${a.hue}, 60%, 45%, ${0.1 * alpha})`);
-    glow.addColorStop(1, 'transparent');
-    $.fillStyle = glow;
-    $.beginPath();
-    $.arc(0, 0, glowSize, 0, Math.PI * 2);
-    $.fill();
-    
-    // Ali (ellissi trasparenti)
-    $.fillStyle = `hsla(50, 30%, 80%, ${0.15 * alpha})`;
-    $.beginPath();
-    $.ellipse(-s * 0.8, wingSpan * 0.3, s * 1.2, Math.abs(wingSpan) * 0.5 + s * 0.3, -0.3, 0, Math.PI * 2);
-    $.fill();
-    $.beginPath();
-    $.ellipse(s * 0.8, -wingSpan * 0.3, s * 1.2, Math.abs(wingSpan) * 0.5 + s * 0.3, 0.3, 0, Math.PI * 2);
-    $.fill();
-    
-    // Corpo (3 segmenti)
-    $.fillStyle = `hsla(${a.hue}, 65%, ${45 + brightness * 20}%, ${alpha})`;
-    $.beginPath();
-    $.ellipse(0, -s * 0.6, s * 0.5, s * 0.4, 0, 0, Math.PI * 2); // testa
-    $.fill();
-    $.fillStyle = `hsla(${a.hue - 5}, 70%, ${40 + brightness * 15}%, ${alpha})`;
-    $.beginPath();
-    $.ellipse(0, 0, s * 0.6, s * 0.5, 0, 0, Math.PI * 2); // torace
-    $.fill();
-    $.fillStyle = `hsla(${a.hue}, 60%, ${35 + brightness * 15}%, ${alpha})`;
-    $.beginPath();
-    $.ellipse(0, s * 0.8, s * 0.5, s * 0.7, 0, 0, Math.PI * 2); // addome
-    $.fill();
-    
-    // Strisce sull'addome
-    $.strokeStyle = `hsla(25, 80%, 20%, ${0.4 * alpha})`;
-    $.lineWidth = s * 0.15;
-    for (let i = 0; i < 3; i++) {
-        $.beginPath();
-        $.arc(0, s * 0.6 + i * s * 0.25, s * 0.4 - i * 0.05, 0.3, Math.PI - 0.3);
-        $.stroke();
-    }
-    
-    $.restore();
-}
-
 function loop() {
-    t += 0.016;
-    
-    // Sfondo nero
-    $.fillStyle = '#000';
+    // Clear
+    $.fillStyle = 'rgba(0, 0, 0, 0.15)';
     $.fillRect(0, 0, W, H);
     
-    // Disegna il tunnel
+    // Tunnel
     drawTunnel();
     
     if (API.length === 0) { requestAnimationFrame(loop); return; }
     
-    // Ordina api per profondità (z)
-    API.sort((a, b) => a.z - b.z);
+    // Boids
+    let avgX = 0, avgY = 0, avgVX = 0, avgVY = 0;
+    API.forEach(a => { avgX += a.x; avgY += a.y; avgVX += a.vx; avgVY += a.vy; });
+    avgX /= API.length; avgY /= API.length;
+    avgVX /= API.length; avgVY /= API.length;
     
-    // Centro e velocità media
-    let cx = 0, cy = 0, vxm = 0, vym = 0;
-    API.forEach(a => { cx += a.x; cy += a.y; vxm += a.vx; vym += a.vy; });
-    cx /= API.length; cy /= API.length;
-    vxm /= API.length; vym /= API.length;
-    
-    // Update e draw api
     API.forEach((a, i) => {
-        // Boids
+        // Separazione
         let sepX = 0, sepY = 0;
         API.forEach((b, j) => {
             if (i === j) return;
             const dx = a.x - b.x, dy = a.y - b.y;
             const d = Math.sqrt(dx*dx + dy*dy) || 1;
-            if (d < 40) { sepX += (dx/d) * (40 - d) * 0.03; sepY += (dy/d) * (40 - d) * 0.03; }
+            if (d < 30) { sepX += (dx/d) * 0.5; sepY += (dy/d) * 0.5; }
         });
         
-        a.vx += (vxm - a.vx) * 0.02 + (cx - a.x) * 0.0004 + sepX;
-        a.vy += (vym - a.vy) * 0.02 + (cy - a.y) * 0.0004 + sepY;
-        
-        // Seguono il tunnel (vanno verso il centro ma con offset dalla direzione)
-        const toCenterX = W/2 + tunnelDirection.x * 100 - a.x;
-        const toCenterY = H/2 + tunnelDirection.y * 100 - a.y;
-        a.vx += toCenterX * 0.001;
-        a.vy += toCenterY * 0.001;
+        // Coesione, allineamento
+        a.vx += (avgVX - a.vx) * 0.02 + (avgX - a.x) * 0.001 + sepX;
+        a.vy += (avgVY - a.vy) * 0.02 + (avgY - a.y) * 0.001 + sepY;
         
         // Attrazione mouse
         const dx = mouse.x - a.x, dy = mouse.y - a.y;
         const d = Math.sqrt(dx*dx + dy*dy) || 1;
-        if (d < 200) {
-            a.vx += (dx/d) * (200 - d) / 200 * 0.3;
-            a.vy += (dy/d) * (200 - d) / 200 * 0.3;
-        }
+        if (d < 200) { a.vx += (dx/d) * 0.2; a.vy += (dy/d) * 0.2; }
         
-        // Movimento Z (profondità)
-        a.vz += (Math.random() - 0.5) * 0.005;
-        a.vz *= 0.95;
-        a.z += a.vz;
-        if (a.z < 0) { a.z = 0; a.vz *= -0.5; }
-        if (a.z > 1) { a.z = 1; a.vz *= -0.5; }
+        // Centro
+        a.vx += (cx - a.x) * 0.0005;
+        a.vy += (cy - a.y) * 0.0005;
         
-        // Noise
-        a.phase += 0.02;
-        a.vx += Math.sin(a.phase + a.hash) * 0.06;
-        a.vy += Math.cos(a.phase * 1.3 + a.hash) * 0.06;
-        
-        // Velocità max
-        const maxV = 2.5 + energy * 2;
+        // Limit
         const v = Math.sqrt(a.vx*a.vx + a.vy*a.vy);
-        if (v > maxV) { a.vx = (a.vx/v) * maxV; a.vy = (a.vy/v) * maxV; }
+        const maxV = 3 + energy * 3;
+        if (v > maxV) { a.vx = (a.vx/v)*maxV; a.vy = (a.vy/v)*maxV; }
         
         a.x += a.vx; a.y += a.vy;
         
-        // Bordi morbidi
-        const margin = 80;
-        if (a.x < margin) a.vx += 0.4;
-        if (a.x > W - margin) a.vx -= 0.4;
-        if (a.y < margin) a.vy += 0.4;
-        if (a.y > H - margin) a.vy -= 0.4;
-        
         // Trail
-        a.trail.push({ x: a.x, y: a.y, z: a.z });
-        if (a.trail.length > 15 + energy * 10) a.trail.shift();
-        
-        // Scala basata su profondità
-        const scale = 0.5 + a.z * 0.8;
-        
+        a.trail.push({ x: a.x, y: a.y });
+        if (a.trail.length > 20) a.trail.shift();
+    });
+    
+    // Connessioni
+    $.lineWidth = 0.5;
+    API.forEach((a, i) => {
+        API.forEach((b, j) => {
+            if (j <= i) return;
+            const d = Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2);
+            if (d < 70) {
+                $.strokeStyle = `rgba(201, 162, 39, ${(1 - d/70) * 0.2})`;
+                $.beginPath(); $.moveTo(a.x, a.y); $.lineTo(b.x, b.y); $.stroke();
+            }
+        });
+    });
+    
+    // Trail e api
+    API.forEach(a => {
         // Trail
         if (a.trail.length > 2) {
             $.beginPath();
             $.moveTo(a.trail[0].x, a.trail[0].y);
-            for (let j = 1; j < a.trail.length; j++) {
-                $.lineTo(a.trail[j].x, a.trail[j].y);
-            }
-            $.strokeStyle = `hsla(${a.hue}, 50%, ${45 + brightness * 20}%, ${0.15 * scale})`;
-            $.lineWidth = 1 + scale + energy;
+            a.trail.forEach(p => $.lineTo(p.x, p.y));
+            $.strokeStyle = `hsla(${a.hue}, 60%, 55%, 0.3)`;
+            $.lineWidth = 2;
             $.stroke();
         }
         
-        // Connessioni (solo tra api vicine in Z)
-        API.forEach((b, j) => {
-            if (j <= i) return;
-            if (Math.abs(a.z - b.z) > 0.3) return;
-            const ddx = a.x - b.x, ddy = a.y - b.y;
-            const dd = Math.sqrt(ddx*ddx + ddy*ddy);
-            if (dd < 60 + energy * 30) {
-                const alpha = (1 - dd / (60 + energy * 30)) * 0.1 * scale;
-                $.strokeStyle = `hsla(42, 50%, 50%, ${alpha})`;
-                $.lineWidth = 0.5;
-                $.beginPath();
-                $.moveTo(a.x, a.y);
-                $.lineTo(b.x, b.y);
-                $.stroke();
-            }
-        });
+        // Alone
+        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, a.size * 5);
+        grad.addColorStop(0, `hsla(${a.hue}, 70%, 60%, 0.4)`);
+        grad.addColorStop(1, 'transparent');
+        $.fillStyle = grad;
+        $.beginPath();
+        $.arc(a.x, a.y, a.size * 5, 0, Math.PI * 2);
+        $.fill();
         
-        // Disegna l'ape
-        drawBee(a, scale);
+        // Corpo
+        $.fillStyle = `hsla(${a.hue}, 70%, 65%, 0.95)`;
+        $.beginPath();
+        $.arc(a.x, a.y, a.size, 0, Math.PI * 2);
+        $.fill();
     });
     
     requestAnimationFrame(loop);
@@ -714,7 +423,6 @@ function loop() {
 document.getElementById('start').onclick = () => {
     initAudio();
     document.getElementById('start').classList.add('hidden');
-    setTimeout(generateMelodyPhrase, 2000);
 };
 
 requestAnimationFrame(loop);
