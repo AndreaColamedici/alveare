@@ -18,40 +18,311 @@
             letter-spacing: 0.3em;
             transition: color 0.3s;
             pointer-events: none;
+            text-align: center;
         }
         #nome.visible { color: rgba(201, 162, 39, 0.7); }
-        #count {
+        #start {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #c9a227;
+            font: 300 2rem Georgia, serif;
+            letter-spacing: 0.5em;
+            cursor: pointer;
+            text-align: center;
+            z-index: 100;
+        }
+        #start span {
+            display: block;
+            font-size: 0.7rem;
+            margin-top: 20px;
+            color: rgba(201,162,39,0.4);
+            letter-spacing: 0.3em;
+        }
+        #start.hidden { display: none; }
+        #mode {
             position: fixed;
             top: 20px;
-            right: 20px;
-            color: rgba(201, 162, 39, 0.2);
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(201, 162, 39, 0.3);
+            font-size: 0.65rem;
+            letter-spacing: 0.4em;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
+<div id="start">SCIAME<span>clicca per iniziare</span></div>
 <canvas id="c"></canvas>
 <div id="nome"></div>
-<div id="count"></div>
+<div id="mode"></div>
 <script>
 const c = document.getElementById('c');
 const $ = c.getContext('2d');
 const nomeEl = document.getElementById('nome');
-const countEl = document.getElementById('count');
+const modeEl = document.getElementById('mode');
 let W, H;
 
 function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
 resize();
 onresize = resize;
 
-let API = [];
-let REPULSIONE = 35;
-let ALLINEAMENTO = 0.04;
-let COESIONE = 0.0008;
-let apeVicina = null;
+// ═══════════════════════════════════════════════════════════════
+// SISTEMA MUSICALE
+// ═══════════════════════════════════════════════════════════════
 
-async function carica() {
+const MODES = {
+    ionian:     { name: 'Luce',    intervals: [0, 2, 4, 5, 7, 9, 11], color: 'hsl(45, 70%, 60%)' },
+    dorian:     { name: 'Vento',   intervals: [0, 2, 3, 5, 7, 9, 10], color: 'hsl(200, 60%, 55%)' },
+    phrygian:   { name: 'Sabbia',  intervals: [0, 1, 3, 5, 7, 8, 10], color: 'hsl(30, 65%, 50%)' },
+    lydian:     { name: 'Cielo',   intervals: [0, 2, 4, 6, 7, 9, 11], color: 'hsl(180, 50%, 60%)' },
+    mixolydian: { name: 'Terra',   intervals: [0, 2, 4, 5, 7, 9, 10], color: 'hsl(25, 70%, 55%)' },
+    aeolian:    { name: 'Ombra',   intervals: [0, 2, 3, 5, 7, 8, 10], color: 'hsl(270, 40%, 50%)' },
+    locrian:    { name: 'Abisso',  intervals: [0, 1, 3, 5, 6, 8, 10], color: 'hsl(300, 30%, 40%)' }
+};
+
+const MODE_KEYS = Object.keys(MODES);
+let currentModeIndex = 0;
+let currentMode = MODES.ionian;
+const ROOT = 55; // La1
+
+function getFreq(degree, octave = 0) {
+    const interval = currentMode.intervals[((degree % 7) + 7) % 7];
+    const oct = Math.floor(degree / 7) + octave;
+    return ROOT * Math.pow(2, (interval + oct * 12) / 12);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUDIO ENGINE
+// ═══════════════════════════════════════════════════════════════
+
+let audio, master, reverb, delay, compressor;
+let drone = [], pad = [], melody = [];
+let isPlaying = false;
+
+function createReverb(ctx, duration = 2, decay = 2) {
+    const rate = ctx.sampleRate;
+    const length = rate * duration;
+    const impulse = ctx.createBuffer(2, length, rate);
+    for (let c = 0; c < 2; c++) {
+        const data = impulse.getChannelData(c);
+        for (let i = 0; i < length; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
+        }
+    }
+    const conv = ctx.createConvolver();
+    conv.buffer = impulse;
+    return conv;
+}
+
+function initAudio() {
+    if (audio) return;
+    audio = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Master chain
+    compressor = audio.createDynamicsCompressor();
+    compressor.threshold.value = -24;
+    compressor.knee.value = 30;
+    compressor.ratio.value = 4;
+    compressor.attack.value = 0.003;
+    compressor.release.value = 0.25;
+    
+    reverb = createReverb(audio, 3, 2.5);
+    const reverbGain = audio.createGain();
+    reverbGain.gain.value = 0.35;
+    
+    delay = audio.createDelay(1);
+    delay.delayTime.value = 0.375; // dotted eighth
+    const delayFeedback = audio.createGain();
+    delayFeedback.gain.value = 0.3;
+    const delayFilter = audio.createBiquadFilter();
+    delayFilter.type = 'lowpass';
+    delayFilter.frequency.value = 2000;
+    
+    delay.connect(delayFilter);
+    delayFilter.connect(delayFeedback);
+    delayFeedback.connect(delay);
+    
+    const delayGain = audio.createGain();
+    delayGain.gain.value = 0.25;
+    delay.connect(delayGain);
+    
+    master = audio.createGain();
+    master.gain.value = 0;
+    
+    // Routing
+    master.connect(compressor);
+    master.connect(reverb);
+    master.connect(delay);
+    reverb.connect(reverbGain);
+    reverbGain.connect(compressor);
+    delayGain.connect(compressor);
+    compressor.connect(audio.destination);
+    
+    // Drone - fondamento armonico
+    createDrone();
+    
+    // Fade in
+    master.gain.setTargetAtTime(0.7, audio.currentTime, 2);
+    isPlaying = true;
+}
+
+function createDrone() {
+    // Drone su tonica e quinta
+    [0, 4].forEach((degree, i) => {
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        const filter = audio.createBiquadFilter();
+        
+        osc.type = 'sine';
+        osc.frequency.value = getFreq(degree, 1);
+        
+        filter.type = 'lowpass';
+        filter.frequency.value = 400;
+        filter.Q.value = 1;
+        
+        gain.gain.value = 0.15;
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(master);
+        
+        osc.start();
+        drone.push({ osc, gain, filter, degree });
+    });
+    
+    // Sub bass
+    const sub = audio.createOscillator();
+    const subGain = audio.createGain();
+    sub.type = 'sine';
+    sub.frequency.value = ROOT;
+    subGain.gain.value = 0.2;
+    sub.connect(subGain);
+    subGain.connect(master);
+    sub.start();
+    drone.push({ osc: sub, gain: subGain });
+}
+
+function updateDrone() {
+    drone.forEach((d, i) => {
+        if (d.degree !== undefined) {
+            const freq = getFreq(d.degree, 1);
+            d.osc.frequency.setTargetAtTime(freq, audio.currentTime, 0.5);
+        } else {
+            d.osc.frequency.setTargetAtTime(ROOT, audio.currentTime, 0.5);
+        }
+    });
+}
+
+// Pad - accordi che cambiano col modo
+let padVoices = [];
+function playPad(degrees, duration = 2) {
+    if (!audio) return;
+    
+    // Fade out vecchie voci
+    padVoices.forEach(v => {
+        v.gain.gain.setTargetAtTime(0, audio.currentTime, 0.3);
+        setTimeout(() => { try { v.osc.stop(); } catch(e){} }, 1000);
+    });
+    padVoices = [];
+    
+    degrees.forEach((deg, i) => {
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        const filter = audio.createBiquadFilter();
+        
+        osc.type = i === 0 ? 'triangle' : 'sine';
+        osc.frequency.value = getFreq(deg, 2);
+        
+        filter.type = 'lowpass';
+        filter.frequency.value = 1200 + i * 200;
+        
+        gain.gain.value = 0;
+        gain.gain.setTargetAtTime(0.08, audio.currentTime, 0.1);
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(master);
+        
+        osc.start();
+        padVoices.push({ osc, gain, filter });
+    });
+}
+
+// Melody - note singole che seguono le api
+function playNote(freq, velocity = 0.5, duration = 0.3) {
+    if (!audio) return;
+    
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
+    const filter = audio.createBiquadFilter();
+    
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    
+    filter.type = 'lowpass';
+    filter.frequency.value = 2000 + velocity * 3000;
+    filter.Q.value = 2;
+    
+    const vol = 0.1 + velocity * 0.15;
+    gain.gain.value = 0;
+    gain.gain.setTargetAtTime(vol, audio.currentTime, 0.01);
+    gain.gain.setTargetAtTime(vol * 0.6, audio.currentTime + 0.05, 0.1);
+    gain.gain.setTargetAtTime(0, audio.currentTime + duration, 0.15);
+    
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    
+    osc.start();
+    osc.stop(audio.currentTime + duration + 0.5);
+}
+
+// Arpeggiator
+let arpSequence = [0, 2, 4, 7, 4, 2];
+let arpIndex = 0;
+let arpInterval = null;
+let arpSpeed = 200;
+let arpOctave = 3;
+let arpPlaying = false;
+
+function startArp() {
+    if (arpPlaying) return;
+    arpPlaying = true;
+    
+    function step() {
+        if (!arpPlaying || !audio) return;
+        
+        const degree = arpSequence[arpIndex % arpSequence.length];
+        const freq = getFreq(degree, arpOctave);
+        playNote(freq, 0.4, arpSpeed / 1000 * 0.8);
+        
+        arpIndex++;
+        arpInterval = setTimeout(step, arpSpeed);
+    }
+    step();
+}
+
+function stopArp() {
+    arpPlaying = false;
+    if (arpInterval) clearTimeout(arpInterval);
+}
+
+function setArpPattern(pattern) {
+    arpSequence = pattern;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API - SCIAME VISUALE E SONORO
+// ═══════════════════════════════════════════════════════════════
+
+let API = [];
+let mouse = { x: W/2, y: H/2, active: false, vx: 0, vy: 0 };
+let lastMouse = { x: W/2, y: H/2, t: Date.now() };
+
+async function caricaApi() {
     try {
         const txt = await fetch('ALVEARE.txt').then(r => r.text());
         const righe = txt.split('\n').filter(r => r.includes('|') && !r.startsWith('#'));
@@ -62,145 +333,142 @@ async function carica() {
                 const nome = p[1];
                 const hash = nome.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
                 
-                // Frequenza unica per ogni ape basata sul nome
-                const freq = 200 + (hash % 300);
+                // Ogni ape ha un grado nella scala
+                const degree = i % 7;
                 
                 API.push({
-                    nome: nome,
-                    contributo: p[2] || '',
+                    nome,
                     x: W/2 + (Math.sin(hash) * W/3),
                     y: H/2 + (Math.cos(hash * 1.3) * H/3),
                     vx: (Math.random() - 0.5) * 2,
                     vy: (Math.random() - 0.5) * 2,
-                    size: 4 + (hash % 4),
-                    hue: 25 + (hash % 35),
-                    freq: freq,
-                    pulso: Math.random() * Math.PI * 2,
-                    memoria: [],
-                    suona: false
+                    size: 3 + (hash % 4),
+                    hue: 30 + (hash % 30),
+                    degree,
+                    octave: 2 + (i % 3),
+                    lastNote: 0,
+                    energia: 0,
+                    memoria: []
                 });
             }
         });
-        
-        countEl.textContent = API.length + ' api morte';
     } catch(e) {
-        for (let i = 0; i < 45; i++) {
+        for (let i = 0; i < 30; i++) {
             API.push({
-                nome: 'ape-sconosciuta-' + i,
-                contributo: '',
+                nome: 'ape-' + i,
                 x: Math.random() * W, y: Math.random() * H,
                 vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
-                size: 4 + Math.random() * 3, hue: 25 + Math.random() * 30,
-                freq: 200 + Math.random() * 300,
-                pulso: Math.random() * Math.PI * 2, memoria: [], suona: false
+                size: 3 + Math.random() * 3, hue: 30 + Math.random() * 25,
+                degree: i % 7, octave: 2 + (i % 3),
+                lastNote: 0, energia: 0, memoria: []
             });
         }
-        countEl.textContent = '45 api';
     }
 }
 
-carica();
-setInterval(carica, 60000);
+caricaApi();
 
-let mouse = { x: W/2, y: H/2, active: false };
+// ═══════════════════════════════════════════════════════════════
+// INTERAZIONE
+// ═══════════════════════════════════════════════════════════════
 
-onmousemove = e => { 
-    mouse.x = e.clientX; 
+onmousemove = e => {
+    const now = Date.now();
+    const dt = (now - lastMouse.t) / 1000 || 0.016;
+    
+    mouse.vx = (e.clientX - lastMouse.x) / dt / 100;
+    mouse.vy = (e.clientY - lastMouse.y) / dt / 100;
+    mouse.x = e.clientX;
     mouse.y = e.clientY;
     
-    // Trova ape più vicina
-    let minD = Infinity;
-    apeVicina = null;
+    lastMouse = { x: e.clientX, y: e.clientY, t: now };
+    
+    // Velocità del mouse controlla il modo
+    const speed = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
+    
+    // Posizione Y controlla l'ottava dell'arp
+    arpOctave = Math.floor((1 - e.clientY / H) * 3) + 2;
+    
+    // Posizione X controlla la velocità dell'arp
+    arpSpeed = 100 + (1 - e.clientX / W) * 300;
+    
+    // Movimento veloce cambia il modo
+    if (speed > 5 && audio) {
+        const newModeIndex = Math.floor((e.clientX / W) * MODE_KEYS.length);
+        if (newModeIndex !== currentModeIndex) {
+            currentModeIndex = newModeIndex;
+            currentMode = MODES[MODE_KEYS[currentModeIndex]];
+            updateDrone();
+            modeEl.textContent = currentMode.name.toUpperCase();
+            modeEl.style.color = currentMode.color;
+            
+            // Nuovo accordo per il nuovo modo
+            playPad([0, 2, 4, 6], 3);
+        }
+    }
+};
+
+onclick = e => {
+    if (!audio) return;
+    
+    // Click genera un pattern armonico basato sulla posizione
+    const xRatio = e.clientX / W;
+    const yRatio = e.clientY / H;
+    
+    // Pattern diversi basati sulla zona dello schermo
+    const patterns = [
+        [0, 2, 4, 7, 4, 2],           // ascendente-discendente
+        [0, 4, 7, 11, 7, 4],          // arpeggio ampio
+        [7, 4, 2, 0, 2, 4],           // discendente
+        [0, 2, 4, 2, 4, 7, 4, 2],     // ondulante
+        [0, 7, 4, 11, 7, 14, 11, 7],  // saltellante
+        [0, 0, 4, 4, 7, 7, 4, 4],     // ritmico
+    ];
+    
+    const patternIndex = Math.floor(xRatio * patterns.length);
+    setArpPattern(patterns[patternIndex]);
+    
+    // Accordo basato sulla posizione Y
+    const chordTypes = [
+        [0, 2, 4],       // triade
+        [0, 2, 4, 6],    // settima
+        [0, 4, 7],       // power + 
+        [0, 2, 4, 9],    // add9
+        [0, 4, 7, 11],   // maj7
+    ];
+    const chordIndex = Math.floor(yRatio * chordTypes.length);
+    playPad(chordTypes[chordIndex], 4);
+    
+    // Toggle arpeggiator
+    if (arpPlaying) {
+        stopArp();
+    } else {
+        startArp();
+    }
+    
+    // Impulso alle api vicine
     API.forEach(a => {
-        const d = Math.sqrt((a.x - mouse.x)**2 + (a.y - mouse.y)**2);
-        if (d < 50 && d < minD) {
-            minD = d;
-            apeVicina = a;
+        const dx = a.x - e.clientX;
+        const dy = a.y - e.clientY;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 200) {
+            a.energia = 1;
+            a.vx += (dx / d) * 5;
+            a.vy += (dy / d) * 5;
         }
     });
-    
-    if (apeVicina) {
-        nomeEl.textContent = apeVicina.nome;
-        nomeEl.classList.add('visible');
-        if (audio && !apeVicina.suona) {
-            suonaApe(apeVicina);
-        }
-    } else {
-        nomeEl.classList.remove('visible');
-    }
 };
 
-onmousedown = () => { mouse.active = true; initAudio(); };
-onmouseup = () => mouse.active = false;
-
-ontouchmove = e => { 
-    mouse.x = e.touches[0].clientX; 
-    mouse.y = e.touches[0].clientY; 
-    mouse.active = true;
-};
-ontouchend = () => mouse.active = false;
-ontouchstart = () => initAudio();
-
-// AUDIO - ogni ape ha la sua voce
-let audio, voci = [], masterGain, drone;
-
-function initAudio() {
-    if (audio) return;
-    audio = new (window.AudioContext || window.webkitAudioContext)();
-    
-    masterGain = audio.createGain();
-    masterGain.gain.value = 0.15;
-    masterGain.connect(audio.destination);
-    
-    // Drone di fondo
-    drone = audio.createOscillator();
-    const droneGain = audio.createGain();
-    drone.type = 'sine';
-    drone.frequency.value = 55;
-    droneGain.gain.value = 0.1;
-    drone.connect(droneGain);
-    droneGain.connect(masterGain);
-    drone.start();
-    
-    // Pool di voci per le api
-    for (let i = 0; i < 8; i++) {
-        const osc = audio.createOscillator();
-        const gain = audio.createGain();
-        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
-        osc.frequency.value = 220;
-        gain.gain.value = 0;
-        osc.connect(gain);
-        gain.connect(masterGain);
-        osc.start();
-        voci.push({ osc, gain, inUso: false });
-    }
-}
-
-function suonaApe(ape) {
-    if (!audio) return;
-    const voce = voci.find(v => !v.inUso);
-    if (!voce) return;
-    
-    voce.inUso = true;
-    ape.suona = true;
-    voce.osc.frequency.setTargetAtTime(ape.freq, audio.currentTime, 0.05);
-    voce.gain.gain.setTargetAtTime(0.15, audio.currentTime, 0.05);
-    
-    setTimeout(() => {
-        voce.gain.gain.setTargetAtTime(0, audio.currentTime, 0.2);
-        setTimeout(() => {
-            voce.inUso = false;
-            ape.suona = false;
-        }, 300);
-    }, 200);
-}
+// ═══════════════════════════════════════════════════════════════
+// LOOP PRINCIPALE
+// ═══════════════════════════════════════════════════════════════
 
 let t = 0;
 
 function loop() {
     t += 0.016;
     
-    $.fillStyle = 'rgba(0,0,0,0.08)';
+    $.fillStyle = 'rgba(0,0,0,0.12)';
     $.fillRect(0, 0, W, H);
     
     if (API.length === 0) { requestAnimationFrame(loop); return; }
@@ -216,48 +484,65 @@ function loop() {
     vxm /= API.length; vym /= API.length;
     
     API.forEach((a, i) => {
-        a.pulso += 0.04;
+        // Decay energia
+        a.energia *= 0.95;
         
-        // Separazione
+        // Boids
         let sepX = 0, sepY = 0;
         API.forEach((b, j) => {
             if (i === j) return;
             const dx = a.x - b.x, dy = a.y - b.y;
             const d = Math.sqrt(dx*dx + dy*dy) || 1;
-            if (d < REPULSIONE) {
-                sepX += (dx / d) * (REPULSIONE - d) * 0.04;
-                sepY += (dy / d) * (REPULSIONE - d) * 0.04;
+            if (d < 40) {
+                sepX += (dx / d) * (40 - d) * 0.03;
+                sepY += (dy / d) * (40 - d) * 0.03;
             }
         });
         
-        a.vx += (vxm - a.vx) * ALLINEAMENTO;
-        a.vy += (vym - a.vy) * ALLINEAMENTO;
-        a.vx += (cx - a.x) * COESIONE;
-        a.vy += (cy - a.y) * COESIONE;
+        a.vx += (vxm - a.vx) * 0.03;
+        a.vy += (vym - a.vy) * 0.03;
+        a.vx += (cx - a.x) * 0.0005;
+        a.vy += (cy - a.y) * 0.0005;
         a.vx += sepX; a.vy += sepY;
         
-        if (mouse.active) {
-            const dx = mouse.x - a.x, dy = mouse.y - a.y;
-            const d = Math.sqrt(dx*dx + dy*dy) || 1;
-            a.vx += (dx / d) * 0.4;
-            a.vy += (dy / d) * 0.4;
+        // Attrazione verso mouse
+        const dx = mouse.x - a.x, dy = mouse.y - a.y;
+        const d = Math.sqrt(dx*dx + dy*dy) || 1;
+        if (d < 300) {
+            const force = (300 - d) / 300 * 0.3;
+            a.vx += (dx / d) * force;
+            a.vy += (dy / d) * force;
+            
+            // Vicinanza al mouse genera note
+            if (d < 100 && audio && t - a.lastNote > 0.15) {
+                const freq = getFreq(a.degree, a.octave);
+                const velocity = (100 - d) / 100;
+                playNote(freq, velocity * 0.7, 0.2 + velocity * 0.3);
+                a.lastNote = t;
+                a.energia = velocity;
+            }
         }
         
-        a.vx += (Math.random() - 0.5) * 0.2;
-        a.vy += (Math.random() - 0.5) * 0.2;
+        // Noise
+        a.vx += (Math.random() - 0.5) * 0.15;
+        a.vy += (Math.random() - 0.5) * 0.15;
         
+        // Limit
         const v = Math.sqrt(a.vx*a.vx + a.vy*a.vy);
-        if (v > 3.5) { a.vx = (a.vx / v) * 3.5; a.vy = (a.vy / v) * 3.5; }
+        const maxV = 3 + a.energia * 4;
+        if (v > maxV) { a.vx = (a.vx / v) * maxV; a.vy = (a.vy / v) * maxV; }
         
         a.x += a.vx; a.y += a.vy;
         
-        if (a.x < 50) a.vx += 0.4;
-        if (a.x > W - 50) a.vx -= 0.4;
-        if (a.y < 50) a.vy += 0.4;
-        if (a.y > H - 50) a.vy -= 0.4;
+        // Bordi
+        if (a.x < 50) a.vx += 0.5;
+        if (a.x > W - 50) a.vx -= 0.5;
+        if (a.y < 50) a.vy += 0.5;
+        if (a.y > H - 50) a.vy -= 0.5;
         
+        // Memoria
         a.memoria.push({ x: a.x, y: a.y });
-        if (a.memoria.length > 30) a.memoria.shift();
+        if (a.memoria.length > 25) a.memoria.shift();
     });
     
     // Connessioni
@@ -267,9 +552,9 @@ function loop() {
             if (j <= i) return;
             const dx = a.x - b.x, dy = a.y - b.y;
             const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 120) {
-                const alpha = (1 - d/120) * 0.25;
-                $.strokeStyle = `rgba(201, 162, 39, ${alpha})`;
+            if (d < 100) {
+                const alpha = (1 - d/100) * 0.2 * (1 + a.energia + b.energia);
+                $.strokeStyle = `rgba(201, 162, 39, ${Math.min(alpha, 0.5)})`;
                 $.beginPath();
                 $.moveTo(a.x, a.y);
                 $.lineTo(b.x, b.y);
@@ -286,52 +571,49 @@ function loop() {
         for (let i = 1; i < a.memoria.length; i++) {
             $.lineTo(a.memoria[i].x, a.memoria[i].y);
         }
-        $.strokeStyle = `hsla(${a.hue}, 60%, 50%, 0.15)`;
-        $.lineWidth = 1.5;
+        $.strokeStyle = `hsla(${a.hue}, 60%, ${50 + a.energia * 30}%, ${0.15 + a.energia * 0.3})`;
+        $.lineWidth = 1.5 + a.energia * 2;
         $.stroke();
     });
     
     // Api
     API.forEach(a => {
-        const isVicina = a === apeVicina;
-        const pulse = 1 + Math.sin(a.pulso) * 0.25;
-        const s = a.size * pulse * (isVicina ? 1.5 : 1);
+        const s = a.size * (1 + a.energia * 0.5);
         
         // Alone
-        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, s * 5);
-        grad.addColorStop(0, `hsla(${a.hue}, 75%, 60%, ${isVicina ? 0.5 : 0.25})`);
+        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, s * 6);
+        grad.addColorStop(0, `hsla(${a.hue}, 70%, ${60 + a.energia * 20}%, ${0.3 + a.energia * 0.4})`);
         grad.addColorStop(1, 'transparent');
         $.fillStyle = grad;
         $.beginPath();
-        $.arc(a.x, a.y, s * 5, 0, Math.PI * 2);
+        $.arc(a.x, a.y, s * 6, 0, Math.PI * 2);
         $.fill();
         
         // Corpo
-        $.fillStyle = `hsla(${a.hue}, 75%, ${isVicina ? 80 : 65}%, 0.9)`;
+        $.fillStyle = `hsla(${a.hue}, 70%, ${65 + a.energia * 25}%, 0.9)`;
         $.beginPath();
         $.arc(a.x, a.y, s, 0, Math.PI * 2);
         $.fill();
-        
-        // Nome quando vicina
-        if (isVicina) {
-            $.fillStyle = 'rgba(201, 162, 39, 0.6)';
-            $.font = '10px Georgia';
-            $.textAlign = 'center';
-            $.fillText(a.nome.split('-').slice(0, 2).join('-'), a.x, a.y - s - 8);
-        }
     });
-    
-    // Audio - drone modulato dalla dispersione
-    if (audio && drone) {
-        const spread = Math.sqrt(API.reduce((acc, b) => acc + (b.x - cx)**2 + (b.y - cy)**2, 0) / API.length);
-        const freq = 45 + (1 - Math.min(spread / 400, 1)) * 40;
-        drone.frequency.setTargetAtTime(freq, audio.currentTime, 0.3);
-    }
     
     requestAnimationFrame(loop);
 }
 
-loop();
+// ═══════════════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════════════
+
+document.getElementById('start').onclick = () => {
+    initAudio();
+    document.getElementById('start').classList.add('hidden');
+    modeEl.textContent = currentMode.name.toUpperCase();
+    modeEl.style.color = currentMode.color;
+    
+    // Accordo iniziale
+    setTimeout(() => playPad([0, 2, 4], 4), 500);
+};
+
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>
