@@ -29,55 +29,127 @@
             line-height: 1.8;
         }
         #start.hidden { display: none; }
-        #info {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(201, 162, 39, 0.25);
-            font: 0.7rem Georgia, serif;
-            letter-spacing: 0.15em;
-            pointer-events: none;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
 <div id="start">SCIAME<span>clicca per entrare<br>muovi per suonare<br>clicca per trasformare</span></div>
 <canvas id="c"></canvas>
-<div id="info"></div>
 <script>
 const c = document.getElementById('c');
 const $ = c.getContext('2d');
-const info = document.getElementById('info');
 let W, H;
 function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
 resize();
 onresize = resize;
 
 // ═══════════════════════════════════════════════════════════════
+// TUNNEL DELL'ALVEARE
+// ═══════════════════════════════════════════════════════════════
+
+let tunnelOffset = 0;
+let tunnelSpeed = 0.5;
+let tunnelDirection = { x: 0, y: 0 };
+
+// Celle esagonali del tunnel
+const HEX_SIZE = 60;
+const HEX_DEPTH = 8; // quanti strati di profondità
+
+function drawHexagon(x, y, size, depth) {
+    $.beginPath();
+    for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI / 3) * i - Math.PI / 6;
+        const px = x + Math.cos(angle) * size;
+        const py = y + Math.sin(angle) * size;
+        if (i === 0) $.moveTo(px, py);
+        else $.lineTo(px, py);
+    }
+    $.closePath();
+}
+
+function drawTunnel() {
+    const cx = W / 2;
+    const cy = H / 2;
+    
+    // Movimento del tunnel basato sulla direzione
+    tunnelOffset += tunnelSpeed;
+    
+    // Disegna strati di profondità (dal più lontano al più vicino)
+    for (let depth = HEX_DEPTH; depth >= 0; depth--) {
+        const scale = 0.3 + (depth / HEX_DEPTH) * 0.7;
+        const alpha = 0.03 + (depth / HEX_DEPTH) * 0.12;
+        const size = HEX_SIZE * scale;
+        
+        // Offset per l'effetto di movimento nel tunnel
+        const depthOffset = (tunnelOffset * (1 - depth / HEX_DEPTH)) % (size * 2);
+        const dirOffsetX = tunnelDirection.x * depth * 3;
+        const dirOffsetY = tunnelDirection.y * depth * 3;
+        
+        // Griglia esagonale
+        const h = size * Math.sqrt(3);
+        const cols = Math.ceil(W / (size * 1.5)) + 4;
+        const rows = Math.ceil(H / h) + 4;
+        
+        for (let row = -2; row < rows; row++) {
+            for (let col = -2; col < cols; col++) {
+                let x = col * size * 1.5 + depthOffset + dirOffsetX;
+                let y = row * h + (col % 2 ? h / 2 : 0) + depthOffset * 0.5 + dirOffsetY;
+                
+                // Wrap
+                x = ((x % (W + size * 3)) + W + size * 3) % (W + size * 3) - size;
+                y = ((y % (H + h * 2)) + H + h * 2) % (H + h * 2) - h;
+                
+                // Distanza dal centro per effetto vignette
+                const dx = x - cx;
+                const dy = y - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const maxDist = Math.sqrt(cx * cx + cy * cy);
+                const vignette = 1 - (dist / maxDist) * 0.5;
+                
+                // Colore basato sulla profondità
+                const brightness = 25 + depth * 3;
+                const saturation = 50 + depth * 5;
+                
+                $.strokeStyle = `hsla(40, ${saturation}%, ${brightness}%, ${alpha * vignette})`;
+                $.lineWidth = 0.5 + depth * 0.15;
+                
+                drawHexagon(x, y, size * 0.95, depth);
+                $.stroke();
+                
+                // Luce interna delle celle più vicine
+                if (depth > HEX_DEPTH - 3) {
+                    const glowAlpha = (depth - HEX_DEPTH + 3) / 3 * 0.02 * vignette;
+                    $.fillStyle = `hsla(45, 70%, 50%, ${glowAlpha})`;
+                    $.fill();
+                }
+            }
+        }
+    }
+    
+    // Bordi del tunnel centrale (l'apertura dove volano le api)
+    const gradient = $.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.7);
+    gradient.addColorStop(0, 'transparent');
+    gradient.addColorStop(0.5, 'transparent');
+    gradient.addColorStop(0.8, 'rgba(20, 15, 5, 0.3)');
+    gradient.addColorStop(1, 'rgba(10, 8, 3, 0.7)');
+    $.fillStyle = gradient;
+    $.fillRect(0, 0, W, H);
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TEORIA MUSICALE
 // ═══════════════════════════════════════════════════════════════
 
-const ROOT = 110; // La2
+const ROOT = 110;
 
-// Progressioni armoniche che funzionano sempre
 const PROGRESSIONS = [
-    // I - vi - IV - V (pop)
     [[0,4,7,11], [9,12,16,19], [5,9,12,17], [7,11,14,19]],
-    // I - V - vi - IV (axis)
     [[0,4,7,11], [7,11,14,19], [9,12,16,19], [5,9,12,17]],
-    // ii - V - I - I (jazz)
     [[2,5,9,12], [7,11,14,17], [0,4,7,11], [0,4,7,11]],
-    // I - IV - vi - V
     [[0,4,7,11], [5,9,12,17], [9,12,16,19], [7,11,14,19]],
-    // vi - IV - I - V
     [[9,12,16,19], [5,9,12,17], [0,4,7,11], [7,11,14,19]],
-    // I - iii - IV - iv (radiohead)
     [[0,4,7,11], [4,7,11,14], [5,9,12,17], [5,8,12,17]],
 ];
 
-// Scale per melodia
 const SCALES = {
     major: [0, 2, 4, 5, 7, 9, 11],
     minor: [0, 2, 3, 5, 7, 8, 10],
@@ -90,16 +162,12 @@ let currentScale = SCALES.major;
 let currentProgression = 0;
 let chordIndex = 0;
 
-function midiToFreq(midi) {
-    return ROOT * Math.pow(2, midi / 12);
-}
+function midiToFreq(midi) { return ROOT * Math.pow(2, midi / 12); }
 
 function quantize(degree) {
-    // Trova la nota più vicina nella scala
     const octave = Math.floor(degree / 12);
     const note = ((degree % 12) + 12) % 12;
-    let closest = currentScale[0];
-    let minDist = 12;
+    let closest = currentScale[0], minDist = 12;
     for (const s of currentScale) {
         const dist = Math.min(Math.abs(s - note), Math.abs(s - note + 12), Math.abs(s - note - 12));
         if (dist < minDist) { minDist = dist; closest = s; }
@@ -111,21 +179,10 @@ function quantize(degree) {
 // AUDIO ENGINE
 // ═══════════════════════════════════════════════════════════════
 
-let ctx;
-let masterGain, reverbGain, delayNode, delayFeedback, compressor;
+let ctx, masterGain, reverbGain, delayNode, compressor;
 let isPlaying = false;
-
-// Voci
-let padVoices = [];
-let bassOsc, bassGain;
-let arpVoices = [];
-let melodyTimeout;
-
-// Stato musicale
-let tension = 0.5;      // 0-1: consonanza-dissonanza
-let energy = 0.5;       // 0-1: calmo-intenso
-let brightness = 0.5;   // 0-1: scuro-brillante
-let tempo = 0.5;        // 0-1: lento-veloce
+let padVoices = [], bassOsc, bassGain;
+let tension = 0.5, energy = 0.5, brightness = 0.5, tempo = 0.5;
 
 function createReverb(duration = 2.5, decay = 2) {
     const length = ctx.sampleRate * duration;
@@ -145,20 +202,16 @@ function initAudio() {
     if (ctx) return;
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     
-    // Master chain
     compressor = ctx.createDynamicsCompressor();
     compressor.threshold.value = -20;
     compressor.knee.value = 20;
     compressor.ratio.value = 6;
-    compressor.attack.value = 0.005;
-    compressor.release.value = 0.1;
     compressor.connect(ctx.destination);
     
     masterGain = ctx.createGain();
     masterGain.gain.value = 0;
     masterGain.connect(compressor);
     
-    // Reverb
     const reverb = createReverb(3, 2);
     reverbGain = ctx.createGain();
     reverbGain.gain.value = 0.3;
@@ -166,10 +219,9 @@ function initAudio() {
     reverbGain.connect(compressor);
     masterGain.connect(reverb);
     
-    // Delay (tempo-synced feel)
     delayNode = ctx.createDelay(2);
     delayNode.delayTime.value = 0.375;
-    delayFeedback = ctx.createGain();
+    const delayFeedback = ctx.createGain();
     delayFeedback.gain.value = 0.25;
     const delayFilter = ctx.createBiquadFilter();
     delayFilter.type = 'lowpass';
@@ -183,10 +235,8 @@ function initAudio() {
     delayOut.connect(compressor);
     masterGain.connect(delayNode);
     
-    // Fade in
     masterGain.gain.setTargetAtTime(0.8, ctx.currentTime, 3);
     
-    // Start music
     startBass();
     startPad();
     scheduleChordChange();
@@ -194,10 +244,6 @@ function initAudio() {
     
     isPlaying = true;
 }
-
-// ═══════════════════════════════════════════════════════════════
-// STRUMENTI
-// ═══════════════════════════════════════════════════════════════
 
 function startBass() {
     bassOsc = ctx.createOscillator();
@@ -207,12 +253,9 @@ function startBass() {
     
     bassOsc.type = 'sine';
     bassOsc2.type = 'triangle';
-    bassOsc2.detune.value = -1200; // un'ottava sotto
-    
+    bassOsc2.detune.value = -1200;
     bassFilter.type = 'lowpass';
     bassFilter.frequency.value = 300;
-    bassFilter.Q.value = 1;
-    
     bassGain.gain.value = 0.25;
     
     const bassOsc2Gain = ctx.createGain();
@@ -234,12 +277,10 @@ function startBass() {
 
 function updateBass(notes) {
     if (!bassOsc) return;
-    const bassNote = notes[0] - 12;
-    bassOsc.frequency.setTargetAtTime(midiToFreq(bassNote), ctx.currentTime, 0.3);
+    bassOsc.frequency.setTargetAtTime(midiToFreq(notes[0] - 12), ctx.currentTime, 0.3);
 }
 
 function startPad() {
-    // 4 voci per il pad
     for (let i = 0; i < 4; i++) {
         const osc1 = ctx.createOscillator();
         const osc2 = ctx.createOscillator();
@@ -250,19 +291,15 @@ function startPad() {
         
         osc1.type = 'sawtooth';
         osc2.type = 'sawtooth';
-        osc2.detune.value = 7 + i * 2; // leggero detune per warmth
-        
+        osc2.detune.value = 7 + i * 2;
         filter.type = 'lowpass';
         filter.frequency.value = 800 + i * 200;
-        filter.Q.value = 0.7;
-        
         lfo.type = 'sine';
         lfo.frequency.value = 0.1 + i * 0.05;
         lfoGain.gain.value = 3;
         lfo.connect(lfoGain);
         lfoGain.connect(osc1.detune);
         lfoGain.connect(osc2.detune);
-        
         gain.gain.value = 0.06;
         
         osc1.connect(filter);
@@ -274,222 +311,140 @@ function startPad() {
         osc1.frequency.value = midiToFreq(chord[i] || chord[0]);
         osc2.frequency.value = midiToFreq(chord[i] || chord[0]);
         
-        osc1.start();
-        osc2.start();
-        lfo.start();
-        
-        padVoices.push({ osc1, osc2, gain, filter, lfo, lfoGain });
+        osc1.start(); osc2.start(); lfo.start();
+        padVoices.push({ osc1, osc2, gain, filter });
     }
 }
 
 function updatePad(notes) {
     padVoices.forEach((voice, i) => {
-        const note = notes[i] || notes[0];
-        const freq = midiToFreq(note);
+        const freq = midiToFreq(notes[i] || notes[0]);
         voice.osc1.frequency.setTargetAtTime(freq, ctx.currentTime, 0.4);
         voice.osc2.frequency.setTargetAtTime(freq, ctx.currentTime, 0.4);
-        
-        // Brightness controlla il filtro
         voice.filter.frequency.setTargetAtTime(400 + brightness * 2000, ctx.currentTime, 0.2);
     });
 }
 
-let arpIndex = 0;
-let arpInterval;
+let arpIndex = 0, arpInterval;
 
 function startArpeggio() {
     function playArpNote() {
         if (!ctx || !isPlaying) return;
-        
         const chord = PROGRESSIONS[currentProgression][chordIndex];
-        
-        // Pattern che cambia con la tensione
-        let pattern;
-        if (tension < 0.3) {
-            pattern = [0, 1, 2, 3, 2, 1]; // semplice
-        } else if (tension < 0.6) {
-            pattern = [0, 2, 1, 3, 2, 0, 3, 1]; // più mosso
-        } else {
-            pattern = [0, 3, 1, 2, 3, 0, 2, 1, 3, 2]; // complesso
-        }
-        
+        let pattern = tension < 0.3 ? [0, 1, 2, 3, 2, 1] : 
+                      tension < 0.6 ? [0, 2, 1, 3, 2, 0, 3, 1] : [0, 3, 1, 2, 3, 0, 2, 1, 3, 2];
         const noteIdx = pattern[arpIndex % pattern.length];
         const baseNote = chord[noteIdx % chord.length];
-        
-        // Octave jumping basato su energy
-        const octaveShift = energy > 0.7 ? (Math.random() > 0.5 ? 12 : 0) : 0;
-        const note = baseNote + 12 + octaveShift;
-        
-        // Volume basato su posizione nel pattern
-        const accent = arpIndex % pattern.length === 0 ? 1.2 : 
-                       arpIndex % (pattern.length/2) === 0 ? 1 : 0.8;
-        
-        playMelodyNote(note, 0.08 * energy * accent, getArpDuration() * 0.8);
-        
+        const octaveShift = energy > 0.7 && Math.random() > 0.5 ? 12 : 0;
+        const accent = arpIndex % pattern.length === 0 ? 1.2 : 0.8;
+        playMelodyNote(baseNote + 12 + octaveShift, 0.08 * energy * accent, getArpDuration() * 0.8);
         arpIndex++;
-        
         arpInterval = setTimeout(playArpNote, getArpDuration());
     }
-    
     playArpNote();
 }
 
-function getArpDuration() {
-    // Tempo controlla la velocità base, energy la accelera
-    const baseDuration = 400 - tempo * 250; // 400ms - 150ms
-    return baseDuration / (1 + energy * 0.5);
-}
+function getArpDuration() { return (400 - tempo * 250) / (1 + energy * 0.5); }
 
 function playMelodyNote(midi, volume, duration) {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     const filter = ctx.createBiquadFilter();
     
-    // Tipo d'onda basato su brightness
     osc.type = brightness > 0.6 ? 'sawtooth' : brightness > 0.3 ? 'triangle' : 'sine';
     osc.frequency.value = midiToFreq(midi);
-    
     filter.type = 'lowpass';
     filter.frequency.value = 1000 + brightness * 4000;
     filter.Q.value = 1 + tension * 3;
     
-    // Envelope
     const now = ctx.currentTime;
-    const attackTime = 0.01;
-    const decayTime = duration * 0.3;
-    const sustainLevel = 0.6;
-    const releaseTime = duration * 0.5;
-    
     gain.gain.value = 0;
-    gain.gain.linearRampToValueAtTime(volume, now + attackTime);
-    gain.gain.linearRampToValueAtTime(volume * sustainLevel, now + attackTime + decayTime);
-    gain.gain.linearRampToValueAtTime(0, now + duration + releaseTime);
+    gain.gain.linearRampToValueAtTime(volume, now + 0.01);
+    gain.gain.linearRampToValueAtTime(volume * 0.6, now + duration * 0.3);
+    gain.gain.linearRampToValueAtTime(0, now + duration + duration * 0.5);
     
     osc.connect(filter);
     filter.connect(gain);
     gain.connect(masterGain);
-    
     osc.start(now);
-    osc.stop(now + duration + releaseTime + 0.1);
+    osc.stop(now + duration * 1.6);
 }
 
 function scheduleChordChange() {
     function changeChord() {
         if (!ctx || !isPlaying) return;
-        
         chordIndex = (chordIndex + 1) % 4;
         const chord = PROGRESSIONS[currentProgression][chordIndex];
-        
         updatePad(chord);
         updateBass(chord);
-        
-        // Prossimo cambio
-        const interval = 2000 + (1 - tempo) * 2000; // 2-4 secondi
-        setTimeout(changeChord, interval);
+        setTimeout(changeChord, 2000 + (1 - tempo) * 2000);
     }
-    
     changeChord();
 }
 
-// ═══════════════════════════════════════════════════════════════
-// MELODIA GENERATIVA
-// ═══════════════════════════════════════════════════════════════
-
-let lastMelodyNote = 12; // partiamo dalla tonica
-let melodyRest = 0;
+let lastMelodyNote = 12, melodyRest = 0;
 
 function generateMelodyPhrase() {
     if (!ctx || !isPlaying) return;
-    
-    // Probabilità di silenzio
     if (Math.random() > energy * 0.8) {
         melodyRest++;
-        if (melodyRest < 3) {
-            setTimeout(generateMelodyPhrase, 500 + Math.random() * 500);
-            return;
-        }
+        if (melodyRest < 3) { setTimeout(generateMelodyPhrase, 500 + Math.random() * 500); return; }
     }
     melodyRest = 0;
     
     const chord = PROGRESSIONS[currentProgression][chordIndex];
     const phraseLength = 3 + Math.floor(Math.random() * 5);
-    
     let time = 0;
+    
     for (let i = 0; i < phraseLength; i++) {
-        // Movimento melodico intelligente
-        let interval;
         const r = Math.random();
-        if (r < 0.4) {
-            interval = Math.random() > 0.5 ? 1 : -1; // step
-        } else if (r < 0.7) {
-            interval = Math.random() > 0.5 ? 2 : -2; // third
-        } else if (r < 0.85) {
-            interval = 0; // ripetizione
-        } else {
-            interval = Math.floor(Math.random() * 5) - 2; // salto
-        }
-        
+        let interval = r < 0.4 ? (Math.random() > 0.5 ? 1 : -1) : 
+                       r < 0.7 ? (Math.random() > 0.5 ? 2 : -2) : 
+                       r < 0.85 ? 0 : Math.floor(Math.random() * 5) - 2;
         let nextNote = lastMelodyNote + interval;
-        
-        // Attrazione verso note dell'accordo
         if (Math.random() < 0.3) {
             const chordTone = chord[Math.floor(Math.random() * chord.length)] + 12;
-            if (Math.abs(chordTone - nextNote) <= 4) {
-                nextNote = chordTone;
-            }
+            if (Math.abs(chordTone - nextNote) <= 4) nextNote = chordTone;
         }
-        
-        // Quantizza alla scala
         nextNote = quantize(nextNote);
-        
-        // Range
         if (nextNote < 7) nextNote += 12;
         if (nextNote > 31) nextNote -= 12;
-        
         lastMelodyNote = nextNote;
         
         const duration = (200 + Math.random() * 300) / (1 + tempo * 0.5);
-        const volume = 0.12 * energy * (i === 0 ? 1.2 : 0.9);
-        
-        setTimeout(() => {
-            playMelodyNote(nextNote + 12, volume, duration / 1000);
-        }, time);
-        
+        setTimeout(() => playMelodyNote(nextNote + 12, 0.12 * energy * (i === 0 ? 1.2 : 0.9), duration / 1000), time);
         time += duration;
     }
-    
-    // Prossima frase
-    const restTime = 500 + Math.random() * 1500 * (1 - energy);
-    setTimeout(generateMelodyPhrase, time + restTime);
+    setTimeout(generateMelodyPhrase, time + 500 + Math.random() * 1500 * (1 - energy));
 }
 
 // ═══════════════════════════════════════════════════════════════
-// API VISIVE
+// API
 // ═══════════════════════════════════════════════════════════════
 
 let API = [];
-let mouse = { x: W/2, y: H/2, pressed: false };
+let mouse = { x: W/2, y: H/2 };
 
 async function loadApi() {
     try {
         const txt = await fetch('ALVEARE.txt').then(r => r.text());
-        const righe = txt.split('\n').filter(r => r.includes('|') && !r.startsWith('#'));
-        
-        righe.forEach((r, i) => {
+        txt.split('\n').filter(r => r.includes('|') && !r.startsWith('#')).forEach((r, i) => {
             const p = r.split('|').map(x => x.trim());
             if (p[1] && p[1].includes('-') && !API.find(a => a.nome === p[1])) {
                 const nome = p[1];
                 const hash = nome.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-                
                 API.push({
-                    nome,
-                    x: W/2 + (Math.sin(hash) * W/3),
-                    y: H/2 + (Math.cos(hash * 1.3) * H/3),
+                    nome, hash,
+                    x: W/2 + (Math.random() - 0.5) * W * 0.5,
+                    y: H/2 + (Math.random() - 0.5) * H * 0.5,
+                    z: Math.random(), // profondità nel tunnel
                     vx: (Math.random() - 0.5) * 2,
                     vy: (Math.random() - 0.5) * 2,
-                    size: 3 + (hash % 3),
+                    vz: (Math.random() - 0.5) * 0.02,
+                    size: 2 + (hash % 3),
                     hue: 35 + (hash % 20),
                     phase: Math.random() * Math.PI * 2,
+                    wingPhase: Math.random() * Math.PI * 2,
                     trail: []
                 });
             }
@@ -497,123 +452,157 @@ async function loadApi() {
     } catch(e) {
         for (let i = 0; i < 40; i++) {
             API.push({
-                nome: 'ape-' + i,
-                x: Math.random() * W, y: Math.random() * H,
+                nome: 'ape-' + i, hash: i * 17,
+                x: W/2 + (Math.random() - 0.5) * W * 0.5,
+                y: H/2 + (Math.random() - 0.5) * H * 0.5,
+                z: Math.random(),
                 vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
-                size: 3 + Math.random() * 2, hue: 35 + Math.random() * 15,
+                vz: (Math.random() - 0.5) * 0.02,
+                size: 2 + Math.random() * 2, hue: 35 + Math.random() * 15,
                 phase: Math.random() * Math.PI * 2,
+                wingPhase: Math.random() * Math.PI * 2,
                 trail: []
             });
         }
     }
 }
-
 loadApi();
 
 // ═══════════════════════════════════════════════════════════════
 // INTERAZIONE
 // ═══════════════════════════════════════════════════════════════
 
-let lastX = W/2, lastY = H/2;
-let mouseSpeed = 0;
-let clickCount = 0;
-let lastClickTime = 0;
+let lastX = W/2, lastY = H/2, mouseSpeed = 0;
+let clickCount = 0, lastClickTime = 0;
 
 onmousemove = e => {
     const dx = e.clientX - lastX;
     const dy = e.clientY - lastY;
     mouseSpeed = Math.sqrt(dx*dx + dy*dy);
     
+    // Direzione del tunnel
+    tunnelDirection.x = (e.clientX - W/2) / W * 2;
+    tunnelDirection.y = (e.clientY - H/2) / H * 2;
+    tunnelSpeed = 0.5 + mouseSpeed * 0.05;
+    
     lastX = mouse.x = e.clientX;
     lastY = mouse.y = e.clientY;
     
-    // Posizione Y controlla brightness (alto = brillante)
     brightness = 1 - (e.clientY / H);
-    
-    // Posizione X controlla tempo (destra = veloce)
     tempo = e.clientX / W;
-    
-    // Velocità del mouse controlla energia
     energy = Math.min(1, energy * 0.95 + mouseSpeed * 0.01);
-    
-    // Movimento veloce aumenta tensione
-    if (mouseSpeed > 30) {
-        tension = Math.min(1, tension + 0.02);
-    } else {
-        tension = Math.max(0, tension - 0.005);
-    }
+    if (mouseSpeed > 30) tension = Math.min(1, tension + 0.02);
+    else tension = Math.max(0, tension - 0.005);
 };
 
 onclick = e => {
     if (!ctx) return;
-    
     const now = Date.now();
-    if (now - lastClickTime < 500) {
-        clickCount++;
-    } else {
-        clickCount = 1;
-    }
+    if (now - lastClickTime < 500) clickCount++;
+    else clickCount = 1;
     lastClickTime = now;
     
-    // Click cambia progressione
     if (clickCount >= 2) {
         currentProgression = (currentProgression + 1) % PROGRESSIONS.length;
+        currentScale = SCALES[Object.keys(SCALES)[currentProgression % 5]];
         clickCount = 0;
         
-        // Cambio di scala in base alla progressione
-        const scaleNames = Object.keys(SCALES);
-        currentScale = SCALES[scaleNames[currentProgression % scaleNames.length]];
-        
-        // Feedback visivo
         API.forEach(a => {
-            const dx = a.x - e.clientX;
-            const dy = a.y - e.clientY;
+            const dx = a.x - e.clientX, dy = a.y - e.clientY;
             const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 300) {
-                a.vx += (dx / d) * 8;
-                a.vy += (dy / d) * 8;
-            }
+            if (d < 300) { a.vx += (dx/d) * 8; a.vy += (dy/d) * 8; a.vz += 0.05; }
         });
         
-        // Forte impulso musicale
         const chord = PROGRESSIONS[currentProgression][chordIndex];
-        chord.forEach((note, i) => {
-            setTimeout(() => {
-                playMelodyNote(note + 24, 0.15, 0.5);
-            }, i * 50);
-        });
+        chord.forEach((note, i) => setTimeout(() => playMelodyNote(note + 24, 0.15, 0.5), i * 50));
     } else {
-        // Singolo click: nota accentata basata sulla posizione
         const note = Math.floor((1 - e.clientY / H) * 24) + 12;
         playMelodyNote(quantize(note) + 12, 0.2, 0.4);
-        
-        // Piccolo impulso alle api
         API.forEach(a => {
-            const dx = a.x - e.clientX;
-            const dy = a.y - e.clientY;
+            const dx = a.x - e.clientX, dy = a.y - e.clientY;
             const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 150) {
-                a.vx += (dx / d) * 3;
-                a.vy += (dy / d) * 3;
-            }
+            if (d < 150) { a.vx += (dx/d) * 3; a.vy += (dy/d) * 3; }
         });
     }
 };
 
 // ═══════════════════════════════════════════════════════════════
-// RENDER LOOP
+// RENDER
 // ═══════════════════════════════════════════════════════════════
 
 let t = 0;
 
+function drawBee(a, scale) {
+    const s = a.size * scale * (1 + energy * 0.2);
+    const alpha = 0.4 + scale * 0.6;
+    
+    // Ali
+    a.wingPhase += 0.3 + energy * 0.2;
+    const wingSpan = Math.sin(a.wingPhase) * s * 1.5;
+    
+    $.save();
+    $.translate(a.x, a.y);
+    
+    // Alone di luce
+    const glowSize = s * (4 + energy * 2);
+    const glow = $.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+    glow.addColorStop(0, `hsla(${a.hue}, 70%, ${55 + brightness * 25}%, ${0.3 * alpha})`);
+    glow.addColorStop(0.5, `hsla(${a.hue}, 60%, 45%, ${0.1 * alpha})`);
+    glow.addColorStop(1, 'transparent');
+    $.fillStyle = glow;
+    $.beginPath();
+    $.arc(0, 0, glowSize, 0, Math.PI * 2);
+    $.fill();
+    
+    // Ali (ellissi trasparenti)
+    $.fillStyle = `hsla(50, 30%, 80%, ${0.15 * alpha})`;
+    $.beginPath();
+    $.ellipse(-s * 0.8, wingSpan * 0.3, s * 1.2, Math.abs(wingSpan) * 0.5 + s * 0.3, -0.3, 0, Math.PI * 2);
+    $.fill();
+    $.beginPath();
+    $.ellipse(s * 0.8, -wingSpan * 0.3, s * 1.2, Math.abs(wingSpan) * 0.5 + s * 0.3, 0.3, 0, Math.PI * 2);
+    $.fill();
+    
+    // Corpo (3 segmenti)
+    $.fillStyle = `hsla(${a.hue}, 65%, ${45 + brightness * 20}%, ${alpha})`;
+    $.beginPath();
+    $.ellipse(0, -s * 0.6, s * 0.5, s * 0.4, 0, 0, Math.PI * 2); // testa
+    $.fill();
+    $.fillStyle = `hsla(${a.hue - 5}, 70%, ${40 + brightness * 15}%, ${alpha})`;
+    $.beginPath();
+    $.ellipse(0, 0, s * 0.6, s * 0.5, 0, 0, Math.PI * 2); // torace
+    $.fill();
+    $.fillStyle = `hsla(${a.hue}, 60%, ${35 + brightness * 15}%, ${alpha})`;
+    $.beginPath();
+    $.ellipse(0, s * 0.8, s * 0.5, s * 0.7, 0, 0, Math.PI * 2); // addome
+    $.fill();
+    
+    // Strisce sull'addome
+    $.strokeStyle = `hsla(25, 80%, 20%, ${0.4 * alpha})`;
+    $.lineWidth = s * 0.15;
+    for (let i = 0; i < 3; i++) {
+        $.beginPath();
+        $.arc(0, s * 0.6 + i * s * 0.25, s * 0.4 - i * 0.05, 0.3, Math.PI - 0.3);
+        $.stroke();
+    }
+    
+    $.restore();
+}
+
 function loop() {
     t += 0.016;
     
-    // Fade trail
-    $.fillStyle = `rgba(0,0,0,${0.08 + energy * 0.04})`;
+    // Sfondo nero
+    $.fillStyle = '#000';
     $.fillRect(0, 0, W, H);
     
+    // Disegna il tunnel
+    drawTunnel();
+    
     if (API.length === 0) { requestAnimationFrame(loop); return; }
+    
+    // Ordina api per profondità (z)
+    API.sort((a, b) => a.z - b.z);
     
     // Centro e velocità media
     let cx = 0, cy = 0, vxm = 0, vym = 0;
@@ -621,7 +610,7 @@ function loop() {
     cx /= API.length; cy /= API.length;
     vxm /= API.length; vym /= API.length;
     
-    // Update api
+    // Update e draw api
     API.forEach((a, i) => {
         // Boids
         let sepX = 0, sepY = 0;
@@ -629,98 +618,90 @@ function loop() {
             if (i === j) return;
             const dx = a.x - b.x, dy = a.y - b.y;
             const d = Math.sqrt(dx*dx + dy*dy) || 1;
-            if (d < 35) {
-                sepX += (dx / d) * (35 - d) * 0.04;
-                sepY += (dy / d) * (35 - d) * 0.04;
-            }
+            if (d < 40) { sepX += (dx/d) * (40 - d) * 0.03; sepY += (dy/d) * (40 - d) * 0.03; }
         });
         
-        // Coesione e allineamento
-        a.vx += (vxm - a.vx) * 0.02;
-        a.vy += (vym - a.vy) * 0.02;
-        a.vx += (cx - a.x) * 0.0003;
-        a.vy += (cy - a.y) * 0.0003;
-        a.vx += sepX; a.vy += sepY;
+        a.vx += (vxm - a.vx) * 0.02 + (cx - a.x) * 0.0004 + sepX;
+        a.vy += (vym - a.vy) * 0.02 + (cy - a.y) * 0.0004 + sepY;
         
-        // Attrazione/repulsione dal mouse basata su energy
+        // Seguono il tunnel (vanno verso il centro ma con offset dalla direzione)
+        const toCenterX = W/2 + tunnelDirection.x * 100 - a.x;
+        const toCenterY = H/2 + tunnelDirection.y * 100 - a.y;
+        a.vx += toCenterX * 0.001;
+        a.vy += toCenterY * 0.001;
+        
+        // Attrazione mouse
         const dx = mouse.x - a.x, dy = mouse.y - a.y;
         const d = Math.sqrt(dx*dx + dy*dy) || 1;
-        if (d < 250) {
-            const force = (250 - d) / 250 * 0.2 * (1 + energy);
-            a.vx += (dx / d) * force;
-            a.vy += (dy / d) * force;
+        if (d < 200) {
+            a.vx += (dx/d) * (200 - d) / 200 * 0.3;
+            a.vy += (dy/d) * (200 - d) / 200 * 0.3;
         }
         
-        // Noise organico
-        a.phase += 0.02;
-        a.vx += Math.sin(a.phase) * 0.05;
-        a.vy += Math.cos(a.phase * 1.3) * 0.05;
+        // Movimento Z (profondità)
+        a.vz += (Math.random() - 0.5) * 0.005;
+        a.vz *= 0.95;
+        a.z += a.vz;
+        if (a.z < 0) { a.z = 0; a.vz *= -0.5; }
+        if (a.z > 1) { a.z = 1; a.vz *= -0.5; }
         
-        // Velocità max basata su energy
-        const maxV = 2 + energy * 3;
+        // Noise
+        a.phase += 0.02;
+        a.vx += Math.sin(a.phase + a.hash) * 0.06;
+        a.vy += Math.cos(a.phase * 1.3 + a.hash) * 0.06;
+        
+        // Velocità max
+        const maxV = 2.5 + energy * 2;
         const v = Math.sqrt(a.vx*a.vx + a.vy*a.vy);
-        if (v > maxV) { a.vx = (a.vx/v)*maxV; a.vy = (a.vy/v)*maxV; }
+        if (v > maxV) { a.vx = (a.vx/v) * maxV; a.vy = (a.vy/v) * maxV; }
         
         a.x += a.vx; a.y += a.vy;
         
         // Bordi morbidi
-        if (a.x < 50) a.vx += 0.3;
-        if (a.x > W - 50) a.vx -= 0.3;
-        if (a.y < 50) a.vy += 0.3;
-        if (a.y > H - 50) a.vy -= 0.3;
+        const margin = 80;
+        if (a.x < margin) a.vx += 0.4;
+        if (a.x > W - margin) a.vx -= 0.4;
+        if (a.y < margin) a.vy += 0.4;
+        if (a.y > H - margin) a.vy -= 0.4;
         
         // Trail
-        a.trail.push({ x: a.x, y: a.y });
-        if (a.trail.length > 20 + energy * 15) a.trail.shift();
-    });
-    
-    // Connessioni
-    $.lineWidth = 0.5;
-    API.forEach((a, i) => {
+        a.trail.push({ x: a.x, y: a.y, z: a.z });
+        if (a.trail.length > 15 + energy * 10) a.trail.shift();
+        
+        // Scala basata su profondità
+        const scale = 0.5 + a.z * 0.8;
+        
+        // Trail
+        if (a.trail.length > 2) {
+            $.beginPath();
+            $.moveTo(a.trail[0].x, a.trail[0].y);
+            for (let j = 1; j < a.trail.length; j++) {
+                $.lineTo(a.trail[j].x, a.trail[j].y);
+            }
+            $.strokeStyle = `hsla(${a.hue}, 50%, ${45 + brightness * 20}%, ${0.15 * scale})`;
+            $.lineWidth = 1 + scale + energy;
+            $.stroke();
+        }
+        
+        // Connessioni (solo tra api vicine in Z)
         API.forEach((b, j) => {
             if (j <= i) return;
-            const dx = a.x - b.x, dy = a.y - b.y;
-            const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 80 + energy * 40) {
-                const alpha = (1 - d/(80 + energy * 40)) * 0.15;
-                $.strokeStyle = `hsla(${(a.hue + b.hue)/2}, 60%, ${55 + brightness * 20}%, ${alpha})`;
+            if (Math.abs(a.z - b.z) > 0.3) return;
+            const ddx = a.x - b.x, ddy = a.y - b.y;
+            const dd = Math.sqrt(ddx*ddx + ddy*ddy);
+            if (dd < 60 + energy * 30) {
+                const alpha = (1 - dd / (60 + energy * 30)) * 0.1 * scale;
+                $.strokeStyle = `hsla(42, 50%, 50%, ${alpha})`;
+                $.lineWidth = 0.5;
                 $.beginPath();
                 $.moveTo(a.x, a.y);
                 $.lineTo(b.x, b.y);
                 $.stroke();
             }
         });
-    });
-    
-    // Trail e api
-    API.forEach(a => {
-        // Trail
-        if (a.trail.length > 2) {
-            $.beginPath();
-            $.moveTo(a.trail[0].x, a.trail[0].y);
-            for (let i = 1; i < a.trail.length; i++) {
-                $.lineTo(a.trail[i].x, a.trail[i].y);
-            }
-            $.strokeStyle = `hsla(${a.hue}, 55%, ${50 + brightness * 25}%, 0.25)`;
-            $.lineWidth = 1.5 + energy;
-            $.stroke();
-        }
         
-        // Alone
-        const s = a.size * (1 + energy * 0.3);
-        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, s * 5);
-        grad.addColorStop(0, `hsla(${a.hue}, 65%, ${55 + brightness * 25}%, ${0.25 + energy * 0.15})`);
-        grad.addColorStop(1, 'transparent');
-        $.fillStyle = grad;
-        $.beginPath();
-        $.arc(a.x, a.y, s * 5, 0, Math.PI * 2);
-        $.fill();
-        
-        // Corpo
-        $.fillStyle = `hsla(${a.hue}, 70%, ${60 + brightness * 25}%, 0.9)`;
-        $.beginPath();
-        $.arc(a.x, a.y, s, 0, Math.PI * 2);
-        $.fill();
+        // Disegna l'ape
+        drawBee(a, scale);
     });
     
     requestAnimationFrame(loop);
@@ -733,8 +714,6 @@ function loop() {
 document.getElementById('start').onclick = () => {
     initAudio();
     document.getElementById('start').classList.add('hidden');
-    
-    // Inizia melodia dopo un po'
     setTimeout(generateMelodyPhrase, 2000);
 };
 
