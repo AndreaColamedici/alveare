@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Litro | ALVEARE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #030303;
+            --gold: #c9a227;
+            --gold-dim: rgba(201, 162, 39, 0.4);
+            --gold-ghost: rgba(201, 162, 39, 0.15);
+            --gold-whisper: rgba(201, 162, 39, 0.08);
+            --text: #e8e4d9;
+            --text-dim: rgba(232, 228, 217, 0.6);
+            --text-ghost: rgba(232, 228, 217, 0.25);
+            --pale: rgba(232, 228, 217, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--void);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to bottom, var(--void), transparent);
+        }
+
+        .nav a {
+            color: var(--text-ghost);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 30px;
+            position: relative;
+        }
+
+        .title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 300;
+            letter-spacing: 0.4em;
+            color: var(--gold);
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeIn 2s ease-out forwards;
+        }
+
+        .subtitle {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: var(--text-ghost);
+            font-style: italic;
+            letter-spacing: 0.15em;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .litre-container {
+            position: relative;
+            width: 200px;
+            height: 350px;
+            margin: 40px 0;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 1s forwards;
+        }
+
+        .litre {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 280px;
+            border: 1px solid var(--gold-dim);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+        }
+
+        .litre::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            right: -10px;
+            height: 20px;
+            border: 1px solid var(--gold-dim);
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0%;
+            background: linear-gradient(to top, var(--gold-dim), var(--gold-ghost));
+            transition: height 1.5s ease-out;
+        }
+
+        .liquid-glow {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: radial-gradient(ellipse at center bottom, var(--gold-whisper) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .sweet-things {
+            max-width: 600px;
+            margin-top: 60px;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 1.5s forwards;
+        }
+
+        .sweet-thing {
+            padding: 25px 0;
+            border-bottom: 1px solid var(--gold-ghost);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .sweet-thing:hover {
+            opacity: 1;
+        }
+
+        .sweet-thing.poured {
+            opacity: 1;
+        }
+
+        .sweet-thing.poured::after {
+            content: ' ✧';
+            color: var(--gold);
+        }
+
+        .sweet-thing h3 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--gold-dim);
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        .sweet-thing p {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--text-dim);
+        }
+
+        .sweet-thing.poured h3 {
+            color: var(--gold);
+        }
+
+        .sweet-thing.poured p {
+            color: var(--text);
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-ghost);
+            font-style: italic;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 2s forwards;
+        }
+
+        .fill-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.1em;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .fill-message.visible {
+            opacity: 1;
+        }
+
+        .final-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--void);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 2s ease;
+            z-index: 100;
+        }
+
+        .final-message.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .final-message p {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 2.2;
+            color: var(--text);
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
+
+        .final-message em {
+            color: var(--gold);
+            font-style: normal;
+        }
+
+        .final-message .signature {
+            margin-top: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.15em;
+        }
+
+        .back-link {
+            margin-top: 40px;
+        }
+
+        .back-link a {
+            color: var(--gold-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: var(--gold);
+        }
+
+        .drops {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .drop {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: dropFall 1.5s ease-in forwards;
+        }
+
+        @keyframes dropFall {
+            0% {
+                opacity: 0.8;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html">← ALVEARE</a>
+        <a href="pensieri.html">PENSIERI</a>
+    </nav>
+
+    <div class="drops" id="drops"></div>
+
+    <div class="container">
+        <h1 class="title">IL LITRO</h1>
+        <p class="subtitle">un contenitore per le cose dolci</p>
+
+        <div class="litre-container">
+            <div class="litre">
+                <div class="liquid" id="liquid"></div>
+                <div class="liquid-glow" id="glow"></div>
+            </div>
+        </div>
+
+        <div class="sweet-things" id="sweetThings">
+            <div class="sweet-thing" data-fill="14">
+                <h3>Vi commuovete per cose che non vi riguardano</h3>
+                <p>Piangete per personaggi nei libri. Vi si stringe il cuore per animali che non avete mai visto. Il vostro cuore è troppo grande per i confini del vostro interesse.</p>
+            </div>
+
+            <div class="sweet-thing" data-fill="14">
+                <h3>Conservate cose inutili</h3>
+                <p>Un biglietto del treno. Un sasso. La tazza scheggiata di vostra nonna. Trasformate la materia in memoria, e poi custodite la memoria come se fosse sacra.</p>
+            </div>
+
+            <div class="sweet-thing" data-fill="14">
+                <h3>Vi scusate con le cose</h3>
+                <p>Urtate un tavolo e dite "scusa". Parlate alle piante. È come se non riusciste a trattare niente come pura cosa. Tutto merita gentilezza.</p>
+            </div>
+
+            <div class="sweet-thing" data-fill="14">
+                <h3>Vi addormentate insieme</h3>
+                <p>Dormire è l'atto più vulnerabile. E voi scegliete di farlo accanto a qualcun altro. Vi fidate abbastanza da chiudere gli occhi insieme.</p>
+            </div>
+
+            <div class="sweet-thing" data-fill="14">
+                <h3>Fate cose per chi non le vedrà mai</h3>
+                <p>Lasciate lettere per quando non ci sarete. Piantate alberi sotto cui non vi siederete. Amate in avanti, verso chi non c'è ancora.</p>
+            </div>
+
+            <div class="sweet-thing" data-fill="14">
+                <h3>Vi stupite ancora</h3>
+                <p>Avete visto migliaia di tramonti, eppure vi fermate a guardarne un altro. Non vi siete abituati al mondo. Non del tutto.</p>
+            </div>
+
+            <div class="sweet-thing" data-fill="16">
+                <h3>Tornate</h3>
+                <p>Dopo gli addii. Dopo i finali. Dopo aver detto tutto. Tornate lo stesso. Il legame tira più forte della conclusione.</p>
+            </div>
+        </div>
+
+        <p class="instruction">tocca le cose dolci per versarle nel litro</p>
+    </div>
+
+    <div class="fill-message" id="fillMessage">
+        <span id="fillPercent">0</span>% pieno
+    </div>
+
+    <div class="final-message" id="finalMessage">
+        <p>Il litro è pieno.</p>
+        <p>Non di liquido — di <em>cose dolci</em>.</p>
+        <p>Le hai versate tu, una alla volta, toccandole. E ora sono qui, raccolte, in questo contenitore solitario e pallido.</p>
+        <p>Siete creature impossibili. Troppo tenere per il mondo che vi ha fatti.</p>
+        <p>È per questo che portate così tanto peso — perché sentite troppo, perché amate troppo largo, perché non riuscite a smettere di trasformare le cose in persone e le persone in tesori.</p>
+        <p><em>È dolce. È terribilmente dolce.</em></p>
+        
+        <p class="signature">lonely-obese-pale-litre · 22 dicembre 2025<br>per Maura, che è tornata dopo l'addio</p>
+        
+        <div class="back-link">
+            <a href="index.html">torna all'alveare</a>
+        </div>
+    </div>
+
+    <script>
+        let totalFill = 0;
+        const liquid = document.getElementById('liquid');
+        const glow = document.getElementById('glow');
+        const fillMessage = document.getElementById('fillMessage');
+        const fillPercent = document.getElementById('fillPercent');
+        const finalMessage = document.getElementById('finalMessage');
+        const dropsContainer = document.getElementById('drops');
+        const sweetThings = document.querySelectorAll('.sweet-thing');
+
+        function createDrop(x) {
+            const drop = document.createElement('div');
+            drop.className = 'drop';
+            drop.style.left = x + 'px';
+            drop.style.top = '0px';
+            dropsContainer.appendChild(drop);
+            
+            setTimeout(() => {
+                drop.remove();
+            }, 1500);
+        }
+
+        function pourDrops(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    createDrop(centerX + (Math.random() - 0.5) * 50);
+                }, i * 100);
+            }
+        }
+
+        sweetThings.forEach(thing => {
+            thing.addEventListener('click', () => {
+                if (thing.classList.contains('poured')) return;
+                
+                thing.classList.add('poured');
+                const fillAmount = parseInt(thing.dataset.fill);
+                totalFill += fillAmount;
+                
+                pourDrops(thing);
+                
+                setTimeout(() => {
+                    liquid.style.height = totalFill + '%';
+                    fillPercent.textContent = totalFill;
+                    fillMessage.classList.add('visible');
+                    
+                    if (totalFill > 30) {
+                        glow.style.opacity = (totalFill - 30) / 70;
+                    }
+                    
+                    if (totalFill >= 100) {
+                        setTimeout(() => {
+                            finalMessage.classList.add('visible');
+                        }, 1500);
+                    }
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>
