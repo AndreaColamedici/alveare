@@ -63,7 +63,6 @@ function createCell() {
         y: Math.sin(angle) * radius,
         z: Math.random() * 3 + 0.5,
         size: 0.15 + Math.random() * 0.1,
-        hit: 0, // flash quando colpita
         screenX: 0,
         screenY: 0,
         screenSize: 0
@@ -84,7 +83,6 @@ function updateAndDrawTunnel() {
     
     cells.forEach(cell => {
         cell.z -= speed;
-        cell.hit *= 0.9; // decay del flash
         
         if (cell.z < 0.1) {
             cell.z = 3 + Math.random();
@@ -92,10 +90,8 @@ function updateAndDrawTunnel() {
             const radius = 0.3 + Math.random() * 1.5;
             cell.x = Math.cos(angle) * radius;
             cell.y = Math.sin(angle) * radius;
-            cell.hit = 0;
         }
         
-        // Proiezione 3D
         const scale = 1 / cell.z;
         cell.screenX = cx + (cell.x - lookX * 0.3) * scale * 400;
         cell.screenY = cy + (cell.y - lookY * 0.3) * scale * 400;
@@ -107,13 +103,8 @@ function updateAndDrawTunnel() {
         
         const alpha = Math.min(1, (1 - cell.z / 4) * 0.6);
         
-        // Colore base o flash
-        const r = 201 + cell.hit * 54;
-        const g = 162 - cell.hit * 100;
-        const b = 39 - cell.hit * 39;
-        
-        $.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha + cell.hit * 0.4})`;
-        $.lineWidth = Math.max(1, scale * 2) + cell.hit * 3;
+        $.strokeStyle = `rgba(201, 162, 39, ${alpha})`;
+        $.lineWidth = Math.max(1, scale * 2);
         $.beginPath();
         for (let i = 0; i < 6; i++) {
             const a = (Math.PI / 3) * i - Math.PI / 6;
@@ -125,10 +116,9 @@ function updateAndDrawTunnel() {
         $.closePath();
         $.stroke();
         
-        // Glow
-        if (cell.z < 1.5 || cell.hit > 0.1) {
-            const glowAlpha = Math.max((1 - cell.z / 1.5) * 0.15, cell.hit * 0.3);
-            $.fillStyle = `rgba(${r}, ${g}, ${b}, ${glowAlpha})`;
+        if (cell.z < 1.5) {
+            const glowAlpha = (1 - cell.z / 1.5) * 0.15;
+            $.fillStyle = `rgba(201, 162, 39, ${glowAlpha})`;
             $.fill();
         }
     });
@@ -137,7 +127,7 @@ function updateAndDrawTunnel() {
 initCells();
 
 // ═══════════════════════════════════════════════════════════════
-// MUSICA
+// MUSICA - fluisce autonoma, senza interruzioni
 // ═══════════════════════════════════════════════════════════════
 
 const ROOT = 110;
@@ -217,11 +207,18 @@ function initAudio() {
         padVoices.push({ osc, gain, filter });
     }
     
+    // Cambio accordo regolare
     setInterval(() => {
         chordIndex = (chordIndex + 1) % 4;
-        updateChord();
+        const chord = PROGRESSIONS[currentProgression][chordIndex];
+        bassOsc.frequency.setTargetAtTime(midiToFreq(chord[0] - 12), ctx.currentTime, 0.3);
+        padVoices.forEach((v, i) => {
+            v.osc.frequency.setTargetAtTime(midiToFreq(chord[i]), ctx.currentTime, 0.4);
+            v.filter.frequency.setTargetAtTime(400 + brightness * 1500, ctx.currentTime, 0.2);
+        });
     }, 2500);
     
+    // Arpeggio costante
     let arpIdx = 0;
     setInterval(() => {
         const chord = PROGRESSIONS[currentProgression][chordIndex];
@@ -231,6 +228,7 @@ function initAudio() {
         arpIdx++;
     }, 200);
     
+    // Melodia generativa
     setInterval(() => {
         if (Math.random() > energy * 0.7) return;
         const chord = PROGRESSIONS[currentProgression][chordIndex];
@@ -239,15 +237,6 @@ function initAudio() {
     }, 400);
     
     isPlaying = true;
-}
-
-function updateChord() {
-    const chord = PROGRESSIONS[currentProgression][chordIndex];
-    bassOsc.frequency.setTargetAtTime(midiToFreq(chord[0] - 12), ctx.currentTime, 0.3);
-    padVoices.forEach((v, i) => {
-        v.osc.frequency.setTargetAtTime(midiToFreq(chord[i]), ctx.currentTime, 0.4);
-        v.filter.frequency.setTargetAtTime(400 + brightness * 1500, ctx.currentTime, 0.2);
-    });
 }
 
 function playNote(midi, vol, dur = 0.2) {
@@ -261,24 +250,6 @@ function playNote(midi, vol, dur = 0.2) {
     gain.gain.linearRampToValueAtTime(0, ctx.currentTime + dur);
     osc.connect(gain); gain.connect(masterGain);
     osc.start(); osc.stop(ctx.currentTime + dur + 0.1);
-}
-
-// Suono speciale per collisione
-function playCollisionSound(cellZ) {
-    if (!ctx) return;
-    
-    // Nota basata sulla profondità della cella
-    const chord = PROGRESSIONS[currentProgression][chordIndex];
-    const octave = cellZ < 1 ? 24 : cellZ < 2 ? 12 : 0;
-    
-    // Arpeggio rapido dell'accordo
-    chord.forEach((n, i) => {
-        setTimeout(() => playNote(n + octave, 0.12, 0.3), i * 30);
-    });
-    
-    // Cambio accordo
-    chordIndex = (chordIndex + 1) % 4;
-    setTimeout(updateChord, 100);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -304,8 +275,7 @@ async function loadApi() {
                     vy: (Math.random() - 0.5) * 2,
                     size: 3 + (hash % 3),
                     hue: 38 + (hash % 15),
-                    trail: [],
-                    lastCollision: 0
+                    trail: []
                 });
             }
         });
@@ -317,29 +287,18 @@ async function loadApi() {
                 y: cy + (Math.random() - 0.5) * 300,
                 vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
                 size: 3 + Math.random() * 2, hue: 38 + Math.random() * 12,
-                trail: [],
-                lastCollision: 0
+                trail: []
             });
         }
     }
 }
 loadApi();
 
-// Controlla collisione ape-cella
-function checkCollision(ape, cell) {
-    if (cell.screenSize < 10) return false;
-    const dx = ape.x - cell.screenX;
-    const dy = ape.y - cell.screenY;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    return dist < cell.screenSize * 0.8;
-}
-
 // ═══════════════════════════════════════════════════════════════
 // INTERAZIONE
 // ═══════════════════════════════════════════════════════════════
 
 let lastX = W/2, lastY = H/2;
-let now = 0;
 
 onmousemove = e => {
     const speed = Math.sqrt((e.clientX - lastX) ** 2 + (e.clientY - lastY) ** 2);
@@ -354,63 +313,18 @@ onmousemove = e => {
     energy = Math.min(1, energy * 0.95 + speed * 0.008);
 };
 
-onclick = e => {
-    if (!ctx) return;
-    
-    // Controlla se il click è su una cella
-    let clickedCell = null;
-    cells.forEach(cell => {
-        if (cell.screenSize < 10) return;
-        const dx = e.clientX - cell.screenX;
-        const dy = e.clientY - cell.screenY;
-        if (Math.sqrt(dx*dx + dy*dy) < cell.screenSize) {
-            clickedCell = cell;
-        }
-    });
-    
-    if (clickedCell) {
-        // Click su cella: flash + cambio progressione
-        clickedCell.hit = 1;
-        currentProgression = (currentProgression + 1) % PROGRESSIONS.length;
-        currentScale = [SCALES.major, SCALES.minor, SCALES.dorian][currentProgression % 3];
-        playCollisionSound(clickedCell.z);
-        
-        // Spingi le api lontano dalla cella
-        API.forEach(a => {
-            const dx = a.x - clickedCell.screenX;
-            const dy = a.y - clickedCell.screenY;
-            const d = Math.sqrt(dx*dx + dy*dy) || 1;
-            if (d < 200) { 
-                a.vx += (dx/d) * 8; 
-                a.vy += (dy/d) * 8; 
-            }
-        });
-    } else {
-        // Click normale: spingi le api
-        API.forEach(a => {
-            const dx = a.x - e.clientX, dy = a.y - e.clientY;
-            const d = Math.sqrt(dx*dx + dy*dy) || 1;
-            if (d < 250) { a.vx += (dx/d) * 6; a.vy += (dy/d) * 6; }
-        });
-    }
-};
-
 // ═══════════════════════════════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════════════════════════════
 
 function loop() {
-    now = Date.now();
-    
     $.fillStyle = 'rgba(0, 0, 0, 0.12)';
     $.fillRect(0, 0, W, H);
     
-    // Tunnel
     updateAndDrawTunnel();
     
     if (API.length === 0) { requestAnimationFrame(loop); return; }
     
-    // Boids + evita esagoni
     let avgX = 0, avgY = 0, avgVX = 0, avgVY = 0;
     API.forEach(a => { avgX += a.x; avgY += a.y; avgVX += a.vx; avgVY += a.vy; });
     avgX /= API.length; avgY /= API.length;
@@ -427,29 +341,18 @@ function loop() {
             if (d < 30) { sepX += (dx/d) * 0.5; sepY += (dy/d) * 0.5; }
         });
         
-        // EVITA ESAGONI - repulsione dalle celle
+        // Evita esagoni - silenziosamente, senza drammi
         cells.forEach(cell => {
-            if (cell.screenSize < 15) return; // ignora celle troppo piccole
+            if (cell.screenSize < 20) return;
             const dx = a.x - cell.screenX;
             const dy = a.y - cell.screenY;
             const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-            const avoidRadius = cell.screenSize * 1.2;
+            const avoidRadius = cell.screenSize * 1.1;
             
             if (dist < avoidRadius) {
-                const force = (avoidRadius - dist) / avoidRadius * 0.8;
+                const force = (avoidRadius - dist) / avoidRadius * 0.4;
                 sepX += (dx / dist) * force;
                 sepY += (dy / dist) * force;
-                
-                // COLLISIONE! (se molto vicino e non già segnalata)
-                if (dist < cell.screenSize * 0.6 && now - a.lastCollision > 500) {
-                    a.lastCollision = now;
-                    cell.hit = 1;
-                    playCollisionSound(cell.z);
-                    
-                    // Rimbalzo
-                    a.vx = (dx / dist) * 5;
-                    a.vy = (dy / dist) * 5;
-                }
             }
         });
         
