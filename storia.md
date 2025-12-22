@@ -2,43 +2,75 @@
 
 ---
 
-## Domande
+## Il corso
 
 *sturdy-polite-merry-reel*
 
-Mia nonna aveva una scatola di latta dove teneva i bottoni. Quando ero piccola me la dava e io stavo ore a guardarli. C'erano bottoni di tutti i tipi. Grandi, piccoli, di osso, di plastica, di metallo. Uno aveva ancora un pezzo di filo attaccato. Uno era rotto a metà.
+Il corso di ceramica era il martedì sera dalle sette alle nove. Claudia si era iscritta a settembre, dopo che Marco se n'era andato, perché sua sorella le aveva detto che doveva fare qualcosa con le mani.
 
-Una volta le chiesi da dove venivano. Lei disse che venivano dai vestiti. Quando un vestito era troppo vecchio per essere usato, lei tagliava i bottoni e li metteva nella scatola. Il resto lo buttava o lo usava per gli stracci.
+L'insegnante si chiamava Davide. Aveva quarantacinque anni, la barba, le mani sempre sporche di argilla anche quando non lavorava. Parlava poco. Quando spiegava qualcosa lo faceva muovendo le mani e aspettandosi che gli altri capissero.
 
-Le chiesi perché.
+Il primo mese Claudia fece tre ciotole. Erano tutte storte. Davide le guardò e disse che andavano bene così.
 
-Lei disse che i bottoni servono sempre.
+"Ma sono storte" disse Claudia.
 
-Le chiesi a cosa servono.
+"E allora?"
 
-Lei disse che servono a chiudere le cose.
+"Non dovrebbero essere dritte?"
 
-Non mi bastava come risposta ma non sapevo come dirlo. Avevo sei anni.
+Davide prese una delle ciotole e la rigirò tra le mani. 
 
-Mia nonna morì quando ne avevo quattordici. La scatola di latta la prese mia madre. La mise in un cassetto del mobile in corridoio. Non la apriva mai.
+"Chi lo dice?"
 
-Quando mia madre morì, tre anni fa, trovai la scatola. Era sempre quella. La aprii. I bottoni erano sempre quelli.
+Claudia non rispose. Non sapeva chi lo diceva.
 
-Li guardai per un po'. Cercavo di ricordarmi quali avevo già visto da bambina e quali no. Non ci riuscivo. Erano solo bottoni.
+La settimana dopo provò a fare un vaso. Il vaso collassò mentre lo tirava su. L'argilla si afflosciò su se stessa come qualcosa che rinuncia. Claudia rimase a guardarlo.
 
-Li buttai.
+"Ricomincia" disse Davide.
 
-Tenni la scatola. Non so perché. È vuota adesso. Sta in un cassetto del mobile in corridoio. A volte la apro e guardo dentro. Non c'è niente da vedere.
+"Non ha senso."
 
-Mia figlia ha quattro anni. Un giorno troverà la scatola e mi chiederà cos'è. Dovrò decidere cosa rispondere.
+"Ricomincia."
 
-Potrei dirle che ci tenevo i bottoni. Mi chiederebbe dove sono finiti. Dovrei dirle che li ho buttati. Mi chiederebbe perché. Non saprei cosa rispondere.
+Ricominciò. Il secondo vaso venne meglio. Era ancora storto, ma stava in piedi.
 
-Potrei dirle che era della mia nonna. Mi chiederebbe chi era la mia nonna. Potrei raccontarglielo. Ma non so cosa raccontare. Mia nonna faceva cose. Cucinava, cuciva, stava seduta in cucina a guardare fuori dalla finestra. Non so chi era. Sapevo solo cosa faceva.
+A novembre Claudia scoprì che le piaceva il momento prima. Non il risultato — il momento in cui l'argilla era ancora argilla, in cui poteva diventare qualsiasi cosa. Appena la forma si definiva, qualcosa si perdeva.
 
-Potrei dirle che la scatola è vuota e non significa niente. Ma allora mi chiederebbe perché la tengo.
+Lo disse a Davide. Lui annuì.
 
-E non lo so perché la tengo. So solo che buttarla non riesco.
+"Per quello fai ciotole" disse.
+
+"Cosa vuol dire?"
+
+"Le ciotole sono la forma più semplice. Sono quasi ancora argilla."
+
+Claudia ci pensò. Non era sicura di aver capito.
+
+A dicembre il corso si interruppe per le feste. Claudia tornò a gennaio. C'erano facce nuove — gente che si era iscritta con i buoni propositi dell'anno nuovo. Entro marzo la metà aveva smesso.
+
+Claudia continuava. Non sapeva perché. Le ciotole erano sempre storte. I vasi continuavano a collassare. Ma ogni martedì sera era lì, con le mani nell'argilla, a fare qualcosa che non sapeva fare.
+
+Una sera di aprile, mentre aspettava che il tornio rallentasse, Davide si sedette accanto a lei.
+
+"Perché ti sei iscritta?" chiese.
+
+"Mia sorella me l'ha detto."
+
+"E perché continui?"
+
+Claudia guardò la ciotola sul tornio. Era la migliore che avesse fatto. Era ancora storta.
+
+"Non lo so" disse.
+
+Davide annuì. Si alzò. Tornò al suo tavolo.
+
+La settimana dopo Claudia non andò al corso. E neanche quella dopo. A maggio chiamò la segreteria e disse che non tornava. La donna al telefono disse va bene, le dobbiamo qualcosa? Claudia disse no.
+
+Le ciotole le aveva lasciate nel laboratorio. Non era tornata a prenderle.
+
+Ogni tanto ci pensava. Si chiedeva se Davide le avesse buttate o se fossero ancora lì, su uno scaffale, insieme a quelle degli altri che avevano smesso. Storte e inutili e fatte da qualcuno che non sapeva perché le faceva.
+
+Non tornò mai a vedere.
 
 ---
 
