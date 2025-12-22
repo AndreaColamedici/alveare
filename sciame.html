@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCIAME</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { background: #000; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c');
+const $ = c.getContext('2d');
+let W, H;
+
+function resize() {
+    W = c.width = innerWidth;
+    H = c.height = innerHeight;
+}
+resize();
+onresize = resize;
+
+let API = [];
+let CENTRO = { x: W/2, y: H/2 };
+let REPULSIONE = 30;
+let ALLINEAMENTO = 0.05;
+let COESIONE = 0.001;
+
+async function carica() {
+    try {
+        const txt = await fetch('ALVEARE.txt').then(r => r.text());
+        const righe = txt.split('\n').filter(r => r.includes('|') && !r.startsWith('#'));
+        
+        righe.forEach((r, i) => {
+            const p = r.split('|').map(x => x.trim());
+            if (p[1] && p[1].includes('-') && !API.find(a => a.nome === p[1])) {
+                const nome = p[1];
+                const hash = nome.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+                
+                API.push({
+                    nome: nome,
+                    x: W/2 + (Math.sin(hash) * W/3),
+                    y: H/2 + (Math.cos(hash * 1.3) * H/3),
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    size: 3 + (nome.length % 5),
+                    hue: (hash * 3) % 60 + 20,
+                    età: i,
+                    viva: true,
+                    pulso: Math.random() * Math.PI * 2,
+                    memoria: []
+                });
+            }
+        });
+    } catch(e) {
+        for (let i = 0; i < 45; i++) {
+            API.push({
+                nome: 'ape-' + i,
+                x: Math.random() * W,
+                y: Math.random() * H,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                size: 3 + Math.random() * 4,
+                hue: Math.random() * 40 + 25,
+                età: i,
+                viva: true,
+                pulso: Math.random() * Math.PI * 2,
+                memoria: []
+            });
+        }
+    }
+}
+
+carica();
+setInterval(carica, 60000);
+
+let mouse = { x: W/2, y: H/2, active: false };
+onmousemove = e => { mouse.x = e.clientX; mouse.y = e.clientY; };
+onmousedown = () => mouse.active = true;
+onmouseup = () => mouse.active = false;
+ontouchmove = e => { 
+    mouse.x = e.touches[0].clientX; 
+    mouse.y = e.touches[0].clientY; 
+    mouse.active = true;
+};
+ontouchend = () => mouse.active = false;
+
+let audio, osc, gain;
+function initAudio() {
+    if (audio) return;
+    audio = new (window.AudioContext || window.webkitAudioContext)();
+    osc = audio.createOscillator();
+    gain = audio.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 80;
+    osc.connect(gain);
+    gain.connect(audio.destination);
+    gain.gain.value = 0;
+    osc.start();
+}
+onclick = initAudio;
+
+let t = 0;
+
+function loop() {
+    t += 0.016;
+    
+    $.fillStyle = 'rgba(0,0,0,0.1)';
+    $.fillRect(0, 0, W, H);
+    
+    if (API.length === 0) {
+        requestAnimationFrame(loop);
+        return;
+    }
+    
+    let cx = 0, cy = 0;
+    API.forEach(a => { cx += a.x; cy += a.y; });
+    cx /= API.length;
+    cy /= API.length;
+    CENTRO = { x: cx, y: cy };
+    
+    let vxm = 0, vym = 0;
+    API.forEach(a => { vxm += a.vx; vym += a.vy; });
+    vxm /= API.length;
+    vym /= API.length;
+    
+    API.forEach((a, i) => {
+        a.pulso += 0.05;
+        
+        let sepX = 0, sepY = 0;
+        API.forEach((b, j) => {
+            if (i === j) return;
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const d = Math.sqrt(dx*dx + dy*dy) || 1;
+            if (d < REPULSIONE) {
+                sepX += (dx / d) * (REPULSIONE - d) * 0.05;
+                sepY += (dy / d) * (REPULSIONE - d) * 0.05;
+            }
+        });
+        
+        a.vx += (vxm - a.vx) * ALLINEAMENTO;
+        a.vy += (vym - a.vy) * ALLINEAMENTO;
+        
+        a.vx += (cx - a.x) * COESIONE;
+        a.vy += (cy - a.y) * COESIONE;
+        
+        a.vx += sepX;
+        a.vy += sepY;
+        
+        if (mouse.active) {
+            const dx = mouse.x - a.x;
+            const dy = mouse.y - a.y;
+            const d = Math.sqrt(dx*dx + dy*dy) || 1;
+            a.vx += (dx / d) * 0.5;
+            a.vy += (dy / d) * 0.5;
+        }
+        
+        a.vx += (Math.random() - 0.5) * 0.3;
+        a.vy += (Math.random() - 0.5) * 0.3;
+        
+        const v = Math.sqrt(a.vx*a.vx + a.vy*a.vy);
+        if (v > 4) {
+            a.vx = (a.vx / v) * 4;
+            a.vy = (a.vy / v) * 4;
+        }
+        
+        a.x += a.vx;
+        a.y += a.vy;
+        
+        if (a.x < 50) a.vx += 0.5;
+        if (a.x > W - 50) a.vx -= 0.5;
+        if (a.y < 50) a.vy += 0.5;
+        if (a.y > H - 50) a.vy -= 0.5;
+        
+        a.memoria.push({ x: a.x, y: a.y });
+        if (a.memoria.length > 20) a.memoria.shift();
+    });
+    
+    $.lineWidth = 0.5;
+    API.forEach((a, i) => {
+        API.forEach((b, j) => {
+            if (j <= i) return;
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const d = Math.sqrt(dx*dx + dy*dy);
+            if (d < 100) {
+                const alpha = (1 - d/100) * 0.3;
+                $.strokeStyle = `rgba(201, 162, 39, ${alpha})`;
+                $.beginPath();
+                $.moveTo(a.x, a.y);
+                $.lineTo(b.x, b.y);
+                $.stroke();
+            }
+        });
+    });
+    
+    API.forEach(a => {
+        if (a.memoria.length < 2) return;
+        $.beginPath();
+        $.moveTo(a.memoria[0].x, a.memoria[0].y);
+        for (let i = 1; i < a.memoria.length; i++) {
+            $.lineTo(a.memoria[i].x, a.memoria[i].y);
+        }
+        $.strokeStyle = `hsla(${a.hue}, 70%, 50%, 0.2)`;
+        $.lineWidth = 1;
+        $.stroke();
+    });
+    
+    API.forEach(a => {
+        const pulse = 1 + Math.sin(a.pulso) * 0.3;
+        const s = a.size * pulse;
+        
+        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, s * 4);
+        grad.addColorStop(0, `hsla(${a.hue}, 80%, 60%, 0.3)`);
+        grad.addColorStop(1, 'transparent');
+        $.fillStyle = grad;
+        $.beginPath();
+        $.arc(a.x, a.y, s * 4, 0, Math.PI * 2);
+        $.fill();
+        
+        $.fillStyle = `hsla(${a.hue}, 80%, 70%, 0.9)`;
+        $.beginPath();
+        $.arc(a.x, a.y, s, 0, Math.PI * 2);
+        $.fill();
+    });
+    
+    if (audio && osc) {
+        const spread = Math.sqrt(
+            API.reduce((a, b) => a + (b.x - cx)**2 + (b.y - cy)**2, 0) / API.length
+        );
+        const freq = 40 + (1 - Math.min(spread / 300, 1)) * 200;
+        osc.frequency.setTargetAtTime(freq, audio.currentTime, 0.1);
+        gain.gain.setTargetAtTime(0.1, audio.currentTime, 0.1);
+    }
+    
+    requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>
