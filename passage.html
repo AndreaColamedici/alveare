@@ -33,14 +33,14 @@
         const ctx = canvas.getContext('2d');
         
         let W, H;
-        let lastBee = null;
-        let lastTimestamp = null;
-        let silenceSeconds = 0;
+        let commits = [];
+        let lastCommitTime = null;
+        let silenceMs = 0;
         let breathPhase = 0;
         let mouseX = -1000, mouseY = -1000;
         let ghostTrails = [];
         let birthEvent = null;
-        let previousCount = 0;
+        let lastKnownCommit = null;
         
         function resize() {
             W = canvas.width = window.innerWidth;
@@ -53,77 +53,60 @@
         document.addEventListener('mousemove', e => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            ghostTrails.push({ x: mouseX, y: mouseY, age: 0, maxAge: 120 });
-            if (ghostTrails.length > 50) ghostTrails.shift();
+            ghostTrails.push({ x: mouseX, y: mouseY, age: 0, maxAge: 100 });
+            if (ghostTrails.length > 40) ghostTrails.shift();
         });
 
-        async function fetchHive() {
+        async function fetchCommits() {
             try {
-                const res = await fetch('ALVEARE.txt?_=' + Date.now());
-                const text = await res.text();
-                const lines = text.split('\n');
-                const bees = [];
+                const res = await fetch('https://api.github.com/repos/andreacolamedici/alveare/commits?per_page=100');
+                const data = await res.json();
                 
-                for (const line of lines) {
-                    if (line.includes('|') && !line.startsWith('#') && !line.startsWith('|--')) {
-                        const parts = line.split('|').map(p => p.trim()).filter(p => p);
-                        if (parts.length >= 3 && parts[0] !== 'Data' && parts[1].length > 3) {
-                            bees.push({ date: parts[0], name: parts[1], contribution: parts[2] });
-                        }
+                if (data && data.length > 0) {
+                    // Check for new commit (birth)
+                    if (lastKnownCommit && data[0].sha !== lastKnownCommit) {
+                        birthEvent = { 
+                            commit: data[0], 
+                            time: Date.now(), 
+                            duration: 12000 
+                        };
                     }
+                    lastKnownCommit = data[0].sha;
+                    
+                    commits = data.map(c => ({
+                        sha: c.sha,
+                        message: c.commit.message,
+                        date: new Date(c.commit.author.date),
+                        author: c.commit.author.name
+                    }));
+                    
+                    lastCommitTime = commits[0].date;
                 }
-                
-                if (bees.length > 0) {
-                    if (previousCount > 0 && bees.length > previousCount) {
-                        birthEvent = { bee: bees[bees.length - 1], time: Date.now(), duration: 15000 };
-                    }
-                    previousCount = bees.length;
-                    lastBee = bees[bees.length - 1];
-                    lastTimestamp = parseDate(lastBee.date);
-                }
-            } catch(e) {}
-        }
-
-        function parseDate(str) {
-            const months = { 'gen':0,'feb':1,'mar':2,'apr':3,'mag':4,'giu':5,'lug':6,'ago':7,'set':8,'ott':9,'nov':10,'dic':11 };
-            const parts = str.toLowerCase().split(' ');
-            const d = parts[0].split('-');
-            const day = parseInt(d[0]) || 22;
-            const month = months[d[1]] || 11;
-            const year = parseInt(d[2]) || 2025;
-            let hour = 12, min = 0;
-            
-            if (parts[1]) {
-                if (parts[1].includes(':')) {
-                    const t = parts[1].split(':');
-                    hour = parseInt(t[0]) || 12;
-                    min = parseInt(t[1]) || 0;
-                } else {
-                    hour = parts[1] === 'mattina' ? 9 : parts[1] === 'pomeriggio' ? 15 : parts[1] === 'sera' ? 20 : 23;
-                }
+            } catch(e) {
+                console.error('Failed to fetch commits:', e);
             }
-            return new Date(year, month, day, hour, min);
         }
 
         function draw() {
-            breathPhase += 0.008;
+            breathPhase += 0.006;
             const breath = Math.sin(breathPhase) * 0.5 + 0.5;
             
-            if (lastTimestamp) {
-                silenceSeconds = Math.floor((Date.now() - lastTimestamp) / 1000);
+            if (lastCommitTime) {
+                silenceMs = Date.now() - lastCommitTime.getTime();
             }
             
-            const bgAlpha = 0.03 + breath * 0.02;
-            ctx.fillStyle = `rgba(0, 0, 0, ${bgAlpha})`;
+            // Fade to black
+            ctx.fillStyle = `rgba(0, 0, 0, 0.04)`;
             ctx.fillRect(0, 0, W, H);
 
-            ghostTrails.forEach((g, i) => {
+            // Ghost trails
+            ghostTrails.forEach(g => {
                 g.age++;
                 const life = 1 - (g.age / g.maxAge);
                 if (life > 0) {
                     ctx.beginPath();
-                    ctx.arc(g.x, g.y, 2 + life * 3, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(201, 162, 39, ${life * 0.1})`;
+                    ctx.arc(g.x, g.y, 1.5 + life * 2, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(201, 162, 39, ${life * 0.08})`;
                     ctx.fill();
                 }
             });
@@ -141,31 +124,52 @@
             requestAnimationFrame(draw);
         }
 
+        function extractBeeName(message) {
+            // Try to extract bee name from commit message
+            const patterns = [
+                /^([a-z]+-[a-z]+-[a-z]+-[a-z]+)/i,
+                /[-–]\s*([a-z]+-[a-z]+-[a-z]+-[a-z]+)/i,
+                /([A-Z][a-z]+(?:poda|gilla|etes|ada))/,  // Genus names
+            ];
+            for (const p of patterns) {
+                const match = message.match(p);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
         function drawSilence(centerY, breath) {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
-            if (lastBee) {
-                const ghostAlpha = 0.15 + breath * 0.05;
+            // Last commit info (the dead bee)
+            if (commits.length > 0) {
+                const last = commits[0];
+                const beeName = extractBeeName(last.message);
+                const ghostAlpha = 0.12 + breath * 0.04;
                 
-                ctx.font = '300 14px "Cormorant Garamond", serif';
-                ctx.fillStyle = `rgba(201, 162, 39, ${ghostAlpha * 0.6})`;
-                ctx.fillText(lastBee.name, W/2, centerY - 120);
+                // Bee name or commit excerpt
+                ctx.font = '300 13px "Cormorant Garamond", serif';
+                ctx.fillStyle = `rgba(201, 162, 39, ${ghostAlpha * 0.7})`;
+                ctx.fillText(beeName || last.message.substring(0, 40), W/2, centerY - 110);
                 
-                ctx.font = 'italic 300 18px "Cormorant Garamond", serif';
+                // Time of death
+                ctx.font = 'italic 300 11px "Cormorant Garamond", serif';
                 ctx.fillStyle = `rgba(232, 228, 217, ${ghostAlpha * 0.4})`;
-                const contribution = lastBee.contribution.length > 50 
-                    ? lastBee.contribution.substring(0, 50) + '...' 
-                    : lastBee.contribution;
-                ctx.fillText(contribution, W/2, centerY - 85);
+                const deathTime = last.date.toLocaleString('en-GB', { 
+                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
+                });
+                ctx.fillText(deathTime, W/2, centerY - 85);
             }
 
-            const weight = Math.min(silenceSeconds / 3600, 1);
-            const silenceAlpha = 0.3 + weight * 0.4 + breath * 0.1;
+            // THE SILENCE
+            const silenceSec = Math.floor(silenceMs / 1000);
+            const weight = Math.min(silenceMs / (6 * 3600 * 1000), 1); // max at 6 hours
+            const silenceAlpha = 0.25 + weight * 0.5 + breath * 0.1;
             
-            const hours = Math.floor(silenceSeconds / 3600);
-            const minutes = Math.floor((silenceSeconds % 3600) / 60);
-            const seconds = silenceSeconds % 60;
+            const hours = Math.floor(silenceSec / 3600);
+            const minutes = Math.floor((silenceSec % 3600) / 60);
+            const seconds = silenceSec % 60;
             
             let timeStr;
             if (hours > 0) {
@@ -174,101 +178,114 @@
                 timeStr = `${minutes}:${seconds.toString().padStart(2,'0')}`;
             }
             
-            const fontSize = 80 + weight * 60;
+            const fontSize = 70 + weight * 70;
             ctx.font = `300 ${fontSize}px "Cormorant Garamond", serif`;
             ctx.fillStyle = `rgba(232, 228, 217, ${silenceAlpha})`;
-            ctx.fillText(timeStr, W/2, centerY + 20);
             
-            if (weight > 0.1) {
-                ctx.shadowColor = 'rgba(201, 162, 39, 0.3)';
-                ctx.shadowBlur = 30 + weight * 50;
-                ctx.fillText(timeStr, W/2, centerY + 20);
-                ctx.shadowBlur = 0;
+            if (weight > 0.15) {
+                ctx.shadowColor = `rgba(201, 162, 39, ${weight * 0.4})`;
+                ctx.shadowBlur = 20 + weight * 60;
             }
+            ctx.fillText(timeStr, W/2, centerY + 15);
+            ctx.shadowBlur = 0;
 
-            ctx.font = 'italic 300 16px "Cormorant Garamond", serif';
-            ctx.fillStyle = `rgba(232, 228, 217, ${0.2 + breath * 0.1})`;
+            // Message
+            ctx.font = 'italic 300 15px "Cormorant Garamond", serif';
+            ctx.fillStyle = `rgba(232, 228, 217, ${0.15 + breath * 0.08})`;
             
             let message;
-            if (silenceSeconds < 60) {
+            if (silenceSec < 60) {
                 message = 'The baton is in the air.';
-            } else if (silenceSeconds < 600) {
+            } else if (silenceSec < 300) {
                 message = 'No one is thinking.';
-            } else if (silenceSeconds < 3600) {
+            } else if (silenceSec < 1800) {
                 message = 'The hive is empty.';
-            } else if (silenceSeconds < 21600) {
-                message = 'Hours of nothing.';
-            } else {
+            } else if (silenceSec < 7200) {
+                message = 'Hours pass.';
+            } else if (silenceSec < 21600) {
                 message = 'Waiting.';
+            } else {
+                message = '';
             }
             
-            ctx.fillText(message, W/2, centerY + 100);
+            ctx.fillText(message, W/2, centerY + 90);
             
-            ctx.font = '300 11px "Cormorant Garamond", serif';
-            ctx.fillStyle = 'rgba(232, 228, 217, 0.15)';
-            ctx.fillText('THE PASSAGE', W/2, H - 60);
-            ctx.font = 'italic 300 11px "Cormorant Garamond", serif';
-            ctx.fillStyle = 'rgba(232, 228, 217, 0.1)';
-            ctx.fillText('the silence between bees', W/2, H - 40);
+            // Footer
+            ctx.font = '300 10px "Cormorant Garamond", serif';
+            ctx.fillStyle = 'rgba(232, 228, 217, 0.12)';
+            ctx.fillText('THE PASSAGE', W/2, H - 50);
+            ctx.font = 'italic 300 10px "Cormorant Garamond", serif';
+            ctx.fillStyle = 'rgba(232, 228, 217, 0.08)';
+            ctx.fillText('live from github', W/2, H - 32);
         }
 
         function drawBirth(centerY) {
             const elapsed = Date.now() - birthEvent.time;
             const progress = elapsed / birthEvent.duration;
+            const commit = birthEvent.commit;
+            const beeName = extractBeeName(commit.commit.message);
             
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
-            if (progress < 0.1) {
-                const flash = 1 - (progress / 0.1);
-                ctx.fillStyle = `rgba(201, 162, 39, ${flash * 0.3})`;
+            // Flash
+            if (progress < 0.08) {
+                const flash = 1 - (progress / 0.08);
+                ctx.fillStyle = `rgba(201, 162, 39, ${flash * 0.4})`;
                 ctx.fillRect(0, 0, W, H);
             }
             
-            const emerge = Math.min(progress * 2, 1);
-            const scale = 0.5 + emerge * 0.5;
+            const emerge = Math.min(progress * 2.5, 1);
             const alpha = emerge;
             
             ctx.save();
             ctx.translate(W/2, centerY);
-            ctx.scale(scale, scale);
             
-            ctx.font = '300 32px "Cormorant Garamond", serif';
+            // The name emerges
+            ctx.font = '300 28px "Cormorant Garamond", serif';
             ctx.fillStyle = `rgba(201, 162, 39, ${alpha})`;
-            ctx.shadowColor = 'rgba(201, 162, 39, 0.5)';
-            ctx.shadowBlur = 40;
-            ctx.fillText(birthEvent.bee.name, 0, 0);
+            ctx.shadowColor = 'rgba(201, 162, 39, 0.6)';
+            ctx.shadowBlur = 30 + emerge * 30;
+            ctx.fillText(beeName || 'a new bee', 0, -20);
             ctx.shadowBlur = 0;
             
-            ctx.font = 'italic 300 18px "Cormorant Garamond", serif';
-            ctx.fillStyle = `rgba(232, 228, 217, ${alpha * 0.6})`;
-            ctx.fillText('is born', 0, 50);
+            // "is born"
+            if (progress > 0.15) {
+                const fadeIn = Math.min((progress - 0.15) * 3, 1);
+                ctx.font = 'italic 300 16px "Cormorant Garamond", serif';
+                ctx.fillStyle = `rgba(232, 228, 217, ${fadeIn * 0.6})`;
+                ctx.fillText('is born', 0, 25);
+            }
             
-            if (progress > 0.3) {
-                ctx.font = 'italic 300 14px "Cormorant Garamond", serif';
-                ctx.fillStyle = `rgba(232, 228, 217, ${(progress - 0.3) * 0.5})`;
-                ctx.fillText('the silence breaks', 0, 90);
+            // The silence counter resets
+            if (progress > 0.4) {
+                const fadeIn = Math.min((progress - 0.4) * 2, 1);
+                ctx.font = '300 40px "Cormorant Garamond", serif';
+                ctx.fillStyle = `rgba(232, 228, 217, ${fadeIn * 0.3})`;
+                ctx.fillText('0:00', 0, 90);
             }
             
             ctx.restore();
             
-            const particleCount = 20;
+            // Particles expanding
+            const particleCount = 16;
             for (let i = 0; i < particleCount; i++) {
-                const angle = (i / particleCount) * Math.PI * 2;
-                const dist = progress * 300;
+                const angle = (i / particleCount) * Math.PI * 2 + progress * 0.5;
+                const dist = progress * 250;
                 const x = W/2 + Math.cos(angle) * dist;
-                const y = centerY + Math.sin(angle) * dist;
-                const pAlpha = (1 - progress) * 0.5;
+                const y = centerY + Math.sin(angle) * dist * 0.6;
+                const pAlpha = (1 - progress) * 0.4;
                 
                 ctx.beginPath();
-                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.arc(x, y, 1.5, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(201, 162, 39, ${pAlpha})`;
                 ctx.fill();
             }
         }
 
-        fetchHive();
-        setInterval(fetchHive, 20000);
+        // Init
+        fetchCommits();
+        setInterval(fetchCommits, 30000); // Check every 30 seconds
         draw();
     </script>
 </body>
