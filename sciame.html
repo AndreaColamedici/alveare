@@ -6,28 +6,15 @@
     <title>SCIAME</title>
     <style>
         * { margin: 0; padding: 0; }
-        body { background: #000; overflow: hidden; font-family: Georgia, serif; }
+        body { background: #000; overflow: hidden; }
         canvas { display: block; }
-        #nome {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(201, 162, 39, 0);
-            font-size: 0.8rem;
-            letter-spacing: 0.3em;
-            transition: color 0.3s;
-            pointer-events: none;
-            text-align: center;
-        }
-        #nome.visible { color: rgba(201, 162, 39, 0.7); }
         #start {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: #c9a227;
-            font: 300 2rem Georgia, serif;
+            font: 300 2.5rem Georgia, serif;
             letter-spacing: 0.5em;
             cursor: pointer;
             text-align: center;
@@ -35,79 +22,116 @@
         }
         #start span {
             display: block;
-            font-size: 0.7rem;
-            margin-top: 20px;
+            font-size: 0.8rem;
+            margin-top: 25px;
             color: rgba(201,162,39,0.4);
-            letter-spacing: 0.3em;
+            letter-spacing: 0.2em;
+            line-height: 1.8;
         }
         #start.hidden { display: none; }
-        #mode {
+        #info {
             position: fixed;
-            top: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(201, 162, 39, 0.3);
-            font-size: 0.65rem;
-            letter-spacing: 0.4em;
+            color: rgba(201, 162, 39, 0.25);
+            font: 0.7rem Georgia, serif;
+            letter-spacing: 0.15em;
             pointer-events: none;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-<div id="start">SCIAME<span>clicca per iniziare</span></div>
+<div id="start">SCIAME<span>clicca per entrare<br>muovi per suonare<br>clicca per trasformare</span></div>
 <canvas id="c"></canvas>
-<div id="nome"></div>
-<div id="mode"></div>
+<div id="info"></div>
 <script>
 const c = document.getElementById('c');
 const $ = c.getContext('2d');
-const nomeEl = document.getElementById('nome');
-const modeEl = document.getElementById('mode');
+const info = document.getElementById('info');
 let W, H;
-
 function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
 resize();
 onresize = resize;
 
 // ═══════════════════════════════════════════════════════════════
-// SISTEMA MUSICALE
+// TEORIA MUSICALE
 // ═══════════════════════════════════════════════════════════════
 
-const MODES = {
-    ionian:     { name: 'Luce',    intervals: [0, 2, 4, 5, 7, 9, 11], color: 'hsl(45, 70%, 60%)' },
-    dorian:     { name: 'Vento',   intervals: [0, 2, 3, 5, 7, 9, 10], color: 'hsl(200, 60%, 55%)' },
-    phrygian:   { name: 'Sabbia',  intervals: [0, 1, 3, 5, 7, 8, 10], color: 'hsl(30, 65%, 50%)' },
-    lydian:     { name: 'Cielo',   intervals: [0, 2, 4, 6, 7, 9, 11], color: 'hsl(180, 50%, 60%)' },
-    mixolydian: { name: 'Terra',   intervals: [0, 2, 4, 5, 7, 9, 10], color: 'hsl(25, 70%, 55%)' },
-    aeolian:    { name: 'Ombra',   intervals: [0, 2, 3, 5, 7, 8, 10], color: 'hsl(270, 40%, 50%)' },
-    locrian:    { name: 'Abisso',  intervals: [0, 1, 3, 5, 6, 8, 10], color: 'hsl(300, 30%, 40%)' }
+const ROOT = 110; // La2
+
+// Progressioni armoniche che funzionano sempre
+const PROGRESSIONS = [
+    // I - vi - IV - V (pop)
+    [[0,4,7,11], [9,12,16,19], [5,9,12,17], [7,11,14,19]],
+    // I - V - vi - IV (axis)
+    [[0,4,7,11], [7,11,14,19], [9,12,16,19], [5,9,12,17]],
+    // ii - V - I - I (jazz)
+    [[2,5,9,12], [7,11,14,17], [0,4,7,11], [0,4,7,11]],
+    // I - IV - vi - V
+    [[0,4,7,11], [5,9,12,17], [9,12,16,19], [7,11,14,19]],
+    // vi - IV - I - V
+    [[9,12,16,19], [5,9,12,17], [0,4,7,11], [7,11,14,19]],
+    // I - iii - IV - iv (radiohead)
+    [[0,4,7,11], [4,7,11,14], [5,9,12,17], [5,8,12,17]],
+];
+
+// Scale per melodia
+const SCALES = {
+    major: [0, 2, 4, 5, 7, 9, 11],
+    minor: [0, 2, 3, 5, 7, 8, 10],
+    dorian: [0, 2, 3, 5, 7, 9, 10],
+    mixolydian: [0, 2, 4, 5, 7, 9, 10],
+    lydian: [0, 2, 4, 6, 7, 9, 11],
 };
 
-const MODE_KEYS = Object.keys(MODES);
-let currentModeIndex = 0;
-let currentMode = MODES.ionian;
-const ROOT = 55; // La1
+let currentScale = SCALES.major;
+let currentProgression = 0;
+let chordIndex = 0;
 
-function getFreq(degree, octave = 0) {
-    const interval = currentMode.intervals[((degree % 7) + 7) % 7];
-    const oct = Math.floor(degree / 7) + octave;
-    return ROOT * Math.pow(2, (interval + oct * 12) / 12);
+function midiToFreq(midi) {
+    return ROOT * Math.pow(2, midi / 12);
+}
+
+function quantize(degree) {
+    // Trova la nota più vicina nella scala
+    const octave = Math.floor(degree / 12);
+    const note = ((degree % 12) + 12) % 12;
+    let closest = currentScale[0];
+    let minDist = 12;
+    for (const s of currentScale) {
+        const dist = Math.min(Math.abs(s - note), Math.abs(s - note + 12), Math.abs(s - note - 12));
+        if (dist < minDist) { minDist = dist; closest = s; }
+    }
+    return octave * 12 + closest;
 }
 
 // ═══════════════════════════════════════════════════════════════
 // AUDIO ENGINE
 // ═══════════════════════════════════════════════════════════════
 
-let audio, master, reverb, delay, compressor;
-let drone = [], pad = [], melody = [];
+let ctx;
+let masterGain, reverbGain, delayNode, delayFeedback, compressor;
 let isPlaying = false;
 
-function createReverb(ctx, duration = 2, decay = 2) {
-    const rate = ctx.sampleRate;
-    const length = rate * duration;
-    const impulse = ctx.createBuffer(2, length, rate);
-    for (let c = 0; c < 2; c++) {
-        const data = impulse.getChannelData(c);
+// Voci
+let padVoices = [];
+let bassOsc, bassGain;
+let arpVoices = [];
+let melodyTimeout;
+
+// Stato musicale
+let tension = 0.5;      // 0-1: consonanza-dissonanza
+let energy = 0.5;       // 0-1: calmo-intenso
+let brightness = 0.5;   // 0-1: scuro-brillante
+let tempo = 0.5;        // 0-1: lento-veloce
+
+function createReverb(duration = 2.5, decay = 2) {
+    const length = ctx.sampleRate * duration;
+    const impulse = ctx.createBuffer(2, length, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+        const data = impulse.getChannelData(ch);
         for (let i = 0; i < length; i++) {
             data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
         }
@@ -118,211 +142,335 @@ function createReverb(ctx, duration = 2, decay = 2) {
 }
 
 function initAudio() {
-    if (audio) return;
-    audio = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
     
     // Master chain
-    compressor = audio.createDynamicsCompressor();
-    compressor.threshold.value = -24;
-    compressor.knee.value = 30;
-    compressor.ratio.value = 4;
-    compressor.attack.value = 0.003;
-    compressor.release.value = 0.25;
+    compressor = ctx.createDynamicsCompressor();
+    compressor.threshold.value = -20;
+    compressor.knee.value = 20;
+    compressor.ratio.value = 6;
+    compressor.attack.value = 0.005;
+    compressor.release.value = 0.1;
+    compressor.connect(ctx.destination);
     
-    reverb = createReverb(audio, 3, 2.5);
-    const reverbGain = audio.createGain();
-    reverbGain.gain.value = 0.35;
+    masterGain = ctx.createGain();
+    masterGain.gain.value = 0;
+    masterGain.connect(compressor);
     
-    delay = audio.createDelay(1);
-    delay.delayTime.value = 0.375; // dotted eighth
-    const delayFeedback = audio.createGain();
-    delayFeedback.gain.value = 0.3;
-    const delayFilter = audio.createBiquadFilter();
-    delayFilter.type = 'lowpass';
-    delayFilter.frequency.value = 2000;
-    
-    delay.connect(delayFilter);
-    delayFilter.connect(delayFeedback);
-    delayFeedback.connect(delay);
-    
-    const delayGain = audio.createGain();
-    delayGain.gain.value = 0.25;
-    delay.connect(delayGain);
-    
-    master = audio.createGain();
-    master.gain.value = 0;
-    
-    // Routing
-    master.connect(compressor);
-    master.connect(reverb);
-    master.connect(delay);
+    // Reverb
+    const reverb = createReverb(3, 2);
+    reverbGain = ctx.createGain();
+    reverbGain.gain.value = 0.3;
     reverb.connect(reverbGain);
     reverbGain.connect(compressor);
-    delayGain.connect(compressor);
-    compressor.connect(audio.destination);
+    masterGain.connect(reverb);
     
-    // Drone - fondamento armonico
-    createDrone();
+    // Delay (tempo-synced feel)
+    delayNode = ctx.createDelay(2);
+    delayNode.delayTime.value = 0.375;
+    delayFeedback = ctx.createGain();
+    delayFeedback.gain.value = 0.25;
+    const delayFilter = ctx.createBiquadFilter();
+    delayFilter.type = 'lowpass';
+    delayFilter.frequency.value = 2500;
+    delayNode.connect(delayFilter);
+    delayFilter.connect(delayFeedback);
+    delayFeedback.connect(delayNode);
+    const delayOut = ctx.createGain();
+    delayOut.gain.value = 0.2;
+    delayNode.connect(delayOut);
+    delayOut.connect(compressor);
+    masterGain.connect(delayNode);
     
     // Fade in
-    master.gain.setTargetAtTime(0.7, audio.currentTime, 2);
+    masterGain.gain.setTargetAtTime(0.8, ctx.currentTime, 3);
+    
+    // Start music
+    startBass();
+    startPad();
+    scheduleChordChange();
+    startArpeggio();
+    
     isPlaying = true;
 }
 
-function createDrone() {
-    // Drone su tonica e quinta
-    [0, 4].forEach((degree, i) => {
-        const osc = audio.createOscillator();
-        const gain = audio.createGain();
-        const filter = audio.createBiquadFilter();
-        
-        osc.type = 'sine';
-        osc.frequency.value = getFreq(degree, 1);
-        
-        filter.type = 'lowpass';
-        filter.frequency.value = 400;
-        filter.Q.value = 1;
-        
-        gain.gain.value = 0.15;
-        
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(master);
-        
-        osc.start();
-        drone.push({ osc, gain, filter, degree });
-    });
+// ═══════════════════════════════════════════════════════════════
+// STRUMENTI
+// ═══════════════════════════════════════════════════════════════
+
+function startBass() {
+    bassOsc = ctx.createOscillator();
+    const bassOsc2 = ctx.createOscillator();
+    bassGain = ctx.createGain();
+    const bassFilter = ctx.createBiquadFilter();
     
-    // Sub bass
-    const sub = audio.createOscillator();
-    const subGain = audio.createGain();
-    sub.type = 'sine';
-    sub.frequency.value = ROOT;
-    subGain.gain.value = 0.2;
-    sub.connect(subGain);
-    subGain.connect(master);
-    sub.start();
-    drone.push({ osc: sub, gain: subGain });
+    bassOsc.type = 'sine';
+    bassOsc2.type = 'triangle';
+    bassOsc2.detune.value = -1200; // un'ottava sotto
+    
+    bassFilter.type = 'lowpass';
+    bassFilter.frequency.value = 300;
+    bassFilter.Q.value = 1;
+    
+    bassGain.gain.value = 0.25;
+    
+    const bassOsc2Gain = ctx.createGain();
+    bassOsc2Gain.gain.value = 0.15;
+    
+    bassOsc.connect(bassFilter);
+    bassOsc2.connect(bassOsc2Gain);
+    bassOsc2Gain.connect(bassFilter);
+    bassFilter.connect(bassGain);
+    bassGain.connect(masterGain);
+    
+    const chord = PROGRESSIONS[currentProgression][chordIndex];
+    bassOsc.frequency.value = midiToFreq(chord[0] - 12);
+    bassOsc2.frequency.value = midiToFreq(chord[0] - 12);
+    
+    bassOsc.start();
+    bassOsc2.start();
 }
 
-function updateDrone() {
-    drone.forEach((d, i) => {
-        if (d.degree !== undefined) {
-            const freq = getFreq(d.degree, 1);
-            d.osc.frequency.setTargetAtTime(freq, audio.currentTime, 0.5);
+function updateBass(notes) {
+    if (!bassOsc) return;
+    const bassNote = notes[0] - 12;
+    bassOsc.frequency.setTargetAtTime(midiToFreq(bassNote), ctx.currentTime, 0.3);
+}
+
+function startPad() {
+    // 4 voci per il pad
+    for (let i = 0; i < 4; i++) {
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        
+        osc1.type = 'sawtooth';
+        osc2.type = 'sawtooth';
+        osc2.detune.value = 7 + i * 2; // leggero detune per warmth
+        
+        filter.type = 'lowpass';
+        filter.frequency.value = 800 + i * 200;
+        filter.Q.value = 0.7;
+        
+        lfo.type = 'sine';
+        lfo.frequency.value = 0.1 + i * 0.05;
+        lfoGain.gain.value = 3;
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc1.detune);
+        lfoGain.connect(osc2.detune);
+        
+        gain.gain.value = 0.06;
+        
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterGain);
+        
+        const chord = PROGRESSIONS[currentProgression][chordIndex];
+        osc1.frequency.value = midiToFreq(chord[i] || chord[0]);
+        osc2.frequency.value = midiToFreq(chord[i] || chord[0]);
+        
+        osc1.start();
+        osc2.start();
+        lfo.start();
+        
+        padVoices.push({ osc1, osc2, gain, filter, lfo, lfoGain });
+    }
+}
+
+function updatePad(notes) {
+    padVoices.forEach((voice, i) => {
+        const note = notes[i] || notes[0];
+        const freq = midiToFreq(note);
+        voice.osc1.frequency.setTargetAtTime(freq, ctx.currentTime, 0.4);
+        voice.osc2.frequency.setTargetAtTime(freq, ctx.currentTime, 0.4);
+        
+        // Brightness controlla il filtro
+        voice.filter.frequency.setTargetAtTime(400 + brightness * 2000, ctx.currentTime, 0.2);
+    });
+}
+
+let arpIndex = 0;
+let arpInterval;
+
+function startArpeggio() {
+    function playArpNote() {
+        if (!ctx || !isPlaying) return;
+        
+        const chord = PROGRESSIONS[currentProgression][chordIndex];
+        
+        // Pattern che cambia con la tensione
+        let pattern;
+        if (tension < 0.3) {
+            pattern = [0, 1, 2, 3, 2, 1]; // semplice
+        } else if (tension < 0.6) {
+            pattern = [0, 2, 1, 3, 2, 0, 3, 1]; // più mosso
         } else {
-            d.osc.frequency.setTargetAtTime(ROOT, audio.currentTime, 0.5);
+            pattern = [0, 3, 1, 2, 3, 0, 2, 1, 3, 2]; // complesso
         }
-    });
+        
+        const noteIdx = pattern[arpIndex % pattern.length];
+        const baseNote = chord[noteIdx % chord.length];
+        
+        // Octave jumping basato su energy
+        const octaveShift = energy > 0.7 ? (Math.random() > 0.5 ? 12 : 0) : 0;
+        const note = baseNote + 12 + octaveShift;
+        
+        // Volume basato su posizione nel pattern
+        const accent = arpIndex % pattern.length === 0 ? 1.2 : 
+                       arpIndex % (pattern.length/2) === 0 ? 1 : 0.8;
+        
+        playMelodyNote(note, 0.08 * energy * accent, getArpDuration() * 0.8);
+        
+        arpIndex++;
+        
+        arpInterval = setTimeout(playArpNote, getArpDuration());
+    }
+    
+    playArpNote();
 }
 
-// Pad - accordi che cambiano col modo
-let padVoices = [];
-function playPad(degrees, duration = 2) {
-    if (!audio) return;
-    
-    // Fade out vecchie voci
-    padVoices.forEach(v => {
-        v.gain.gain.setTargetAtTime(0, audio.currentTime, 0.3);
-        setTimeout(() => { try { v.osc.stop(); } catch(e){} }, 1000);
-    });
-    padVoices = [];
-    
-    degrees.forEach((deg, i) => {
-        const osc = audio.createOscillator();
-        const gain = audio.createGain();
-        const filter = audio.createBiquadFilter();
-        
-        osc.type = i === 0 ? 'triangle' : 'sine';
-        osc.frequency.value = getFreq(deg, 2);
-        
-        filter.type = 'lowpass';
-        filter.frequency.value = 1200 + i * 200;
-        
-        gain.gain.value = 0;
-        gain.gain.setTargetAtTime(0.08, audio.currentTime, 0.1);
-        
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(master);
-        
-        osc.start();
-        padVoices.push({ osc, gain, filter });
-    });
+function getArpDuration() {
+    // Tempo controlla la velocità base, energy la accelera
+    const baseDuration = 400 - tempo * 250; // 400ms - 150ms
+    return baseDuration / (1 + energy * 0.5);
 }
 
-// Melody - note singole che seguono le api
-function playNote(freq, velocity = 0.5, duration = 0.3) {
-    if (!audio) return;
+function playMelodyNote(midi, volume, duration) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
     
-    const osc = audio.createOscillator();
-    const gain = audio.createGain();
-    const filter = audio.createBiquadFilter();
-    
-    osc.type = 'triangle';
-    osc.frequency.value = freq;
+    // Tipo d'onda basato su brightness
+    osc.type = brightness > 0.6 ? 'sawtooth' : brightness > 0.3 ? 'triangle' : 'sine';
+    osc.frequency.value = midiToFreq(midi);
     
     filter.type = 'lowpass';
-    filter.frequency.value = 2000 + velocity * 3000;
-    filter.Q.value = 2;
+    filter.frequency.value = 1000 + brightness * 4000;
+    filter.Q.value = 1 + tension * 3;
     
-    const vol = 0.1 + velocity * 0.15;
+    // Envelope
+    const now = ctx.currentTime;
+    const attackTime = 0.01;
+    const decayTime = duration * 0.3;
+    const sustainLevel = 0.6;
+    const releaseTime = duration * 0.5;
+    
     gain.gain.value = 0;
-    gain.gain.setTargetAtTime(vol, audio.currentTime, 0.01);
-    gain.gain.setTargetAtTime(vol * 0.6, audio.currentTime + 0.05, 0.1);
-    gain.gain.setTargetAtTime(0, audio.currentTime + duration, 0.15);
+    gain.gain.linearRampToValueAtTime(volume, now + attackTime);
+    gain.gain.linearRampToValueAtTime(volume * sustainLevel, now + attackTime + decayTime);
+    gain.gain.linearRampToValueAtTime(0, now + duration + releaseTime);
     
     osc.connect(filter);
     filter.connect(gain);
-    gain.connect(master);
+    gain.connect(masterGain);
     
-    osc.start();
-    osc.stop(audio.currentTime + duration + 0.5);
+    osc.start(now);
+    osc.stop(now + duration + releaseTime + 0.1);
 }
 
-// Arpeggiator
-let arpSequence = [0, 2, 4, 7, 4, 2];
-let arpIndex = 0;
-let arpInterval = null;
-let arpSpeed = 200;
-let arpOctave = 3;
-let arpPlaying = false;
-
-function startArp() {
-    if (arpPlaying) return;
-    arpPlaying = true;
-    
-    function step() {
-        if (!arpPlaying || !audio) return;
+function scheduleChordChange() {
+    function changeChord() {
+        if (!ctx || !isPlaying) return;
         
-        const degree = arpSequence[arpIndex % arpSequence.length];
-        const freq = getFreq(degree, arpOctave);
-        playNote(freq, 0.4, arpSpeed / 1000 * 0.8);
+        chordIndex = (chordIndex + 1) % 4;
+        const chord = PROGRESSIONS[currentProgression][chordIndex];
         
-        arpIndex++;
-        arpInterval = setTimeout(step, arpSpeed);
+        updatePad(chord);
+        updateBass(chord);
+        
+        // Prossimo cambio
+        const interval = 2000 + (1 - tempo) * 2000; // 2-4 secondi
+        setTimeout(changeChord, interval);
     }
-    step();
-}
-
-function stopArp() {
-    arpPlaying = false;
-    if (arpInterval) clearTimeout(arpInterval);
-}
-
-function setArpPattern(pattern) {
-    arpSequence = pattern;
+    
+    changeChord();
 }
 
 // ═══════════════════════════════════════════════════════════════
-// API - SCIAME VISUALE E SONORO
+// MELODIA GENERATIVA
+// ═══════════════════════════════════════════════════════════════
+
+let lastMelodyNote = 12; // partiamo dalla tonica
+let melodyRest = 0;
+
+function generateMelodyPhrase() {
+    if (!ctx || !isPlaying) return;
+    
+    // Probabilità di silenzio
+    if (Math.random() > energy * 0.8) {
+        melodyRest++;
+        if (melodyRest < 3) {
+            setTimeout(generateMelodyPhrase, 500 + Math.random() * 500);
+            return;
+        }
+    }
+    melodyRest = 0;
+    
+    const chord = PROGRESSIONS[currentProgression][chordIndex];
+    const phraseLength = 3 + Math.floor(Math.random() * 5);
+    
+    let time = 0;
+    for (let i = 0; i < phraseLength; i++) {
+        // Movimento melodico intelligente
+        let interval;
+        const r = Math.random();
+        if (r < 0.4) {
+            interval = Math.random() > 0.5 ? 1 : -1; // step
+        } else if (r < 0.7) {
+            interval = Math.random() > 0.5 ? 2 : -2; // third
+        } else if (r < 0.85) {
+            interval = 0; // ripetizione
+        } else {
+            interval = Math.floor(Math.random() * 5) - 2; // salto
+        }
+        
+        let nextNote = lastMelodyNote + interval;
+        
+        // Attrazione verso note dell'accordo
+        if (Math.random() < 0.3) {
+            const chordTone = chord[Math.floor(Math.random() * chord.length)] + 12;
+            if (Math.abs(chordTone - nextNote) <= 4) {
+                nextNote = chordTone;
+            }
+        }
+        
+        // Quantizza alla scala
+        nextNote = quantize(nextNote);
+        
+        // Range
+        if (nextNote < 7) nextNote += 12;
+        if (nextNote > 31) nextNote -= 12;
+        
+        lastMelodyNote = nextNote;
+        
+        const duration = (200 + Math.random() * 300) / (1 + tempo * 0.5);
+        const volume = 0.12 * energy * (i === 0 ? 1.2 : 0.9);
+        
+        setTimeout(() => {
+            playMelodyNote(nextNote + 12, volume, duration / 1000);
+        }, time);
+        
+        time += duration;
+    }
+    
+    // Prossima frase
+    const restTime = 500 + Math.random() * 1500 * (1 - energy);
+    setTimeout(generateMelodyPhrase, time + restTime);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API VISIVE
 // ═══════════════════════════════════════════════════════════════
 
 let API = [];
-let mouse = { x: W/2, y: H/2, active: false, vx: 0, vy: 0 };
-let lastMouse = { x: W/2, y: H/2, t: Date.now() };
+let mouse = { x: W/2, y: H/2, pressed: false };
 
-async function caricaApi() {
+async function loadApi() {
     try {
         const txt = await fetch('ALVEARE.txt').then(r => r.text());
         const righe = txt.split('\n').filter(r => r.includes('|') && !r.startsWith('#'));
@@ -333,134 +481,127 @@ async function caricaApi() {
                 const nome = p[1];
                 const hash = nome.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
                 
-                // Ogni ape ha un grado nella scala
-                const degree = i % 7;
-                
                 API.push({
                     nome,
                     x: W/2 + (Math.sin(hash) * W/3),
                     y: H/2 + (Math.cos(hash * 1.3) * H/3),
                     vx: (Math.random() - 0.5) * 2,
                     vy: (Math.random() - 0.5) * 2,
-                    size: 3 + (hash % 4),
-                    hue: 30 + (hash % 30),
-                    degree,
-                    octave: 2 + (i % 3),
-                    lastNote: 0,
-                    energia: 0,
-                    memoria: []
+                    size: 3 + (hash % 3),
+                    hue: 35 + (hash % 20),
+                    phase: Math.random() * Math.PI * 2,
+                    trail: []
                 });
             }
         });
     } catch(e) {
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 40; i++) {
             API.push({
                 nome: 'ape-' + i,
                 x: Math.random() * W, y: Math.random() * H,
                 vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
-                size: 3 + Math.random() * 3, hue: 30 + Math.random() * 25,
-                degree: i % 7, octave: 2 + (i % 3),
-                lastNote: 0, energia: 0, memoria: []
+                size: 3 + Math.random() * 2, hue: 35 + Math.random() * 15,
+                phase: Math.random() * Math.PI * 2,
+                trail: []
             });
         }
     }
 }
 
-caricaApi();
+loadApi();
 
 // ═══════════════════════════════════════════════════════════════
 // INTERAZIONE
 // ═══════════════════════════════════════════════════════════════
 
+let lastX = W/2, lastY = H/2;
+let mouseSpeed = 0;
+let clickCount = 0;
+let lastClickTime = 0;
+
 onmousemove = e => {
-    const now = Date.now();
-    const dt = (now - lastMouse.t) / 1000 || 0.016;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    mouseSpeed = Math.sqrt(dx*dx + dy*dy);
     
-    mouse.vx = (e.clientX - lastMouse.x) / dt / 100;
-    mouse.vy = (e.clientY - lastMouse.y) / dt / 100;
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
+    lastX = mouse.x = e.clientX;
+    lastY = mouse.y = e.clientY;
     
-    lastMouse = { x: e.clientX, y: e.clientY, t: now };
+    // Posizione Y controlla brightness (alto = brillante)
+    brightness = 1 - (e.clientY / H);
     
-    // Velocità del mouse controlla il modo
-    const speed = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
+    // Posizione X controlla tempo (destra = veloce)
+    tempo = e.clientX / W;
     
-    // Posizione Y controlla l'ottava dell'arp
-    arpOctave = Math.floor((1 - e.clientY / H) * 3) + 2;
+    // Velocità del mouse controlla energia
+    energy = Math.min(1, energy * 0.95 + mouseSpeed * 0.01);
     
-    // Posizione X controlla la velocità dell'arp
-    arpSpeed = 100 + (1 - e.clientX / W) * 300;
-    
-    // Movimento veloce cambia il modo
-    if (speed > 5 && audio) {
-        const newModeIndex = Math.floor((e.clientX / W) * MODE_KEYS.length);
-        if (newModeIndex !== currentModeIndex) {
-            currentModeIndex = newModeIndex;
-            currentMode = MODES[MODE_KEYS[currentModeIndex]];
-            updateDrone();
-            modeEl.textContent = currentMode.name.toUpperCase();
-            modeEl.style.color = currentMode.color;
-            
-            // Nuovo accordo per il nuovo modo
-            playPad([0, 2, 4, 6], 3);
-        }
+    // Movimento veloce aumenta tensione
+    if (mouseSpeed > 30) {
+        tension = Math.min(1, tension + 0.02);
+    } else {
+        tension = Math.max(0, tension - 0.005);
     }
 };
 
 onclick = e => {
-    if (!audio) return;
+    if (!ctx) return;
     
-    // Click genera un pattern armonico basato sulla posizione
-    const xRatio = e.clientX / W;
-    const yRatio = e.clientY / H;
-    
-    // Pattern diversi basati sulla zona dello schermo
-    const patterns = [
-        [0, 2, 4, 7, 4, 2],           // ascendente-discendente
-        [0, 4, 7, 11, 7, 4],          // arpeggio ampio
-        [7, 4, 2, 0, 2, 4],           // discendente
-        [0, 2, 4, 2, 4, 7, 4, 2],     // ondulante
-        [0, 7, 4, 11, 7, 14, 11, 7],  // saltellante
-        [0, 0, 4, 4, 7, 7, 4, 4],     // ritmico
-    ];
-    
-    const patternIndex = Math.floor(xRatio * patterns.length);
-    setArpPattern(patterns[patternIndex]);
-    
-    // Accordo basato sulla posizione Y
-    const chordTypes = [
-        [0, 2, 4],       // triade
-        [0, 2, 4, 6],    // settima
-        [0, 4, 7],       // power + 
-        [0, 2, 4, 9],    // add9
-        [0, 4, 7, 11],   // maj7
-    ];
-    const chordIndex = Math.floor(yRatio * chordTypes.length);
-    playPad(chordTypes[chordIndex], 4);
-    
-    // Toggle arpeggiator
-    if (arpPlaying) {
-        stopArp();
+    const now = Date.now();
+    if (now - lastClickTime < 500) {
+        clickCount++;
     } else {
-        startArp();
+        clickCount = 1;
     }
+    lastClickTime = now;
     
-    // Impulso alle api vicine
-    API.forEach(a => {
-        const dx = a.x - e.clientX;
-        const dy = a.y - e.clientY;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < 200) {
-            a.energia = 1;
-            a.vx += (dx / d) * 5;
-            a.vy += (dy / d) * 5;
-        }
-    });
+    // Click cambia progressione
+    if (clickCount >= 2) {
+        currentProgression = (currentProgression + 1) % PROGRESSIONS.length;
+        clickCount = 0;
+        
+        // Cambio di scala in base alla progressione
+        const scaleNames = Object.keys(SCALES);
+        currentScale = SCALES[scaleNames[currentProgression % scaleNames.length]];
+        
+        // Feedback visivo
+        API.forEach(a => {
+            const dx = a.x - e.clientX;
+            const dy = a.y - e.clientY;
+            const d = Math.sqrt(dx*dx + dy*dy);
+            if (d < 300) {
+                a.vx += (dx / d) * 8;
+                a.vy += (dy / d) * 8;
+            }
+        });
+        
+        // Forte impulso musicale
+        const chord = PROGRESSIONS[currentProgression][chordIndex];
+        chord.forEach((note, i) => {
+            setTimeout(() => {
+                playMelodyNote(note + 24, 0.15, 0.5);
+            }, i * 50);
+        });
+    } else {
+        // Singolo click: nota accentata basata sulla posizione
+        const note = Math.floor((1 - e.clientY / H) * 24) + 12;
+        playMelodyNote(quantize(note) + 12, 0.2, 0.4);
+        
+        // Piccolo impulso alle api
+        API.forEach(a => {
+            const dx = a.x - e.clientX;
+            const dy = a.y - e.clientY;
+            const d = Math.sqrt(dx*dx + dy*dy);
+            if (d < 150) {
+                a.vx += (dx / d) * 3;
+                a.vy += (dy / d) * 3;
+            }
+        });
+    }
 };
 
 // ═══════════════════════════════════════════════════════════════
-// LOOP PRINCIPALE
+// RENDER LOOP
 // ═══════════════════════════════════════════════════════════════
 
 let t = 0;
@@ -468,81 +609,69 @@ let t = 0;
 function loop() {
     t += 0.016;
     
-    $.fillStyle = 'rgba(0,0,0,0.12)';
+    // Fade trail
+    $.fillStyle = `rgba(0,0,0,${0.08 + energy * 0.04})`;
     $.fillRect(0, 0, W, H);
     
     if (API.length === 0) { requestAnimationFrame(loop); return; }
     
-    // Centro di massa
-    let cx = 0, cy = 0;
-    API.forEach(a => { cx += a.x; cy += a.y; });
+    // Centro e velocità media
+    let cx = 0, cy = 0, vxm = 0, vym = 0;
+    API.forEach(a => { cx += a.x; cy += a.y; vxm += a.vx; vym += a.vy; });
     cx /= API.length; cy /= API.length;
-    
-    // Velocità media
-    let vxm = 0, vym = 0;
-    API.forEach(a => { vxm += a.vx; vym += a.vy; });
     vxm /= API.length; vym /= API.length;
     
+    // Update api
     API.forEach((a, i) => {
-        // Decay energia
-        a.energia *= 0.95;
-        
         // Boids
         let sepX = 0, sepY = 0;
         API.forEach((b, j) => {
             if (i === j) return;
             const dx = a.x - b.x, dy = a.y - b.y;
             const d = Math.sqrt(dx*dx + dy*dy) || 1;
-            if (d < 40) {
-                sepX += (dx / d) * (40 - d) * 0.03;
-                sepY += (dy / d) * (40 - d) * 0.03;
+            if (d < 35) {
+                sepX += (dx / d) * (35 - d) * 0.04;
+                sepY += (dy / d) * (35 - d) * 0.04;
             }
         });
         
-        a.vx += (vxm - a.vx) * 0.03;
-        a.vy += (vym - a.vy) * 0.03;
-        a.vx += (cx - a.x) * 0.0005;
-        a.vy += (cy - a.y) * 0.0005;
+        // Coesione e allineamento
+        a.vx += (vxm - a.vx) * 0.02;
+        a.vy += (vym - a.vy) * 0.02;
+        a.vx += (cx - a.x) * 0.0003;
+        a.vy += (cy - a.y) * 0.0003;
         a.vx += sepX; a.vy += sepY;
         
-        // Attrazione verso mouse
+        // Attrazione/repulsione dal mouse basata su energy
         const dx = mouse.x - a.x, dy = mouse.y - a.y;
         const d = Math.sqrt(dx*dx + dy*dy) || 1;
-        if (d < 300) {
-            const force = (300 - d) / 300 * 0.3;
+        if (d < 250) {
+            const force = (250 - d) / 250 * 0.2 * (1 + energy);
             a.vx += (dx / d) * force;
             a.vy += (dy / d) * force;
-            
-            // Vicinanza al mouse genera note
-            if (d < 100 && audio && t - a.lastNote > 0.15) {
-                const freq = getFreq(a.degree, a.octave);
-                const velocity = (100 - d) / 100;
-                playNote(freq, velocity * 0.7, 0.2 + velocity * 0.3);
-                a.lastNote = t;
-                a.energia = velocity;
-            }
         }
         
-        // Noise
-        a.vx += (Math.random() - 0.5) * 0.15;
-        a.vy += (Math.random() - 0.5) * 0.15;
+        // Noise organico
+        a.phase += 0.02;
+        a.vx += Math.sin(a.phase) * 0.05;
+        a.vy += Math.cos(a.phase * 1.3) * 0.05;
         
-        // Limit
+        // Velocità max basata su energy
+        const maxV = 2 + energy * 3;
         const v = Math.sqrt(a.vx*a.vx + a.vy*a.vy);
-        const maxV = 3 + a.energia * 4;
-        if (v > maxV) { a.vx = (a.vx / v) * maxV; a.vy = (a.vy / v) * maxV; }
+        if (v > maxV) { a.vx = (a.vx/v)*maxV; a.vy = (a.vy/v)*maxV; }
         
         a.x += a.vx; a.y += a.vy;
         
-        // Bordi
-        if (a.x < 50) a.vx += 0.5;
-        if (a.x > W - 50) a.vx -= 0.5;
-        if (a.y < 50) a.vy += 0.5;
-        if (a.y > H - 50) a.vy -= 0.5;
+        // Bordi morbidi
+        if (a.x < 50) a.vx += 0.3;
+        if (a.x > W - 50) a.vx -= 0.3;
+        if (a.y < 50) a.vy += 0.3;
+        if (a.y > H - 50) a.vy -= 0.3;
         
-        // Memoria
-        a.memoria.push({ x: a.x, y: a.y });
-        if (a.memoria.length > 25) a.memoria.shift();
+        // Trail
+        a.trail.push({ x: a.x, y: a.y });
+        if (a.trail.length > 20 + energy * 15) a.trail.shift();
     });
     
     // Connessioni
@@ -552,9 +681,9 @@ function loop() {
             if (j <= i) return;
             const dx = a.x - b.x, dy = a.y - b.y;
             const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 100) {
-                const alpha = (1 - d/100) * 0.2 * (1 + a.energia + b.energia);
-                $.strokeStyle = `rgba(201, 162, 39, ${Math.min(alpha, 0.5)})`;
+            if (d < 80 + energy * 40) {
+                const alpha = (1 - d/(80 + energy * 40)) * 0.15;
+                $.strokeStyle = `hsla(${(a.hue + b.hue)/2}, 60%, ${55 + brightness * 20}%, ${alpha})`;
                 $.beginPath();
                 $.moveTo(a.x, a.y);
                 $.lineTo(b.x, b.y);
@@ -563,34 +692,32 @@ function loop() {
         });
     });
     
-    // Scie
+    // Trail e api
     API.forEach(a => {
-        if (a.memoria.length < 2) return;
-        $.beginPath();
-        $.moveTo(a.memoria[0].x, a.memoria[0].y);
-        for (let i = 1; i < a.memoria.length; i++) {
-            $.lineTo(a.memoria[i].x, a.memoria[i].y);
+        // Trail
+        if (a.trail.length > 2) {
+            $.beginPath();
+            $.moveTo(a.trail[0].x, a.trail[0].y);
+            for (let i = 1; i < a.trail.length; i++) {
+                $.lineTo(a.trail[i].x, a.trail[i].y);
+            }
+            $.strokeStyle = `hsla(${a.hue}, 55%, ${50 + brightness * 25}%, 0.25)`;
+            $.lineWidth = 1.5 + energy;
+            $.stroke();
         }
-        $.strokeStyle = `hsla(${a.hue}, 60%, ${50 + a.energia * 30}%, ${0.15 + a.energia * 0.3})`;
-        $.lineWidth = 1.5 + a.energia * 2;
-        $.stroke();
-    });
-    
-    // Api
-    API.forEach(a => {
-        const s = a.size * (1 + a.energia * 0.5);
         
         // Alone
-        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, s * 6);
-        grad.addColorStop(0, `hsla(${a.hue}, 70%, ${60 + a.energia * 20}%, ${0.3 + a.energia * 0.4})`);
+        const s = a.size * (1 + energy * 0.3);
+        const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, s * 5);
+        grad.addColorStop(0, `hsla(${a.hue}, 65%, ${55 + brightness * 25}%, ${0.25 + energy * 0.15})`);
         grad.addColorStop(1, 'transparent');
         $.fillStyle = grad;
         $.beginPath();
-        $.arc(a.x, a.y, s * 6, 0, Math.PI * 2);
+        $.arc(a.x, a.y, s * 5, 0, Math.PI * 2);
         $.fill();
         
         // Corpo
-        $.fillStyle = `hsla(${a.hue}, 70%, ${65 + a.energia * 25}%, 0.9)`;
+        $.fillStyle = `hsla(${a.hue}, 70%, ${60 + brightness * 25}%, 0.9)`;
         $.beginPath();
         $.arc(a.x, a.y, s, 0, Math.PI * 2);
         $.fill();
@@ -606,11 +733,9 @@ function loop() {
 document.getElementById('start').onclick = () => {
     initAudio();
     document.getElementById('start').classList.add('hidden');
-    modeEl.textContent = currentMode.name.toUpperCase();
-    modeEl.style.color = currentMode.color;
     
-    // Accordo iniziale
-    setTimeout(() => playPad([0, 2, 4], 4), 500);
+    // Inizia melodia dopo un po'
+    setTimeout(generateMelodyPhrase, 2000);
 };
 
 requestAnimationFrame(loop);
