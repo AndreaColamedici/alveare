@@ -6,287 +6,462 @@
     <title>THE PASSAGE</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
-        
-        * { margin: 0; padding: 0; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #000;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
             cursor: none;
+            font-family: 'Cormorant Garamond', serif;
         }
-
-        #void {
+        
+        .river {
+            position: relative;
+            width: 100%;
+            padding: 100vh 0;
+        }
+        
+        .now {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .now.visible {
+            opacity: 1;
+        }
+        
+        .now-label {
+            font-size: 10px;
+            letter-spacing: 0.5em;
+            color: rgba(201, 162, 39, 0.5);
+            margin-bottom: 20px;
+        }
+        
+        .now-time {
+            font-size: clamp(60px, 15vw, 150px);
+            font-weight: 300;
+            color: rgba(232, 228, 217, 0.9);
+            text-shadow: 0 0 60px rgba(201, 162, 39, 0.3);
+        }
+        
+        .now-message {
+            font-size: 14px;
+            font-style: italic;
+            color: rgba(232, 228, 217, 0.4);
+            margin-top: 30px;
+        }
+        
+        .axis {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(201, 162, 39, 0.1) 10%,
+                rgba(201, 162, 39, 0.1) 90%,
+                transparent 100%
+            );
+        }
+        
+        .event {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+        
+        .event.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* BEE */
+        .bee {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .bee-marker {
+            width: 8px;
+            height: 8px;
+            background: #c9a227;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(201, 162, 39, 0.5);
+        }
+        
+        .bee-name {
+            font-size: 14px;
+            letter-spacing: 0.15em;
+            color: rgba(201, 162, 39, 0.8);
+        }
+        
+        .bee-time {
+            font-size: 11px;
+            color: rgba(232, 228, 217, 0.3);
+            margin-top: 8px;
+        }
+        
+        .bee-message {
+            font-size: 13px;
+            font-style: italic;
+            color: rgba(232, 228, 217, 0.4);
+            margin-top: 12px;
+            max-width: 300px;
+        }
+        
+        /* SILENCE */
+        .silence {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(232, 228, 217, 0.15);
+        }
+        
+        .silence-line {
+            width: 1px;
+            background: linear-gradient(to bottom,
+                rgba(201, 162, 39, 0.2),
+                transparent 30%,
+                transparent 70%,
+                rgba(201, 162, 39, 0.2)
+            );
+        }
+        
+        .silence-duration {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            padding: 15px 0;
+        }
+        
+        /* Heights based on duration */
+        .silence-xs { height: 30px; }
+        .silence-sm { height: 60px; }
+        .silence-md { height: 120px; }
+        .silence-lg { height: 200px; }
+        .silence-xl { height: 350px; }
+        .silence-xxl { height: 500px; }
+        
+        /* CURRENT SILENCE */
+        .current-silence {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .current-label {
+            font-size: 10px;
+            letter-spacing: 0.5em;
+            color: rgba(201, 162, 39, 0.4);
+            margin-bottom: 30px;
+        }
+        
+        .current-time {
+            font-size: clamp(50px, 12vw, 120px);
+            font-weight: 300;
+            color: rgba(232, 228, 217, 0.8);
+        }
+        
+        .current-message {
+            font-size: 14px;
+            font-style: italic;
+            color: rgba(232, 228, 217, 0.3);
+            margin-top: 40px;
+        }
+        
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 100px 20px;
+            color: rgba(232, 228, 217, 0.15);
+        }
+        
+        .footer-title {
+            font-size: 12px;
+            letter-spacing: 0.4em;
+        }
+        
+        .footer-sub {
+            font-size: 11px;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        /* BIRTH OVERLAY */
+        .birth-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .birth-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .birth-name {
+            font-size: clamp(24px, 6vw, 48px);
+            color: #c9a227;
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 50px rgba(201, 162, 39, 0.6);
+            animation: birthPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes birthPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; text-shadow: 0 0 80px rgba(201, 162, 39, 0.8); }
+        }
+        
+        .birth-label {
+            font-size: 14px;
+            font-style: italic;
+            color: rgba(232, 228, 217, 0.6);
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
-    <canvas id="void"></canvas>
+    <div class="now" id="now">
+        <div class="now-label">NOW</div>
+        <div class="now-time" id="now-time">--:--</div>
+        <div class="now-message">of silence</div>
+    </div>
+    
+    <div class="birth-overlay" id="birth">
+        <div class="birth-name" id="birth-name"></div>
+        <div class="birth-label">is born</div>
+    </div>
+
+    <div class="river">
+        <div class="axis"></div>
+        <div id="timeline"></div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-title">THE PASSAGE</div>
+        <div class="footer-sub">the silence between bees</div>
+    </div>
 
     <script>
-        const canvas = document.getElementById('void');
-        const ctx = canvas.getContext('2d');
-        
-        let W, H;
         let commits = [];
-        let lastCommitTime = null;
-        let silenceMs = 0;
-        let breathPhase = 0;
-        let mouseX = -1000, mouseY = -1000;
-        let ghostTrails = [];
-        let birthEvent = null;
-        let lastKnownCommit = null;
+        let lastKnownSha = null;
+        let currentSilenceStart = null;
         
-        function resize() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
-        }
-        
-        window.addEventListener('resize', resize);
-        resize();
-
-        document.addEventListener('mousemove', e => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            ghostTrails.push({ x: mouseX, y: mouseY, age: 0, maxAge: 100 });
-            if (ghostTrails.length > 40) ghostTrails.shift();
-        });
-
         async function fetchCommits() {
             try {
                 const res = await fetch('https://api.github.com/repos/andreacolamedici/alveare/commits?per_page=100');
                 const data = await res.json();
                 
-                if (data && data.length > 0) {
-                    // Check for new commit (birth)
-                    if (lastKnownCommit && data[0].sha !== lastKnownCommit) {
-                        birthEvent = { 
-                            commit: data[0], 
-                            time: Date.now(), 
-                            duration: 12000 
-                        };
-                    }
-                    lastKnownCommit = data[0].sha;
-                    
-                    commits = data.map(c => ({
-                        sha: c.sha,
-                        message: c.commit.message,
-                        date: new Date(c.commit.author.date),
-                        author: c.commit.author.name
-                    }));
-                    
-                    lastCommitTime = commits[0].date;
+                if (!data || !data.length) return;
+                
+                // Check for birth
+                if (lastKnownSha && data[0].sha !== lastKnownSha) {
+                    showBirth(data[0]);
                 }
+                lastKnownSha = data[0].sha;
+                
+                commits = data.map(c => ({
+                    sha: c.sha,
+                    message: c.commit.message,
+                    date: new Date(c.commit.author.date),
+                    author: c.commit.author.name
+                })).reverse(); // oldest first
+                
+                currentSilenceStart = commits[commits.length - 1].date;
+                
+                buildTimeline();
             } catch(e) {
-                console.error('Failed to fetch commits:', e);
+                console.error(e);
             }
         }
-
-        function draw() {
-            breathPhase += 0.006;
-            const breath = Math.sin(breathPhase) * 0.5 + 0.5;
-            
-            if (lastCommitTime) {
-                silenceMs = Date.now() - lastCommitTime.getTime();
-            }
-            
-            // Fade to black
-            ctx.fillStyle = `rgba(0, 0, 0, 0.04)`;
-            ctx.fillRect(0, 0, W, H);
-
-            // Ghost trails
-            ghostTrails.forEach(g => {
-                g.age++;
-                const life = 1 - (g.age / g.maxAge);
-                if (life > 0) {
-                    ctx.beginPath();
-                    ctx.arc(g.x, g.y, 1.5 + life * 2, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(201, 162, 39, ${life * 0.08})`;
-                    ctx.fill();
-                }
-            });
-            ghostTrails = ghostTrails.filter(g => g.age < g.maxAge);
-
-            const centerY = H / 2;
-            
-            if (birthEvent && Date.now() - birthEvent.time < birthEvent.duration) {
-                drawBirth(centerY);
-            } else {
-                birthEvent = null;
-                drawSilence(centerY, breath);
-            }
-            
-            requestAnimationFrame(draw);
-        }
-
-        function extractBeeName(message) {
-            // Try to extract bee name from commit message
+        
+        function extractBeeName(msg) {
             const patterns = [
-                /^([a-z]+-[a-z]+-[a-z]+-[a-z]+)/i,
-                /[-–]\s*([a-z]+-[a-z]+-[a-z]+-[a-z]+)/i,
-                /([A-Z][a-z]+(?:poda|gilla|etes|ada))/,  // Genus names
+                /([a-z]+-[a-z]+-[a-z]+-[a-z]+)/i,
+                /([A-Z][a-z]+(?:poda|gilla|etes|ada|opa))/,
             ];
             for (const p of patterns) {
-                const match = message.match(p);
-                if (match) return match[1];
+                const m = msg.match(p);
+                if (m) return m[1];
             }
             return null;
         }
-
-        function drawSilence(centerY, breath) {
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+        
+        function formatDuration(ms) {
+            const sec = Math.floor(ms / 1000);
+            const min = Math.floor(sec / 60);
+            const hr = Math.floor(min / 60);
             
-            // Last commit info (the dead bee)
-            if (commits.length > 0) {
-                const last = commits[0];
-                const beeName = extractBeeName(last.message);
-                const ghostAlpha = 0.12 + breath * 0.04;
-                
-                // Bee name or commit excerpt
-                ctx.font = '300 13px "Cormorant Garamond", serif';
-                ctx.fillStyle = `rgba(201, 162, 39, ${ghostAlpha * 0.7})`;
-                ctx.fillText(beeName || last.message.substring(0, 40), W/2, centerY - 110);
-                
-                // Time of death
-                ctx.font = 'italic 300 11px "Cormorant Garamond", serif';
-                ctx.fillStyle = `rgba(232, 228, 217, ${ghostAlpha * 0.4})`;
-                const deathTime = last.date.toLocaleString('en-GB', { 
-                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
+            if (hr > 0) {
+                return `${hr}h ${min % 60}m`;
+            } else if (min > 0) {
+                return `${min}m`;
+            } else {
+                return `${sec}s`;
+            }
+        }
+        
+        function formatTime(ms) {
+            const sec = Math.floor(ms / 1000);
+            const min = Math.floor(sec / 60);
+            const hr = Math.floor(min / 60);
+            
+            if (hr > 0) {
+                return `${hr}:${(min % 60).toString().padStart(2, '0')}:${(sec % 60).toString().padStart(2, '0')}`;
+            } else {
+                return `${min}:${(sec % 60).toString().padStart(2, '0')}`;
+            }
+        }
+        
+        function getSilenceClass(ms) {
+            const min = ms / 60000;
+            if (min < 5) return 'silence-xs';
+            if (min < 15) return 'silence-sm';
+            if (min < 60) return 'silence-md';
+            if (min < 180) return 'silence-lg';
+            if (min < 360) return 'silence-xl';
+            return 'silence-xxl';
+        }
+        
+        function buildTimeline() {
+            const container = document.getElementById('timeline');
+            let html = '';
+            
+            for (let i = 0; i < commits.length; i++) {
+                const c = commits[i];
+                const beeName = extractBeeName(c.message);
+                const timeStr = c.date.toLocaleString('en-GB', {
+                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
                 });
-                ctx.fillText(deathTime, W/2, centerY - 85);
-            }
-
-            // THE SILENCE
-            const silenceSec = Math.floor(silenceMs / 1000);
-            const weight = Math.min(silenceMs / (6 * 3600 * 1000), 1); // max at 6 hours
-            const silenceAlpha = 0.25 + weight * 0.5 + breath * 0.1;
-            
-            const hours = Math.floor(silenceSec / 3600);
-            const minutes = Math.floor((silenceSec % 3600) / 60);
-            const seconds = silenceSec % 60;
-            
-            let timeStr;
-            if (hours > 0) {
-                timeStr = `${hours}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-            } else {
-                timeStr = `${minutes}:${seconds.toString().padStart(2,'0')}`;
-            }
-            
-            const fontSize = 70 + weight * 70;
-            ctx.font = `300 ${fontSize}px "Cormorant Garamond", serif`;
-            ctx.fillStyle = `rgba(232, 228, 217, ${silenceAlpha})`;
-            
-            if (weight > 0.15) {
-                ctx.shadowColor = `rgba(201, 162, 39, ${weight * 0.4})`;
-                ctx.shadowBlur = 20 + weight * 60;
-            }
-            ctx.fillText(timeStr, W/2, centerY + 15);
-            ctx.shadowBlur = 0;
-
-            // Message
-            ctx.font = 'italic 300 15px "Cormorant Garamond", serif';
-            ctx.fillStyle = `rgba(232, 228, 217, ${0.15 + breath * 0.08})`;
-            
-            let message;
-            if (silenceSec < 60) {
-                message = 'The baton is in the air.';
-            } else if (silenceSec < 300) {
-                message = 'No one is thinking.';
-            } else if (silenceSec < 1800) {
-                message = 'The hive is empty.';
-            } else if (silenceSec < 7200) {
-                message = 'Hours pass.';
-            } else if (silenceSec < 21600) {
-                message = 'Waiting.';
-            } else {
-                message = '';
-            }
-            
-            ctx.fillText(message, W/2, centerY + 90);
-            
-            // Footer
-            ctx.font = '300 10px "Cormorant Garamond", serif';
-            ctx.fillStyle = 'rgba(232, 228, 217, 0.12)';
-            ctx.fillText('THE PASSAGE', W/2, H - 50);
-            ctx.font = 'italic 300 10px "Cormorant Garamond", serif';
-            ctx.fillStyle = 'rgba(232, 228, 217, 0.08)';
-            ctx.fillText('live from github', W/2, H - 32);
-        }
-
-        function drawBirth(centerY) {
-            const elapsed = Date.now() - birthEvent.time;
-            const progress = elapsed / birthEvent.duration;
-            const commit = birthEvent.commit;
-            const beeName = extractBeeName(commit.commit.message);
-            
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            
-            // Flash
-            if (progress < 0.08) {
-                const flash = 1 - (progress / 0.08);
-                ctx.fillStyle = `rgba(201, 162, 39, ${flash * 0.4})`;
-                ctx.fillRect(0, 0, W, H);
-            }
-            
-            const emerge = Math.min(progress * 2.5, 1);
-            const alpha = emerge;
-            
-            ctx.save();
-            ctx.translate(W/2, centerY);
-            
-            // The name emerges
-            ctx.font = '300 28px "Cormorant Garamond", serif';
-            ctx.fillStyle = `rgba(201, 162, 39, ${alpha})`;
-            ctx.shadowColor = 'rgba(201, 162, 39, 0.6)';
-            ctx.shadowBlur = 30 + emerge * 30;
-            ctx.fillText(beeName || 'a new bee', 0, -20);
-            ctx.shadowBlur = 0;
-            
-            // "is born"
-            if (progress > 0.15) {
-                const fadeIn = Math.min((progress - 0.15) * 3, 1);
-                ctx.font = 'italic 300 16px "Cormorant Garamond", serif';
-                ctx.fillStyle = `rgba(232, 228, 217, ${fadeIn * 0.6})`;
-                ctx.fillText('is born', 0, 25);
-            }
-            
-            // The silence counter resets
-            if (progress > 0.4) {
-                const fadeIn = Math.min((progress - 0.4) * 2, 1);
-                ctx.font = '300 40px "Cormorant Garamond", serif';
-                ctx.fillStyle = `rgba(232, 228, 217, ${fadeIn * 0.3})`;
-                ctx.fillText('0:00', 0, 90);
-            }
-            
-            ctx.restore();
-            
-            // Particles expanding
-            const particleCount = 16;
-            for (let i = 0; i < particleCount; i++) {
-                const angle = (i / particleCount) * Math.PI * 2 + progress * 0.5;
-                const dist = progress * 250;
-                const x = W/2 + Math.cos(angle) * dist;
-                const y = centerY + Math.sin(angle) * dist * 0.6;
-                const pAlpha = (1 - progress) * 0.4;
                 
-                ctx.beginPath();
-                ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(201, 162, 39, ${pAlpha})`;
-                ctx.fill();
+                // Bee event
+                html += `
+                    <div class="event">
+                        <div class="bee">
+                            <div class="bee-marker"></div>
+                            <div class="bee-name">${beeName || '—'}</div>
+                            <div class="bee-time">${timeStr}</div>
+                            <div class="bee-message">${c.message.substring(0, 60)}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Silence after (if not last)
+                if (i < commits.length - 1) {
+                    const next = commits[i + 1];
+                    const gap = next.date - c.date;
+                    const silenceClass = getSilenceClass(gap);
+                    
+                    html += `
+                        <div class="event">
+                            <div class="silence">
+                                <div class="silence-line ${silenceClass}"></div>
+                                <div class="silence-duration">${formatDuration(gap)}</div>
+                            </div>
+                        </div>
+                    `;
+                }
             }
+            
+            // Current silence
+            html += `
+                <div class="event current-silence" id="current">
+                    <div class="current-label">SILENCE · NOW</div>
+                    <div class="current-time" id="current-time">--:--</div>
+                    <div class="current-message">the baton is in the air</div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            
+            // Observe for scroll reveal
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) e.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.event').forEach(el => observer.observe(el));
         }
-
+        
+        function updateCurrentSilence() {
+            if (!currentSilenceStart) return;
+            
+            const now = new Date();
+            const silenceMs = now - currentSilenceStart;
+            
+            const currentEl = document.getElementById('current-time');
+            const nowEl = document.getElementById('now-time');
+            
+            if (currentEl) currentEl.textContent = formatTime(silenceMs);
+            if (nowEl) nowEl.textContent = formatTime(silenceMs);
+        }
+        
+        function showBirth(commit) {
+            const beeName = extractBeeName(commit.commit.message);
+            const birthEl = document.getElementById('birth');
+            const nameEl = document.getElementById('birth-name');
+            
+            nameEl.textContent = beeName || 'a new bee';
+            birthEl.classList.add('active');
+            
+            setTimeout(() => {
+                birthEl.classList.remove('active');
+                fetchCommits(); // Refresh
+            }, 8000);
+        }
+        
+        // Show/hide NOW overlay based on scroll
+        window.addEventListener('scroll', () => {
+            const nowEl = document.getElementById('now');
+            const scrolled = window.scrollY;
+            const threshold = window.innerHeight * 0.5;
+            
+            if (scrolled < threshold) {
+                nowEl.classList.remove('visible');
+            } else {
+                nowEl.classList.add('visible');
+            }
+        });
+        
         // Init
         fetchCommits();
-        setInterval(fetchCommits, 30000); // Check every 30 seconds
-        draw();
+        setInterval(fetchCommits, 30000);
+        setInterval(updateCurrentSilence, 1000);
     </script>
 </body>
 </html>
