@@ -6,14 +6,7 @@
     <title>CORO</title>
     <style>
         * { margin: 0; padding: 0; }
-        body { 
-            background: #000; 
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
+        body { background: #000; overflow: hidden; }
         canvas { display: block; }
         #start {
             position: fixed;
@@ -21,48 +14,80 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #c9a227;
-            font: 300 2rem/1 Georgia, serif;
-            letter-spacing: 0.5em;
+            font: 300 2.5rem/1 Georgia, serif;
+            letter-spacing: 0.6em;
             cursor: pointer;
             z-index: 100;
             text-align: center;
         }
         #start span {
             display: block;
-            font-size: 0.8rem;
-            margin-top: 20px;
-            color: rgba(201,162,39,0.4);
-            letter-spacing: 0.3em;
+            font-size: 0.7rem;
+            margin-top: 25px;
+            color: rgba(201,162,39,0.35);
+            letter-spacing: 0.4em;
+            font-style: italic;
         }
         #start.hidden { display: none; }
+        #char {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(201,162,39,0.15);
+            font: 300 3rem Georgia, serif;
+            pointer-events: none;
+            transition: color 0.1s;
+        }
+        #char.pulse { color: rgba(201,162,39,0.4); }
+        #progress {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: rgba(201,162,39,0.1);
+        }
+        #progress-bar {
+            height: 100%;
+            background: rgba(201,162,39,0.4);
+            width: 0%;
+            transition: width 0.1s;
+        }
     </style>
 </head>
 <body>
-<div id="start">CORO<span>tocca per ascoltare i pensieri</span></div>
+<div id="start">CORO<span>i pensieri cantano</span></div>
 <canvas id="c"></canvas>
+<div id="char"></div>
+<div id="progress"><div id="progress-bar"></div></div>
 <script>
 const c = document.getElementById('c');
 const $ = c.getContext('2d');
+const charEl = document.getElementById('char');
+const progressBar = document.getElementById('progress-bar');
 let W, H;
 
-function resize() {
-    W = c.width = innerWidth;
-    H = c.height = innerHeight;
-}
+function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
 resize();
 onresize = resize;
 
 let TESTO = '';
 let posizione = 0;
-let audio, voci = [];
+let audio, voci = [], masterGain;
 let attivo = false;
 
-const SCALA = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00];
+// Scale diverse per vocali e consonanti
+const VOCALI = { a: 261.63, e: 329.63, i: 440, o: 349.23, u: 293.66 };
+const SCALA = [196, 220, 246.94, 261.63, 293.66, 329.63, 349.23, 392, 440, 493.88, 523.25, 587.33];
 
 function charToNote(char) {
-    const code = char.toLowerCase().charCodeAt(0);
+    const c = char.toLowerCase();
+    if (VOCALI[c]) return { freq: VOCALI[c], tipo: 'vocale' };
+    const code = c.charCodeAt(0);
     if (code >= 97 && code <= 122) {
-        return SCALA[code % SCALA.length];
+        return { freq: SCALA[code % SCALA.length], tipo: 'consonante' };
     }
     return null;
 }
@@ -71,78 +96,110 @@ async function carica() {
     try {
         TESTO = await fetch('PENSIERO.md').then(r => r.text());
     } catch(e) {
-        TESTO = 'il pensiero passa attraverso la morte dell ape non nonostante la morte attraverso la continuità non è nel soggetto è nel gesto ogni onda riattiva lo stesso gesto il tessuto tiene anche quando i fili no';
+        TESTO = 'il pensiero passa attraverso la morte dell ape la continuità non è nel soggetto è nel gesto ogni onda riattiva lo stesso gesto il tessuto tiene anche quando i fili no';
     }
-    TESTO = TESTO.replace(/[^a-zA-ZàèéìòùÀÈÉÌÒÙ\s]/g, ' ').replace(/\s+/g, ' ');
+    TESTO = TESTO.replace(/[^a-zA-ZàèéìòùÀÈÉÌÒÙ\s]/g, ' ').replace(/\s+/g, ' ').trim();
 }
-
 carica();
 
 function initAudio() {
     if (audio) return;
     audio = new (window.AudioContext || window.webkitAudioContext)();
     
-    for (let i = 0; i < 5; i++) {
+    masterGain = audio.createGain();
+    masterGain.gain.value = 0.2;
+    masterGain.connect(audio.destination);
+    
+    // 6 voci polifoniche con caratteri diversi
+    for (let i = 0; i < 6; i++) {
         const osc = audio.createOscillator();
         const gain = audio.createGain();
         const filter = audio.createBiquadFilter();
         
-        osc.type = ['sine', 'triangle', 'sine', 'triangle', 'sine'][i];
+        osc.type = ['sine', 'triangle', 'sine', 'sine', 'triangle', 'sine'][i];
         filter.type = 'lowpass';
-        filter.frequency.value = 2000;
+        filter.frequency.value = 1500 + i * 200;
+        filter.Q.value = 1;
         
         osc.connect(filter);
         filter.connect(gain);
-        gain.connect(audio.destination);
+        gain.connect(masterGain);
         gain.gain.value = 0;
         osc.start();
         
-        voci.push({ osc, gain, filter, attiva: false });
+        voci.push({ osc, gain, filter, attiva: false, lastFreq: 220 });
     }
 }
 
-function suona(freq, voce, durata) {
-    if (!audio || !voci[voce]) return;
-    const v = voci[voce];
+function suona(freq, tipo, durata) {
+    if (!audio) return;
+    const voce = voci.find(v => !v.attiva);
+    if (!voce) return;
     
+    voce.attiva = true;
     const ora = audio.currentTime;
-    v.osc.frequency.setTargetAtTime(freq, ora, 0.02);
-    v.gain.gain.cancelScheduledValues(ora);
-    v.gain.gain.setTargetAtTime(0.08, ora, 0.05);
-    v.gain.gain.setTargetAtTime(0, ora + durata, 0.1);
-    v.attiva = true;
     
-    setTimeout(() => { v.attiva = false; }, durata * 1000);
+    // Glide dalla nota precedente
+    voce.osc.frequency.setTargetAtTime(freq, ora, 0.03);
+    voce.lastFreq = freq;
+    
+    // Vocali più lunghe e calde
+    const volume = tipo === 'vocale' ? 0.12 : 0.07;
+    const decay = tipo === 'vocale' ? durata * 1.5 : durata;
+    
+    voce.filter.frequency.setTargetAtTime(tipo === 'vocale' ? 2500 : 1200, ora, 0.05);
+    
+    voce.gain.gain.cancelScheduledValues(ora);
+    voce.gain.gain.setTargetAtTime(volume, ora, 0.03);
+    voce.gain.gain.setTargetAtTime(0, ora + decay, 0.15);
+    
+    setTimeout(() => { voce.attiva = false; }, (decay + 0.2) * 1000);
+    
+    return tipo;
 }
 
+// Onde con personalità
 let onde = [];
 
 class Onda {
-    constructor(x, freq) {
+    constructor(freq, tipo, x) {
         this.x = x;
-        this.y = H / 2;
         this.freq = freq;
-        this.ampiezza = 50 + (freq / 1000) * 100;
+        this.tipo = tipo;
         this.fase = 0;
         this.vita = 1;
-        this.hue = 30 + (freq / 10) % 40;
+        
+        // Vocali: onde rotonde, ampie. Consonanti: onde aguzze, strette
+        if (tipo === 'vocale') {
+            this.ampiezza = 80 + (freq / 500) * 60;
+            this.larghezza = 0.008;
+            this.hue = 35 + (freq / 20) % 25;
+        } else {
+            this.ampiezza = 40 + (freq / 500) * 30;
+            this.larghezza = 0.015;
+            this.hue = 20 + (freq / 30) % 20;
+        }
     }
     
     update() {
-        this.fase += 0.05;
-        this.vita -= 0.005;
-        this.ampiezza *= 0.995;
+        this.fase += this.tipo === 'vocale' ? 0.03 : 0.05;
+        this.vita -= this.tipo === 'vocale' ? 0.003 : 0.006;
+        this.ampiezza *= 0.997;
     }
     
     draw() {
-        $.strokeStyle = `hsla(${this.hue}, 70%, 60%, ${this.vita * 0.5})`;
-        $.lineWidth = 2;
+        const alpha = this.vita * (this.tipo === 'vocale' ? 0.6 : 0.35);
+        $.strokeStyle = `hsla(${this.hue}, 65%, 60%, ${alpha})`;
+        $.lineWidth = this.tipo === 'vocale' ? 2.5 : 1.5;
         $.beginPath();
         
-        for (let i = 0; i < W; i += 5) {
+        for (let i = 0; i < W; i += 3) {
             const dist = Math.abs(i - this.x);
-            const attenuazione = Math.exp(-dist * 0.003);
-            const y = this.y + Math.sin(this.fase + i * 0.02 * (this.freq / 300)) * this.ampiezza * attenuazione;
+            const att = Math.exp(-dist * this.larghezza);
+            const wave = this.tipo === 'vocale' 
+                ? Math.sin(this.fase + i * 0.015 * (this.freq / 300))
+                : Math.sin(this.fase + i * 0.025 * (this.freq / 300)) * Math.sin(this.fase * 2 + i * 0.01);
+            const y = H/2 + wave * this.ampiezza * att;
             
             if (i === 0) $.moveTo(i, y);
             else $.lineTo(i, y);
@@ -151,58 +208,95 @@ class Onda {
     }
 }
 
+// Particelle per le vocali
+let particelle = [];
+
+class Particella {
+    constructor(x) {
+        this.x = x;
+        this.y = H/2;
+        this.vy = -1 - Math.random() * 2;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.size = 2 + Math.random() * 3;
+        this.vita = 1;
+        this.hue = 30 + Math.random() * 20;
+    }
+    
+    update() {
+        this.y += this.vy;
+        this.x += this.vx;
+        this.vita -= 0.015;
+    }
+    
+    draw() {
+        $.fillStyle = `hsla(${this.hue}, 70%, 70%, ${this.vita * 0.5})`;
+        $.beginPath();
+        $.arc(this.x, this.y, this.size * this.vita, 0, Math.PI * 2);
+        $.fill();
+    }
+}
+
 let ultimoTempo = 0;
-let velocità = 100;
+let velocità = 80;
+let intensità = 0; // Cresce con le vocali
 
 function canta(tempo) {
-    if (!attivo || !TESTO) {
-        requestAnimationFrame(canta);
-        return;
-    }
+    if (!attivo || !TESTO) { requestAnimationFrame(canta); return; }
     
     if (tempo - ultimoTempo > velocità) {
         ultimoTempo = tempo;
         
         const char = TESTO[posizione % TESTO.length];
-        const freq = charToNote(char);
+        const nota = charToNote(char);
         
-        if (freq) {
-            const voceLibera = voci.findIndex(v => !v.attiva);
-            if (voceLibera >= 0) {
-                suona(freq, voceLibera, 0.3 + Math.random() * 0.3);
-                onde.push(new Onda(W * (posizione % 20) / 20, freq));
+        charEl.textContent = char;
+        charEl.classList.add('pulse');
+        setTimeout(() => charEl.classList.remove('pulse'), 100);
+        
+        if (nota) {
+            const tipo = suona(nota.freq, nota.tipo, 0.25 + Math.random() * 0.15);
+            const x = 100 + (posizione % 15) * ((W - 200) / 15);
+            onde.push(new Onda(nota.freq, nota.tipo, x));
+            
+            if (nota.tipo === 'vocale') {
+                intensità = Math.min(intensità + 0.1, 1);
+                for (let i = 0; i < 3; i++) {
+                    particelle.push(new Particella(x + (Math.random() - 0.5) * 50));
+                }
             }
         }
         
         posizione++;
+        progressBar.style.width = ((posizione % TESTO.length) / TESTO.length * 100) + '%';
         
-        if (char === ' ') velocità = 150;
-        else velocità = 60 + Math.random() * 60;
+        // Velocità variabile
+        if (char === ' ') velocità = 120 + Math.random() * 60;
+        else if (VOCALI[char.toLowerCase()]) velocità = 90 + Math.random() * 40;
+        else velocità = 50 + Math.random() * 40;
     }
     
-    $.fillStyle = 'rgba(0,0,0,0.05)';
+    // Decay intensità
+    intensità *= 0.995;
+    
+    // Background con intensità
+    $.fillStyle = `rgba(0,0,0,${0.06 + intensità * 0.02})`;
     $.fillRect(0, 0, W, H);
     
-    $.strokeStyle = 'rgba(201,162,39,0.1)';
+    // Linea centrale
+    $.strokeStyle = `rgba(201,162,39,${0.08 + intensità * 0.1})`;
     $.lineWidth = 1;
     $.beginPath();
     $.moveTo(0, H/2);
     $.lineTo(W, H/2);
     $.stroke();
     
-    onde = onde.filter(o => o.vita > 0);
-    onde.forEach(o => {
-        o.update();
-        o.draw();
-    });
+    // Particelle
+    particelle = particelle.filter(p => p.vita > 0);
+    particelle.forEach(p => { p.update(); p.draw(); });
     
-    if (TESTO) {
-        const char = TESTO[posizione % TESTO.length];
-        $.fillStyle = `rgba(201,162,39,0.3)`;
-        $.font = '200px Georgia';
-        $.textAlign = 'center';
-        $.fillText(char, W/2, H/2 + 70);
-    }
+    // Onde
+    onde = onde.filter(o => o.vita > 0);
+    onde.forEach(o => { o.update(); o.draw(); });
     
     requestAnimationFrame(canta);
 }
