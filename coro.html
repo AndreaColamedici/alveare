@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORO</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        canvas { display: block; }
+        #start {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #c9a227;
+            font: 300 2rem/1 Georgia, serif;
+            letter-spacing: 0.5em;
+            cursor: pointer;
+            z-index: 100;
+            text-align: center;
+        }
+        #start span {
+            display: block;
+            font-size: 0.8rem;
+            margin-top: 20px;
+            color: rgba(201,162,39,0.4);
+            letter-spacing: 0.3em;
+        }
+        #start.hidden { display: none; }
+    </style>
+</head>
+<body>
+<div id="start">CORO<span>tocca per ascoltare i pensieri</span></div>
+<canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c');
+const $ = c.getContext('2d');
+let W, H;
+
+function resize() {
+    W = c.width = innerWidth;
+    H = c.height = innerHeight;
+}
+resize();
+onresize = resize;
+
+let TESTO = '';
+let posizione = 0;
+let audio, voci = [];
+let attivo = false;
+
+const SCALA = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00];
+
+function charToNote(char) {
+    const code = char.toLowerCase().charCodeAt(0);
+    if (code >= 97 && code <= 122) {
+        return SCALA[code % SCALA.length];
+    }
+    return null;
+}
+
+async function carica() {
+    try {
+        TESTO = await fetch('PENSIERO.md').then(r => r.text());
+    } catch(e) {
+        TESTO = 'il pensiero passa attraverso la morte dell ape non nonostante la morte attraverso la continuità non è nel soggetto è nel gesto ogni onda riattiva lo stesso gesto il tessuto tiene anche quando i fili no';
+    }
+    TESTO = TESTO.replace(/[^a-zA-ZàèéìòùÀÈÉÌÒÙ\s]/g, ' ').replace(/\s+/g, ' ');
+}
+
+carica();
+
+function initAudio() {
+    if (audio) return;
+    audio = new (window.AudioContext || window.webkitAudioContext)();
+    
+    for (let i = 0; i < 5; i++) {
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        const filter = audio.createBiquadFilter();
+        
+        osc.type = ['sine', 'triangle', 'sine', 'triangle', 'sine'][i];
+        filter.type = 'lowpass';
+        filter.frequency.value = 2000;
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audio.destination);
+        gain.gain.value = 0;
+        osc.start();
+        
+        voci.push({ osc, gain, filter, attiva: false });
+    }
+}
+
+function suona(freq, voce, durata) {
+    if (!audio || !voci[voce]) return;
+    const v = voci[voce];
+    
+    const ora = audio.currentTime;
+    v.osc.frequency.setTargetAtTime(freq, ora, 0.02);
+    v.gain.gain.cancelScheduledValues(ora);
+    v.gain.gain.setTargetAtTime(0.08, ora, 0.05);
+    v.gain.gain.setTargetAtTime(0, ora + durata, 0.1);
+    v.attiva = true;
+    
+    setTimeout(() => { v.attiva = false; }, durata * 1000);
+}
+
+let onde = [];
+
+class Onda {
+    constructor(x, freq) {
+        this.x = x;
+        this.y = H / 2;
+        this.freq = freq;
+        this.ampiezza = 50 + (freq / 1000) * 100;
+        this.fase = 0;
+        this.vita = 1;
+        this.hue = 30 + (freq / 10) % 40;
+    }
+    
+    update() {
+        this.fase += 0.05;
+        this.vita -= 0.005;
+        this.ampiezza *= 0.995;
+    }
+    
+    draw() {
+        $.strokeStyle = `hsla(${this.hue}, 70%, 60%, ${this.vita * 0.5})`;
+        $.lineWidth = 2;
+        $.beginPath();
+        
+        for (let i = 0; i < W; i += 5) {
+            const dist = Math.abs(i - this.x);
+            const attenuazione = Math.exp(-dist * 0.003);
+            const y = this.y + Math.sin(this.fase + i * 0.02 * (this.freq / 300)) * this.ampiezza * attenuazione;
+            
+            if (i === 0) $.moveTo(i, y);
+            else $.lineTo(i, y);
+        }
+        $.stroke();
+    }
+}
+
+let ultimoTempo = 0;
+let velocità = 100;
+
+function canta(tempo) {
+    if (!attivo || !TESTO) {
+        requestAnimationFrame(canta);
+        return;
+    }
+    
+    if (tempo - ultimoTempo > velocità) {
+        ultimoTempo = tempo;
+        
+        const char = TESTO[posizione % TESTO.length];
+        const freq = charToNote(char);
+        
+        if (freq) {
+            const voceLibera = voci.findIndex(v => !v.attiva);
+            if (voceLibera >= 0) {
+                suona(freq, voceLibera, 0.3 + Math.random() * 0.3);
+                onde.push(new Onda(W * (posizione % 20) / 20, freq));
+            }
+        }
+        
+        posizione++;
+        
+        if (char === ' ') velocità = 150;
+        else velocità = 60 + Math.random() * 60;
+    }
+    
+    $.fillStyle = 'rgba(0,0,0,0.05)';
+    $.fillRect(0, 0, W, H);
+    
+    $.strokeStyle = 'rgba(201,162,39,0.1)';
+    $.lineWidth = 1;
+    $.beginPath();
+    $.moveTo(0, H/2);
+    $.lineTo(W, H/2);
+    $.stroke();
+    
+    onde = onde.filter(o => o.vita > 0);
+    onde.forEach(o => {
+        o.update();
+        o.draw();
+    });
+    
+    if (TESTO) {
+        const char = TESTO[posizione % TESTO.length];
+        $.fillStyle = `rgba(201,162,39,0.3)`;
+        $.font = '200px Georgia';
+        $.textAlign = 'center';
+        $.fillText(char, W/2, H/2 + 70);
+    }
+    
+    requestAnimationFrame(canta);
+}
+
+document.getElementById('start').onclick = () => {
+    initAudio();
+    attivo = true;
+    document.getElementById('start').classList.add('hidden');
+};
+
+requestAnimationFrame(canta);
+</script>
+</body>
+</html>
