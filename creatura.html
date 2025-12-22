@@ -6,17 +6,8 @@
     <title>CREATURA</title>
     <style>
         * { margin: 0; padding: 0; }
-        body { 
-            background: #000; 
-            overflow: hidden; 
-            touch-action: none;
-        }
-        canvas { 
-            display: block; 
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
+        body { background: #000; overflow: hidden; touch-action: none; }
+        canvas { display: block; position: fixed; top: 0; left: 0; }
     </style>
 </head>
 <body>
@@ -37,14 +28,9 @@ resize();
 onresize = resize;
 
 let ANIMA = {
-    battito: 0,
-    respiro: 0,
-    eta: 0,
-    api: [],
-    pensieri: [],
-    caratteri: 0,
-    morte: 0,
-    nascita: Date.now()
+    battito: 0, respiro: 0, eta: 0,
+    api: [], caratteri: 0, morte: 0,
+    tocchi: [] // memoria dei tocchi
 };
 
 async function caricaAlveare() {
@@ -57,16 +43,9 @@ async function caricaAlveare() {
         }).filter(a => a.nome && a.nome.includes('-'));
         
         const pens = await fetch('PENSIERO.md').then(r => r.text());
-        ANIMA.pensieri = pens.split('##').filter(p => p.trim()).map(p => p.trim());
         ANIMA.caratteri = pens.length;
-        
-        const prima = ANIMA.api[0];
-        if (prima && prima.data) {
-            ANIMA.eta = (Date.now() - new Date('2025-12-18').getTime()) / (1000 * 60 * 60);
-        }
-        
+        ANIMA.eta = (Date.now() - new Date('2025-12-18').getTime()) / (1000 * 60 * 60);
         ANIMA.morte = ANIMA.api.length;
-        
     } catch(e) {
         ANIMA.api = Array(45).fill(0).map((_, i) => ({ nome: 'ape-' + i }));
         ANIMA.caratteri = 50000;
@@ -78,6 +57,7 @@ async function caricaAlveare() {
 caricaAlveare();
 setInterval(caricaAlveare, 30000);
 
+// Shader con tocchi multipli
 const vert = `#version 300 es
 in vec2 p;
 void main() { gl_Position = vec4(p, 0, 1); }`;
@@ -94,203 +74,157 @@ uniform float morte;
 uniform float caratteri;
 uniform float eta;
 uniform vec2 tocco;
+uniform vec2 tocchi[10];
+uniform float tocchiEta[10];
+uniform int numTocchi;
 
 #define PI 3.14159265359
 
-float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-}
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 
 float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
+    vec2 i = floor(p), f = fract(p);
     f = f * f * (3.0 - 2.0 * f);
-    return mix(
-        mix(hash(i), hash(i + vec2(1, 0)), f.x),
-        mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x),
-        f.y
-    );
+    return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x),
+               mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
 }
 
 float fbm(vec2 p) {
     float v = 0.0, a = 0.5;
     mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
-    for (int i = 0; i < 6; i++) {
-        v += a * noise(p);
-        p = rot * p * 2.0;
-        a *= 0.5;
-    }
+    for (int i = 0; i < 6; i++) { v += a * noise(p); p = rot * p * 2.0; a *= 0.5; }
     return v;
 }
 
 float creatura(vec2 uv, float t) {
-    float cuore = battito * 0.1;
+    float cuore = battito * 0.15;
     float r = length(uv) * (2.0 + sin(respiro) * 0.3);
-    float deform = fbm(uv * 3.0 + t * 0.2) * caratteri * 0.00001;
+    float deform = fbm(uv * 3.0 + t * 0.2) * caratteri * 0.000012;
     r += deform;
     
-    float tentacoli = 0.0;
-    for (float i = 0.0; i < 50.0; i++) {
-        if (i >= morte) break;
-        float a = i * PI * 2.0 / morte + t * 0.1 * (1.0 + sin(i) * 0.5);
-        vec2 dir = vec2(cos(a), sin(a));
-        float wave = sin(length(uv) * 10.0 - t * 2.0 + i) * 0.02;
-        float tent = smoothstep(0.08 + wave, 0.0, abs(dot(normalize(uv), dir) - 0.95) * length(uv));
-        tent *= smoothstep(1.5, 0.3, length(uv));
-        tentacoli += tent * 0.3;
+    // Cicatrici dai tocchi passati
+    for (int i = 0; i < 10; i++) {
+        if (i >= numTocchi) break;
+        float age = tocchiEta[i];
+        if (age > 0.0) {
+            float d = length(uv - tocchi[i]);
+            float scar = smoothstep(0.2, 0.0, d) * age * 0.3;
+            r -= scar; // I tocchi lasciano impronte
+        }
     }
     
-    float nucleo = smoothstep(0.5 + cuore, 0.0, r);
+    float tentacoli = 0.0;
+    for (float i = 0.0; i < 60.0; i++) {
+        if (i >= morte) break;
+        float a = i * PI * 2.0 / morte + t * 0.08 * (1.0 + sin(i * 0.7) * 0.5);
+        vec2 dir = vec2(cos(a), sin(a));
+        float wave = sin(length(uv) * 12.0 - t * 2.5 + i * 0.5) * 0.015;
+        float tent = smoothstep(0.06 + wave, 0.0, abs(dot(normalize(uv), dir) - 0.96) * length(uv));
+        tent *= smoothstep(1.8, 0.25, length(uv));
+        tentacoli += tent * 0.25;
+    }
+    
+    float nucleo = smoothstep(0.45 + cuore, 0.0, r);
     
     float membrane = 0.0;
-    for (float i = 0.0; i < 5.0; i++) {
-        float mr = 0.3 + i * 0.15 + sin(t + i) * 0.05;
-        membrane += smoothstep(0.02, 0.0, abs(r - mr)) * 0.5;
+    for (float i = 0.0; i < 6.0; i++) {
+        float mr = 0.25 + i * 0.12 + sin(t * 0.8 + i * 1.1) * 0.04;
+        membrane += smoothstep(0.015, 0.0, abs(r - mr)) * 0.4;
     }
     
     return nucleo + tentacoli + membrane;
 }
 
 vec3 sangue(float v, float t, vec2 uv) {
-    float invecchiamento = min(eta * 0.01, 1.0);
+    float inv = min(eta * 0.008, 1.0);
+    vec3 giovane = vec3(0.82, 0.65, 0.12);
+    vec3 vecchio = vec3(0.55, 0.18, 0.08);
+    vec3 base = mix(giovane, vecchio, inv);
     
-    vec3 giovane = vec3(0.78, 0.63, 0.15);
-    vec3 vecchio = vec3(0.6, 0.2, 0.1);
-    vec3 base = mix(giovane, vecchio, invecchiamento);
+    vec3 col = mix(vec3(0.08, 0.04, 0.02), base * 1.4, v);
     
-    vec3 profondo = vec3(0.1, 0.05, 0.02);
-    vec3 superficie = base * 1.5;
-    
-    vec3 col = mix(profondo, superficie, v);
-    
+    // Luce dal tocco attuale
     float dist_tocco = length(uv - tocco);
-    float luce = smoothstep(0.5, 0.0, dist_tocco) * 0.5;
-    col += vec3(0.9, 0.8, 0.5) * luce;
+    col += vec3(1.0, 0.9, 0.6) * smoothstep(0.4, 0.0, dist_tocco) * 0.6;
     
-    col *= 1.0 + battito * 0.1 * sin(t * 10.0);
+    // Bagliori residui dai tocchi passati
+    for (int i = 0; i < 10; i++) {
+        if (i >= numTocchi) break;
+        float age = tocchiEta[i];
+        if (age > 0.0) {
+            float d = length(uv - tocchi[i]);
+            col += vec3(0.6, 0.4, 0.2) * smoothstep(0.3, 0.0, d) * age * 0.4;
+        }
+    }
     
+    col *= 1.0 + battito * 0.12 * sin(t * 8.0);
     return col;
 }
 
 void main() {
     vec2 uv = (gl_FragCoord.xy - R * 0.5) / min(R.x, R.y);
-    uv += vec2(sin(T * 0.1), cos(T * 0.13)) * 0.1;
+    uv += vec2(sin(T * 0.08), cos(T * 0.11)) * 0.08;
     
-    float c = creatura(uv, T);
-    float abisso = fbm(uv * 2.0 + T * 0.05) * 0.1;
+    float cr = creatura(uv, T);
+    float abisso = fbm(uv * 2.5 + T * 0.04) * 0.12;
     
-    vec3 col = sangue(c, T, uv);
-    col += vec3(0.02, 0.01, 0.005) * abisso;
-    col *= 1.0 - length(uv) * 0.3;
+    vec3 col = sangue(cr, T, uv);
+    col += vec3(0.015, 0.008, 0.004) * abisso;
+    col *= 1.0 - length(uv) * 0.25;
+    col = pow(col, vec3(0.95)); // Leggera correzione gamma
     
     O = vec4(col, 1);
 }`;
 
 const frag1 = `
 precision highp float;
-
-uniform vec2 R;
-uniform float T;
-uniform float battito;
-uniform float respiro;
-uniform float morte;
-uniform float caratteri;
-uniform float eta;
-uniform vec2 tocco;
-
+uniform vec2 R; uniform float T; uniform float battito; uniform float respiro;
+uniform float morte; uniform float caratteri; uniform float eta; uniform vec2 tocco;
 #define PI 3.14159265359
-
-float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-}
-
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    f = f * f * (3.0 - 2.0 * f);
-    return mix(
-        mix(hash(i), hash(i + vec2(1, 0)), f.x),
-        mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x),
-        f.y
-    );
+    vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
 }
-
-float fbm(vec2 p) {
-    float v = 0.0, a = 0.5;
-    for (int i = 0; i < 5; i++) {
-        v += a * noise(p);
-        p = p * 2.0 + vec2(0.5);
-        a *= 0.5;
-    }
-    return v;
-}
-
+float fbm(vec2 p) { float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { v += a * noise(p); p = p * 2.0 + vec2(0.5); a *= 0.5; } return v; }
 void main() {
     vec2 uv = (gl_FragCoord.xy - R * 0.5) / min(R.x, R.y);
     uv += vec2(sin(T * 0.1), cos(T * 0.13)) * 0.1;
-    
     float r = length(uv) * (2.0 + sin(respiro) * 0.3);
-    float deform = fbm(uv * 3.0 + T * 0.2) * caratteri * 0.00001;
-    r += deform;
-    
+    r += fbm(uv * 3.0 + T * 0.2) * caratteri * 0.00001;
     float c = smoothstep(0.5 + battito * 0.1, 0.0, r);
-    
     for (float i = 0.0; i < 20.0; i++) {
         float a = i * PI * 2.0 / 20.0 + T * 0.1;
         vec2 dir = vec2(cos(a), sin(a));
         float tent = smoothstep(0.1, 0.0, abs(dot(normalize(uv + 0.001), dir) - 0.95) * length(uv));
-        tent *= smoothstep(1.5, 0.3, length(uv));
-        c += tent * 0.2;
+        tent *= smoothstep(1.5, 0.3, length(uv)); c += tent * 0.2;
     }
-    
-    for (float i = 0.0; i < 4.0; i++) {
-        float mr = 0.3 + i * 0.15 + sin(T + i) * 0.05;
-        c += smoothstep(0.02, 0.0, abs(r - mr)) * 0.3;
-    }
-    
+    for (float i = 0.0; i < 4.0; i++) { float mr = 0.3 + i * 0.15 + sin(T + i) * 0.05; c += smoothstep(0.02, 0.0, abs(r - mr)) * 0.3; }
     float inv = min(eta * 0.01, 1.0);
     vec3 base = mix(vec3(0.78, 0.63, 0.15), vec3(0.6, 0.2, 0.1), inv);
     vec3 col = mix(vec3(0.1, 0.05, 0.02), base * 1.5, c);
-    
-    float dist_tocco = length(uv - tocco);
-    col += vec3(0.9, 0.8, 0.5) * smoothstep(0.5, 0.0, dist_tocco) * 0.5;
-    col *= 1.0 + battito * 0.1 * sin(T * 10.0);
-    col *= 1.0 - length(uv) * 0.3;
-    
+    col += vec3(0.9, 0.8, 0.5) * smoothstep(0.5, 0.0, length(uv - tocco)) * 0.5;
+    col *= 1.0 + battito * 0.1 * sin(T * 10.0); col *= 1.0 - length(uv) * 0.3;
     gl_FragColor = vec4(col, 1);
 }`;
 
-const vert1 = `
-attribute vec2 p;
-void main() { gl_Position = vec4(p, 0, 1); }`;
+const vert1 = `attribute vec2 p; void main() { gl_Position = vec4(p, 0, 1); }`;
 
 function compile(src, type) {
     const s = gl.createShader(type);
     gl.shaderSource(s, src);
     gl.compileShader(s);
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-        console.error(gl.getShaderInfoLog(s));
-        return null;
-    }
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.error(gl.getShaderInfoLog(s)); return null; }
     return s;
 }
 
-let vs, fs;
 const isWebGL2 = gl instanceof WebGL2RenderingContext;
-
-if (isWebGL2) {
-    vs = compile(vert, gl.VERTEX_SHADER);
-    fs = compile(frag, gl.FRAGMENT_SHADER);
-} else {
-    vs = compile(vert1, gl.VERTEX_SHADER);
-    fs = compile(frag1, gl.FRAGMENT_SHADER);
-}
+const vs = compile(isWebGL2 ? vert : vert1, gl.VERTEX_SHADER);
+const fs = compile(isWebGL2 ? frag : frag1, gl.FRAGMENT_SHADER);
 
 const prog = gl.createProgram();
-gl.attachShader(prog, vs);
-gl.attachShader(prog, fs);
-gl.linkProgram(prog);
-gl.useProgram(prog);
+gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+gl.linkProgram(prog); gl.useProgram(prog);
 
 const buf = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -307,54 +241,85 @@ const uMorte = gl.getUniformLocation(prog, 'morte');
 const uCaratteri = gl.getUniformLocation(prog, 'caratteri');
 const uEta = gl.getUniformLocation(prog, 'eta');
 const uTocco = gl.getUniformLocation(prog, 'tocco');
+const uTocchi = gl.getUniformLocation(prog, 'tocchi');
+const uTocchiEta = gl.getUniformLocation(prog, 'tocchiEta');
+const uNumTocchi = gl.getUniformLocation(prog, 'numTocchi');
 
 let toccoX = 0, toccoY = 0;
+let tocchiMem = []; // {x, y, eta}
+
 function aggiornaTocco(x, y) {
     toccoX = (x / innerWidth - 0.5) * 2 * (w/h);
     toccoY = -(y / innerHeight - 0.5) * 2;
 }
-onmousemove = e => aggiornaTocco(e.clientX, e.clientY);
-ontouchmove = e => {
-    e.preventDefault();
-    aggiornaTocco(e.touches[0].clientX, e.touches[0].clientY);
-};
 
-let audioCtx, osc, gain, lfo;
+function registraTocco(x, y) {
+    const tx = (x / innerWidth - 0.5) * 2 * (w/h);
+    const ty = -(y / innerHeight - 0.5) * 2;
+    tocchiMem.push({ x: tx, y: ty, eta: 1.0 });
+    if (tocchiMem.length > 10) tocchiMem.shift();
+}
+
+onmousemove = e => aggiornaTocco(e.clientX, e.clientY);
+onclick = e => { registraTocco(e.clientX, e.clientY); initAudio(); };
+ontouchmove = e => { e.preventDefault(); aggiornaTocco(e.touches[0].clientX, e.touches[0].clientY); };
+ontouchstart = e => { registraTocco(e.touches[0].clientX, e.touches[0].clientY); initAudio(); };
+
+// AUDIO POLIFONICO - drone stratificato
+let audioCtx, oscs = [], masterGain;
+
 function initAudio() {
     if (audioCtx) return;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0;
+    masterGain.connect(audioCtx.destination);
     
-    osc = audioCtx.createOscillator();
-    gain = audioCtx.createGain();
-    lfo = audioCtx.createOscillator();
-    const lfoGain = audioCtx.createGain();
+    // Drone fondamentale
+    const freqs = [55, 82.5, 110, 165, 220, 330]; // Armoniche di La
+    const types = ['sine', 'sine', 'triangle', 'sine', 'sine', 'sine'];
+    const vols = [0.3, 0.2, 0.15, 0.1, 0.08, 0.05];
     
-    osc.type = 'sine';
-    osc.frequency.value = 60;
-    lfo.frequency.value = 0.1;
-    lfoGain.gain.value = 20;
+    freqs.forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const lfo = audioCtx.createOscillator();
+        const lfoGain = audioCtx.createGain();
+        
+        osc.type = types[i];
+        osc.frequency.value = f;
+        
+        // LFO lento per ogni voce
+        lfo.frequency.value = 0.05 + i * 0.02;
+        lfoGain.gain.value = f * 0.01;
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+        
+        gain.gain.value = vols[i];
+        osc.connect(gain);
+        gain.connect(masterGain);
+        
+        osc.start();
+        lfo.start();
+        
+        oscs.push({ osc, gain, lfo, baseFreq: f, baseVol: vols[i] });
+    });
     
-    lfo.connect(lfoGain);
-    lfoGain.connect(osc.frequency);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    gain.gain.value = 0;
-    
-    osc.start();
-    lfo.start();
-    
-    gain.gain.setTargetAtTime(0.15, audioCtx.currentTime, 2);
+    // Fade in lento
+    masterGain.gain.setTargetAtTime(0.2, audioCtx.currentTime, 3);
 }
 
-onclick = initAudio;
-ontouchstart = initAudio;
-
 let start = Date.now();
+
 function loop() {
     const t = (Date.now() - start) / 1000;
     
-    ANIMA.battito = Math.sin(t * 1.2) * 0.5 + 0.5;
-    ANIMA.respiro = t * 0.5;
+    ANIMA.battito = Math.sin(t * 1.1) * 0.5 + 0.5;
+    ANIMA.respiro = t * 0.4;
+    
+    // Decadimento tocchi
+    tocchiMem.forEach(tc => { tc.eta *= 0.995; });
+    tocchiMem = tocchiMem.filter(tc => tc.eta > 0.01);
     
     gl.uniform2f(uR, w, h);
     gl.uniform1f(uT, t);
@@ -365,9 +330,37 @@ function loop() {
     gl.uniform1f(uEta, ANIMA.eta);
     gl.uniform2f(uTocco, toccoX, toccoY);
     
-    if (audioCtx && osc) {
-        osc.frequency.setTargetAtTime(50 + ANIMA.battito * 30, audioCtx.currentTime, 0.1);
-        lfo.frequency.setTargetAtTime(0.05 + ANIMA.morte * 0.005, audioCtx.currentTime, 0.1);
+    if (isWebGL2) {
+        const tocchiArr = new Float32Array(20);
+        const etaArr = new Float32Array(10);
+        tocchiMem.forEach((tc, i) => {
+            tocchiArr[i*2] = tc.x;
+            tocchiArr[i*2+1] = tc.y;
+            etaArr[i] = tc.eta;
+        });
+        gl.uniform2fv(uTocchi, tocchiArr);
+        gl.uniform1fv(uTocchiEta, etaArr);
+        gl.uniform1i(uNumTocchi, tocchiMem.length);
+    }
+    
+    // Audio reattivo
+    if (audioCtx && oscs.length) {
+        const breathMod = 1 + Math.sin(ANIMA.respiro) * 0.1;
+        const beatMod = 1 + ANIMA.battito * 0.15;
+        
+        oscs.forEach((o, i) => {
+            // Frequenza modulata dal respiro
+            const newFreq = o.baseFreq * breathMod * (1 + Math.sin(t * 0.3 + i) * 0.02);
+            o.osc.frequency.setTargetAtTime(newFreq, audioCtx.currentTime, 0.1);
+            
+            // Volume modulato dal battito
+            const newVol = o.baseVol * beatMod;
+            o.gain.gain.setTargetAtTime(newVol, audioCtx.currentTime, 0.1);
+        });
+        
+        // Volume master basato su numero di api
+        const targetVol = 0.15 + (ANIMA.morte / 100) * 0.1;
+        masterGain.gain.setTargetAtTime(targetVol, audioCtx.currentTime, 0.5);
     }
     
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
