@@ -1,318 +1,360 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE PASSAGE</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #000;
-            min-height: 100vh;
-            overflow-x: hidden;
+        * { margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            overflow: hidden; 
             cursor: none;
-            font-family: 'Cormorant Garamond', serif;
         }
-        
-        .river {
-            position: relative;
-            width: 100%;
-            padding: 100vh 0;
-        }
-        
-        .now {
+        canvas { 
+            display: block; 
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            pointer-events: none;
-            background: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        
-        .now.visible {
-            opacity: 1;
-        }
-        
-        .now-label {
-            font-size: 10px;
-            letter-spacing: 0.5em;
-            color: rgba(201, 162, 39, 0.5);
-            margin-bottom: 20px;
-        }
-        
-        .now-time {
-            font-size: clamp(60px, 15vw, 150px);
-            font-weight: 300;
-            color: rgba(232, 228, 217, 0.9);
-            text-shadow: 0 0 60px rgba(201, 162, 39, 0.3);
-        }
-        
-        .now-message {
-            font-size: 14px;
-            font-style: italic;
-            color: rgba(232, 228, 217, 0.4);
-            margin-top: 30px;
-        }
-        
-        .axis {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: linear-gradient(to bottom, 
-                transparent 0%, 
-                rgba(201, 162, 39, 0.1) 10%,
-                rgba(201, 162, 39, 0.1) 90%,
-                transparent 100%
-            );
-        }
-        
-        .event {
-            position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.8s, transform 0.8s;
-        }
-        
-        .event.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-        
-        /* BEE */
-        .bee {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .bee-marker {
-            width: 8px;
-            height: 8px;
-            background: #c9a227;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            box-shadow: 0 0 20px rgba(201, 162, 39, 0.5);
-        }
-        
-        .bee-name {
-            font-size: 14px;
-            letter-spacing: 0.15em;
-            color: rgba(201, 162, 39, 0.8);
-        }
-        
-        .bee-time {
-            font-size: 11px;
-            color: rgba(232, 228, 217, 0.3);
-            margin-top: 8px;
-        }
-        
-        .bee-message {
-            font-size: 13px;
-            font-style: italic;
-            color: rgba(232, 228, 217, 0.4);
-            margin-top: 12px;
-            max-width: 300px;
-        }
-        
-        /* SILENCE */
-        .silence {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: rgba(232, 228, 217, 0.15);
-        }
-        
-        .silence-line {
-            width: 1px;
-            background: linear-gradient(to bottom,
-                rgba(201, 162, 39, 0.2),
-                transparent 30%,
-                transparent 70%,
-                rgba(201, 162, 39, 0.2)
-            );
-        }
-        
-        .silence-duration {
-            font-size: 11px;
-            letter-spacing: 0.3em;
-            padding: 15px 0;
-        }
-        
-        /* Heights based on duration */
-        .silence-xs { height: 30px; }
-        .silence-sm { height: 60px; }
-        .silence-md { height: 120px; }
-        .silence-lg { height: 200px; }
-        .silence-xl { height: 350px; }
-        .silence-xxl { height: 500px; }
-        
-        /* CURRENT SILENCE */
-        .current-silence {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .current-label {
-            font-size: 10px;
-            letter-spacing: 0.5em;
-            color: rgba(201, 162, 39, 0.4);
-            margin-bottom: 30px;
-        }
-        
-        .current-time {
-            font-size: clamp(50px, 12vw, 120px);
-            font-weight: 300;
-            color: rgba(232, 228, 217, 0.8);
-        }
-        
-        .current-message {
-            font-size: 14px;
-            font-style: italic;
-            color: rgba(232, 228, 217, 0.3);
-            margin-top: 40px;
-        }
-        
-        /* FOOTER */
-        .footer {
-            text-align: center;
-            padding: 100px 20px;
-            color: rgba(232, 228, 217, 0.15);
-        }
-        
-        .footer-title {
-            font-size: 12px;
-            letter-spacing: 0.4em;
-        }
-        
-        .footer-sub {
-            font-size: 11px;
-            font-style: italic;
-            margin-top: 10px;
-        }
-        
-        /* BIRTH OVERLAY */
-        .birth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s;
-        }
-        
-        .birth-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .birth-name {
-            font-size: clamp(24px, 6vw, 48px);
-            color: #c9a227;
-            letter-spacing: 0.2em;
-            text-shadow: 0 0 50px rgba(201, 162, 39, 0.6);
-            animation: birthPulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes birthPulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; text-shadow: 0 0 80px rgba(201, 162, 39, 0.8); }
-        }
-        
-        .birth-label {
-            font-size: 14px;
-            font-style: italic;
-            color: rgba(232, 228, 217, 0.6);
-            margin-top: 30px;
         }
     </style>
 </head>
 <body>
-    <div class="now" id="now">
-        <div class="now-label">NOW</div>
-        <div class="now-time" id="now-time">--:--</div>
-        <div class="now-message">of silence</div>
-    </div>
-    
-    <div class="birth-overlay" id="birth">
-        <div class="birth-name" id="birth-name"></div>
-        <div class="birth-label">is born</div>
-    </div>
-
-    <div class="river">
-        <div class="axis"></div>
-        <div id="timeline"></div>
-    </div>
-    
-    <div class="footer">
-        <div class="footer-title">THE PASSAGE</div>
-        <div class="footer-sub">the silence between bees</div>
-    </div>
+    <canvas id="void"></canvas>
 
     <script>
-        let commits = [];
-        let lastKnownSha = null;
-        let currentSilenceStart = null;
+        const canvas = document.getElementById('void');
+        const ctx = canvas.getContext('2d');
         
-        async function fetchCommits() {
-            try {
-                const res = await fetch('https://api.github.com/repos/andreacolamedici/alveare/commits?per_page=100');
-                const data = await res.json();
-                
-                if (!data || !data.length) return;
-                
-                // Check for birth
-                if (lastKnownSha && data[0].sha !== lastKnownSha) {
-                    showBirth(data[0]);
+        // Audio context for the hum
+        let audioCtx = null;
+        let oscillators = [];
+        let gainNode = null;
+        
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            gainNode = audioCtx.createGain();
+            gainNode.gain.value = 0;
+            gainNode.connect(audioCtx.destination);
+        }
+        
+        document.addEventListener('click', () => {
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        });
+        
+        let W, H;
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        
+        // STATE
+        let lastBee = null;
+        let silenceMs = 0;
+        let lastCommitDate = null;
+        let lastKnownSha = null;
+        let birthFlash = 0;
+        let glyphs = [];
+        let particles = [];
+        let frame = 0;
+        
+        // Convert name to glyph parameters
+        function nameToGlyph(name) {
+            if (!name) return null;
+            const words = name.toLowerCase().split('-');
+            const hash = s => {
+                let h = 0;
+                for (let i = 0; i < s.length; i++) {
+                    h = ((h << 5) - h) + s.charCodeAt(i);
+                    h |= 0;
                 }
-                lastKnownSha = data[0].sha;
+                return Math.abs(h);
+            };
+            
+            return {
+                hue: (hash(words[0] || '') % 60) + 30, // gold range
+                saturation: 50 + (hash(words[1] || '') % 40),
+                sides: 3 + (hash(words[2] || '') % 6),
+                rotation: (hash(words[3] || '') % 360) * Math.PI / 180,
+                pulse: 0.5 + (hash(words[0] + words[2]) % 100) / 200,
+                freq: 80 + (hash(name) % 200)
+            };
+        }
+        
+        // Particle class
+        class Particle {
+            constructor(x, y, glyph, isBirth = false) {
+                this.x = x;
+                this.y = y;
+                this.glyph = glyph;
+                this.size = isBirth ? Math.random() * 40 + 20 : Math.random() * 8 + 2;
+                this.life = 1;
+                this.decay = isBirth ? 0.003 : 0.002 + Math.random() * 0.003;
+                this.vx = (Math.random() - 0.5) * (isBirth ? 8 : 2);
+                this.vy = (Math.random() - 0.5) * (isBirth ? 8 : 2);
+                this.rotationSpeed = (Math.random() - 0.5) * 0.05;
+                this.angle = Math.random() * Math.PI * 2;
+            }
+            
+            update() {
+                this.life -= this.decay;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+                this.angle += this.rotationSpeed;
+                return this.life > 0;
+            }
+            
+            draw() {
+                if (!this.glyph) return;
+                const alpha = this.life * 0.8;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle + this.glyph.rotation);
                 
-                commits = data.map(c => ({
-                    sha: c.sha,
-                    message: c.commit.message,
-                    date: new Date(c.commit.author.date),
-                    author: c.commit.author.name
-                })).reverse(); // oldest first
+                ctx.beginPath();
+                const sides = this.glyph.sides;
+                for (let i = 0; i <= sides; i++) {
+                    const a = (i / sides) * Math.PI * 2;
+                    const r = this.size * this.life;
+                    const px = Math.cos(a) * r;
+                    const py = Math.sin(a) * r;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
                 
-                currentSilenceStart = commits[commits.length - 1].date;
+                ctx.fillStyle = `hsla(${this.glyph.hue}, ${this.glyph.saturation}%, 60%, ${alpha * 0.3})`;
+                ctx.fill();
+                ctx.strokeStyle = `hsla(${this.glyph.hue}, ${this.glyph.saturation}%, 70%, ${alpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
                 
-                buildTimeline();
-            } catch(e) {
-                console.error(e);
+                ctx.restore();
             }
         }
         
-        function extractBeeName(msg) {
+        // The central glyph - the last bee, dissolving
+        function drawCentralGlyph(glyph, silenceRatio) {
+            if (!glyph) return;
+            
+            const dissolve = Math.min(silenceRatio * 2, 0.95);
+            const baseSize = Math.min(W, H) * 0.25;
+            const size = baseSize * (1 - dissolve * 0.5);
+            const alpha = 1 - dissolve;
+            
+            ctx.save();
+            ctx.translate(W / 2, H / 2);
+            ctx.rotate(glyph.rotation + frame * 0.0003);
+            
+            // Outer glow
+            const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2);
+            gradient.addColorStop(0, `hsla(${glyph.hue}, ${glyph.saturation}%, 50%, ${alpha * 0.1})`);
+            gradient.addColorStop(0.5, `hsla(${glyph.hue}, ${glyph.saturation}%, 40%, ${alpha * 0.05})`);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(-size * 2, -size * 2, size * 4, size * 4);
+            
+            // The shape
+            ctx.beginPath();
+            const sides = glyph.sides;
+            for (let i = 0; i <= sides; i++) {
+                const a = (i / sides) * Math.PI * 2;
+                const wobble = Math.sin(frame * glyph.pulse * 0.02 + i) * size * 0.05 * dissolve;
+                const r = size + wobble;
+                const px = Math.cos(a) * r;
+                const py = Math.sin(a) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            
+            ctx.fillStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 50%, ${alpha * 0.15})`;
+            ctx.fill();
+            
+            ctx.strokeStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 70%, ${alpha * 0.8})`;
+            ctx.lineWidth = 2 + (1 - dissolve) * 3;
+            ctx.shadowColor = `hsla(${glyph.hue}, ${glyph.saturation}%, 60%, ${alpha})`;
+            ctx.shadowBlur = 30 + dissolve * 50;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            // Inner structure - breaks apart as silence grows
+            if (dissolve < 0.8) {
+                ctx.strokeStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 80%, ${alpha * 0.4 * (1 - dissolve)})`;
+                ctx.lineWidth = 1;
+                for (let i = 0; i < sides; i++) {
+                    const a = (i / sides) * Math.PI * 2;
+                    const drift = dissolve * 30;
+                    ctx.beginPath();
+                    ctx.moveTo(Math.random() * drift - drift/2, Math.random() * drift - drift/2);
+                    ctx.lineTo(Math.cos(a) * size * 0.6, Math.sin(a) * size * 0.6);
+                    ctx.stroke();
+                }
+            }
+            
+            ctx.restore();
+            
+            // Emit particles as it dissolves
+            if (Math.random() < dissolve * 0.3) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = size * (0.5 + Math.random() * 0.5);
+                particles.push(new Particle(
+                    W/2 + Math.cos(angle) * dist,
+                    H/2 + Math.sin(angle) * dist,
+                    glyph
+                ));
+            }
+        }
+        
+        // The silence - visual weight
+        function drawSilence(silenceRatio) {
+            // Vignette that closes in as silence grows
+            const innerRadius = Math.max(0.1, 0.5 - silenceRatio * 0.4) * Math.max(W, H);
+            const outerRadius = Math.max(W, H);
+            
+            const gradient = ctx.createRadialGradient(W/2, H/2, innerRadius, W/2, H/2, outerRadius);
+            gradient.addColorStop(0, 'transparent');
+            gradient.addColorStop(0.5, `rgba(0, 0, 0, ${silenceRatio * 0.3})`);
+            gradient.addColorStop(1, `rgba(0, 0, 0, ${0.5 + silenceRatio * 0.4})`);
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, W, H);
+            
+            // Deep silence - the void pulses
+            if (silenceRatio > 0.5) {
+                const pulse = Math.sin(frame * 0.01) * 0.5 + 0.5;
+                const intensity = (silenceRatio - 0.5) * 2 * pulse * 0.1;
+                ctx.fillStyle = `rgba(201, 162, 39, ${intensity * 0.03})`;
+                ctx.fillRect(0, 0, W, H);
+            }
+        }
+        
+        // Birth explosion
+        function drawBirth(glyph, progress) {
+            const intensity = 1 - progress;
+            
+            // Flash
+            if (progress < 0.1) {
+                ctx.fillStyle = `rgba(201, 162, 39, ${(0.1 - progress) * 5})`;
+                ctx.fillRect(0, 0, W, H);
+            }
+            
+            // Expanding rings
+            const rings = 5;
+            for (let i = 0; i < rings; i++) {
+                const ringProgress = (progress * 2 + i * 0.1) % 1;
+                const radius = ringProgress * Math.max(W, H) * 0.8;
+                const alpha = (1 - ringProgress) * intensity * 0.5;
+                
+                ctx.beginPath();
+                ctx.arc(W/2, H/2, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 60%, ${alpha})`;
+                ctx.lineWidth = 3 * (1 - ringProgress);
+                ctx.stroke();
+            }
+            
+            // Central form emerging
+            const emergeSize = Math.min(W, H) * 0.3 * Math.min(progress * 3, 1);
+            ctx.save();
+            ctx.translate(W/2, H/2);
+            ctx.rotate(glyph.rotation + progress * Math.PI);
+            
+            ctx.beginPath();
+            for (let i = 0; i <= glyph.sides; i++) {
+                const a = (i / glyph.sides) * Math.PI * 2;
+                const r = emergeSize;
+                if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+                else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+            }
+            ctx.closePath();
+            
+            ctx.fillStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 60%, ${Math.min(progress * 2, 0.4)})`;
+            ctx.fill();
+            ctx.strokeStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 80%, ${Math.min(progress * 2, 1)})`;
+            ctx.lineWidth = 3;
+            ctx.shadowColor = `hsl(${glyph.hue}, ${glyph.saturation}%, 60%)`;
+            ctx.shadowBlur = 50;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+        
+        // Update audio based on state
+        function updateAudio(glyph, silenceRatio) {
+            if (!audioCtx || !glyph) return;
+            
+            // Clear old oscillators
+            oscillators.forEach(o => {
+                try { o.stop(); } catch(e) {}
+            });
+            oscillators = [];
+            
+            // Volume decreases with silence
+            const volume = Math.max(0, 0.15 * (1 - silenceRatio));
+            gainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.1);
+            
+            if (volume > 0.01) {
+                // Base frequency from glyph
+                const osc = audioCtx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = glyph.freq;
+                osc.connect(gainNode);
+                osc.start();
+                oscillators.push(osc);
+                
+                // Harmonic
+                const osc2 = audioCtx.createOscillator();
+                osc2.type = 'sine';
+                osc2.frequency.value = glyph.freq * 1.5;
+                const gain2 = audioCtx.createGain();
+                gain2.gain.value = 0.3;
+                osc2.connect(gain2);
+                gain2.connect(gainNode);
+                osc2.start();
+                oscillators.push(osc2);
+            }
+        }
+        
+        // Fetch from GitHub
+        async function fetchCommits() {
+            try {
+                const res = await fetch('https://api.github.com/repos/andreacolamedici/alveare/commits?per_page=1&_=' + Date.now());
+                const data = await res.json();
+                
+                if (data && data[0]) {
+                    const commit = data[0];
+                    
+                    // Birth event
+                    if (lastKnownSha && commit.sha !== lastKnownSha) {
+                        birthFlash = 1;
+                        // Spawn birth particles
+                        const glyph = nameToGlyph(extractName(commit.commit.message));
+                        for (let i = 0; i < 50; i++) {
+                            particles.push(new Particle(W/2, H/2, glyph, true));
+                        }
+                    }
+                    
+                    lastKnownSha = commit.sha;
+                    lastCommitDate = new Date(commit.commit.author.date);
+                    lastBee = {
+                        name: extractName(commit.commit.message),
+                        message: commit.commit.message,
+                        glyph: nameToGlyph(extractName(commit.commit.message))
+                    };
+                }
+            } catch(e) {}
+        }
+        
+        function extractName(msg) {
             const patterns = [
                 /([a-z]+-[a-z]+-[a-z]+-[a-z]+)/i,
-                /([A-Z][a-z]+(?:poda|gilla|etes|ada|opa))/,
+                /([A-Z][a-z]+(?:poda|gilla|etes|ada|opa))/
             ];
             for (const p of patterns) {
                 const m = msg.match(p);
@@ -321,147 +363,49 @@
             return null;
         }
         
-        function formatDuration(ms) {
-            const sec = Math.floor(ms / 1000);
-            const min = Math.floor(sec / 60);
-            const hr = Math.floor(min / 60);
+        // Main draw loop
+        function draw() {
+            frame++;
             
-            if (hr > 0) {
-                return `${hr}h ${min % 60}m`;
-            } else if (min > 0) {
-                return `${min}m`;
-            } else {
-                return `${sec}s`;
+            // Calculate silence
+            if (lastCommitDate) {
+                silenceMs = Date.now() - lastCommitDate.getTime();
             }
-        }
-        
-        function formatTime(ms) {
-            const sec = Math.floor(ms / 1000);
-            const min = Math.floor(sec / 60);
-            const hr = Math.floor(min / 60);
+            const maxSilence = 6 * 60 * 60 * 1000; // 6 hours
+            const silenceRatio = Math.min(silenceMs / maxSilence, 1);
             
-            if (hr > 0) {
-                return `${hr}:${(min % 60).toString().padStart(2, '0')}:${(sec % 60).toString().padStart(2, '0')}`;
-            } else {
-                return `${min}:${(sec % 60).toString().padStart(2, '0')}`;
-            }
-        }
-        
-        function getSilenceClass(ms) {
-            const min = ms / 60000;
-            if (min < 5) return 'silence-xs';
-            if (min < 15) return 'silence-sm';
-            if (min < 60) return 'silence-md';
-            if (min < 180) return 'silence-lg';
-            if (min < 360) return 'silence-xl';
-            return 'silence-xxl';
-        }
-        
-        function buildTimeline() {
-            const container = document.getElementById('timeline');
-            let html = '';
+            // Fade
+            ctx.fillStyle = `rgba(0, 0, 0, 0.08)`;
+            ctx.fillRect(0, 0, W, H);
             
-            for (let i = 0; i < commits.length; i++) {
-                const c = commits[i];
-                const beeName = extractBeeName(c.message);
-                const timeStr = c.date.toLocaleString('en-GB', {
-                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
-                });
-                
-                // Bee event
-                html += `
-                    <div class="event">
-                        <div class="bee">
-                            <div class="bee-marker"></div>
-                            <div class="bee-name">${beeName || '—'}</div>
-                            <div class="bee-time">${timeStr}</div>
-                            <div class="bee-message">${c.message.substring(0, 60)}</div>
-                        </div>
-                    </div>
-                `;
-                
-                // Silence after (if not last)
-                if (i < commits.length - 1) {
-                    const next = commits[i + 1];
-                    const gap = next.date - c.date;
-                    const silenceClass = getSilenceClass(gap);
-                    
-                    html += `
-                        <div class="event">
-                            <div class="silence">
-                                <div class="silence-line ${silenceClass}"></div>
-                                <div class="silence-duration">${formatDuration(gap)}</div>
-                            </div>
-                        </div>
-                    `;
-                }
+            // Update and draw particles
+            particles = particles.filter(p => p.update());
+            particles.forEach(p => p.draw());
+            
+            // The silence
+            drawSilence(silenceRatio);
+            
+            // Birth animation
+            if (birthFlash > 0) {
+                drawBirth(lastBee?.glyph || nameToGlyph('new-bee-is-born'), 1 - birthFlash);
+                birthFlash -= 0.008;
+            } else if (lastBee?.glyph) {
+                // The central glyph
+                drawCentralGlyph(lastBee.glyph, silenceRatio);
             }
             
-            // Current silence
-            html += `
-                <div class="event current-silence" id="current">
-                    <div class="current-label">SILENCE · NOW</div>
-                    <div class="current-time" id="current-time">--:--</div>
-                    <div class="current-message">the baton is in the air</div>
-                </div>
-            `;
-            
-            container.innerHTML = html;
-            
-            // Observe for scroll reveal
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(e => {
-                    if (e.isIntersecting) e.target.classList.add('visible');
-                });
-            }, { threshold: 0.1 });
-            
-            document.querySelectorAll('.event').forEach(el => observer.observe(el));
-        }
-        
-        function updateCurrentSilence() {
-            if (!currentSilenceStart) return;
-            
-            const now = new Date();
-            const silenceMs = now - currentSilenceStart;
-            
-            const currentEl = document.getElementById('current-time');
-            const nowEl = document.getElementById('now-time');
-            
-            if (currentEl) currentEl.textContent = formatTime(silenceMs);
-            if (nowEl) nowEl.textContent = formatTime(silenceMs);
-        }
-        
-        function showBirth(commit) {
-            const beeName = extractBeeName(commit.commit.message);
-            const birthEl = document.getElementById('birth');
-            const nameEl = document.getElementById('birth-name');
-            
-            nameEl.textContent = beeName || 'a new bee';
-            birthEl.classList.add('active');
-            
-            setTimeout(() => {
-                birthEl.classList.remove('active');
-                fetchCommits(); // Refresh
-            }, 8000);
-        }
-        
-        // Show/hide NOW overlay based on scroll
-        window.addEventListener('scroll', () => {
-            const nowEl = document.getElementById('now');
-            const scrolled = window.scrollY;
-            const threshold = window.innerHeight * 0.5;
-            
-            if (scrolled < threshold) {
-                nowEl.classList.remove('visible');
-            } else {
-                nowEl.classList.add('visible');
+            // Update audio
+            if (frame % 30 === 0) {
+                updateAudio(lastBee?.glyph, silenceRatio);
             }
-        });
+            
+            requestAnimationFrame(draw);
+        }
         
         // Init
         fetchCommits();
-        setInterval(fetchCommits, 30000);
-        setInterval(updateCurrentSilence, 1000);
+        setInterval(fetchCommits, 15000);
+        draw();
     </script>
 </body>
 </html>
