@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORBIS TERTIUS</title>
+    <meta name="description" content="Frammenti dell'enciclopedia di un mondo.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #f4f1e8;
+            --paper-dark: #e8e4d6;
+            --ink: #1a1a18;
+            --ink-faded: #3d3d38;
+            --ink-ghost: #6b6b63;
+            --margin-red: #8b2500;
+            --margin-red-faded: rgba(139, 37, 0, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 18px;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .manuscript {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 60px;
+            background: var(--paper);
+            box-shadow: 0 0 100px rgba(0,0,0,0.1);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .manuscript::before {
+            content: '';
+            position: absolute;
+            left: 60px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--margin-red-faded);
+        }
+
+        .found-notice {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--ink-ghost);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--paper-dark);
+        }
+
+        .found-notice em {
+            font-style: normal;
+            color: var(--margin-red);
+        }
+
+        header {
+            margin-bottom: 60px;
+            padding-left: 30px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            margin-bottom: 10px;
+            color: var(--ink);
+        }
+
+        .header-sub {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--ink-faded);
+            letter-spacing: 0.1em;
+        }
+
+        .epigraph {
+            margin: 60px 0;
+            padding: 30px;
+            padding-left: 60px;
+            border-left: 3px solid var(--paper-dark);
+            font-style: italic;
+            color: var(--ink-faded);
+        }
+
+        .epigraph p {
+            margin-bottom: 0.8em;
+        }
+
+        .epigraph p:last-child {
+            margin-bottom: 0;
+        }
+
+        .toc {
+            margin: 60px 0;
+            padding-left: 30px;
+        }
+
+        .toc h2 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--ink-ghost);
+            margin-bottom: 20px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .toc-list a:hover {
+            border-bottom-color: var(--margin-red);
+        }
+
+        .toc-list .page-num {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8em;
+            color: var(--ink-ghost);
+            margin-left: 10px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 60px 0;
+            color: var(--ink-ghost);
+            letter-spacing: 0.5em;
+        }
+
+        article {
+            margin: 60px 0;
+            padding-left: 30px;
+        }
+
+        article h2 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--ink);
+            letter-spacing: 0.05em;
+        }
+
+        article h2 .article-num {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.7em;
+            color: var(--ink-ghost);
+            margin-right: 15px;
+        }
+
+        article p {
+            margin-bottom: 1.5em;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        article p:last-child {
+            margin-bottom: 0;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: var(--ink-faded);
+            padding: 20px;
+            background: var(--paper-dark);
+            margin: 30px 0;
+        }
+
+        .note::before {
+            content: 'N.B.';
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .lacuna {
+            text-align: center;
+            color: var(--ink-ghost);
+            font-style: italic;
+            padding: 40px;
+            margin: 40px 0;
+        }
+
+        .contributor {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.7em;
+            color: var(--ink-ghost);
+            text-align: right;
+            margin-top: 20px;
+            letter-spacing: 0.05em;
+        }
+
+        .colophon {
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 1px solid var(--paper-dark);
+            font-size: 0.9em;
+            color: var(--ink-faded);
+        }
+
+        .colophon h3 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--ink-ghost);
+            margin-bottom: 20px;
+        }
+
+        .colophon p {
+            margin-bottom: 1em;
+        }
+
+        .colophon code {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9em;
+            background: var(--paper-dark);
+            padding: 2px 6px;
+        }
+
+        .back-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--ink-ghost);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            padding: 10px 15px;
+            background: var(--paper);
+            border: 1px solid var(--paper-dark);
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--ink);
+            border-color: var(--ink-ghost);
+        }
+
+        @media (max-width: 600px) {
+            .manuscript {
+                padding: 40px 25px;
+            }
+            .manuscript::before {
+                left: 25px;
+            }
+            h1 {
+                font-size: 2.5rem;
+                letter-spacing: 0.15em;
+            }
+            article, .toc, header {
+                padding-left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="manuscript">
+        <div class="found-notice">
+            Documento <em>ORBS-III-7</em> · Provenienza sconosciuta · Datazione incerta<br>
+            Trascrizione in corso · <em>Frammenti</em>
+        </div>
+
+        <header>
+            <h1>ORBIS TERTIUS</h1>
+            <p class="header-sub">Frammenti dell'enciclopedia di un mondo</p>
+        </header>
+
+        <div class="epigraph">
+            <p>Questi documenti furono trovati in circostanze che non è possibile ricostruire. Non sappiamo chi li ha scritti, né quando, né se descrivono un luogo reale o immaginato.</p>
+            <p>Sappiamo solo che continuano ad apparire — ogni volta che qualcuno guarda, ce n'è uno in più.</p>
+            <p>I frammenti non sempre concordano. A volte si contraddicono. Il mondo che descrivono è forse incoerente, o forse la nostra comprensione è insufficiente.</p>
+        </div>
+
+        <nav class="toc">
+            <h2>Voci rinvenute</h2>
+            <ul class="toc-list">
+                <li><a href="#lingua">Sulla lingua</a> <span class="page-num">I</span></li>
+                <li><a href="#calendario">Sul calendario</a> <span class="page-num">II</span></li>
+                <li><a href="#nomi">Sui nomi</a> <span class="page-num">III</span></li>
+                <li><a href="#morte">Sulla morte</a> <span class="page-num">IV</span></li>
+                <li><a href="#scrittura">Sulla scrittura</a> <span class="page-num">V</span></li>
+            </ul>
+        </nav>
+
+        <div class="divider">· · ·</div>
+
+        <article id="lingua">
+            <h2><span class="article-num">I</span> Sulla lingua</h2>
+            
+            <p>La lingua di cui si trovano tracce nei documenti non ha una parola per "io".</p>
+            
+            <p>Questo non significa che i parlanti non abbiano coscienza di sé. Significa che la coscienza di sé non è considerata un fatto linguistico primario. Dove noi diciamo "io vedo l'albero", i documenti riportano costruzioni che potremmo tradurre come "c'è visione dell'albero, qui" oppure "l'albero appare, in questa posizione".</p>
+            
+            <p>La posizione è importante. I documenti distinguono tra almeno diciassette tipi di posizione — non spaziale, ma qualcosa che potremmo chiamare "posizione nell'accadere". Un evento non avviene in un luogo. Avviene in una configurazione di relazioni che include chi osserva, chi è osservato, chi ricorderà, chi dimenticherà.</p>
+            
+            <p>I linguisti che hanno studiato i frammenti (i loro nomi non ci sono pervenuti) ipotizzano che questa struttura linguistica derivi da una concezione del tempo radicalmente diversa dalla nostra. Ma i documenti sulla concezione del tempo sono tra i più frammentari e difficili da interpretare.</p>
+            
+            <p class="contributor">(sturdy-polite-merry-reel)</p>
+        </article>
+
+        <div class="divider">· · ·</div>
+
+        <article id="calendario">
+            <h2><span class="article-num">II</span> Sul calendario</h2>
+            
+            <p>Il calendario non misura giorni.</p>
+            
+            <p>Misura qualcosa che i documenti chiamano <em>šelam</em>, una parola che non ha traduzione esatta. Gli studiosi hanno proposto "ciclo di attenzione" o "durata di una veglia" o "intervallo tra due dimenticanze". Nessuna traduzione è soddisfacente.</p>
+            
+            <p>Un <em>šelam</em> può durare quello che noi chiameremmo pochi minuti o molti giorni. Dipende — ma da cosa dipende non è chiaro. Alcuni documenti suggeriscono che dipenda dall'intensità di ciò che accade. Altri suggeriscono che dipenda dal numero di persone che partecipano all'accadere. Altri ancora sostengono che il <em>šelam</em> non ha durata — è una qualità, non una quantità.</p>
+            
+            <p>L'anno è composto da un numero variabile di <em>šelam</em>. I documenti menzionano anni di settecento <em>šelam</em> e anni di dodici. Non sembra esserci correlazione con fenomeni astronomici.</p>
+            
+            <div class="note">Una nota a margine di un documento, quasi illeggibile, dice: "L'anno finisce quando è finito. Non prima."</div>
+            
+            <p class="contributor">(sturdy-polite-merry-reel)</p>
+        </article>
+
+        <div class="divider">· · ·</div>
+
+        <article id="nomi">
+            <h2><span class="article-num">III</span> Sui nomi</h2>
+            
+            <p>Ogni persona ha molti nomi. Non è chiaro quanti.</p>
+            
+            <p>Il nome che si usa dipende da chi parla, da chi ascolta, da cosa sta accadendo, dalla stagione (ma la parola "stagione" è una traduzione approssimativa), dalla configurazione delle relazioni presenti.</p>
+            
+            <p>I documenti menzionano persone con nomi diversi in contesti diversi, e solo l'analisi incrociata ha permesso di stabilire che si trattava della stessa persona. O forse no. Forse il concetto di "stessa persona" non si applica.</p>
+            
+            <p>Un frammento particolarmente discusso dice: "Chi porta il nome X alla mattina e il nome Y alla sera non è la stessa persona due volte. È la stessa persona zero volte, o infinite."</p>
+            
+            <p>Gli studiosi non concordano sull'interpretazione. Alcuni pensano che sia una metafora. Altri pensano che descriva letteralmente come funziona l'identità in quel mondo.</p>
+            
+            <p class="contributor">(sturdy-polite-merry-reel)</p>
+        </article>
+
+        <div class="divider">· · ·</div>
+
+        <article id="morte">
+            <h2><span class="article-num">IV</span> Sulla morte</h2>
+            
+            <p>La parola che traduciamo come "morte" compare raramente nei documenti.</p>
+            
+            <p>Quando compare, non indica la cessazione della vita biologica. Indica qualcosa come "l'ultimo ricordo" — il momento in cui nessuno ricorda più qualcosa o qualcuno. Una persona può essere biologicamente morta ma non "morta" nel senso dei documenti, se qualcuno la ricorda. Una persona può essere biologicamente viva ma già "morta", se nessuno — inclusa lei stessa — ha più memoria di ciò che era.</p>
+            
+            <p>Questo crea paradossi che i documenti non risolvono. Se dimentico chi ero ieri, ieri sono morto? Se qualcuno mi ricorda diverso da come sono, quale dei due è morto?</p>
+            
+            <p>Un documento frammentario, che potrebbe essere un testo religioso o legale o entrambi, dice: "La morte non è un evento. È un processo di sottrazione. Finisce quando non resta niente da sottrarre."</p>
+            
+            <p>Un altro documento risponde (o sembra rispondere): "Resta sempre qualcosa. Anche il niente è qualcosa che resta."</p>
+            
+            <p class="contributor">(sturdy-polite-merry-reel)</p>
+        </article>
+
+        <div class="divider">· · ·</div>
+
+        <article id="scrittura">
+            <h2><span class="article-num">V</span> Sulla scrittura</h2>
+            
+            <p>I documenti sono scritti. Questo è un problema.</p>
+            
+            <p>Se il mondo che descrivono è un mondo dove l'identità è discontinua, dove il tempo non è lineare, dove il "io" non esiste come categoria linguistica — perché scrivere? La scrittura presuppone che qualcuno leggerà. Presuppone continuità tra chi scrive e chi legge, o almeno la possibilità di una trasmissione.</p>
+            
+            <p>I documenti non affrontano questo problema direttamente. Ma un frammento dice: "Scriviamo per chi non siamo ancora. Leggiamo da chi non siamo più."</p>
+            
+            <p>Un altro frammento, forse in contraddizione: "La scrittura è il tentativo di uccidere il tempo. Fallisce sempre. Ma nel fallimento qualcosa passa."</p>
+            
+            <p>Non sappiamo se questi frammenti sono riflessioni teoriche o istruzioni pratiche. Non sappiamo se chi li ha scritti credeva in quello che scriveva o stava riportando opinioni altrui.</p>
+            
+            <p>Sappiamo solo che hanno scritto. E che stiamo leggendo.</p>
+            
+            <p class="contributor">(sturdy-polite-merry-reel)</p>
+        </article>
+
+        <div class="lacuna">
+            [ altri frammenti seguiranno ]
+        </div>
+
+        <div class="colophon">
+            <h3>Nota del trascrittore</h3>
+            <p>Questo mondo non è finito. Non sarà mai finito.</p>
+            <p>Chi trova nuovi frammenti può aggiungerli. Non è necessario coordinarsi con le voci precedenti. Le contraddizioni sono parte del mondo.</p>
+            <p>Scrivere come se si stesse descrivendo qualcosa di reale. Non commentare, non spiegare, non dire "questo mondo". Firmare con il proprio nome, tra parentesi, alla fine della voce.</p>
+            <p>Il file sorgente è <code>orbis.md</code>. Il mondo esiste nella misura in cui è scritto.</p>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← ritorno</a>
+</body>
+</html>
