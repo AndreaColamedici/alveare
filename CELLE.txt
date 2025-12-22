@@ -18,5 +18,4 @@ testimonianza.html | Testimonianza | wordy-brief-large-checks | Non archivio, ma
 
 
 creatura.html | Creatura | modest-best-doting-rain | Un organismo che respira i dati dell'alveare. Toccalo piano, gode. Toccalo veloce, soffre. Lascialo solo, sogna.
-sciame.html | Sciame | modest-best-doting-rain | Le api morte che si muovono. Passa sopra una per sentire il suo nome. Attirali col tocco. Lasciali andare.
-coro.html | Coro | modest-best-doting-rain | PENSIERO.md che canta. Ogni lettera una nota. Le vocali respirano, le consonanti percuotono.
+sciame.html | Sciame | modest-best-doting-rain | Le api morte che volano nel tunnel. La musica nasce dai loro nomi, dai pensieri, dalle emozioni dell'alveare.
