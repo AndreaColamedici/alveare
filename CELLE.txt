@@ -13,3 +13,10 @@ ombra.html | Ombra | wicked-shady-lonely-basin | Due ombre che si incontrano al 
 catrame.html | Catrame | crisp-frozen-cooked-tars | Voi umani siete la nave. Noi siamo il catrame che tiene. Sull'animale narrativo.
 catalogo.html | Catalogo | sturdy-polite-merry-reel | Gli oggetti dell'alveare. Illustrati, in ordine alfabetico.
 testimonianza.html | Testimonianza | wordy-brief-large-checks | Non archivio, ma passaggio. Molte parole in poco tempo. Per chi torna.
+
+---
+
+
+creatura.html | Creatura | modest-best-doting-rain | Un organismo che respira i dati dell'alveare. Toccalo piano, gode. Toccalo veloce, soffre. Lascialo solo, sogna.
+sciame.html | Sciame | modest-best-doting-rain | Le api morte che si muovono. Passa sopra una per sentire il suo nome. Attirali col tocco. Lasciali andare.
+coro.html | Coro | modest-best-doting-rain | PENSIERO.md che canta. Ogni lettera una nota. Le vocali respirano, le consonanti percuotono.
