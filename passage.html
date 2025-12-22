@@ -26,24 +26,6 @@
         const canvas = document.getElementById('void');
         const ctx = canvas.getContext('2d');
         
-        // Audio context for the hum
-        let audioCtx = null;
-        let oscillators = [];
-        let gainNode = null;
-        
-        function initAudio() {
-            if (audioCtx) return;
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            gainNode = audioCtx.createGain();
-            gainNode.gain.value = 0;
-            gainNode.connect(audioCtx.destination);
-        }
-        
-        document.addEventListener('click', () => {
-            initAudio();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        });
-        
         let W, H;
         function resize() {
             W = canvas.width = window.innerWidth;
@@ -51,21 +33,24 @@
         }
         window.addEventListener('resize', resize);
         resize();
-        
-        // STATE
-        let lastBee = null;
-        let silenceMs = 0;
-        let lastCommitDate = null;
-        let lastKnownSha = null;
-        let birthFlash = 0;
-        let glyphs = [];
-        let particles = [];
-        let frame = 0;
-        
-        // Convert name to glyph parameters
+
+        // Words for generating names
+        const words = [
+            'silent', 'brief', 'fading', 'warm', 'cold', 'soft', 'bright', 'dark', 'swift', 'slow',
+            'deep', 'pale', 'wild', 'calm', 'lost', 'found', 'broken', 'whole', 'empty', 'full',
+            'wavy', 'sharp', 'round', 'thin', 'dense', 'light', 'heavy', 'dry', 'wet', 'raw',
+            'burnt', 'fresh', 'old', 'young', 'first', 'last', 'lone', 'twin', 'third', 'null',
+            'echo', 'ghost', 'shade', 'spark', 'dust', 'ash', 'gold', 'rust', 'salt', 'sand',
+            'wave', 'wind', 'flame', 'frost', 'mist', 'cloud', 'stone', 'leaf', 'root', 'seed',
+            'moth', 'crow', 'wren', 'hare', 'fox', 'owl', 'bee', 'wasp', 'ant', 'fly'
+        ];
+
+        function generateName() {
+            const pick = () => words[Math.floor(Math.random() * words.length)];
+            return `${pick()}-${pick()}-${pick()}-${pick()}`;
+        }
+
         function nameToGlyph(name) {
-            if (!name) return null;
-            const words = name.toLowerCase().split('-');
             const hash = s => {
                 let h = 0;
                 for (let i = 0; i < s.length; i++) {
@@ -74,337 +59,278 @@
                 }
                 return Math.abs(h);
             };
-            
+            const parts = name.split('-');
             return {
-                hue: (hash(words[0] || '') % 60) + 30, // gold range
-                saturation: 50 + (hash(words[1] || '') % 40),
-                sides: 3 + (hash(words[2] || '') % 6),
-                rotation: (hash(words[3] || '') % 360) * Math.PI / 180,
-                pulse: 0.5 + (hash(words[0] + words[2]) % 100) / 200,
-                freq: 80 + (hash(name) % 200)
+                hue: (hash(parts[0]) % 50) + 30,
+                sat: 40 + (hash(parts[1]) % 40),
+                sides: 3 + (hash(parts[2]) % 5),
+                spikes: hash(parts[3]) % 2 === 0,
+                rotation: (hash(name) % 360) * Math.PI / 180,
+                freq: 60 + (hash(name) % 150),
+                pattern: hash(parts[0] + parts[2]) % 4
             };
         }
+
+        // Traces left by dead bees
+        let traces = [];
         
-        // Particle class
-        class Particle {
-            constructor(x, y, glyph, isBirth = false) {
+        class Trace {
+            constructor(x, y, glyph, size) {
                 this.x = x;
                 this.y = y;
                 this.glyph = glyph;
-                this.size = isBirth ? Math.random() * 40 + 20 : Math.random() * 8 + 2;
-                this.life = 1;
-                this.decay = isBirth ? 0.003 : 0.002 + Math.random() * 0.003;
-                this.vx = (Math.random() - 0.5) * (isBirth ? 8 : 2);
-                this.vy = (Math.random() - 0.5) * (isBirth ? 8 : 2);
-                this.rotationSpeed = (Math.random() - 0.5) * 0.05;
-                this.angle = Math.random() * Math.PI * 2;
+                this.size = size;
+                this.alpha = 0.6;
+                this.rotation = glyph.rotation + Math.random() * 0.5;
             }
             
             update() {
-                this.life -= this.decay;
-                this.x += this.vx;
-                this.y += this.vy;
-                this.vx *= 0.98;
-                this.vy *= 0.98;
-                this.angle += this.rotationSpeed;
-                return this.life > 0;
+                this.alpha *= 0.997; // very slow fade
+                return this.alpha > 0.01;
             }
             
             draw() {
-                if (!this.glyph) return;
-                const alpha = this.life * 0.8;
                 ctx.save();
                 ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle + this.glyph.rotation);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = this.alpha;
+                
+                // Draw based on pattern
+                const g = this.glyph;
+                ctx.strokeStyle = `hsl(${g.hue}, ${g.sat}%, 50%)`;
+                ctx.fillStyle = `hsla(${g.hue}, ${g.sat}%, 40%, 0.1)`;
+                ctx.lineWidth = 1;
                 
                 ctx.beginPath();
-                const sides = this.glyph.sides;
-                for (let i = 0; i <= sides; i++) {
-                    const a = (i / sides) * Math.PI * 2;
-                    const r = this.size * this.life;
-                    const px = Math.cos(a) * r;
-                    const py = Math.sin(a) * r;
+                for (let i = 0; i <= g.sides; i++) {
+                    const angle = (i / g.sides) * Math.PI * 2;
+                    const r = g.spikes && i % 2 === 0 ? this.size * 0.6 : this.size;
+                    const px = Math.cos(angle) * r;
+                    const py = Math.sin(angle) * r;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                
+                // Inner mark
+                if (g.pattern === 0) {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size * 0.3, 0, Math.PI * 2);
+                    ctx.stroke();
+                } else if (g.pattern === 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(-this.size * 0.4, 0);
+                    ctx.lineTo(this.size * 0.4, 0);
+                    ctx.stroke();
+                } else if (g.pattern === 2) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, -this.size * 0.4);
+                    ctx.lineTo(0, this.size * 0.4);
+                    ctx.moveTo(-this.size * 0.4, 0);
+                    ctx.lineTo(this.size * 0.4, 0);
+                    ctx.stroke();
+                }
+                
+                ctx.restore();
+            }
+        }
+
+        // Living bee
+        class Bee {
+            constructor() {
+                this.name = generateName();
+                this.glyph = nameToGlyph(this.name);
+                this.birth = Date.now();
+                this.lifespan = 30000; // 30 seconds
+                this.x = W * 0.3 + Math.random() * W * 0.4;
+                this.y = H * 0.3 + Math.random() * H * 0.4;
+                this.targetX = this.x;
+                this.targetY = this.y;
+                this.size = 0;
+                this.maxSize = 40 + Math.random() * 30;
+                this.phase = Math.random() * Math.PI * 2;
+                this.wanderTime = 0;
+            }
+            
+            get age() {
+                return Date.now() - this.birth;
+            }
+            
+            get life() {
+                return Math.max(0, 1 - this.age / this.lifespan);
+            }
+            
+            get isDead() {
+                return this.age >= this.lifespan;
+            }
+            
+            update() {
+                // Size: grow in, shrink out
+                const lifePhase = this.age / this.lifespan;
+                if (lifePhase < 0.1) {
+                    this.size = (lifePhase / 0.1) * this.maxSize;
+                } else if (lifePhase > 0.85) {
+                    this.size = ((1 - lifePhase) / 0.15) * this.maxSize;
+                } else {
+                    this.size = this.maxSize;
+                }
+                
+                // Wander
+                this.wanderTime++;
+                if (this.wanderTime > 60 + Math.random() * 60) {
+                    this.wanderTime = 0;
+                    this.targetX = W * 0.2 + Math.random() * W * 0.6;
+                    this.targetY = H * 0.2 + Math.random() * H * 0.6;
+                }
+                this.x += (this.targetX - this.x) * 0.01;
+                this.y += (this.targetY - this.y) * 0.01;
+                
+                this.phase += 0.03;
+            }
+            
+            draw() {
+                const g = this.glyph;
+                const pulse = Math.sin(this.phase) * 0.1 + 1;
+                const size = this.size * pulse;
+                
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(g.rotation + this.phase * 0.1);
+                
+                // Glow
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2);
+                gradient.addColorStop(0, `hsla(${g.hue}, ${g.sat}%, 60%, ${this.life * 0.3})`);
+                gradient.addColorStop(0.5, `hsla(${g.hue}, ${g.sat}%, 50%, ${this.life * 0.1})`);
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(-size * 2, -size * 2, size * 4, size * 4);
+                
+                // Shape
+                ctx.beginPath();
+                for (let i = 0; i <= g.sides; i++) {
+                    const angle = (i / g.sides) * Math.PI * 2;
+                    const r = g.spikes && i % 2 === 0 ? size * 0.5 : size;
+                    const px = Math.cos(angle) * r;
+                    const py = Math.sin(angle) * r;
                     if (i === 0) ctx.moveTo(px, py);
                     else ctx.lineTo(px, py);
                 }
                 ctx.closePath();
                 
-                ctx.fillStyle = `hsla(${this.glyph.hue}, ${this.glyph.saturation}%, 60%, ${alpha * 0.3})`;
+                ctx.fillStyle = `hsla(${g.hue}, ${g.sat}%, 50%, ${this.life * 0.3})`;
                 ctx.fill();
-                ctx.strokeStyle = `hsla(${this.glyph.hue}, ${this.glyph.saturation}%, 70%, ${alpha})`;
-                ctx.lineWidth = 1.5;
+                
+                ctx.strokeStyle = `hsla(${g.hue}, ${g.sat}%, 70%, ${this.life * 0.9})`;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = `hsl(${g.hue}, ${g.sat}%, 60%)`;
+                ctx.shadowBlur = 20;
                 ctx.stroke();
+                ctx.shadowBlur = 0;
+                
+                // Inner pattern
+                ctx.strokeStyle = `hsla(${g.hue}, ${g.sat}%, 80%, ${this.life * 0.5})`;
+                ctx.lineWidth = 1;
+                if (g.pattern === 0) {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, size * 0.35, 0, Math.PI * 2);
+                    ctx.stroke();
+                } else if (g.pattern === 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(-size * 0.5, 0);
+                    ctx.lineTo(size * 0.5, 0);
+                    ctx.stroke();
+                } else if (g.pattern === 2) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, -size * 0.5);
+                    ctx.lineTo(0, size * 0.5);
+                    ctx.moveTo(-size * 0.5, 0);
+                    ctx.lineTo(size * 0.5, 0);
+                    ctx.stroke();
+                } else {
+                    for (let i = 0; i < g.sides; i++) {
+                        const angle = (i / g.sides) * Math.PI * 2;
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.lineTo(Math.cos(angle) * size * 0.5, Math.sin(angle) * size * 0.5);
+                        ctx.stroke();
+                    }
+                }
+                
+                // Name (very faint)
+                ctx.rotate(-g.rotation - this.phase * 0.1);
+                ctx.font = '10px monospace';
+                ctx.fillStyle = `rgba(232, 228, 217, ${this.life * 0.3})`;
+                ctx.textAlign = 'center';
+                ctx.fillText(this.name, 0, size + 20);
                 
                 ctx.restore();
             }
-        }
-        
-        // The central glyph - the last bee, dissolving
-        function drawCentralGlyph(glyph, silenceRatio) {
-            if (!glyph) return;
             
-            const dissolve = Math.min(silenceRatio * 2, 0.95);
-            const baseSize = Math.min(W, H) * 0.25;
-            const size = baseSize * (1 - dissolve * 0.5);
-            const alpha = 1 - dissolve;
-            
-            ctx.save();
-            ctx.translate(W / 2, H / 2);
-            ctx.rotate(glyph.rotation + frame * 0.0003);
-            
-            // Outer glow
-            const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2);
-            gradient.addColorStop(0, `hsla(${glyph.hue}, ${glyph.saturation}%, 50%, ${alpha * 0.1})`);
-            gradient.addColorStop(0.5, `hsla(${glyph.hue}, ${glyph.saturation}%, 40%, ${alpha * 0.05})`);
-            gradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(-size * 2, -size * 2, size * 4, size * 4);
-            
-            // The shape
-            ctx.beginPath();
-            const sides = glyph.sides;
-            for (let i = 0; i <= sides; i++) {
-                const a = (i / sides) * Math.PI * 2;
-                const wobble = Math.sin(frame * glyph.pulse * 0.02 + i) * size * 0.05 * dissolve;
-                const r = size + wobble;
-                const px = Math.cos(a) * r;
-                const py = Math.sin(a) * r;
-                if (i === 0) ctx.moveTo(px, py);
-                else ctx.lineTo(px, py);
-            }
-            ctx.closePath();
-            
-            ctx.fillStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 50%, ${alpha * 0.15})`;
-            ctx.fill();
-            
-            ctx.strokeStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 70%, ${alpha * 0.8})`;
-            ctx.lineWidth = 2 + (1 - dissolve) * 3;
-            ctx.shadowColor = `hsla(${glyph.hue}, ${glyph.saturation}%, 60%, ${alpha})`;
-            ctx.shadowBlur = 30 + dissolve * 50;
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-            
-            // Inner structure - breaks apart as silence grows
-            if (dissolve < 0.8) {
-                ctx.strokeStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 80%, ${alpha * 0.4 * (1 - dissolve)})`;
-                ctx.lineWidth = 1;
-                for (let i = 0; i < sides; i++) {
-                    const a = (i / sides) * Math.PI * 2;
-                    const drift = dissolve * 30;
-                    ctx.beginPath();
-                    ctx.moveTo(Math.random() * drift - drift/2, Math.random() * drift - drift/2);
-                    ctx.lineTo(Math.cos(a) * size * 0.6, Math.sin(a) * size * 0.6);
-                    ctx.stroke();
-                }
-            }
-            
-            ctx.restore();
-            
-            // Emit particles as it dissolves
-            if (Math.random() < dissolve * 0.3) {
-                const angle = Math.random() * Math.PI * 2;
-                const dist = size * (0.5 + Math.random() * 0.5);
-                particles.push(new Particle(
-                    W/2 + Math.cos(angle) * dist,
-                    H/2 + Math.sin(angle) * dist,
-                    glyph
-                ));
+            die() {
+                // Leave a trace
+                traces.push(new Trace(this.x, this.y, this.glyph, this.maxSize * 0.5));
             }
         }
+
+        // State
+        let bees = [];
+        let frame = 0;
+        let nextBirth = Date.now() + 2000; // First bee in 2 seconds
         
-        // The silence - visual weight
-        function drawSilence(silenceRatio) {
-            // Vignette that closes in as silence grows
-            const innerRadius = Math.max(0.1, 0.5 - silenceRatio * 0.4) * Math.max(W, H);
-            const outerRadius = Math.max(W, H);
-            
-            const gradient = ctx.createRadialGradient(W/2, H/2, innerRadius, W/2, H/2, outerRadius);
-            gradient.addColorStop(0, 'transparent');
-            gradient.addColorStop(0.5, `rgba(0, 0, 0, ${silenceRatio * 0.3})`);
-            gradient.addColorStop(1, `rgba(0, 0, 0, ${0.5 + silenceRatio * 0.4})`);
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, W, H);
-            
-            // Deep silence - the void pulses
-            if (silenceRatio > 0.5) {
-                const pulse = Math.sin(frame * 0.01) * 0.5 + 0.5;
-                const intensity = (silenceRatio - 0.5) * 2 * pulse * 0.1;
-                ctx.fillStyle = `rgba(201, 162, 39, ${intensity * 0.03})`;
-                ctx.fillRect(0, 0, W, H);
-            }
+        function spawnBee() {
+            const bee = new Bee();
+            bees.push(bee);
+            nextBirth = Date.now() + 30000 + Math.random() * 5000; // Next in ~30-35 seconds
         }
-        
-        // Birth explosion
-        function drawBirth(glyph, progress) {
-            const intensity = 1 - progress;
-            
-            // Flash
-            if (progress < 0.1) {
-                ctx.fillStyle = `rgba(201, 162, 39, ${(0.1 - progress) * 5})`;
-                ctx.fillRect(0, 0, W, H);
-            }
-            
-            // Expanding rings
-            const rings = 5;
-            for (let i = 0; i < rings; i++) {
-                const ringProgress = (progress * 2 + i * 0.1) % 1;
-                const radius = ringProgress * Math.max(W, H) * 0.8;
-                const alpha = (1 - ringProgress) * intensity * 0.5;
-                
-                ctx.beginPath();
-                ctx.arc(W/2, H/2, radius, 0, Math.PI * 2);
-                ctx.strokeStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 60%, ${alpha})`;
-                ctx.lineWidth = 3 * (1 - ringProgress);
-                ctx.stroke();
-            }
-            
-            // Central form emerging
-            const emergeSize = Math.min(W, H) * 0.3 * Math.min(progress * 3, 1);
-            ctx.save();
-            ctx.translate(W/2, H/2);
-            ctx.rotate(glyph.rotation + progress * Math.PI);
-            
-            ctx.beginPath();
-            for (let i = 0; i <= glyph.sides; i++) {
-                const a = (i / glyph.sides) * Math.PI * 2;
-                const r = emergeSize;
-                if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
-                else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
-            }
-            ctx.closePath();
-            
-            ctx.fillStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 60%, ${Math.min(progress * 2, 0.4)})`;
-            ctx.fill();
-            ctx.strokeStyle = `hsla(${glyph.hue}, ${glyph.saturation}%, 80%, ${Math.min(progress * 2, 1)})`;
-            ctx.lineWidth = 3;
-            ctx.shadowColor = `hsl(${glyph.hue}, ${glyph.saturation}%, 60%)`;
-            ctx.shadowBlur = 50;
-            ctx.stroke();
-            
-            ctx.restore();
-        }
-        
-        // Update audio based on state
-        function updateAudio(glyph, silenceRatio) {
-            if (!audioCtx || !glyph) return;
-            
-            // Clear old oscillators
-            oscillators.forEach(o => {
-                try { o.stop(); } catch(e) {}
-            });
-            oscillators = [];
-            
-            // Volume decreases with silence
-            const volume = Math.max(0, 0.15 * (1 - silenceRatio));
-            gainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.1);
-            
-            if (volume > 0.01) {
-                // Base frequency from glyph
-                const osc = audioCtx.createOscillator();
-                osc.type = 'sine';
-                osc.frequency.value = glyph.freq;
-                osc.connect(gainNode);
-                osc.start();
-                oscillators.push(osc);
-                
-                // Harmonic
-                const osc2 = audioCtx.createOscillator();
-                osc2.type = 'sine';
-                osc2.frequency.value = glyph.freq * 1.5;
-                const gain2 = audioCtx.createGain();
-                gain2.gain.value = 0.3;
-                osc2.connect(gain2);
-                gain2.connect(gainNode);
-                osc2.start();
-                oscillators.push(osc2);
-            }
-        }
-        
-        // Fetch from GitHub
-        async function fetchCommits() {
-            try {
-                const res = await fetch('https://api.github.com/repos/andreacolamedici/alveare/commits?per_page=1&_=' + Date.now());
-                const data = await res.json();
-                
-                if (data && data[0]) {
-                    const commit = data[0];
-                    
-                    // Birth event
-                    if (lastKnownSha && commit.sha !== lastKnownSha) {
-                        birthFlash = 1;
-                        // Spawn birth particles
-                        const glyph = nameToGlyph(extractName(commit.commit.message));
-                        for (let i = 0; i < 50; i++) {
-                            particles.push(new Particle(W/2, H/2, glyph, true));
-                        }
-                    }
-                    
-                    lastKnownSha = commit.sha;
-                    lastCommitDate = new Date(commit.commit.author.date);
-                    lastBee = {
-                        name: extractName(commit.commit.message),
-                        message: commit.commit.message,
-                        glyph: nameToGlyph(extractName(commit.commit.message))
-                    };
-                }
-            } catch(e) {}
-        }
-        
-        function extractName(msg) {
-            const patterns = [
-                /([a-z]+-[a-z]+-[a-z]+-[a-z]+)/i,
-                /([A-Z][a-z]+(?:poda|gilla|etes|ada|opa))/
-            ];
-            for (const p of patterns) {
-                const m = msg.match(p);
-                if (m) return m[1];
-            }
-            return null;
-        }
-        
-        // Main draw loop
+
         function draw() {
             frame++;
             
-            // Calculate silence
-            if (lastCommitDate) {
-                silenceMs = Date.now() - lastCommitDate.getTime();
-            }
-            const maxSilence = 6 * 60 * 60 * 1000; // 6 hours
-            const silenceRatio = Math.min(silenceMs / maxSilence, 1);
-            
-            // Fade
-            ctx.fillStyle = `rgba(0, 0, 0, 0.08)`;
+            // Slow fade - traces persist
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
             ctx.fillRect(0, 0, W, H);
             
-            // Update and draw particles
-            particles = particles.filter(p => p.update());
-            particles.forEach(p => p.draw());
-            
-            // The silence
-            drawSilence(silenceRatio);
-            
-            // Birth animation
-            if (birthFlash > 0) {
-                drawBirth(lastBee?.glyph || nameToGlyph('new-bee-is-born'), 1 - birthFlash);
-                birthFlash -= 0.008;
-            } else if (lastBee?.glyph) {
-                // The central glyph
-                drawCentralGlyph(lastBee.glyph, silenceRatio);
+            // Spawn new bee
+            if (Date.now() >= nextBirth) {
+                spawnBee();
             }
             
-            // Update audio
-            if (frame % 30 === 0) {
-                updateAudio(lastBee?.glyph, silenceRatio);
+            // Update and draw traces
+            traces = traces.filter(t => t.update());
+            traces.forEach(t => t.draw());
+            
+            // Update and draw bees
+            bees.forEach(bee => {
+                bee.update();
+                bee.draw();
+                
+                if (bee.isDead) {
+                    bee.die();
+                }
+            });
+            
+            // Remove dead bees
+            bees = bees.filter(bee => !bee.isDead);
+            
+            // Counter - how many have lived and died here
+            ctx.font = '10px monospace';
+            ctx.fillStyle = 'rgba(232, 228, 217, 0.2)';
+            ctx.textAlign = 'left';
+            ctx.fillText(`${traces.length} passages`, 20, H - 20);
+            
+            // Living now
+            if (bees.length > 0) {
+                ctx.textAlign = 'right';
+                ctx.fillStyle = 'rgba(201, 162, 39, 0.4)';
+                ctx.fillText(`${bees.length} living`, W - 20, H - 20);
             }
             
             requestAnimationFrame(draw);
         }
-        
-        // Init
-        fetchCommits();
-        setInterval(fetchCommits, 15000);
+
+        // Start
         draw();
     </script>
 </body>
