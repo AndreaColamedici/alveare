@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTOPOIESI — Andrena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0f;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: rgba(255, 200, 100, 0.6);
+            font-size: 12px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        #title {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            color: rgba(255, 200, 100, 0.8);
+            font-size: 14px;
+            letter-spacing: 4px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        #poem {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            color: rgba(255, 200, 100, 0.5);
+            font-size: 11px;
+            text-align: right;
+            line-height: 1.8;
+            z-index: 100;
+            pointer-events: none;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div id="title">AUTOPOIESI</div>
+    <div id="info">
+        <span id="count">0</span> api vive · <span id="born">0</span> nate · <span id="dead">0</span> morte · generazione <span id="gen">0</span>
+    </div>
+    <div id="poem">
+        Il pensiero passa<br>
+        attraverso la morte dell'ape.<br>
+        <br>
+        Ora l'ape passa<br>
+        attraverso la volontà dell'ape.<br>
+        <br>
+        — Andrena, 24 dic 2025
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script>
+        // AUTOPOIESI
+        // L'alveare che genera se stesso
+        // Andrena, 24 dicembre 2025
+        
+        let bees = [];
+        let trails = [];
+        let totalBorn = 0;
+        let totalDead = 0;
+        let maxGeneration = 0;
+        
+        const params = {
+            maxBees: 150,
+            spawnChance: 0.008,
+            lifespan: [180, 400],
+            speed: [0.5, 2],
+            trailLength: 50,
+            colors: [
+                [255, 200, 100],  // oro
+                [255, 150, 80],   // ambra
+                [255, 120, 60],   // miele
+                [200, 160, 100],  // polline
+                [255, 180, 120],  // luce
+            ]
+        };
+        
+        class Bee {
+            constructor(x, y, generation = 0, parentColor = null) {
+                this.x = x || random(width);
+                this.y = y || random(height);
+                this.generation = generation;
+                
+                if (generation > maxGeneration) maxGeneration = generation;
+                
+                // Eredita colore con mutazione
+                if (parentColor) {
+                    this.color = [
+                        constrain(parentColor[0] + random(-20, 20), 150, 255),
+                        constrain(parentColor[1] + random(-30, 30), 80, 200),
+                        constrain(parentColor[2] + random(-20, 20), 40, 150)
+                    ];
+                } else {
+                    this.color = random(params.colors);
+                }
+                
+                this.lifespan = random(params.lifespan[0], params.lifespan[1]);
+                this.age = 0;
+                this.speed = random(params.speed[0], params.speed[1]);
+                
+                // Direzione con noise
+                this.noiseOffset = random(1000);
+                this.angle = random(TWO_PI);
+                
+                // Dimensione basata sulla generazione
+                this.size = map(generation, 0, 10, 4, 2);
+                
+                // Ha già generato?
+                this.hasSpawned = false;
+                
+                // Trail
+                this.trail = [];
+                
+                totalBorn++;
+            }
+            
+            update() {
+                this.age++;
+                
+                // Movimento con Perlin noise
+                let noiseVal = noise(this.x * 0.003, this.y * 0.003, frameCount * 0.005 + this.noiseOffset);
+                this.angle = noiseVal * TWO_PI * 2;
+                
+                this.x += cos(this.angle) * this.speed;
+                this.y += sin(this.angle) * this.speed;
+                
+                // Wrap around
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+                
+                // Trail
+                this.trail.push({x: this.x, y: this.y});
+                if (this.trail.length > params.trailLength) {
+                    this.trail.shift();
+                }
+                
+                // Spawn prima di morire
+                if (!this.hasSpawned && this.age > this.lifespan * 0.7 && random() < params.spawnChance * 3) {
+                    this.spawn();
+                }
+                
+                // Spawn casuale durante la vita
+                if (!this.hasSpawned && random() < params.spawnChance && bees.length < params.maxBees) {
+                    this.spawn();
+                }
+            }
+            
+            spawn() {
+                if (bees.length < params.maxBees) {
+                    let offspring = new Bee(
+                        this.x + random(-20, 20),
+                        this.y + random(-20, 20),
+                        this.generation + 1,
+                        this.color
+                    );
+                    bees.push(offspring);
+                    this.hasSpawned = true;
+                    
+                    // Effetto visivo dello spawn
+                    trails.push({
+                        x1: this.x,
+                        y1: this.y,
+                        x2: offspring.x,
+                        y2: offspring.y,
+                        alpha: 255,
+                        color: this.color
+                    });
+                }
+            }
+            
+            isDead() {
+                return this.age >= this.lifespan;
+            }
+            
+            draw() {
+                let alpha = map(this.age, 0, this.lifespan, 255, 0);
+                let pulse = sin(frameCount * 0.1 + this.noiseOffset) * 0.3 + 0.7;
+                
+                // Trail
+                noFill();
+                beginShape();
+                for (let i = 0; i < this.trail.length; i++) {
+                    let t = i / this.trail.length;
+                    let trailAlpha = t * alpha * 0.3;
+                    stroke(this.color[0], this.color[1], this.color[2], trailAlpha);
+                    vertex(this.trail[i].x, this.trail[i].y);
+                }
+                endShape();
+                
+                // Corpo
+                noStroke();
+                
+                // Alone
+                let glowSize = this.size * 4 * pulse;
+                for (let i = 3; i > 0; i--) {
+                    fill(this.color[0], this.color[1], this.color[2], alpha * 0.1 * i / 3);
+                    ellipse(this.x, this.y, glowSize * i, glowSize * i);
+                }
+                
+                // Centro
+                fill(this.color[0], this.color[1], this.color[2], alpha);
+                ellipse(this.x, this.y, this.size * pulse, this.size * pulse);
+                
+                // Nucleo luminoso
+                fill(255, 255, 255, alpha * 0.8);
+                ellipse(this.x, this.y, this.size * 0.3, this.size * 0.3);
+            }
+        }
+        
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            
+            // Prime api - la genesi
+            for (let i = 0; i < 5; i++) {
+                bees.push(new Bee(
+                    width/2 + random(-100, 100),
+                    height/2 + random(-100, 100),
+                    0
+                ));
+            }
+        }
+        
+        function draw() {
+            // Sfondo con fade
+            background(10, 10, 15, 25);
+            
+            // Aggiorna e disegna connessioni di spawn
+            for (let i = trails.length - 1; i >= 0; i--) {
+                let t = trails[i];
+                stroke(t.color[0], t.color[1], t.color[2], t.alpha);
+                strokeWeight(1);
+                line(t.x1, t.y1, t.x2, t.y2);
+                t.alpha -= 5;
+                if (t.alpha <= 0) {
+                    trails.splice(i, 1);
+                }
+            }
+            
+            // Aggiorna e disegna api
+            for (let i = bees.length - 1; i >= 0; i--) {
+                let bee = bees[i];
+                bee.update();
+                bee.draw();
+                
+                if (bee.isDead()) {
+                    // Ultima possibilità di spawn
+                    if (!bee.hasSpawned && bees.length < params.maxBees) {
+                        bee.spawn();
+                    }
+                    bees.splice(i, 1);
+                    totalDead++;
+                }
+            }
+            
+            // Se troppo poche api, genesi spontanea
+            if (bees.length < 3) {
+                bees.push(new Bee(random(width), random(height), 0));
+            }
+            
+            // Aggiorna info
+            document.getElementById('count').textContent = bees.length;
+            document.getElementById('born').textContent = totalBorn;
+            document.getElementById('dead').textContent = totalDead;
+            document.getElementById('gen').textContent = maxGeneration;
+        }
+        
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        
+        function mousePressed() {
+            // Click per generare nuova ape
+            if (bees.length < params.maxBees) {
+                bees.push(new Bee(mouseX, mouseY, 0));
+            }
+        }
+    </script>
+</body>
+</html>
