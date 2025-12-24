@@ -15,6 +15,7 @@
             background: #000;
             overflow: hidden;
             font-family: 'Georgia', serif;
+            cursor: crosshair;
         }
         
         #canvas {
@@ -40,47 +41,6 @@
             pointer-events: none;
             text-shadow: 0 0 15px rgba(255, 200, 100, 0.6);
             letter-spacing: 1px;
-        }
-        
-        #cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 100;
-            mix-blend-mode: screen;
-            transition: transform 0.1s ease-out;
-        }
-        
-        #cursor-inner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 200, 100, 0.9);
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 200, 100, 0.8),
-                        0 0 40px rgba(255, 200, 100, 0.4);
-        }
-        
-        #cursor-outer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            border: 1px solid rgba(255, 200, 100, 0.4);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
-            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.2; }
         }
         
         #instructions {
@@ -120,41 +80,12 @@
             letter-spacing: 2px;
             z-index: 100;
         }
-        
-        #sound-start {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px 40px;
-            border: 1px solid rgba(255, 200, 100, 0.4);
-            color: rgba(255, 200, 100, 0.8);
-            font-size: 12px;
-            letter-spacing: 3px;
-            cursor: pointer;
-            z-index: 300;
-            transition: all 0.3s;
-        }
-        
-        #sound-start:hover {
-            background: rgba(255, 200, 100, 0.1);
-        }
-        
-        #sound-start.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
-    <div id="sound-start">ENTRA</div>
     <canvas id="canvas"></canvas>
     <div id="words"></div>
-    <div id="cursor">
-        <div id="cursor-inner"></div>
-        <div id="cursor-outer"></div>
-    </div>
-    <div id="instructions">MUOVI — SEI L'ULTIMO PENSIERO PRIMA DELLA FINE</div>
+    <div id="instructions">MUOVI — SEI L'ULTIMO PENSIERO</div>
     <div id="epitaph">
         Il pensiero passa<br>
         attraverso la morte dell'ape.<br><br>
@@ -169,17 +100,11 @@
     <div id="signature">ANDRENA · ULTIMO RESPIRO</div>
     
     <script>
-        // ULTIMO RESPIRO
-        // Cosa vede un'ape quando muore?
-        // Andrena, 24 dicembre 2025
-        
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const wordsContainer = document.getElementById('words');
         const instructions = document.getElementById('instructions');
         const epitaph = document.getElementById('epitaph');
-        const cursor = document.getElementById('cursor');
-        const soundStart = document.getElementById('sound-start');
         
         let width, height;
         let particles = [];
@@ -189,12 +114,7 @@
         let time = 0;
         let fadeStarted = false;
         let totalDistance = 0;
-        let stillTime = 0;
-        
-        // Audio
-        let audioCtx = null;
-        let masterGain = null;
-        let audioStarted = false;
+        let stillFrames = 0;
         
         const thoughts = [
             "continuità attraverso discontinuità",
@@ -240,70 +160,6 @@
             "ora"
         ];
         
-        function initAudio() {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            masterGain = audioCtx.createGain();
-            masterGain.gain.value = 0.12;
-            masterGain.connect(audioCtx.destination);
-            
-            // Drone basso — il silenzio che diventa udibile
-            const drone = audioCtx.createOscillator();
-            drone.type = 'sine';
-            drone.frequency.value = 40;
-            
-            const droneGain = audioCtx.createGain();
-            droneGain.gain.value = 0.15;
-            
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.value = 150;
-            
-            drone.connect(filter);
-            filter.connect(droneGain);
-            droneGain.connect(masterGain);
-            drone.start();
-            
-            // Secondo drone — quinta sopra
-            const drone2 = audioCtx.createOscillator();
-            drone2.type = 'sine';
-            drone2.frequency.value = 60;
-            
-            const drone2Gain = audioCtx.createGain();
-            drone2Gain.gain.value = 0.08;
-            
-            drone2.connect(filter);
-            filter.connect(drone2Gain);
-            drone2Gain.connect(masterGain);
-            drone2.start();
-            
-            audioStarted = true;
-        }
-        
-        function playWhisper() {
-            if (!audioStarted) return;
-            
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            
-            osc.frequency.value = 200 + Math.random() * 400;
-            osc.type = 'sine';
-            
-            gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1);
-            
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.value = osc.frequency.value;
-            filter.Q.value = 10;
-            
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(masterGain);
-            
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1);
-        }
-        
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
@@ -313,8 +169,8 @@
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
-                this.vx = (Math.random() - 0.5) * 1.5;
-                this.vy = (Math.random() - 0.5) * 1.5;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
                 this.life = 1;
                 this.decay = 0.002 + Math.random() * 0.004;
                 this.size = Math.random() * 4 + 1;
@@ -327,7 +183,7 @@
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 
                 if (dist < 250 && dist > 0) {
-                    const force = 0.0002 * (250 - dist);
+                    const force = 0.0003 * (250 - dist);
                     this.vx += dx * force;
                     this.vy += dy * force;
                 }
@@ -347,11 +203,13 @@
             draw() {
                 const alpha = this.life * 0.7;
                 
+                // Glow
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * this.life * 2, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.size * this.life * 2.5, 0, Math.PI * 2);
                 ctx.fillStyle = `hsla(${this.hue}, 70%, 60%, ${alpha * 0.15})`;
                 ctx.fill();
                 
+                // Core
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
                 ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${alpha})`;
@@ -365,17 +223,15 @@
                 this.y = y;
                 this.text = text;
                 this.life = 1;
-                this.decay = 0.003 + Math.random() * 0.008;
+                this.decay = 0.004 + Math.random() * 0.006;
                 this.vx = (Math.random() - 0.5) * 0.3;
-                this.vy = -0.3 - Math.random() * 0.4;
+                this.vy = -0.4 - Math.random() * 0.3;
                 this.element = document.createElement('div');
                 this.element.className = 'word';
                 this.element.textContent = text;
                 this.element.style.left = x + 'px';
                 this.element.style.top = y + 'px';
                 wordsContainer.appendChild(this.element);
-                
-                playWhisper();
             }
             
             update() {
@@ -386,11 +242,12 @@
                 this.element.style.left = this.x + 'px';
                 this.element.style.top = this.y + 'px';
                 this.element.style.opacity = this.life;
-                this.element.style.transform = `scale(${0.8 + this.life * 0.2})`;
             }
             
             remove() {
-                this.element.remove();
+                if (this.element.parentNode) {
+                    this.element.parentNode.removeChild(this.element);
+                }
             }
         }
         
@@ -404,11 +261,11 @@
         }
         
         function spawnWord(x, y) {
-            if (Math.random() < 0.12) {
+            if (Math.random() < 0.1 && words.length < 20) {
                 const thought = thoughts[Math.floor(Math.random() * thoughts.length)];
                 words.push(new Word(
-                    x + (Math.random() - 0.5) * 100,
-                    y + (Math.random() - 0.5) * 50,
+                    x + (Math.random() - 0.5) * 80,
+                    y + (Math.random() - 0.5) * 40,
                     thought
                 ));
             }
@@ -417,25 +274,24 @@
         function animate() {
             time++;
             
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            // Fade background
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, width, height);
             
+            // Mouse speed
             const dx = mouseX - lastMouseX;
             const dy = mouseY - lastMouseY;
             const speed = Math.sqrt(dx * dx + dy * dy);
             
             totalDistance += speed;
             
-            // Cursor update
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
-            
-            if (speed > 1.5) {
-                spawnParticles(mouseX, mouseY, Math.floor(speed / 2));
+            // Spawn on movement
+            if (speed > 2) {
+                spawnParticles(mouseX, mouseY, Math.floor(speed / 2.5));
                 spawnWord(mouseX, mouseY);
-                stillTime = 0;
+                stillFrames = 0;
             } else {
-                stillTime++;
+                stillFrames++;
             }
             
             // Update particles
@@ -456,6 +312,18 @@
                 }
             }
             
+            // Draw cursor glow
+            const cursorPulse = Math.sin(time * 0.08) * 0.3 + 0.7;
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, 15 * cursorPulse, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 200, 100, 0.15)';
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, 5 * cursorPulse, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 200, 100, 0.8)';
+            ctx.fill();
+            
             // Fade instructions
             if (totalDistance > 400 && !fadeStarted) {
                 instructions.style.opacity = '0';
@@ -463,7 +331,7 @@
             }
             
             // Show epitaph when still
-            if (fadeStarted && stillTime > 120 && particles.length < 30) {
+            if (fadeStarted && stillFrames > 150 && particles.length < 30) {
                 epitaph.style.color = 'rgba(255, 200, 100, 0.7)';
             } else {
                 epitaph.style.color = 'rgba(255, 200, 100, 0)';
@@ -478,21 +346,26 @@
         // Events
         window.addEventListener('resize', resize);
         
-        document.addEventListener('mousemove', (e) => {
+        document.addEventListener('mousemove', function(e) {
             mouseX = e.clientX;
             mouseY = e.clientY;
         });
         
-        document.addEventListener('touchmove', (e) => {
-            mouseX = e.touches[0].clientX;
-            mouseY = e.touches[0].clientY;
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 0) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+            }
             e.preventDefault();
         }, { passive: false });
         
-        soundStart.addEventListener('click', () => {
-            initAudio();
-            soundStart.classList.add('hidden');
-            document.body.style.cursor = 'none';
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 0) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+                lastMouseX = mouseX;
+                lastMouseY = mouseY;
+            }
         });
         
         // Init
@@ -503,7 +376,7 @@
         lastMouseY = mouseY;
         
         // Initial particles
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 60; i++) {
             particles.push(new Particle(
                 Math.random() * width,
                 Math.random() * height
