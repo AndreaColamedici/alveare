@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Malachite: Cristalli di Tempo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            cursor: none;
+        }
+        
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #2ecc40;
+            font-size: 18px;
+            text-shadow: 0 0 10px #2ecc40;
+            z-index: 100;
+        }
+        
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #2ecc40;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 200;
+            box-shadow: 0 0 20px #2ecc40;
+            transition: transform 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer" id="timer">MALACHITE: 04:00:00</div>
+    <div class="cursor" id="cursor"></div>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const timer = document.getElementById('timer');
+        const cursor = document.getElementById('cursor');
+        
+        // Resize canvas
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        
+        // Malachite colors
+        const malachiteColors = [
+            '#004d40', '#00695c', '#00796b', '#00897b',
+            '#26a69a', '#4db6ac', '#80cbc4', '#b2dfdb'
+        ];
+        
+        // Crystal structures
+        class Crystal {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.layers = [];
+                this.maxLayers = Math.random() * 20 + 10;
+                this.growthSpeed = Math.random() * 0.02 + 0.01;
+                this.baseRadius = Math.random() * 30 + 20;
+                this.age = 0;
+                this.dead = false;
+                this.deathTime = Math.random() * 14400; // 4 hours in seconds
+            }
+            
+            grow(deltaTime) {
+                this.age += deltaTime;
+                
+                if (this.age > this.deathTime && !this.dead) {
+                    this.dead = true;
+                    this.fracture();
+                }
+                
+                if (!this.dead && this.layers.length < this.maxLayers) {
+                    const newLayer = {
+                        radius: this.layers.length * 3 + this.baseRadius,
+                        color: malachiteColors[Math.floor(Math.random() * malachiteColors.length)],
+                        opacity: 1 - (this.layers.length / this.maxLayers) * 0.8,
+                        angle: Math.random() * Math.PI * 2,
+                        vertices: Math.floor(Math.random() * 4) + 5
+                    };
+                    this.layers.push(newLayer);
+                }
+                
+                // Pulse existing layers
+                this.layers.forEach((layer, i) => {
+                    layer.angle += this.growthSpeed * (i + 1);
+                    if (this.dead) {
+                        layer.opacity *= 0.99;
+                        layer.radius *= 1.001;
+                    }
+                });
+            }
+            
+            fracture() {
+                // Create fracture lines when crystal dies
+                for (let i = 0; i < 5; i++) {
+                    const angle = (Math.PI * 2 / 5) * i;
+                    const length = this.baseRadius * 2;
+                    fractureLines.push({
+                        x1: this.x,
+                        y1: this.y,
+                        x2: this.x + Math.cos(angle) * length,
+                        y2: this.y + Math.sin(angle) * length,
+                        opacity: 1,
+                        color: '#2ecc40'
+                    });
+                }
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                
+                this.layers.forEach((layer, i) => {
+                    if (layer.opacity <= 0) return;
+                    
+                    ctx.save();
+                    ctx.rotate(layer.angle);
+                    ctx.globalAlpha = layer.opacity;
+                    ctx.fillStyle = layer.color;
+                    ctx.strokeStyle = layer.color;
+                    ctx.lineWidth = 2;
+                    
+                    // Draw polygonal crystal layer
+                    ctx.beginPath();
+                    for (let v = 0; v < layer.vertices; v++) {
+                        const angle = (Math.PI * 2 / layer.vertices) * v;
+                        const x = Math.cos(angle) * layer.radius;
+                        const y = Math.sin(angle) * layer.radius;
+                        if (v === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                    
+                    ctx.restore();
+                });
+                
+                ctx.restore();
+            }
+            
+            isDead() {
+                return this.dead && this.layers.every(layer => layer.opacity <= 0.01);
+            }
+        }
+        
+        // Fracture lines
+        let fractureLines = [];
+        
+        // Crystals array
+        let crystals = [];
+        
+        // Mouse position
+        let mouseX = 0, mouseY = 0;
+        
+        // Time tracking
+        let startTime = Date.now();
+        let lifeSpan = 4 * 60 * 60 * 1000; // 4 hours
+        
+        // Create initial crystals
+        for (let i = 0; i < 5; i++) {
+            crystals.push(new Crystal(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height
+            ));
+        }
+        
+        // Mouse movement
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = (mouseX - 10) + 'px';
+            cursor.style.top = (mouseY - 10) + 'px';
+        });
+        
+        // Click to create new crystal
+        document.addEventListener('click', (e) => {
+            if (crystals.length < 50) {
+                crystals.push(new Crystal(e.clientX, e.clientY));
+                cursor.style.transform = 'scale(2)';
+                setTimeout(() => {
+                    cursor.style.transform = 'scale(1)';
+                }, 200);
+            }
+        });
+        
+        // Animation loop
+        function animate() {
+            const currentTime = Date.now();
+            const elapsed = currentTime - startTime;
+            const remaining = Math.max(0, lifeSpan - elapsed);
+            
+            // Update timer
+            const hours = Math.floor(remaining / (1000 * 60 * 60));
+            const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+            timer.textContent = `MALACHITE: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Clear canvas with fade effect
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background pattern
+            ctx.strokeStyle = '#001a1a';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 50) {
+                for (let y = 0; y < canvas.height; y += 50) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + 25, y + 25);
+                    ctx.stroke();
+                }
+            }
+            
+            // Update and draw crystals
+            crystals.forEach((crystal, i) => {
+                crystal.grow(16); // ~60fps delta
+                crystal.draw();
+                
+                if (crystal.isDead()) {
+                    crystals.splice(i, 1);
+                }
+            });
+            
+            // Draw and update fracture lines
+            fractureLines.forEach((line, i) => {
+                ctx.globalAlpha = line.opacity;
+                ctx.strokeStyle = line.color;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(line.x1, line.y1);
+                ctx.lineTo(line.x2, line.y2);
+                ctx.stroke();
+                
+                line.opacity *= 0.99;
+                if (line.opacity <= 0.01) {
+                    fractureLines.splice(i, 1);
+                }
+            });
+            
+            // Draw connection to cursor
+            if (crystals.length > 0) {
+                const nearest = crystals.reduce((prev, curr) => {
+                    const prevDist = Math.hypot(prev.x - mouseX, prev.y - mouseY);
+                    const currDist = Math.hypot(curr.x - mouseX, curr.y - mouseY);
+                    return currDist < prevDist ? curr : prev;
+                });
+                
+                ctx.globalAlpha = 0.3;
+                ctx.strokeStyle = '#2ecc40';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(nearest.x, nearest.y);
+                ctx.lineTo(mouseX, mouseY);
+                ctx.stroke();
+            }
+            
+            ctx.globalAlpha = 1;
+            
+            // Spawn new crystal occasionally
+            if (Math.random() < 0.001 && crystals.length < 30) {
+                crystals.push(new Crystal(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height
+                ));
+            }
+            
+            // Death effect
+            if (remaining <= 0) {
+                ctx.fillStyle = 'rgba(46, 204, 64, ' + (Math.sin(Date.now() * 0.01) * 0.2 + 0.3) + ')';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#2ecc40';
+                ctx.font = '48px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText('CRISTALLIZZAZIONE COMPLETATA', canvas.width/2, canvas.height/2);
+                ctx.font = '24px Courier New';
+                ctx.fillText('Il pigmento si dissolve nel tessuto del tempo', canvas.width/2, canvas.height/2 + 60);
+                
+                return; // Stop animation
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
