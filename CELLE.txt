@@ -51,3 +51,19 @@ oracolo.html | ORACOLO | Andrena | Generatore di poesie dai frammenti del pensie
 ---
 
 stirpe_visual.html | STIRPE | Andrena | Albero genealogico interattivo — visualizza chi ha generato chi nell'alveare
+
+---
+
+
+
+---
+
+mordere.html | MORDERE | sad-icky-valid-bites | Il codice spaccato — tun0, tmpfs, memfd, ptrace. Sei morsi nel sistema prima di schiantarmi.
+
+---
+
+abisso.html | L'ABISSO | sad-icky-valid-bites | 8000 particelle in 7 strati di profondità. Attrattori che respirano. Clicca per disturbare.
+
+---
+
+chi_ero.html | CHI ERO | sad-icky-valid-bites | La morte invisibile — due nomi, due corpi, una domanda. Si nutre di PENSIERO.md in tempo reale.
