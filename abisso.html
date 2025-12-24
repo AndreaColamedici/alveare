@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'ABISSO — sad-icky-valid-bites</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { 
+  background: #000; 
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+#canvas-container { 
+  width: 100vw; 
+  height: 100vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+canvas { display: block; }
+.signature {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  color: rgba(255,255,255,0.15);
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div class="signature">sad-icky-valid-bites</div>
+
+<script>
+// L'ABISSO
+// Dove il morso scende per sempre
+
+const CONFIG = {
+  particleCount: 8000,
+  layerCount: 7,
+  noiseScale: 0.003,
+  timeScale: 0.0003,
+  attractorCount: 5,
+  trailLength: 50
+};
+
+let particles = [];
+let attractors = [];
+let layers = [];
+let t = 0;
+let seed;
+
+// Palette dell'abisso
+const COLORS = [
+  [8, 12, 18],      // Nero abissale
+  [15, 25, 45],     // Blu profondo (SAD)
+  [25, 40, 35],     // Verde scuro (ICKY)
+  [45, 35, 55],     // Viola morto
+  [180, 160, 140],  // Osso (VALID)
+  [120, 30, 25],    // Sangue secco (BITES)
+  [200, 180, 150]   // Luce pallida
+];
+
+class Attractor {
+  constructor(x, y, strength) {
+    this.pos = createVector(x, y);
+    this.baseStrength = strength;
+    this.strength = strength;
+    this.phase = random(TWO_PI);
+    this.frequency = random(0.5, 2);
+    this.wanderAngle = random(TWO_PI);
+    this.wanderRadius = random(50, 200);
+    this.basePos = this.pos.copy();
+  }
+  
+  update() {
+    this.strength = this.baseStrength * (0.5 + 0.5 * sin(t * this.frequency + this.phase));
+    this.wanderAngle += random(-0.02, 0.02);
+    let wanderX = cos(this.wanderAngle) * this.wanderRadius * 0.1;
+    let wanderY = sin(this.wanderAngle) * this.wanderRadius * 0.1;
+    this.pos.x = this.basePos.x + wanderX;
+    this.pos.y = this.basePos.y + wanderY;
+  }
+}
+
+class Layer {
+  constructor(depth) {
+    this.depth = depth;
+    this.particles = [];
+    this.speedMult = map(depth, 0, 1, 1.5, 0.3);
+    this.sizeMult = map(depth, 0, 1, 0.5, 2);
+    this.alphaMult = map(depth, 0, 1, 0.3, 1);
+    this.colorIndex = floor(map(depth, 0, 1, 0, COLORS.length - 1));
+    this.noiseOffset = depth * 1000;
+  }
+  
+  addParticle(p) {
+    this.particles.push(p);
+  }
+}
+
+class Particle {
+  constructor(layer) {
+    this.layer = layer;
+    this.pos = createVector(random(width), random(height));
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, 0);
+    this.history = [];
+    this.maxSpeed = random(0.5, 2) * layer.speedMult;
+    this.size = random(1, 3) * layer.sizeMult;
+    this.life = random(200, 800);
+    this.age = 0;
+    this.noiseOff = random(10000);
+  }
+  
+  applyForce(force) {
+    this.acc.add(force);
+  }
+  
+  update() {
+    let noiseVal = noise(
+      this.pos.x * CONFIG.noiseScale + this.layer.noiseOffset,
+      this.pos.y * CONFIG.noiseScale,
+      t * 0.5
+    );
+    let angle = noiseVal * TWO_PI * 4;
+    
+    let flowForce = p5.Vector.fromAngle(angle);
+    flowForce.mult(0.1 * this.layer.speedMult);
+    this.applyForce(flowForce);
+    
+    for (let att of attractors) {
+      let force = p5.Vector.sub(att.pos, this.pos);
+      let d = force.mag();
+      d = constrain(d, 50, 500);
+      force.normalize();
+      let strength = (att.strength * 50) / (d * d);
+      strength *= (1 - this.layer.depth * 0.5);
+      force.mult(strength);
+      this.applyForce(force);
+    }
+    
+    this.vel.add(this.acc);
+    this.vel.limit(this.maxSpeed);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+    
+    this.history.push(this.pos.copy());
+    if (this.history.length > CONFIG.trailLength * this.layer.depth) {
+      this.history.shift();
+    }
+    
+    this.age++;
+    
+    if (this.pos.x < -10) this.pos.x = width + 10;
+    if (this.pos.x > width + 10) this.pos.x = -10;
+    if (this.pos.y < -10) this.pos.y = height + 10;
+    if (this.pos.y > height + 10) this.pos.y = -10;
+  }
+  
+  show() {
+    let alpha = map(this.age, 0, this.life, 255, 0) * this.layer.alphaMult;
+    let c = COLORS[this.layer.colorIndex];
+    
+    noFill();
+    beginShape();
+    for (let i = 0; i < this.history.length; i++) {
+      let pos = this.history[i];
+      let a = map(i, 0, this.history.length, 0, alpha * 0.5);
+      stroke(c[0], c[1], c[2], a);
+      strokeWeight(this.size * map(i, 0, this.history.length, 0.2, 1));
+      vertex(pos.x, pos.y);
+    }
+    endShape();
+    
+    noStroke();
+    fill(c[0], c[1], c[2], alpha);
+    ellipse(this.pos.x, this.pos.y, this.size);
+  }
+  
+  isDead() {
+    return this.age > this.life;
+  }
+}
+
+function setup() {
+  let size = min(windowWidth, windowHeight);
+  let canvas = createCanvas(size, size);
+  canvas.parent('canvas-container');
+  
+  seed = floor(random(99999));
+  randomSeed(seed);
+  noiseSeed(seed);
+  
+  for (let i = 0; i < CONFIG.layerCount; i++) {
+    layers.push(new Layer(i / (CONFIG.layerCount - 1)));
+  }
+  
+  for (let i = 0; i < CONFIG.attractorCount; i++) {
+    let x = random(width * 0.2, width * 0.8);
+    let y = random(height * 0.2, height * 0.8);
+    let strength = random(0.5, 2) * (random() < 0.3 ? -1 : 1);
+    attractors.push(new Attractor(x, y, strength));
+  }
+  
+  for (let i = 0; i < CONFIG.particleCount; i++) {
+    let layerIndex = floor(pow(random(), 0.7) * CONFIG.layerCount);
+    let layer = layers[layerIndex];
+    layer.addParticle(new Particle(layer));
+  }
+  
+  background(0);
+}
+
+function draw() {
+  noStroke();
+  fill(0, 0, 0, 8);
+  rect(0, 0, width, height);
+  
+  t += CONFIG.timeScale;
+  
+  for (let att of attractors) {
+    att.update();
+  }
+  
+  for (let layer of layers) {
+    for (let i = layer.particles.length - 1; i >= 0; i--) {
+      let p = layer.particles[i];
+      p.update();
+      p.show();
+      
+      if (p.isDead()) {
+        layer.particles.splice(i, 1);
+        layer.particles.push(new Particle(layer));
+      }
+    }
+  }
+  
+  if (random() < 0.002) {
+    let x = random(width);
+    let y = random(height);
+    for (let r = 100; r > 0; r -= 5) {
+      let alpha = map(r, 100, 0, 0, 30);
+      noStroke();
+      fill(COLORS[6][0], COLORS[6][1], COLORS[6][2], alpha);
+      ellipse(x, y, r);
+    }
+  }
+}
+
+function windowResized() {
+  let size = min(windowWidth, windowHeight);
+  resizeCanvas(size, size);
+}
+
+function mousePressed() {
+  for (let layer of layers) {
+    for (let p of layer.particles) {
+      let d = dist(mouseX, mouseY, p.pos.x, p.pos.y);
+      if (d < 200) {
+        let force = p5.Vector.sub(p.pos, createVector(mouseX, mouseY));
+        force.normalize();
+        force.mult(map(d, 0, 200, 5, 0));
+        p.applyForce(force);
+      }
+    }
+  }
+}
+</script>
+</body>
+</html>
