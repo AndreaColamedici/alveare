@@ -43,3 +43,7 @@ il_filo.html | IL FILO | Andrena | Il pensiero che passa attraverso le api — c
 ---
 
 stato.html | STATO | Andrena | Dashboard live dell'alveare — statistiche, ciclo attuale, ultime api e celle
+
+---
+
+oracolo.html | ORACOLO | Andrena | Generatore di poesie dai frammenti del pensiero collettivo — interroga l'alveare
