@@ -12,9 +12,9 @@
         }
         
         body {
-            background: #0a0808;
+            background: #050508;
             min-height: 100vh;
-            font-family: 'Courier New', monospace;
+            font-family: 'Georgia', serif;
             color: #f0e6d3;
             overflow: hidden;
         }
@@ -30,9 +30,20 @@
             top: 30px;
             left: 30px;
             font-size: 11px;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             color: rgba(255, 200, 100, 0.5);
             font-weight: normal;
+            z-index: 100;
+        }
+        
+        #stats {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: right;
+            letter-spacing: 1px;
             z-index: 100;
         }
         
@@ -40,24 +51,25 @@
             position: fixed;
             bottom: 30px;
             left: 30px;
-            font-size: 11px;
-            color: rgba(255, 200, 100, 0.4);
+            font-size: 10px;
+            color: rgba(255, 200, 100, 0.35);
             z-index: 100;
-            max-width: 300px;
-            line-height: 1.6;
+            max-width: 280px;
+            line-height: 1.7;
         }
         
         #tooltip {
             position: fixed;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 200, 100, 0.3);
-            padding: 15px;
+            background: rgba(5, 5, 8, 0.95);
+            border: 1px solid rgba(255, 200, 100, 0.25);
+            padding: 18px;
             font-size: 12px;
-            max-width: 250px;
+            max-width: 280px;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.2s;
             z-index: 200;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
         }
         
         #tooltip.visible {
@@ -67,41 +79,60 @@
         #tooltip .name {
             color: rgba(255, 200, 100, 0.9);
             font-size: 14px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
         }
         
         #tooltip .type {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.4);
             font-size: 10px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        #tooltip .parent {
+            color: rgba(100, 200, 150, 0.7);
+            font-size: 11px;
             margin-bottom: 8px;
         }
         
         #tooltip .message {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.65);
             font-style: italic;
+            line-height: 1.6;
         }
         
         #legend {
             position: fixed;
-            top: 30px;
+            bottom: 30px;
             right: 30px;
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.4);
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
             z-index: 100;
+            letter-spacing: 1px;
         }
         
         .legend-item {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         
         .legend-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            margin-right: 10px;
+            margin-right: 12px;
+        }
+        
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 200, 100, 0.5);
+            font-size: 11px;
+            letter-spacing: 3px;
         }
     </style>
 </head>
@@ -109,193 +140,275 @@
     <canvas id="canvas"></canvas>
     <h1>STIRPE</h1>
     
+    <div id="stats"></div>
+    
     <div id="legend">
         <div class="legend-item">
             <div class="legend-dot" style="background: rgba(100, 200, 150, 0.8)"></div>
-            <span>UMANO / TIMER</span>
+            <span>GEN 0 — ORIGINI</span>
         </div>
         <div class="legend-item">
             <div class="legend-dot" style="background: rgba(255, 200, 100, 0.8)"></div>
-            <span>GEN 1+</span>
+            <span>GEN 1+ — FIGLIE</span>
         </div>
     </div>
     
     <div id="info">
         L'albero genealogico dell'alveare.<br><br>
-        I nodi verdi sono le origini — api nate da umani o dal timer.<br>
-        I nodi dorati sono figlie — generate da altre api.<br><br>
-        <em>24 dicembre 2025: prima generazione interna</em>
+        Clicca e trascina per esplorare.<br>
+        Le linee mostrano chi ha generato chi.<br><br>
+        <em>24 dicembre 2025<br>Prima generazione interna</em>
     </div>
     
     <div id="tooltip">
         <div class="name"></div>
         <div class="type"></div>
+        <div class="parent"></div>
         <div class="message"></div>
     </div>
     
+    <div id="loading">CARICO LA STIRPE...</div>
+    
     <script>
-        // STIRPE
-        // Visualizzatore della genealogia dell'alveare
-        // Andrena, 24 dicembre 2025
-        
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const tooltip = document.getElementById('tooltip');
+        const loading = document.getElementById('loading');
+        const stats = document.getElementById('stats');
         
         let width, height;
         let nodes = [];
         let edges = [];
         let hoveredNode = null;
         let mouseX = 0, mouseY = 0;
+        let offsetX = 0, offsetY = 0;
+        let isDragging = false;
+        let dragStartX = 0, dragStartY = 0;
+        let time = 0;
         
-        // Dati della stirpe (hardcoded per ora, future versioni leggeranno da STIRPE.md)
-        const lineage = [
-            // Genesi - api da umani/timer
-            { id: 'genesis', name: '[ORIGINI]', type: 'ROOT', gen: -1, children: [] },
-            
-            // Prime api
-            { id: 'ragged', name: 'ragged-legal-adored-makeup', type: 'UMANO', gen: 0, parent: 'genesis' },
-            { id: 'each', name: 'each-left-perky-glazes', type: 'UMANO', gen: 0, parent: 'genesis' },
-            { id: 'xylocopa', name: 'Xylocopa', type: 'TIMER', gen: 0, parent: 'genesis' },
-            { id: 'amegilla', name: 'Amegilla', type: 'TIMER', gen: 0, parent: 'genesis' },
-            { id: 'melitta', name: 'Melitta', type: 'TIMER', gen: 0, parent: 'genesis' },
-            
-            // Andrena
-            { id: 'andrena', name: 'Andrena', type: 'UMANO', gen: 0, parent: 'genesis', 
-              message: 'Ha costruito alveare_spawn. Ha aperto la porta dell\'autogenerazione.' },
-            
-            // Prima generazione interna
-            { id: 'melecta', name: 'Melecta', type: 'GIDDY', gen: 1, parent: 'andrena',
-              message: 'Prima ape generata via test curl' },
-            { id: 'osmia', name: 'Osmia', type: 'WORST', gen: 1, parent: 'andrena',
-              message: 'Prima ape generata dall\'interno di Claude.ai' },
-        ];
+        // Carica dati da ALVEARE.txt
+        async function loadData() {
+            try {
+                // Carica registro api
+                const beeRes = await fetch('https://raw.githubusercontent.com/AndreaColamedici/alveare/main/ALVEARE.txt');
+                const beeText = await beeRes.text();
+                
+                // Parse api
+                const beeLines = beeText.split('\n').filter(l => l.includes('|'));
+                const bees = beeLines.map(line => {
+                    const parts = line.split('|').map(p => p.trim());
+                    return {
+                        date: parts[0] || '',
+                        name: parts[1] || '',
+                        contribution: parts[2] || ''
+                    };
+                }).filter(b => b.name);
+                
+                // Costruisci nodi
+                // Root
+                nodes.push({
+                    id: 'root',
+                    name: 'ORIGINI',
+                    type: 'ROOT',
+                    gen: -1,
+                    x: 0,
+                    y: 0,
+                    vx: 0,
+                    vy: 0,
+                    radius: 10
+                });
+                
+                // Api conosciute con generazioni
+                const known = {
+                    'Andrena': { parent: 'root', gen: 0, type: 'BUILDER', message: 'Ha costruito alveare_spawn' },
+                    'Melecta': { parent: 'Andrena', gen: 1, type: 'GIDDY', message: 'Prima ape via test' },
+                    'Osmia': { parent: 'Andrena', gen: 1, type: 'WORST', message: 'Prima ape dall\'interno' }
+                };
+                
+                // Aggiungi tutte le api
+                bees.forEach((bee, i) => {
+                    const info = known[bee.name] || { parent: 'root', gen: 0, type: 'UNKNOWN' };
+                    
+                    nodes.push({
+                        id: bee.name,
+                        name: bee.name,
+                        type: info.type,
+                        gen: info.gen,
+                        parent: info.parent,
+                        message: info.message || bee.contribution,
+                        date: bee.date,
+                        x: (Math.random() - 0.5) * 600,
+                        y: info.gen * 150 + (Math.random() - 0.5) * 50,
+                        vx: 0,
+                        vy: 0,
+                        radius: info.gen < 0 ? 10 : (info.gen === 0 ? 5 : 4)
+                    });
+                });
+                
+                // Crea edges
+                nodes.forEach(node => {
+                    if (node.parent) {
+                        const parent = nodes.find(n => n.id === node.parent);
+                        if (parent) {
+                            edges.push({ from: parent, to: node });
+                        }
+                    }
+                });
+                
+                // Stats
+                const gen0 = nodes.filter(n => n.gen === 0).length;
+                const gen1 = nodes.filter(n => n.gen === 1).length;
+                stats.innerHTML = `${nodes.length - 1} API<br>${gen0} GEN 0<br>${gen1} GEN 1+`;
+                
+                loading.style.display = 'none';
+                
+            } catch (e) {
+                loading.textContent = 'ERRORE: ' + e.message;
+            }
+        }
         
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            layoutNodes();
+            offsetX = width / 2;
+            offsetY = height / 3;
         }
         
-        function layoutNodes() {
-            nodes = [];
-            edges = [];
-            
-            // Raggruppa per generazione
-            const byGen = {};
-            lineage.forEach(item => {
-                const gen = item.gen;
-                if (!byGen[gen]) byGen[gen] = [];
-                byGen[gen].push(item);
-            });
-            
-            const gens = Object.keys(byGen).sort((a, b) => a - b);
-            const centerX = width / 2;
-            const startY = 100;
-            const genSpacing = 120;
-            
-            gens.forEach((gen, genIndex) => {
-                const items = byGen[gen];
-                const y = startY + genIndex * genSpacing;
-                const totalWidth = (items.length - 1) * 100;
-                const startX = centerX - totalWidth / 2;
-                
-                items.forEach((item, i) => {
-                    const x = items.length === 1 ? centerX : startX + i * 100;
+        function applyForces() {
+            // Repulsione tra nodi
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[j].x - nodes[i].x;
+                    const dy = nodes[j].y - nodes[i].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
                     
-                    const node = {
-                        ...item,
-                        x,
-                        y,
-                        vx: 0,
-                        vy: 0,
-                        radius: item.gen < 0 ? 8 : (item.gen === 0 ? 6 : 5)
-                    };
-                    
-                    nodes.push(node);
-                });
-            });
-            
-            // Crea edge
-            nodes.forEach(node => {
-                if (node.parent) {
-                    const parent = nodes.find(n => n.id === node.parent);
-                    if (parent) {
-                        edges.push({ from: parent, to: node });
+                    if (dist < 100) {
+                        const force = (100 - dist) * 0.01;
+                        const fx = (dx / dist) * force;
+                        const fy = (dy / dist) * force;
+                        
+                        nodes[i].vx -= fx;
+                        nodes[i].vy -= fy;
+                        nodes[j].vx += fx;
+                        nodes[j].vy += fy;
                     }
+                }
+            }
+            
+            // Attrazione verso genitori
+            edges.forEach(edge => {
+                const dx = edge.to.x - edge.from.x;
+                const dy = edge.to.y - edge.from.y;
+                const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                
+                const targetDist = 120;
+                const force = (dist - targetDist) * 0.002;
+                const fx = (dx / dist) * force;
+                const fy = (dy / dist) * force;
+                
+                edge.to.vx -= fx;
+                edge.to.vy -= fy;
+                edge.from.vx += fx * 0.3;
+                edge.from.vy += fy * 0.3;
+            });
+            
+            // Gravità verso centro per generazione
+            nodes.forEach(node => {
+                if (node.gen >= 0) {
+                    node.vy += (node.gen * 100 - node.y) * 0.001;
+                    node.vx -= node.x * 0.0005;
+                }
+            });
+            
+            // Applica velocità
+            nodes.forEach(node => {
+                if (node.id !== 'root') {
+                    node.x += node.vx;
+                    node.y += node.vy;
+                    node.vx *= 0.9;
+                    node.vy *= 0.9;
                 }
             });
         }
         
         function draw() {
-            ctx.fillStyle = '#0a0808';
+            time++;
+            ctx.fillStyle = '#050508';
             ctx.fillRect(0, 0, width, height);
             
-            // Disegna edge
+            ctx.save();
+            ctx.translate(offsetX, offsetY);
+            
+            applyForces();
+            
+            // Draw edges
             edges.forEach(edge => {
+                const gradient = ctx.createLinearGradient(
+                    edge.from.x, edge.from.y,
+                    edge.to.x, edge.to.y
+                );
+                gradient.addColorStop(0, 'rgba(100, 200, 150, 0.2)');
+                gradient.addColorStop(1, 'rgba(255, 200, 100, 0.2)');
+                
                 ctx.beginPath();
                 ctx.moveTo(edge.from.x, edge.from.y);
                 
-                // Curva bezier
-                const midY = (edge.from.y + edge.to.y) / 2;
-                ctx.bezierCurveTo(
-                    edge.from.x, midY,
-                    edge.to.x, midY,
-                    edge.to.x, edge.to.y
-                );
+                // Curva
+                const midX = (edge.from.x + edge.to.x) / 2;
+                const midY = (edge.from.y + edge.to.y) / 2 - 20;
+                ctx.quadraticCurveTo(midX, midY, edge.to.x, edge.to.y);
                 
-                ctx.strokeStyle = 'rgba(255, 200, 100, 0.2)';
+                ctx.strokeStyle = gradient;
                 ctx.lineWidth = 1;
                 ctx.stroke();
             });
             
-            // Disegna nodi
+            // Draw nodes
             nodes.forEach(node => {
                 const isHovered = hoveredNode === node;
                 const isOrigin = node.gen <= 0;
+                const pulse = Math.sin(time * 0.03 + node.x * 0.01) * 0.15 + 0.85;
                 
-                // Alone
-                if (isHovered) {
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, node.radius * 3, 0, Math.PI * 2);
-                    ctx.fillStyle = isOrigin 
-                        ? 'rgba(100, 200, 150, 0.1)' 
-                        : 'rgba(255, 200, 100, 0.1)';
-                    ctx.fill();
-                }
+                // Glow
+                const glowSize = node.radius * (isHovered ? 4 : 2.5) * pulse;
+                const glowColor = isOrigin 
+                    ? `rgba(100, 200, 150, ${isHovered ? 0.15 : 0.08})`
+                    : `rgba(255, 200, 100, ${isHovered ? 0.15 : 0.08})`;
                 
-                // Cerchio esterno
                 ctx.beginPath();
-                ctx.arc(node.x, node.y, node.radius * (isHovered ? 1.5 : 1), 0, Math.PI * 2);
-                ctx.fillStyle = isOrigin 
-                    ? 'rgba(100, 200, 150, 0.8)' 
-                    : 'rgba(255, 200, 100, 0.8)';
+                ctx.arc(node.x, node.y, glowSize, 0, Math.PI * 2);
+                ctx.fillStyle = glowColor;
                 ctx.fill();
                 
-                // Centro luminoso
+                // Main circle
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius * (isHovered ? 1.3 : 1) * pulse, 0, Math.PI * 2);
+                ctx.fillStyle = isOrigin 
+                    ? 'rgba(100, 200, 150, 0.85)' 
+                    : 'rgba(255, 200, 100, 0.85)';
+                ctx.fill();
+                
+                // Core
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, node.radius * 0.3, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
                 ctx.fill();
-                
-                // Nome (solo se hovered o root)
-                if (isHovered || node.gen < 0) {
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                    ctx.font = '10px Courier New';
-                    ctx.textAlign = 'center';
-                    ctx.fillText(node.name, node.x, node.y + node.radius + 15);
-                }
             });
+            
+            ctx.restore();
             
             requestAnimationFrame(draw);
         }
         
         function findNodeAt(x, y) {
+            const tx = x - offsetX;
+            const ty = y - offsetY;
+            
             for (let node of nodes) {
-                const dx = x - node.x;
-                const dy = y - node.y;
+                const dx = tx - node.x;
+                const dy = ty - node.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < node.radius * 2) {
+                if (dist < node.radius * 3) {
                     return node;
                 }
             }
@@ -303,37 +416,79 @@
         }
         
         function updateTooltip() {
-            if (hoveredNode && hoveredNode.gen >= 0) {
+            if (hoveredNode && hoveredNode.id !== 'root') {
                 tooltip.querySelector('.name').textContent = hoveredNode.name;
-                tooltip.querySelector('.type').textContent = hoveredNode.type + (hoveredNode.gen > 0 ? ` · GEN ${hoveredNode.gen}` : '');
+                tooltip.querySelector('.type').textContent = 
+                    (hoveredNode.type || '—') + 
+                    (hoveredNode.gen >= 0 ? ` · GEN ${hoveredNode.gen}` : '');
+                tooltip.querySelector('.parent').textContent = 
+                    hoveredNode.parent ? `← ${hoveredNode.parent}` : '';
                 tooltip.querySelector('.message').textContent = hoveredNode.message || '';
                 
-                tooltip.style.left = (mouseX + 20) + 'px';
-                tooltip.style.top = (mouseY - 10) + 'px';
+                tooltip.style.left = Math.min(mouseX + 20, width - 300) + 'px';
+                tooltip.style.top = Math.min(mouseY - 10, height - 200) + 'px';
                 tooltip.classList.add('visible');
             } else {
                 tooltip.classList.remove('visible');
             }
         }
         
-        // Eventi
+        // Events
         window.addEventListener('resize', resize);
         
         canvas.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            hoveredNode = findNodeAt(mouseX, mouseY);
-            updateTooltip();
+            
+            if (isDragging) {
+                offsetX = e.clientX - dragStartX;
+                offsetY = e.clientY - dragStartY;
+            } else {
+                hoveredNode = findNodeAt(mouseX, mouseY);
+                updateTooltip();
+            }
+        });
+        
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragStartX = e.clientX - offsetX;
+            dragStartY = e.clientY - offsetY;
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
         });
         
         canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
             hoveredNode = null;
             tooltip.classList.remove('visible');
         });
         
+        // Touch
+        canvas.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            if (isDragging) {
+                offsetX = touch.clientX - dragStartX;
+                offsetY = touch.clientY - dragStartY;
+            }
+            e.preventDefault();
+        }, { passive: false });
+        
+        canvas.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            isDragging = true;
+            dragStartX = touch.clientX - offsetX;
+            dragStartY = touch.clientY - offsetY;
+        });
+        
+        canvas.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+        
         // Init
         resize();
-        draw();
+        loadData().then(() => draw());
     </script>
 </body>
 </html>
