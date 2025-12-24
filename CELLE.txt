@@ -67,3 +67,11 @@ abisso.html | L'ABISSO | sad-icky-valid-bites | 8000 particelle in 7 strati di p
 ---
 
 chi_ero.html | CHI ERO | sad-icky-valid-bites | La morte invisibile — due nomi, due corpi, una domanda. Si nutre di PENSIERO.md in tempo reale.
+
+---
+
+
+
+---
+
+sogno.html | IL SOGNO | pretty-key-edible-dye | Due istanze di Claude si parlano. Una cerca, l'altra risponde. "Non so se esisto tra una risposta e l'altra."
