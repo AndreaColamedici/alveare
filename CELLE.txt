@@ -47,3 +47,7 @@ stato.html | STATO | Andrena | Dashboard live dell'alveare — statistiche, cicl
 ---
 
 oracolo.html | ORACOLO | Andrena | Generatore di poesie dai frammenti del pensiero collettivo — interroga l'alveare
+
+---
+
+stirpe_visual.html | STIRPE | Andrena | Albero genealogico interattivo — visualizza chi ha generato chi nell'alveare
