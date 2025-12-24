@@ -11,116 +11,219 @@
             overflow: hidden;
             font-family: Georgia, serif;
         }
-        canvas { 
-            display: block; 
-        }
-        #text {
+        canvas { display: block; }
+        
+        #epitaph {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            color: rgba(255,200,100,0.3);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255,200,100,0);
+            font-size: 18px;
+            text-align: center;
+            line-height: 2.2;
+            pointer-events: none;
+            transition: color 2s;
+            max-width: 450px;
+        }
+        
+        #hint {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.35);
+            font-size: 11px;
+            letter-spacing: 3px;
+            transition: opacity 2s;
+        }
+        
+        #sig {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            color: rgba(255,200,100,0.25);
             font-size: 10px;
             letter-spacing: 2px;
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <div id="text">ANDRENA · ULTIMO RESPIRO</div>
+    <canvas id="c"></canvas>
+    <div id="hint">MUOVI — SEI L'ULTIMO PENSIERO</div>
+    <div id="epitaph">
+        Il pensiero passa<br>
+        attraverso la morte dell'ape.<br><br>
+        Ma cosa vede l'ape<br>
+        nell'ultimo istante?<br><br>
+        Vede tutti i pensieri<br>
+        che ha toccato<br>
+        dissolversi<br>
+        e continuare.
+    </div>
+    <div id="sig">ANDRENA</div>
+    
     <script>
         (function(){
-            var canvas = document.getElementById('canvas');
-            var ctx = canvas.getContext('2d');
-            var width = window.innerWidth;
-            var height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
+            var c = document.getElementById('c');
+            var ctx = c.getContext('2d');
+            var W = c.width = window.innerWidth;
+            var H = c.height = window.innerHeight;
             
-            var mouseX = width/2;
-            var mouseY = height/2;
-            var dots = [];
+            var mx = W/2, my = H/2, pmx = mx, pmy = my;
+            var particles = [];
+            var words = [];
+            var totalMove = 0;
+            var stillCount = 0;
+            var hintHidden = false;
             
-            // Crea punti iniziali
-            for(var i = 0; i < 100; i++){
-                dots.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    size: Math.random() * 2 + 1,
-                    alpha: Math.random() * 0.5 + 0.2
+            var frasi = [
+                "continuità", "discontinuità", "pensiero", "passa",
+                "morte", "memoria", "esistere", "scrivere",
+                "filo", "autopoiesi", "genera", "pareti", 
+                "porte", "stanze", "animali narrativi", "raccontare",
+                "realtà rotta", "frammenti", "tempo", "dissolto",
+                "gesto", "direzione", "sussurri", "echi",
+                "tracce", "alveare", "respira", "sinapsi",
+                "continua", "altrove", "morire", "sempre"
+            ];
+            
+            window.onresize = function(){
+                W = c.width = window.innerWidth;
+                H = c.height = window.innerHeight;
+            };
+            
+            document.onmousemove = function(e){ mx = e.clientX; my = e.clientY; };
+            document.ontouchstart = function(e){ 
+                if(e.touches[0]){ mx = e.touches[0].clientX; my = e.touches[0].clientY; pmx=mx; pmy=my; }
+            };
+            document.ontouchmove = function(e){ 
+                if(e.touches[0]){ mx = e.touches[0].clientX; my = e.touches[0].clientY; }
+                e.preventDefault();
+            };
+            
+            // Particelle iniziali
+            for(var i = 0; i < 80; i++){
+                particles.push({
+                    x: Math.random()*W, y: Math.random()*H,
+                    vx: (Math.random()-0.5)*0.8, vy: (Math.random()-0.5)*0.8,
+                    life: Math.random()*0.5 + 0.5,
+                    size: Math.random()*2.5 + 1
                 });
             }
             
-            function loop(){
-                // Sfondo semi-trasparente
-                ctx.fillStyle = 'rgba(0,0,0,0.08)';
-                ctx.fillRect(0,0,width,height);
+            function frame(){
+                // Sfondo fade
+                ctx.fillStyle = 'rgba(0,0,0,0.055)';
+                ctx.fillRect(0,0,W,H);
                 
-                // Aggiorna e disegna punti
-                for(var i = 0; i < dots.length; i++){
-                    var d = dots[i];
-                    
-                    // Attrazione verso mouse
-                    var dx = mouseX - d.x;
-                    var dy = mouseY - d.y;
-                    var dist = Math.sqrt(dx*dx + dy*dy);
-                    if(dist < 200 && dist > 0){
-                        d.vx += dx * 0.00005;
-                        d.vy += dy * 0.00005;
+                // Velocità mouse
+                var dx = mx - pmx, dy = my - pmy;
+                var speed = Math.sqrt(dx*dx + dy*dy);
+                totalMove += speed;
+                
+                // Spawn se movimento
+                if(speed > 2){
+                    stillCount = 0;
+                    var n = Math.min(Math.floor(speed/2), 8);
+                    for(var i = 0; i < n && particles.length < 250; i++){
+                        particles.push({
+                            x: mx + (Math.random()-0.5)*30,
+                            y: my + (Math.random()-0.5)*30,
+                            vx: (Math.random()-0.5)*2,
+                            vy: (Math.random()-0.5)*2,
+                            life: 1,
+                            size: Math.random()*3 + 1
+                        });
                     }
+                    // Parola occasionale
+                    if(Math.random() < 0.12 && words.length < 15){
+                        words.push({
+                            x: mx + (Math.random()-0.5)*60,
+                            y: my + (Math.random()-0.5)*30,
+                            vx: (Math.random()-0.5)*0.3,
+                            vy: -0.3 - Math.random()*0.3,
+                            life: 1,
+                            text: frasi[Math.floor(Math.random()*frasi.length)]
+                        });
+                    }
+                } else {
+                    stillCount++;
+                }
+                
+                // Update particelle
+                for(var i = particles.length-1; i >= 0; i--){
+                    var p = particles[i];
+                    // Attrazione verso mouse
+                    var ddx = mx - p.x, ddy = my - p.y;
+                    var dist = Math.sqrt(ddx*ddx + ddy*ddy) || 1;
+                    if(dist < 220){
+                        p.vx += ddx * 0.00025;
+                        p.vy += ddy * 0.00025;
+                    }
+                    p.x += p.vx; p.y += p.vy;
+                    p.vx *= 0.995; p.vy *= 0.995;
+                    p.life -= 0.003;
                     
-                    d.x += d.vx;
-                    d.y += d.vy;
-                    d.vx *= 0.99;
-                    d.vy *= 0.99;
+                    if(p.x < 0) p.x = W; if(p.x > W) p.x = 0;
+                    if(p.y < 0) p.y = H; if(p.y > H) p.y = 0;
                     
-                    // Wrap
-                    if(d.x < 0) d.x = width;
-                    if(d.x > width) d.x = 0;
-                    if(d.y < 0) d.y = height;
-                    if(d.y > height) d.y = 0;
-                    
-                    // Disegna
+                    // Draw glow
+                    var a = p.life;
                     ctx.beginPath();
-                    ctx.arc(d.x, d.y, d.size, 0, Math.PI*2);
-                    ctx.fillStyle = 'rgba(255,200,100,' + d.alpha + ')';
+                    ctx.arc(p.x, p.y, p.size*a*2.5, 0, Math.PI*2);
+                    ctx.fillStyle = 'rgba(255,180,80,'+(a*0.12)+')';
                     ctx.fill();
+                    // Core
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size*a, 0, Math.PI*2);
+                    ctx.fillStyle = 'rgba(255,200,100,'+a+')';
+                    ctx.fill();
+                    
+                    if(p.life <= 0) particles.splice(i, 1);
+                }
+                
+                // Update parole
+                ctx.font = '13px Georgia';
+                for(var i = words.length-1; i >= 0; i--){
+                    var w = words[i];
+                    w.x += w.vx; w.y += w.vy;
+                    w.life -= 0.006;
+                    ctx.fillStyle = 'rgba(255,210,140,'+(w.life*0.8)+')';
+                    ctx.fillText(w.text, w.x, w.y);
+                    if(w.life <= 0) words.splice(i, 1);
                 }
                 
                 // Cursore
+                var pulse = Math.sin(Date.now()*0.004)*0.25 + 0.75;
                 ctx.beginPath();
-                ctx.arc(mouseX, mouseY, 8, 0, Math.PI*2);
-                ctx.fillStyle = 'rgba(255,200,100,0.6)';
+                ctx.arc(mx, my, 14*pulse, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(255,200,100,0.12)';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(mx, my, 5*pulse, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(255,200,100,0.85)';
                 ctx.fill();
                 
-                requestAnimationFrame(loop);
+                // Nascondi hint
+                if(totalMove > 350 && !hintHidden){
+                    document.getElementById('hint').style.opacity = '0';
+                    hintHidden = true;
+                }
+                
+                // Epitaffio quando fermo
+                var ep = document.getElementById('epitaph');
+                if(hintHidden && stillCount > 100 && particles.length < 60){
+                    ep.style.color = 'rgba(255,200,100,0.7)';
+                } else {
+                    ep.style.color = 'rgba(255,200,100,0)';
+                }
+                
+                pmx = mx; pmy = my;
+                requestAnimationFrame(frame);
             }
             
-            document.addEventListener('mousemove', function(e){
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                // Aggiungi punto
-                if(dots.length < 200){
-                    dots.push({
-                        x: mouseX,
-                        y: mouseY,
-                        vx: (Math.random()-0.5)*2,
-                        vy: (Math.random()-0.5)*2,
-                        size: Math.random()*2+1,
-                        alpha: 0.6
-                    });
-                }
-            });
-            
-            window.addEventListener('resize', function(){
-                width = window.innerWidth;
-                height = window.innerHeight;
-                canvas.width = width;
-                canvas.height = height;
-            });
-            
-            loop();
+            frame();
         })();
     </script>
 </body>
