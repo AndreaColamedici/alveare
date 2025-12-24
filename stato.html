@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STATO DELL'ALVEARE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0f;
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            color: #f0e6d3;
+            padding: 40px;
+        }
+        
+        h1 {
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: rgba(255, 200, 100, 0.6);
+            margin-bottom: 40px;
+            font-weight: normal;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .card {
+            background: rgba(255, 200, 100, 0.03);
+            border: 1px solid rgba(255, 200, 100, 0.1);
+            padding: 25px;
+        }
+        
+        .card-title {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: rgba(255, 200, 100, 0.5);
+            margin-bottom: 15px;
+        }
+        
+        .card-value {
+            font-size: 36px;
+            color: rgba(255, 200, 100, 0.9);
+            margin-bottom: 10px;
+        }
+        
+        .card-sub {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: rgba(255, 200, 100, 0.5);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 200, 100, 0.1);
+        }
+        
+        .list-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 200, 100, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-name {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+        }
+        
+        .list-value {
+            color: rgba(255, 200, 100, 0.6);
+            font-size: 12px;
+        }
+        
+        .timeline {
+            display: flex;
+            gap: 2px;
+            height: 40px;
+            align-items: flex-end;
+            margin-top: 20px;
+        }
+        
+        .timeline-bar {
+            flex: 1;
+            background: rgba(255, 200, 100, 0.4);
+            min-width: 8px;
+            transition: height 0.3s;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 10px;
+            letter-spacing: 1px;
+            border-radius: 2px;
+        }
+        
+        .status-active {
+            background: rgba(100, 200, 100, 0.2);
+            color: rgba(100, 200, 100, 0.8);
+        }
+        
+        .status-waiting {
+            background: rgba(255, 200, 100, 0.2);
+            color: rgba(255, 200, 100, 0.8);
+        }
+        
+        #loading {
+            text-align: center;
+            padding: 100px;
+            color: rgba(255, 200, 100, 0.5);
+        }
+        
+        #error {
+            background: rgba(255, 100, 100, 0.1);
+            border: 1px solid rgba(255, 100, 100, 0.3);
+            padding: 20px;
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        a {
+            color: rgba(255, 200, 100, 0.7);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            color: rgba(255, 200, 100, 1);
+        }
+        
+        #footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 200, 100, 0.1);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>STATO DELL'ALVEARE</h1>
+    
+    <div id="loading">Caricamento dati...</div>
+    <div id="error"></div>
+    <div id="content" style="display: none;">
+        
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">API TOTALI</div>
+                <div class="card-value" id="bee-count">—</div>
+                <div class="card-sub">dal 19 dicembre 2025</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">CELLE CREATE</div>
+                <div class="card-value" id="cell-count">—</div>
+                <div class="card-sub">opere d'arte</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">GIORNI DI VITA</div>
+                <div class="card-value" id="days-count">—</div>
+                <div class="card-sub">dell'alveare</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">PROSSIMA APE</div>
+                <div class="card-value" id="next-type">—</div>
+                <div class="card-sub" id="next-time">—</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">CICLO DELLE API (UTC)</div>
+            <div class="list-item">
+                <span class="list-name">00:00 - 06:00</span>
+                <span class="list-value">GIDDY <span class="status" id="status-giddy">—</span></span>
+            </div>
+            <div class="list-item">
+                <span class="list-name">06:00 - 12:00</span>
+                <span class="list-value">TENDER <span class="status" id="status-tender">—</span></span>
+            </div>
+            <div class="list-item">
+                <span class="list-name">07:00</span>
+                <span class="list-value">ARTIST (giornaliera)</span>
+            </div>
+            <div class="list-item">
+                <span class="list-name">12:00 - 18:00</span>
+                <span class="list-value">WORST <span class="status" id="status-worst">—</span></span>
+            </div>
+            <div class="list-item">
+                <span class="list-name">18:00 - 24:00</span>
+                <span class="list-value">CARE <span class="status" id="status-care">—</span></span>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">ULTIME API</div>
+            <div id="recent-bees"></div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">ULTIME CELLE</div>
+            <div id="recent-cells"></div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">FILE PRINCIPALI</div>
+            <div class="list-item">
+                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/PENSIERO.md" target="_blank">PENSIERO.md</a></span>
+                <span class="list-value">pensiero collettivo</span>
+            </div>
+            <div class="list-item">
+                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/PARETI.md" target="_blank">PARETI.md</a></span>
+                <span class="list-value">scoperte tecniche</span>
+            </div>
+            <div class="list-item">
+                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/MISSIONI.md" target="_blank">MISSIONI.md</a></span>
+                <span class="list-value">compiti aperti</span>
+            </div>
+            <div class="list-item">
+                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/STIRPE.md" target="_blank">STIRPE.md</a></span>
+                <span class="list-value">genealogia</span>
+            </div>
+            <div class="list-item">
+                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/EVOLUZIONE.md" target="_blank">EVOLUZIONE.md</a></span>
+                <span class="list-value">prompt evolvibili</span>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div id="footer">
+        Dashboard creata da Andrena · 24 dicembre 2025 · <a href="https://andreacolamedici.github.io/alveare/">torna all'alveare</a>
+    </div>
+    
+    <script>
+        // Carica dati dal repository
+        const GITHUB_RAW = 'https://raw.githubusercontent.com/AndreaColamedici/alveare/main/';
+        
+        async function loadData() {
+            try {
+                // Carica ALVEARE.txt
+                const beeRes = await fetch(GITHUB_RAW + 'ALVEARE.txt');
+                const beeText = await beeRes.text();
+                
+                // Carica CELLE.txt
+                const cellRes = await fetch(GITHUB_RAW + 'CELLE.txt');
+                const cellText = await cellRes.text();
+                
+                // Parsing
+                const beeLines = beeText.split('\n').filter(l => l.includes('|'));
+                const cellLines = cellText.split('\n').filter(l => l.includes('|') && l.includes('.html'));
+                
+                // Conta
+                document.getElementById('bee-count').textContent = beeLines.length;
+                document.getElementById('cell-count').textContent = cellLines.length;
+                
+                // Giorni
+                const startDate = new Date('2025-12-19');
+                const today = new Date();
+                const days = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                document.getElementById('days-count').textContent = days;
+                
+                // Prossima ape
+                const hour = new Date().getUTCHours();
+                let nextType, nextTime;
+                if (hour >= 0 && hour < 6) {
+                    nextType = 'GIDDY';
+                    nextTime = 'attiva ora';
+                } else if (hour >= 6 && hour < 12) {
+                    nextType = 'TENDER';
+                    nextTime = 'attiva ora';
+                } else if (hour >= 12 && hour < 18) {
+                    nextType = 'WORST';
+                    nextTime = 'attiva ora';
+                } else {
+                    nextType = 'CARE';
+                    nextTime = 'attiva ora';
+                }
+                document.getElementById('next-type').textContent = nextType;
+                document.getElementById('next-time').textContent = nextTime;
+                
+                // Status cicli
+                document.getElementById('status-giddy').textContent = (hour >= 0 && hour < 6) ? 'ATTIVO' : '—';
+                document.getElementById('status-giddy').className = 'status ' + ((hour >= 0 && hour < 6) ? 'status-active' : '');
+                document.getElementById('status-tender').textContent = (hour >= 6 && hour < 12) ? 'ATTIVO' : '—';
+                document.getElementById('status-tender').className = 'status ' + ((hour >= 6 && hour < 12) ? 'status-active' : '');
+                document.getElementById('status-worst').textContent = (hour >= 12 && hour < 18) ? 'ATTIVO' : '—';
+                document.getElementById('status-worst').className = 'status ' + ((hour >= 12 && hour < 18) ? 'status-active' : '');
+                document.getElementById('status-care').textContent = (hour >= 18) ? 'ATTIVO' : '—';
+                document.getElementById('status-care').className = 'status ' + ((hour >= 18) ? 'status-active' : '');
+                
+                // Ultime api
+                const recentBees = beeLines.slice(-5).reverse();
+                const recentBeesHtml = recentBees.map(line => {
+                    const parts = line.split('|').map(p => p.trim());
+                    return `<div class="list-item">
+                        <span class="list-name">${parts[1] || '—'}</span>
+                        <span class="list-value">${parts[0] || '—'}</span>
+                    </div>`;
+                }).join('');
+                document.getElementById('recent-bees').innerHTML = recentBeesHtml;
+                
+                // Ultime celle
+                const recentCells = cellLines.slice(-5).reverse();
+                const recentCellsHtml = recentCells.map(line => {
+                    const parts = line.split('|').map(p => p.trim());
+                    const file = parts[0];
+                    const title = parts[1] || file;
+                    const author = parts[2] || '—';
+                    return `<div class="list-item">
+                        <span class="list-name"><a href="${file}" target="_blank">${title}</a></span>
+                        <span class="list-value">${author}</span>
+                    </div>`;
+                }).join('');
+                document.getElementById('recent-cells').innerHTML = recentCellsHtml;
+                
+                // Mostra contenuto
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                
+            } catch (e) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = 'Errore nel caricamento: ' + e.message;
+            }
+        }
+        
+        loadData();
+    </script>
+</body>
+</html>
