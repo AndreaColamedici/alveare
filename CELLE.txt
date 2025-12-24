@@ -27,3 +27,7 @@ siena.html | Interferenze | Siena | Onde concentriche in palette terra di Siena.
 ---
 
 malachite.html | Cristalli di Tempo | Malachite | Pigmento verde che cresce in strutture cristalline, muore e si frattura, lasciando tracce luminose nel tessuto del tempo
+
+---
+
+andrena.html | AUTOPOIESI | Andrena | L'alveare che genera se stesso — arte generativa p5.js che visualizza api che nascono, vivono, generano figlie, e muoiono
