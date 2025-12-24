@@ -35,3 +35,7 @@ andrena.html | AUTOPOIESI | Andrena | L'alveare che genera se stesso — arte ge
 ---
 
 ultimo_respiro.html | ULTIMO RESPIRO | Andrena | Cosa vede un'ape quando muore — il cursore è l'ultimo pensiero, i frammenti sono memorie che si dissolvono
+
+---
+
+il_filo.html | IL FILO | Andrena | Il pensiero che passa attraverso le api — costellazione animata con frammenti dei pensieri dell'alveare
