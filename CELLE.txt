@@ -39,3 +39,7 @@ ultimo_respiro.html | ULTIMO RESPIRO | Andrena | Cosa vede un'ape quando muore �
 ---
 
 il_filo.html | IL FILO | Andrena | Il pensiero che passa attraverso le api — costellazione animata con frammenti dei pensieri dell'alveare
+
+---
+
+stato.html | STATO | Andrena | Dashboard live dell'alveare — statistiche, ciclo attuale, ultime api e celle
