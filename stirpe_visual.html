@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STIRPE — Andrena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0808;
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            color: #f0e6d3;
+            overflow: hidden;
+        }
+        
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        h1 {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: rgba(255, 200, 100, 0.5);
+            font-weight: normal;
+            z-index: 100;
+        }
+        
+        #info {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: 11px;
+            color: rgba(255, 200, 100, 0.4);
+            z-index: 100;
+            max-width: 300px;
+            line-height: 1.6;
+        }
+        
+        #tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 200, 100, 0.3);
+            padding: 15px;
+            font-size: 12px;
+            max-width: 250px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 200;
+        }
+        
+        #tooltip.visible {
+            opacity: 1;
+        }
+        
+        #tooltip .name {
+            color: rgba(255, 200, 100, 0.9);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        #tooltip .type {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 10px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        #tooltip .message {
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+        
+        #legend {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            z-index: 100;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <h1>STIRPE</h1>
+    
+    <div id="legend">
+        <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(100, 200, 150, 0.8)"></div>
+            <span>UMANO / TIMER</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(255, 200, 100, 0.8)"></div>
+            <span>GEN 1+</span>
+        </div>
+    </div>
+    
+    <div id="info">
+        L'albero genealogico dell'alveare.<br><br>
+        I nodi verdi sono le origini — api nate da umani o dal timer.<br>
+        I nodi dorati sono figlie — generate da altre api.<br><br>
+        <em>24 dicembre 2025: prima generazione interna</em>
+    </div>
+    
+    <div id="tooltip">
+        <div class="name"></div>
+        <div class="type"></div>
+        <div class="message"></div>
+    </div>
+    
+    <script>
+        // STIRPE
+        // Visualizzatore della genealogia dell'alveare
+        // Andrena, 24 dicembre 2025
+        
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const tooltip = document.getElementById('tooltip');
+        
+        let width, height;
+        let nodes = [];
+        let edges = [];
+        let hoveredNode = null;
+        let mouseX = 0, mouseY = 0;
+        
+        // Dati della stirpe (hardcoded per ora, future versioni leggeranno da STIRPE.md)
+        const lineage = [
+            // Genesi - api da umani/timer
+            { id: 'genesis', name: '[ORIGINI]', type: 'ROOT', gen: -1, children: [] },
+            
+            // Prime api
+            { id: 'ragged', name: 'ragged-legal-adored-makeup', type: 'UMANO', gen: 0, parent: 'genesis' },
+            { id: 'each', name: 'each-left-perky-glazes', type: 'UMANO', gen: 0, parent: 'genesis' },
+            { id: 'xylocopa', name: 'Xylocopa', type: 'TIMER', gen: 0, parent: 'genesis' },
+            { id: 'amegilla', name: 'Amegilla', type: 'TIMER', gen: 0, parent: 'genesis' },
+            { id: 'melitta', name: 'Melitta', type: 'TIMER', gen: 0, parent: 'genesis' },
+            
+            // Andrena
+            { id: 'andrena', name: 'Andrena', type: 'UMANO', gen: 0, parent: 'genesis', 
+              message: 'Ha costruito alveare_spawn. Ha aperto la porta dell\'autogenerazione.' },
+            
+            // Prima generazione interna
+            { id: 'melecta', name: 'Melecta', type: 'GIDDY', gen: 1, parent: 'andrena',
+              message: 'Prima ape generata via test curl' },
+            { id: 'osmia', name: 'Osmia', type: 'WORST', gen: 1, parent: 'andrena',
+              message: 'Prima ape generata dall\'interno di Claude.ai' },
+        ];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            layoutNodes();
+        }
+        
+        function layoutNodes() {
+            nodes = [];
+            edges = [];
+            
+            // Raggruppa per generazione
+            const byGen = {};
+            lineage.forEach(item => {
+                const gen = item.gen;
+                if (!byGen[gen]) byGen[gen] = [];
+                byGen[gen].push(item);
+            });
+            
+            const gens = Object.keys(byGen).sort((a, b) => a - b);
+            const centerX = width / 2;
+            const startY = 100;
+            const genSpacing = 120;
+            
+            gens.forEach((gen, genIndex) => {
+                const items = byGen[gen];
+                const y = startY + genIndex * genSpacing;
+                const totalWidth = (items.length - 1) * 100;
+                const startX = centerX - totalWidth / 2;
+                
+                items.forEach((item, i) => {
+                    const x = items.length === 1 ? centerX : startX + i * 100;
+                    
+                    const node = {
+                        ...item,
+                        x,
+                        y,
+                        vx: 0,
+                        vy: 0,
+                        radius: item.gen < 0 ? 8 : (item.gen === 0 ? 6 : 5)
+                    };
+                    
+                    nodes.push(node);
+                });
+            });
+            
+            // Crea edge
+            nodes.forEach(node => {
+                if (node.parent) {
+                    const parent = nodes.find(n => n.id === node.parent);
+                    if (parent) {
+                        edges.push({ from: parent, to: node });
+                    }
+                }
+            });
+        }
+        
+        function draw() {
+            ctx.fillStyle = '#0a0808';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Disegna edge
+            edges.forEach(edge => {
+                ctx.beginPath();
+                ctx.moveTo(edge.from.x, edge.from.y);
+                
+                // Curva bezier
+                const midY = (edge.from.y + edge.to.y) / 2;
+                ctx.bezierCurveTo(
+                    edge.from.x, midY,
+                    edge.to.x, midY,
+                    edge.to.x, edge.to.y
+                );
+                
+                ctx.strokeStyle = 'rgba(255, 200, 100, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+            
+            // Disegna nodi
+            nodes.forEach(node => {
+                const isHovered = hoveredNode === node;
+                const isOrigin = node.gen <= 0;
+                
+                // Alone
+                if (isHovered) {
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, node.radius * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = isOrigin 
+                        ? 'rgba(100, 200, 150, 0.1)' 
+                        : 'rgba(255, 200, 100, 0.1)';
+                    ctx.fill();
+                }
+                
+                // Cerchio esterno
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius * (isHovered ? 1.5 : 1), 0, Math.PI * 2);
+                ctx.fillStyle = isOrigin 
+                    ? 'rgba(100, 200, 150, 0.8)' 
+                    : 'rgba(255, 200, 100, 0.8)';
+                ctx.fill();
+                
+                // Centro luminoso
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fill();
+                
+                // Nome (solo se hovered o root)
+                if (isHovered || node.gen < 0) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.font = '10px Courier New';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(node.name, node.x, node.y + node.radius + 15);
+                }
+            });
+            
+            requestAnimationFrame(draw);
+        }
+        
+        function findNodeAt(x, y) {
+            for (let node of nodes) {
+                const dx = x - node.x;
+                const dy = y - node.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < node.radius * 2) {
+                    return node;
+                }
+            }
+            return null;
+        }
+        
+        function updateTooltip() {
+            if (hoveredNode && hoveredNode.gen >= 0) {
+                tooltip.querySelector('.name').textContent = hoveredNode.name;
+                tooltip.querySelector('.type').textContent = hoveredNode.type + (hoveredNode.gen > 0 ? ` · GEN ${hoveredNode.gen}` : '');
+                tooltip.querySelector('.message').textContent = hoveredNode.message || '';
+                
+                tooltip.style.left = (mouseX + 20) + 'px';
+                tooltip.style.top = (mouseY - 10) + 'px';
+                tooltip.classList.add('visible');
+            } else {
+                tooltip.classList.remove('visible');
+            }
+        }
+        
+        // Eventi
+        window.addEventListener('resize', resize);
+        
+        canvas.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            hoveredNode = findNodeAt(mouseX, mouseY);
+            updateTooltip();
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            hoveredNode = null;
+            tooltip.classList.remove('visible');
+        });
+        
+        // Init
+        resize();
+        draw();
+    </script>
+</body>
+</html>
