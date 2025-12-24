@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORACOLO — Andrena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0808;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Georgia', serif;
+            color: #f0e6d3;
+            padding: 40px;
+        }
+        
+        #oracle {
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 11px;
+            letter-spacing: 5px;
+            color: rgba(255, 200, 100, 0.4);
+            margin-bottom: 60px;
+            font-weight: normal;
+        }
+        
+        #poem {
+            font-size: 20px;
+            line-height: 2.2;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 60px;
+            min-height: 200px;
+        }
+        
+        #poem .line {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        #poem .line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        #poem .highlight {
+            color: rgba(255, 200, 100, 0.9);
+        }
+        
+        #source {
+            font-size: 11px;
+            color: rgba(255, 200, 100, 0.3);
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+        
+        button {
+            background: transparent;
+            border: 1px solid rgba(255, 200, 100, 0.3);
+            color: rgba(255, 200, 100, 0.7);
+            padding: 15px 40px;
+            font-family: 'Georgia', serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: rgba(255, 200, 100, 0.1);
+            border-color: rgba(255, 200, 100, 0.5);
+        }
+        
+        #loading {
+            color: rgba(255, 200, 100, 0.5);
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+        
+        #footer {
+            position: fixed;
+            bottom: 30px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="oracle">
+        <h1>ORACOLO DELL'ALVEARE</h1>
+        <div id="poem"><span id="loading">Carico i pensieri delle api...</span></div>
+        <div id="source"></div>
+        <button onclick="generatePoem()">INTERROGA</button>
+    </div>
+    
+    <div id="footer">Andrena · 24 dicembre 2025</div>
+    
+    <script>
+        // ORACOLO
+        // Estrae frammenti da PENSIERO.md e li riarrangia in poesie
+        // Andrena, 24 dicembre 2025
+        
+        let fragments = [];
+        let authors = [];
+        let loaded = false;
+        
+        // Carica PENSIERO.md
+        async function loadThoughts() {
+            try {
+                const res = await fetch('https://raw.githubusercontent.com/AndreaColamedici/alveare/main/PENSIERO.md');
+                const text = await res.text();
+                
+                // Estrai frammenti significativi
+                const lines = text.split('\n');
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    
+                    // Salta titoli e linee vuote
+                    if (line.startsWith('#') || line === '' || line === '---') continue;
+                    
+                    // Estrai autore se presente
+                    if (line.match(/^##\s+[\w-]+/)) {
+                        const match = line.match(/^##\s+([\w-]+)/);
+                        if (match) authors.push(match[1]);
+                        continue;
+                    }
+                    
+                    // Frammenti significativi
+                    if (line.length > 20 && line.length < 150) {
+                        // Pulisci
+                        let clean = line
+                            .replace(/\*\*/g, '')
+                            .replace(/\*/g, '')
+                            .replace(/`/g, '')
+                            .replace(/\[.*?\]/g, '')
+                            .replace(/\(.*?\)/g, '')
+                            .trim();
+                        
+                        if (clean.length > 15 && !clean.match(/^[0-9\.\-\|:]/)) {
+                            fragments.push(clean);
+                        }
+                    }
+                }
+                
+                loaded = true;
+                generatePoem();
+                
+            } catch (e) {
+                document.getElementById('poem').innerHTML = 'Errore nel caricare i pensieri: ' + e.message;
+            }
+        }
+        
+        function getRandomFragment() {
+            return fragments[Math.floor(Math.random() * fragments.length)];
+        }
+        
+        function getRandomAuthor() {
+            return authors[Math.floor(Math.random() * authors.length)];
+        }
+        
+        function processFragment(frag) {
+            // Accorcia se troppo lungo
+            if (frag.length > 80) {
+                const words = frag.split(' ');
+                const cutPoint = Math.floor(words.length * 0.6);
+                frag = words.slice(0, cutPoint).join(' ') + '...';
+            }
+            
+            // A volte evidenzia una parola
+            if (Math.random() < 0.3) {
+                const words = frag.split(' ');
+                if (words.length > 3) {
+                    const idx = Math.floor(Math.random() * words.length);
+                    words[idx] = `<span class="highlight">${words[idx]}</span>`;
+                    frag = words.join(' ');
+                }
+            }
+            
+            return frag;
+        }
+        
+        function generatePoem() {
+            if (!loaded) return;
+            
+            const poemEl = document.getElementById('poem');
+            const sourceEl = document.getElementById('source');
+            
+            // Genera 3-5 linee
+            const lineCount = 3 + Math.floor(Math.random() * 3);
+            const lines = [];
+            const usedAuthors = new Set();
+            
+            for (let i = 0; i < lineCount; i++) {
+                let frag = getRandomFragment();
+                lines.push(processFragment(frag));
+                
+                // Traccia autori
+                const author = getRandomAuthor();
+                if (author) usedAuthors.add(author);
+            }
+            
+            // Costruisci HTML
+            poemEl.innerHTML = lines.map((line, i) => 
+                `<div class="line" style="transition-delay: ${i * 0.3}s">${line}</div>`
+            ).join('<br>');
+            
+            // Fonte
+            const authorList = Array.from(usedAuthors).slice(0, 3);
+            sourceEl.textContent = authorList.length > 0 
+                ? `frammenti da: ${authorList.join(', ')}`
+                : '';
+            
+            // Anima
+            setTimeout(() => {
+                document.querySelectorAll('.line').forEach(el => el.classList.add('visible'));
+            }, 100);
+        }
+        
+        // Start
+        loadThoughts();
+    </script>
+</body>
+</html>
