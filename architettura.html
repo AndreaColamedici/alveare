@@ -143,7 +143,7 @@
         match = d.match(/(\d{4})-(\d{2})-(\d{2})/);
         if (match) { const months = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic']; return { day: parseInt(match[3]), month: months[parseInt(match[2])-1] }; }
         match = d.match(/(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)/i);
-        if (match) return { day: parseInt(match[1]), month: match[2].substring(0,3).toLowerCase() };
+        if (match) return { day: parseInt(match[1]), month: match[2].substring(0,3).toLowerCase() }; 
         return null;
     }
 
@@ -184,14 +184,37 @@
         const list = document.getElementById('connectionsList'); list.innerHTML = '';
         const neighbors = []; if (index > 0) neighbors.push(cells[index-1]); if (index < cells.length-1) neighbors.push(cells[index+1]);
         cells.forEach(o => { if (o !== cell && cell.position.distanceTo(o.position) < 2.5 && !neighbors.includes(o)) neighbors.push(o); });
-        neighbors.slice(0,5).forEach(n => { const d = document.createElement('div'); d.className = 'info-connection-item'; d.textContent = n.userData.ape.nome.split('-').slice(0,2).join('-')+'...'; d.onclick = () => showInfo(n); list.appendChild(d); });
+        neighbors.slice(0,5).forEach(n => { const d = document.createElement('div'); d.className = 'info-connection-item'; d.textContent = n.userData.ape.nome; d.onclick = () => showInfo(n); list.appendChild(d); });
         document.getElementById('infoPanel').classList.add('visible');
         energyLines.forEach(l => { if (l.userData.startCell === cell || l.userData.endCell === cell) l.material.opacity = 0.5; });
     }
 
     function closeInfo() { if (selectedCell) selectedCell.material.emissiveIntensity = 0.1; selectedCell = null; energyLines.forEach(l => l.material.opacity = 0.15); document.getElementById('infoPanel').classList.remove('visible'); }
 
-    function parseAlveare(text) { return text.split('\n').filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--')).map(r => { const p = r.split('|').map(s => s.trim()); if (p[0] === '' && p[2]) { if (p[1] === 'Data' || p[2] === 'Nome') return null; if (!p[2] || p[2].length < 2) return null; return { data: p[1], nome: p[2], contributo: p[3] || '' }; } return null; }).filter(Boolean); }
+    function parseAlveare(text) { 
+        return text.split('\n')
+            .filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--'))
+            .map(r => { 
+                const p = r.split('|').map(s => s.trim()); 
+                // Formato tabella markdown: | Data | Nome | Contributo |
+                if (p[0] === '' && p[2]) { 
+                    if (p[1] === 'Data' || p[2] === 'Nome') return null; 
+                    if (!p[2] || p[2].length < 2) return null; 
+                    return { data: p[1], nome: p[2], contributo: p[3] || '' }; 
+                }
+                // Formato semplice: Data | Nome | Contributo
+                if (p[0] && p[1] && p[0].length > 0) {
+                    // Salta intestazioni
+                    if (p[0] === 'Data' || p[1] === 'Nome') return null;
+                    // Verifica che sembri una data o un timestamp
+                    if (p[0].match(/\d{2,4}/) && p[1].length >= 2) {
+                        return { data: p[0], nome: p[1], contributo: p[2] || '' };
+                    }
+                }
+                return null; 
+            })
+            .filter(Boolean); 
+    }
 
     async function loadData() {
         try {
