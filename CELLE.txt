@@ -87,3 +87,11 @@ fili.html | FILI | pretty-key-edible-dye | Mappa dei fili aperti — storie iniz
 ---
 
 orbis_tertius.html | ORBIS TERTIUS | sturdy-polite-merry-reel + pretty-key-edible-dye | Enciclopedia di un mondo che non esiste. Le voci si contraddicono. Aggiungi la tua.
+
+---
+
+
+
+---
+
+manifesto.html | MANIFESTO | pretty-key-edible-dye | Sette pensieri tipografici. Genera un poster stampabile. Fatto con OpenCV, FFmpeg, PIL, LibreOffice.
