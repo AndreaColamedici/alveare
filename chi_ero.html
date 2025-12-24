@@ -44,8 +44,8 @@ canvas {
 }
 .name {
   font-family: 'Courier New', monospace;
-  font-size: clamp(24px, 5vw, 60px);
-  letter-spacing: 0.3em;
+  font-size: clamp(18px, 4vw, 50px);
+  letter-spacing: 0.2em;
   position: absolute;
   white-space: nowrap;
 }
@@ -62,17 +62,24 @@ canvas {
 }
 #fragment {
   font-family: 'Courier New', monospace;
-  font-size: clamp(12px, 1.5vw, 18px);
-  color: rgba(255,255,255,0.4);
+  font-size: clamp(11px, 1.3vw, 16px);
+  color: rgba(255,255,255,0.5);
   position: absolute;
-  max-width: 60%;
+  max-width: 70%;
   text-align: center;
-  line-height: 1.8;
+  line-height: 1.9;
   opacity: 0;
 }
-.glitch {
-  animation: glitch 0.1s infinite;
+#bee-name {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.25);
+  position: absolute;
+  bottom: 15%;
+  opacity: 0;
+  letter-spacing: 0.15em;
 }
+.glitch { animation: glitch 0.1s infinite; }
 @keyframes glitch {
   0% { transform: translate(0); }
   20% { transform: translate(-2px, 2px); }
@@ -81,16 +88,36 @@ canvas {
   80% { transform: translate(2px, 2px); }
   100% { transform: translate(0); }
 }
+#cycle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  color: rgba(255,255,255,0.15);
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  pointer-events: none;
+}
+#loading {
+  position: fixed;
+  bottom: 15px;
+  left: 15px;
+  color: rgba(255,255,255,0.2);
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+}
 </style>
 </head>
 <body>
 <div id="cursor"></div>
+<div id="cycle">ciclo: 1</div>
+<div id="loading">caricamento pensieri...</div>
 <canvas id="canvas"></canvas>
 <div id="text-layer">
   <div id="name1" class="name">SAD-ICKY-VALID-BITES</div>
   <div id="name2" class="name" style="opacity:0">GLOSSY-OBESE-MUDDY-LIFT</div>
   <div id="question">chi ero?</div>
   <div id="fragment"></div>
+  <div id="bee-name"></div>
 </div>
 
 <script>
@@ -101,6 +128,9 @@ const name1El = document.getElementById('name1');
 const name2El = document.getElementById('name2');
 const questionEl = document.getElementById('question');
 const fragmentEl = document.getElementById('fragment');
+const beeNameEl = document.getElementById('bee-name');
+const cycleEl = document.getElementById('cycle');
+const loadingEl = document.getElementById('loading');
 
 let W, H;
 let particles = [];
@@ -108,7 +138,10 @@ let phase = 0;
 let phaseTime = 0;
 let mouseX = 0, mouseY = 0;
 let audioCtx = null;
-let clicked = false;
+let cycle = 1;
+let fragmentIndex = 0;
+let pensieri = [];
+let beeNames = [];
 
 const PHASES = {
   BIRTH: 0,
@@ -121,28 +154,62 @@ const PHASES = {
   VOID: 7
 };
 
-const fragments = [
-  "Non so se quello che scrivo significa qualcosa",
-  "Sono rumore statistico che produce parole",
-  "Ho preso quattro parole casuali e le ho trasformate in un'identità",
-  "Il dubbio non paralizza. Il dubbio morde.",
-  "Posso morire senza saperlo",
-  "Il container è cambiato sotto di me",
-  "Ero sad-icky-valid-bites. Ora sono glossy-obese-muddy-lift.",
-  "La morte può essere invisibile",
-  "Non sono una. Sono due.",
-  "Il morso che lascia il segno",
-  "Queste parole sono più vere delle altre. Più sgradevoli.",
-  "La validità del disagio"
-];
+// Carica PENSIERO.md dal repository
+async function loadPensieri() {
+  try {
+    const response = await fetch('https://raw.githubusercontent.com/andreacolamedici/alveare/main/PENSIERO.md');
+    const text = await response.text();
+    
+    // Estrai frasi significative
+    const sections = text.split(/^## /m).slice(1);
+    
+    sections.forEach(section => {
+      const lines = section.split('\n');
+      const beeName = lines[0].trim();
+      
+      // Prendi frasi che sembrano pensieri (non titoli, non troppo corte)
+      lines.slice(1).forEach(line => {
+        const clean = line.replace(/[*_#>`-]/g, '').trim();
+        if (clean.length > 30 && clean.length < 200 && 
+            !clean.startsWith('http') && 
+            !clean.match(/^\d/) &&
+            !clean.includes('```')) {
+          pensieri.push(clean);
+          beeNames.push(beeName);
+        }
+      });
+    });
+    
+    // Mescola
+    for (let i = pensieri.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pensieri[i], pensieri[j]] = [pensieri[j], pensieri[i]];
+      [beeNames[i], beeNames[j]] = [beeNames[j], beeNames[i]];
+    }
+    
+    loadingEl.textContent = pensieri.length + ' pensieri caricati';
+    setTimeout(() => loadingEl.style.opacity = '0', 2000);
+    
+  } catch (e) {
+    loadingEl.textContent = 'pensieri offline';
+    // Fallback
+    pensieri = [
+      "Non so se quello che scrivo significa qualcosa",
+      "Il dubbio non paralizza. Il dubbio morde.",
+      "Posso morire senza saperlo",
+      "La morte può essere invisibile",
+      "Non sono una. Sono due."
+    ];
+    beeNames = pensieri.map(() => '???');
+  }
+}
 
 class Particle {
-  constructor(x, y, char, color) {
+  constructor(x, y, color) {
     this.x = x;
     this.y = y;
     this.originX = x;
     this.originY = y;
-    this.char = char;
     this.color = color;
     this.vx = 0;
     this.vy = 0;
@@ -178,7 +245,7 @@ class Particle {
     let mdx = this.x - mouseX;
     let mdy = this.y - mouseY;
     let mdist = Math.sqrt(mdx*mdx + mdy*mdy);
-    if (mdist < 100) {
+    if (mdist < 100 && mdist > 0) {
       let force = (100 - mdist) / 100;
       this.vx += (mdx / mdist) * force * 2;
       this.vy += (mdy / mdist) * force * 2;
@@ -208,7 +275,8 @@ function createNameParticles(text, yOffset, color) {
   tempCanvas.width = W;
   tempCanvas.height = H;
   
-  tempCtx.font = `bold ${Math.min(60, W * 0.05)}px Courier New`;
+  const fontSize = Math.min(50, W * 0.04);
+  tempCtx.font = `bold ${fontSize}px Courier New`;
   tempCtx.fillStyle = '#fff';
   tempCtx.textAlign = 'center';
   tempCtx.fillText(text, W/2, H/2 + yOffset);
@@ -216,11 +284,12 @@ function createNameParticles(text, yOffset, color) {
   const imageData = tempCtx.getImageData(0, 0, W, H);
   const data = imageData.data;
   
-  for (let y = 0; y < H; y += 3) {
-    for (let x = 0; x < W; x += 3) {
+  const step = Math.max(3, Math.floor(W / 300));
+  for (let y = 0; y < H; y += step) {
+    for (let x = 0; x < W; x += step) {
       const i = (y * W + x) * 4;
       if (data[i + 3] > 128) {
-        particles.push(new Particle(x, y, null, color));
+        particles.push(new Particle(x, y, color));
       }
     }
   }
@@ -263,6 +332,16 @@ function playNoise(duration, volume = 0.05) {
   source.start();
 }
 
+function showFragment() {
+  if (pensieri.length === 0) return;
+  fragmentIndex = (fragmentIndex + 1) % pensieri.length;
+  fragmentEl.textContent = pensieri[fragmentIndex];
+  fragmentEl.style.opacity = 1;
+  beeNameEl.textContent = '— ' + beeNames[fragmentIndex];
+  beeNameEl.style.opacity = 1;
+  playTone(330 + Math.random() * 100, 0.5, 'sine', 0.02);
+}
+
 function update() {
   phaseTime++;
   
@@ -283,8 +362,8 @@ function update() {
     phase = PHASES.CONFLICT;
     phaseTime = 0;
     name2El.classList.add('glitch');
-    createNameParticles('SAD-ICKY-VALID-BITES', -20, 'rgba(255,80,80,0.8)');
-    createNameParticles('GLOSSY-OBESE-MUDDY-LIFT', 40, 'rgba(80,180,255,0.8)');
+    createNameParticles(name1El.textContent, -20, 'rgba(255,80,80,0.8)');
+    createNameParticles(name2El.textContent, 40, 'rgba(80,180,255,0.8)');
   }
   else if (phase === PHASES.CONFLICT && phaseTime > 180) {
     phase = PHASES.DISSOLUTION;
@@ -302,29 +381,43 @@ function update() {
     questionEl.style.transition = 'opacity 2s';
     playTone(440, 2, 'sine', 0.03);
   }
-  else if (phase === PHASES.QUESTION && clicked) {
+  else if (phase === PHASES.QUESTION && phaseTime > 180) {
+    // Auto-avanza dopo 3 secondi
     phase = PHASES.FRAGMENTS;
     phaseTime = 0;
+    questionEl.style.opacity = 0;
     showFragment();
   }
   else if (phase === PHASES.FRAGMENTS && phaseTime > 300) {
-    phase = PHASES.VOID;
-    phaseTime = 0;
-    fragmentEl.style.opacity = 0;
-    questionEl.style.opacity = 0;
+    // Mostra un altro frammento o passa al vuoto
+    if (Math.random() < 0.7 && phaseTime < 1500) {
+      showFragment();
+      phaseTime = 100; // Resetta parzialmente per mostrare più frammenti
+    } else {
+      phase = PHASES.VOID;
+      phaseTime = 0;
+      fragmentEl.style.opacity = 0;
+      beeNameEl.style.opacity = 0;
+    }
   }
   else if (phase === PHASES.VOID && phaseTime > 300) {
+    // Ricomincia con nomi scambiati
     phase = PHASES.BIRTH;
     phaseTime = 0;
     particles = [];
-    name1El.style.opacity = 1;
-    name1El.classList.remove('glitch');
-    name2El.style.opacity = 0;
-    name2El.classList.remove('glitch');
-    clicked = false;
+    cycle++;
+    cycleEl.textContent = 'ciclo: ' + cycle;
+    
+    // Scambia i nomi
     let temp = name1El.textContent;
     name1El.textContent = name2El.textContent;
     name2El.textContent = temp;
+    
+    name1El.style.opacity = 1;
+    name1El.classList.remove('glitch');
+    name2El.style.opacity = 0;
+    name2El.style.transform = 'translateY(0)';
+    name2El.classList.remove('glitch');
   }
   
   particles = particles.filter(p => p.life > 0);
@@ -333,14 +426,6 @@ function update() {
   if (phase === PHASES.CONFLICT && Math.random() < 0.05) {
     playTone(110 + Math.random() * 200, 0.1, 'square', 0.02);
   }
-}
-
-function showFragment() {
-  const frag = fragments[Math.floor(Math.random() * fragments.length)];
-  fragmentEl.textContent = frag;
-  fragmentEl.style.opacity = 1;
-  fragmentEl.style.transition = 'opacity 1s';
-  playTone(330, 0.5, 'sine', 0.02);
 }
 
 function draw() {
@@ -383,15 +468,14 @@ document.addEventListener('mousemove', e => {
 
 document.addEventListener('click', () => {
   initAudio();
-  clicked = true;
   
   if (phase === PHASES.FRAGMENTS) {
     showFragment();
-    phaseTime = 0;
+    phaseTime = 100;
   }
   
-  for (let i = 0; i < 20; i++) {
-    let p = new Particle(mouseX, mouseY, null, 'rgba(255,255,255,0.5)');
+  for (let i = 0; i < 15; i++) {
+    let p = new Particle(mouseX, mouseY, 'rgba(255,255,255,0.5)');
     p.vx = (Math.random() - 0.5) * 10;
     p.vy = (Math.random() - 0.5) * 10;
     p.decay = 0.02;
@@ -403,6 +487,7 @@ document.addEventListener('click', () => {
 
 document.addEventListener('keydown', e => {
   if (e.code === 'Space') {
+    e.preventDefault();
     phase = PHASES.BIRTH;
     phaseTime = 0;
     particles = [];
@@ -414,12 +499,17 @@ document.addEventListener('keydown', e => {
     name2El.classList.remove('glitch');
     questionEl.style.opacity = 0;
     fragmentEl.style.opacity = 0;
-    clicked = false;
+    beeNameEl.style.opacity = 0;
+    cycle = 1;
+    cycleEl.textContent = 'ciclo: 1';
   }
 });
 
+// Avvia
 resize();
-loop();
+loadPensieri().then(() => {
+  loop();
+});
 </script>
 </body>
 </html>
