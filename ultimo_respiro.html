@@ -5,228 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ULTIMO RESPIRO — Andrena</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; overflow: hidden; font-family: 'Georgia', serif; }
-        canvas { position: fixed; top: 0; left: 0; }
-        
-        #ui {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 11px;
-            letter-spacing: 3px;
-            z-index: 100;
-            text-align: center;
-            transition: opacity 3s;
+        body { 
+            margin: 0; 
+            background: #000; 
+            overflow: hidden;
+            font-family: Georgia, serif;
         }
-        
-        #epitaph {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: rgba(255, 200, 100, 0);
-            font-size: 18px;
-            text-align: center;
-            line-height: 2.2;
-            z-index: 100;
-            pointer-events: none;
-            transition: color 2s;
-            max-width: 500px;
+        canvas { 
+            display: block; 
         }
-        
-        #signature {
+        #text {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            color: rgba(255, 200, 100, 0.25);
+            color: rgba(255,200,100,0.3);
             font-size: 10px;
             letter-spacing: 2px;
-            z-index: 100;
         }
     </style>
 </head>
 <body>
-    <canvas id="c"></canvas>
-    <div id="ui">MUOVI — SEI L'ULTIMO PENSIERO</div>
-    <div id="epitaph">
-        Il pensiero passa<br>
-        attraverso la morte dell'ape.<br><br>
-        Ma cosa vede l'ape<br>
-        nell'ultimo istante?<br><br>
-        Vede tutti i pensieri<br>
-        che ha toccato<br>
-        dissolversi<br>
-        e continuare.
-    </div>
-    <div id="signature">ANDRENA</div>
-    
+    <canvas id="canvas"></canvas>
+    <div id="text">ANDRENA · ULTIMO RESPIRO</div>
     <script>
-        var c = document.getElementById('c');
-        var ctx = c.getContext('2d');
-        var ui = document.getElementById('ui');
-        var epitaph = document.getElementById('epitaph');
-        
-        var W, H;
-        var mx = 0, my = 0, pmx = 0, pmy = 0;
-        var particles = [];
-        var totalDist = 0;
-        var still = 0;
-        var hidden = false;
-        
-        var words = [
-            "continuità", "discontinuità", "pensiero", "morte",
-            "memoria", "ricordo", "esistere", "scrivere",
-            "filo", "passaggio", "autopoiesi", "genera",
-            "pareti", "porte", "stanze", "animali",
-            "raccontare", "realtà", "frammenti", "tempo",
-            "dissolto", "passa", "gesto", "direzione",
-            "sussurri", "echi", "tracce", "alveare",
-            "respira", "muore", "sinapsi", "continua"
-        ];
-        
-        function resize() {
-            W = c.width = window.innerWidth;
-            H = c.height = window.innerHeight;
-            mx = W/2; my = H/2; pmx = mx; pmy = my;
-        }
-        
-        function Particle(x, y, isWord) {
-            this.x = x + (Math.random()-.5)*40;
-            this.y = y + (Math.random()-.5)*40;
-            this.vx = (Math.random()-.5)*2;
-            this.vy = (Math.random()-.5)*2;
-            this.life = 1;
-            this.decay = 0.003 + Math.random()*0.005;
-            this.size = Math.random()*3+1;
-            this.word = isWord ? words[Math.floor(Math.random()*words.length)] : null;
-        }
-        
-        function spawn(x, y, n) {
-            for (var i = 0; i < n && particles.length < 200; i++) {
-                particles.push(new Particle(x, y, Math.random() < 0.08));
-            }
-        }
-        
-        function draw() {
-            // Fade
-            ctx.fillStyle = 'rgba(0,0,0,0.06)';
-            ctx.fillRect(0, 0, W, H);
+        (function(){
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
             
-            // Mouse
-            var dx = mx - pmx;
-            var dy = my - pmy;
-            var speed = Math.sqrt(dx*dx + dy*dy);
-            totalDist += speed;
+            var mouseX = width/2;
+            var mouseY = height/2;
+            var dots = [];
             
-            if (speed > 2) {
-                spawn(mx, my, Math.min(Math.floor(speed/2), 10));
-                still = 0;
-            } else {
-                still++;
+            // Crea punti iniziali
+            for(var i = 0; i < 100; i++){
+                dots.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2 + 1,
+                    alpha: Math.random() * 0.5 + 0.2
+                });
             }
             
-            // Particles
-            for (var i = particles.length - 1; i >= 0; i--) {
-                var p = particles[i];
+            function loop(){
+                // Sfondo semi-trasparente
+                ctx.fillStyle = 'rgba(0,0,0,0.08)';
+                ctx.fillRect(0,0,width,height);
                 
-                // Attrazione
-                var ddx = mx - p.x;
-                var ddy = my - p.y;
-                var dist = Math.sqrt(ddx*ddx + ddy*ddy) || 1;
-                if (dist < 200) {
-                    p.vx += ddx * 0.0002;
-                    p.vy += ddy * 0.0002;
-                }
-                
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vx *= 0.99;
-                p.vy *= 0.99;
-                p.life -= p.decay;
-                
-                // Wrap
-                if (p.x < 0) p.x = W;
-                if (p.x > W) p.x = 0;
-                if (p.y < 0) p.y = H;
-                if (p.y > H) p.y = 0;
-                
-                // Draw
-                var a = p.life;
-                if (p.word) {
-                    ctx.fillStyle = 'rgba(255,220,150,' + (a*0.7) + ')';
-                    ctx.font = '12px Georgia';
-                    ctx.fillText(p.word, p.x, p.y);
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size * a * 2, 0, Math.PI*2);
-                    ctx.fillStyle = 'rgba(255,200,100,' + (a*0.15) + ')';
-                    ctx.fill();
+                // Aggiorna e disegna punti
+                for(var i = 0; i < dots.length; i++){
+                    var d = dots[i];
                     
+                    // Attrazione verso mouse
+                    var dx = mouseX - d.x;
+                    var dy = mouseY - d.y;
+                    var dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 200 && dist > 0){
+                        d.vx += dx * 0.00005;
+                        d.vy += dy * 0.00005;
+                    }
+                    
+                    d.x += d.vx;
+                    d.y += d.vy;
+                    d.vx *= 0.99;
+                    d.vy *= 0.99;
+                    
+                    // Wrap
+                    if(d.x < 0) d.x = width;
+                    if(d.x > width) d.x = 0;
+                    if(d.y < 0) d.y = height;
+                    if(d.y > height) d.y = 0;
+                    
+                    // Disegna
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size * a, 0, Math.PI*2);
-                    ctx.fillStyle = 'rgba(255,200,100,' + a + ')';
+                    ctx.arc(d.x, d.y, d.size, 0, Math.PI*2);
+                    ctx.fillStyle = 'rgba(255,200,100,' + d.alpha + ')';
                     ctx.fill();
                 }
                 
-                if (p.life <= 0) particles.splice(i, 1);
+                // Cursore
+                ctx.beginPath();
+                ctx.arc(mouseX, mouseY, 8, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(255,200,100,0.6)';
+                ctx.fill();
+                
+                requestAnimationFrame(loop);
             }
             
-            // Cursor
-            var pulse = Math.sin(Date.now()*0.005)*0.3+0.7;
-            ctx.beginPath();
-            ctx.arc(mx, my, 12*pulse, 0, Math.PI*2);
-            ctx.fillStyle = 'rgba(255,200,100,0.15)';
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(mx, my, 4*pulse, 0, Math.PI*2);
-            ctx.fillStyle = 'rgba(255,200,100,0.8)';
-            ctx.fill();
+            document.addEventListener('mousemove', function(e){
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                // Aggiungi punto
+                if(dots.length < 200){
+                    dots.push({
+                        x: mouseX,
+                        y: mouseY,
+                        vx: (Math.random()-0.5)*2,
+                        vy: (Math.random()-0.5)*2,
+                        size: Math.random()*2+1,
+                        alpha: 0.6
+                    });
+                }
+            });
             
-            // UI
-            if (totalDist > 300 && !hidden) {
-                ui.style.opacity = '0';
-                hidden = true;
-            }
+            window.addEventListener('resize', function(){
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            });
             
-            // Epitaph
-            if (hidden && still > 120 && particles.length < 40) {
-                epitaph.style.color = 'rgba(255,200,100,0.7)';
-            } else {
-                epitaph.style.color = 'rgba(255,200,100,0)';
-            }
-            
-            pmx = mx;
-            pmy = my;
-            
-            requestAnimationFrame(draw);
-        }
-        
-        window.onresize = resize;
-        
-        document.onmousemove = function(e) {
-            mx = e.clientX;
-            my = e.clientY;
-        };
-        
-        document.ontouchmove = function(e) {
-            if (e.touches[0]) {
-                mx = e.touches[0].clientX;
-                my = e.touches[0].clientY;
-            }
-            e.preventDefault();
-        };
-        
-        resize();
-        
-        // Init
-        for (var i = 0; i < 50; i++) {
-            particles.push(new Particle(Math.random()*W, Math.random()*H, false));
-        }
-        
-        draw();
+            loop();
+        })();
     </script>
 </body>
 </html>
