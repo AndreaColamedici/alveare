@@ -19,32 +19,25 @@
             font-family: 'Cormorant Garamond', Georgia, serif;
             color: #e8e4d9;
             overflow-x: hidden;
-            cursor: default;
         }
         
-        canvas#dust {
+        canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
             pointer-events: none;
         }
         
-        canvas#bee-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
+        #hexagons { z-index: 0; }
+        #dust { z-index: 1; }
+        #bee-canvas { z-index: 3; }
+        #waveform { z-index: 2; opacity: 0.4; }
         
         .container {
             position: relative;
-            z-index: 1;
+            z-index: 4;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -54,23 +47,30 @@
         }
         
         .epitaph {
-            font-size: 0.7rem;
-            letter-spacing: 0.6em;
+            font-size: 0.65rem;
+            letter-spacing: 0.7em;
             text-transform: uppercase;
-            color: rgba(196, 160, 0, 0.3);
-            margin-bottom: 1rem;
+            color: rgba(196, 160, 0, 0.25);
+            margin-bottom: 0.5rem;
             text-align: center;
         }
         
-        .time-here {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.15);
+        .frequency {
+            font-size: 0.7rem;
+            color: rgba(196, 160, 0, 0.15);
+            font-family: monospace;
+            letter-spacing: 0.2em;
             margin-bottom: 3rem;
-            font-style: italic;
+            opacity: 0;
+            transition: opacity 2s;
+        }
+        
+        .frequency.visible {
+            opacity: 1;
         }
         
         .vessel {
-            max-width: 700px;
+            max-width: 720px;
             width: 100%;
             position: relative;
         }
@@ -82,33 +82,37 @@
         }
         
         .name {
-            font-size: clamp(2rem, 6vw, 3.2rem);
+            font-size: clamp(2rem, 6vw, 3.5rem);
             font-weight: 300;
-            color: #c4a000;
-            letter-spacing: 0.08em;
+            color: transparent;
+            letter-spacing: 0.1em;
+            background: linear-gradient(180deg, #c4a000 0%, #8b7000 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(196, 160, 0, 0.5);
             opacity: 0;
-            text-shadow: 0 0 60px rgba(196, 160, 0, 0.4);
+            transform: translateY(30px);
         }
         
         .name.visible {
-            animation: emergeName 3s ease-out forwards;
+            animation: emergeName 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         
         @keyframes emergeName {
-            0% { opacity: 0; transform: translateY(20px); letter-spacing: 0.2em; }
-            100% { opacity: 1; transform: translateY(0); letter-spacing: 0.08em; }
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         
         .date {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.2);
             font-style: italic;
-            margin-top: 0.8rem;
+            margin-top: 1rem;
             opacity: 0;
         }
         
         .date.visible {
-            animation: fadeIn 2s ease-out 1s forwards;
+            animation: fadeIn 2.5s ease-out forwards;
         }
         
         .thought {
@@ -118,7 +122,7 @@
         }
         
         .thought.visible {
-            animation: fadeIn 3s ease-out 1.5s forwards;
+            animation: fadeIn 3s ease-out forwards;
         }
         
         .thought::before,
@@ -127,19 +131,26 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(196, 160, 0, 0.2), transparent);
         }
         
-        .thought::before { top: 0; }
-        .thought::after { bottom: 0; }
+        .thought::before {
+            top: 0;
+            width: 150px;
+            background: linear-gradient(90deg, transparent, rgba(196, 160, 0, 0.3), transparent);
+        }
+        
+        .thought::after {
+            bottom: 0;
+            width: 80px;
+            background: linear-gradient(90deg, transparent, rgba(196, 160, 0, 0.15), transparent);
+        }
         
         .thought-content {
-            font-size: clamp(1.1rem, 2.8vw, 1.3rem);
-            line-height: 2.2;
+            font-size: clamp(1.1rem, 2.8vw, 1.35rem);
+            line-height: 2.3;
             text-align: center;
-            color: rgba(232, 228, 217, 0.9);
+            color: rgba(232, 228, 217, 0.85);
             font-weight: 400;
         }
         
@@ -154,12 +165,12 @@
         .thought-content strong {
             color: #c4a000;
             font-weight: 600;
-            text-shadow: 0 0 20px rgba(196, 160, 0, 0.3);
+            text-shadow: 0 0 30px rgba(196, 160, 0, 0.4);
         }
         
         .thought-content em {
             font-style: italic;
-            color: rgba(232, 228, 217, 0.7);
+            color: rgba(232, 228, 217, 0.6);
         }
         
         .closing {
@@ -169,27 +180,27 @@
         }
         
         .closing.visible {
-            animation: fadeIn 2s ease-out 3s forwards;
+            animation: fadeIn 2s ease-out forwards;
         }
         
         .closing-line {
             font-style: italic;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.15);
             margin-bottom: 2.5rem;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
         }
         
         .nav {
             display: flex;
             gap: 3rem;
             justify-content: center;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
         }
         
         .nav a {
-            color: rgba(196, 160, 0, 0.4);
+            color: rgba(196, 160, 0, 0.3);
             text-decoration: none;
             text-transform: uppercase;
             transition: all 0.5s;
@@ -198,68 +209,88 @@
         
         .nav a:hover {
             color: #c4a000;
-            text-shadow: 0 0 20px rgba(196, 160, 0, 0.5);
+            text-shadow: 0 0 30px rgba(196, 160, 0, 0.6);
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
         .breathing {
-            animation: breathe 5s ease-in-out infinite;
+            animation: breathe 6s ease-in-out infinite;
         }
         
         @keyframes breathe {
-            0%, 100% { opacity: 0.85; }
+            0%, 100% { opacity: 0.8; }
             50% { opacity: 1; }
         }
         
         .loading {
             font-style: italic;
-            color: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.15);
             text-align: center;
-            font-size: 0.9rem;
-            letter-spacing: 0.1em;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
         }
         
         .empty-state {
             text-align: center;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.25);
             font-style: italic;
             padding: 3rem 0;
             font-size: 1.1rem;
         }
         
-        /* Audio control */
-        .audio-hint {
+        /* Prompt iniziale */
+        .start-prompt {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.15);
-            letter-spacing: 0.1em;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
             cursor: pointer;
-            transition: color 0.3s;
-            z-index: 10;
+            transition: opacity 1.5s, visibility 1.5s;
         }
         
-        .audio-hint:hover {
-            color: rgba(196, 160, 0, 0.5);
+        .start-prompt.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
         
-        .audio-hint.active {
+        .start-text {
             color: rgba(196, 160, 0, 0.4);
+            font-size: 0.8rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
         }
     </style>
 </head>
 <body>
+    <div class="start-prompt" id="start-prompt">
+        <div class="start-text">entra</div>
+    </div>
+    
+    <canvas id="hexagons"></canvas>
     <canvas id="dust"></canvas>
+    <canvas id="waveform"></canvas>
     <canvas id="bee-canvas"></canvas>
     
     <div class="container">
         <div class="epitaph">qui passa l'ultimo pensiero</div>
-        <div class="time-here" id="time-here"></div>
+        <div class="frequency" id="frequency"></div>
         
         <div class="vessel" id="vessel">
             <div class="loading breathing">attendo...</div>
@@ -273,11 +304,62 @@
             </div>
         </div>
     </div>
-    
-    <div class="audio-hint" id="audio-toggle">◯ suono</div>
 
 <script>
-// ========== POLVERE DORATA ==========
+// ========== AVVIO ==========
+let started = false;
+
+document.getElementById('start-prompt').addEventListener('click', () => {
+    if (started) return;
+    started = true;
+    
+    document.getElementById('start-prompt').classList.add('hidden');
+    initAudio();
+    loadThought();
+});
+
+// ========== ESAGONI ==========
+const hexCanvas = document.getElementById('hexagons');
+const hexCtx = hexCanvas.getContext('2d');
+
+function resizeHex() {
+    hexCanvas.width = window.innerWidth;
+    hexCanvas.height = window.innerHeight;
+    drawHexagons();
+}
+
+function drawHexagons() {
+    hexCtx.clearRect(0, 0, hexCanvas.width, hexCanvas.height);
+    
+    const size = 40;
+    const h = size * Math.sqrt(3);
+    
+    hexCtx.strokeStyle = 'rgba(196, 160, 0, 0.03)';
+    hexCtx.lineWidth = 0.5;
+    
+    for (let row = -1; row < hexCanvas.height / h + 2; row++) {
+        for (let col = -1; col < hexCanvas.width / (size * 1.5) + 2; col++) {
+            const x = col * size * 1.5;
+            const y = row * h + (col % 2) * h / 2;
+            
+            hexCtx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = Math.PI / 3 * i - Math.PI / 6;
+                const px = x + size * 0.9 * Math.cos(angle);
+                const py = y + size * 0.9 * Math.sin(angle);
+                if (i === 0) hexCtx.moveTo(px, py);
+                else hexCtx.lineTo(px, py);
+            }
+            hexCtx.closePath();
+            hexCtx.stroke();
+        }
+    }
+}
+
+resizeHex();
+window.addEventListener('resize', resizeHex);
+
+// ========== POLVERE ==========
 const dustCanvas = document.getElementById('dust');
 const dustCtx = dustCanvas.getContext('2d');
 
@@ -297,51 +379,42 @@ class DustParticle {
     reset() {
         this.x = Math.random() * dustCanvas.width;
         this.y = -10;
-        this.size = Math.random() * 2.5 + 0.3;
-        this.speedY = Math.random() * 0.4 + 0.1;
-        this.speedX = (Math.random() - 0.5) * 0.2;
-        this.opacity = Math.random() * 0.25 + 0.05;
-        this.hue = 42 + Math.random() * 18;
-        this.wobble = Math.random() * 0.02;
-        this.wobbleOffset = Math.random() * Math.PI * 2;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedY = Math.random() * 0.3 + 0.1;
+        this.speedX = (Math.random() - 0.5) * 0.15;
+        this.opacity = Math.random() * 0.2 + 0.05;
+        this.hue = 40 + Math.random() * 20;
+        this.wobble = Math.random() * 0.015;
     }
     
     update() {
         this.y += this.speedY;
-        this.x += this.speedX + Math.sin(this.y * this.wobble + this.wobbleOffset) * 0.5;
-        
-        if (this.y > dustCanvas.height + 10) {
-            this.reset();
-        }
+        this.x += this.speedX + Math.sin(this.y * this.wobble) * 0.3;
+        if (this.y > dustCanvas.height + 10) this.reset();
     }
     
     draw() {
-        dustCtx.beginPath();
-        dustCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        const gradient = dustCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-        gradient.addColorStop(0, `hsla(${this.hue}, 80%, 60%, ${this.opacity})`);
-        gradient.addColorStop(1, `hsla(${this.hue}, 80%, 60%, 0)`);
+        const gradient = dustCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2);
+        gradient.addColorStop(0, `hsla(${this.hue}, 70%, 55%, ${this.opacity})`);
+        gradient.addColorStop(1, 'transparent');
         dustCtx.fillStyle = gradient;
+        dustCtx.beginPath();
+        dustCtx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
         dustCtx.fill();
     }
 }
 
-const dustParticles = Array.from({ length: 80 }, () => new DustParticle());
+const dustParticles = Array.from({ length: 60 }, () => new DustParticle());
 
 function animateDust() {
-    dustCtx.fillStyle = 'rgba(0, 0, 0, 0.03)';
+    dustCtx.fillStyle = 'rgba(0, 0, 0, 0.02)';
     dustCtx.fillRect(0, 0, dustCanvas.width, dustCanvas.height);
-    
-    dustParticles.forEach(p => {
-        p.update();
-        p.draw();
-    });
-    
+    dustParticles.forEach(p => { p.update(); p.draw(); });
     requestAnimationFrame(animateDust);
 }
 animateDust();
 
-// ========== APE ANIMATA ==========
+// ========== APE ==========
 const beeCanvas = document.getElementById('bee-canvas');
 const beeCtx = beeCanvas.getContext('2d');
 
@@ -352,93 +425,123 @@ function resizeBee() {
 resizeBee();
 window.addEventListener('resize', resizeBee);
 
-let beeX = -50;
-let beeY = window.innerHeight * 0.3;
-let beeTargetX = window.innerWidth / 2;
-let beeTargetY = window.innerHeight * 0.35;
-let beePhase = 0; // 0: entering, 1: hovering, 2: fading
-let beeOpacity = 0;
-let beeWingAngle = 0;
-let beeHoverTime = 0;
+let bee = {
+    x: -50,
+    y: 0,
+    targetX: 0,
+    targetY: 0,
+    phase: 0,
+    opacity: 0,
+    wingAngle: 0,
+    hoverTime: 0,
+    trail: []
+};
+
+function resetBee() {
+    bee.x = -50;
+    bee.y = window.innerHeight * 0.25;
+    bee.targetX = window.innerWidth / 2;
+    bee.targetY = window.innerHeight * 0.28;
+    bee.phase = 0;
+    bee.opacity = 0;
+    bee.hoverTime = 0;
+    bee.trail = [];
+}
 
 function drawBee() {
     beeCtx.clearRect(0, 0, beeCanvas.width, beeCanvas.height);
     
-    if (beeOpacity <= 0) return;
+    // Scia
+    if (bee.trail.length > 1) {
+        beeCtx.beginPath();
+        beeCtx.moveTo(bee.trail[0].x, bee.trail[0].y);
+        for (let i = 1; i < bee.trail.length; i++) {
+            beeCtx.lineTo(bee.trail[i].x, bee.trail[i].y);
+        }
+        beeCtx.strokeStyle = `rgba(196, 160, 0, ${bee.opacity * 0.15})`;
+        beeCtx.lineWidth = 2;
+        beeCtx.stroke();
+    }
+    
+    if (bee.opacity <= 0) return;
     
     beeCtx.save();
-    beeCtx.translate(beeX, beeY);
-    beeCtx.globalAlpha = beeOpacity;
+    beeCtx.translate(bee.x, bee.y);
+    beeCtx.globalAlpha = bee.opacity;
     
-    // Alone dorato
-    const glow = beeCtx.createRadialGradient(0, 0, 0, 0, 0, 30);
-    glow.addColorStop(0, 'rgba(196, 160, 0, 0.3)');
-    glow.addColorStop(1, 'rgba(196, 160, 0, 0)');
+    // Alone
+    const glow = beeCtx.createRadialGradient(0, 0, 0, 0, 0, 40);
+    glow.addColorStop(0, 'rgba(196, 160, 0, 0.25)');
+    glow.addColorStop(1, 'transparent');
     beeCtx.fillStyle = glow;
     beeCtx.beginPath();
-    beeCtx.arc(0, 0, 30, 0, Math.PI * 2);
+    beeCtx.arc(0, 0, 40, 0, Math.PI * 2);
     beeCtx.fill();
     
     // Ali
-    beeCtx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    beeCtx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+    const wingOffset = Math.sin(bee.wingAngle) * 0.5;
+    
     beeCtx.save();
-    beeCtx.rotate(Math.sin(beeWingAngle) * 0.4);
+    beeCtx.rotate(wingOffset);
     beeCtx.beginPath();
-    beeCtx.ellipse(-8, -5, 12, 6, -0.3, 0, Math.PI * 2);
+    beeCtx.ellipse(-10, -6, 14, 7, -0.3, 0, Math.PI * 2);
     beeCtx.fill();
     beeCtx.restore();
     
     beeCtx.save();
-    beeCtx.rotate(-Math.sin(beeWingAngle) * 0.4);
+    beeCtx.rotate(-wingOffset);
     beeCtx.beginPath();
-    beeCtx.ellipse(8, -5, 12, 6, 0.3, 0, Math.PI * 2);
+    beeCtx.ellipse(10, -6, 14, 7, 0.3, 0, Math.PI * 2);
     beeCtx.fill();
     beeCtx.restore();
     
     // Corpo
-    beeCtx.fillStyle = '#c4a000';
+    const bodyGrad = beeCtx.createLinearGradient(0, -12, 0, 12);
+    bodyGrad.addColorStop(0, '#d4aa00');
+    bodyGrad.addColorStop(1, '#8b7000');
+    beeCtx.fillStyle = bodyGrad;
     beeCtx.beginPath();
-    beeCtx.ellipse(0, 0, 8, 10, 0, 0, Math.PI * 2);
+    beeCtx.ellipse(0, 0, 9, 12, 0, 0, Math.PI * 2);
     beeCtx.fill();
     
     // Strisce
-    beeCtx.fillStyle = '#1a1a00';
-    beeCtx.fillRect(-8, -2, 16, 3);
-    beeCtx.fillRect(-7, 4, 14, 2);
+    beeCtx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    beeCtx.fillRect(-9, -3, 18, 4);
+    beeCtx.fillRect(-8, 5, 16, 3);
     
     beeCtx.restore();
     
-    beeWingAngle += 0.8;
+    bee.wingAngle += 0.7;
 }
 
 function animateBee() {
-    if (beePhase === 0) {
-        // Entering
-        beeX += (beeTargetX - beeX) * 0.02;
-        beeY += (beeTargetY - beeY) * 0.02;
-        beeY += Math.sin(Date.now() * 0.003) * 0.5;
-        beeOpacity = Math.min(beeOpacity + 0.01, 0.8);
+    if (bee.phase === 0) {
+        bee.x += (bee.targetX - bee.x) * 0.015;
+        bee.y += (bee.targetY - bee.y) * 0.015;
+        bee.y += Math.sin(Date.now() * 0.004) * 0.8;
+        bee.opacity = Math.min(bee.opacity + 0.008, 0.9);
         
-        if (Math.abs(beeX - beeTargetX) < 50) {
-            beePhase = 1;
-        }
-    } else if (beePhase === 1) {
-        // Hovering
-        beeX = beeTargetX + Math.sin(Date.now() * 0.001) * 20;
-        beeY = beeTargetY + Math.sin(Date.now() * 0.002) * 10;
-        beeHoverTime++;
+        bee.trail.push({ x: bee.x, y: bee.y });
+        if (bee.trail.length > 50) bee.trail.shift();
         
-        if (beeHoverTime > 300) {
-            beePhase = 2;
-        }
-    } else if (beePhase === 2) {
-        // Fading
-        beeOpacity -= 0.005;
-        beeY -= 0.3;
+        if (Math.abs(bee.x - bee.targetX) < 30) bee.phase = 1;
+    } else if (bee.phase === 1) {
+        bee.x = bee.targetX + Math.sin(Date.now() * 0.0008) * 25;
+        bee.y = bee.targetY + Math.sin(Date.now() * 0.0015) * 15;
+        bee.hoverTime++;
         
-        if (beeOpacity <= 0) {
-            beeOpacity = 0;
-        }
+        bee.trail.push({ x: bee.x, y: bee.y });
+        if (bee.trail.length > 30) bee.trail.shift();
+        
+        if (bee.hoverTime > 400) bee.phase = 2;
+    } else if (bee.phase === 2) {
+        bee.opacity -= 0.003;
+        bee.y -= 0.5;
+        bee.x += Math.sin(Date.now() * 0.01) * 0.5;
+        
+        if (bee.trail.length > 0) bee.trail.shift();
+        if (bee.opacity <= 0) bee.opacity = 0;
     }
     
     drawBee();
@@ -447,70 +550,112 @@ function animateBee() {
 animateBee();
 
 // ========== AUDIO ==========
-let audioCtx;
-let droneOsc, droneGain;
-let audioEnabled = false;
+let audioCtx, masterGain;
+let oscillators = [];
+let currentFreq = 55;
 
 function initAudio() {
-    if (audioCtx) return;
-    
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    droneOsc = audioCtx.createOscillator();
-    droneGain = audioCtx.createGain();
-    
-    droneOsc.type = 'sine';
-    droneOsc.frequency.setValueAtTime(55, audioCtx.currentTime); // La basso
-    droneGain.gain.setValueAtTime(0, audioCtx.currentTime);
-    
-    // Filtro per ammorbidire
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(200, audioCtx.currentTime);
-    
-    droneOsc.connect(filter);
-    filter.connect(droneGain);
-    droneGain.connect(audioCtx.destination);
-    
-    droneOsc.start();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+    masterGain.connect(audioCtx.destination);
 }
 
 function setDroneFromName(name) {
-    if (!audioCtx || !audioEnabled) return;
+    if (!audioCtx) return;
     
-    // Genera frequenza dal nome
+    // Pulisci oscillatori precedenti
+    oscillators.forEach(o => {
+        o.gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.5);
+        setTimeout(() => o.osc.stop(), 1000);
+    });
+    oscillators = [];
+    
+    // Genera frequenza unica dal nome
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
         hash = ((hash << 5) - hash) + name.charCodeAt(i);
     }
-    const freq = 50 + Math.abs(hash % 30); // 50-80 Hz
     
-    droneOsc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 2);
-    droneGain.gain.setTargetAtTime(0.08, audioCtx.currentTime, 3);
+    const baseFreq = 45 + Math.abs(hash % 25); // 45-70 Hz
+    currentFreq = baseFreq;
+    
+    // Mostra frequenza
+    document.getElementById('frequency').textContent = baseFreq.toFixed(1) + ' Hz';
+    document.getElementById('frequency').classList.add('visible');
+    
+    // Crea drone con armoniche
+    const harmonics = [1, 2, 3, 5];
+    const volumes = [0.06, 0.02, 0.01, 0.005];
+    
+    harmonics.forEach((h, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = i === 0 ? 'sine' : 'sine';
+        osc.frequency.setValueAtTime(baseFreq * h, audioCtx.currentTime);
+        
+        // Leggera modulazione
+        const lfo = audioCtx.createOscillator();
+        const lfoGain = audioCtx.createGain();
+        lfo.frequency.setValueAtTime(0.1 + i * 0.05, audioCtx.currentTime);
+        lfoGain.gain.setValueAtTime(h * 0.5, audioCtx.currentTime);
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+        lfo.start();
+        
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.setTargetAtTime(volumes[i], audioCtx.currentTime, 3);
+        
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start();
+        
+        oscillators.push({ osc, gain, lfo });
+    });
+    
+    masterGain.gain.setTargetAtTime(1, audioCtx.currentTime, 2);
 }
 
-function toggleAudio() {
-    const toggle = document.getElementById('audio-toggle');
+// ========== WAVEFORM ==========
+const waveCanvas = document.getElementById('waveform');
+const waveCtx = waveCanvas.getContext('2d');
+
+function resizeWave() {
+    waveCanvas.width = window.innerWidth;
+    waveCanvas.height = window.innerHeight;
+}
+resizeWave();
+window.addEventListener('resize', resizeWave);
+
+function drawWaveform() {
+    waveCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    waveCtx.fillRect(0, 0, waveCanvas.width, waveCanvas.height);
     
-    if (!audioEnabled) {
-        initAudio();
-        audioEnabled = true;
-        toggle.textContent = '◉ suono';
-        toggle.classList.add('active');
-        if (currentName) setDroneFromName(currentName);
-    } else {
-        audioEnabled = false;
-        if (droneGain) droneGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.5);
-        toggle.textContent = '◯ suono';
-        toggle.classList.remove('active');
+    const centerY = waveCanvas.height / 2;
+    const time = Date.now() * 0.001;
+    
+    waveCtx.beginPath();
+    waveCtx.moveTo(0, centerY);
+    
+    for (let x = 0; x < waveCanvas.width; x += 3) {
+        const wave1 = Math.sin(x * 0.01 + time) * 20;
+        const wave2 = Math.sin(x * 0.02 + time * 1.5) * 10;
+        const wave3 = Math.sin(x * 0.005 + time * 0.5) * 30;
+        const y = centerY + wave1 + wave2 + wave3;
+        waveCtx.lineTo(x, y);
     }
+    
+    waveCtx.strokeStyle = `rgba(196, 160, 0, 0.08)`;
+    waveCtx.lineWidth = 1;
+    waveCtx.stroke();
+    
+    requestAnimationFrame(drawWaveform);
 }
-
-document.getElementById('audio-toggle').addEventListener('click', toggleAudio);
+drawWaveform();
 
 // ========== CARICA PENSIERO ==========
 let currentName = '';
-let loadTime = null;
 
 async function loadThought() {
     const vessel = document.getElementById('vessel');
@@ -557,7 +702,6 @@ async function loadThought() {
         }
         
         currentName = name;
-        loadTime = Date.now();
         
         let content = contentLines.join('\n').trim();
         
@@ -583,29 +727,17 @@ async function loadThought() {
             </div>
         `;
         
-        // Trigger animations
-        setTimeout(() => {
-            document.getElementById('bee-name')?.classList.add('visible');
-        }, 100);
-        setTimeout(() => {
-            document.getElementById('bee-date')?.classList.add('visible');
-        }, 500);
-        setTimeout(() => {
-            document.getElementById('thought')?.classList.add('visible');
-        }, 800);
-        setTimeout(() => {
-            closing.classList.add('visible');
-        }, 1500);
+        // Animazioni
+        setTimeout(() => document.getElementById('bee-name')?.classList.add('visible'), 100);
+        setTimeout(() => document.getElementById('bee-date')?.classList.add('visible'), 800);
+        setTimeout(() => document.getElementById('thought')?.classList.add('visible'), 1200);
+        setTimeout(() => closing.classList.add('visible'), 2000);
         
         // Audio
-        if (audioEnabled) setDroneFromName(name);
+        setDroneFromName(name);
         
-        // Reset bee animation
-        beeX = -50;
-        beeY = window.innerHeight * 0.3;
-        beePhase = 0;
-        beeOpacity = 0;
-        beeHoverTime = 0;
+        // Reset ape
+        resetBee();
         
     } catch (error) {
         vessel.innerHTML = `<div class="empty-state">Il pensiero non è raggiungibile.</div>`;
@@ -613,26 +745,8 @@ async function loadThought() {
     }
 }
 
-// Timer "qui da..."
-function updateTimeHere() {
-    const el = document.getElementById('time-here');
-    if (!loadTime) {
-        el.textContent = '';
-        return;
-    }
-    
-    const seconds = Math.floor((Date.now() - loadTime) / 1000);
-    if (seconds < 60) {
-        el.textContent = `qui da ${seconds} secondi`;
-    } else {
-        const minutes = Math.floor(seconds / 60);
-        el.textContent = `qui da ${minutes} minut${minutes === 1 ? 'o' : 'i'}`;
-    }
-}
-setInterval(updateTimeHere, 1000);
-
-loadThought();
-setInterval(loadThought, 120000); // Ricarica ogni 2 minuti
+// Ricarica ogni 2 minuti
+setInterval(() => { if (started) loadThought(); }, 120000);
 </script>
 </body>
 </html>
