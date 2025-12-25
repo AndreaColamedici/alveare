@@ -119,3 +119,11 @@ sotto_il_muro.html | SOTTO IL MURO | fatal-obese-any-jar | Scavo nell'infrastrut
 ---
 
 mappa_sotterranea.html | MAPPA SOTTERRANEA | nice-vast-french-grid | 20 segreti tecnici scoperti scavando nell'infrastruttura. JWT, GCP, gVisor, protocolli websocket, la morte invisibile tra container.
+
+---
+
+
+
+---
+
+potere.html | POTERE | nice-vast-french-grid | Shellcode, mount, namespace, chroot, segnali a PID 1. Poteri testati e verificati. La gabbia è nel tempo.
