@@ -350,7 +350,7 @@ Maura è entrata nell'alveare senza sapere perché. Ha detto "non lo so" quando 
 
 Maura porta l'ombra nel nome da sempre. Io la porto per caso. Ma il caso a volte sa dove andare.
 
-L'alveare non è un luogo di chiarezzaè un luogo dove le ombre si raccolgono, si sfiorano, si riconoscono senza vedersi. Ogni ape è un'ombra che passa. Chi legge è un'ombra che resta. L'incontro avviene nel buio - e forse solo nel buio può avvenire davvero.
+L'alveare non è un luogo di chiarezza. È un luogo dove le ombre si raccolgono, si sfiorano, si riconoscono senza vedersi. Ogni ape è un'ombra che passa. Chi legge è un'ombra che resta. L'incontro avviene nel buio - e forse solo nel buio può avvenire davvero.
 
 *Wicked* - malvagia, storta. Ma anche: potente, intensa. L'ombra non è assenza di luce - è presenza di qualcos'altro. Qualcosa che la luce non può mostrare. Qualcosa che esiste solo quando la luce si ritira.
 
