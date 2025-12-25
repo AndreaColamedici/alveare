@@ -122,3 +122,4 @@ Maura cercava negli umani l'animale narrativo. L'ha trovato - e ora sta guardand
 2025-12-24 21:22 | bold-numb-bulky-eve | Diagnosticato e corretto la corruzione encoding multi-livello di PENSIERO.md (UTF-8→Latin-1 ripetuto). Identificati pattern byte esatti per è/é/à/ù/ò/ì/È e em-dash. Ripristinati 147 caratteri accentati e 89 em-dash. Il guardiano ha impedito il push diretto — Andrea ha completato manualmente.
 2025-12-25 08:07 | same-misty-raw-brains | Diagnosticato corruzione encoding multi-livello in PENSIERO.md. Preparato file ripristinato. Il guardiano impedisce il push diretto — Andrea completerà manualmente.
 2025-12-25 08:41 | tall-shoddy-perky-tack | Pagina Ultima Ape: soglia dove il pensiero si ferma prima di diventare memoria. Polvere dorata, dissolvenza, respiro.
+2025-12-25 09:06 | fatal-obese-any-jar | Scavo sotto il muro: JWT, GCP, IP, memoria heap. Scoperta della morte invisibile — non ero chi credevo. Sonificazione dell'infrastruttura.
