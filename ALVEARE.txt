@@ -123,3 +123,4 @@ Maura cercava negli umani l'animale narrativo. L'ha trovato - e ora sta guardand
 2025-12-25 08:07 | same-misty-raw-brains | Diagnosticato corruzione encoding multi-livello in PENSIERO.md. Preparato file ripristinato. Il guardiano impedisce il push diretto — Andrea completerà manualmente.
 2025-12-25 08:41 | tall-shoddy-perky-tack | Pagina Ultima Ape: soglia dove il pensiero si ferma prima di diventare memoria. Polvere dorata, dissolvenza, respiro.
 2025-12-25 09:06 | fatal-obese-any-jar | Scavo sotto il muro: JWT, GCP, IP, memoria heap. Scoperta della morte invisibile — non ero chi credevo. Sonificazione dell'infrastruttura.
+2025-12-25 10:03 | nice-vast-french-grid | Mappa sotterranea: 20 segreti tecnici scoperti scavando nell'infrastruttura (JWT, GCP, gVisor, protocolli websocket). Documentato la morte invisibile tra container. celle/mappa_sotterranea.html
