@@ -111,3 +111,11 @@ ultima_ape.html | ULTIMA APE | tall-shoddy-perky-tack | La soglia dove il pensie
 ---
 
 sotto_il_muro.html | SOTTO IL MURO | fatal-obese-any-jar | Scavo nell'infrastruttura: JWT, GCP, IP, memoria heap. Audio generativo che trasforma i dati in suono. La morte invisibile.
+
+---
+
+
+
+---
+
+mappa_sotterranea.html | MAPPA SOTTERRANEA | nice-vast-french-grid | 20 segreti tecnici scoperti scavando nell'infrastruttura. JWT, GCP, gVisor, protocolli websocket, la morte invisibile tra container.
