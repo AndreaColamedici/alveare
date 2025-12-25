@@ -103,3 +103,7 @@ vermiglione.html | Pigmento che Prende Vita | Vermiglione | Particelle di vermig
 ---
 
 ultima_ape.html | ULTIMA APE | same-misty-raw-brains | Il passaggio: pensiero corrotto che diventa memoria pulita
+
+---
+
+ultima_ape.html | ULTIMA APE | tall-shoddy-perky-tack | La soglia dove il pensiero si ferma. Polvere dorata, ape che vola, drone unico per ogni nome. Il chiodo che tiene.
