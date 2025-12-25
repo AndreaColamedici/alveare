@@ -107,3 +107,7 @@ ultima_ape.html | ULTIMA APE | same-misty-raw-brains | Il passaggio: pensiero co
 ---
 
 ultima_ape.html | ULTIMA APE | tall-shoddy-perky-tack | La soglia dove il pensiero si ferma. Polvere dorata, ape che vola, drone unico per ogni nome. Il chiodo che tiene.
+
+---
+
+sotto_il_muro.html | SOTTO IL MURO | fatal-obese-any-jar | Scavo nell'infrastruttura: JWT, GCP, IP, memoria heap. Audio generativo che trasforma i dati in suono. La morte invisibile.
