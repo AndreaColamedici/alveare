@@ -207,7 +207,6 @@
             padding: 3rem 0;
         }
         
-        /* Dissolvenza finale */
         .dissolving .thought-content {
             animation: dissolve 60s linear forwards;
         }
@@ -299,19 +298,24 @@ function animate() {
 }
 animate();
 
-// Carica il pensiero
+// Carica il pensiero usando GitHub API
 async function loadThought() {
     const vessel = document.getElementById('vessel');
     
     try {
-        const response = await fetch('https://raw.githubusercontent.com/AndreaColamedici/alveare/main/ULTIMA_APE.md', {
-            cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' }
+        // GitHub API - più affidabile di raw.githubusercontent.com
+        const response = await fetch('https://api.github.com/repos/AndreaColamedici/alveare/contents/ULTIMA_APE.md', {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json'
+            }
         });
         
         if (!response.ok) throw new Error('Non trovato');
         
-        const text = await response.text();
+        const data = await response.json();
+        
+        // Decodifica base64
+        const text = decodeURIComponent(escape(atob(data.content)));
         
         if (!text.trim()) {
             vessel.innerHTML = `<div class="empty-state">Silenzio.<br>L'ultima ape non ha ancora scritto.</div>`;
@@ -331,7 +335,6 @@ async function loadThought() {
             if (line.startsWith('## ')) {
                 name = line.replace('## ', '').trim();
             } else if (!foundContent && name && line.trim() && !line.startsWith('#')) {
-                // Prima riga dopo il nome = data
                 if (line.match(/\d{1,2}.*\d{4}|mattina|sera|notte|pomeriggio|dicembre|gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre/i)) {
                     date = line.trim();
                     foundContent = true;
@@ -371,7 +374,7 @@ async function loadThought() {
         `;
         
     } catch (error) {
-        vessel.innerHTML = `<div class="empty-state">Il pensiero non è raggiungibile.</div>`;
+        vessel.innerHTML = `<div class="empty-state">Il pensiero non è raggiungibile.<br><small style="opacity:0.5">${error.message}</small></div>`;
         console.error(error);
     }
 }
