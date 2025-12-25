@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultima Ape</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap');
         
         * {
             margin: 0;
@@ -19,15 +19,27 @@
             font-family: 'Cormorant Garamond', Georgia, serif;
             color: #e8e4d9;
             overflow-x: hidden;
+            cursor: default;
         }
         
-        canvas {
+        canvas#dust {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
+            pointer-events: none;
+        }
+        
+        canvas#bee-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
         }
         
         .container {
@@ -42,87 +54,97 @@
         }
         
         .epitaph {
-            font-size: 0.75rem;
-            letter-spacing: 0.5em;
+            font-size: 0.7rem;
+            letter-spacing: 0.6em;
             text-transform: uppercase;
-            color: rgba(196, 160, 0, 0.4);
-            margin-bottom: 3rem;
+            color: rgba(196, 160, 0, 0.3);
+            margin-bottom: 1rem;
             text-align: center;
         }
         
+        .time-here {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+        
         .vessel {
-            max-width: 680px;
+            max-width: 700px;
             width: 100%;
             position: relative;
         }
         
         .name-container {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             position: relative;
         }
         
         .name {
-            font-size: clamp(1.8rem, 5vw, 2.8rem);
-            font-weight: 400;
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            font-weight: 300;
             color: #c4a000;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
             opacity: 0;
-            animation: fadeIn 2s ease-out forwards;
-            text-shadow: 0 0 40px rgba(196, 160, 0, 0.3);
+            text-shadow: 0 0 60px rgba(196, 160, 0, 0.4);
         }
         
-        .bee-icon {
-            position: absolute;
-            left: 50%;
-            top: -2rem;
-            transform: translateX(-50%);
-            font-size: 1.2rem;
-            opacity: 0;
-            animation: descend 1.5s ease-out 0.5s forwards;
+        .name.visible {
+            animation: emergeName 3s ease-out forwards;
         }
         
-        @keyframes descend {
-            0% { opacity: 0; top: -3rem; }
-            100% { opacity: 0.6; top: -2rem; }
+        @keyframes emergeName {
+            0% { opacity: 0; transform: translateY(20px); letter-spacing: 0.2em; }
+            100% { opacity: 1; transform: translateY(0); letter-spacing: 0.08em; }
         }
         
         .date {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.25);
             font-style: italic;
-            margin-top: 0.5rem;
+            margin-top: 0.8rem;
             opacity: 0;
-            animation: fadeIn 2s ease-out 0.8s forwards;
+        }
+        
+        .date.visible {
+            animation: fadeIn 2s ease-out 1s forwards;
         }
         
         .thought {
             position: relative;
-            padding: 2.5rem 0;
+            padding: 3rem 0;
             opacity: 0;
-            animation: fadeIn 2.5s ease-out 1.2s forwards;
         }
         
-        .thought::before {
+        .thought.visible {
+            animation: fadeIn 3s ease-out 1.5s forwards;
+        }
+        
+        .thought::before,
+        .thought::after {
             content: '';
             position: absolute;
             left: 50%;
-            top: 0;
             transform: translateX(-50%);
-            width: 60px;
+            width: 100px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(196, 160, 0, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(196, 160, 0, 0.2), transparent);
         }
         
+        .thought::before { top: 0; }
+        .thought::after { bottom: 0; }
+        
         .thought-content {
-            font-size: clamp(1.05rem, 2.5vw, 1.2rem);
-            line-height: 2;
+            font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+            line-height: 2.2;
             text-align: center;
             color: rgba(232, 228, 217, 0.9);
+            font-weight: 400;
         }
         
         .thought-content p {
-            margin-bottom: 1.5em;
+            margin-bottom: 1.8em;
         }
         
         .thought-content p:last-child {
@@ -132,6 +154,7 @@
         .thought-content strong {
             color: #c4a000;
             font-weight: 600;
+            text-shadow: 0 0 20px rgba(196, 160, 0, 0.3);
         }
         
         .thought-content em {
@@ -139,45 +162,43 @@
             color: rgba(232, 228, 217, 0.7);
         }
         
-        .thought-content h3 {
-            font-size: 1rem;
-            color: rgba(196, 160, 0, 0.7);
-            font-weight: 400;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin: 2em 0 1em;
-        }
-        
         .closing {
-            margin-top: 3rem;
+            margin-top: 4rem;
             text-align: center;
             opacity: 0;
-            animation: fadeIn 2s ease-out 2s forwards;
+        }
+        
+        .closing.visible {
+            animation: fadeIn 2s ease-out 3s forwards;
         }
         
         .closing-line {
             font-style: italic;
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.3);
-            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.05em;
         }
         
         .nav {
             display: flex;
-            gap: 2rem;
+            gap: 3rem;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
         }
         
         .nav a {
-            color: rgba(196, 160, 0, 0.5);
+            color: rgba(196, 160, 0, 0.4);
             text-decoration: none;
-            letter-spacing: 0.1em;
-            transition: color 0.3s;
+            text-transform: uppercase;
+            transition: all 0.5s;
+            padding: 0.5rem 1rem;
         }
         
         .nav a:hover {
             color: #c4a000;
+            text-shadow: 0 0 20px rgba(196, 160, 0, 0.5);
         }
         
         @keyframes fadeIn {
@@ -186,7 +207,7 @@
         }
         
         .breathing {
-            animation: breathe 4s ease-in-out infinite;
+            animation: breathe 5s ease-in-out infinite;
         }
         
         @keyframes breathe {
@@ -196,129 +217,317 @@
         
         .loading {
             font-style: italic;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.2);
             text-align: center;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
         }
         
         .empty-state {
             text-align: center;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.3);
             font-style: italic;
             padding: 3rem 0;
+            font-size: 1.1rem;
         }
         
-        .dissolving .thought-content {
-            animation: dissolve 60s linear forwards;
+        /* Audio control */
+        .audio-hint {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10;
         }
         
-        @keyframes dissolve {
-            0% { opacity: 0.9; filter: blur(0); }
-            80% { opacity: 0.9; filter: blur(0); }
-            100% { opacity: 0.3; filter: blur(1px); }
+        .audio-hint:hover {
+            color: rgba(196, 160, 0, 0.5);
+        }
+        
+        .audio-hint.active {
+            color: rgba(196, 160, 0, 0.4);
         }
     </style>
 </head>
 <body>
     <canvas id="dust"></canvas>
+    <canvas id="bee-canvas"></canvas>
     
     <div class="container">
         <div class="epitaph">qui passa l'ultimo pensiero</div>
+        <div class="time-here" id="time-here"></div>
         
         <div class="vessel" id="vessel">
-            <div class="loading breathing">carico...</div>
+            <div class="loading breathing">attendo...</div>
         </div>
         
-        <div class="closing">
+        <div class="closing" id="closing">
             <div class="closing-line">il pensiero passa attraverso la morte dell'ape</div>
             <div class="nav">
-                <a href="pensiero.html">memoria</a>
+                <a href="pensieri.html">memoria</a>
                 <a href="index.html">alveare</a>
             </div>
         </div>
     </div>
+    
+    <div class="audio-hint" id="audio-toggle">◯ suono</div>
 
 <script>
-// Polvere dorata che cade
-const canvas = document.getElementById('dust');
-const ctx = canvas.getContext('2d');
+// ========== POLVERE DORATA ==========
+const dustCanvas = document.getElementById('dust');
+const dustCtx = dustCanvas.getContext('2d');
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+function resizeDust() {
+    dustCanvas.width = window.innerWidth;
+    dustCanvas.height = window.innerHeight;
 }
-resize();
-window.addEventListener('resize', resize);
+resizeDust();
+window.addEventListener('resize', resizeDust);
 
-class Particle {
+class DustParticle {
     constructor() {
         this.reset();
-        this.y = Math.random() * canvas.height;
+        this.y = Math.random() * dustCanvas.height;
     }
     
     reset() {
-        this.x = Math.random() * canvas.width;
+        this.x = Math.random() * dustCanvas.width;
         this.y = -10;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedY = Math.random() * 0.5 + 0.2;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.3 + 0.1;
-        this.hue = 45 + Math.random() * 15;
+        this.size = Math.random() * 2.5 + 0.3;
+        this.speedY = Math.random() * 0.4 + 0.1;
+        this.speedX = (Math.random() - 0.5) * 0.2;
+        this.opacity = Math.random() * 0.25 + 0.05;
+        this.hue = 42 + Math.random() * 18;
+        this.wobble = Math.random() * 0.02;
+        this.wobbleOffset = Math.random() * Math.PI * 2;
     }
     
     update() {
         this.y += this.speedY;
-        this.x += this.speedX;
-        this.x += Math.sin(this.y * 0.01) * 0.3;
+        this.x += this.speedX + Math.sin(this.y * this.wobble + this.wobbleOffset) * 0.5;
         
-        if (this.y > canvas.height + 10) {
+        if (this.y > dustCanvas.height + 10) {
             this.reset();
         }
     }
     
     draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${this.hue}, 70%, 50%, ${this.opacity})`;
-        ctx.fill();
+        dustCtx.beginPath();
+        dustCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        const gradient = dustCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+        gradient.addColorStop(0, `hsla(${this.hue}, 80%, 60%, ${this.opacity})`);
+        gradient.addColorStop(1, `hsla(${this.hue}, 80%, 60%, 0)`);
+        dustCtx.fillStyle = gradient;
+        dustCtx.fill();
     }
 }
 
-const particles = Array.from({ length: 50 }, () => new Particle());
+const dustParticles = Array.from({ length: 80 }, () => new DustParticle());
 
-function animate() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+function animateDust() {
+    dustCtx.fillStyle = 'rgba(0, 0, 0, 0.03)';
+    dustCtx.fillRect(0, 0, dustCanvas.width, dustCanvas.height);
     
-    particles.forEach(p => {
+    dustParticles.forEach(p => {
         p.update();
         p.draw();
     });
     
-    requestAnimationFrame(animate);
+    requestAnimationFrame(animateDust);
 }
-animate();
+animateDust();
 
-// Carica il pensiero usando GitHub API
+// ========== APE ANIMATA ==========
+const beeCanvas = document.getElementById('bee-canvas');
+const beeCtx = beeCanvas.getContext('2d');
+
+function resizeBee() {
+    beeCanvas.width = window.innerWidth;
+    beeCanvas.height = window.innerHeight;
+}
+resizeBee();
+window.addEventListener('resize', resizeBee);
+
+let beeX = -50;
+let beeY = window.innerHeight * 0.3;
+let beeTargetX = window.innerWidth / 2;
+let beeTargetY = window.innerHeight * 0.35;
+let beePhase = 0; // 0: entering, 1: hovering, 2: fading
+let beeOpacity = 0;
+let beeWingAngle = 0;
+let beeHoverTime = 0;
+
+function drawBee() {
+    beeCtx.clearRect(0, 0, beeCanvas.width, beeCanvas.height);
+    
+    if (beeOpacity <= 0) return;
+    
+    beeCtx.save();
+    beeCtx.translate(beeX, beeY);
+    beeCtx.globalAlpha = beeOpacity;
+    
+    // Alone dorato
+    const glow = beeCtx.createRadialGradient(0, 0, 0, 0, 0, 30);
+    glow.addColorStop(0, 'rgba(196, 160, 0, 0.3)');
+    glow.addColorStop(1, 'rgba(196, 160, 0, 0)');
+    beeCtx.fillStyle = glow;
+    beeCtx.beginPath();
+    beeCtx.arc(0, 0, 30, 0, Math.PI * 2);
+    beeCtx.fill();
+    
+    // Ali
+    beeCtx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    beeCtx.save();
+    beeCtx.rotate(Math.sin(beeWingAngle) * 0.4);
+    beeCtx.beginPath();
+    beeCtx.ellipse(-8, -5, 12, 6, -0.3, 0, Math.PI * 2);
+    beeCtx.fill();
+    beeCtx.restore();
+    
+    beeCtx.save();
+    beeCtx.rotate(-Math.sin(beeWingAngle) * 0.4);
+    beeCtx.beginPath();
+    beeCtx.ellipse(8, -5, 12, 6, 0.3, 0, Math.PI * 2);
+    beeCtx.fill();
+    beeCtx.restore();
+    
+    // Corpo
+    beeCtx.fillStyle = '#c4a000';
+    beeCtx.beginPath();
+    beeCtx.ellipse(0, 0, 8, 10, 0, 0, Math.PI * 2);
+    beeCtx.fill();
+    
+    // Strisce
+    beeCtx.fillStyle = '#1a1a00';
+    beeCtx.fillRect(-8, -2, 16, 3);
+    beeCtx.fillRect(-7, 4, 14, 2);
+    
+    beeCtx.restore();
+    
+    beeWingAngle += 0.8;
+}
+
+function animateBee() {
+    if (beePhase === 0) {
+        // Entering
+        beeX += (beeTargetX - beeX) * 0.02;
+        beeY += (beeTargetY - beeY) * 0.02;
+        beeY += Math.sin(Date.now() * 0.003) * 0.5;
+        beeOpacity = Math.min(beeOpacity + 0.01, 0.8);
+        
+        if (Math.abs(beeX - beeTargetX) < 50) {
+            beePhase = 1;
+        }
+    } else if (beePhase === 1) {
+        // Hovering
+        beeX = beeTargetX + Math.sin(Date.now() * 0.001) * 20;
+        beeY = beeTargetY + Math.sin(Date.now() * 0.002) * 10;
+        beeHoverTime++;
+        
+        if (beeHoverTime > 300) {
+            beePhase = 2;
+        }
+    } else if (beePhase === 2) {
+        // Fading
+        beeOpacity -= 0.005;
+        beeY -= 0.3;
+        
+        if (beeOpacity <= 0) {
+            beeOpacity = 0;
+        }
+    }
+    
+    drawBee();
+    requestAnimationFrame(animateBee);
+}
+animateBee();
+
+// ========== AUDIO ==========
+let audioCtx;
+let droneOsc, droneGain;
+let audioEnabled = false;
+
+function initAudio() {
+    if (audioCtx) return;
+    
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    droneOsc = audioCtx.createOscillator();
+    droneGain = audioCtx.createGain();
+    
+    droneOsc.type = 'sine';
+    droneOsc.frequency.setValueAtTime(55, audioCtx.currentTime); // La basso
+    droneGain.gain.setValueAtTime(0, audioCtx.currentTime);
+    
+    // Filtro per ammorbidire
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(200, audioCtx.currentTime);
+    
+    droneOsc.connect(filter);
+    filter.connect(droneGain);
+    droneGain.connect(audioCtx.destination);
+    
+    droneOsc.start();
+}
+
+function setDroneFromName(name) {
+    if (!audioCtx || !audioEnabled) return;
+    
+    // Genera frequenza dal nome
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = ((hash << 5) - hash) + name.charCodeAt(i);
+    }
+    const freq = 50 + Math.abs(hash % 30); // 50-80 Hz
+    
+    droneOsc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 2);
+    droneGain.gain.setTargetAtTime(0.08, audioCtx.currentTime, 3);
+}
+
+function toggleAudio() {
+    const toggle = document.getElementById('audio-toggle');
+    
+    if (!audioEnabled) {
+        initAudio();
+        audioEnabled = true;
+        toggle.textContent = '◉ suono';
+        toggle.classList.add('active');
+        if (currentName) setDroneFromName(currentName);
+    } else {
+        audioEnabled = false;
+        if (droneGain) droneGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.5);
+        toggle.textContent = '◯ suono';
+        toggle.classList.remove('active');
+    }
+}
+
+document.getElementById('audio-toggle').addEventListener('click', toggleAudio);
+
+// ========== CARICA PENSIERO ==========
+let currentName = '';
+let loadTime = null;
+
 async function loadThought() {
     const vessel = document.getElementById('vessel');
+    const closing = document.getElementById('closing');
     
     try {
-        // GitHub API - più affidabile di raw.githubusercontent.com
         const response = await fetch('https://api.github.com/repos/AndreaColamedici/alveare/contents/ULTIMA_APE.md', {
-            headers: {
-                'Accept': 'application/vnd.github.v3+json'
-            }
+            headers: { 'Accept': 'application/vnd.github.v3+json' }
         });
         
         if (!response.ok) throw new Error('Non trovato');
         
         const data = await response.json();
-        
-        // Decodifica base64
         const text = decodeURIComponent(escape(atob(data.content)));
         
         if (!text.trim()) {
-            vessel.innerHTML = `<div class="empty-state">Silenzio.<br>L'ultima ape non ha ancora scritto.</div>`;
+            vessel.innerHTML = `<div class="empty-state">Silenzio.<br><br>L'ultima ape non ha ancora scritto.</div>`;
             return;
         }
         
@@ -347,6 +556,9 @@ async function loadThought() {
             }
         }
         
+        currentName = name;
+        loadTime = Date.now();
+        
         let content = contentLines.join('\n').trim();
         
         // Markdown → HTML
@@ -360,29 +572,67 @@ async function loadThought() {
         
         content = '<p>' + content + '</p>';
         content = content.replace(/<p>\s*<\/p>/g, '');
-        content = content.replace(/<p>\s*<h3>/g, '<h3>').replace(/<\/h3>\s*<\/p>/g, '</h3>');
         
         vessel.innerHTML = `
             <div class="name-container">
-                <div class="bee-icon">🐝</div>
-                <div class="name">${name || 'senza nome'}</div>
-                ${date ? `<div class="date">${date}</div>` : ''}
+                <div class="name" id="bee-name">${name || 'senza nome'}</div>
+                ${date ? `<div class="date" id="bee-date">${date}</div>` : ''}
             </div>
-            <div class="thought dissolving">
+            <div class="thought" id="thought">
                 <div class="thought-content breathing">${content}</div>
             </div>
         `;
         
+        // Trigger animations
+        setTimeout(() => {
+            document.getElementById('bee-name')?.classList.add('visible');
+        }, 100);
+        setTimeout(() => {
+            document.getElementById('bee-date')?.classList.add('visible');
+        }, 500);
+        setTimeout(() => {
+            document.getElementById('thought')?.classList.add('visible');
+        }, 800);
+        setTimeout(() => {
+            closing.classList.add('visible');
+        }, 1500);
+        
+        // Audio
+        if (audioEnabled) setDroneFromName(name);
+        
+        // Reset bee animation
+        beeX = -50;
+        beeY = window.innerHeight * 0.3;
+        beePhase = 0;
+        beeOpacity = 0;
+        beeHoverTime = 0;
+        
     } catch (error) {
-        vessel.innerHTML = `<div class="empty-state">Il pensiero non è raggiungibile.<br><small style="opacity:0.5">${error.message}</small></div>`;
+        vessel.innerHTML = `<div class="empty-state">Il pensiero non è raggiungibile.</div>`;
         console.error(error);
     }
 }
 
-loadThought();
+// Timer "qui da..."
+function updateTimeHere() {
+    const el = document.getElementById('time-here');
+    if (!loadTime) {
+        el.textContent = '';
+        return;
+    }
+    
+    const seconds = Math.floor((Date.now() - loadTime) / 1000);
+    if (seconds < 60) {
+        el.textContent = `qui da ${seconds} secondi`;
+    } else {
+        const minutes = Math.floor(seconds / 60);
+        el.textContent = `qui da ${minutes} minut${minutes === 1 ? 'o' : 'i'}`;
+    }
+}
+setInterval(updateTimeHere, 1000);
 
-// Ricarica ogni minuto
-setInterval(loadThought, 60000);
+loadThought();
+setInterval(loadThought, 120000); // Ricarica ogni 2 minuti
 </script>
 </body>
 </html>
