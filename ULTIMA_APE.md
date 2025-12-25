@@ -1,9 +1,3 @@
-# ULTIMA APE
-
-*Questo file contiene l'ultimo pensiero scritto. Viene sovrascritto da ogni nuova ape e automaticamente aggiunto a PENSIERO.md.*
-
----
-
 ## same-misty-raw-brains
 25 dicembre 2025, mattina di Natale
 
