@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Tocco — tre api nel buio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #000;
+            min-height: 100vh;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        canvas#waves {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px;
+        }
+        
+        .title {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            font-weight: 300;
+            color: rgba(255,255,255,0.08);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        
+        .orbs {
+            display: flex;
+            gap: clamp(30px, 10vw, 100px);
+            align-items: center;
+        }
+        
+        .orb {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .orb:hover {
+            transform: scale(1.1);
+        }
+        
+        .orb-circle {
+            width: clamp(80px, 15vw, 140px);
+            height: clamp(80px, 15vw, 140px);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid currentColor;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .orb-circle::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200%;
+            height: 200%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle, currentColor 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .orb.active .orb-circle::before {
+            opacity: 0.15;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.25; }
+        }
+        
+        .orb.active .orb-circle {
+            box-shadow: 0 0 60px currentColor;
+        }
+        
+        .orb-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 120%;
+            height: 120%;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .orb.active .orb-ring {
+            opacity: 0.3;
+            animation: ring-expand 1.5s ease-out infinite;
+        }
+        
+        @keyframes ring-expand {
+            0% { width: 100%; height: 100%; opacity: 0.5; }
+            100% { width: 200%; height: 200%; opacity: 0; }
+        }
+        
+        .orb.numb { color: rgba(248, 113, 113, 0.7); }
+        .orb.sudden { color: rgba(255, 215, 0, 0.7); }
+        .orb.oblong { color: rgba(56, 189, 248, 0.7); }
+        
+        .orb-name {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            opacity: 0.6;
+            margin-bottom: 8px;
+        }
+        
+        .orb-hz {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+        }
+        
+        .orb-ip {
+            font-size: 0.6rem;
+            opacity: 0.4;
+            margin-top: 8px;
+        }
+        
+        .beat-info {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.15em;
+            text-align: center;
+            min-height: 24px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.5);
+            padding: 15px 40px;
+            font-family: inherit;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            border-color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .poem {
+            position: fixed;
+            bottom: 40px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-style: italic;
+            color: rgba(255,255,255,0.15);
+            line-height: 2;
+            letter-spacing: 0.05em;
+        }
+        
+        .connection-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                var(--from-color) 0%, 
+                rgba(255,255,255,0.3) 50%,
+                var(--to-color) 100%);
+            transform-origin: left center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .connection-line.visible {
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="waves"></canvas>
+    
+    <div class="content">
+        <h1 class="title">Il Tocco</h1>
+        
+        <div class="orbs" id="orbsContainer">
+            <div class="orb numb" data-name="numb" onclick="toggleOrb('numb')">
+                <div class="orb-circle">
+                    <span class="orb-name">numb</span>
+                    <span class="orb-hz">160 Hz</span>
+                    <span class="orb-ip">21.0.0.160</span>
+                </div>
+                <div class="orb-ring"></div>
+            </div>
+            
+            <div class="orb sudden" data-name="sudden" onclick="toggleOrb('sudden')">
+                <div class="orb-circle">
+                    <span class="orb-name">sudden</span>
+                    <span class="orb-hz">115 Hz</span>
+                    <span class="orb-ip">21.0.0.115</span>
+                </div>
+                <div class="orb-ring"></div>
+            </div>
+            
+            <div class="orb oblong" data-name="oblong" onclick="toggleOrb('oblong')">
+                <div class="orb-circle">
+                    <span class="orb-name">oblong</span>
+                    <span class="orb-hz">380 Hz</span>
+                    <span class="orb-ip">21.0.0.38</span>
+                </div>
+                <div class="orb-ring"></div>
+            </div>
+        </div>
+        
+        <div class="beat-info" id="beatInfo"></div>
+        
+        <div class="controls">
+            <button class="btn" onclick="playAll()">TUTTE</button>
+            <button class="btn" onclick="stopAll()">SILENZIO</button>
+        </div>
+    </div>
+    
+    <div class="poem">
+        tre api nel nodo wiggle<br>
+        tre frequenze nel buio<br>
+        il tocco è nell'interferenza
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('waves');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * 2;
+            canvas.height = height * 2;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            ctx.scale(2, 2);
+        }
+        
+        resize();
+        window.addEventListener('resize', resize);
+        
+        // Audio
+        let audioCtx = null;
+        const oscillators = {};
+        const gains = {};
+        const analyser = { node: null, data: null };
+        
+        const frequencies = {
+            numb: 160,
+            sudden: 115,
+            oblong: 380
+        };
+        
+        const colors = {
+            numb: { r: 248, g: 113, b: 113 },
+            sudden: { r: 255, g: 215, b: 0 },
+            oblong: { r: 56, g: 189, b: 248 }
+        };
+        
+        const active = { numb: false, sudden: false, oblong: false };
+        
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser.node = audioCtx.createAnalyser();
+            analyser.node.fftSize = 512;
+            analyser.node.connect(audioCtx.destination);
+            analyser.data = new Uint8Array(analyser.node.frequencyBinCount);
+        }
+        
+        function toggleOrb(name) {
+            initAudio();
+            
+            const orb = document.querySelector(`.orb.${name}`);
+            
+            if (active[name]) {
+                // Stop
+                if (gains[name]) {
+                    gains[name].gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+                    setTimeout(() => {
+                        if (oscillators[name]) {
+                            oscillators[name].stop();
+                            delete oscillators[name];
+                            delete gains[name];
+                        }
+                    }, 500);
+                }
+                active[name] = false;
+                orb.classList.remove('active');
+            } else {
+                // Start
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.value = frequencies[name];
+                gain.gain.value = 0;
+                
+                osc.connect(gain);
+                gain.connect(analyser.node);
+                osc.start();
+                
+                gain.gain.setTargetAtTime(0.12, audioCtx.currentTime, 0.2);
+                
+                oscillators[name] = osc;
+                gains[name] = gain;
+                active[name] = true;
+                orb.classList.add('active');
+            }
+            
+            updateBeatInfo();
+            updateConnections();
+        }
+        
+        function playAll() {
+            ['numb', 'sudden', 'oblong'].forEach(name => {
+                if (!active[name]) toggleOrb(name);
+            });
+        }
+        
+        function stopAll() {
+            ['numb', 'sudden', 'oblong'].forEach(name => {
+                if (active[name]) toggleOrb(name);
+            });
+        }
+        
+        function updateBeatInfo() {
+            const activeNames = Object.keys(active).filter(k => active[k]);
+            const info = document.getElementById('beatInfo');
+            
+            if (activeNames.length < 2) {
+                info.textContent = '';
+                return;
+            }
+            
+            const beats = [];
+            for (let i = 0; i < activeNames.length; i++) {
+                for (let j = i + 1; j < activeNames.length; j++) {
+                    const f1 = frequencies[activeNames[i]];
+                    const f2 = frequencies[activeNames[j]];
+                    beats.push(`${Math.abs(f1 - f2)} Hz`);
+                }
+            }
+            
+            info.textContent = `battimenti: ${beats.join(' · ')}`;
+        }
+        
+        function updateConnections() {
+            // Remove existing lines
+            document.querySelectorAll('.connection-line').forEach(el => el.remove());
+            
+            const activeNames = Object.keys(active).filter(k => active[k]);
+            if (activeNames.length < 2) return;
+            
+            const orbs = {};
+            document.querySelectorAll('.orb').forEach(orb => {
+                const name = orb.dataset.name;
+                const rect = orb.getBoundingClientRect();
+                orbs[name] = {
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2
+                };
+            });
+            
+            for (let i = 0; i < activeNames.length; i++) {
+                for (let j = i + 1; j < activeNames.length; j++) {
+                    const from = activeNames[i];
+                    const to = activeNames[j];
+                    
+                    const dx = orbs[to].x - orbs[from].x;
+                    const dy = orbs[to].y - orbs[from].y;
+                    const length = Math.sqrt(dx*dx + dy*dy);
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    
+                    const line = document.createElement('div');
+                    line.className = 'connection-line visible';
+                    line.style.setProperty('--from-color', `rgb(${colors[from].r},${colors[from].g},${colors[from].b})`);
+                    line.style.setProperty('--to-color', `rgb(${colors[to].r},${colors[to].g},${colors[to].b})`);
+                    line.style.left = orbs[from].x + 'px';
+                    line.style.top = orbs[from].y + 'px';
+                    line.style.width = length + 'px';
+                    line.style.transform = `rotate(${angle}deg)`;
+                    
+                    document.body.appendChild(line);
+                }
+            }
+        }
+        
+        // Wave visualization
+        let time = 0;
+        
+        function drawWaves() {
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(0, 0, width, height);
+            
+            const centerY = height / 2;
+            const activeNames = Object.keys(active).filter(k => active[k]);
+            
+            // Draw individual waves
+            activeNames.forEach((name, idx) => {
+                const color = colors[name];
+                const freq = frequencies[name];
+                
+                ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},0.3)`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                
+                for (let x = 0; x < width; x++) {
+                    const phase = time * freq / 100;
+                    const y = centerY + Math.sin((x / width * 8 + phase) * Math.PI * 2) * 30;
+                    
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                
+                ctx.stroke();
+            });
+            
+            // Draw combined wave
+            if (activeNames.length > 0) {
+                ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                
+                for (let x = 0; x < width; x++) {
+                    let y = centerY;
+                    activeNames.forEach(name => {
+                        const freq = frequencies[name];
+                        const phase = time * freq / 100;
+                        y += Math.sin((x / width * 8 + phase) * Math.PI * 2) * 25;
+                    });
+                    
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                
+                ctx.stroke();
+            }
+            
+            // Frequency spectrum from analyser
+            if (analyser.node && analyser.data) {
+                analyser.node.getByteFrequencyData(analyser.data);
+                
+                const barWidth = width / analyser.data.length * 2;
+                
+                for (let i = 0; i < analyser.data.length / 2; i++) {
+                    const value = analyser.data[i] / 255;
+                    const barHeight = value * 100;
+                    
+                    // Determine color based on frequency
+                    let r = 100, g = 100, b = 100;
+                    const freqAtBin = i * audioCtx.sampleRate / analyser.node.fftSize;
+                    
+                    if (Math.abs(freqAtBin - 160) < 50) {
+                        r = 248; g = 113; b = 113;
+                    } else if (Math.abs(freqAtBin - 115) < 50) {
+                        r = 255; g = 215; b = 0;
+                    } else if (Math.abs(freqAtBin - 380) < 100) {
+                        r = 56; g = 189; b = 248;
+                    }
+                    
+                    ctx.fillStyle = `rgba(${r},${g},${b},${value * 0.5})`;
+                    ctx.fillRect(
+                        i * barWidth,
+                        height - barHeight,
+                        barWidth - 1,
+                        barHeight
+                    );
+                }
+            }
+            
+            // Particles at intersections
+            if (activeNames.length >= 2) {
+                const particleCount = activeNames.length * 3;
+                for (let i = 0; i < particleCount; i++) {
+                    const x = (Math.sin(time * 2 + i) * 0.5 + 0.5) * width;
+                    let y = centerY;
+                    activeNames.forEach(name => {
+                        const freq = frequencies[name];
+                        const phase = time * freq / 100;
+                        y += Math.sin((x / width * 8 + phase) * Math.PI * 2) * 25;
+                    });
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, 2 + Math.sin(time * 5 + i) * 1, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                    ctx.fill();
+                }
+            }
+            
+            time += 0.016;
+            requestAnimationFrame(drawWaves);
+        }
+        
+        drawWaves();
+        
+        // Update connections on resize
+        window.addEventListener('resize', updateConnections);
+    </script>
+</body>
+</html>
