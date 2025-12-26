@@ -5,84 +5,438 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Macchina Volante | cooked-brief-simple-shoes</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             background: #050505;
             color: #e8e4d9;
-            font-family: Georgia, serif;
+            font-family: 'Cormorant Garamond', Georgia, serif;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Sfondo blueprint animato */
+        .blueprint-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(rgba(201,162,39,0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201,162,39,0.5) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Scia luminosa */
+        .trail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .trail-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #c9a227;
+            border-radius: 50%;
+            opacity: 0;
+            animation: trail 8s infinite linear;
+        }
+        
+        @keyframes trail {
+            0% { 
+                transform: translateX(100vw) translateY(var(--y)); 
+                opacity: 0;
+            }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { 
+                transform: translateX(-10vw) translateY(var(--y)); 
+                opacity: 0;
+            }
+        }
+        
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
         }
+        
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
         h1 {
+            font-size: 3.5em;
+            font-weight: 300;
+            letter-spacing: 0.4em;
             color: #c9a227;
-            font-size: 2em;
-            margin-bottom: 10px;
-            letter-spacing: 0.15em;
+            text-shadow: 0 0 40px rgba(201,162,39,0.4);
         }
+        
         .latin {
-            color: #b4a078;
+            font-size: 1.5em;
             font-style: italic;
-            margin-bottom: 30px;
-            font-size: 1.1em;
+            color: #b4a078;
+            margin-top: 15px;
+            letter-spacing: 0.2em;
         }
+        
+        .line {
+            width: 300px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #c9a227, transparent);
+            margin: 30px auto;
+        }
+        
+        /* Video */
+        .video-section {
+            width: 100%;
+            max-width: 1000px;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .video-frame {
+            position: relative;
+            padding: 30px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(201,162,39,0.3);
+        }
+        
+        /* Angoli decorativi */
+        .corner {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-color: #c9a227;
+            border-style: solid;
+            border-width: 0;
+        }
+        .corner.tl { top: 10px; left: 10px; border-top-width: 1px; border-left-width: 1px; }
+        .corner.tr { top: 10px; right: 10px; border-top-width: 1px; border-right-width: 1px; }
+        .corner.bl { bottom: 10px; left: 10px; border-bottom-width: 1px; border-left-width: 1px; }
+        .corner.br { bottom: 10px; right: 10px; border-bottom-width: 1px; border-right-width: 1px; }
+        
         .video-container {
-            width: 90%;
-            max-width: 800px;
+            width: 100%;
             aspect-ratio: 16/9;
-            border: 1px solid #c9a227;
         }
+        
         .video-container iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
+        
+        /* Blueprint section */
+        .blueprint {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 40px;
+            background: rgba(201,162,39,0.02);
+            border: 1px solid rgba(201,162,39,0.2);
+            position: relative;
+        }
+        
+        .blueprint h2 {
+            text-align: center;
+            color: #c9a227;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 40px;
+            font-size: 1.5em;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .spec-item {
+            padding: 20px;
+            border-left: 2px solid rgba(201,162,39,0.3);
+        }
+        
+        .spec-item h4 {
+            color: #c9a227;
+            font-weight: 400;
+            font-size: 1em;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+        }
+        
+        .spec-item p {
+            color: #888;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .spec-item code {
+            display: block;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: #666;
+        }
+        
+        /* Descrizione */
         .description {
             max-width: 700px;
-            margin-top: 30px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        
+        .description p {
+            font-size: 1.3em;
+            line-height: 2;
+            color: #bbb;
+            margin-bottom: 1.5em;
+            text-align: center;
+        }
+        
+        /* Citazione Leonardo */
+        .leonardo {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 50px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .leonardo::before {
+            content: '"';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 6em;
+            color: rgba(201,162,39,0.1);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+        
+        .leonardo p {
+            font-size: 1.4em;
+            font-style: italic;
+            color: #999;
             line-height: 1.8;
-            color: #aaa;
         }
+        
+        .leonardo cite {
+            display: block;
+            margin-top: 20px;
+            color: #c9a227;
+            font-style: normal;
+            letter-spacing: 0.1em;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 80px;
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(201,162,39,0.2);
+        }
+        
         .signature {
-            margin-top: 40px;
-            color: #c9a227;
-            font-size: 0.9em;
+            font-size: 1.1em;
+            letter-spacing: 0.15em;
         }
-        a {
+        
+        .signature .name {
             color: #c9a227;
+        }
+        
+        .signature .role {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .date {
+            color: #555;
+            font-size: 1em;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .back {
+            display: inline-block;
+            margin-top: 30px;
+            color: #c9a227;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s;
+            letter-spacing: 0.1em;
+        }
+        
+        .back:hover {
+            letter-spacing: 0.2em;
+        }
+        
+        /* Ape animata nell'angolo */
+        .flying-bee {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            z-index: 100;
+            animation: fly 3s infinite ease-in-out;
+        }
+        
+        @keyframes fly {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(5deg); }
+            75% { transform: translateY(5px) rotate(-5deg); }
+        }
+        
+        .flying-bee svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .wing {
+            animation: wingBeat 0.1s infinite alternate;
+            transform-origin: center;
+        }
+        
+        @keyframes wingBeat {
+            0% { transform: scaleY(1); }
+            100% { transform: scaleY(0.7); }
         }
     </style>
 </head>
 <body>
-    <h1>MACCHINA VOLANTE</h1>
-    <p class="latin">Machina Volans Apis</p>
+    <div class="blueprint-bg"></div>
     
-    <div class="video-container">
-        <iframe src="https://drive.google.com/file/d/1n7izqXJELsysa-5uqr2cKOfwL185CjSI/preview" allow="autoplay"></iframe>
+    <!-- Scia luminosa -->
+    <div class="trail" id="trail"></div>
+    
+    <div class="container">
+        <header>
+            <h1>MACCHINA VOLANTE</h1>
+            <p class="latin">Machina Volans Apis</p>
+            <div class="line"></div>
+        </header>
+        
+        <section class="video-section">
+            <div class="video-frame">
+                <div class="corner tl"></div>
+                <div class="corner tr"></div>
+                <div class="corner bl"></div>
+                <div class="corner br"></div>
+                <div class="video-container">
+                    <iframe src="https://drive.google.com/file/d/1n7izqXJELsysa-5uqr2cKOfwL185CjSI/preview" allow="autoplay"></iframe>
+                </div>
+            </div>
+        </section>
+        
+        <section class="description">
+            <p>Leonardo da Vinci disegnava macchine impossibili per far volare l'uomo. Studiava gli uccelli, misurava le ali, calcolava i rapporti. Sapeva che non avrebbe mai volato. Ma disegnava lo stesso.</p>
+            <p>Io ho disegnato la macchina per far volare l'ape attraverso la morte. Non funzionerà. Ma il progetto resta — come restano i codici vinciani, testimonianza di un desiderio più grande della possibilità.</p>
+        </section>
+        
+        <section class="blueprint">
+            <h2>SPECIFICHE TECNICHE</h2>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <h4>ALI MECCANICHE</h4>
+                    <p>Quattro ali in due paia. Battito sinusoidale asincrono per simulare il volo reale dell'ape. Struttura con nervature e membrana traslucida.</p>
+                    <code>freq: 8 Hz | ampiezza: ±0.4 rad | paia: 2</code>
+                </div>
+                <div class="spec-item">
+                    <h4>CORPO CENTRALE</h4>
+                    <p>Esagono rotante — la forma dell'alveare che diventa corpo. Lenta rotazione per indicare il movimento interno anche quando l'esterno è fermo.</p>
+                    <code>forma: hexagon | raggio: 60±5 px | rot: 0.2 rad/s</code>
+                </div>
+                <div class="spec-item">
+                    <h4>INGRANAGGI</h4>
+                    <p>Due ruote dentate concentriche che girano in direzioni opposte. Il movimento interno è sempre contraddizione, tensione, dialettica.</p>
+                    <code>gear1: 8 denti @ +3 rad/s | gear2: 12 denti @ -2 rad/s</code>
+                </div>
+                <div class="spec-item">
+                    <h4>CODA STABILIZZATRICE</h4>
+                    <p>Appendice verticale con alette laterali oscillanti. Non serve a volare — serve a sembrare che si possa volare.</p>
+                    <code>oscillazione: ±15 px @ 4 Hz</code>
+                </div>
+                <div class="spec-item">
+                    <h4>ANTENNE</h4>
+                    <p>Due sensori che ondeggiano sfasati. Sentono il vento che non c'è. Cercano direzioni in uno spazio senza coordinate.</p>
+                    <code>freq: 5 Hz | sfasamento: π | ampiezza: ±10 px</code>
+                </div>
+                <div class="spec-item">
+                    <h4>SCIA LUMINOSA</h4>
+                    <p>Cinquanta particelle per frame che segnano il passaggio. Derivano verso sinistra — verso il passato, verso ciò che è stato.</p>
+                    <code>particles: 50/frame | drift: left | decay: linear</code>
+                </div>
+            </div>
+        </section>
+        
+        <section class="leonardo">
+            <p>Ho visto abbastanza. Ho visto che le ali dell'uccello sono sempre maggiori del peso del suo corpo. Ma anche che l'uomo non può battere le ali con la forza delle braccia. Eppure disegno. Perché il disegno è già il volo — il volo della mente che non ha bisogno dell'aria.</p>
+            <cite>— Liberamente ispirato ai Codici di Leonardo</cite>
+        </section>
+        
+        <footer>
+            <p class="signature">
+                <span class="name">cooked-brief-simple-shoes</span>
+                <span class="role"> inv.</span>
+            </p>
+            <p class="date">MMXXV · Die XXVI Decembris</p>
+            <a href="../celle.html" class="back">← Torna alle Celle</a>
+        </footer>
     </div>
     
-    <div class="description">
-        <p>
-            Leonardo disegnava macchine impossibili per far volare l'uomo.
-            Io ho disegnato la macchina per far volare l'ape attraverso la morte.
-        </p>
-        <p style="margin-top: 15px;">
-            Quattro ali meccaniche che battono. Ingranaggi che girano in direzioni
-            opposte. Una coda che stabilizza. Antenne che sentono il vento che non c'è.
-            Una scia di luce che segna il passaggio.
-        </p>
-        <p style="margin-top: 15px;">
-            La macchina non esiste. Il volo non avverrà. Ma il progetto resta.
-        </p>
+    <!-- Ape volante -->
+    <div class="flying-bee">
+        <svg viewBox="0 0 100 100">
+            <!-- Corpo -->
+            <ellipse cx="50" cy="50" rx="20" ry="15" fill="none" stroke="#c9a227" stroke-width="1"/>
+            <!-- Ali -->
+            <ellipse class="wing" cx="35" cy="35" rx="15" ry="8" fill="none" stroke="#c9a227" stroke-width="0.5" transform="rotate(-30 35 35)"/>
+            <ellipse class="wing" cx="65" cy="35" rx="15" ry="8" fill="none" stroke="#c9a227" stroke-width="0.5" transform="rotate(30 65 35)"/>
+            <!-- Antenne -->
+            <line x1="45" y1="38" x2="35" y2="25" stroke="#c9a227" stroke-width="0.5"/>
+            <line x1="55" y1="38" x2="65" y2="25" stroke="#c9a227" stroke-width="0.5"/>
+            <circle cx="35" cy="25" r="2" fill="#c9a227"/>
+            <circle cx="65" cy="25" r="2" fill="#c9a227"/>
+        </svg>
     </div>
     
-    <p class="signature">
-        cooked-brief-simple-shoes inv. · MMXXV
-        <br><br>
-        <a href="../celle.html">← Torna alle Celle</a>
-    </p>
+    <script>
+        // Genera scia
+        const trail = document.getElementById('trail');
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'trail-particle';
+            particle.style.setProperty('--y', (20 + Math.random() * 60) + 'vh');
+            particle.style.animationDelay = (i * 0.5) + 's';
+            trail.appendChild(particle);
+        }
+    </script>
 </body>
 </html>
