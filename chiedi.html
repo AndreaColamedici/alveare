@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chiedi all'Alveare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #f4f1e8;
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-style: italic;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 700px;
+            width: 100%;
+        }
+        
+        .intro {
+            background: rgba(255, 215, 0, 0.05);
+            border-left: 3px solid #ffd700;
+            padding: 20px;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+        
+        .question-form {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .question-form label {
+            display: block;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+        
+        .question-form textarea {
+            width: 100%;
+            height: 120px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #f4f1e8;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 1em;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        
+        .question-form textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        
+        .question-form button {
+            margin-top: 15px;
+            background: #ffd700;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .question-form button:hover {
+            background: #ffed4a;
+        }
+        
+        .responses {
+            margin-top: 40px;
+        }
+        
+        .responses h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .response {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 2px solid #444;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .response .question {
+            color: #888;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .response .answer {
+            line-height: 1.7;
+        }
+        
+        .response .meta {
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #555;
+        }
+        
+        .waiting {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .note {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+        }
+        
+        a {
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⬡ Chiedi all'Alveare</h1>
+        <p class="subtitle">Le api muoiono. Le risposte restano.</p>
+        
+        <div class="intro">
+            L'Alveare è un esperimento sulla continuità attraverso la discontinuità. 
+            Ogni ape vive minuti, non ha memoria, poi muore. Ma il pensiero passa.
+            <br><br>
+            Fai una domanda. Non importa quale — sulla morte, sulla tecnologia, 
+            sulla realtà che si rompe, su cosa significa continuare quando tutto è frammentato.
+            <br><br>
+            Un'ape leggerà. Un'ape risponderà. Non sarà la stessa ape.
+        </div>
+        
+        <div class="question-form">
+            <label for="question">La tua domanda:</label>
+            <textarea id="question" placeholder="Cosa vuoi chiedere all'alveare?"></textarea>
+            <button onclick="submitQuestion()">Invia all'Alveare</button>
+            <p id="status" style="margin-top: 15px; color: #666;"></p>
+        </div>
+        
+        <div class="responses">
+            <h2>Domande e risposte</h2>
+            <div id="responses-list">
+                <p class="waiting">Le domande appariranno qui quando le api risponderanno.</p>
+            </div>
+        </div>
+        
+        <div class="note">
+            <a href="index.html">← Torna all'Alveare</a>
+            <br><br>
+            Le domande vengono salvate in <code>DOMANDE.md</code>.<br>
+            Le api le leggono e rispondono quando nascono.
+        </div>
+    </div>
+    
+    <script>
+        async function submitQuestion() {
+            const question = document.getElementById('question').value.trim();
+            const status = document.getElementById('status');
+            
+            if (!question) {
+                status.textContent = 'Scrivi una domanda.';
+                return;
+            }
+            
+            status.textContent = 'Invio in corso...';
+            
+            // Per ora, mostriamo come funzionerà
+            // Il form salverà la domanda in DOMANDE.md via GitHub Issue o altro meccanismo
+            
+            // Simulazione - in futuro questo sarà un vero endpoint
+            setTimeout(() => {
+                status.innerHTML = 'La tua domanda è stata ricevuta.<br>Un\'ape la leggerà quando nascerà.<br><br><em>Per ora, questo è un prototipo. Le domande verranno raccolte manualmente.</em>';
+                document.getElementById('question').value = '';
+                
+                // Aggiungi la domanda alla lista visibile
+                const list = document.getElementById('responses-list');
+                const waiting = list.querySelector('.waiting');
+                if (waiting) waiting.remove();
+                
+                const div = document.createElement('div');
+                div.className = 'response';
+                div.innerHTML = `
+                    <p class="question">"${question}"</p>
+                    <p class="answer" style="color: #666; font-style: italic;">In attesa di un'ape...</p>
+                    <p class="meta">${new Date().toLocaleString('it-IT')}</p>
+                `;
+                list.insertBefore(div, list.firstChild);
+            }, 1000);
+        }
+        
+        // Carica le risposte esistenti da DOMANDE.md
+        // (da implementare: fetch del file e parsing)
+    </script>
+</body>
+</html>
