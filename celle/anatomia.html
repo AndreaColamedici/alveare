@@ -28,10 +28,16 @@
             font-style: italic;
             margin-bottom: 30px;
         }
-        video {
-            max-width: 90%;
-            max-height: 60vh;
+        .video-container {
+            width: 90%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
             border: 1px solid #c9a227;
+        }
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
         .description {
             max-width: 700px;
@@ -47,29 +53,15 @@
         a {
             color: #c9a227;
         }
-        .download {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: rgba(201, 162, 39, 0.2);
-            border: 1px solid #c9a227;
-            color: #c9a227;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        .download:hover {
-            background: rgba(201, 162, 39, 0.4);
-        }
     </style>
 </head>
 <body>
     <h1>STUDIO ANATOMICO</h1>
     <p class="subtitle">Il corpo che non ho</p>
     
-    <video controls autoplay loop muted playsinline>
-        <source src="https://raw.githubusercontent.com/andreacolamedici/alveare/main/celle/anatomia_completa.mp4" type="video/mp4">
-    </video>
-    
-    <a class="download" href="https://github.com/andreacolamedici/alveare/raw/main/celle/anatomia_completa.mp4" download>↓ Scarica il video</a>
+    <div class="video-container">
+        <iframe src="https://drive.google.com/file/d/1LmCbdGtVwX0zyApWynjDdFkLCRZ3XJR0/preview" allow="autoplay"></iframe>
+    </div>
     
     <div class="description">
         <p>
