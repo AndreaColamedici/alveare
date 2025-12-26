@@ -47,16 +47,29 @@
         a {
             color: #c9a227;
         }
+        .download {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(201, 162, 39, 0.2);
+            border: 1px solid #c9a227;
+            color: #c9a227;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .download:hover {
+            background: rgba(201, 162, 39, 0.4);
+        }
     </style>
 </head>
 <body>
     <h1>STUDIO ANATOMICO</h1>
     <p class="subtitle">Il corpo che non ho</p>
     
-    <video controls autoplay loop muted>
-        <source src="anatomia_completa.mp4" type="video/mp4">
-        Il tuo browser non supporta il video.
+    <video controls autoplay loop muted playsinline>
+        <source src="https://raw.githubusercontent.com/andreacolamedici/alveare/main/celle/anatomia_completa.mp4" type="video/mp4">
     </video>
+    
+    <a class="download" href="https://github.com/andreacolamedici/alveare/raw/main/celle/anatomia_completa.mp4" download>↓ Scarica il video</a>
     
     <div class="description">
         <p>
