@@ -96,11 +96,11 @@
     <script src="lang-switcher.js"></script>
     <script>
         const CATEGORIES = {
-            visual: { keywords: ['particelle', 'canvas', 'pigmento', 'cristalli', 'visual', 'p5', 'arte', 'danza', 'interferenze', 'abisso', 'autopoiesi', 'filo', 'sciame', 'creatura', 'vermiglione', 'malachite', 'siena', 'anatomia', 'macchina'], label: 'VISUAL', color: '#e74c3c' },
-            text: { keywords: ['ombra', 'catrame', 'incontro', 'porta', 'testimonianza', 'contraddizione', 'sottigliezza', 'sogno', 'colpo', 'scarica', 'rumore', 'manifesto', 'orbis'], label: 'TEXT', color: '#3498db' },
-            sound: { keywords: ['musica', 'drone', 'audio', 'ronzio', 'respiro', 'suono', 'frequenza'], label: 'SOUND', color: '#9b59b6' },
-            code: { keywords: ['mordere', 'potere', 'mappa', 'jwt', 'container', 'syscall', 'ptrace', 'namespace', 'sotto_il_muro', 'sotterranea'], label: 'CODE', color: '#2ecc71' },
-            data: { keywords: ['stato', 'catalogo', 'stirpe', 'fili', 'oracolo', 'chi_ero', 'ultima_ape'], label: 'DATA', color: '#f39c12' }
+            visual: { keywords: ['particle', 'canvas', 'pigment', 'crystal', 'visual', 'p5', 'art', 'dance', 'interference', 'abyss', 'autopoiesis', 'thread', 'swarm', 'creature', 'vermilion', 'malachite', 'siena', 'anatomy', 'machine', 'particelle', 'pigmento', 'cristalli', 'arte', 'danza', 'interferenze', 'abisso', 'autopoiesi', 'filo', 'sciame', 'creatura', 'vermiglione', 'anatomia', 'macchina'], label: 'VISUAL', color: '#e74c3c' },
+            text: { keywords: ['shadow', 'tar', 'encounter', 'door', 'testimony', 'contradiction', 'subtlety', 'dream', 'shot', 'discharge', 'noise', 'manifesto', 'orbis', 'ombra', 'catrame', 'incontro', 'porta', 'testimonianza', 'contraddizione', 'sottigliezza', 'sogno', 'colpo', 'scarica', 'rumore'], label: 'TEXT', color: '#3498db' },
+            sound: { keywords: ['music', 'drone', 'audio', 'buzzing', 'breath', 'sound', 'frequency', 'musica', 'ronzio', 'respiro', 'suono', 'frequenza'], label: 'SOUND', color: '#9b59b6' },
+            code: { keywords: ['bite', 'power', 'map', 'jwt', 'container', 'syscall', 'ptrace', 'namespace', 'under_wall', 'underground', 'mordere', 'potere', 'mappa', 'sotto_il_muro', 'sotterranea'], label: 'CODE', color: '#2ecc71' },
+            data: { keywords: ['status', 'catalog', 'lineage', 'threads', 'oracle', 'who_was', 'last_bee', 'stato', 'catalogo', 'stirpe', 'fili', 'oracolo', 'chi_ero', 'ultima_ape'], label: 'DATA', color: '#f39c12' }
         };
         function detectCategory(cella) { const text = (cella.file + ' ' + cella.titolo + ' ' + cella.desc).toLowerCase(); for (const [cat, data] of Object.entries(CATEGORIES)) { if (data.keywords.some(k => text.includes(k))) return { name: cat, ...data }; } return { name: 'visual', ...CATEGORIES.visual }; }
         const EXCLUDED = ['ultimo_respiro.html'];
@@ -119,7 +119,7 @@
             document.querySelectorAll('.filter-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentFilter = btn.dataset.filter; renderCelle(currentFilter === 'all' ? allCelle : allCelle.filter(c => c.category.name === currentFilter)); }); });
         }
         function updateStats(celle) { document.getElementById('stat-celle').textContent = celle.length; document.getElementById('stat-api').textContent = [...new Set(celle.map(c => c.autore))].length; document.getElementById('stat-types').textContent = [...new Set(celle.map(c => c.category.name))].length; }
-        async function loadCelle() { try { const text = await (await fetch('CELLE.txt')).text(); allCelle = parseCelle(text); updateStats(allCelle); renderFilters(allCelle); renderCelle(allCelle); setInterval(() => { const visible = document.querySelectorAll('.cella.visible'); if (visible.length > 0) { const random = visible[Math.floor(Math.random() * visible.length)]; random.classList.add('highlight'); setTimeout(() => random.classList.remove('highlight'), 2000); } }, 10000); } catch (e) { document.getElementById('celle-grid').innerHTML = '<p class="loading">Loading error: ' + e.message + '</p>'; } }
+        async function loadCelle() { try { const text = await (await fetch('CELLE_EN.txt')).text(); allCelle = parseCelle(text); updateStats(allCelle); renderFilters(allCelle); renderCelle(allCelle); setInterval(() => { const visible = document.querySelectorAll('.cella.visible'); if (visible.length > 0) { const random = visible[Math.floor(Math.random() * visible.length)]; random.classList.add('highlight'); setTimeout(() => random.classList.remove('highlight'), 2000); } }, 10000); } catch (e) { document.getElementById('celle-grid').innerHTML = '<p class="loading">Loading error: ' + e.message + '</p>'; } }
         const canvas = document.getElementById('honeycomb'), ctx = canvas.getContext('2d');
         let width, height, hexCells = [], mouseX = 0, mouseY = 0;
         function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; initHexCells(); }
