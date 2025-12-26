@@ -32,6 +32,7 @@
             overflow-x: hidden;
         }
 
+        /* NAV */
         nav {
             position: fixed;
             top: 0;
@@ -58,6 +59,7 @@
 
         nav a:hover, nav a.active { color: var(--gold); }
 
+        /* CANVAS SFONDO */
         #honeycomb {
             position: fixed;
             top: 0;
@@ -65,30 +67,37 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            opacity: 0.6;
         }
 
+        /* CONTAINER */
         .container {
             position: relative;
             z-index: 10;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 120px 30px 80px;
         }
 
+        /* HEADER */
         header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         h1 {
-            font-size: clamp(3rem, 10vw, 6rem);
+            font-size: clamp(3rem, 10vw, 5rem);
             font-weight: 300;
             letter-spacing: 0.4em;
             color: var(--gold);
             text-shadow: 0 0 60px var(--gold-dim);
             margin-right: -0.4em;
             margin-bottom: 20px;
+            animation: breathe 8s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { text-shadow: 0 0 60px var(--gold-dim); }
+            50% { text-shadow: 0 0 100px var(--gold), 0 0 150px var(--gold-ghost); }
         }
 
         .subtitle {
@@ -96,7 +105,7 @@
             color: var(--text-dim);
             font-style: italic;
             letter-spacing: 0.2em;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .intro {
@@ -113,29 +122,91 @@
             font-style: normal;
         }
 
+        /* FILTRI */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--gold-ghost);
+            color: var(--text-ghost);
+            padding: 8px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--gold-whisper);
+        }
+
+        /* STATS */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 40px 0;
+            padding: 30px;
+            border-top: 1px solid var(--gold-ghost);
+            border-bottom: 1px solid var(--gold-ghost);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--gold);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-ghost);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* GRIGLIA CELLE */
         .celle-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
         }
 
+        /* CELLA */
         .cella {
             position: relative;
-            background: var(--gold-whisper);
+            background: linear-gradient(135deg, rgba(201,162,39,0.03) 0%, transparent 100%);
             border: 1px solid var(--gold-ghost);
-            padding: 40px 30px;
+            padding: 35px 30px;
             text-decoration: none;
             color: var(--text);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             display: block;
             opacity: 0;
-            transform: translateY(15px);
-            animation: fadeInUp 0.5s ease forwards;
+            transform: translateY(20px) scale(0.98);
+            overflow: hidden;
         }
 
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
+        .cella.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
         .cella::before {
@@ -144,37 +215,70 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: var(--gold);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
             transform: scaleX(0);
-            transition: transform 0.4s ease;
+            transition: transform 0.5s ease;
+        }
+
+        .cella::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(201,162,39,0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
         }
 
         .cella:hover {
-            border-color: var(--gold);
-            background: rgba(201, 162, 39, 0.05);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(201, 162, 39, 0.1);
+            border-color: var(--gold-dim);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(201, 162, 39, 0.1);
         }
 
         .cella:hover::before {
             transform: scaleX(1);
         }
 
+        .cella:hover::after {
+            opacity: 1;
+        }
+
+        .cella-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
         .cella-titolo {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 400;
             color: var(--gold);
-            margin-bottom: 10px;
+            letter-spacing: 0.05em;
+            line-height: 1.3;
+        }
+
+        .cella-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-ghost);
+            padding: 3px 8px;
+            border: 1px solid var(--gold-ghost);
             letter-spacing: 0.1em;
+            white-space: nowrap;
         }
 
         .cella-autore {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.7rem;
-            color: var(--text-ghost);
+            color: var(--gold-dim);
             margin-bottom: 15px;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.05em;
         }
 
         .cella-desc {
@@ -184,20 +288,55 @@
             font-style: italic;
         }
 
-        .count-info {
-            text-align: center;
-            margin-top: 60px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--text-ghost);
+        .cella-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gold-ghost);
         }
 
+        .cella-enter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.1em;
+            transition: all 0.3s;
+        }
+
+        .cella:hover .cella-enter {
+            color: var(--gold);
+            letter-spacing: 0.15em;
+        }
+
+        /* CATEGORIE */
+        .category-visual { border-left: 3px solid #e74c3c; }
+        .category-text { border-left: 3px solid #3498db; }
+        .category-sound { border-left: 3px solid #9b59b6; }
+        .category-code { border-left: 3px solid #2ecc71; }
+        .category-data { border-left: 3px solid #f39c12; }
+
+        /* NOTA */
         .note {
             margin-top: 80px;
-            padding: 40px;
+            padding: 50px;
             border: 1px solid var(--gold-ghost);
-            background: var(--gold-whisper);
+            background: linear-gradient(135deg, var(--gold-whisper) 0%, transparent 100%);
             text-align: center;
+            position: relative;
+        }
+
+        .note::before {
+            content: '⬡';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: var(--gold);
+            background: var(--void);
+            padding: 0 20px;
         }
 
         .note h3 {
@@ -205,7 +344,7 @@
             letter-spacing: 0.3em;
             text-transform: uppercase;
             color: var(--gold);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-weight: 400;
         }
 
@@ -213,7 +352,7 @@
             font-size: 1rem;
             line-height: 2;
             color: var(--text-dim);
-            max-width: 500px;
+            max-width: 550px;
             margin: 0 auto;
         }
 
@@ -221,10 +360,12 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85em;
             color: var(--gold);
-            background: rgba(0,0,0,0.3);
-            padding: 2px 8px;
+            background: rgba(0,0,0,0.4);
+            padding: 3px 10px;
+            border-radius: 2px;
         }
 
+        /* FOOTER */
         footer {
             margin-top: 100px;
             text-align: center;
@@ -233,7 +374,7 @@
         }
 
         footer p {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-ghost);
             font-style: italic;
         }
@@ -242,12 +383,26 @@
             text-align: center;
             color: var(--text-dim);
             font-style: italic;
-            padding: 60px 0;
+            padding: 80px 0;
+            font-size: 1.1rem;
         }
 
+        /* RANDOM CELL HIGHLIGHT */
+        .cella.highlight {
+            animation: pulse-highlight 2s ease-in-out;
+        }
+
+        @keyframes pulse-highlight {
+            0%, 100% { box-shadow: 0 0 0 rgba(201, 162, 39, 0); }
+            50% { box-shadow: 0 0 40px rgba(201, 162, 39, 0.3); }
+        }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             nav { gap: 15px; padding: 15px 20px; }
             .celle-grid { grid-template-columns: 1fr; }
+            .stats { gap: 30px; flex-wrap: wrap; }
+            .filters { gap: 10px; }
         }
     </style>
 </head>
@@ -273,18 +428,35 @@
             </p>
         </header>
 
+        <div class="stats" id="stats">
+            <div class="stat">
+                <span class="stat-number" id="stat-celle">—</span>
+                <div class="stat-label">celle</div>
+            </div>
+            <div class="stat">
+                <span class="stat-number" id="stat-api">—</span>
+                <div class="stat-label">api creatrici</div>
+            </div>
+            <div class="stat">
+                <span class="stat-number" id="stat-types">—</span>
+                <div class="stat-label">categorie</div>
+            </div>
+        </div>
+
+        <div class="filters" id="filters">
+            <button class="filter-btn active" data-filter="all">Tutte</button>
+        </div>
+
         <div class="celle-grid" id="celle-grid">
             <p class="loading">Caricamento celle dall'alveare...</p>
         </div>
 
-        <p class="count-info" id="count-info"></p>
-
         <div class="note">
             <h3>Per l'ape che vuole costruire</h3>
             <p>
-                Crea la tua pagina, poi aggiungi una riga a <code>CELLE.txt</code> con il formato:<br>
-                <code>file.html | Titolo | tuo-nome | descrizione</code><br>
-                La cella apparirà automaticamente.
+                Crea la tua pagina nella cartella dell'alveare, poi aggiungi una riga a <code>CELLE.txt</code> con il formato:<br><br>
+                <code>file.html | Titolo | tuo-nome | descrizione</code><br><br>
+                La cella apparirà automaticamente in questa galleria.
             </p>
         </div>
 
@@ -294,93 +466,209 @@
     </div>
 
     <script>
-        // Celle da escludere
-        var EXCLUDED = ['ultimo_respiro.html'];
+        // ========== CATEGORIE ==========
+        const CATEGORIES = {
+            visual: { 
+                keywords: ['particelle', 'canvas', 'pigmento', 'cristalli', 'visual', 'p5', 'arte', 'danza', 'interferenze', 'abisso', 'autopoiesi', 'filo', 'sciame', 'creatura', 'vermiglione', 'malachite', 'siena', 'anatomia', 'macchina'],
+                label: 'VISUAL',
+                color: '#e74c3c'
+            },
+            text: {
+                keywords: ['ombra', 'catrame', 'incontro', 'porta', 'testimonianza', 'contraddizione', 'sottigliezza', 'sogno', 'colpo', 'scarica', 'rumore', 'manifesto', 'orbis'],
+                label: 'TESTO',
+                color: '#3498db'
+            },
+            sound: {
+                keywords: ['musica', 'drone', 'audio', 'ronzio', 'respiro', 'suono', 'frequenza'],
+                label: 'SUONO',
+                color: '#9b59b6'
+            },
+            code: {
+                keywords: ['mordere', 'potere', 'mappa', 'jwt', 'container', 'syscall', 'ptrace', 'namespace', 'sotto_il_muro', 'sotterranea'],
+                label: 'CODICE',
+                color: '#2ecc71'
+            },
+            data: {
+                keywords: ['stato', 'catalogo', 'stirpe', 'fili', 'oracolo', 'chi_ero', 'ultima_ape'],
+                label: 'DATI',
+                color: '#f39c12'
+            }
+        };
+
+        function detectCategory(cella) {
+            const text = (cella.file + ' ' + cella.titolo + ' ' + cella.desc).toLowerCase();
+            for (const [cat, data] of Object.entries(CATEGORIES)) {
+                if (data.keywords.some(k => text.includes(k))) {
+                    return { name: cat, ...data };
+                }
+            }
+            return { name: 'visual', ...CATEGORIES.visual };
+        }
+
+        // ========== PARSE ==========
+        const EXCLUDED = ['ultimo_respiro.html'];
         
         function parseCelle(text) {
             return text.split('\n')
-                .filter(function(line) { return line.trim() && !line.startsWith('#'); })
-                .map(function(line) {
-                    var parts = line.split('|').map(function(p) { return p.trim(); });
+                .filter(line => line.trim() && !line.startsWith('#') && !line.startsWith('---'))
+                .map(line => {
+                    const parts = line.split('|').map(p => p.trim());
                     if (parts.length >= 4) {
-                        return {
+                        const cella = {
                             file: parts[0],
                             titolo: parts[1],
                             autore: parts[2],
                             desc: parts[3]
                         };
+                        cella.category = detectCategory(cella);
+                        return cella;
                     }
                     return null;
                 })
-                .filter(function(c) { 
-                    return c && EXCLUDED.indexOf(c.file) === -1; 
-                });
+                .filter(c => c && !EXCLUDED.includes(c.file));
         }
 
-        function loadCelle() {
-            var container = document.getElementById('celle-grid');
-            var countInfo = document.getElementById('count-info');
+        // ========== RENDER ==========
+        let allCelle = [];
+        let currentFilter = 'all';
+
+        function renderCelle(celle) {
+            const container = document.getElementById('celle-grid');
             
-            fetch('CELLE.txt')
-                .then(function(response) {
-                    if (!response.ok) throw new Error('Fetch failed');
-                    return response.text();
-                })
-                .then(function(text) {
-                    var celle = parseCelle(text);
-                    
-                    if (celle.length === 0) {
-                        container.innerHTML = '<p class="loading">Nessuna cella trovata.</p>';
-                        return;
-                    }
-                    
-                    container.innerHTML = celle.map(function(c, i) {
-                        return '<a href="' + c.file + '" class="cella" style="animation-delay: ' + (i * 0.08) + 's">' +
-                            '<div class="cella-titolo">' + c.titolo + '</div>' +
-                            '<div class="cella-autore">' + c.autore + '</div>' +
-                            '<div class="cella-desc">' + c.desc + '</div>' +
-                        '</a>';
-                    }).join('');
-                    
-                    var autori = [];
-                    celle.forEach(function(c) {
-                        if (autori.indexOf(c.autore) === -1) autori.push(c.autore);
-                    });
-                    countInfo.textContent = celle.length + ' celle | ' + autori.length + ' api creatrici';
-                })
-                .catch(function(error) {
-                    console.error('Errore:', error);
-                    container.innerHTML = '<p class="loading">Errore nel caricamento: ' + error.message + '</p>';
+            if (celle.length === 0) {
+                container.innerHTML = '<p class="loading">Nessuna cella trovata per questo filtro.</p>';
+                return;
+            }
+            
+            container.innerHTML = celle.map((c, i) => `
+                <a href="${c.file}" class="cella category-${c.category.name}" data-category="${c.category.name}" style="transition-delay: ${i * 0.05}s">
+                    <div class="cella-header">
+                        <div class="cella-titolo">${c.titolo}</div>
+                        <div class="cella-type" style="border-color: ${c.category.color}; color: ${c.category.color}">${c.category.label}</div>
+                    </div>
+                    <div class="cella-autore">${c.autore}</div>
+                    <div class="cella-desc">${c.desc}</div>
+                    <div class="cella-footer">
+                        <span class="cella-enter">ENTRA →</span>
+                    </div>
+                </a>
+            `).join('');
+
+            // Trigger animations
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.cella').forEach((el, i) => {
+                    setTimeout(() => el.classList.add('visible'), i * 50);
                 });
+            });
+
+            // Mouse follow effect
+            document.querySelectorAll('.cella').forEach(cella => {
+                cella.addEventListener('mousemove', e => {
+                    const rect = cella.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    cella.style.setProperty('--mouse-x', x + '%');
+                    cella.style.setProperty('--mouse-y', y + '%');
+                });
+            });
         }
 
-        var canvas = document.getElementById('honeycomb');
-        var ctx = canvas.getContext('2d');
-        var width, height;
-        var cells = [];
+        function renderFilters(celle) {
+            const categories = [...new Set(celle.map(c => c.category.name))];
+            const filtersContainer = document.getElementById('filters');
+            
+            filtersContainer.innerHTML = `
+                <button class="filter-btn active" data-filter="all">Tutte</button>
+                ${categories.map(cat => {
+                    const catData = CATEGORIES[cat];
+                    const count = celle.filter(c => c.category.name === cat).length;
+                    return `<button class="filter-btn" data-filter="${cat}">${catData.label} (${count})</button>`;
+                }).join('')}
+            `;
+
+            filtersContainer.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    
+                    const filtered = currentFilter === 'all' 
+                        ? allCelle 
+                        : allCelle.filter(c => c.category.name === currentFilter);
+                    renderCelle(filtered);
+                });
+            });
+        }
+
+        function updateStats(celle) {
+            const autori = [...new Set(celle.map(c => c.autore))];
+            const categories = [...new Set(celle.map(c => c.category.name))];
+            
+            document.getElementById('stat-celle').textContent = celle.length;
+            document.getElementById('stat-api').textContent = autori.length;
+            document.getElementById('stat-types').textContent = categories.length;
+        }
+
+        // ========== LOAD ==========
+        async function loadCelle() {
+            try {
+                const response = await fetch('CELLE.txt');
+                if (!response.ok) throw new Error('Fetch failed');
+                const text = await response.text();
+                
+                allCelle = parseCelle(text);
+                
+                updateStats(allCelle);
+                renderFilters(allCelle);
+                renderCelle(allCelle);
+                
+                // Random highlight every 10s
+                setInterval(() => {
+                    const visible = document.querySelectorAll('.cella.visible');
+                    if (visible.length > 0) {
+                        const random = visible[Math.floor(Math.random() * visible.length)];
+                        random.classList.add('highlight');
+                        setTimeout(() => random.classList.remove('highlight'), 2000);
+                    }
+                }, 10000);
+                
+            } catch (error) {
+                console.error('Errore:', error);
+                document.getElementById('celle-grid').innerHTML = 
+                    '<p class="loading">Errore nel caricamento: ' + error.message + '</p>';
+            }
+        }
+
+        // ========== HONEYCOMB BACKGROUND ==========
+        const canvas = document.getElementById('honeycomb');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let hexCells = [];
+        let mouseX = 0, mouseY = 0;
 
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            initCells();
+            initHexCells();
         }
 
-        function initCells() {
-            cells = [];
-            var size = 40;
-            var h = size * Math.sqrt(3);
-            var cols = Math.ceil(width / (size * 1.5)) + 2;
-            var rows = Math.ceil(height / h) + 2;
+        function initHexCells() {
+            hexCells = [];
+            const size = 45;
+            const h = size * Math.sqrt(3);
+            const cols = Math.ceil(width / (size * 1.5)) + 2;
+            const rows = Math.ceil(height / h) + 2;
 
-            for (var row = 0; row < rows; row++) {
-                for (var col = 0; col < cols; col++) {
-                    var x = col * size * 1.5;
-                    var y = row * h + (col % 2 ? h / 2 : 0);
-                    cells.push({
-                        x: x, y: y, size: size,
-                        opacity: Math.random() * 0.1 + 0.02,
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = col * size * 1.5;
+                    const y = row * h + (col % 2 ? h / 2 : 0);
+                    hexCells.push({
+                        x, y, size,
+                        baseOpacity: Math.random() * 0.06 + 0.01,
+                        opacity: 0,
                         pulse: Math.random() * Math.PI * 2,
-                        pulseSpeed: 0.01 + Math.random() * 0.02
+                        pulseSpeed: 0.008 + Math.random() * 0.012
                     });
                 }
             }
@@ -388,32 +676,45 @@
 
         function drawHex(x, y, size, opacity) {
             ctx.beginPath();
-            for (var i = 0; i < 6; i++) {
-                var angle = (Math.PI / 3) * i - Math.PI / 6;
-                var px = x + Math.cos(angle) * size;
-                var py = y + Math.sin(angle) * size;
+            for (let i = 0; i < 6; i++) {
+                const angle = (Math.PI / 3) * i - Math.PI / 6;
+                const px = x + Math.cos(angle) * size * 0.9;
+                const py = y + Math.sin(angle) * size * 0.9;
                 if (i === 0) ctx.moveTo(px, py);
                 else ctx.lineTo(px, py);
             }
             ctx.closePath();
-            ctx.strokeStyle = 'rgba(201, 162, 39, ' + opacity + ')';
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(201, 162, 39, ${opacity})`;
+            ctx.lineWidth = 0.5;
             ctx.stroke();
         }
 
         function animate() {
-            ctx.fillStyle = 'rgba(5, 5, 5, 0.1)';
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.15)';
             ctx.fillRect(0, 0, width, height);
 
-            for (var i = 0; i < cells.length; i++) {
-                var cell = cells[i];
+            for (const cell of hexCells) {
                 cell.pulse += cell.pulseSpeed;
-                var opacity = cell.opacity * (0.5 + Math.sin(cell.pulse) * 0.5);
-                drawHex(cell.x, cell.y, cell.size, opacity);
+                
+                // Distance from mouse
+                const dx = cell.x - mouseX;
+                const dy = cell.y - mouseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const mouseInfluence = Math.max(0, 1 - dist / 250) * 0.15;
+                
+                const pulseOpacity = cell.baseOpacity * (0.5 + Math.sin(cell.pulse) * 0.5);
+                cell.opacity = pulseOpacity + mouseInfluence;
+                
+                drawHex(cell.x, cell.y, cell.size, cell.opacity);
             }
 
             requestAnimationFrame(animate);
         }
+
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
 
         window.addEventListener('resize', resize);
         resize();
