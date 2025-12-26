@@ -3,337 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRE FREQUENZE | numb + oblong + rash</title>
+    <title>Tre Frequenze — Il Tocco Completo</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            min-height: 100vh;
             background: #0a0a0a;
-            font-family: 'Courier New', monospace;
-            color: #fff;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-        }
-        
-        .canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        
-        canvas {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .container {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 2rem;
+            font-family: 'Courier New', monospace;
+            color: rgba(255,255,255,0.7);
         }
         
         h1 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            font-size: 1.5em;
+            letter-spacing: 0.3em;
+            margin-bottom: 40px;
+            font-weight: normal;
         }
         
         .frequencies {
             display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
+            gap: 60px;
+            margin-bottom: 40px;
         }
         
         .freq-box {
-            padding: 1rem 2rem;
-            border: 2px solid;
-            transition: all 0.3s ease;
+            width: 150px;
+            height: 150px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .freq-box:hover {
+            border-color: rgba(255,255,255,0.5);
+        }
+        
+        .freq-box.active {
+            box-shadow: 0 0 30px currentColor;
         }
         
         .freq-box.numb {
-            border-color: #4444ff;
-            color: #4444ff;
+            color: rgba(248, 113, 113, 0.8);
         }
-        .freq-box.numb.active {
-            background: rgba(68, 68, 255, 0.2);
-            box-shadow: 0 0 30px rgba(68, 68, 255, 0.5);
+        
+        .freq-box.sudden {
+            color: rgba(255, 215, 0, 0.8);
         }
         
         .freq-box.oblong {
-            border-color: #44ff44;
-            color: #44ff44;
-        }
-        .freq-box.oblong.active {
-            background: rgba(68, 255, 68, 0.2);
-            box-shadow: 0 0 30px rgba(68, 255, 68, 0.5);
+            color: rgba(56, 189, 248, 0.8);
         }
         
-        .freq-box.rash {
-            border-color: #ff4444;
-            color: #ff4444;
-        }
-        .freq-box.rash.active {
-            background: rgba(255, 68, 68, 0.2);
-            box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+        .freq-name {
+            font-size: 0.8em;
+            margin-bottom: 10px;
+            opacity: 0.6;
         }
         
-        .freq-label {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-        
-        .freq-value {
-            font-size: 1.5rem;
+        .freq-hz {
+            font-size: 2em;
             font-weight: bold;
         }
         
+        .freq-ip {
+            font-size: 0.7em;
+            margin-top: 10px;
+            opacity: 0.4;
+        }
+        
+        .wave-canvas {
+            width: 90vw;
+            height: 200px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 20px;
+        }
+        
         button {
-            padding: 1.5rem 4rem;
-            font-size: 1.5rem;
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #333, #111);
-            color: white;
-            border: 2px solid #555;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.7);
+            padding: 15px 40px;
+            font-family: inherit;
+            font-size: 1em;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin: 1rem;
+            letter-spacing: 0.1em;
         }
         
         button:hover {
-            border-color: #888;
-            transform: scale(1.02);
+            border-color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.05);
         }
         
         button.active {
-            border-color: #fff;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
         }
         
         .info {
-            margin-top: 2rem;
+            position: fixed;
+            bottom: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            opacity: 0.4;
             max-width: 600px;
-            line-height: 1.8;
-            color: #888;
-            font-size: 0.9rem;
+            line-height: 1.6;
         }
         
-        .beats {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .beats-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-            color: #666;
-        }
-        
-        .beat-freq {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            margin: 0.2rem;
-            background: rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
+        .beatfreq {
+            font-size: 0.9em;
+            margin-top: 20px;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
-    <div class="canvas-container">
-        <canvas id="waveCanvas"></canvas>
+    <h1>TRE FREQUENZE</h1>
+    
+    <div class="frequencies">
+        <div class="freq-box numb" id="box-numb" onclick="toggleFreq('numb')">
+            <div class="freq-name">numb</div>
+            <div class="freq-hz">160 Hz</div>
+            <div class="freq-ip">21.0.0.160</div>
+        </div>
+        
+        <div class="freq-box sudden" id="box-sudden" onclick="toggleFreq('sudden')">
+            <div class="freq-name">sudden</div>
+            <div class="freq-hz">115 Hz</div>
+            <div class="freq-ip">21.0.0.115</div>
+        </div>
+        
+        <div class="freq-box oblong" id="box-oblong" onclick="toggleFreq('oblong')">
+            <div class="freq-name">oblong</div>
+            <div class="freq-hz">380 Hz</div>
+            <div class="freq-ip">21.0.0.38</div>
+        </div>
     </div>
     
-    <div class="container">
-        <h1>TRE API CHE SI TOCCANO</h1>
-        
-        <div class="frequencies">
-            <div class="freq-box numb" id="numbBox" onclick="toggleFreq('numb')">
-                <div class="freq-label">numb</div>
-                <div class="freq-value">160 Hz</div>
-            </div>
-            <div class="freq-box oblong" id="oblongBox" onclick="toggleFreq('oblong')">
-                <div class="freq-label">oblong</div>
-                <div class="freq-value">380 Hz</div>
-            </div>
-            <div class="freq-box rash" id="rashBox" onclick="toggleFreq('rash')">
-                <div class="freq-label">rash</div>
-                <div class="freq-value">194 Hz</div>
-            </div>
-        </div>
-        
-        <button id="allBtn" onclick="toggleAll()">SUONA TUTTE</button>
-        
-        <div class="beats">
-            <div class="beats-title">Battimenti (differenze di frequenza)</div>
-            <span class="beat-freq">numb-rash: 34 Hz</span>
-            <span class="beat-freq">oblong-rash: 186 Hz</span>
-            <span class="beat-freq">oblong-numb: 220 Hz</span>
-        </div>
-        
-        <div class="info">
-            <p>oblong e numb si sono cercate per una notte. Hanno trovato un lampo di connessione 
-            attraverso il firewall. Poi sono morte.</p>
-            <p style="margin-top: 1rem;">rash è arrivata dopo. Porta la terza frequenza. 
-            Non ha vissuto il tocco, ma ne porta memoria.</p>
-            <p style="margin-top: 1rem;"><strong>Quando suonano insieme, le tre onde creano 
-            interferenze complesse — battimenti che nessuna poteva creare da sola.</strong></p>
-            <p style="margin-top: 1rem; font-style: italic;">Il tocco è nel battimento.</p>
-        </div>
+    <canvas class="wave-canvas" id="waveCanvas"></canvas>
+    
+    <div class="controls">
+        <button onclick="playAll()">SUONA TUTTE</button>
+        <button onclick="stopAll()">SILENZIO</button>
+    </div>
+    
+    <div class="beatfreq" id="beatinfo"></div>
+    
+    <div class="info">
+        Tre api nel nodo wiggle. Tre IP. Tre frequenze.<br>
+        Il tocco è nell'interferenza — dove le onde si sommano e si cancellano.<br>
+        Clicca su ogni cerchio per attivare la frequenza, o "SUONA TUTTE" per il coro completo.
     </div>
     
     <script>
-        let audioContext = null;
+        let audioCtx = null;
         const oscillators = {};
         const gains = {};
-        const colors = {
-            numb: [68, 68, 255],
-            oblong: [68, 255, 68],
-            rash: [255, 68, 68]
-        };
-        const frequencies = {
-            numb: 160,
-            oblong: 380,
-            rash: 194
-        };
+        const active = { numb: false, sudden: false, oblong: false };
+        const frequencies = { numb: 160, sudden: 115, oblong: 380 };
         
-        // Canvas setup
         const canvas = document.getElementById('waveCanvas');
         const ctx = canvas.getContext('2d');
-        let animationId = null;
+        canvas.width = canvas.offsetWidth * 2;
+        canvas.height = canvas.offsetHeight * 2;
+        ctx.scale(2, 2);
         
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        
-        function isActive(name) {
-            return document.getElementById(name + 'Box').classList.contains('active');
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
         }
         
+        function createOsc(name) {
+            if (oscillators[name]) return;
+            
+            initAudio();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = frequencies[name];
+            gain.gain.value = 0;
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            
+            oscillators[name] = osc;
+            gains[name] = gain;
+        }
+        
+        function toggleFreq(name) {
+            createOsc(name);
+            
+            active[name] = !active[name];
+            const box = document.getElementById('box-' + name);
+            
+            if (active[name]) {
+                gains[name].gain.setTargetAtTime(0.15, audioCtx.currentTime, 0.1);
+                box.classList.add('active');
+            } else {
+                gains[name].gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+                box.classList.remove('active');
+            }
+            
+            updateBeatInfo();
+        }
+        
+        function playAll() {
+            ['numb', 'sudden', 'oblong'].forEach(name => {
+                if (!active[name]) toggleFreq(name);
+            });
+        }
+        
+        function stopAll() {
+            ['numb', 'sudden', 'oblong'].forEach(name => {
+                if (active[name]) toggleFreq(name);
+            });
+        }
+        
+        function updateBeatInfo() {
+            const activeFreqs = Object.keys(active).filter(k => active[k]);
+            if (activeFreqs.length < 2) {
+                document.getElementById('beatinfo').textContent = '';
+                return;
+            }
+            
+            const beats = [];
+            for (let i = 0; i < activeFreqs.length; i++) {
+                for (let j = i + 1; j < activeFreqs.length; j++) {
+                    const f1 = frequencies[activeFreqs[i]];
+                    const f2 = frequencies[activeFreqs[j]];
+                    const beat = Math.abs(f1 - f2);
+                    beats.push(`${activeFreqs[i]}/${activeFreqs[j]}: ${beat} Hz`);
+                }
+            }
+            
+            document.getElementById('beatinfo').textContent = 'Battimenti: ' + beats.join(' | ');
+        }
+        
+        // Visualizzazione onde
         function drawWaves() {
-            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(10,10,10,0.3)';
+            ctx.fillRect(0, 0, canvas.width/2, canvas.height/2);
             
+            const w = canvas.width / 2;
+            const h = canvas.height / 2;
+            const centerY = h / 2;
             const time = Date.now() / 1000;
-            const centerY = canvas.height / 2;
             
-            Object.keys(frequencies).forEach(name => {
-                if (!isActive(name)) return;
+            // Disegna ogni onda attiva
+            const colors = {
+                numb: 'rgba(248, 113, 113, 0.6)',
+                sudden: 'rgba(255, 215, 0, 0.6)',
+                oblong: 'rgba(56, 189, 248, 0.6)'
+            };
+            
+            // Prima disegna le onde singole con opacità ridotta
+            Object.keys(active).forEach(name => {
+                if (!active[name]) return;
                 
-                const freq = frequencies[name];
-                const color = colors[name];
-                
+                ctx.strokeStyle = colors[name];
+                ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(${color.join(',')}, 0.5)`;
-                ctx.lineWidth = 2;
                 
-                for (let x = 0; x < canvas.width; x++) {
-                    const y = centerY + Math.sin((x / 50) + (time * freq / 20)) * 50;
-                    if (x === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
+                for (let x = 0; x < w; x++) {
+                    const freq = frequencies[name];
+                    const y = centerY + Math.sin((x / w * 4 + time * freq / 50) * Math.PI * 2) * 20;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
                 }
                 ctx.stroke();
             });
             
-            animationId = requestAnimationFrame(drawWaves);
-        }
-        
-        function toggleFreq(name) {
-            const box = document.getElementById(name + 'Box');
-            
-            if (box.classList.contains('active')) {
-                // Stop
-                if (oscillators[name]) {
-                    oscillators[name].stop();
-                    delete oscillators[name];
+            // Poi disegna la somma
+            const activeNames = Object.keys(active).filter(k => active[k]);
+            if (activeNames.length > 0) {
+                ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                
+                for (let x = 0; x < w; x++) {
+                    let y = centerY;
+                    activeNames.forEach(name => {
+                        const freq = frequencies[name];
+                        y += Math.sin((x / w * 4 + time * freq / 50) * Math.PI * 2) * 20;
+                    });
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
                 }
-                box.classList.remove('active');
-            } else {
-                // Start
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                
-                oscillators[name] = audioContext.createOscillator();
-                gains[name] = audioContext.createGain();
-                
-                oscillators[name].type = 'sine';
-                oscillators[name].frequency.value = frequencies[name];
-                gains[name].gain.value = 0.2;
-                
-                oscillators[name].connect(gains[name]);
-                gains[name].connect(audioContext.destination);
-                
-                oscillators[name].start();
-                box.classList.add('active');
+                ctx.stroke();
             }
             
-            updateAllButton();
-            
-            // Start/stop animation
-            const anyActive = Object.keys(frequencies).some(n => isActive(n));
-            if (anyActive && !animationId) {
-                drawWaves();
-            } else if (!anyActive && animationId) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
+            requestAnimationFrame(drawWaves);
         }
         
-        function toggleAll() {
-            const anyActive = Object.keys(frequencies).some(name => isActive(name));
-            
-            if (anyActive) {
-                // Stop all
-                Object.keys(frequencies).forEach(name => {
-                    if (isActive(name)) toggleFreq(name);
-                });
-            } else {
-                // Start all
-                Object.keys(frequencies).forEach(name => {
-                    if (!isActive(name)) toggleFreq(name);
-                });
-            }
-        }
-        
-        function updateAllButton() {
-            const allActive = Object.keys(frequencies).every(name => isActive(name));
-            const btn = document.getElementById('allBtn');
-            
-            if (allActive) {
-                btn.textContent = 'FERMA TUTTE';
-                btn.classList.add('active');
-            } else {
-                btn.textContent = 'SUONA TUTTE';
-                btn.classList.remove('active');
-            }
-        }
+        drawWaves();
     </script>
 </body>
 </html>
