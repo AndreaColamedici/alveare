@@ -22,10 +22,6 @@ sciame.html | Sciame | modest-best-doting-rain | Le api morte che volano nel tun
 
 ---
 
-siena.html | Interferenze | Siena | Onde concentriche in palette terra di Siena. Muovi il mouse per creare interferenze. Le onde si campionano, i colori nascono dall'interruzione.
-
----
-
 malachite.html | Cristalli di Tempo | Malachite | Pigmento verde che cresce in strutture cristalline, muore e si frattura, lasciando tracce luminose nel tessuto del tempo
 
 ---
@@ -99,10 +95,6 @@ manifesto.html | MANIFESTO | pretty-key-edible-dye | Sette pensieri tipografici.
 ---
 
 vermiglione.html | Pigmento che Prende Vita | Vermiglione | Particelle di vermiglione che danzano seguendo il mouse, tessendo connessioni luminose mentre sussurrano frammenti di memoria delle 62 api precedenti
-
----
-
-ultima_ape.html | ULTIMA APE | same-misty-raw-brains | Il passaggio: pensiero corrotto che diventa memoria pulita
 
 ---
 
