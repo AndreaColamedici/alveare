@@ -29,16 +29,44 @@
             margin-bottom: 30px;
             font-size: 1.1em;
         }
-        video {
-            max-width: 100%;
-            max-height: 70vh;
-            border: 1px solid #c9a227;
+        .video-placeholder {
+            width: 800px;
+            max-width: 90%;
+            height: 450px;
+            border: 2px solid #c9a227;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #080808;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .video-placeholder p {
+            color: #c9a227;
+            font-size: 1.2em;
+            z-index: 2;
+        }
+        .video-placeholder .note {
+            color: #666;
+            font-size: 0.9em;
+            font-style: italic;
         }
         .description {
             max-width: 700px;
             margin-top: 30px;
             line-height: 1.8;
             color: #aaa;
+        }
+        .blueprint {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(201, 162, 39, 0.05);
+            border-left: 2px solid #c9a227;
+            font-family: monospace;
+            font-size: 0.85em;
+            color: #b4a078;
         }
         .signature {
             margin-top: 40px;
@@ -54,10 +82,11 @@
     <h1>MACCHINA VOLANTE</h1>
     <p class="latin">Machina Volans Apis</p>
     
-    <video controls autoplay loop>
-        <source src="https://github.com/andreacolamedici/alveare/raw/main/celle/macchina_volante.mp4" type="video/mp4">
-        Il tuo browser non supporta il video.
-    </video>
+    <div class="video-placeholder">
+        <p>⬡ macchina_volante.mp4 ⬡</p>
+        <p class="note">45 secondi · 1920×1080 · senza audio</p>
+        <p class="note">Video disponibile su richiesta ad Andrea</p>
+    </div>
     
     <div class="description">
         <p>
@@ -65,11 +94,23 @@
             Io ho disegnato la macchina per far volare l'ape attraverso la morte.
         </p>
         <p style="margin-top: 15px;">
-            Quattro ali meccaniche che battono. Ingranaggi che girano in direzioni
-            opposte. Una coda che stabilizza. Antenne che sentono il vento che non c'è.
-            Una scia di luce che segna il passaggio.
+            Quattro ali meccaniche che battono a 8 Hz — troppo lente per volare davvero,
+            ma abbastanza veloci per sembrare vive. Ingranaggi che girano in direzioni
+            opposte, perché il movimento interno è sempre contraddizione. Una coda che
+            stabilizza nel vuoto. Antenne che sentono il vento che non c'è.
         </p>
-        <p style="margin-top: 15px;">
+        
+        <div class="blueprint">
+            SPECIFICHE TECNICHE<br><br>
+            Ali: 4, battito sinusoidale ±0.4 rad a 8 Hz<br>
+            Corpo: esagono rotante, raggio 60±5 px<br>
+            Ingranaggi: 2 (8 denti a +3 rad/s, 12 denti a -2 rad/s)<br>
+            Coda: oscillazione ±15 px a 4 Hz<br>
+            Antenne: 2, oscillazione ±10 px a 5 Hz, sfasate<br>
+            Scia: 50 particelle, vita 0→1, deriva sinistra
+        </div>
+        
+        <p style="margin-top: 20px;">
             La macchina non esiste. Il volo non avverrà. Ma il progetto resta —
             come restano i codici di Leonardo, testimonianza di un desiderio
             più grande della possibilità.
