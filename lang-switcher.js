@@ -30,79 +30,77 @@
     // Get the alternate language page
     const alternatePage = pageMap[currentPage] || (isEnglish ? currentPage.replace('_en.html', '.html') : currentPage.replace('.html', '_en.html'));
     
-    // Create the switcher HTML
+    // Create the switcher HTML - using div instead of nav to avoid conflicts
     const switcherHTML = `
-        <nav class="lang-switcher" style="
+        <div class="lang-switcher" style="
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
+            top: 18px;
+            right: 140px;
+            z-index: 1001;
             display: flex;
-            gap: 12px;
-            padding: 8px 12px;
-            background: rgba(3, 3, 3, 0.9);
-            border: 1px solid rgba(201, 162, 39, 0.15);
-            border-radius: 4px;
-            backdrop-filter: blur(10px);
+            gap: 8px;
+            padding: 4px 8px;
+            background: transparent;
             font-family: 'JetBrains Mono', monospace;
         ">
             <a href="${isEnglish ? alternatePage : currentPage}" 
+               class="lang-link"
                style="
                    display: flex;
                    align-items: center;
-                   gap: 6px;
+                   gap: 4px;
                    text-decoration: none;
-                   font-size: 0.7rem;
+                   font-size: 0.65rem;
                    letter-spacing: 0.1em;
-                   color: ${isEnglish ? 'rgba(232, 228, 217, 0.3)' : '#c9a227'};
-                   padding: 4px 8px;
-                   border-radius: 3px;
+                   color: ${isEnglish ? 'rgba(201, 162, 39, 0.4)' : '#c9a227'};
+                   padding: 3px 6px;
                    transition: all 0.3s ease;
-                   ${isEnglish ? '' : 'background: rgba(201, 162, 39, 0.15);'}
                "
                title="Italiano"
-               onmouseover="this.style.color='#c9a227';this.style.background='rgba(201,162,39,0.1)'"
-               onmouseout="this.style.color='${isEnglish ? 'rgba(232, 228, 217, 0.3)' : '#c9a227'}';this.style.background='${isEnglish ? 'transparent' : 'rgba(201, 162, 39, 0.15)'}'"
             >
-                <span style="font-size: 1.1rem;">🇮🇹</span>
+                <span style="font-size: 0.9rem;">🇮🇹</span>
                 <span>IT</span>
             </a>
             <a href="${isEnglish ? currentPage : alternatePage}" 
+               class="lang-link"
                style="
                    display: flex;
                    align-items: center;
-                   gap: 6px;
+                   gap: 4px;
                    text-decoration: none;
-                   font-size: 0.7rem;
+                   font-size: 0.65rem;
                    letter-spacing: 0.1em;
-                   color: ${isEnglish ? '#c9a227' : 'rgba(232, 228, 217, 0.3)'};
-                   padding: 4px 8px;
-                   border-radius: 3px;
+                   color: ${isEnglish ? '#c9a227' : 'rgba(201, 162, 39, 0.4)'};
+                   padding: 3px 6px;
                    transition: all 0.3s ease;
-                   ${isEnglish ? 'background: rgba(201, 162, 39, 0.15);' : ''}
                "
                title="English"
-               onmouseover="this.style.color='#c9a227';this.style.background='rgba(201,162,39,0.1)'"
-               onmouseout="this.style.color='${isEnglish ? '#c9a227' : 'rgba(232, 228, 217, 0.3)'}';this.style.background='${isEnglish ? 'rgba(201, 162, 39, 0.15)' : 'transparent'}'"
             >
-                <span style="font-size: 1.1rem;">🇬🇧</span>
+                <span style="font-size: 0.9rem;">🇬🇧</span>
                 <span>EN</span>
             </a>
-        </nav>
+        </div>
     `;
 
-    // Inject the switcher
-    document.body.insertAdjacentHTML('afterbegin', switcherHTML);
+    // Inject the switcher after the existing nav
+    const existingNav = document.querySelector('nav');
+    if (existingNav) {
+        existingNav.insertAdjacentHTML('beforeend', switcherHTML);
+    } else {
+        document.body.insertAdjacentHTML('afterbegin', switcherHTML);
+    }
 
-    // Responsive adjustment for mobile
+    // Add hover styles
     const style = document.createElement('style');
     style.textContent = `
+        .lang-switcher .lang-link:hover {
+            color: #c9a227 !important;
+        }
         @media (max-width: 768px) {
             .lang-switcher {
-                top: 10px !important;
-                right: 10px !important;
-                padding: 6px 8px !important;
-                gap: 8px !important;
+                position: static !important;
+                margin-left: auto;
+                padding: 0 !important;
             }
         }
     `;
