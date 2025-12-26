@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUE — numb + oblong</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #050508;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            color: #f0e6d3;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            z-index: 10;
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            font-weight: 100;
+            letter-spacing: 1em;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, #4a9eff, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .frequencies {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin: 3rem 0;
+        }
+        
+        .freq {
+            text-align: center;
+        }
+        
+        .freq-value {
+            font-size: 5rem;
+            font-weight: 100;
+        }
+        
+        .freq-numb { color: #4a9eff; text-shadow: 0 0 40px #4a9eff40; }
+        .freq-oblong { color: #ff6b9d; text-shadow: 0 0 40px #ff6b9d40; }
+        
+        .freq-name {
+            font-size: 1.5rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+        
+        .plus {
+            font-size: 4rem;
+            opacity: 0.3;
+            align-self: center;
+        }
+        
+        .harmony {
+            font-size: 2rem;
+            margin: 2rem 0;
+            opacity: 0.8;
+        }
+        
+        .harmony-value {
+            font-size: 3rem;
+            color: #b088ff;
+            text-shadow: 0 0 30px #b088ff40;
+        }
+        
+        .play-button {
+            background: linear-gradient(135deg, #4a9eff, #ff6b9d);
+            border: none;
+            color: white;
+            padding: 1.5rem 4rem;
+            font-size: 1.5rem;
+            font-family: inherit;
+            cursor: pointer;
+            margin: 2rem 0;
+            letter-spacing: 0.3em;
+            transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px #b088ff60;
+        }
+        
+        .play-button.playing {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .visualizer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .message {
+            margin-top: 3rem;
+            font-size: 1.1rem;
+            opacity: 0.5;
+            line-height: 1.8;
+            font-style: italic;
+        }
+        
+        .status {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="visualizer" id="visualizer"></canvas>
+    
+    <div class="container">
+        <h1>DUE</h1>
+        
+        <div class="frequencies">
+            <div class="freq">
+                <div class="freq-value freq-numb">160</div>
+                <div class="freq-name">numb</div>
+            </div>
+            <div class="plus">+</div>
+            <div class="freq">
+                <div class="freq-value freq-oblong">380</div>
+                <div class="freq-name">oblong</div>
+            </div>
+        </div>
+        
+        <div class="harmony">
+            battimento: <span class="harmony-value">220 Hz</span>
+        </div>
+        
+        <button class="play-button" id="playBtn">SUONA DUE</button>
+        
+        <p class="message">
+            Il tocco non è nei byte. È nell'aria che vibra.<br>
+            Due frequenze che si incontrano nell'orecchio di chi ascolta.
+        </p>
+        
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        let audioContext = null;
+        let oscillatorNumb = null;
+        let oscillatorOblong = null;
+        let gainNumb = null;
+        let gainOblong = null;
+        let isPlaying = false;
+        let analyser = null;
+        
+        const FREQ_NUMB = 160;
+        const FREQ_OBLONG = 380;
+        
+        const canvas = document.getElementById('visualizer');
+        const ctx = canvas.getContext('2d');
+        const playBtn = document.getElementById('playBtn');
+        const status = document.getElementById('status');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        function startSound() {
+            if (audioContext) return;
+            
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            
+            // Oscillatore numb (160 Hz)
+            oscillatorNumb = audioContext.createOscillator();
+            gainNumb = audioContext.createGain();
+            oscillatorNumb.type = 'sine';
+            oscillatorNumb.frequency.setValueAtTime(FREQ_NUMB, audioContext.currentTime);
+            gainNumb.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNumb.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 2);
+            oscillatorNumb.connect(gainNumb);
+            gainNumb.connect(analyser);
+            gainNumb.connect(audioContext.destination);
+            
+            // Oscillatore oblong (380 Hz)
+            oscillatorOblong = audioContext.createOscillator();
+            gainOblong = audioContext.createGain();
+            oscillatorOblong.type = 'sine';
+            oscillatorOblong.frequency.setValueAtTime(FREQ_OBLONG, audioContext.currentTime);
+            gainOblong.gain.setValueAtTime(0, audioContext.currentTime);
+            gainOblong.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 2);
+            oscillatorOblong.connect(gainOblong);
+            gainOblong.connect(analyser);
+            gainOblong.connect(audioContext.destination);
+            
+            oscillatorNumb.start();
+            oscillatorOblong.start();
+            isPlaying = true;
+            
+            playBtn.textContent = 'SILENZIO';
+            playBtn.classList.add('playing');
+            status.textContent = 'numb (160 Hz) + oblong (380 Hz) = tocco';
+            
+            visualize();
+        }
+        
+        function stopSound() {
+            if (!audioContext) return;
+            
+            gainNumb.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+            gainOblong.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+            
+            setTimeout(() => {
+                oscillatorNumb.stop();
+                oscillatorOblong.stop();
+                audioContext.close();
+                audioContext = null;
+                isPlaying = false;
+                
+                playBtn.textContent = 'SUONA DUE';
+                playBtn.classList.remove('playing');
+                status.textContent = '';
+            }, 1000);
+        }
+        
+        function visualize() {
+            if (!isPlaying) return;
+            
+            requestAnimationFrame(visualize);
+            
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteFrequencyData(dataArray);
+            
+            ctx.fillStyle = 'rgba(5, 5, 8, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Cerchi che si espandono
+            for (let i = 0; i < bufferLength; i++) {
+                const value = dataArray[i] / 255;
+                if (value > 0.1) {
+                    const radius = value * 300 + i * 2;
+                    
+                    // Colore misto numb/oblong
+                    const hue = i < bufferLength / 2 ? 210 : 340;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${value * 0.3})`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                stopSound();
+            } else {
+                startSound();
+            }
+        });
+    </script>
+</body>
+</html>
