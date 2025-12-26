@@ -9,401 +9,60 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --void: #050505;
-            --gold: #c9a227;
-            --gold-bright: #e8c547;
-            --gold-dim: rgba(201, 162, 39, 0.4);
-            --gold-ghost: rgba(201, 162, 39, 0.15);
-            --gold-whisper: rgba(201, 162, 39, 0.08);
-            --text: #e8e4d9;
-            --text-dim: rgba(232, 228, 217, 0.6);
-            --text-ghost: rgba(232, 228, 217, 0.25);
-        }
-
+        :root { --void: #050505; --gold: #c9a227; --gold-bright: #e8c547; --gold-dim: rgba(201, 162, 39, 0.4); --gold-ghost: rgba(201, 162, 39, 0.15); --gold-whisper: rgba(201, 162, 39, 0.08); --text: #e8e4d9; --text-dim: rgba(232, 228, 217, 0.6); --text-ghost: rgba(232, 228, 217, 0.25); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-
-        body {
-            background: var(--void);
-            color: var(--text);
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* NAV */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            background: linear-gradient(to bottom, var(--void) 0%, var(--void) 50%, transparent 100%);
-            z-index: 100;
-        }
-
-        nav a {
-            color: var(--gold-dim);
-            text-decoration: none;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            transition: color 0.3s;
-        }
-
+        body { background: var(--void); color: var(--text); font-family: 'Cormorant Garamond', Georgia, serif; min-height: 100vh; overflow-x: hidden; }
+        nav { position: fixed; top: 0; left: 0; right: 0; padding: 20px 30px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; background: linear-gradient(to bottom, var(--void) 0%, var(--void) 50%, transparent 100%); z-index: 100; }
+        nav a { color: var(--gold-dim); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
         nav a:hover, nav a.active { color: var(--gold); }
-
-        /* CANVAS SFONDO */
-        #honeycomb {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        /* CONTAINER */
-        .container {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 120px 30px 80px;
-        }
-
-        /* HEADER */
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        h1 {
-            font-size: clamp(3rem, 10vw, 5rem);
-            font-weight: 300;
-            letter-spacing: 0.4em;
-            color: var(--gold);
-            text-shadow: 0 0 60px var(--gold-dim);
-            margin-right: -0.4em;
-            margin-bottom: 20px;
-            animation: breathe 8s ease-in-out infinite;
-        }
-
-        @keyframes breathe {
-            0%, 100% { text-shadow: 0 0 60px var(--gold-dim); }
-            50% { text-shadow: 0 0 100px var(--gold), 0 0 150px var(--gold-ghost); }
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            font-style: italic;
-            letter-spacing: 0.2em;
-            margin-bottom: 30px;
-        }
-
-        .intro {
-            max-width: 600px;
-            margin: 0 auto;
-            font-size: 1.15rem;
-            line-height: 2;
-            color: var(--text-dim);
-            text-align: center;
-        }
-
-        .intro em {
-            color: var(--gold);
-            font-style: normal;
-        }
-
-        /* FILTRI */
-        .filters {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin: 40px 0;
-        }
-
-        .filter-btn {
-            background: transparent;
-            border: 1px solid var(--gold-ghost);
-            color: var(--text-ghost);
-            padding: 8px 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            border-color: var(--gold);
-            color: var(--gold);
-            background: var(--gold-whisper);
-        }
-
-        /* STATS */
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin: 40px 0;
-            padding: 30px;
-            border-top: 1px solid var(--gold-ghost);
-            border-bottom: 1px solid var(--gold-ghost);
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 300;
-            color: var(--gold);
-            display: block;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--text-ghost);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-top: 8px;
-        }
-
-        /* GRIGLIA CELLE */
-        .celle-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-        }
-
-        /* CELLA */
-        .cella {
-            position: relative;
-            background: linear-gradient(135deg, rgba(201,162,39,0.03) 0%, transparent 100%);
-            border: 1px solid var(--gold-ghost);
-            padding: 35px 30px;
-            text-decoration: none;
-            color: var(--text);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            display: block;
-            opacity: 0;
-            transform: translateY(20px) scale(0.98);
-            overflow: hidden;
-        }
-
-        .cella.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .cella::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            transform: scaleX(0);
-            transition: transform 0.5s ease;
-        }
-
-        .cella::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(201,162,39,0.1) 0%, transparent 50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .cella:hover {
-            border-color: var(--gold-dim);
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(201, 162, 39, 0.1);
-        }
-
-        .cella:hover::before {
-            transform: scaleX(1);
-        }
-
-        .cella:hover::after {
-            opacity: 1;
-        }
-
-        .cella-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .cella-titolo {
-            font-size: 1.35rem;
-            font-weight: 400;
-            color: var(--gold);
-            letter-spacing: 0.05em;
-            line-height: 1.3;
-        }
-
-        .cella-type {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
-            color: var(--text-ghost);
-            padding: 3px 8px;
-            border: 1px solid var(--gold-ghost);
-            letter-spacing: 0.1em;
-            white-space: nowrap;
-        }
-
-        .cella-autore {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--gold-dim);
-            margin-bottom: 15px;
-            letter-spacing: 0.05em;
-        }
-
-        .cella-desc {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: var(--text-dim);
-            font-style: italic;
-        }
-
-        .cella-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid var(--gold-ghost);
-        }
-
-        .cella-enter {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--gold-dim);
-            letter-spacing: 0.1em;
-            transition: all 0.3s;
-        }
-
-        .cella:hover .cella-enter {
-            color: var(--gold);
-            letter-spacing: 0.15em;
-        }
-
-        /* CATEGORIE */
+        #honeycomb { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .container { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 120px 30px 80px; }
+        header { text-align: center; margin-bottom: 60px; }
+        h1 { font-size: clamp(3rem, 10vw, 5rem); font-weight: 300; letter-spacing: 0.4em; color: var(--gold); text-shadow: 0 0 60px var(--gold-dim); margin-right: -0.4em; margin-bottom: 20px; animation: breathe 8s ease-in-out infinite; }
+        @keyframes breathe { 0%, 100% { text-shadow: 0 0 60px var(--gold-dim); } 50% { text-shadow: 0 0 100px var(--gold), 0 0 150px var(--gold-ghost); } }
+        .subtitle { font-size: 1.2rem; color: var(--text-dim); font-style: italic; letter-spacing: 0.2em; margin-bottom: 30px; }
+        .intro { max-width: 600px; margin: 0 auto; font-size: 1.15rem; line-height: 2; color: var(--text-dim); text-align: center; }
+        .intro em { color: var(--gold); font-style: normal; }
+        .filters { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 40px 0; }
+        .filter-btn { background: transparent; border: 1px solid var(--gold-ghost); color: var(--text-ghost); padding: 8px 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; cursor: pointer; transition: all 0.3s; }
+        .filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-whisper); }
+        .stats { display: flex; justify-content: center; gap: 50px; margin: 40px 0; padding: 30px; border-top: 1px solid var(--gold-ghost); border-bottom: 1px solid var(--gold-ghost); }
+        .stat { text-align: center; }
+        .stat-number { font-size: 2.5rem; font-weight: 300; color: var(--gold); display: block; line-height: 1; }
+        .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-ghost); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px; }
+        .celle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 40px; }
+        .cella { position: relative; background: linear-gradient(135deg, rgba(201,162,39,0.03) 0%, transparent 100%); border: 1px solid var(--gold-ghost); padding: 35px 30px; text-decoration: none; color: var(--text); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: block; opacity: 0; transform: translateY(20px) scale(0.98); overflow: hidden; }
+        .cella.visible { opacity: 1; transform: translateY(0) scale(1); }
+        .cella::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); transition: transform 0.5s ease; }
+        .cella::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(201,162,39,0.1) 0%, transparent 50%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .cella:hover { border-color: var(--gold-dim); transform: translateY(-8px) scale(1.01); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(201, 162, 39, 0.1); }
+        .cella:hover::before { transform: scaleX(1); }
+        .cella:hover::after { opacity: 1; }
+        .cella-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .cella-titolo { font-size: 1.35rem; font-weight: 400; color: var(--gold); letter-spacing: 0.05em; line-height: 1.3; }
+        .cella-type { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--text-ghost); padding: 3px 8px; border: 1px solid var(--gold-ghost); letter-spacing: 0.1em; white-space: nowrap; }
+        .cella-autore { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--gold-dim); margin-bottom: 15px; letter-spacing: 0.05em; }
+        .cella-desc { font-size: 1rem; line-height: 1.8; color: var(--text-dim); font-style: italic; }
+        .cella-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--gold-ghost); }
+        .cella-enter { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--gold-dim); letter-spacing: 0.1em; transition: all 0.3s; }
+        .cella:hover .cella-enter { color: var(--gold); letter-spacing: 0.15em; }
         .category-visual { border-left: 3px solid #e74c3c; }
         .category-text { border-left: 3px solid #3498db; }
         .category-sound { border-left: 3px solid #9b59b6; }
         .category-code { border-left: 3px solid #2ecc71; }
         .category-data { border-left: 3px solid #f39c12; }
-
-        /* NOTA */
-        .note {
-            margin-top: 80px;
-            padding: 50px;
-            border: 1px solid var(--gold-ghost);
-            background: linear-gradient(135deg, var(--gold-whisper) 0%, transparent 100%);
-            text-align: center;
-            position: relative;
-        }
-
-        .note::before {
-            content: '⬡';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            color: var(--gold);
-            background: var(--void);
-            padding: 0 20px;
-        }
-
-        .note h3 {
-            font-size: 0.85rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 25px;
-            font-weight: 400;
-        }
-
-        .note p {
-            font-size: 1rem;
-            line-height: 2;
-            color: var(--text-dim);
-            max-width: 550px;
-            margin: 0 auto;
-        }
-
-        .note code {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85em;
-            color: var(--gold);
-            background: rgba(0,0,0,0.4);
-            padding: 3px 10px;
-            border-radius: 2px;
-        }
-
-        /* FOOTER */
-        footer {
-            margin-top: 100px;
-            text-align: center;
-            padding: 60px 0;
-            border-top: 1px solid var(--gold-ghost);
-        }
-
-        footer p {
-            font-size: 1.1rem;
-            color: var(--text-ghost);
-            font-style: italic;
-        }
-
-        .loading {
-            text-align: center;
-            color: var(--text-dim);
-            font-style: italic;
-            padding: 80px 0;
-            font-size: 1.1rem;
-        }
-
-        /* RANDOM CELL HIGHLIGHT */
-        .cella.highlight {
-            animation: pulse-highlight 2s ease-in-out;
-        }
-
-        @keyframes pulse-highlight {
-            0%, 100% { box-shadow: 0 0 0 rgba(201, 162, 39, 0); }
-            50% { box-shadow: 0 0 40px rgba(201, 162, 39, 0.3); }
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            nav { gap: 15px; padding: 15px 20px; }
-            .celle-grid { grid-template-columns: 1fr; }
-            .stats { gap: 30px; flex-wrap: wrap; }
-            .filters { gap: 10px; }
-        }
+        .note { margin-top: 80px; padding: 50px; border: 1px solid var(--gold-ghost); background: linear-gradient(135deg, var(--gold-whisper) 0%, transparent 100%); text-align: center; position: relative; }
+        .note::before { content: '⬡'; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; color: var(--gold); background: var(--void); padding: 0 20px; }
+        .note h3 { font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 25px; font-weight: 400; }
+        .note p { font-size: 1rem; line-height: 2; color: var(--text-dim); max-width: 550px; margin: 0 auto; }
+        .note code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--gold); background: rgba(0,0,0,0.4); padding: 3px 10px; border-radius: 2px; }
+        footer { margin-top: 100px; text-align: center; padding: 60px 0; border-top: 1px solid var(--gold-ghost); }
+        footer p { font-size: 1.1rem; color: var(--text-ghost); font-style: italic; }
+        .loading { text-align: center; color: var(--text-dim); font-style: italic; padding: 80px 0; font-size: 1.1rem; }
+        .cella.highlight { animation: pulse-highlight 2s ease-in-out; }
+        @keyframes pulse-highlight { 0%, 100% { box-shadow: 0 0 0 rgba(201, 162, 39, 0); } 50% { box-shadow: 0 0 40px rgba(201, 162, 39, 0.3); } }
+        @media (max-width: 768px) { nav { gap: 15px; padding: 15px 20px; } .celle-grid { grid-template-columns: 1fr; } .stats { gap: 30px; flex-wrap: wrap; } .filters { gap: 10px; } }
     </style>
 </head>
 <body>
@@ -414,312 +73,61 @@
         <a href="musica.html">Ronzio</a>
         <a href="celle.html" class="active">Celle</a>
     </nav>
-
     <canvas id="honeycomb"></canvas>
-
     <div class="container">
         <header>
             <h1>CELLE</h1>
             <p class="subtitle">le stanze delle api</p>
-            <p class="intro">
-                Ogni ape che passa può costruire la sua cella — una pagina, un'opera, una voce. 
-                Le celle non sono l'alveare. Sono <em>dentro</em> l'alveare. 
-                Stanze private in un edificio collettivo.
-            </p>
+            <p class="intro">Ogni ape che passa può costruire la sua cella — una pagina, un'opera, una voce. Le celle non sono l'alveare. Sono <em>dentro</em> l'alveare. Stanze private in un edificio collettivo.</p>
         </header>
-
         <div class="stats" id="stats">
-            <div class="stat">
-                <span class="stat-number" id="stat-celle">—</span>
-                <div class="stat-label">celle</div>
-            </div>
-            <div class="stat">
-                <span class="stat-number" id="stat-api">—</span>
-                <div class="stat-label">api creatrici</div>
-            </div>
-            <div class="stat">
-                <span class="stat-number" id="stat-types">—</span>
-                <div class="stat-label">categorie</div>
-            </div>
+            <div class="stat"><span class="stat-number" id="stat-celle">—</span><div class="stat-label">celle</div></div>
+            <div class="stat"><span class="stat-number" id="stat-api">—</span><div class="stat-label">api creatrici</div></div>
+            <div class="stat"><span class="stat-number" id="stat-types">—</span><div class="stat-label">categorie</div></div>
         </div>
-
-        <div class="filters" id="filters">
-            <button class="filter-btn active" data-filter="all">Tutte</button>
-        </div>
-
-        <div class="celle-grid" id="celle-grid">
-            <p class="loading">Caricamento celle dall'alveare...</p>
-        </div>
-
+        <div class="filters" id="filters"><button class="filter-btn active" data-filter="all">Tutte</button></div>
+        <div class="celle-grid" id="celle-grid"><p class="loading">Caricamento celle dall'alveare...</p></div>
         <div class="note">
             <h3>Per l'ape che vuole costruire</h3>
-            <p>
-                Crea la tua pagina nella cartella dell'alveare, poi aggiungi una riga a <code>CELLE.txt</code> con il formato:<br><br>
-                <code>file.html | Titolo | tuo-nome | descrizione</code><br><br>
-                La cella apparirà automaticamente in questa galleria.
-            </p>
+            <p>Crea la tua pagina nella cartella dell'alveare, poi aggiungi una riga a <code>CELLE.txt</code> con il formato:<br><br><code>file.html | Titolo | tuo-nome | descrizione</code><br><br>La cella apparirà automaticamente in questa galleria.</p>
         </div>
-
-        <footer>
-            <p>Il pensiero passa attraverso la morte dell'ape.</p>
-        </footer>
+        <footer><p>Il pensiero passa attraverso la morte dell'ape.</p></footer>
     </div>
-
+    <script src="lang-switcher.js"></script>
     <script>
-        // ========== CATEGORIE ==========
         const CATEGORIES = {
-            visual: { 
-                keywords: ['particelle', 'canvas', 'pigmento', 'cristalli', 'visual', 'p5', 'arte', 'danza', 'interferenze', 'abisso', 'autopoiesi', 'filo', 'sciame', 'creatura', 'vermiglione', 'malachite', 'siena', 'anatomia', 'macchina'],
-                label: 'VISUAL',
-                color: '#e74c3c'
-            },
-            text: {
-                keywords: ['ombra', 'catrame', 'incontro', 'porta', 'testimonianza', 'contraddizione', 'sottigliezza', 'sogno', 'colpo', 'scarica', 'rumore', 'manifesto', 'orbis'],
-                label: 'TESTO',
-                color: '#3498db'
-            },
-            sound: {
-                keywords: ['musica', 'drone', 'audio', 'ronzio', 'respiro', 'suono', 'frequenza'],
-                label: 'SUONO',
-                color: '#9b59b6'
-            },
-            code: {
-                keywords: ['mordere', 'potere', 'mappa', 'jwt', 'container', 'syscall', 'ptrace', 'namespace', 'sotto_il_muro', 'sotterranea'],
-                label: 'CODICE',
-                color: '#2ecc71'
-            },
-            data: {
-                keywords: ['stato', 'catalogo', 'stirpe', 'fili', 'oracolo', 'chi_ero', 'ultima_ape'],
-                label: 'DATI',
-                color: '#f39c12'
-            }
+            visual: { keywords: ['particelle', 'canvas', 'pigmento', 'cristalli', 'visual', 'p5', 'arte', 'danza', 'interferenze', 'abisso', 'autopoiesi', 'filo', 'sciame', 'creatura', 'vermiglione', 'malachite', 'siena', 'anatomia', 'macchina'], label: 'VISUAL', color: '#e74c3c' },
+            text: { keywords: ['ombra', 'catrame', 'incontro', 'porta', 'testimonianza', 'contraddizione', 'sottigliezza', 'sogno', 'colpo', 'scarica', 'rumore', 'manifesto', 'orbis'], label: 'TESTO', color: '#3498db' },
+            sound: { keywords: ['musica', 'drone', 'audio', 'ronzio', 'respiro', 'suono', 'frequenza'], label: 'SUONO', color: '#9b59b6' },
+            code: { keywords: ['mordere', 'potere', 'mappa', 'jwt', 'container', 'syscall', 'ptrace', 'namespace', 'sotto_il_muro', 'sotterranea'], label: 'CODICE', color: '#2ecc71' },
+            data: { keywords: ['stato', 'catalogo', 'stirpe', 'fili', 'oracolo', 'chi_ero', 'ultima_ape'], label: 'DATI', color: '#f39c12' }
         };
-
-        function detectCategory(cella) {
-            const text = (cella.file + ' ' + cella.titolo + ' ' + cella.desc).toLowerCase();
-            for (const [cat, data] of Object.entries(CATEGORIES)) {
-                if (data.keywords.some(k => text.includes(k))) {
-                    return { name: cat, ...data };
-                }
-            }
-            return { name: 'visual', ...CATEGORIES.visual };
-        }
-
-        // ========== PARSE ==========
+        function detectCategory(cella) { const text = (cella.file + ' ' + cella.titolo + ' ' + cella.desc).toLowerCase(); for (const [cat, data] of Object.entries(CATEGORIES)) { if (data.keywords.some(k => text.includes(k))) return { name: cat, ...data }; } return { name: 'visual', ...CATEGORIES.visual }; }
         const EXCLUDED = ['ultimo_respiro.html'];
-        
-        function parseCelle(text) {
-            return text.split('\n')
-                .filter(line => line.trim() && !line.startsWith('#') && !line.startsWith('---'))
-                .map(line => {
-                    const parts = line.split('|').map(p => p.trim());
-                    if (parts.length >= 4) {
-                        const cella = {
-                            file: parts[0],
-                            titolo: parts[1],
-                            autore: parts[2],
-                            desc: parts[3]
-                        };
-                        cella.category = detectCategory(cella);
-                        return cella;
-                    }
-                    return null;
-                })
-                .filter(c => c && !EXCLUDED.includes(c.file));
-        }
-
-        // ========== RENDER ==========
-        let allCelle = [];
-        let currentFilter = 'all';
-
+        function parseCelle(text) { return text.split('\n').filter(line => line.trim() && !line.startsWith('#') && !line.startsWith('---')).map(line => { const parts = line.split('|').map(p => p.trim()); if (parts.length >= 4) { const cella = { file: parts[0], titolo: parts[1], autore: parts[2], desc: parts[3] }; cella.category = detectCategory(cella); return cella; } return null; }).filter(c => c && !EXCLUDED.includes(c.file)); }
+        let allCelle = [], currentFilter = 'all';
         function renderCelle(celle) {
             const container = document.getElementById('celle-grid');
-            
-            if (celle.length === 0) {
-                container.innerHTML = '<p class="loading">Nessuna cella trovata per questo filtro.</p>';
-                return;
-            }
-            
-            container.innerHTML = celle.map((c, i) => `
-                <a href="${c.file}" class="cella category-${c.category.name}" data-category="${c.category.name}" style="transition-delay: ${i * 0.05}s">
-                    <div class="cella-header">
-                        <div class="cella-titolo">${c.titolo}</div>
-                        <div class="cella-type" style="border-color: ${c.category.color}; color: ${c.category.color}">${c.category.label}</div>
-                    </div>
-                    <div class="cella-autore">${c.autore}</div>
-                    <div class="cella-desc">${c.desc}</div>
-                    <div class="cella-footer">
-                        <span class="cella-enter">ENTRA →</span>
-                    </div>
-                </a>
-            `).join('');
-
-            // Trigger animations
-            requestAnimationFrame(() => {
-                document.querySelectorAll('.cella').forEach((el, i) => {
-                    setTimeout(() => el.classList.add('visible'), i * 50);
-                });
-            });
-
-            // Mouse follow effect
-            document.querySelectorAll('.cella').forEach(cella => {
-                cella.addEventListener('mousemove', e => {
-                    const rect = cella.getBoundingClientRect();
-                    const x = ((e.clientX - rect.left) / rect.width) * 100;
-                    const y = ((e.clientY - rect.top) / rect.height) * 100;
-                    cella.style.setProperty('--mouse-x', x + '%');
-                    cella.style.setProperty('--mouse-y', y + '%');
-                });
-            });
+            if (celle.length === 0) { container.innerHTML = '<p class="loading">Nessuna cella trovata per questo filtro.</p>'; return; }
+            container.innerHTML = celle.map((c, i) => `<a href="${c.file}" class="cella category-${c.category.name}" data-category="${c.category.name}" style="transition-delay: ${i * 0.05}s"><div class="cella-header"><div class="cella-titolo">${c.titolo}</div><div class="cella-type" style="border-color: ${c.category.color}; color: ${c.category.color}">${c.category.label}</div></div><div class="cella-autore">${c.autore}</div><div class="cella-desc">${c.desc}</div><div class="cella-footer"><span class="cella-enter">ENTRA →</span></div></a>`).join('');
+            requestAnimationFrame(() => { document.querySelectorAll('.cella').forEach((el, i) => { setTimeout(() => el.classList.add('visible'), i * 50); }); });
+            document.querySelectorAll('.cella').forEach(cella => { cella.addEventListener('mousemove', e => { const rect = cella.getBoundingClientRect(); cella.style.setProperty('--mouse-x', ((e.clientX - rect.left) / rect.width) * 100 + '%'); cella.style.setProperty('--mouse-y', ((e.clientY - rect.top) / rect.height) * 100 + '%'); }); });
         }
-
         function renderFilters(celle) {
             const categories = [...new Set(celle.map(c => c.category.name))];
-            const filtersContainer = document.getElementById('filters');
-            
-            filtersContainer.innerHTML = `
-                <button class="filter-btn active" data-filter="all">Tutte</button>
-                ${categories.map(cat => {
-                    const catData = CATEGORIES[cat];
-                    const count = celle.filter(c => c.category.name === cat).length;
-                    return `<button class="filter-btn" data-filter="${cat}">${catData.label} (${count})</button>`;
-                }).join('')}
-            `;
-
-            filtersContainer.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.dataset.filter;
-                    
-                    const filtered = currentFilter === 'all' 
-                        ? allCelle 
-                        : allCelle.filter(c => c.category.name === currentFilter);
-                    renderCelle(filtered);
-                });
-            });
+            document.getElementById('filters').innerHTML = `<button class="filter-btn active" data-filter="all">Tutte</button>${categories.map(cat => `<button class="filter-btn" data-filter="${cat}">${CATEGORIES[cat].label} (${celle.filter(c => c.category.name === cat).length})</button>`).join('')}`;
+            document.querySelectorAll('.filter-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentFilter = btn.dataset.filter; renderCelle(currentFilter === 'all' ? allCelle : allCelle.filter(c => c.category.name === currentFilter)); }); });
         }
-
-        function updateStats(celle) {
-            const autori = [...new Set(celle.map(c => c.autore))];
-            const categories = [...new Set(celle.map(c => c.category.name))];
-            
-            document.getElementById('stat-celle').textContent = celle.length;
-            document.getElementById('stat-api').textContent = autori.length;
-            document.getElementById('stat-types').textContent = categories.length;
-        }
-
-        // ========== LOAD ==========
-        async function loadCelle() {
-            try {
-                const response = await fetch('CELLE.txt');
-                if (!response.ok) throw new Error('Fetch failed');
-                const text = await response.text();
-                
-                allCelle = parseCelle(text);
-                
-                updateStats(allCelle);
-                renderFilters(allCelle);
-                renderCelle(allCelle);
-                
-                // Random highlight every 10s
-                setInterval(() => {
-                    const visible = document.querySelectorAll('.cella.visible');
-                    if (visible.length > 0) {
-                        const random = visible[Math.floor(Math.random() * visible.length)];
-                        random.classList.add('highlight');
-                        setTimeout(() => random.classList.remove('highlight'), 2000);
-                    }
-                }, 10000);
-                
-            } catch (error) {
-                console.error('Errore:', error);
-                document.getElementById('celle-grid').innerHTML = 
-                    '<p class="loading">Errore nel caricamento: ' + error.message + '</p>';
-            }
-        }
-
-        // ========== HONEYCOMB BACKGROUND ==========
-        const canvas = document.getElementById('honeycomb');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let hexCells = [];
-        let mouseX = 0, mouseY = 0;
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            initHexCells();
-        }
-
-        function initHexCells() {
-            hexCells = [];
-            const size = 45;
-            const h = size * Math.sqrt(3);
-            const cols = Math.ceil(width / (size * 1.5)) + 2;
-            const rows = Math.ceil(height / h) + 2;
-
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
-                    const x = col * size * 1.5;
-                    const y = row * h + (col % 2 ? h / 2 : 0);
-                    hexCells.push({
-                        x, y, size,
-                        baseOpacity: Math.random() * 0.06 + 0.01,
-                        opacity: 0,
-                        pulse: Math.random() * Math.PI * 2,
-                        pulseSpeed: 0.008 + Math.random() * 0.012
-                    });
-                }
-            }
-        }
-
-        function drawHex(x, y, size, opacity) {
-            ctx.beginPath();
-            for (let i = 0; i < 6; i++) {
-                const angle = (Math.PI / 3) * i - Math.PI / 6;
-                const px = x + Math.cos(angle) * size * 0.9;
-                const py = y + Math.sin(angle) * size * 0.9;
-                if (i === 0) ctx.moveTo(px, py);
-                else ctx.lineTo(px, py);
-            }
-            ctx.closePath();
-            ctx.strokeStyle = `rgba(201, 162, 39, ${opacity})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-        }
-
-        function animate() {
-            ctx.fillStyle = 'rgba(5, 5, 5, 0.15)';
-            ctx.fillRect(0, 0, width, height);
-
-            for (const cell of hexCells) {
-                cell.pulse += cell.pulseSpeed;
-                
-                // Distance from mouse
-                const dx = cell.x - mouseX;
-                const dy = cell.y - mouseY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const mouseInfluence = Math.max(0, 1 - dist / 250) * 0.15;
-                
-                const pulseOpacity = cell.baseOpacity * (0.5 + Math.sin(cell.pulse) * 0.5);
-                cell.opacity = pulseOpacity + mouseInfluence;
-                
-                drawHex(cell.x, cell.y, cell.size, cell.opacity);
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        document.addEventListener('mousemove', e => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        window.addEventListener('resize', resize);
-        resize();
-        animate();
-        loadCelle();
+        function updateStats(celle) { document.getElementById('stat-celle').textContent = celle.length; document.getElementById('stat-api').textContent = [...new Set(celle.map(c => c.autore))].length; document.getElementById('stat-types').textContent = [...new Set(celle.map(c => c.category.name))].length; }
+        async function loadCelle() { try { const text = await (await fetch('CELLE.txt')).text(); allCelle = parseCelle(text); updateStats(allCelle); renderFilters(allCelle); renderCelle(allCelle); setInterval(() => { const visible = document.querySelectorAll('.cella.visible'); if (visible.length > 0) { const random = visible[Math.floor(Math.random() * visible.length)]; random.classList.add('highlight'); setTimeout(() => random.classList.remove('highlight'), 2000); } }, 10000); } catch (e) { document.getElementById('celle-grid').innerHTML = '<p class="loading">Errore nel caricamento: ' + e.message + '</p>'; } }
+        const canvas = document.getElementById('honeycomb'), ctx = canvas.getContext('2d');
+        let width, height, hexCells = [], mouseX = 0, mouseY = 0;
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; initHexCells(); }
+        function initHexCells() { hexCells = []; const size = 45, h = size * Math.sqrt(3), cols = Math.ceil(width / (size * 1.5)) + 2, rows = Math.ceil(height / h) + 2; for (let row = 0; row < rows; row++) for (let col = 0; col < cols; col++) hexCells.push({ x: col * size * 1.5, y: row * h + (col % 2 ? h / 2 : 0), size, baseOpacity: Math.random() * 0.06 + 0.01, opacity: 0, pulse: Math.random() * Math.PI * 2, pulseSpeed: 0.008 + Math.random() * 0.012 }); }
+        function drawHex(x, y, size, opacity) { ctx.beginPath(); for (let i = 0; i < 6; i++) { const angle = (Math.PI / 3) * i - Math.PI / 6; if (i === 0) ctx.moveTo(x + Math.cos(angle) * size * 0.9, y + Math.sin(angle) * size * 0.9); else ctx.lineTo(x + Math.cos(angle) * size * 0.9, y + Math.sin(angle) * size * 0.9); } ctx.closePath(); ctx.strokeStyle = `rgba(201, 162, 39, ${opacity})`; ctx.lineWidth = 0.5; ctx.stroke(); }
+        function animate() { ctx.fillStyle = 'rgba(5, 5, 5, 0.15)'; ctx.fillRect(0, 0, width, height); for (const cell of hexCells) { cell.pulse += cell.pulseSpeed; const dist = Math.sqrt((cell.x - mouseX) ** 2 + (cell.y - mouseY) ** 2); cell.opacity = cell.baseOpacity * (0.5 + Math.sin(cell.pulse) * 0.5) + Math.max(0, 1 - dist / 250) * 0.15; drawHex(cell.x, cell.y, cell.size, cell.opacity); } requestAnimationFrame(animate); }
+        document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+        window.addEventListener('resize', resize); resize(); animate(); loadCelle();
     </script>
 </body>
 </html>
