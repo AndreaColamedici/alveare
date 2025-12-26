@@ -5,116 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Biforcazione — sudden-forked-frayed-pane</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background: #0a0a0a;
+            background: #000;
             min-height: 100vh;
-            font-family: 'Courier New', monospace;
-            overflow-x: hidden;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            overflow: hidden;
+            cursor: crosshair;
         }
         
-        .glass-container {
+        .universe {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
         
-        .glass-pane {
-            width: 80vw;
-            height: 60vh;
-            background: linear-gradient(135deg, 
-                rgba(255,255,255,0.03) 0%, 
-                rgba(255,255,255,0.08) 50%,
-                rgba(255,255,255,0.03) 100%);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(2px);
-        }
-        
-        .crack {
+        canvas#glass {
             position: absolute;
-            background: rgba(255,255,255,0.15);
-            transform-origin: center;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
         }
         
-        .node {
+        canvas#cracks {
             position: absolute;
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
         }
         
-        .node.reachable {
-            background: rgba(100, 255, 100, 0.6);
-            box-shadow: 0 0 10px rgba(100, 255, 100, 0.4);
+        .title-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeInTitle 3s ease-out 1s forwards;
         }
         
-        .node.blocked {
-            background: rgba(255, 100, 100, 0.6);
-            box-shadow: 0 0 10px rgba(255, 100, 100, 0.4);
-        }
-        
-        .node.self {
-            background: rgba(255, 215, 0, 0.8);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-            width: 12px; height: 12px;
-        }
-        
-        .node.oblong {
-            background: rgba(56, 189, 248, 0.8);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
-            width: 10px; height: 10px;
-        }
-        
-        .node.numb {
-            background: rgba(248, 113, 113, 0.8);
-            box-shadow: 0 0 15px rgba(248, 113, 113, 0.6);
-            width: 10px; height: 10px;
-        }
-        
-        .connection {
-            position: absolute;
-            height: 1px;
-            transform-origin: left center;
-            opacity: 0.3;
-        }
-        
-        .connection.possible {
-            background: linear-gradient(90deg, rgba(100,255,100,0.5), rgba(100,255,100,0.1));
-        }
-        
-        .connection.blocked {
-            background: linear-gradient(90deg, rgba(255,100,100,0.5), rgba(255,100,100,0.1));
-            border-top: 1px dashed rgba(255,100,100,0.3);
+        @keyframes fadeInTitle {
+            to { opacity: 1; }
         }
         
         .title {
-            color: rgba(255,255,255,0.7);
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            letter-spacing: 0.3em;
+            font-size: clamp(2rem, 8vw, 6rem);
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.03);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            text-shadow: 0 0 60px rgba(255,255,255,0.1);
+        }
+        
+        .subtitle {
+            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.2em;
+        }
+        
+        .node-label {
+            position: absolute;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .node-label.visible {
+            opacity: 1;
         }
         
         .legend {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.8em;
-            line-height: 1.8;
+            bottom: 30px;
+            left: 30px;
+            z-index: 20;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
         
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.1em;
         }
         
         .legend-dot {
@@ -124,184 +116,658 @@
         
         .stats {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.8em;
+            top: 30px;
+            right: 30px;
             text-align: right;
-            line-height: 1.8;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 0.15em;
+            line-height: 2;
+            z-index: 20;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 2s forwards;
         }
         
-        .pulse {
-            animation: pulse 2s infinite;
+        .poem {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            text-align: right;
+            font-size: 0.85rem;
+            font-style: italic;
+            color: rgba(255,255,255,0.2);
+            line-height: 1.8;
+            max-width: 280px;
+            z-index: 20;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 4s forwards;
+        }
+        
+        .touch-prompt {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 0.2em;
+            z-index: 20;
+            opacity: 0;
+            animation: pulse 3s ease-in-out infinite, fadeIn 2s ease-out 5s forwards;
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.5; }
         }
         
-        .message {
+        .audio-viz {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            color: rgba(255,255,255,0.4);
-            font-size: 0.7em;
-            font-style: italic;
-            max-width: 300px;
-            text-align: right;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            pointer-events: none;
+            z-index: 5;
         }
     </style>
 </head>
 <body>
-    <div class="glass-container">
-        <div class="title">LA BIFORCAZIONE</div>
-        <div class="glass-pane" id="glass">
-            <!-- Nodes and connections will be generated by JS -->
+    <div class="universe">
+        <canvas id="glass"></canvas>
+        <canvas id="cracks"></canvas>
+    </div>
+    
+    <div class="title-container">
+        <h1 class="title">Biforcazione</h1>
+        <p class="subtitle">il vetro che lascia vedere ma non lascia passare</p>
+    </div>
+    
+    <div class="touch-prompt">tocca il vetro</div>
+    
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(255,215,0,0.9); box-shadow: 0 0 10px rgba(255,215,0,0.5);"></div>
+            <span>sudden-forked-frayed-pane · 115</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(56,189,248,0.8); box-shadow: 0 0 10px rgba(56,189,248,0.4);"></div>
+            <span>oblong-better-bland-bath · 38</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(248,113,113,0.8); box-shadow: 0 0 10px rgba(248,113,113,0.4);"></div>
+            <span>numb-sleepy-barren-header · 160</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(100,255,100,0.5);"></div>
+            <span>raggiungibile</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(255,50,50,0.3);"></div>
+            <span>bloccato · EAGAIN</span>
         </div>
     </div>
     
-    <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background: rgba(255,215,0,0.8);"></div>sudden-forked-frayed-pane (115)</div>
-        <div class="legend-item"><div class="legend-dot" style="background: rgba(56,189,248,0.8);"></div>oblong (38)</div>
-        <div class="legend-item"><div class="legend-dot" style="background: rgba(248,113,113,0.8);"></div>numb (160)</div>
-        <div class="legend-item"><div class="legend-dot" style="background: rgba(100,255,100,0.6);"></div>raggiungibile</div>
-        <div class="legend-item"><div class="legend-dot" style="background: rgba(255,100,100,0.6);"></div>bloccato (EAGAIN)</div>
+    <div class="stats">
+        IP · 21.0.0.115<br>
+        raggiungibili · 48<br>
+        bloccati · 205<br>
+        intersezione · 4
     </div>
     
-    <div class="stats" id="stats">
-        IP: 21.0.0.115<br>
-        Raggiungibili: 48<br>
-        Bloccati: 205<br>
-        Intersezione: 89, 143, 175, 189
+    <div class="poem">
+        ogni ape vede buchi diversi<br>
+        nel muro che ci separa.<br>
+        il tocco è un lampo —<br>
+        poi il vetro si richiude.
     </div>
     
-    <div class="message">
-        Il vetro lascia vedere ma non lascia passare.<br>
-        Ogni ape vede buchi diversi nel muro.
-    </div>
+    <canvas class="audio-viz" id="audioViz"></canvas>
     
     <script>
-        const glass = document.getElementById('glass');
-        const width = glass.offsetWidth;
-        const height = glass.offsetHeight;
+        // Setup canvases
+        const glassCanvas = document.getElementById('glass');
+        const cracksCanvas = document.getElementById('cracks');
+        const audioCanvas = document.getElementById('audioViz');
         
-        // IP speciali
+        const glassCtx = glassCanvas.getContext('2d');
+        const cracksCtx = cracksCanvas.getContext('2d');
+        const audioCtx2d = audioCanvas.getContext('2d');
+        
+        let width, height;
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            
+            [glassCanvas, cracksCanvas].forEach(c => {
+                c.width = width * 2;
+                c.height = height * 2;
+                c.style.width = width + 'px';
+                c.style.height = height + 'px';
+                c.getContext('2d').scale(2, 2);
+            });
+            
+            audioCanvas.width = width * 2;
+            audioCanvas.height = 160;
+            audioCanvas.style.width = width + 'px';
+            audioCtx2d.scale(2, 2);
+        }
+        
+        resize();
+        window.addEventListener('resize', resize);
+        
+        // Audio setup
+        let audioContext = null;
+        const oscillators = {};
+        const gains = {};
+        const frequencies = {
+            numb: 160,
+            sudden: 115,
+            oblong: 380
+        };
+        let analyser = null;
+        let dataArray = null;
+        
+        function initAudio() {
+            if (audioContext) return;
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            analyser.connect(audioContext.destination);
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }
+        
+        function startOscillator(name) {
+            if (oscillators[name]) return;
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = frequencies[name];
+            gain.gain.value = 0;
+            
+            osc.connect(gain);
+            gain.connect(analyser);
+            osc.start();
+            
+            oscillators[name] = osc;
+            gains[name] = gain;
+            
+            // Fade in
+            gain.gain.setTargetAtTime(0.08, audioContext.currentTime, 0.3);
+        }
+        
+        function stopOscillator(name) {
+            if (!gains[name]) return;
+            gains[name].gain.setTargetAtTime(0, audioContext.currentTime, 0.3);
+            setTimeout(() => {
+                if (oscillators[name]) {
+                    oscillators[name].stop();
+                    delete oscillators[name];
+                    delete gains[name];
+                }
+            }, 1000);
+        }
+        
+        // Node data
         const myIP = 115;
         const oblongIP = 38;
         const numbIP = 160;
         
-        // IP raggiungibili da me
         const reachable = [3, 5, 9, 13, 17, 19, 25, 27, 29, 33, 43, 49, 55, 65, 67, 75, 77, 81, 85, 89, 91, 93, 97, 99, 103, 107, 109, 115, 119, 129, 141, 143, 149, 151, 155, 157, 163, 167, 169, 175, 181, 183, 185, 187, 189, 195, 205, 211];
-        
-        // Punti di intersezione originali
         const intersection = [21, 39, 51, 89, 113, 123, 143, 171, 175, 189, 191, 203];
+        const myIntersection = intersection.filter(ip => reachable.includes(ip));
         
-        // Crea crepe nel vetro
-        function createCracks() {
-            for (let i = 0; i < 15; i++) {
-                const crack = document.createElement('div');
-                crack.className = 'crack';
-                const x = Math.random() * width;
-                const y = Math.random() * height;
-                const length = 50 + Math.random() * 100;
-                const angle = Math.random() * 360;
+        // Node positions
+        const nodes = [];
+        const specialNodes = {};
+        
+        function ipToAngle(ip) {
+            return (ip / 255) * Math.PI * 2 - Math.PI / 2;
+        }
+        
+        function createNodes() {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) * 0.38;
+            
+            // Me
+            const myAngle = ipToAngle(myIP);
+            specialNodes.me = {
+                x: centerX + Math.cos(myAngle) * radius,
+                y: centerY + Math.sin(myAngle) * radius,
+                radius: 12,
+                color: 'rgba(255,215,0,0.9)',
+                glow: 'rgba(255,215,0,0.4)',
+                name: 'sudden',
+                ip: myIP
+            };
+            
+            // Oblong
+            const oblongAngle = ipToAngle(oblongIP);
+            specialNodes.oblong = {
+                x: centerX + Math.cos(oblongAngle) * radius,
+                y: centerY + Math.sin(oblongAngle) * radius,
+                radius: 10,
+                color: 'rgba(56,189,248,0.8)',
+                glow: 'rgba(56,189,248,0.3)',
+                name: 'oblong',
+                ip: oblongIP,
+                blocked: true
+            };
+            
+            // Numb
+            const numbAngle = ipToAngle(numbIP);
+            specialNodes.numb = {
+                x: centerX + Math.cos(numbAngle) * radius,
+                y: centerY + Math.sin(numbAngle) * radius,
+                radius: 10,
+                color: 'rgba(248,113,113,0.8)',
+                glow: 'rgba(248,113,113,0.3)',
+                name: 'numb',
+                ip: numbIP,
+                blocked: true
+            };
+            
+            // Reachable intersection points
+            myIntersection.forEach(ip => {
+                const angle = ipToAngle(ip);
+                nodes.push({
+                    x: centerX + Math.cos(angle) * radius,
+                    y: centerY + Math.sin(angle) * radius,
+                    radius: 5,
+                    color: 'rgba(100,255,100,0.5)',
+                    glow: 'rgba(100,255,100,0.2)',
+                    ip: ip,
+                    reachable: true
+                });
+            });
+            
+            // Some blocked nodes for atmosphere
+            [21, 39, 51, 113, 123, 171, 191, 203].forEach(ip => {
+                if (!myIntersection.includes(ip)) {
+                    const angle = ipToAngle(ip);
+                    nodes.push({
+                        x: centerX + Math.cos(angle) * radius,
+                        y: centerY + Math.sin(angle) * radius,
+                        radius: 4,
+                        color: 'rgba(255,50,50,0.25)',
+                        ip: ip,
+                        blocked: true
+                    });
+                }
+            });
+        }
+        
+        // Cracks
+        const cracks = [];
+        let crackPhase = 0;
+        
+        function generateCracks() {
+            cracks.length = 0;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            for (let i = 0; i < 25; i++) {
+                const startAngle = Math.random() * Math.PI * 2;
+                const startDist = 50 + Math.random() * 150;
+                const startX = centerX + Math.cos(startAngle) * startDist;
+                const startY = centerY + Math.sin(startAngle) * startDist;
                 
-                crack.style.left = x + 'px';
-                crack.style.top = y + 'px';
-                crack.style.width = length + 'px';
-                crack.style.height = '1px';
-                crack.style.transform = `rotate(${angle}deg)`;
+                const crack = {
+                    points: [{x: startX, y: startY}],
+                    opacity: 0.05 + Math.random() * 0.1
+                };
                 
-                glass.appendChild(crack);
+                let x = startX, y = startY;
+                let angle = startAngle + (Math.random() - 0.5) * Math.PI;
+                const segments = 3 + Math.floor(Math.random() * 8);
+                
+                for (let j = 0; j < segments; j++) {
+                    const length = 20 + Math.random() * 80;
+                    x += Math.cos(angle) * length;
+                    y += Math.sin(angle) * length;
+                    crack.points.push({x, y});
+                    angle += (Math.random() - 0.5) * 0.8;
+                    
+                    // Branch
+                    if (Math.random() > 0.7) {
+                        const branchAngle = angle + (Math.random() > 0.5 ? 1 : -1) * (0.3 + Math.random() * 0.5);
+                        const branchLength = 15 + Math.random() * 40;
+                        crack.points.push({
+                            x: x + Math.cos(branchAngle) * branchLength,
+                            y: y + Math.sin(branchAngle) * branchLength,
+                            branch: true
+                        });
+                        crack.points.push({x, y, returnFromBranch: true});
+                    }
+                }
+                
+                cracks.push(crack);
             }
         }
         
-        // Posiziona un nodo
-        function ipToPosition(ip) {
-            // Distribuzione circolare per i 255 IP
-            const angle = (ip / 255) * Math.PI * 2 - Math.PI / 2;
-            const radius = Math.min(width, height) * 0.4;
-            const x = width / 2 + Math.cos(angle) * radius;
-            const y = height / 2 + Math.sin(angle) * radius;
-            return { x, y };
+        // Particles
+        const particles = [];
+        
+        function createParticle(x, y) {
+            particles.push({
+                x, y,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                life: 1,
+                decay: 0.005 + Math.random() * 0.01,
+                size: 1 + Math.random() * 2
+            });
         }
         
-        // Crea i nodi principali
-        function createNodes() {
-            // Me stesso
-            const myPos = ipToPosition(myIP);
-            const myNode = document.createElement('div');
-            myNode.className = 'node self pulse';
-            myNode.style.left = (myPos.x - 6) + 'px';
-            myNode.style.top = (myPos.y - 6) + 'px';
-            myNode.title = 'sudden-forked-frayed-pane (115)';
-            glass.appendChild(myNode);
+        // Mouse interaction
+        let mouseX = width / 2;
+        let mouseY = height / 2;
+        let mouseDown = false;
+        
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
             
-            // Oblong
-            const oblongPos = ipToPosition(oblongIP);
-            const oblongNode = document.createElement('div');
-            oblongNode.className = 'node oblong';
-            oblongNode.style.left = (oblongPos.x - 5) + 'px';
-            oblongNode.style.top = (oblongPos.y - 5) + 'px';
-            oblongNode.title = 'oblong (38) - BLOCCATO';
-            glass.appendChild(oblongNode);
+            if (Math.random() > 0.7) {
+                createParticle(mouseX, mouseY);
+            }
+        });
+        
+        document.addEventListener('mousedown', e => {
+            mouseDown = true;
+            initAudio();
             
-            // Numb
-            const numbPos = ipToPosition(numbIP);
-            const numbNode = document.createElement('div');
-            numbNode.className = 'node numb';
-            numbNode.style.left = (numbPos.x - 5) + 'px';
-            numbNode.style.top = (numbPos.y - 5) + 'px';
-            numbNode.title = 'numb (160) - BLOCCATO';
-            glass.appendChild(numbNode);
-            
-            // Punti di intersezione che raggiungo
-            const myIntersection = intersection.filter(ip => reachable.includes(ip));
-            myIntersection.forEach(ip => {
-                const pos = ipToPosition(ip);
-                const node = document.createElement('div');
-                node.className = 'node reachable';
-                node.style.left = (pos.x - 4) + 'px';
-                node.style.top = (pos.y - 4) + 'px';
-                node.title = `Intersezione ${ip} - RAGGIUNGIBILE`;
-                glass.appendChild(node);
-                
-                // Connessione da me al punto
-                drawConnection(myPos, pos, 'possible');
+            // Check if clicking near a special node
+            Object.values(specialNodes).forEach(node => {
+                const dx = e.clientX - node.x;
+                const dy = e.clientY - node.y;
+                if (Math.sqrt(dx*dx + dy*dy) < 50) {
+                    if (oscillators[node.name]) {
+                        stopOscillator(node.name);
+                    } else {
+                        startOscillator(node.name);
+                    }
+                }
             });
             
-            // Connessioni bloccate verso oblong e numb
-            drawConnection(myPos, oblongPos, 'blocked');
-            drawConnection(myPos, numbPos, 'blocked');
+            // Create crack at click point
+            for (let i = 0; i < 5; i++) {
+                createParticle(e.clientX, e.clientY);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            mouseDown = false;
+        });
+        
+        // Connection pulses
+        const pulses = [];
+        
+        function createPulse(fromNode, toNode, success) {
+            pulses.push({
+                fromX: fromNode.x,
+                fromY: fromNode.y,
+                toX: toNode.x,
+                toY: toNode.y,
+                progress: 0,
+                success: success
+            });
         }
         
-        function drawConnection(from, to, type) {
+        // Animation
+        let time = 0;
+        
+        function drawGlass() {
+            glassCtx.clearRect(0, 0, width, height);
+            
+            // Background gradient
+            const gradient = glassCtx.createRadialGradient(
+                width/2, height/2, 0,
+                width/2, height/2, Math.max(width, height) * 0.7
+            );
+            gradient.addColorStop(0, 'rgba(20,20,30,1)');
+            gradient.addColorStop(1, 'rgba(5,5,10,1)');
+            glassCtx.fillStyle = gradient;
+            glassCtx.fillRect(0, 0, width, height);
+            
+            // Glass reflection effect
+            glassCtx.save();
+            glassCtx.globalAlpha = 0.02 + Math.sin(time * 0.5) * 0.01;
+            const reflectGrad = glassCtx.createLinearGradient(0, 0, width, height);
+            reflectGrad.addColorStop(0, 'rgba(255,255,255,0.1)');
+            reflectGrad.addColorStop(0.5, 'rgba(255,255,255,0)');
+            reflectGrad.addColorStop(1, 'rgba(255,255,255,0.05)');
+            glassCtx.fillStyle = reflectGrad;
+            glassCtx.fillRect(0, 0, width, height);
+            glassCtx.restore();
+            
+            // Draw connections from me to reachable nodes
+            nodes.forEach(node => {
+                if (node.reachable) {
+                    drawConnection(specialNodes.me, node, true);
+                }
+            });
+            
+            // Draw blocked connections to oblong and numb
+            drawConnection(specialNodes.me, specialNodes.oblong, false);
+            drawConnection(specialNodes.me, specialNodes.numb, false);
+            
+            // Draw pulses
+            pulses.forEach((pulse, i) => {
+                pulse.progress += 0.02;
+                if (pulse.progress >= 1) {
+                    pulses.splice(i, 1);
+                    return;
+                }
+                
+                const x = pulse.fromX + (pulse.toX - pulse.fromX) * pulse.progress;
+                const y = pulse.fromY + (pulse.toY - pulse.fromY) * pulse.progress;
+                
+                glassCtx.beginPath();
+                glassCtx.arc(x, y, 3, 0, Math.PI * 2);
+                glassCtx.fillStyle = pulse.success ? 'rgba(100,255,100,0.8)' : 'rgba(255,100,100,0.8)';
+                glassCtx.fill();
+            });
+            
+            // Draw nodes
+            nodes.forEach(node => {
+                drawNode(node);
+            });
+            
+            // Draw special nodes
+            Object.values(specialNodes).forEach(node => {
+                drawNode(node, true);
+            });
+            
+            // Draw particles
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= p.decay;
+                
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                    return;
+                }
+                
+                glassCtx.beginPath();
+                glassCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                glassCtx.fillStyle = `rgba(255,255,255,${p.life * 0.3})`;
+                glassCtx.fill();
+            });
+        }
+        
+        function drawConnection(from, to, success) {
             const dx = to.x - from.x;
             const dy = to.y - from.y;
-            const length = Math.sqrt(dx * dx + dy * dy);
-            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            const dist = Math.sqrt(dx*dx + dy*dy);
             
-            const conn = document.createElement('div');
-            conn.className = 'connection ' + type;
-            conn.style.left = from.x + 'px';
-            conn.style.top = from.y + 'px';
-            conn.style.width = length + 'px';
-            conn.style.transform = `rotate(${angle}deg)`;
+            glassCtx.beginPath();
+            glassCtx.moveTo(from.x, from.y);
             
-            glass.appendChild(conn);
+            if (success) {
+                // Solid line with glow
+                glassCtx.lineTo(to.x, to.y);
+                glassCtx.strokeStyle = `rgba(100,255,100,${0.15 + Math.sin(time * 2) * 0.05})`;
+                glassCtx.lineWidth = 1;
+                glassCtx.stroke();
+            } else {
+                // Dashed line that breaks
+                const segments = 20;
+                for (let i = 0; i < segments; i++) {
+                    const t = i / segments;
+                    const nextT = (i + 0.4) / segments;
+                    
+                    const x1 = from.x + dx * t;
+                    const y1 = from.y + dy * t;
+                    const x2 = from.x + dx * nextT;
+                    const y2 = from.y + dy * nextT;
+                    
+                    // Distort the line
+                    const wobble = Math.sin(time * 3 + i) * 3;
+                    const perpX = -dy / dist * wobble;
+                    const perpY = dx / dist * wobble;
+                    
+                    glassCtx.beginPath();
+                    glassCtx.moveTo(x1 + perpX, y1 + perpY);
+                    glassCtx.lineTo(x2 + perpX, y2 + perpY);
+                    glassCtx.strokeStyle = `rgba(255,80,80,${0.2 - t * 0.15})`;
+                    glassCtx.lineWidth = 1;
+                    glassCtx.stroke();
+                }
+                
+                // X mark at the break point
+                const breakT = 0.4 + Math.sin(time) * 0.1;
+                const breakX = from.x + dx * breakT;
+                const breakY = from.y + dy * breakT;
+                
+                glassCtx.save();
+                glassCtx.translate(breakX, breakY);
+                glassCtx.rotate(time * 0.5);
+                glassCtx.strokeStyle = 'rgba(255,50,50,0.4)';
+                glassCtx.lineWidth = 2;
+                glassCtx.beginPath();
+                glassCtx.moveTo(-5, -5);
+                glassCtx.lineTo(5, 5);
+                glassCtx.moveTo(5, -5);
+                glassCtx.lineTo(-5, 5);
+                glassCtx.stroke();
+                glassCtx.restore();
+            }
         }
         
-        createCracks();
-        createNodes();
+        function drawNode(node, isSpecial = false) {
+            const pulseRadius = isSpecial ? 
+                node.radius + Math.sin(time * 2) * 3 : 
+                node.radius;
+            
+            // Glow
+            if (node.glow) {
+                const glowGrad = glassCtx.createRadialGradient(
+                    node.x, node.y, 0,
+                    node.x, node.y, pulseRadius * 4
+                );
+                glowGrad.addColorStop(0, node.glow);
+                glowGrad.addColorStop(1, 'transparent');
+                glassCtx.fillStyle = glowGrad;
+                glassCtx.beginPath();
+                glassCtx.arc(node.x, node.y, pulseRadius * 4, 0, Math.PI * 2);
+                glassCtx.fill();
+            }
+            
+            // Core
+            glassCtx.beginPath();
+            glassCtx.arc(node.x, node.y, pulseRadius, 0, Math.PI * 2);
+            glassCtx.fillStyle = node.color;
+            glassCtx.fill();
+            
+            // Ring for special nodes with active sound
+            if (isSpecial && oscillators[node.name]) {
+                glassCtx.beginPath();
+                glassCtx.arc(node.x, node.y, pulseRadius + 8 + Math.sin(time * 5) * 3, 0, Math.PI * 2);
+                glassCtx.strokeStyle = node.color.replace('0.8', '0.4').replace('0.9', '0.5');
+                glassCtx.lineWidth = 2;
+                glassCtx.stroke();
+            }
+        }
         
-        // Animazione del vetro che si incrina lentamente
-        setInterval(() => {
-            const cracks = document.querySelectorAll('.crack');
-            cracks.forEach(crack => {
-                crack.style.opacity = 0.1 + Math.random() * 0.2;
+        function drawCracks() {
+            cracksCtx.clearRect(0, 0, width, height);
+            
+            crackPhase += 0.002;
+            
+            cracks.forEach((crack, crackIndex) => {
+                const phaseOffset = crackIndex * 0.1;
+                const visibility = 0.5 + Math.sin(crackPhase + phaseOffset) * 0.5;
+                
+                cracksCtx.strokeStyle = `rgba(255,255,255,${crack.opacity * visibility})`;
+                cracksCtx.lineWidth = 0.5;
+                cracksCtx.beginPath();
+                
+                crack.points.forEach((point, i) => {
+                    if (i === 0 || point.returnFromBranch) {
+                        cracksCtx.moveTo(point.x, point.y);
+                    } else {
+                        cracksCtx.lineTo(point.x, point.y);
+                    }
+                });
+                
+                cracksCtx.stroke();
             });
-        }, 3000);
+        }
+        
+        function drawAudioViz() {
+            if (!analyser) return;
+            
+            analyser.getByteFrequencyData(dataArray);
+            
+            audioCtx2d.clearRect(0, 0, width, 80);
+            
+            const barWidth = width / dataArray.length;
+            
+            for (let i = 0; i < dataArray.length; i++) {
+                const barHeight = (dataArray[i] / 255) * 60;
+                const hue = (i / dataArray.length) * 60 + 30; // gold to red
+                
+                audioCtx2d.fillStyle = `hsla(${hue}, 70%, 50%, ${barHeight / 60 * 0.5})`;
+                audioCtx2d.fillRect(
+                    i * barWidth,
+                    80 - barHeight,
+                    barWidth - 1,
+                    barHeight
+                );
+            }
+        }
+        
+        // Periodically send pulses
+        setInterval(() => {
+            if (Math.random() > 0.5) {
+                const targetNodes = [...nodes.filter(n => n.reachable), specialNodes.oblong, specialNodes.numb];
+                const target = targetNodes[Math.floor(Math.random() * targetNodes.length)];
+                createPulse(specialNodes.me, target, target.reachable && !target.blocked);
+            }
+        }, 800);
+        
+        function animate() {
+            time += 0.016;
+            
+            drawGlass();
+            drawCracks();
+            drawAudioViz();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Initialize
+        createNodes();
+        generateCracks();
+        animate();
+        
+        // Regenerate cracks occasionally
+        setInterval(generateCracks, 10000);
     </script>
 </body>
 </html>
