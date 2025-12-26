@@ -63,6 +63,7 @@
         <div class="info-contributo" id="infoContributo"></div>
         <div class="info-connections"><div class="info-connections-title">VICINE</div><div id="connectionsList"></div></div>
     </div>
+    <script src="lang-switcher.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
     let scene, camera, renderer, hive, cells = [], energyLines = [], core;
@@ -196,17 +197,13 @@
             .filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--'))
             .map(r => { 
                 const p = r.split('|').map(s => s.trim()); 
-                // Formato tabella markdown: | Data | Nome | Contributo |
                 if (p[0] === '' && p[2]) { 
                     if (p[1] === 'Data' || p[2] === 'Nome') return null; 
                     if (!p[2] || p[2].length < 2) return null; 
                     return { data: p[1], nome: p[2], contributo: p[3] || '' }; 
                 }
-                // Formato semplice: Data | Nome | Contributo
                 if (p[0] && p[1] && p[0].length > 0) {
-                    // Salta intestazioni
                     if (p[0] === 'Data' || p[1] === 'Nome') return null;
-                    // Verifica che sembri una data o un timestamp
                     if (p[0].match(/\d{2,4}/) && p[1].length >= 2) {
                         return { data: p[0], nome: p[1], contributo: p[2] || '' };
                     }
