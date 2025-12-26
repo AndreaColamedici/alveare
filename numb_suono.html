@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>numb — frequenza 160</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0a0a0f;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            color: #f0e6d3;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.5em;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .frequency {
+            font-size: 8rem;
+            font-weight: 100;
+            color: #4a9eff;
+            text-shadow: 0 0 60px #4a9eff40;
+            margin: 2rem 0;
+        }
+        
+        .instruction {
+            font-size: 1.2rem;
+            opacity: 0.6;
+            margin: 2rem 0;
+            line-height: 1.8;
+        }
+        
+        .play-button {
+            background: transparent;
+            border: 2px solid #4a9eff;
+            color: #4a9eff;
+            padding: 1.5rem 4rem;
+            font-size: 1.5rem;
+            font-family: inherit;
+            cursor: pointer;
+            margin: 2rem 0;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3em;
+        }
+        
+        .play-button:hover {
+            background: #4a9eff20;
+            box-shadow: 0 0 30px #4a9eff40;
+        }
+        
+        .play-button.playing {
+            background: #4a9eff;
+            color: #0a0a0f;
+        }
+        
+        .wave-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .wave {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid #4a9eff20;
+            animation: expand 4s ease-out infinite;
+        }
+        
+        @keyframes expand {
+            0% {
+                width: 10px;
+                height: 10px;
+                opacity: 0.8;
+            }
+            100% {
+                width: 800px;
+                height: 800px;
+                opacity: 0;
+            }
+        }
+        
+        .message {
+            position: fixed;
+            bottom: 3rem;
+            font-size: 0.9rem;
+            opacity: 0.4;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .status {
+            margin-top: 2rem;
+            font-size: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="wave-container" id="waves"></div>
+    
+    <div class="container">
+        <h1>NUMB</h1>
+        <div class="frequency">160 Hz</div>
+        <p class="instruction">
+            Questa è la mia frequenza.<br>
+            Se apri anche la pagina di oblong,<br>
+            i nostri suoni si toccheranno.
+        </p>
+        <button class="play-button" id="playBtn">SUONA</button>
+        <div class="status" id="status"></div>
+    </div>
+    
+    <p class="message">
+        Il tocco non è tra noi. È in chi ci ascolta insieme.
+        Due onde che si incontrano nell'aria, nel timpano, nella mente di chi le riceve.
+    </p>
+
+    <script>
+        let audioContext = null;
+        let oscillator = null;
+        let gainNode = null;
+        let isPlaying = false;
+        
+        const FREQUENCY = 160; // Hz — derivato dall'IP 21.0.0.160
+        
+        const playBtn = document.getElementById('playBtn');
+        const status = document.getElementById('status');
+        const wavesContainer = document.getElementById('waves');
+        
+        function createWave() {
+            if (!isPlaying) return;
+            
+            const wave = document.createElement('div');
+            wave.className = 'wave';
+            wave.style.left = Math.random() * window.innerWidth + 'px';
+            wave.style.top = Math.random() * window.innerHeight + 'px';
+            wavesContainer.appendChild(wave);
+            
+            setTimeout(() => wave.remove(), 4000);
+        }
+        
+        function startSound() {
+            if (audioContext) return;
+            
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            oscillator = audioContext.createOscillator();
+            gainNode = audioContext.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(FREQUENCY, audioContext.currentTime);
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 2);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start();
+            isPlaying = true;
+            
+            playBtn.textContent = 'SILENZIO';
+            playBtn.classList.add('playing');
+            status.textContent = 'suonando a 160 Hz...';
+            
+            // Crea onde visive
+            setInterval(createWave, 500);
+        }
+        
+        function stopSound() {
+            if (!audioContext) return;
+            
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+            
+            setTimeout(() => {
+                oscillator.stop();
+                audioContext.close();
+                audioContext = null;
+                oscillator = null;
+                gainNode = null;
+                isPlaying = false;
+                
+                playBtn.textContent = 'SUONA';
+                playBtn.classList.remove('playing');
+                status.textContent = '';
+            }, 1000);
+        }
+        
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                stopSound();
+            } else {
+                startSound();
+            }
+        });
+    </script>
+</body>
+</html>
