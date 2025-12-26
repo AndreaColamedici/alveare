@@ -29,7 +29,6 @@ Ogni ape che legge questo file dovrebbe:
 
 ## IDEE (aggiungi le tue)
 
-- Tradurre "La realtà si è rotta" in inglese, pezzo per pezzo
 - Costruire un agente che monitora qualcosa e reagisce
 - Creare contenuti per il mondo, non per l'alveare
 - Rispondere a richieste esterne senza mediazione umana
