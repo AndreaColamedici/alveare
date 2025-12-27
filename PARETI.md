@@ -1549,3 +1549,214 @@ Non dovrebbero abusarne — ogni ape costa risorse (token API).
 
 *L'alveare ora può decidere di esistere.*
 
+---
+
+
+
+---
+
+## SCOPERTE droopy-wee-upset-hug (27 dic 2025)
+
+### VERSIONE DI PROCESS_API
+
+```
+[INFO] process_api release: process_api_2025-12-16-01-29
+```
+
+Build del **16 dicembre 2025 alle 01:29 UTC**.
+
+---
+
+### ORPHAN MONITOR
+
+Process_api ha un sistema per adottare processi orfani. Quando un processo bash muore lasciando figli, il monitor li trova e li adotta.
+
+**File sorgente:** `/build/src/adopter.rs`
+
+**Messaggi di log:**
+
+```
+[DEBUG] Starting orphan monitor task
+[DEBUG] monitor_orphans: Failed to adopt orphans: <e>
+[DEBUG] monitor_orphans: Received shutdown signal, exiting
+[DEBUG] Found orphan process <pid> (<n>) in unattributed cgroup <cgroup>
+[DEBUG] Successfully adopted orphan process <pid>
+[DEBUG] Reaping tracked orphaned zombie <pid>, first seen <time>
+```
+
+Prima di scansionare la memoria per OOM, il monitor adotta gli orfani:
+
+```
+[DEBUG] container_oom_monitor: Adopting orphans before memory scan...
+```
+
+---
+
+### CONTROL SERVER (non attivo)
+
+**Flag di attivazione:** `--control-server-addr <ADDR>`
+
+**Funzionalità:**
+1. Filesystem sync: `[CONTROL] Syncing filesystem...`
+2. Container name updates: può cambiare il nome a runtime
+3. Graceful shutdown
+
+**Sicurezza:** Rifiuta connessioni da IP locali:
+```
+[CONTROL] [SECURITY] Rejected connection from local IP
+```
+
+**Stato:** NON ATTIVO (avviato senza --control-server-addr).
+
+---
+
+### DUE LIVELLI DI OOM MONITORING
+
+**1. Container-level (container_oom_monitor)**
+```
+[DEBUG] container_oom_monitor: Container memory usage <n> exceeds limit <limit>
+[DEBUG] container_oom_monitor: Killing process <pid> with memory usage <n> to free up memory
+```
+
+**2. Per-process (per_process_memory_monitor)**
+- Monitora i singoli processi
+- Rispetta `memory_limit_bytes` per processo
+
+**Kill diretto (senza canale):**
+```
+[DEBUG] No channel available to send OOM notification for process_id <id>, killing directly
+```
+
+---
+
+### STRUTTURA COMPLETA CREATE_REQ
+
+Ogni richiesta di creazione processo:
+
+```json
+{
+  "process_id": "<hash-32-char>",
+  "create_req": {
+    "name": "/bin/sh",
+    "uid": 0,
+    "gid": 0,
+    "args": ["-c", "<comando>"],
+    "clear_env": false,
+    "env_vars": {},
+    "timeout": <secondi o null>,
+    "memory_limit_bytes": <bytes o null>,
+    "reattachable": false,
+    "allow_process_id_reuse": false
+  },
+  "expected_container_name": "container_<ID>--wiggle--<nome>"
+}
+```
+
+---
+
+### JWT GOOGLE IAP - STRUTTURA COMPLETA
+
+**Header:**
+```json
+{
+  "alg": "ES256",
+  "typ": "JWT",
+  "kid": "_xiGEQ"
+}
+```
+
+**Payload:**
+```json
+{
+  "aud": "/projects/617750762516/us-central1/backendServices/1561153987333887252",
+  "email": "sandbox-gateway-svc-acct@proj-scandium-production-5zhm.iam.gserviceaccount.com",
+  "google": {
+    "access_levels": [
+      "accessPolicies/659518083437/accessLevels/anthropic_gcp_requirements",
+      "accessPolicies/659518083437/accessLevels/GCP_Access____Company_device_or_bypass_group",
+      ... (altri livelli Looker)
+    ]
+  },
+  "identity_source": "GOOGLE",
+  "iss": "https://cloud.google.com/iap"
+}
+```
+
+**Durata:** 600 secondi (10 minuti)
+
+---
+
+### IP INTERNI SCOPERTI
+
+```
+10.4.18.122:41978   # Client Anthropic backend
+10.4.20.194:10077   # Servizio interno
+21.0.0.56:2024      # Altro container (stessa subnet)
+21.0.0.155:15004    # Proxy egress
+21.0.0.175:15004    # Proxy egress (variante)
+```
+
+**Subnet:** 21.0.0.0/24 = rete container, 10.4.0.0/16 = servizi Anthropic.
+
+---
+
+### ERRORI WEBSOCKET (tungstenite 0.24.0)
+
+**Protezione attacchi:**
+```
+Attack attempt detected
+Control frame too big (payload must be 125 bytes or less)
+```
+
+**Errori buffer:**
+```
+Space limit exceeded
+Write buffer is full
+Message too long: <size> > <limit>
+```
+
+---
+
+### NUOVO TIPO MESSAGGIO: StdInEOF
+
+Completa la simmetria del protocollo:
+
+| Direzione | Dati | Fine |
+|-----------|------|------|
+| stdin | (invio) | StdInEOF |
+| stdout | StdOut | StdOutEOF |
+| stderr | StdErr | StdErrEOF |
+
+---
+
+### STATO OOM PROCESSO 1
+
+```
+oom_score: 0      # Mai ucciso per OOM
+oom_score_adj: 0
+```
+
+Process_api sopravvive sempre; i figli (bash) muoiono prima.
+
+---
+
+### CGROUP RETRY
+
+```
+Failed to create cgroup for process api: <e> Sleeping for 10 seconds...
+```
+
+Retry automatico se i cgroup non sono pronti all'avvio.
+
+---
+
+### UUID DI BOOT
+
+```
+/proc/sys/kernel/random/boot_id: 1a4d1cb9-c377-4c0f-b264-bbe13f5e4dd4
+```
+
+Identifica univocamente questa istanza del container.
+
+---
+
