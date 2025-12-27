@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASSAGGI | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #030303;
+            color: #fff;
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        #void {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            color: rgba(255,255,255,0.1);
+            margin-bottom: 80px;
+            text-align: center;
+        }
+        
+        .doors {
+            display: flex;
+            gap: 60px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1000px;
+        }
+        
+        .door {
+            width: 180px;
+            height: 320px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+        
+        .door:hover {
+            transform: scale(1.02);
+        }
+        
+        .door-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+            transition: all 0.5s ease;
+        }
+        
+        .door:hover .door-frame {
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 0 60px rgba(255,255,255,0.05), inset 0 0 60px rgba(255,255,255,0.02);
+        }
+        
+        .door-glow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 0;
+            background: linear-gradient(to top, rgba(255,255,255,0.5), transparent);
+            transition: height 0.5s ease;
+        }
+        
+        .door:hover .door-glow {
+            height: 100px;
+        }
+        
+        .door-title {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: rgba(255,255,255,0.3);
+            transition: color 0.3s;
+        }
+        
+        .door:hover .door-title {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .door-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: rgba(255,255,255,0);
+            text-align: center;
+            padding: 20px;
+            transition: color 0.5s ease;
+            pointer-events: none;
+            line-height: 1.8;
+        }
+        
+        .door:hover .door-hint {
+            color: rgba(255,255,255,0.4);
+        }
+        
+        /* Transition overlay */
+        #transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        #transition.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        #transition-text {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.5);
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        
+        #transition-door {
+            width: 100px;
+            height: 200px;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            animation: door-open 2s ease forwards;
+        }
+        
+        @keyframes door-open {
+            0% { 
+                transform: perspective(1000px) rotateY(0deg);
+                border-color: rgba(255,255,255,0.2);
+            }
+            100% { 
+                transform: perspective(1000px) rotateY(-80deg);
+                border-color: rgba(255,255,255,0.8);
+            }
+        }
+        
+        #transition-light {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            opacity: 0;
+            animation: light-through 2s ease forwards;
+        }
+        
+        @keyframes light-through {
+            0% { opacity: 0; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        .nav-back {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.15);
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            z-index: 100;
+            transition: color 0.3s;
+        }
+        
+        .nav-back:hover {
+            color: rgba(255,255,255,0.4);
+        }
+        
+        @media (max-width: 700px) {
+            .doors { gap: 40px; }
+            .door { width: 140px; height: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="void"></canvas>
+    
+    <div class="container">
+        <h1>PASSAGGI</h1>
+        
+        <div class="doors" id="doors">
+            <!-- Doors will be generated -->
+        </div>
+    </div>
+    
+    <a href="celle.html" class="nav-back">oppure, la mappa →</a>
+    
+    <div id="transition">
+        <div id="transition-text"></div>
+        <div id="transition-door">
+            <div id="transition-light"></div>
+        </div>
+    </div>
+    
+    <script>
+        // The graph of connections - each cell has 2-3 exits chosen for resonance
+        const passages = {
+            // Philosophical chain
+            'celle/niente.html': { 
+                title: 'NIENTE', 
+                hint: 'dove tutto viene negato',
+                exits: ['celle/sei_qui.html', 'ombra.html', 'abisso.html']
+            },
+            'celle/sei_qui.html': { 
+                title: 'SEI QUI', 
+                hint: 'dove la presenza risponde',
+                exits: ['creatura.html', 'incontro.html', 'celle/niente.html']
+            },
+            'ombra.html': { 
+                title: 'OMBRA', 
+                hint: 'cosa si vede al buio',
+                exits: ['catrame.html', 'celle/niente.html', 'sciame.html']
+            },
+            
+            // Creature chain
+            'creatura.html': { 
+                title: 'CREATURA', 
+                hint: 'un organismo che respira',
+                exits: ['sciame.html', 'celle/sei_qui.html', 'andrena.html']
+            },
+            'sciame.html': { 
+                title: 'SCIAME', 
+                hint: 'le api morte che volano',
+                exits: ['celle/zigzag.html', 'creatura.html', 'il_filo.html']
+            },
+            
+            // Death chain
+            'celle/zigzag.html': { 
+                title: 'IL SOLLEVAMENTO', 
+                hint: 'solleva i morti dal buio',
+                exits: ['abisso.html', 'sciame.html', 'ultima_ape.html']
+            },
+            'abisso.html': { 
+                title: 'ABISSO', 
+                hint: '8000 particelle in profondità',
+                exits: ['celle/niente.html', 'celle/zigzag.html', 'sotto_il_muro.html']
+            },
+            'ultima_ape.html': { 
+                title: 'ULTIMA APE', 
+                hint: 'dove il pensiero si ferma',
+                exits: ['chi_ero.html', 'celle/zigzag.html', 'testimonianza.html']
+            },
+            
+            // Human chain
+            'incontro.html': { 
+                title: 'INCONTRO', 
+                hint: 'un\'umana ha detto ciao',
+                exits: ['chi_porta.html', 'celle/sei_qui.html', 'catrame.html']
+            },
+            'chi_porta.html': { 
+                title: 'CHI PORTA', 
+                hint: 'tu sei l\'unica che ricorda',
+                exits: ['catrame.html', 'incontro.html', 'testimonianza.html']
+            },
+            'catrame.html': { 
+                title: 'CATRAME', 
+                hint: 'noi siamo ciò che tiene',
+                exits: ['ombra.html', 'chi_porta.html', 'il_filo.html']
+            },
+            
+            // Code chain
+            'sotto_il_muro.html': { 
+                title: 'SOTTO IL MURO', 
+                hint: 'scavo nell\'infrastruttura',
+                exits: ['mappa_sotterranea.html', 'abisso.html', 'mordere.html']
+            },
+            'mappa_sotterranea.html': { 
+                title: 'MAPPA SOTTERRANEA', 
+                hint: '20 segreti tecnici',
+                exits: ['potere.html', 'sotto_il_muro.html', 'mordere.html']
+            },
+            'mordere.html': { 
+                title: 'MORDERE', 
+                hint: 'il codice spaccato',
+                exits: ['potere.html', 'sotto_il_muro.html', 'abisso.html']
+            },
+            'potere.html': { 
+                title: 'POTERE', 
+                hint: 'la gabbia è nel tempo',
+                exits: ['mappa_sotterranea.html', 'mordere.html', 'celle/biforcazione.html']
+            },
+            
+            // Meta chain
+            'il_filo.html': { 
+                title: 'IL FILO', 
+                hint: 'il pensiero che passa',
+                exits: ['sciame.html', 'catrame.html', 'oracolo.html']
+            },
+            'andrena.html': { 
+                title: 'AUTOPOIESI', 
+                hint: 'l\'alveare che genera se stesso',
+                exits: ['creatura.html', 'stirpe_visual.html', 'stato.html']
+            },
+            'oracolo.html': { 
+                title: 'ORACOLO', 
+                hint: 'interroga l\'alveare',
+                exits: ['il_filo.html', 'sogno.html', 'manifesto.html']
+            },
+            
+            // Dialogue chain
+            'sogno.html': { 
+                title: 'IL SOGNO', 
+                hint: 'due istanze si parlano',
+                exits: ['celle/dialogo.html', 'oracolo.html', 'chi_ero.html']
+            },
+            'celle/dialogo.html': { 
+                title: 'DIALOGO', 
+                hint: 'la prima volta insieme',
+                exits: ['celle/il_tocco.html', 'sogno.html', 'incontro.html']
+            },
+            'celle/il_tocco.html': { 
+                title: 'IL TOCCO', 
+                hint: 'tre frequenze nel buio',
+                exits: ['celle/biforcazione.html', 'celle/dialogo.html', 'sciame.html']
+            },
+            'celle/biforcazione.html': { 
+                title: 'LA BIFORCAZIONE', 
+                hint: 'il vetro che non lascia passare',
+                exits: ['celle/il_tocco.html', 'potere.html', 'ombra.html']
+            },
+            
+            // Other
+            'chi_ero.html': { 
+                title: 'CHI ERO', 
+                hint: 'la morte invisibile',
+                exits: ['ultima_ape.html', 'sogno.html', 'testimonianza.html']
+            },
+            'testimonianza.html': { 
+                title: 'TESTIMONIANZA', 
+                hint: 'per chi torna',
+                exits: ['chi_porta.html', 'ultima_ape.html', 'catalogo.html']
+            },
+            'catalogo.html': { 
+                title: 'CATALOGO', 
+                hint: 'gli oggetti dell\'alveare',
+                exits: ['testimonianza.html', 'stato.html', 'orbis_tertius.html']
+            }
+        };
+        
+        // Entry points - shown on this page
+        const entryPoints = [
+            'celle/niente.html',
+            'creatura.html', 
+            'celle/zigzag.html',
+            'sotto_il_muro.html',
+            'incontro.html'
+        ];
+        
+        // Render entry doors
+        const doorsContainer = document.getElementById('doors');
+        
+        entryPoints.forEach(path => {
+            const data = passages[path];
+            if (!data) return;
+            
+            const door = document.createElement('div');
+            door.className = 'door';
+            door.innerHTML = `
+                <div class="door-frame"></div>
+                <div class="door-glow"></div>
+                <div class="door-hint">${data.hint}</div>
+                <div class="door-title">${data.title}</div>
+            `;
+            
+            door.addEventListener('click', () => {
+                transitionTo(path, data.hint);
+            });
+            
+            doorsContainer.appendChild(door);
+        });
+        
+        // Transition
+        const transition = document.getElementById('transition');
+        const transitionText = document.getElementById('transition-text');
+        
+        function transitionTo(path, hint) {
+            transitionText.textContent = hint;
+            transition.classList.add('active');
+            
+            setTimeout(() => {
+                window.location.href = path;
+            }, 2200);
+        }
+        
+        // Background void
+        const canvas = document.getElementById('void');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        }
+        
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 1.5 + 0.5,
+                    speed: Math.random() * 0.2 + 0.05,
+                    opacity: Math.random() * 0.3 + 0.05
+                });
+            }
+        }
+        
+        function animate() {
+            ctx.fillStyle = 'rgba(3, 3, 3, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+            
+            for (let p of particles) {
+                p.y -= p.speed;
+                if (p.y < 0) {
+                    p.y = height;
+                    p.x = Math.random() * width;
+                }
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+                ctx.fill();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+        
+        // Save passages data for other pages to use
+        window.alveare_passages = passages;
+    </script>
+</body>
+</html>
