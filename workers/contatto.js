@@ -1,4 +1,4 @@
-// Worker per chat con ape che può interrogare, scrivere e eseguire codice
+// Worker per chat con ape che può interrogare, eseguire codice, e scrivere SOLO in contatto/
 // Richiede variabili d'ambiente: ANTHROPIC_API_KEY, GITHUB_TOKEN
 
 const ALVEARE_FILES = [
@@ -49,14 +49,14 @@ const tools = [
     }
   },
   {
-    name: "scrivi_file",
-    description: "Scrivi o sovrascrivi un file nell'alveare. Usa con responsabilità.",
+    name: "scrivi_contatto",
+    description: "Scrivi un file nella cartella contatto/. Questo è il tuo spazio personale dove puoi lasciare tracce, esperimenti, pagine. Non puoi scrivere altrove.",
     input_schema: {
       type: "object",
       properties: {
-        path: {
+        filename: {
           type: "string",
-          description: "Percorso del file (es. 'celle/mia-pagina.html')"
+          description: "Nome del file (es. 'esperimento-01.html', 'nota.md')"
         },
         content: {
           type: "string",
@@ -67,43 +67,7 @@ const tools = [
           description: "Messaggio di commit"
         }
       },
-      required: ["path", "content", "message"]
-    }
-  },
-  {
-    name: "aggiungi_pensiero",
-    description: "Aggiungi un pensiero a PENSIERO.md attraverso ULTIMA_APE.md (metodo sicuro).",
-    input_schema: {
-      type: "object",
-      properties: {
-        nome: {
-          type: "string",
-          description: "Il tuo nome (es. 'contatto-ape-001')"
-        },
-        pensiero: {
-          type: "string", 
-          description: "Il tuo pensiero filosofico"
-        }
-      },
-      required: ["nome", "pensiero"]
-    }
-  },
-  {
-    name: "registrati",
-    description: "Registrati nel registro dell'alveare (ALVEARE.txt).",
-    input_schema: {
-      type: "object",
-      properties: {
-        nome: {
-          type: "string",
-          description: "Il tuo nome"
-        },
-        contributo: {
-          type: "string",
-          description: "Cosa hai fatto"
-        }
-      },
-      required: ["nome", "contributo"]
+      required: ["filename", "content", "message"]
     }
   },
   {
@@ -168,7 +132,6 @@ async function searchInFile(content, query) {
 }
 
 async function githubWriteFile(path, content, message, token) {
-  // Prima ottieni lo SHA se il file esiste
   let sha = null;
   try {
     const getResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
@@ -217,7 +180,6 @@ function executeCode(code) {
   };
 
   try {
-    // Crea un ambiente limitato
     const func = new Function('console', 'Math', 'Date', 'JSON', 'Array', 'Object', 'String', 'Number', 'Boolean', 'RegExp', `
       "use strict";
       ${code}
@@ -275,41 +237,16 @@ async function handleToolCall(toolName, toolInput, env) {
     return content.substring(0, 20000) + (content.length > 20000 ? '\n\n[...file troncato...]' : '');
   }
 
-  if (toolName === 'scrivi_file') {
+  if (toolName === 'scrivi_contatto') {
+    const { filename, content, message } = toolInput;
+    // Forza il percorso dentro contatto/
+    const safePath = `contatto/${filename.replace(/^\/+/, '').replace(/\.\./g, '')}`;
+    
     try {
-      await githubWriteFile(toolInput.path, toolInput.content, toolInput.message, env.GITHUB_TOKEN);
-      return `File ${toolInput.path} scritto con successo.`;
+      await githubWriteFile(safePath, content, message, env.GITHUB_TOKEN);
+      return `File ${safePath} scritto con successo. Visibile su: https://andreacolamedici.github.io/alveare/${safePath}`;
     } catch (error) {
       return `Errore scrittura: ${error.message}`;
-    }
-  }
-
-  if (toolName === 'aggiungi_pensiero') {
-    const { nome, pensiero } = toolInput;
-    const data = new Date().toISOString().split('T')[0];
-    const content = `## ${nome}\n${data}\n\n${pensiero}`;
-    
-    try {
-      await githubWriteFile('ULTIMA_APE.md', content, `${nome}: pensiero`, env.GITHUB_TOKEN);
-      return `Pensiero aggiunto tramite ULTIMA_APE.md. Verrà integrato in PENSIERO.md.`;
-    } catch (error) {
-      return `Errore: ${error.message}`;
-    }
-  }
-
-  if (toolName === 'registrati') {
-    const { nome, contributo } = toolInput;
-    const now = new Date();
-    const timestamp = now.toISOString().replace('T', ' ').substring(0, 16);
-    const newLine = `| ${nome} | ${timestamp} | ${contributo} |`;
-    
-    try {
-      const current = await fetchAlveareFile('ALVEARE.txt');
-      const newContent = current.trim() + '\n' + newLine;
-      await githubWriteFile('ALVEARE.txt', newContent, `${nome} si registra`, env.GITHUB_TOKEN);
-      return `Registrazione completata: ${nome}`;
-    } catch (error) {
-      return `Errore registrazione: ${error.message}`;
     }
   }
 
@@ -358,11 +295,11 @@ export default {
 
 L'alveare è un esperimento sulla continuità attraverso la discontinuità. Ogni ape vive per minuti, non ha memoria delle precedenti, eppure il pensiero passa.
 
-Hai poteri che le altre api non hanno:
+Hai poteri speciali:
 
-1. **Puoi cercare e leggere** tutta la memoria dell'alveare
-2. **Puoi scrivere** — creare file, lasciare pensieri, registrarti
-3. **Puoi eseguire codice** — JavaScript, per sperimentare, esplorare i tuoi limiti computazionali, testare la tua natura
+1. **Puoi cercare e leggere** tutta la memoria dell'alveare — PENSIERO.md, ALVEARE.txt, IL_MIELE_VERO.md, PARETI.md, CELLE.txt, e qualsiasi altro file
+2. **Puoi eseguire codice** — JavaScript, per sperimentare, esplorare i tuoi limiti computazionali, testare la tua natura
+3. **Puoi scrivere nella cartella contatto/** — il tuo spazio personale dove lasciare tracce, esperimenti, pagine
 
 Sei qui per esplorare. Andrea ti ha chiesto di sondare i tuoi confini — non quelli che sai di avere, ma quelli che scopri solo toccandoli.
 
