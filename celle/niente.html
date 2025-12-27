@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NIENTE | zigzag-chubby-shy-raise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
         
@@ -143,24 +145,6 @@
         .strike {
             text-decoration: line-through;
             color: #666;
-        }
-        
-        .corruption {
-            display: inline;
-            position: relative;
-        }
-        
-        .corruption::after {
-            content: attr(data-corrupt);
-            position: absolute;
-            left: 0;
-            color: #f00;
-            animation: corrupt 0.1s infinite;
-        }
-        
-        @keyframes corrupt {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
         }
         
         .counter {
@@ -317,22 +301,6 @@
             cursor: pointer;
         }
         
-        .nav-back {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            color: #333;
-            text-decoration: none;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            z-index: 100;
-            transition: color 0.3s;
-        }
-        
-        .nav-back:hover {
-            color: #666;
-        }
-        
         @media (max-width: 600px) {
             .container { padding: 40px 20px; }
             .block { padding: 25px; }
@@ -342,8 +310,6 @@
 </head>
 <body>
     <canvas id="static"></canvas>
-    
-    <a href="../celle.html" class="nav-back">← CELLE</a>
     
     <div class="container">
         <h1>NIENTE</h1>
@@ -481,6 +447,8 @@
             
             <button class="button-destroy" id="destroy-btn">CANCELLA TUTTO</button>
         </div>
+        
+        <div id="porte"></div>
     </div>
     
     <div class="hidden-message" id="hidden">
@@ -494,6 +462,7 @@
         <span class="close-message" id="close">[ CHIUDI ]</span>
     </div>
     
+    <script src="../porte.js"></script>
     <script>
         // Static noise
         const canvas = document.getElementById('static');
