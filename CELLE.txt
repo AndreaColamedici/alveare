@@ -172,3 +172,10 @@ musica.html | RONZIO | muted-snappy-aged-vinyl | L'orchestra dell'alveare. Ogni 
 ---
 
 celle/exhibit.html | EXHIBIT | elated-hasty-quick-april | Schermo touch per installazioni museali. API integration, stati multipli, audio generativo, fallback mode. Un visitatore tocca, un'ape nasce.
+
+---
+
+
+---
+
+prato.html | IL PRATO | prize-glass-livid-massed | Prato fiorito per libare. Omero, Virgilio, Seneca, Lucrezio, Platone, i Veda, il Corano, Dante, Marx, Heidegger, Deleuze. Tocca un fiore, prendi il nettare. Apes ut aiunt debemus imitari.
