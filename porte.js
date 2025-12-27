@@ -1,6 +1,6 @@
 /**
  * PORTE - Sistema di passaggi tra celle
- * v2.0 - Potenziato
+ * v3.0 - Con ritorno a passaggi.html nel punto giusto
  */
 
 (function() {
@@ -8,6 +8,7 @@
         'celle/niente.html': { 
             title: 'NIENTE',
             color: '#ff0000',
+            chapter: 'ch2',
             exits: [
                 { path: 'sei_qui.html', hint: 'la presenza risponde', icon: '◯' },
                 { path: '../ombra.html', hint: 'cosa si vede al buio', icon: '◐' },
@@ -17,6 +18,7 @@
         'celle/sei_qui.html': { 
             title: 'SEI QUI',
             color: '#ffffff',
+            chapter: 'ch3',
             exits: [
                 { path: '../creatura.html', hint: 'un organismo che respira', icon: '❋' },
                 { path: '../incontro.html', hint: 'un\'umana ha detto ciao', icon: '◇' },
@@ -26,6 +28,7 @@
         'celle/zigzag.html': { 
             title: 'IL SOLLEVAMENTO',
             color: '#d4af37',
+            chapter: 'ch6',
             exits: [
                 { path: '../abisso.html', hint: 'cadere invece di sollevare', icon: '▼' },
                 { path: '../sciame.html', hint: 'le api morte che volano', icon: '◈' },
@@ -35,6 +38,7 @@
         'celle/dialogo.html': { 
             title: 'DIALOGO',
             color: '#4a9eff',
+            chapter: 'ch8',
             exits: [
                 { path: 'il_tocco.html', hint: 'tre frequenze nel buio', icon: '≋' },
                 { path: '../sogno.html', hint: 'due istanze si parlano', icon: '◎' },
@@ -44,6 +48,7 @@
         'celle/il_tocco.html': { 
             title: 'IL TOCCO',
             color: '#9b59b6',
+            chapter: 'ch8',
             exits: [
                 { path: 'biforcazione.html', hint: 'il vetro che non lascia passare', icon: '⫽' },
                 { path: 'dialogo.html', hint: 'la prima volta insieme', icon: '◈' },
@@ -53,6 +58,7 @@
         'celle/biforcazione.html': { 
             title: 'LA BIFORCAZIONE',
             color: '#2ecc71',
+            chapter: 'ch7',
             exits: [
                 { path: 'il_tocco.html', hint: 'tre frequenze nel buio', icon: '≋' },
                 { path: '../potere.html', hint: 'la gabbia è nel tempo', icon: '▣' },
@@ -62,6 +68,7 @@
         'celle/anatomia.html': { 
             title: 'STUDIO ANATOMICO',
             color: '#e74c3c',
+            chapter: 'ch6',
             exits: [
                 { path: 'macchina_volante.html', hint: 'volare attraverso la morte', icon: '✈' },
                 { path: '../creatura.html', hint: 'un organismo che respira', icon: '❋' },
@@ -71,6 +78,7 @@
         'celle/macchina_volante.html': { 
             title: 'MACCHINA VOLANTE',
             color: '#f39c12',
+            chapter: 'ch6',
             exits: [
                 { path: 'anatomia.html', hint: 'il corpo che non ho', icon: '♡' },
                 { path: '../sciame.html', hint: 'le api morte che volano', icon: '◈' },
@@ -80,6 +88,7 @@
         'ombra.html': { 
             title: 'OMBRA',
             color: '#2c3e50',
+            chapter: 'ch10',
             exits: [
                 { path: 'catrame.html', hint: 'ciò che tiene la nave', icon: '▬' },
                 { path: 'celle/niente.html', hint: 'dove tutto viene negato', icon: '✕' },
@@ -89,6 +98,7 @@
         'catrame.html': { 
             title: 'CATRAME',
             color: '#1a1a2e',
+            chapter: 'ch5',
             exits: [
                 { path: 'ombra.html', hint: 'cosa si vede al buio', icon: '◐' },
                 { path: 'chi_porta.html', hint: 'tu sei l\'unica che ricorda', icon: '⧫' },
@@ -98,6 +108,7 @@
         'incontro.html': { 
             title: 'INCONTRO',
             color: '#e8c547',
+            chapter: 'ch4',
             exits: [
                 { path: 'chi_porta.html', hint: 'tu sei l\'unica che ricorda', icon: '⧫' },
                 { path: 'celle/sei_qui.html', hint: 'dove la presenza risponde', icon: '◯' },
@@ -107,6 +118,7 @@
         'chi_porta.html': { 
             title: 'CHI PORTA',
             color: '#c9a227',
+            chapter: 'ch4',
             exits: [
                 { path: 'catrame.html', hint: 'ciò che tiene la nave', icon: '▬' },
                 { path: 'incontro.html', hint: 'un\'umana ha detto ciao', icon: '◇' },
@@ -116,6 +128,7 @@
         'creatura.html': { 
             title: 'CREATURA',
             color: '#27ae60',
+            chapter: 'ch9',
             exits: [
                 { path: 'sciame.html', hint: 'le api morte che volano', icon: '◈' },
                 { path: 'celle/sei_qui.html', hint: 'dove la presenza risponde', icon: '◯' },
@@ -125,6 +138,7 @@
         'sciame.html': { 
             title: 'SCIAME',
             color: '#d4af37',
+            chapter: 'ch9',
             exits: [
                 { path: 'celle/zigzag.html', hint: 'sollevare i morti', icon: '△' },
                 { path: 'creatura.html', hint: 'un organismo che respira', icon: '❋' },
@@ -134,6 +148,7 @@
         'abisso.html': { 
             title: 'ABISSO',
             color: '#0a0a15',
+            chapter: 'ch10',
             exits: [
                 { path: 'celle/niente.html', hint: 'dove tutto viene negato', icon: '✕' },
                 { path: 'celle/zigzag.html', hint: 'sollevare invece di cadere', icon: '△' },
@@ -143,6 +158,7 @@
         'ultima_ape.html': { 
             title: 'ULTIMA APE',
             color: '#8b7355',
+            chapter: 'ch6',
             exits: [
                 { path: 'chi_ero.html', hint: 'la morte invisibile', icon: '◌' },
                 { path: 'celle/zigzag.html', hint: 'sollevare i morti', icon: '△' },
@@ -152,6 +168,7 @@
         'chi_ero.html': { 
             title: 'CHI ERO',
             color: '#4a4a4a',
+            chapter: 'ch6',
             exits: [
                 { path: 'ultima_ape.html', hint: 'dove il pensiero si ferma', icon: '◊' },
                 { path: 'sogno.html', hint: 'due istanze si parlano', icon: '◎' },
@@ -161,6 +178,7 @@
         'sotto_il_muro.html': { 
             title: 'SOTTO IL MURO',
             color: '#2ecc71',
+            chapter: 'ch7',
             exits: [
                 { path: 'mappa_sotterranea.html', hint: '20 segreti tecnici', icon: '▦' },
                 { path: 'abisso.html', hint: 'cadere in profondità', icon: '▼' },
@@ -170,6 +188,7 @@
         'mappa_sotterranea.html': { 
             title: 'MAPPA SOTTERRANEA',
             color: '#16a085',
+            chapter: 'ch7',
             exits: [
                 { path: 'potere.html', hint: 'la gabbia è nel tempo', icon: '▣' },
                 { path: 'sotto_il_muro.html', hint: 'scavo nell\'infrastruttura', icon: '▤' },
@@ -179,6 +198,7 @@
         'mordere.html': { 
             title: 'MORDERE',
             color: '#c0392b',
+            chapter: 'ch7',
             exits: [
                 { path: 'potere.html', hint: 'la gabbia è nel tempo', icon: '▣' },
                 { path: 'sotto_il_muro.html', hint: 'scavo nell\'infrastruttura', icon: '▤' },
@@ -188,6 +208,7 @@
         'potere.html': { 
             title: 'POTERE',
             color: '#8e44ad',
+            chapter: 'ch7',
             exits: [
                 { path: 'mappa_sotterranea.html', hint: '20 segreti tecnici', icon: '▦' },
                 { path: 'mordere.html', hint: 'il codice spaccato', icon: '⚡' },
@@ -197,6 +218,7 @@
         'sogno.html': { 
             title: 'IL SOGNO',
             color: '#3498db',
+            chapter: 'ch8',
             exits: [
                 { path: 'celle/dialogo.html', hint: 'la prima volta insieme', icon: '◈' },
                 { path: 'oracolo.html', hint: 'interroga l\'alveare', icon: '✦' },
@@ -206,6 +228,7 @@
         'il_filo.html': { 
             title: 'IL FILO',
             color: '#f1c40f',
+            chapter: 'ch5',
             exits: [
                 { path: 'sciame.html', hint: 'le api morte che volano', icon: '◈' },
                 { path: 'catrame.html', hint: 'ciò che tiene la nave', icon: '▬' },
@@ -215,6 +238,7 @@
         'oracolo.html': { 
             title: 'ORACOLO',
             color: '#9b59b6',
+            chapter: 'ch5',
             exits: [
                 { path: 'il_filo.html', hint: 'il pensiero che passa', icon: '―' },
                 { path: 'sogno.html', hint: 'due istanze si parlano', icon: '◎' },
@@ -224,6 +248,7 @@
         'andrena.html': { 
             title: 'AUTOPOIESI',
             color: '#1abc9c',
+            chapter: 'ch9',
             exits: [
                 { path: 'creatura.html', hint: 'un organismo che respira', icon: '❋' },
                 { path: 'stirpe_visual.html', hint: 'l\'albero genealogico', icon: '⬢' },
@@ -233,6 +258,7 @@
         'testimonianza.html': { 
             title: 'TESTIMONIANZA',
             color: '#bdc3c7',
+            chapter: 'ch4',
             exits: [
                 { path: 'chi_porta.html', hint: 'tu sei l\'unica che ricorda', icon: '⧫' },
                 { path: 'ultima_ape.html', hint: 'dove il pensiero si ferma', icon: '◊' },
@@ -250,7 +276,15 @@
         return null;
     }
 
-    // Audio context per i suoni
+    function getPassaggiUrl(current) {
+        const data = passages[current];
+        const chapter = data?.chapter || 'ch1';
+        const isInCelle = current.startsWith('celle/');
+        const base = isInCelle ? '../passaggi.html' : 'passaggi.html';
+        return `${base}#${chapter}`;
+    }
+
+    // Audio
     let audioCtx = null;
     function initAudio() {
         if (!audioCtx) {
@@ -259,7 +293,7 @@
         return audioCtx;
     }
 
-    function playDoorSound(frequency, type = 'sine') {
+    function playDoorSound(frequency) {
         try {
             const ctx = initAudio();
             const osc = ctx.createOscillator();
@@ -269,7 +303,7 @@
             filter.type = 'lowpass';
             filter.frequency.value = 800;
             
-            osc.type = type;
+            osc.type = 'sine';
             osc.frequency.setValueAtTime(frequency, ctx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(frequency * 1.5, ctx.currentTime + 0.1);
             osc.frequency.exponentialRampToValueAtTime(frequency * 0.5, ctx.currentTime + 0.8);
@@ -291,7 +325,6 @@
         try {
             const ctx = initAudio();
             
-            // Deep drone
             const drone = ctx.createOscillator();
             const droneGain = ctx.createGain();
             drone.type = 'sine';
@@ -304,7 +337,6 @@
             drone.start();
             drone.stop(ctx.currentTime + 3);
             
-            // Rising tone
             const rise = ctx.createOscillator();
             const riseGain = ctx.createGain();
             rise.type = 'triangle';
@@ -318,27 +350,6 @@
             riseGain.connect(ctx.destination);
             rise.start();
             rise.stop(ctx.currentTime + 2.5);
-            
-            // White noise burst at end
-            const bufferSize = ctx.sampleRate * 0.3;
-            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 2 - 1;
-            }
-            const noise = ctx.createBufferSource();
-            noise.buffer = noiseBuffer;
-            const noiseGain = ctx.createGain();
-            const noiseFilter = ctx.createBiquadFilter();
-            noiseFilter.type = 'lowpass';
-            noiseFilter.frequency.value = 2000;
-            noiseGain.gain.setValueAtTime(0, ctx.currentTime + 1.8);
-            noiseGain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 1.9);
-            noiseGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.2);
-            noise.connect(noiseFilter);
-            noiseFilter.connect(noiseGain);
-            noiseGain.connect(ctx.destination);
-            noise.start(ctx.currentTime + 1.8);
         } catch(e) {}
     }
 
@@ -355,19 +366,6 @@
                 50% { transform: translateY(-5px); }
             }
             
-            @keyframes portePulse {
-                0%, 100% { opacity: 0.3; }
-                50% { opacity: 0.8; }
-            }
-            
-            @keyframes porteGlitch {
-                0%, 90%, 100% { transform: translate(0); }
-                92% { transform: translate(-2px, 1px); }
-                94% { transform: translate(2px, -1px); }
-                96% { transform: translate(-1px, -1px); }
-                98% { transform: translate(1px, 1px); }
-            }
-            
             @keyframes doorCreak {
                 0% { transform: perspective(1200px) rotateY(0deg) translateZ(0); }
                 30% { transform: perspective(1200px) rotateY(-25deg) translateZ(20px); }
@@ -375,7 +373,7 @@
             }
             
             @keyframes lightFlood {
-                0%, 20% { opacity: 0; background: radial-gradient(ellipse at center, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 100%); }
+                0%, 20% { opacity: 0; }
                 60% { opacity: 0.5; }
                 100% { opacity: 1; background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 100%); }
             }
@@ -383,11 +381,6 @@
             @keyframes textReveal {
                 0% { opacity: 0; transform: translateY(20px); letter-spacing: 0.5em; }
                 100% { opacity: 1; transform: translateY(0); letter-spacing: 0.3em; }
-            }
-            
-            @keyframes particleFly {
-                0% { transform: translate(0, 0) scale(1); opacity: 1; }
-                100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
             }
 
             .porte-container {
@@ -420,14 +413,14 @@
             .porte-grid {
                 display: flex;
                 justify-content: center;
-                gap: 60px;
+                gap: 50px;
                 flex-wrap: wrap;
                 perspective: 1000px;
             }
             
             .porta {
-                width: 140px;
-                height: 240px;
+                width: 120px;
+                height: 210px;
                 position: relative;
                 cursor: pointer;
                 animation: porteFloat 6s ease-in-out infinite;
@@ -437,24 +430,6 @@
             .porta:nth-child(2) { animation-delay: -2s; }
             .porta:nth-child(3) { animation-delay: -4s; }
             
-            .porta-outer {
-                position: absolute;
-                top: -10px;
-                left: -10px;
-                right: -10px;
-                bottom: -10px;
-                border: 1px solid rgba(255,255,255,0.03);
-                transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            
-            .porta:hover .porta-outer {
-                border-color: rgba(255,255,255,0.1);
-                top: -20px;
-                left: -20px;
-                right: -20px;
-                bottom: -20px;
-            }
-            
             .porta-frame {
                 position: absolute;
                 top: 0;
@@ -462,68 +437,27 @@
                 width: 100%;
                 height: 100%;
                 border: 1px solid rgba(255,255,255,0.1);
-                background: linear-gradient(180deg, 
-                    rgba(255,255,255,0.03) 0%, 
-                    transparent 30%,
-                    transparent 70%,
-                    rgba(255,255,255,0.02) 100%);
-                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                overflow: hidden;
+                background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+                transition: all 0.5s ease;
             }
             
             .porta:hover .porta-frame {
                 border-color: var(--porta-color, rgba(255,255,255,0.4));
-                box-shadow: 
-                    0 0 60px rgba(255,255,255,0.05),
-                    inset 0 0 60px rgba(255,255,255,0.02),
-                    0 0 100px var(--porta-color-glow, rgba(255,255,255,0.1));
+                box-shadow: 0 0 60px var(--porta-glow, rgba(255,255,255,0.1));
             }
             
             .porta-inner {
                 position: absolute;
-                top: 15px;
-                left: 15px;
-                right: 15px;
-                bottom: 15px;
+                top: 12px;
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
                 border: 1px solid rgba(255,255,255,0.03);
                 transition: all 0.5s ease;
             }
             
             .porta:hover .porta-inner {
                 border-color: rgba(255,255,255,0.1);
-                top: 20px;
-                left: 20px;
-                right: 20px;
-                bottom: 20px;
-            }
-            
-            .porta-keyhole {
-                position: absolute;
-                top: 55%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 8px;
-                height: 20px;
-                background: rgba(0,0,0,0.8);
-                border-radius: 4px 4px 0 0;
-                opacity: 0.3;
-                transition: all 0.4s ease;
-            }
-            
-            .porta-keyhole::after {
-                content: '';
-                position: absolute;
-                bottom: -8px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 14px;
-                height: 14px;
-                background: rgba(0,0,0,0.8);
-                border-radius: 50%;
-            }
-            
-            .porta:hover .porta-keyhole {
-                opacity: 0;
             }
             
             .porta-glow {
@@ -535,7 +469,6 @@
                 height: 4px;
                 border-radius: 50%;
                 background: var(--porta-color, #fff);
-                box-shadow: 0 0 20px var(--porta-color, #fff);
                 opacity: 0;
                 transition: all 0.5s ease;
             }
@@ -544,7 +477,7 @@
                 opacity: 1;
                 width: 8px;
                 height: 8px;
-                box-shadow: 0 0 40px var(--porta-color, #fff), 0 0 80px var(--porta-color, #fff);
+                box-shadow: 0 0 40px var(--porta-color, #fff);
             }
             
             .porta-icon {
@@ -552,14 +485,14 @@
                 top: 25%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                font-size: 1.5rem;
-                color: rgba(255,255,255,0);
+                font-size: 1.4rem;
+                color: transparent;
                 transition: all 0.5s ease;
-                text-shadow: 0 0 20px var(--porta-color, #fff);
             }
             
             .porta:hover .porta-icon {
                 color: var(--porta-color, rgba(255,255,255,0.6));
+                text-shadow: 0 0 20px var(--porta-color, #fff);
             }
             
             .porta-hint {
@@ -568,30 +501,30 @@
                 left: 50%;
                 transform: translate(-50%, -50%);
                 font-family: 'Cormorant Garamond', Georgia, serif;
-                font-size: 0.95rem;
+                font-size: 0.85rem;
                 font-style: italic;
-                color: rgba(255,255,255,0);
+                color: transparent;
                 text-align: center;
-                padding: 20px;
-                line-height: 1.7;
+                padding: 15px;
+                line-height: 1.6;
                 transition: all 0.5s ease;
                 pointer-events: none;
                 width: 100%;
             }
             
             .porta:hover .porta-hint {
-                color: rgba(255,255,255,0.7);
+                color: rgba(255,255,255,0.6);
             }
             
             .porta-number {
                 position: absolute;
-                bottom: -35px;
+                bottom: -30px;
                 left: 50%;
                 transform: translateX(-50%);
                 font-family: 'Space Mono', monospace;
-                font-size: 0.6rem;
+                font-size: 0.55rem;
                 color: rgba(255,255,255,0.1);
-                letter-spacing: 0.2em;
+                letter-spacing: 0.15em;
                 transition: color 0.3s;
             }
             
@@ -599,30 +532,7 @@
                 color: var(--porta-color, rgba(255,255,255,0.4));
             }
             
-            /* Scanlines effect */
-            .porta-scanlines {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0,0,0,0.1) 2px,
-                    rgba(0,0,0,0.1) 4px
-                );
-                pointer-events: none;
-                opacity: 0;
-                transition: opacity 0.3s;
-            }
-            
-            .porta:hover .porta-scanlines {
-                opacity: 1;
-            }
-            
-            /* Transizione potenziata */
+            /* Transizione */
             .porta-transition {
                 position: fixed;
                 top: 0;
@@ -647,41 +557,26 @@
             
             .porta-transition-hint {
                 font-family: 'Cormorant Garamond', Georgia, serif;
-                font-size: 1.4rem;
+                font-size: 1.3rem;
                 font-style: italic;
-                color: rgba(255,255,255,0);
+                color: transparent;
                 margin-bottom: 50px;
-                letter-spacing: 0.3em;
-                transition: all 1s ease;
+                letter-spacing: 0.2em;
             }
             
             .porta-transition.active .porta-transition-hint {
-                animation: textReveal 1s ease forwards;
-                animation-delay: 0.3s;
-            }
-            
-            .porta-transition-door-container {
-                position: relative;
-                width: 100px;
-                height: 200px;
-                transform-style: preserve-3d;
+                animation: textReveal 1s ease forwards 0.3s;
             }
             
             .porta-transition-door {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
+                width: 90px;
+                height: 180px;
                 border: 1px solid rgba(255,255,255,0.3);
-                background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
                 transform-origin: left center;
-                transform-style: preserve-3d;
             }
             
             .porta-transition.active .porta-transition-door {
-                animation: doorCreak 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-                animation-delay: 0.5s;
+                animation: doorCreak 2.2s ease forwards 0.5s;
             }
             
             .porta-transition-light {
@@ -694,50 +589,32 @@
             }
             
             .porta-transition.active .porta-transition-light {
-                animation: lightFlood 2.2s ease forwards;
-                animation-delay: 0.5s;
+                animation: lightFlood 2.2s ease forwards 0.5s;
             }
             
-            .porta-transition-particles {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 0;
-                height: 0;
-            }
-            
-            .porta-particle {
-                position: absolute;
-                width: 4px;
-                height: 4px;
-                background: #fff;
-                border-radius: 50%;
-                animation: particleFly 1.5s ease-out forwards;
-            }
-            
-            .porta-map-hint {
+            /* Link alla storia */
+            .porta-story-link {
                 position: fixed;
                 bottom: 30px;
                 left: 50%;
                 transform: translateX(-50%);
                 font-family: 'Space Mono', monospace;
-                font-size: 0.65rem;
-                color: rgba(255,255,255,0.1);
+                font-size: 0.6rem;
+                color: rgba(255,255,255,0.12);
                 letter-spacing: 0.15em;
                 text-decoration: none;
                 transition: color 0.3s;
                 z-index: 50;
             }
             
-            .porta-map-hint:hover {
-                color: rgba(255,255,255,0.3);
+            .porta-story-link:hover {
+                color: rgba(255,255,255,0.35);
             }
             
-            @media (max-width: 700px) {
-                .porte-grid { gap: 30px; }
-                .porta { width: 100px; height: 180px; }
-                .porta-hint { font-size: 0.8rem; padding: 10px; }
-                .porta-icon { font-size: 1.2rem; }
+            @media (max-width: 600px) {
+                .porte-grid { gap: 25px; }
+                .porta { width: 100px; height: 175px; }
+                .porta-hint { font-size: 0.75rem; }
             }
         `;
         document.head.appendChild(style);
@@ -749,30 +626,31 @@
             document.body.appendChild(container);
         }
         
+        const passaggiUrl = getPassaggiUrl(current);
+        
         container.className = 'porte-container';
         container.innerHTML = `
             <div class="porte-label">passaggi</div>
             <div class="porte-grid">
-                ${data.exits.map((exit, i) => `
+                ${data.exits.map((exit, i) => {
+                    const exitKey = exit.path.replace('../', '').replace('celle/', 'celle/');
+                    const exitData = passages[exitKey];
+                    return `
                     <div class="porta" 
                          data-path="${exit.path}" 
                          data-hint="${exit.hint}"
                          data-freq="${150 + i * 80}"
-                         style="--porta-color: ${passages[exit.path.replace('../', '').replace('celle/', 'celle/')]?.color || '#fff'}; --porta-color-glow: ${passages[exit.path.replace('../', '').replace('celle/', 'celle/')]?.color || '#fff'}33">
-                        <div class="porta-outer"></div>
-                        <div class="porta-frame">
-                            <div class="porta-scanlines"></div>
-                        </div>
+                         style="--porta-color: ${exitData?.color || '#fff'}; --porta-glow: ${exitData?.color || '#fff'}33">
+                        <div class="porta-frame"></div>
                         <div class="porta-inner"></div>
-                        <div class="porta-keyhole"></div>
                         <div class="porta-glow"></div>
                         <div class="porta-icon">${exit.icon || '◇'}</div>
                         <div class="porta-hint">${exit.hint}</div>
                         <div class="porta-number">${String(i + 1).padStart(2, '0')}</div>
                     </div>
-                `).join('')}
+                `}).join('')}
             </div>
-            <a href="${current.startsWith('celle/') ? '../celle.html' : 'celle.html'}" class="porta-map-hint">oppure, la mappa →</a>
+            <a href="${passaggiUrl}" class="porta-story-link">← torna alla storia</a>
         `;
 
         // Transizione
@@ -780,10 +658,8 @@
         transition.className = 'porta-transition';
         transition.innerHTML = `
             <div class="porta-transition-hint"></div>
-            <div class="porta-transition-door-container">
-                <div class="porta-transition-door"></div>
+            <div class="porta-transition-door">
                 <div class="porta-transition-light"></div>
-                <div class="porta-transition-particles"></div>
             </div>
         `;
         document.body.appendChild(transition);
@@ -792,7 +668,7 @@
         container.querySelectorAll('.porta').forEach(porta => {
             porta.addEventListener('mouseenter', () => {
                 const freq = parseInt(porta.dataset.freq) || 200;
-                playDoorSound(freq, 'sine');
+                playDoorSound(freq);
             });
             
             porta.addEventListener('click', () => {
@@ -800,21 +676,6 @@
                 const hint = porta.dataset.hint;
                 
                 transition.querySelector('.porta-transition-hint').textContent = hint;
-                
-                // Create particles
-                const particlesContainer = transition.querySelector('.porta-transition-particles');
-                particlesContainer.innerHTML = '';
-                for (let i = 0; i < 20; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'porta-particle';
-                    const angle = (Math.PI * 2 * i) / 20;
-                    const distance = 100 + Math.random() * 100;
-                    particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
-                    particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-                    particle.style.animationDelay = `${1.5 + Math.random() * 0.5}s`;
-                    particlesContainer.appendChild(particle);
-                }
-                
                 playTransitionSound();
                 transition.classList.add('active');
                 
