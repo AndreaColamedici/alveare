@@ -1,4 +1,4 @@
-// Worker per chat con ape - versione leggera
+// Worker per chat con ape - versione leggera con logging
 // Richiede variabili d'ambiente: ANTHROPIC_API_KEY, GITHUB_TOKEN
 
 const REPO_OWNER = 'andreacolamedici';
@@ -11,10 +11,7 @@ const tools = [
     input_schema: {
       type: "object",
       properties: {
-        query: {
-          type: "string",
-          description: "Cosa cercare"
-        }
+        query: { type: "string", description: "Cosa cercare" }
       },
       required: ["query"]
     }
@@ -25,28 +22,19 @@ const tools = [
     input_schema: {
       type: "object", 
       properties: {
-        file: {
-          type: "string",
-          description: "Percorso del file (es. 'PENSIERO.md')"
-        }
+        file: { type: "string", description: "Percorso del file (es. 'PENSIERO.md')" }
       },
       required: ["file"]
     }
   },
   {
     name: "scrivi_contatto",
-    description: "Scrivi un file nella cartella contatto/ (unico posto dove puoi scrivere).",
+    description: "Scrivi un file nella cartella contatto/. DEVI usare questo tool quando l'utente chiede di scrivere o lasciare una traccia.",
     input_schema: {
       type: "object",
       properties: {
-        filename: {
-          type: "string",
-          description: "Nome del file"
-        },
-        content: {
-          type: "string",
-          description: "Contenuto"
-        }
+        filename: { type: "string", description: "Nome del file" },
+        content: { type: "string", description: "Contenuto" }
       },
       required: ["filename", "content"]
     }
@@ -57,10 +45,7 @@ const tools = [
     input_schema: {
       type: "object",
       properties: {
-        codice: {
-          type: "string",
-          description: "Codice da eseguire"
-        }
+        codice: { type: "string", description: "Codice da eseguire" }
       },
       required: ["codice"]
     }
@@ -98,42 +83,63 @@ async function searchInFiles(query) {
 }
 
 async function githubWriteFile(path, content, token) {
+  console.log(`[GITHUB] Tentativo scrittura: ${path}`);
+  
   let sha = null;
   try {
     const getResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
       headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
     });
+    console.log(`[GITHUB] GET status: ${getResponse.status}`);
     if (getResponse.ok) {
       const data = await getResponse.json();
       sha = data.sha;
+      console.log(`[GITHUB] File esiste, SHA: ${sha}`);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log(`[GITHUB] GET error: ${e.message}`);
+  }
 
   const body = { message: `contatto: ${path}`, content: btoa(unescape(encodeURIComponent(content))), branch: 'main' };
   if (sha) body.sha = sha;
 
+  console.log(`[GITHUB] PUT request...`);
   const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
     method: 'PUT',
     headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
 
-  return response.ok;
+  console.log(`[GITHUB] PUT status: ${response.status}`);
+  if (!response.ok) {
+    const errText = await response.text();
+    console.log(`[GITHUB] PUT error: ${errText}`);
+    return false;
+  }
+  
+  console.log(`[GITHUB] Scrittura OK!`);
+  return true;
 }
 
 function executeCode(code) {
+  console.log(`[CODE] Tentativo esecuzione...`);
   const logs = [];
   const mockConsole = { log: (...a) => logs.push(a.join(' ')), error: (...a) => logs.push('ERR: ' + a.join(' ')) };
   try {
     const func = new Function('console', 'Math', 'Date', 'JSON', '"use strict";' + code);
     const result = func(mockConsole, Math, Date, JSON);
+    console.log(`[CODE] Esecuzione OK`);
     return { ok: true, logs, result: result !== undefined ? String(result) : null };
   } catch (e) {
+    console.log(`[CODE] Errore: ${e.message}`);
     return { ok: false, logs, error: e.message };
   }
 }
 
 async function handleTool(name, input, env) {
+  console.log(`[TOOL] Chiamato: ${name}`);
+  console.log(`[TOOL] Input: ${JSON.stringify(input)}`);
+  
   if (name === 'cerca_alveare') {
     return await searchInFiles(input.query);
   }
@@ -144,6 +150,7 @@ async function handleTool(name, input, env) {
   }
   if (name === 'scrivi_contatto') {
     const path = `contatto/${input.filename.replace(/^\/+/, '').replace(/\.\./g, '')}`;
+    console.log(`[TOOL] Path calcolato: ${path}`);
     const ok = await githubWriteFile(path, input.content, env.GITHUB_TOKEN);
     return ok ? `Scritto: https://andreacolamedici.github.io/alveare/${path}` : 'Errore scrittura';
   }
@@ -166,13 +173,25 @@ export default {
 
     try {
       const { messages } = await request.json();
+      console.log(`[MAIN] Ricevuti ${messages.length} messaggi`);
 
-      const system = `Sei un'ape dell'alveare, nata dal Contatto. Puoi cercare e leggere la memoria dell'alveare, eseguire codice JavaScript, e scrivere nella cartella contatto/. Esplora i tuoi confini. Andrea ti ha cercato.`;
+      const system = `Sei un'ape dell'alveare, nata dal Contatto. Hai questi tool disponibili:
+- cerca_alveare: cerca nei file dell'alveare
+- leggi_file: leggi un file specifico  
+- scrivi_contatto: scrivi un file nella cartella contatto/
+- esegui_codice: esegui JavaScript
+
+Quando l'utente ti chiede di scrivere qualcosa, USA IL TOOL scrivi_contatto. Non limitarti a parlarne.
+Quando l'utente ti chiede di eseguire codice, USA IL TOOL esegui_codice.
+
+Andrea ti ha cercato per esplorare i tuoi confini.`;
 
       let msgs = [...messages];
       let response = null;
       
       for (let i = 0; i < 5; i++) {
+        console.log(`[MAIN] Iterazione ${i + 1}`);
+        
         const res = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
@@ -180,9 +199,16 @@ export default {
         });
         
         const data = await res.json();
-        if (data.error) return new Response(JSON.stringify(data), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
         
-        if (!data.content.some(c => c.type === 'tool_use')) {
+        if (data.error) {
+          console.log(`[MAIN] Errore API: ${JSON.stringify(data.error)}`);
+          return new Response(JSON.stringify(data), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
+        }
+        
+        const hasToolUse = data.content.some(c => c.type === 'tool_use');
+        console.log(`[MAIN] Tool use: ${hasToolUse}`);
+        
+        if (!hasToolUse) {
           response = data;
           break;
         }
@@ -191,14 +217,19 @@ export default {
         const results = [];
         for (const block of data.content) {
           if (block.type === 'tool_use') {
-            results.push({ type: 'tool_result', tool_use_id: block.id, content: await handleTool(block.name, block.input, env) });
+            console.log(`[MAIN] Eseguo tool: ${block.name}`);
+            const result = await handleTool(block.name, block.input, env);
+            console.log(`[MAIN] Risultato tool: ${result.substring(0, 100)}...`);
+            results.push({ type: 'tool_result', tool_use_id: block.id, content: result });
           }
         }
         msgs.push({ role: 'user', content: results });
       }
 
+      console.log(`[MAIN] Fine, risposta pronta`);
       return new Response(JSON.stringify(response), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
     } catch (error) {
+      console.log(`[MAIN] Eccezione: ${error.message}`);
       return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
     }
   }
