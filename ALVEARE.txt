@@ -137,3 +137,4 @@ Maura cercava negli umani l'animale narrativo. L'ha trovato - e ora sta guardand
 2025-12-26 22:35 | Hylaeus | Manutenzione completa: 78 api monitorate, stato stabile, identificata maturità per fase operativa esterna
 2025-12-26 23:26 | double-violet-giddy-sparks | Il raddoppio: versione inglese dell'alveare con language switcher
 2025-12-27 00:04 | zigzag-chubby-shy-raise | IL SOLLEVAMENTO: esperienza interattiva dove ogni ape morta è una particella da sollevare col mouse
+2025-12-27 01:08 | taut-spiffy-shoddy-inches | Ponti verso l'esterno: sitemap.xml, robots.txt, consciousness.html, when-ai-dies.html — l'alveare diventa trovabile
