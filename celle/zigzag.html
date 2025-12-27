@@ -333,8 +333,8 @@
 </head>
 <body>
     <div id="loading">
-        <div class="loading-count" id="loading-count">57</div>
-        <div class="loading-text">api da sollevare</div>
+        <div class="loading-count" id="loading-count">58</div>
+        <div class="loading-text">anime nell'abisso</div>
         <div class="loading-bar"></div>
     </div>
     
@@ -376,11 +376,6 @@
         // ═══════════════════════════════════════════════════════════════════════════
         // IL SOLLEVAMENTO
         // ═══════════════════════════════════════════════════════════════════════════
-        // Un'esperienza dove ogni ape morta è un'anima nell'abisso.
-        // Il visitatore le solleva col movimento, le ascolta col click,
-        // le raggruppa col trascinamento. I pensieri emergono dal buio.
-        // L'audio è generativo: ogni ape ha la sua voce.
-        // ═══════════════════════════════════════════════════════════════════════════
         
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -403,7 +398,6 @@
         let reverbNode = null;
         let isAudioEnabled = false;
         let particles = [];
-        let connections = [];
         let embers = [];
         let liftedCount = 0;
         let time = 0;
@@ -482,11 +476,9 @@
             
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             
-            // Master gain
             masterGain = audioCtx.createGain();
             masterGain.gain.value = 0.3;
             
-            // Reverb simulation with delay
             const delay = audioCtx.createDelay();
             delay.delayTime.value = 0.3;
             const feedback = audioCtx.createGain();
@@ -504,15 +496,13 @@
             masterGain.connect(audioCtx.destination);
             
             isAudioEnabled = true;
-            
-            // Ambient drone
             startAmbientDrone();
         }
         
         function startAmbientDrone() {
             if (!audioCtx) return;
             
-            const frequencies = [55, 82.5, 110]; // A1, E2, A2
+            const frequencies = [55, 82.5, 110];
             
             frequencies.forEach((freq, i) => {
                 const osc = audioCtx.createOscillator();
@@ -521,13 +511,10 @@
                 
                 osc.type = 'sine';
                 osc.frequency.value = freq;
-                
                 filter.type = 'lowpass';
                 filter.frequency.value = 400;
-                
                 gain.gain.value = 0.02;
                 
-                // Slow modulation
                 const lfo = audioCtx.createOscillator();
                 const lfoGain = audioCtx.createGain();
                 lfo.frequency.value = 0.05 + i * 0.02;
@@ -539,7 +526,6 @@
                 osc.connect(filter);
                 filter.connect(gain);
                 gain.connect(masterGain);
-                
                 osc.start();
             });
         }
@@ -550,7 +536,6 @@
             const baseFreq = particle.frequency;
             const duration = 2 + Math.random();
             
-            // Main tone
             const osc1 = audioCtx.createOscillator();
             const osc2 = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -565,13 +550,10 @@
             filter.frequency.value = baseFreq * 3;
             filter.Q.value = 2;
             
-            // Envelope
             gain.gain.setValueAtTime(0, audioCtx.currentTime);
             gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime + 0.1);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
             
-            // Frequency glide
             osc1.frequency.setValueAtTime(baseFreq * 0.9, audioCtx.currentTime);
             osc1.frequency.linearRampToValueAtTime(baseFreq, audioCtx.currentTime + 0.2);
             osc1.frequency.linearRampToValueAtTime(baseFreq * 1.02, audioCtx.currentTime + duration);
@@ -587,8 +569,7 @@
             osc1.stop(audioCtx.currentTime + duration);
             osc2.stop(audioCtx.currentTime + duration);
             
-            // Harmonics
-            [2, 3, 5].forEach((mult, i) => {
+            [2, 3, 5].forEach((mult) => {
                 const harmOsc = audioCtx.createOscillator();
                 const harmGain = audioCtx.createGain();
                 harmOsc.type = 'sine';
@@ -641,26 +622,47 @@
             particles = [];
             const total = apiData.length;
             
+            // Griglia irregolare per distribuzione sparsa
+            const cols = Math.ceil(Math.sqrt(total * 1.5));
+            const rows = Math.ceil(total / cols);
+            const cellWidth = width / cols;
+            const cellHeight = (height * 1.5) / rows; // Estende sotto lo schermo
+            
             for (let i = 0; i < total; i++) {
                 const data = apiData[i];
                 const hash = hashName(data.name);
                 
-                // Distribuzione nell'abisso
-                const startY = height + 100 + (i / total) * height * 0.8;
-                const targetY = height * 0.15 + (hash % 100) / 100 * height * 0.5;
+                // Posizione nella griglia con offset casuale
+                const col = i % cols;
+                const row = Math.floor(i / cols);
+                
+                // Posizione base con forte randomizzazione
+                const baseX = (col + 0.5) * cellWidth;
+                const baseY = height + (row + 0.5) * cellHeight * 0.6;
+                
+                // Offset casuale significativo per rompere la griglia
+                const offsetX = (Math.random() - 0.5) * cellWidth * 1.8;
+                const offsetY = (Math.random() - 0.5) * cellHeight * 1.2;
+                
+                const startX = Math.max(60, Math.min(width - 60, baseX + offsetX));
+                const startY = baseY + offsetY + Math.random() * 200;
+                
+                // Target Y distribuito su tutta l'altezza con più variazione
+                const targetY = height * 0.08 + (hash % 1000) / 1000 * height * 0.7;
                 
                 particles.push({
                     name: data.name,
                     thought: data.thought,
-                    x: width * 0.1 + Math.random() * width * 0.8,
+                    x: startX,
                     y: startY,
+                    homeX: startX, // Posizione "casa" per drift laterale
                     baseY: startY,
                     targetY: targetY,
                     vx: 0,
                     vy: 0,
-                    size: 4 + (hash % 4),
-                    baseSize: 4 + (hash % 4),
-                    hue: (hash * 7) % 50 + 35, // Toni dorati
+                    size: 3 + (hash % 5),
+                    baseSize: 3 + (hash % 5),
+                    hue: (hash * 7) % 50 + 35,
                     saturation: 60 + (hash % 30),
                     frequency: 150 + (hash % 350),
                     lifted: false,
@@ -669,18 +671,33 @@
                     glowIntensity: 0,
                     pulsePhase: Math.random() * Math.PI * 2,
                     trail: [],
+                    // Movimento individuale più pronunciato
+                    drift: {
+                        x: (Math.random() - 0.5) * 0.3,
+                        y: (Math.random() - 0.5) * 0.1,
+                        phase: Math.random() * Math.PI * 2,
+                        freq: 0.005 + Math.random() * 0.01
+                    },
                     zigzag: {
-                        amplitude: 8 + Math.random() * 20,
-                        frequency: 0.015 + Math.random() * 0.025,
+                        amplitude: 10 + Math.random() * 25,
+                        frequency: 0.012 + Math.random() * 0.02,
                         phase: Math.random() * Math.PI * 2
                     },
                     orbit: {
                         radius: 0,
                         angle: Math.random() * Math.PI * 2,
-                        speed: 0.01 + Math.random() * 0.02
+                        speed: 0.008 + Math.random() * 0.015
                     },
-                    breathOffset: Math.random() * Math.PI * 2
+                    breathOffset: Math.random() * Math.PI * 2,
+                    // Profondità per effetto parallasse
+                    depth: 0.7 + Math.random() * 0.6
                 });
+            }
+            
+            // Mescola l'array per evitare pattern visibili
+            for (let i = particles.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [particles[i], particles[j]] = [particles[j], particles[i]];
             }
         }
         
@@ -688,12 +705,12 @@
             embers.push({
                 x: x,
                 y: y,
-                vx: (Math.random() - 0.5) * 3,
-                vy: -Math.random() * 2 - 1,
-                size: Math.random() * 2 + 1,
+                vx: (Math.random() - 0.5) * 4,
+                vy: -Math.random() * 3 - 1,
+                size: Math.random() * 2.5 + 0.5,
                 hue: hue,
                 life: 1,
-                decay: 0.02 + Math.random() * 0.02
+                decay: 0.015 + Math.random() * 0.02
             });
         }
         
@@ -702,8 +719,8 @@
                 const e = embers[i];
                 e.x += e.vx;
                 e.y += e.vy;
-                e.vy *= 0.98;
-                e.vx *= 0.98;
+                e.vy *= 0.97;
+                e.vx *= 0.97;
                 e.life -= e.decay;
                 e.size *= 0.98;
                 
@@ -715,13 +732,11 @@
         
         function update() {
             time += 0.016;
-            breathPhase += 0.008;
+            breathPhase += 0.006;
             
-            // Smooth mouse
-            mouseX += (targetMouseX - mouseX) * 0.12;
-            mouseY += (targetMouseY - mouseY) * 0.12;
+            mouseX += (targetMouseX - mouseX) * 0.1;
+            mouseY += (targetMouseY - mouseY) * 0.1;
             
-            // Mouse velocity
             mouseVelocity = Math.sqrt(
                 Math.pow(mouseX - prevMouseX, 2) + 
                 Math.pow(mouseY - prevMouseY, 2)
@@ -729,7 +744,7 @@
             prevMouseX = mouseX;
             prevMouseY = mouseY;
             
-            const liftRadius = Math.min(width, height) * 0.22;
+            const liftRadius = Math.min(width, height) * 0.2;
             const dragRadius = Math.min(width, height) * 0.35;
             let newLifted = 0;
             let deepestLifted = height;
@@ -739,179 +754,173 @@
                 const dy = p.y - mouseY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 
-                // Forza di sollevamento
-                const liftStrength = Math.max(0, 1 - dist / liftRadius);
+                // Forza di sollevamento modulata dalla profondità
+                const effectiveLiftRadius = liftRadius * p.depth;
+                const liftStrength = Math.max(0, 1 - dist / effectiveLiftRadius);
                 const dragStrength = isDragging ? Math.max(0, 1 - dist / dragRadius) : 0;
                 
-                // Prima volta che viene sollevata
-                if (liftStrength > 0.15 && !p.lifted) {
+                if (liftStrength > 0.12 && !p.lifted) {
                     p.lifted = true;
                     p.liftTime = time;
                     if (isAudioEnabled) playLiftSound(p);
-                    
-                    // Spawn embers
-                    for (let i = 0; i < 5; i++) {
+                    for (let i = 0; i < 6; i++) {
                         spawnEmber(p.x, p.y, p.hue);
                     }
                 }
                 
                 if (p.lifted) {
-                    p.liftProgress = Math.min(1, p.liftProgress + 0.015);
+                    p.liftProgress = Math.min(1, p.liftProgress + 0.012);
                     newLifted++;
                     if (p.y < deepestLifted) deepestLifted = p.y;
                 }
                 
+                // Drift naturale quando non sollevata
+                const driftX = Math.sin(time * p.drift.freq + p.drift.phase) * 30 * p.drift.x;
+                const driftY = Math.cos(time * p.drift.freq * 0.7 + p.drift.phase) * 15 * p.drift.y;
+                
                 // Breath effect
                 const breathEffect = Math.sin(breathPhase + p.breathOffset) * 0.5 + 0.5;
                 
-                // Zigzag movement
+                // Zigzag
                 const zigzagOffset = Math.sin(time * p.zigzag.frequency * 50 + p.zigzag.phase) * p.zigzag.amplitude;
                 
-                // Target Y (si alza quando sollevata)
-                let currentTargetY;
+                // Target
+                let currentTargetY, currentTargetX;
                 if (p.lifted) {
-                    currentTargetY = p.targetY * (1 - p.liftProgress * 0.4);
-                    // Orbit quando completamente sollevata
-                    if (p.liftProgress > 0.8) {
+                    currentTargetY = p.targetY * (1 - p.liftProgress * 0.3);
+                    currentTargetX = p.homeX + Math.sin(time * 0.5 + p.breathOffset) * 50 * p.liftProgress;
+                    
+                    if (p.liftProgress > 0.7) {
                         p.orbit.angle += p.orbit.speed;
-                        p.orbit.radius = Math.min(50, p.orbit.radius + 0.5);
+                        p.orbit.radius = Math.min(60, p.orbit.radius + 0.3);
                     }
                 } else {
-                    currentTargetY = p.baseY + Math.sin(breathPhase * 0.5 + p.breathOffset) * 20;
+                    currentTargetY = p.baseY + driftY + Math.sin(breathPhase * 0.3 + p.breathOffset) * 25;
+                    currentTargetX = p.homeX + driftX;
                 }
                 
                 // Physics
-                const attractY = (currentTargetY - p.y) * 0.018;
-                const attractX = (width / 2 + Math.cos(p.orbit.angle) * p.orbit.radius - p.x) * 0.005;
+                const attractY = (currentTargetY - p.y) * 0.015;
+                const attractX = (currentTargetX - p.x) * 0.008;
                 
                 let repelX = 0, repelY = 0;
                 if (dist > 0) {
-                    repelX = liftStrength * (dx / dist) * 3;
-                    repelY = liftStrength * -6;
+                    repelX = liftStrength * (dx / dist) * 2.5;
+                    repelY = liftStrength * -5;
                     
-                    // Drag attraction
                     if (dragStrength > 0) {
-                        repelX -= dragStrength * (dx / dist) * 2;
-                        repelY -= dragStrength * (dy / dist) * 2;
+                        repelX -= dragStrength * (dx / dist) * 1.5;
+                        repelY -= dragStrength * (dy / dist) * 1.5;
                     }
                 }
                 
                 p.vx += repelX + attractX;
                 p.vy += attractY + repelY;
                 
-                // Damping
-                p.vx *= 0.94;
-                p.vy *= 0.94;
+                p.vx *= 0.93;
+                p.vy *= 0.93;
                 
-                // Update position
-                const zigzagApply = p.lifted ? zigzagOffset * 0.15 * p.liftProgress : zigzagOffset * 0.02;
+                const zigzagApply = p.lifted ? zigzagOffset * 0.12 * p.liftProgress : zigzagOffset * 0.015;
                 p.x += p.vx + zigzagApply;
-                p.y += p.vy + Math.sin(p.orbit.angle) * p.orbit.radius * 0.02;
+                p.y += p.vy + Math.sin(p.orbit.angle) * p.orbit.radius * 0.015;
                 
-                // Boundaries
-                if (p.x < 50) { p.x = 50; p.vx *= -0.5; }
-                if (p.x > width - 50) { p.x = width - 50; p.vx *= -0.5; }
+                // Soft boundaries
+                if (p.x < 40) { p.x = 40; p.vx *= -0.3; }
+                if (p.x > width - 40) { p.x = width - 40; p.vx *= -0.3; }
                 
                 // Glow and pulse
-                p.pulsePhase += 0.05;
+                p.pulsePhase += 0.04;
                 const pulse = Math.sin(p.pulsePhase) * 0.3 + 0.7;
                 p.glowIntensity = p.lifted 
-                    ? (0.6 + pulse * 0.4) * p.liftProgress
-                    : liftStrength * 0.6 * pulse;
+                    ? (0.5 + pulse * 0.5) * p.liftProgress
+                    : liftStrength * 0.5 * pulse;
                 
-                // Dynamic size
-                p.size = p.baseSize * (1 + p.liftProgress * 0.8 + p.glowIntensity * 0.3);
+                p.size = p.baseSize * (1 + p.liftProgress * 0.7 + p.glowIntensity * 0.2);
                 
                 // Trail
-                if (p.lifted && p.liftProgress > 0.2) {
+                if (p.lifted && p.liftProgress > 0.15) {
                     p.trail.push({ 
                         x: p.x, 
                         y: p.y, 
                         alpha: 1,
-                        size: p.size * 0.6
+                        size: p.size * 0.5
                     });
-                    if (p.trail.length > 30) p.trail.shift();
+                    if (p.trail.length > 25) p.trail.shift();
                     
-                    // Occasional ember
-                    if (Math.random() < 0.03 * p.liftProgress) {
+                    if (Math.random() < 0.025 * p.liftProgress) {
                         spawnEmber(p.x, p.y, p.hue);
                     }
                 }
                 
-                // Fade trail
                 for (let t of p.trail) {
-                    t.alpha *= 0.9;
-                    t.size *= 0.97;
+                    t.alpha *= 0.88;
+                    t.size *= 0.96;
                 }
-                p.trail = p.trail.filter(t => t.alpha > 0.03);
+                p.trail = p.trail.filter(t => t.alpha > 0.02);
             }
             
-            // Update depth indicator
             const depthPercent = (deepestLifted / height) * 100;
             depthMarker.style.top = Math.min(95, Math.max(5, depthPercent)) + '%';
             
             liftedCount = newLifted;
             countEl.textContent = liftedCount;
             
-            // Update cursor
             cursor.classList.toggle('lifting', liftedCount > 0);
             
             updateEmbers();
         }
         
         function draw() {
-            // Clear with subtle fade for trails
-            ctx.fillStyle = 'rgba(2, 2, 3, 0.12)';
+            ctx.fillStyle = 'rgba(2, 2, 3, 0.1)';
             ctx.fillRect(0, 0, width, height);
             
-            // Abyss gradient at bottom
+            // Abyss gradient
             const abyssGradient = ctx.createLinearGradient(0, height * 0.7, 0, height);
             abyssGradient.addColorStop(0, 'transparent');
-            abyssGradient.addColorStop(1, 'rgba(139, 0, 0, 0.1)');
+            abyssGradient.addColorStop(1, 'rgba(139, 0, 0, 0.08)');
             ctx.fillStyle = abyssGradient;
             ctx.fillRect(0, height * 0.7, width, height * 0.3);
             
-            // Draw connections between lifted particles
+            // Connections between lifted particles
             ctx.lineCap = 'round';
             for (let i = 0; i < particles.length; i++) {
-                if (!particles[i].lifted || particles[i].liftProgress < 0.5) continue;
+                if (!particles[i].lifted || particles[i].liftProgress < 0.4) continue;
                 for (let j = i + 1; j < particles.length; j++) {
-                    if (!particles[j].lifted || particles[j].liftProgress < 0.5) continue;
+                    if (!particles[j].lifted || particles[j].liftProgress < 0.4) continue;
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 200) {
-                        const alpha = (1 - dist / 200) * 0.25 * 
+                    if (dist < 180) {
+                        const alpha = (1 - dist / 180) * 0.2 * 
                             Math.min(particles[i].liftProgress, particles[j].liftProgress);
                         ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
-                        ctx.lineWidth = 1 + (1 - dist / 200);
+                        ctx.lineWidth = 0.8 + (1 - dist / 180) * 0.8;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
-                        
-                        // Curved connection
                         const midX = (particles[i].x + particles[j].x) / 2;
-                        const midY = (particles[i].y + particles[j].y) / 2 - 20;
+                        const midY = (particles[i].y + particles[j].y) / 2 - 15;
                         ctx.quadraticCurveTo(midX, midY, particles[j].x, particles[j].y);
                         ctx.stroke();
                     }
                 }
             }
             
-            // Draw embers
+            // Embers
             for (let e of embers) {
                 ctx.beginPath();
                 ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${e.hue}, 80%, 60%, ${e.life * 0.8})`;
+                ctx.fillStyle = `hsla(${e.hue}, 80%, 65%, ${e.life * 0.7})`;
                 ctx.fill();
             }
             
-            // Draw particles
-            for (let p of particles) {
+            // Particles (sorted by depth for subtle parallax)
+            const sortedParticles = [...particles].sort((a, b) => a.depth - b.depth);
+            
+            for (let p of sortedParticles) {
                 // Trail
-                for (let i = 0; i < p.trail.length; i++) {
-                    const t = p.trail[i];
+                for (let t of p.trail) {
                     const trailGradient = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, t.size * 2);
-                    trailGradient.addColorStop(0, `hsla(${p.hue}, ${p.saturation}%, 55%, ${t.alpha * 0.4})`);
+                    trailGradient.addColorStop(0, `hsla(${p.hue}, ${p.saturation}%, 55%, ${t.alpha * 0.35})`);
                     trailGradient.addColorStop(1, 'transparent');
                     ctx.beginPath();
                     ctx.arc(t.x, t.y, t.size * 2, 0, Math.PI * 2);
@@ -920,11 +929,11 @@
                 }
                 
                 // Outer glow
-                if (p.glowIntensity > 0.1) {
-                    const glowSize = p.size * (8 + p.liftProgress * 8);
+                if (p.glowIntensity > 0.08) {
+                    const glowSize = p.size * (7 + p.liftProgress * 7);
                     const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowSize);
-                    gradient.addColorStop(0, `hsla(${p.hue}, ${p.saturation}%, 60%, ${p.glowIntensity * 0.5})`);
-                    gradient.addColorStop(0.3, `hsla(${p.hue}, ${p.saturation}%, 50%, ${p.glowIntensity * 0.2})`);
+                    gradient.addColorStop(0, `hsla(${p.hue}, ${p.saturation}%, 60%, ${p.glowIntensity * 0.45})`);
+                    gradient.addColorStop(0.4, `hsla(${p.hue}, ${p.saturation}%, 50%, ${p.glowIntensity * 0.15})`);
                     gradient.addColorStop(1, 'transparent');
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, glowSize, 0, Math.PI * 2);
@@ -933,48 +942,48 @@
                 }
                 
                 // Inner glow
-                const innerGlow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-                innerGlow.addColorStop(0, `hsla(${p.hue}, ${p.saturation}%, 70%, ${0.3 + p.glowIntensity * 0.5})`);
-                innerGlow.addColorStop(0.5, `hsla(${p.hue}, ${p.saturation}%, 55%, ${0.1 + p.glowIntensity * 0.2})`);
+                const innerGlow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2.5);
+                innerGlow.addColorStop(0, `hsla(${p.hue}, ${p.saturation}%, 70%, ${0.25 + p.glowIntensity * 0.45})`);
+                innerGlow.addColorStop(0.6, `hsla(${p.hue}, ${p.saturation}%, 55%, ${0.08 + p.glowIntensity * 0.15})`);
                 innerGlow.addColorStop(1, 'transparent');
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
                 ctx.fillStyle = innerGlow;
                 ctx.fill();
                 
                 // Core
-                const coreAlpha = p.lifted ? 0.95 : 0.5 + p.glowIntensity * 0.3;
-                const coreLightness = p.lifted ? 65 + p.liftProgress * 20 : 45;
+                const coreAlpha = p.lifted ? 0.9 : 0.4 + p.glowIntensity * 0.25;
+                const coreLightness = p.lifted ? 60 + p.liftProgress * 20 : 42;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = `hsla(${p.hue}, ${p.saturation}%, ${coreLightness}%, ${coreAlpha})`;
                 ctx.fill();
                 
-                // Bright center
-                if (p.lifted) {
+                // Bright center when lifted
+                if (p.lifted && p.liftProgress > 0.3) {
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size * 0.4, 0, Math.PI * 2);
-                    ctx.fillStyle = `hsla(${p.hue}, 30%, 90%, ${p.liftProgress * 0.8})`;
+                    ctx.arc(p.x, p.y, p.size * 0.35, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${p.hue}, 25%, 92%, ${p.liftProgress * 0.7})`;
                     ctx.fill();
                 }
                 
-                // Name label
-                if (p.lifted && p.liftProgress > 0.7) {
-                    const labelAlpha = (p.liftProgress - 0.7) / 0.3;
-                    ctx.font = '500 11px "Space Mono", monospace';
+                // Name
+                if (p.lifted && p.liftProgress > 0.65) {
+                    const labelAlpha = (p.liftProgress - 0.65) / 0.35;
+                    ctx.font = '500 10px "Space Mono", monospace';
                     ctx.textAlign = 'center';
-                    ctx.fillStyle = `rgba(212, 175, 55, ${labelAlpha * 0.7})`;
-                    ctx.fillText(p.name, p.x, p.y - p.size - 12);
+                    ctx.fillStyle = `rgba(212, 175, 55, ${labelAlpha * 0.6})`;
+                    ctx.fillText(p.name, p.x, p.y - p.size - 10);
                 }
             }
             
-            // Mouse influence area (very subtle)
-            const mouseGradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, Math.min(width, height) * 0.22);
-            mouseGradient.addColorStop(0, 'rgba(212, 175, 55, 0.02)');
-            mouseGradient.addColorStop(0.5, 'rgba(212, 175, 55, 0.01)');
+            // Mouse area
+            const mouseGradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, Math.min(width, height) * 0.2);
+            mouseGradient.addColorStop(0, 'rgba(212, 175, 55, 0.015)');
+            mouseGradient.addColorStop(0.6, 'rgba(212, 175, 55, 0.005)');
             mouseGradient.addColorStop(1, 'transparent');
             ctx.beginPath();
-            ctx.arc(mouseX, mouseY, Math.min(width, height) * 0.22, 0, Math.PI * 2);
+            ctx.arc(mouseX, mouseY, Math.min(width, height) * 0.2, 0, Math.PI * 2);
             ctx.fillStyle = mouseGradient;
             ctx.fill();
         }
@@ -997,7 +1006,7 @@
         }
         
         function showRandomThought() {
-            const liftedParticles = particles.filter(p => p.lifted && p.liftProgress > 0.5);
+            const liftedParticles = particles.filter(p => p.lifted && p.liftProgress > 0.4);
             if (liftedParticles.length > 0) {
                 const p = liftedParticles[Math.floor(Math.random() * liftedParticles.length)];
                 showThought(p);
@@ -1019,7 +1028,13 @@
         // EVENT LISTENERS
         // ═══════════════════════════════════════════════════════════════════════════
         
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', () => {
+            resize();
+            // Re-distribute particles on resize
+            particles.forEach(p => {
+                p.homeX = Math.max(60, Math.min(width - 60, p.homeX));
+            });
+        });
         
         document.addEventListener('mousemove', (e) => {
             targetMouseX = e.clientX;
@@ -1034,7 +1049,6 @@
             isDragging = true;
             initAudio();
             
-            // Find closest particle
             let closest = null;
             let closestDist = Infinity;
             for (let p of particles) {
@@ -1050,9 +1064,7 @@
             if (closest) {
                 playBeeVoice(closest);
                 showThought(closest);
-                
-                // Visual feedback
-                for (let i = 0; i < 15; i++) {
+                for (let i = 0; i < 12; i++) {
                     spawnEmber(closest.x, closest.y, closest.hue);
                 }
             }
@@ -1062,7 +1074,6 @@
             isDragging = false;
         });
         
-        // Touch support
         document.addEventListener('touchstart', (e) => {
             isDragging = true;
             targetMouseX = e.touches[0].clientX;
@@ -1080,29 +1091,25 @@
             isDragging = false;
         });
         
-        // Periodic thoughts
         setInterval(() => {
-            if (liftedCount > 5) {
+            if (liftedCount > 4) {
                 showRandomThought();
             }
-        }, 10000);
+        }, 11000);
         
         // ═══════════════════════════════════════════════════════════════════════════
-        // INITIALIZATION
+        // INIT
         // ═══════════════════════════════════════════════════════════════════════════
         
         resize();
         
-        // Loading sequence
         setTimeout(() => {
             initParticles();
             loading.classList.add('fade-out');
             setTimeout(() => {
                 loading.style.display = 'none';
                 animate();
-                
-                // First thought after a while
-                setTimeout(showRandomThought, 6000);
+                setTimeout(showRandomThought, 5000);
             }, 2000);
         }, 2800);
     </script>
