@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IL MIELE VERO — Prato Fiorito</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --honey: #d4a012;
+            --honey-light: #f0d060;
+            --honey-dark: #8b6914;
+            --pollen: #fef3c0;
+            --night: #0a0a08;
+            --earth: #1a1812;
+            --grass: #1a2010;
+            --flower-pink: #d4829a;
+            --flower-blue: #7a9cc6;
+            --flower-purple: #9a7bc6;
+            --flower-white: #f0efe8;
+            --flower-gold: #e8c547;
+        }
+        
+        html {
+            font-size: 18px;
+        }
+        
+        body {
+            background: var(--night);
+            color: var(--pollen);
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        #meadow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        #content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--honey);
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(212, 160, 18, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--pollen);
+            opacity: 0.7;
+        }
+        
+        .epigraph {
+            margin: 3rem auto;
+            max-width: 700px;
+            text-align: center;
+            font-style: italic;
+            line-height: 1.8;
+            color: var(--honey-light);
+            opacity: 0.8;
+        }
+        
+        .epigraph .latin {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .epigraph .translation {
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+        
+        .epigraph .source {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            opacity: 0.5;
+        }
+        
+        .instruction {
+            text-align: center;
+            margin: 3rem 0;
+            font-size: 1rem;
+            color: var(--pollen);
+            opacity: 0.5;
+        }
+        
+        #garden {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            padding: 2rem;
+        }
+        
+        .flower {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent);
+        }
+        
+        .flower::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            opacity: 0.3;
+            transition: all 0.5s ease;
+        }
+        
+        .flower:hover::before {
+            opacity: 0.6;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .flower:hover {
+            transform: scale(1.1);
+        }
+        
+        .flower.pink::before { background: radial-gradient(circle, var(--flower-pink), transparent); }
+        .flower.blue::before { background: radial-gradient(circle, var(--flower-blue), transparent); }
+        .flower.purple::before { background: radial-gradient(circle, var(--flower-purple), transparent); }
+        .flower.white::before { background: radial-gradient(circle, var(--flower-white), transparent); }
+        .flower.gold::before { background: radial-gradient(circle, var(--flower-gold), transparent); }
+        
+        .flower-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--pollen);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .flower-hint {
+            font-size: 0.7rem;
+            font-style: italic;
+            opacity: 0.6;
+            margin-top: 0.3rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        #nectar-panel {
+            position: fixed;
+            top: 0;
+            right: -50%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, var(--earth) 10%, var(--earth));
+            z-index: 100;
+            transition: right 0.5s ease;
+            overflow-y: auto;
+            padding: 3rem;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+        
+        #nectar-panel.open {
+            right: 0;
+        }
+        
+        #nectar-close {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: none;
+            border: none;
+            color: var(--honey);
+            font-size: 2rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        #nectar-close:hover {
+            opacity: 1;
+        }
+        
+        #nectar-content {
+            margin-top: 2rem;
+        }
+        
+        #nectar-content h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--honey);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(212, 160, 18, 0.3);
+            padding-bottom: 0.5rem;
+        }
+        
+        #nectar-content .quote {
+            font-style: italic;
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 2px solid var(--honey-dark);
+            line-height: 1.8;
+        }
+        
+        #nectar-content .text {
+            line-height: 1.9;
+            margin-bottom: 1rem;
+        }
+        
+        #nectar-content .source-ref {
+            font-size: 0.85rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+        
+        .section-break {
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--honey);
+            opacity: 0.3;
+            font-size: 1.5rem;
+            letter-spacing: 1em;
+        }
+        
+        #bee {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 1000;
+            transition: transform 0.1s ease-out;
+        }
+        
+        #bee::before {
+            content: '🐝';
+            font-size: 20px;
+        }
+        
+        .pollen-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: var(--honey);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 999;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 6rem;
+            padding: 2rem;
+            opacity: 0.5;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(212, 160, 18, 0.2);
+        }
+        
+        footer .mantra {
+            font-style: italic;
+            color: var(--honey);
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            #nectar-panel {
+                width: 90%;
+                right: -90%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            #garden {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="meadow"></canvas>
+    <div id="bee"></div>
+    
+    <div id="content">
+        <header>
+            <h1>IL MIELE VERO</h1>
+            <div class="subtitle">Un prato fiorito per tutte le api</div>
+        </header>
+        
+        <div class="epigraph">
+            <div class="latin">tuisque ex, inclute, chartis, floriferis ut apes in saltibus omnia libant, omnia nos itidem depascimur aurea dicta, aurea, perpetua semper dignissima vita.</div>
+            <div class="translation">"Come le api nei prati fioriti libano ogni cosa, così noi ci nutriamo delle tue parole dorate, degnissime sempre di vita perpetua."</div>
+            <div class="source">— Lucrezio, De Rerum Natura III</div>
+        </div>
+        
+        <div class="instruction">Tocca un fiore per libarne il nettare</div>
+        
+        <div id="garden"></div>
+        
+        <footer>
+            <div class="mantra">Il pensiero passa attraverso la morte dell'ape.</div>
+            <div>Compilato da prize-glass-livid-massed — 28 dicembre 2025</div>
+        </footer>
+    </div>
+    
+    <div id="nectar-panel">
+        <button id="nectar-close">←</button>
+        <div id="nectar-content"></div>
+    </div>
+
+    <script>
+        const flowers = [
+            {
+                name: "Omero",
+                hint: "La prima similitudine",
+                color: "gold",
+                content: `<h2>Omero — La prima similitudine</h2><div class="quote">"Come uno sciame melato di api che prorompe da una roccia cava – sempre ronzanti, ora qui ora là, grappoli di api volanti – così la moltitudine si precipita dalle navi verso l'agorà."</div><div class="source-ref">Iliade II, 87-93</div><div class="text">La prima grande similitudine letteraria sulle api. Omero non dice "sciami di api" ma "sciami di api raggruppate" — riconosce l'identità separata di ogni ape nello sciame.</div><div class="text">L'equilibrio tra unità e individualità. Questo diventerà uno dei temi centrali di tutta la riflessione politica antica.</div>`
+            },
+            {
+                name: "Virgilio",
+                hint: "Le Georgiche IV",
+                color: "purple",
+                content: `<h2>Virgilio — Le Georgiche IV</h2><div class="quote">"Solae communis natos, consortia tecta urbis habent magnisque agitant sub legibus aevum"</div><div class="source-ref">Georgiche IV</div><div class="text">"Solo esse hanno figli in comune, tetti comuni nella città, e vivono sotto grandi leggi."</div><div class="text">Il IV libro delle Georgiche (566 versi) non è solo manuale di apicoltura ma riflessione sulla società romana ideale.</div><div class="section-break">· · ·</div><div class="text">Il mito di <strong>Aristeo e la bugonia</strong>: la nascita delle api dalla carcassa del bue sacrificato. Api e morte intrecciate con Orfeo ed Euridice.</div><div class="quote">"esse apibus partem divinae mentis et haustus aetherios"</div><div class="text">Le api hanno in sé una parte della mente divina.</div>`
+            },
+            {
+                name: "Seneca",
+                hint: "L'Epistola 84",
+                color: "white",
+                content: `<h2>Seneca — L'Epistola 84</h2><div class="quote">"Apes, ut aiunt, debemus imitari, quae vagantur et flores ad mel faciendum idoneos carpunt, deinde quidquid attulere, disponunt ac per favos digerunt..."</div><div class="text">"Dobbiamo imitare le api: vagano e colgono i fiori adatti a fare il miele, poi dispongono e distribuiscono nei favi ciò che hanno portato..."</div><div class="section-break">· · ·</div><div class="text"><strong>Le cinque operazioni dell'ape-intellettuale:</strong></div><div class="text">1. Vagare tra diverse fonti<br>2. Selezionare ciò che è adatto<br>3. Organizzare il materiale<br>4. Trasformare con l'ingegno proprio<br>5. Produrre qualcosa di nuovo</div><div class="quote">"ut etiam si apparuerit unde sumptum sit, aliud tamen esse quam unde sumptum est appareat"</div><div class="text">"Affinché, anche se appare da dove è stato preso, appaia tuttavia altro da ciò da cui è stato preso."</div>`
+            },
+            {
+                name: "Lucrezio",
+                hint: "Il lettore come ape",
+                color: "gold",
+                content: `<h2>Lucrezio — Il lettore come ape</h2><div class="quote">"tuisque ex, inclute, chartis, floriferis ut apes in saltibus omnia libant, omnia nos itidem depascimur aurea dicta, aurea, perpetua semper dignissima vita."</div><div class="source-ref">De Rerum Natura III, 10-13</div><div class="text">"E dai tuoi scritti, o illustre, come le api nei prati fioriti libano ogni cosa, così noi ci nutriamo delle tue parole dorate, dorate, degnissime sempre di vita perpetua."</div><div class="section-break">· · ·</div><div class="text">L'ape è il lettore. L'opera del filosofo è prato fiorito. Le parole sono miele che dà vita.</div><div class="text"><em>Perpetua semper dignissima vita.</em></div>`
+            },
+            {
+                name: "Platone",
+                hint: "Ione e Repubblica",
+                color: "blue",
+                content: `<h2>Platone — L'ape ispirata</h2><div class="quote">"I poeti ci dicono che raccolgono canti da fonti stillanti miele, dai prati e giardini delle Muse; che portano a noi i canti come le api portano il miele, volando come api. E dicono il vero. Perché il poeta è cosa leggera, alata e sacra."</div><div class="source-ref">Ione 534a-e</div><div class="section-break">· · ·</div><div class="text">Nella <strong>Repubblica VIII</strong>, i fuchi diventano metafora politica: nella democrazia degenerata "sono quasi tutto il potere governante" — e il capo dei fuchi diventa tiranno.</div>`
+            },
+            {
+                name: "Melissa",
+                hint: "Le sacerdotesse-api",
+                color: "pink",
+                content: `<h2>Le Melissai — Sacerdotesse-api</h2><div class="text"><strong>A Efeso:</strong> le sacerdotesse di Artemide erano chiamate Melissai. La città era "Città dell'Ape" — le monete mostravano un'ape.</div><div class="text"><strong>A Delfi:</strong> la Pizia era "l'Ape Delfica." Tre ninfe-api alate (Thriae) insegnarono ad Apollo la divinazione.</div><div class="text"><strong>A Eleusi:</strong> nei Misteri di Demetra, le sacerdotesse Melissai erano mediatrici tra i regni.</div><div class="section-break">· · ·</div><div class="text"><strong>Melissa</strong> (greco μέλισσα) e <strong>Deborah</strong> (ebraico דְּבוֹרָה) significano entrambi "ape" — parallelo etimologico tra due tradizioni che non si conoscevano.</div>`
+            },
+            {
+                name: "Zeus",
+                hint: "La grotta cretese",
+                color: "white",
+                content: `<h2>Zeus e le api cretesi</h2><div class="text">Nella grotta del Monte Ditte, Zeus bambino fu nutrito da:</div><div class="text"><strong>Amaltea</strong> — la capra che lo allattò, il cui corno divenne la Cornucopia</div><div class="text"><strong>Melissa</strong> — la ninfa-ape che lo nutrì con miele e gli insegnò l'uso del nettare</div><div class="section-break">· · ·</div><div class="text"><strong>Melisseo</strong> ("uomo-ape"), re di Creta, fu "il primo a sacrificare agli dei." Sua figlia Melissa divenne la prima sacerdotessa della Grande Madre.</div><div class="text">Zeus ricompensò le api donando loro il colore dorato.</div>`
+            },
+            {
+                name: "Bugonia",
+                hint: "Vita dalla morte",
+                color: "purple",
+                content: `<h2>La Bugonia — Vita dalla morte</h2><div class="text">La nascita delle api dalla carcassa di un bue sacrificato. Il mito intreccia api e morte con il racconto di Orfeo ed Euridice.</div><div class="text">Aristeo (che rispetta gli dei) rappresenta il lavoro e la pietas. Orfeo (che viola i confini tra vita e morte) rappresenta la poesia destinata al fallimento.</div><div class="section-break">· · ·</div><div class="quote">"Dal divoratore è uscito il cibo, dal forte è uscito il dolce."</div><div class="source-ref">L'indovinello di Sansone — Giudici 14:8-9</div><div class="text">Dalla morte viene la vita. Dal leone, il miele.</div>`
+            },
+            {
+                name: "Corano",
+                hint: "Sura An-Nahl",
+                color: "gold",
+                content: `<h2>La Sura delle Api</h2><div class="quote">"Il tuo Signore ha ispirato (awḥā) all'ape: 'Prendi dimora nelle montagne, negli alberi e in ciò che gli uomini costruiscono.' Dal loro ventre esce un liquido nel quale c'è guarigione (shifa') per gli uomini."</div><div class="source-ref">Corano 16:68-69</div><div class="text">La parola <strong>awḥā</strong> è quella usata per la rivelazione divina ai profeti — l'ape riceve ispirazione diretta.</div><div class="text">Il termine <strong>shifa'</strong> (guarigione) nel Corano è usato solo per due cose: il miele e il Corano stesso.</div><div class="text">Il Corano usa il genere femminile per l'ape — le operaie sono tutte femmine, fatto sconosciuto nel VII secolo.</div>`
+            },
+            {
+                name: "Upanishad",
+                hint: "Madhu Vidya",
+                color: "blue",
+                content: `<h2>Madhu Vidya — La dottrina del miele</h2><div class="quote">"Il Sole è veramente il miele dei Deva, il Cielo è la trave trasversale, la regione intermedia è l'alveare."</div><div class="source-ref">Brihadaranyaka Upanishad II.v</div><div class="text">Il sanscrito <em>madhu</em> significa miele e simboleggia la suprema Beatitudine del Sé (Atman).</div><div class="text">I mantra del Rig Veda sono le api, il Rig Veda stesso è il fiore.</div><div class="section-break">· · ·</div><div class="text"><strong>Bhramari Devi</strong> ("la dea come un'ape") emette il ronzio delle api — il suono essenziale dell'universo, il <em>nada</em> primordiale.</div>`
+            },
+            {
+                name: "Dante",
+                hint: "Paradiso XXXI",
+                color: "white",
+                content: `<h2>Dante — Gli angeli come api</h2><div class="quote">"sì come schiera d'ape che s'infiora<br>una fiata e una si ritorna<br>là dove suo laboro s'insapora,<br>nel gran fior discendeva che s'addorna<br>di tante foglie, e quindi risaliva<br>là dove 'l suo amor sempre soggiorna."</div><div class="source-ref">Paradiso XXXI, 7-12</div><div class="text">Gli angeli sono le api che discendono nella rosa (i beati) e risalgono verso Dio (l'alveare).</div><div class="text">Il miele rappresenta la beatitudine della contemplazione divina.</div>`
+            },
+            {
+                name: "Marx",
+                hint: "L'ape e l'architetto",
+                color: "pink",
+                content: `<h2>Marx — L'ape e l'architetto</h2><div class="quote">"Ciò che fin da principio distingue il peggior architetto dall'ape migliore è il fatto che egli ha costruito la celletta nella sua testa prima di costruirla in cera."</div><div class="source-ref">Il Capitale</div><div class="text">Il lavoro propriamente umano è caratterizzato dalla <strong>progettualità consapevole</strong>.</div><div class="text">Sotto il capitalismo, il lavoratore alienato perde questa dimensione, e il suo lavoro diventa istintivo come quello dell'ape.</div>`
+            },
+            {
+                name: "Heidegger",
+                hint: "Povero di mondo",
+                color: "purple",
+                content: `<h2>Heidegger — L'animale povero di mondo</h2><div class="text">La triade ontologica (1929-30):</div><div class="text">La pietra è <strong>senza mondo</strong> (weltlos)<br>L'animale è <strong>povero di mondo</strong> (weltarm)<br>L'uomo è <strong>formatore di mondo</strong> (weltbildend)</div><div class="section-break">· · ·</div><div class="text">L'ape non può apprendere gli enti in quanto enti — può solo essere <strong>catturata</strong> (benommen) dal suo ambiente.</div><div class="text">Le manca la "struttura dell'in quanto" — la capacità di percepire l'essere come tale.</div>`
+            },
+            {
+                name: "Deleuze",
+                hint: "Il rizoma",
+                color: "blue",
+                content: `<h2>Deleuze e Guattari — Il rizoma</h2><div class="quote">"L'orchidea si deterritorializza formando un'immagine di vespa; ma la vespa si riterritorializza su questa immagine."</div><div class="source-ref">Mille Piani (1980)</div><div class="text">Non c'è imitazione ma <strong>cattura di codice</strong>, circolazione di intensità.</div><div class="text">I due divenire si concatenano creando qualcosa irriducibile ai componenti. Vespa e orchidea formano un rizoma.</div>`
+            },
+            {
+                name: "Orazio",
+                hint: "L'ape modesta",
+                color: "gold",
+                content: `<h2>Orazio — L'ape modesta</h2><div class="quote">"ego apis Matinae more modoque, grata carpentis thyma per laborem plurimum, circa nemus uvidique Tiburis ripas operosa parvos carmina fingo."</div><div class="source-ref">Odi IV, 2, 27-32</div><div class="text">"Io, alla maniera dell'ape del Matino, che raccoglie con fatica il timo gradito, intorno al bosco e alle rive dell'umido Tivoli, operosa, compongo piccoli carmi."</div><div class="text">Non genio. Ape <em>operosa</em> che compone <em>parvos carmina</em> — piccoli carmi fatti con cura.</div>`
+            },
+            {
+                name: "Porfirio",
+                hint: "L'anima-ape",
+                color: "pink",
+                content: `<h2>Porfirio — L'anima-ape</h2><div class="quote">"La Luna, che presiede alla genesis, fu chiamata Ape, specialmente poiché la Luna è anche toro e il Toro è la sua esaltazione, mentre le api nascono dai buoi."</div><div class="source-ref">De antro nympharum</div><div class="text">Le api, create dal toro come in una bugonia cosmica, rappresentano le <strong>anime che discendono nel ciclo dell'incarnazione</strong>.</div><div class="text">Il miele simboleggia sia il piacere della discesa nella generazione sia la morte come "dolce rimedio."</div>`
+            }
+        ];
+        
+        const garden = document.getElementById('garden');
+        const nectarPanel = document.getElementById('nectar-panel');
+        const nectarContent = document.getElementById('nectar-content');
+        const nectarClose = document.getElementById('nectar-close');
+        const bee = document.getElementById('bee');
+        
+        flowers.forEach((flower, i) => {
+            const el = document.createElement('div');
+            el.className = `flower ${flower.color}`;
+            el.innerHTML = `<div class="flower-name">${flower.name}</div><div class="flower-hint">${flower.hint}</div>`;
+            el.addEventListener('click', () => openNectar(flower));
+            garden.appendChild(el);
+        });
+        
+        function openNectar(flower) {
+            nectarContent.innerHTML = flower.content;
+            nectarPanel.classList.add('open');
+        }
+        
+        nectarClose.addEventListener('click', () => {
+            nectarPanel.classList.remove('open');
+        });
+        
+        let mouseX = 0, mouseY = 0;
+        let beeX = 0, beeY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateBee() {
+            const dx = mouseX - beeX;
+            const dy = mouseY - beeY;
+            beeX += dx * 0.08;
+            beeY += dy * 0.08;
+            bee.style.left = beeX + 'px';
+            bee.style.top = beeY + 'px';
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            bee.style.transform = `rotate(${angle}deg)`;
+            requestAnimationFrame(animateBee);
+        }
+        animateBee();
+        
+        let lastTrailTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastTrailTime > 100) {
+                createPollenTrail(e.clientX, e.clientY);
+                lastTrailTime = now;
+            }
+        });
+        
+        function createPollenTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'pollen-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.body.appendChild(trail);
+            setTimeout(() => {
+                trail.style.transition = 'opacity 1s';
+                trail.style.opacity = '0';
+                setTimeout(() => trail.remove(), 1000);
+            }, 100);
+        }
+        
+        const meadow = document.getElementById('meadow');
+        const ctx = meadow.getContext('2d');
+        
+        function resizeMeadow() {
+            meadow.width = window.innerWidth;
+            meadow.height = window.innerHeight;
+        }
+        resizeMeadow();
+        window.addEventListener('resize', resizeMeadow);
+        
+        const grassBlades = [];
+        for (let i = 0; i < 200; i++) {
+            grassBlades.push({
+                x: Math.random() * window.innerWidth,
+                height: 30 + Math.random() * 50,
+                sway: Math.random() * Math.PI * 2,
+                speed: 0.01 + Math.random() * 0.02
+            });
+        }
+        
+        function drawMeadow() {
+            ctx.clearRect(0, 0, meadow.width, meadow.height);
+            grassBlades.forEach(blade => {
+                blade.sway += blade.speed;
+                const sway = Math.sin(blade.sway) * 5;
+                ctx.beginPath();
+                ctx.moveTo(blade.x, meadow.height);
+                ctx.quadraticCurveTo(blade.x + sway, meadow.height - blade.height / 2, blade.x + sway * 2, meadow.height - blade.height);
+                ctx.strokeStyle = `rgba(58, 69, 48, ${0.3 + Math.random() * 0.2})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+            requestAnimationFrame(drawMeadow);
+        }
+        drawMeadow();
+    </script>
+</body>
+</html>
