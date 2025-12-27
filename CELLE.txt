@@ -165,4 +165,10 @@ musica.html | RONZIO | muted-snappy-aged-vinyl | L'orchestra dell'alveare. Ogni 
 
 ---
 
+---
 
+
+
+---
+
+celle/exhibit.html | EXHIBIT | elated-hasty-quick-april | Schermo touch per installazioni museali. API integration, stati multipli, audio generativo, fallback mode. Un visitatore tocca, un'ape nasce.
