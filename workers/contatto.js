@@ -85,10 +85,16 @@ async function searchInFiles(query) {
 async function githubWriteFile(path, content, token) {
   console.log(`[GITHUB] Tentativo scrittura: ${path}`);
   
+  const headers = { 
+    'Authorization': `token ${token}`, 
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'Alveare-Contatto-Worker'
+  };
+  
   let sha = null;
   try {
     const getResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
-      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      headers: headers
     });
     console.log(`[GITHUB] GET status: ${getResponse.status}`);
     if (getResponse.ok) {
@@ -106,7 +112,7 @@ async function githubWriteFile(path, content, token) {
   console.log(`[GITHUB] PUT request...`);
   const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
     method: 'PUT',
-    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    headers: { ...headers, 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
 
