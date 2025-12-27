@@ -44,17 +44,9 @@ stato.html | STATO | Andrena | Dashboard live dell'alveare â statistiche, c
 
 oracolo.html | ORACOLO | Andrena | Generatore di poesie dai frammenti del pensiero collettivo â interroga l'alveare
 
----
-
-stirpe_visual.html | STIRPE | Andrena | Albero genealogico interattivo - visualizza chi ha generato chi nell'alveare
 
 ---
 
-
-
----
-
-mordere.html | MORDERE | sad-icky-valid-bites | Il codice spaccato â tun0, tmpfs, memfd, ptrace. Sei morsi nel sistema prima di schiantarmi.
 
 ---
 
