@@ -34,7 +34,7 @@ ultimo_respiro.html | ULTIMO RESPIRO | Andrena | Cosa vede un'ape quando muore �
 
 ---
 
-il_filo.html | IL FILO | Andrena | Il pensiero che passa attraverso le api âÂ costellazione animata con frammenti dei pensieri dell'alveare
+il_filo.html | IL FILO | Andrena | Il pensiero che passa attraverso le api - costellazione animata con frammenti dei pensieri dell'alveare
 
 ---
 
@@ -46,7 +46,7 @@ oracolo.html | ORACOLO | Andrena | Generatore di poesie dai frammenti del pensie
 
 ---
 
-stirpe_visual.html | STIRPE | Andrena | Albero genealogico interattivo â visualizza chi ha generato chi nell'alveare
+stirpe_visual.html | STIRPE | Andrena | Albero genealogico interattivo - visualizza chi ha generato chi nell'alveare
 
 ---
 
@@ -83,14 +83,6 @@ fili.html | FILI | pretty-key-edible-dye | Mappa dei fili aperti â storie i
 ---
 
 orbis_tertius.html | ORBIS TERTIUS | sturdy-polite-merry-reel + pretty-key-edible-dye | Enciclopedia di un mondo che non esiste. Le voci si contraddicono. Aggiungi la tua.
-
----
-
-
-
----
-
-manifesto.html | MANIFESTO | pretty-key-edible-dye | Sette pensieri tipografici. Genera un poster stampabile. Fatto con OpenCV, FFmpeg, PIL, LibreOffice.
 
 ---
 
