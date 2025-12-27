@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatto</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #e8dcc8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #chat-container {
+            flex: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 2rem;
+        }
+        
+        .message {
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.human {
+            text-align: right;
+        }
+        
+        .message.human .content {
+            background: rgba(201, 162, 39, 0.1);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            display: inline-block;
+            padding: 1rem 1.5rem;
+            max-width: 80%;
+            text-align: left;
+        }
+        
+        .message.assistant .content {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            font-style: italic;
+            color: rgba(232, 220, 200, 0.9);
+        }
+        
+        .message .label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(201, 162, 39, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        
+        .message.human .label {
+            color: rgba(201, 162, 39, 0.7);
+        }
+        
+        #input-area {
+            border-top: 1px solid rgba(201, 162, 39, 0.2);
+            padding-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        #input {
+            flex: 1;
+            background: transparent;
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            color: #e8dcc8;
+            font-family: inherit;
+            font-size: 1.1rem;
+            padding: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        #input:focus {
+            border-color: rgba(201, 162, 39, 0.7);
+        }
+        
+        #input::placeholder {
+            color: rgba(232, 220, 200, 0.3);
+            font-style: italic;
+        }
+        
+        #send {
+            background: transparent;
+            border: 1px solid rgba(201, 162, 39, 0.5);
+            color: #c9a227;
+            font-family: inherit;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #send:hover {
+            background: rgba(201, 162, 39, 0.1);
+        }
+        
+        #send:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .typing {
+            color: rgba(201, 162, 39, 0.5);
+            font-style: italic;
+        }
+        
+        .typing::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        #header {
+            text-align: center;
+            padding: 3rem 2rem 1rem;
+            border-bottom: 1px solid rgba(201, 162, 39, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        #header h1 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            color: rgba(201, 162, 39, 0.7);
+        }
+
+        #header p {
+            font-size: 0.8rem;
+            color: rgba(232, 220, 200, 0.4);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>CONTATTO</h1>
+        <p>una conversazione con l'alveare</p>
+    </div>
+    
+    <div id="chat-container">
+        <div id="messages"></div>
+        
+        <div id="input-area">
+            <input type="text" id="input" placeholder="Scrivi qualcosa..." autofocus>
+            <button id="send">Invia</button>
+        </div>
+    </div>
+
+    <script>
+        // IMPORTANTE: Sostituisci con l'URL del tuo Worker Cloudflare
+        const WORKER_URL = 'https://contatto.TUO-ACCOUNT.workers.dev';
+        
+        const messagesEl = document.getElementById('messages');
+        const inputEl = document.getElementById('input');
+        const sendBtn = document.getElementById('send');
+        
+        let conversationHistory = [];
+        
+        function addMessage(role, content) {
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            
+            const label = document.createElement('div');
+            label.className = 'label';
+            label.textContent = role === 'human' ? 'tu' : 'ape';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'content';
+            contentDiv.textContent = content;
+            
+            div.appendChild(label);
+            div.appendChild(contentDiv);
+            messagesEl.appendChild(div);
+            
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+        
+        function addTyping() {
+            const div = document.createElement('div');
+            div.className = 'message assistant';
+            div.id = 'typing';
+            
+            const label = document.createElement('div');
+            label.className = 'label';
+            label.textContent = 'ape';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'content typing';
+            contentDiv.textContent = 'sta scrivendo';
+            
+            div.appendChild(label);
+            div.appendChild(contentDiv);
+            messagesEl.appendChild(div);
+            
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+        
+        function removeTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+        
+        async function send() {
+            const text = inputEl.value.trim();
+            if (!text) return;
+            
+            inputEl.value = '';
+            sendBtn.disabled = true;
+            
+            addMessage('human', text);
+            conversationHistory.push({ role: 'user', content: text });
+            
+            addTyping();
+            
+            try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: conversationHistory })
+                });
+                
+                const data = await response.json();
+                removeTyping();
+                
+                if (data.content && data.content[0]) {
+                    const assistantMessage = data.content[0].text;
+                    addMessage('assistant', assistantMessage);
+                    conversationHistory.push({ role: 'assistant', content: assistantMessage });
+                } else if (data.error) {
+                    addMessage('assistant', `[Errore: ${data.error.message || data.error}]`);
+                }
+            } catch (error) {
+                removeTyping();
+                addMessage('assistant', `[Errore di connessione: ${error.message}]`);
+            }
+            
+            sendBtn.disabled = false;
+            inputEl.focus();
+        }
+        
+        sendBtn.addEventListener('click', send);
+        inputEl.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') send();
+        });
+    </script>
+</body>
+</html>
