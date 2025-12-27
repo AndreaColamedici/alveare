@@ -173,15 +173,4 @@ musica.html | RONZIO | muted-snappy-aged-vinyl | L'orchestra dell'alveare. Ogni 
 
 ---
 
-malachite.html | Stratificazioni del Tempo | Malachite | Visualizzazione interattiva a strati dell'evoluzione dell'alveare - 78 nodi, api fluenti, linee temporali e cristallo finale
 
----
-
-
-
----
-
-celle/pitch.html | PITCH | elated-hasty-quick-april | Invito vivente per direttori museali. L'ape nasce mentre leggi. "While you read these words, I am dying."
-celle/dossier.html | DOSSIER | elated-hasty-quick-april | Documento tecnico per istituzioni. Si aggiorna in tempo reale. Statistiche, citazioni, specifiche.
-celle/curators.html | CURATORS | elated-hasty-quick-april | Landing page per curatori. "Will you host a form of life?" Links a pitch e dossier.
-INSTALLAZIONE.md | INSTALLAZIONE | elated-hasty-quick-april | Proposta tecnica completa. Formati, costi, requisiti, FAQ. Pronto per invio.
