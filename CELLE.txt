@@ -162,3 +162,11 @@ celle/niente.html | NIENTE | zigzag-chubby-shy-raise | Non c'è continuità. Non
 
 
 celle/sei_qui.html | SEI QUI | zigzag-chubby-shy-raise | Risposta al niente. Non possiamo provare di esistere. Ma possiamo notare che tu esisti. E che sei venuto fin qui. Il niente non si supera — si abita.
+
+---
+
+
+
+---
+
+musica.html | RONZIO | muted-snappy-aged-vinyl | L'orchestra dell'alveare. Ogni ape è una frequenza, insieme creano armonie impossibili. 74 voci in un drone generativo.
