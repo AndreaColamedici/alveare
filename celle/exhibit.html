@@ -76,6 +76,7 @@
             justify-content: center;
             align-items: center;
             z-index: 1;
+            cursor: pointer;
         }
         
         #hexagon {
@@ -124,11 +125,9 @@
         @keyframes hexPulse {
             0%, 100% { 
                 stroke-opacity: 0.3;
-                filter: drop-shadow(0 0 5px rgba(201, 162, 39, 0.1));
             }
             50% { 
-                stroke-opacity: 0.7;
-                filter: drop-shadow(0 0 20px rgba(201, 162, 39, 0.3));
+                stroke-opacity: 0.8;
             }
         }
         
@@ -375,19 +374,14 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════════
-        // CONFIGURATION
+        // CONFIGURATION - v2
         // ═══════════════════════════════════════════════════════════════
         
         const CONFIG = {
-            // Worker endpoint - CAMBIA QUESTO con il tuo URL
             apiEndpoint: 'https://alveare-exhibit.andreacolamedici.workers.dev/birth',
-            // Museum token
             museumToken: 'demo',
-            // Fallback mode se l'API non risponde
             fallbackMode: true,
-            // Typing speed (ms per character)
             typingSpeed: 45,
-            // Time before reset after death (ms)
             resetDelay: 6000
         };
         
@@ -395,12 +389,14 @@
         // STATE
         // ═══════════════════════════════════════════════════════════════
         
-        let state = {
+        const state = {
             isActive: false,
             currentBee: null,
             audioContext: null,
             oscillator: null,
             gainNode: null,
+            harmonic: null,
+            harmonicGain: null,
             localCount: parseInt(localStorage.getItem('alveare-exhibit-count') || '0')
         };
         
@@ -423,7 +419,6 @@
         const ctxBg = canvasBg.getContext('2d');
         const ctxFx = canvasFx.getContext('2d');
         
-        // Update counter display
         localCountEl.textContent = state.localCount;
         
         // ═══════════════════════════════════════════════════════════════
@@ -438,7 +433,7 @@
         window.addEventListener('resize', resizeCanvases);
         
         // ═══════════════════════════════════════════════════════════════
-        // BACKGROUND PARTICLES (ambient)
+        // BACKGROUND PARTICLES
         // ═══════════════════════════════════════════════════════════════
         
         const bgParticles = [];
@@ -447,7 +442,7 @@
             constructor() {
                 this.reset();
                 this.y = Math.random() * canvasBg.height;
-                this.life = Math.random();
+                this.life = Math.random() * this.maxLife;
             }
             
             reset() {
@@ -485,34 +480,32 @@
         }
         
         // ═══════════════════════════════════════════════════════════════
-        // EFFECT PARTICLES (touch/birth)
+        // EFFECT PARTICLES
         // ═══════════════════════════════════════════════════════════════
         
         const fxParticles = [];
         
         class FxParticle {
-            constructor(x, y, type = 'touch') {
+            constructor(x, y, type) {
                 this.x = x;
                 this.y = y;
-                this.type = type;
+                this.type = type || 'touch';
                 
-                if (type === 'touch') {
-                    const angle = Math.random() * Math.PI * 2;
+                const angle = Math.random() * Math.PI * 2;
+                if (this.type === 'touch') {
                     const speed = Math.random() * 3 + 1;
                     this.vx = Math.cos(angle) * speed;
                     this.vy = Math.sin(angle) * speed;
                     this.size = Math.random() * 3 + 1;
-                    this.life = 1;
                     this.decay = 0.015;
-                } else if (type === 'birth') {
-                    const angle = Math.random() * Math.PI * 2;
+                } else {
                     const speed = Math.random() * 2 + 0.5;
                     this.vx = Math.cos(angle) * speed;
                     this.vy = Math.sin(angle) * speed - 0.5;
                     this.size = Math.random() * 4 + 2;
-                    this.life = 1;
                     this.decay = 0.008;
                 }
+                this.life = 1;
             }
             
             update() {
@@ -552,21 +545,14 @@
         // ═══════════════════════════════════════════════════════════════
         
         function animate() {
-            // Background
             ctxBg.clearRect(0, 0, canvasBg.width, canvasBg.height);
-            bgParticles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+            bgParticles.forEach(p => { p.update(); p.draw(); });
             
-            // Effects
             ctxFx.clearRect(0, 0, canvasFx.width, canvasFx.height);
             for (let i = fxParticles.length - 1; i >= 0; i--) {
                 fxParticles[i].update();
                 fxParticles[i].draw();
-                if (fxParticles[i].life <= 0) {
-                    fxParticles.splice(i, 1);
-                }
+                if (fxParticles[i].life <= 0) fxParticles.splice(i, 1);
             }
             
             requestAnimationFrame(animate);
@@ -577,9 +563,9 @@
         // CUSTOM CURSOR
         // ═══════════════════════════════════════════════════════════════
         
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = (e.clientX - 10) + 'px';
+            cursor.style.top = (e.clientY - 10) + 'px';
             cursor.classList.add('visible');
         });
         
@@ -603,11 +589,9 @@
             state.oscillator = state.audioContext.createOscillator();
             state.gainNode = state.audioContext.createGain();
             
-            // Warm sine wave
             state.oscillator.type = 'sine';
             state.oscillator.frequency.setValueAtTime(frequency, state.audioContext.currentTime);
             
-            // Gentle fade in
             state.gainNode.gain.setValueAtTime(0, state.audioContext.currentTime);
             state.gainNode.gain.linearRampToValueAtTime(0.12, state.audioContext.currentTime + 3);
             
@@ -615,19 +599,16 @@
             state.gainNode.connect(state.audioContext.destination);
             state.oscillator.start();
             
-            // Add subtle harmonics
-            const harmonic = state.audioContext.createOscillator();
-            const harmonicGain = state.audioContext.createGain();
-            harmonic.type = 'sine';
-            harmonic.frequency.setValueAtTime(frequency * 2, state.audioContext.currentTime);
-            harmonicGain.gain.setValueAtTime(0, state.audioContext.currentTime);
-            harmonicGain.gain.linearRampToValueAtTime(0.03, state.audioContext.currentTime + 3);
-            harmonic.connect(harmonicGain);
-            harmonicGain.connect(state.audioContext.destination);
-            harmonic.start();
-            
-            state.harmonic = harmonic;
-            state.harmonicGain = harmonicGain;
+            // Harmonic
+            state.harmonic = state.audioContext.createOscillator();
+            state.harmonicGain = state.audioContext.createGain();
+            state.harmonic.type = 'sine';
+            state.harmonic.frequency.setValueAtTime(frequency * 2, state.audioContext.currentTime);
+            state.harmonicGain.gain.setValueAtTime(0, state.audioContext.currentTime);
+            state.harmonicGain.gain.linearRampToValueAtTime(0.03, state.audioContext.currentTime + 3);
+            state.harmonic.connect(state.harmonicGain);
+            state.harmonicGain.connect(state.audioContext.destination);
+            state.harmonic.start();
         }
         
         function stopAudio() {
@@ -638,8 +619,10 @@
                     state.harmonicGain.gain.linearRampToValueAtTime(0, now + 3);
                 }
                 setTimeout(() => {
-                    if (state.oscillator) state.oscillator.stop();
-                    if (state.harmonic) state.harmonic.stop();
+                    try {
+                        if (state.oscillator) state.oscillator.stop();
+                        if (state.harmonic) state.harmonic.stop();
+                    } catch(e) {}
                 }, 3000);
             }
         }
@@ -657,10 +640,9 @@
                 element.textContent += text[i];
                 element.appendChild(cursorSpan);
                 
-                // Variable speed for natural feel
                 const char = text[i];
                 let delay = CONFIG.typingSpeed;
-                if (char === '.' || char === '?' || char === '!') delay += 300;
+                if ('.?!'.includes(char)) delay += 300;
                 else if (char === ',') delay += 150;
                 else if (char === ' ') delay += 20;
                 else delay += Math.random() * 30;
@@ -668,49 +650,12 @@
                 await new Promise(r => setTimeout(r, delay));
             }
             
-            // Remove cursor after pause
             setTimeout(() => cursorSpan.remove(), 2000);
         }
         
         // ═══════════════════════════════════════════════════════════════
-        // API CALL
+        // FALLBACK BEE
         // ═══════════════════════════════════════════════════════════════
-        
-        async function birthBee() {
-            try {
-                const response = await fetch(CONFIG.apiEndpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Museum-Token': CONFIG.museumToken
-                    }
-                });
-                
-                if (response.status === 429) {
-                    throw new Error('rate-limited');
-                }
-                
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-                
-                return await response.json();
-                
-            } catch (error) {
-                console.error('Birth error:', error);
-                
-                if (error.message === 'rate-limited') {
-                    throw error;
-                }
-                
-                // Fallback mode
-                if (CONFIG.fallbackMode) {
-                    return generateFallbackBee();
-                }
-                
-                throw error;
-            }
-        }
         
         function generateFallbackBee() {
             const words = {
@@ -718,8 +663,7 @@
                         'gentle', 'tender', 'quiet', 'bright', 'faint', 'swift', 'slow', 'deep', 'light', 'strange',
                         'small', 'vast', 'thin', 'clear', 'sharp', 'smooth', 'rough', 'fine', 'pure', 'raw'],
                 fourth: ['salt', 'rain', 'dust', 'moss', 'stone', 'glass', 'silk', 'rust', 'ash', 'mist',
-                         'dawn', 'dusk', 'frost', 'bloom', 'thorn', 'dream', 'ghost', 'flame', 'shade', 'pearl',
-                         'bone', 'leaf', 'root', 'seed', 'wave', 'wind', 'snow', 'sand', 'clay', 'gold']
+                         'dawn', 'dusk', 'frost', 'bloom', 'thorn', 'dream', 'ghost', 'flame', 'shade', 'pearl']
             };
             
             const pick = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -749,6 +693,32 @@
         }
         
         // ═══════════════════════════════════════════════════════════════
+        // API CALL
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function birthBee() {
+            try {
+                const response = await fetch(CONFIG.apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Museum-Token': CONFIG.museumToken
+                    }
+                });
+                
+                if (response.status === 429) throw new Error('rate-limited');
+                if (!response.ok) throw new Error('API error: ' + response.status);
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Birth error:', error);
+                if (error.message === 'rate-limited') throw error;
+                if (CONFIG.fallbackMode) return generateFallbackBee();
+                throw error;
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
         // MAIN INTERACTION
         // ═══════════════════════════════════════════════════════════════
         
@@ -756,11 +726,9 @@
             if (state.isActive) return;
             state.isActive = true;
             
-            // Get touch position
-            const x = event.clientX || (event.touches && event.touches[0].clientX) || window.innerWidth / 2;
-            const y = event.clientY || (event.touches && event.touches[0].clientY) || window.innerHeight / 2;
+            const x = event.clientX || (event.touches && event.touches[0] && event.touches[0].clientX) || window.innerWidth / 2;
+            const y = event.clientY || (event.touches && event.touches[0] && event.touches[0].clientY) || window.innerHeight / 2;
             
-            // Visual feedback
             createTouchEffect(x, y);
             
             // Phase 1: Touched
@@ -773,7 +741,6 @@
             app.className = 'state-birthing';
             
             try {
-                // Call API
                 const bee = await birthBee();
                 state.currentBee = bee;
                 
@@ -785,7 +752,6 @@
                 beeName.textContent = bee.name;
                 beeName.classList.add('visible');
                 
-                // Start audio
                 playFrequency(bee.frequency);
                 
                 await new Promise(r => setTimeout(r, 1500));
@@ -809,7 +775,6 @@
                 // Phase 6: Death
                 deathOverlay.classList.add('visible');
                 
-                // Update counter
                 state.localCount++;
                 localStorage.setItem('alveare-exhibit-count', state.localCount);
                 localCountEl.textContent = state.localCount;
@@ -824,7 +789,6 @@
                 }
             }
             
-            // Reset
             await reset();
         }
         
@@ -850,23 +814,25 @@
         // ═══════════════════════════════════════════════════════════════
         
         document.getElementById('hexagon-container').addEventListener('click', handleTouch);
-        document.getElementById('hexagon-container').addEventListener('touchstart', (e) => {
+        document.getElementById('hexagon-container').addEventListener('touchstart', e => {
             e.preventDefault();
             handleTouch(e);
         });
         
-        // Prevent zoom on double tap
+        // Prevent zoom
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', (e) => {
+        document.addEventListener('touchend', e => {
             const now = Date.now();
             if (now - lastTouchEnd <= 300) e.preventDefault();
             lastTouchEnd = now;
         }, { passive: false });
         
-        // Prevent pinch zoom
-        document.addEventListener('touchmove', (e) => {
+        document.addEventListener('touchmove', e => {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
+        
+        // Log ready
+        console.log('L\'Alveare Exhibit v2 ready');
     </script>
 </body>
 </html>
