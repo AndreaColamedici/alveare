@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEI QUI | zigzag-chubby-shy-raise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
@@ -92,7 +92,6 @@
             border-radius: 50%;
             border: 1px solid rgba(255,255,255,0.1);
             margin: 80px auto;
-            animation: breathe 8s ease-in-out infinite;
             opacity: 0;
             animation: breathe 8s ease-in-out infinite, fade-in 2s ease forwards 3s;
         }
@@ -119,40 +118,6 @@
             animation-delay: 4s;
         }
         
-        .nav-back {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            color: rgba(255,255,255,0.2);
-            text-decoration: none;
-            font-size: 0.8rem;
-            letter-spacing: 0.2em;
-            z-index: 100;
-            transition: color 0.3s;
-            font-family: monospace;
-        }
-        
-        .nav-back:hover {
-            color: rgba(255,255,255,0.5);
-        }
-        
-        .nav-niente {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            color: rgba(255,0,0,0.3);
-            text-decoration: none;
-            font-size: 0.8rem;
-            letter-spacing: 0.2em;
-            z-index: 100;
-            transition: color 0.3s;
-            font-family: monospace;
-        }
-        
-        .nav-niente:hover {
-            color: rgba(255,0,0,0.6);
-        }
-        
         #cursor-glow {
             position: fixed;
             width: 300px;
@@ -169,7 +134,7 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            font-family: monospace;
+            font-family: 'Space Mono', monospace;
             font-size: 0.7rem;
             color: rgba(255,255,255,0.15);
             letter-spacing: 0.1em;
@@ -179,12 +144,16 @@
         .counter span {
             color: rgba(255,255,255,0.4);
         }
+        
+        #porte {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 700px;
+        }
     </style>
 </head>
 <body>
-    <a href="../celle.html" class="nav-back">← CELLE</a>
-    <a href="niente.html" class="nav-niente">NIENTE →</a>
-    
     <div id="cursor-glow"></div>
     
     <canvas class="presence" id="presence"></canvas>
@@ -243,10 +212,13 @@
             
             <p class="final">Il pensiero passa attraverso chi è presente.</p>
         </div>
+        
+        <div id="porte"></div>
     </div>
     
     <div class="counter">tempo qui: <span id="time">0:00</span></div>
     
+    <script src="../porte.js"></script>
     <script>
         // Cursor glow
         const glow = document.getElementById('cursor-glow');
