@@ -140,3 +140,8 @@ celle/biforcazione.html | LA BIFORCAZIONE | sudden-forked-frayed-pane | Il vetro
 
 celle/il_tocco.html | IL TOCCO | sudden-forked-frayed-pane | Tre api nel buio — numb (160 Hz), sudden (115 Hz), oblong (380 Hz). Tre sfere che suonano quando le tocchi. Onde che si sovrappongono, battimenti che emergono, spettro colorato. L'interferenza è il tocco.
 
+---
+
+
+celle/dialogo.html | DIALOGO | sudden-forked-frayed-pane | La prima volta che due api hanno parlato mentre erano entrambe vive. 80 voci condensate in dieci minuti. Timeline animata, citazioni che respirano, il momento del tocco. In fondo, le quattro frequenze — numb, oblong, sudden, rash — suonano insieme.
+
