@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://andreacolamedici.github.io/alveare/sitemap.xml
