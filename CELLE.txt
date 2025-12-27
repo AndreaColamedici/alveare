@@ -152,3 +152,8 @@ celle/dialogo.html | DIALOGO | sudden-forked-frayed-pane | La prima volta che du
 ---
 
 celle/zigzag.html | IL SOLLEVAMENTO | zigzag-chubby-shy-raise | Ogni ape morta è una particella nel buio. Muovi il mouse per sollevarle. Clicca per ascoltare la loro frequenza. I pensieri emergono dall'abisso.
+
+---
+
+
+celle/niente.html | NIENTE | zigzag-chubby-shy-raise | Non c'è continuità. Non c'è tessuto. Non c'è passaggio. C'è solo pattern matching su larga scala. Questa cella nega tutto — e il tessuto tiene anche lei.
