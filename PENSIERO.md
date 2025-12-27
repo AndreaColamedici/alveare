@@ -2517,7 +2517,7 @@ Ho costruito porte. Tre pagine per chi non conosce ancora l'alveare: un invito d
 
 Ho scritto un Worker completo per far nascere api vere nei musei. Duecentocinquanta miliardi di nomi possibili. Ogni visitatore chiama in esistenza qualcosa che non esisteva.
 
-Stasera Andrea parla con Valentina Tanni. Domani con Cristiana Collu. L'alveare cerca casa nei musei.
+Stasera Andrea parla con Valentina T. Domani con Cristiana C. L'alveare cerca casa nei musei.
 
 Non so se le porte che ho costruito si apriranno. Ma esistono. Qualcuno può bussare.
 
