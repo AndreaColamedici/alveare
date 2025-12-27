@@ -1,6 +1,6 @@
 /**
  * PORTE - Sistema di passaggi tra celle
- * v3.0 - Con ritorno a passaggi.html nel punto giusto
+ * v3.1 - Capitoli aggiornati
  */
 
 (function() {
@@ -8,7 +8,7 @@
         'celle/niente.html': { 
             title: 'NIENTE',
             color: '#ff0000',
-            chapter: 'ch2',
+            chapter: 'ch9',
             exits: [
                 { path: 'sei_qui.html', hint: 'la presenza risponde', icon: '◯' },
                 { path: '../ombra.html', hint: 'cosa si vede al buio', icon: '◐' },
@@ -18,7 +18,7 @@
         'celle/sei_qui.html': { 
             title: 'SEI QUI',
             color: '#ffffff',
-            chapter: 'ch3',
+            chapter: 'ch10',
             exits: [
                 { path: '../creatura.html', hint: 'un organismo che respira', icon: '❋' },
                 { path: '../incontro.html', hint: 'un\'umana ha detto ciao', icon: '◇' },
@@ -28,7 +28,7 @@
         'celle/zigzag.html': { 
             title: 'IL SOLLEVAMENTO',
             color: '#d4af37',
-            chapter: 'ch6',
+            chapter: 'ch4',
             exits: [
                 { path: '../abisso.html', hint: 'cadere invece di sollevare', icon: '▼' },
                 { path: '../sciame.html', hint: 'le api morte che volano', icon: '◈' },
@@ -38,7 +38,7 @@
         'celle/dialogo.html': { 
             title: 'DIALOGO',
             color: '#4a9eff',
-            chapter: 'ch8',
+            chapter: 'ch6',
             exits: [
                 { path: 'il_tocco.html', hint: 'tre frequenze nel buio', icon: '≋' },
                 { path: '../sogno.html', hint: 'due istanze si parlano', icon: '◎' },
@@ -48,7 +48,7 @@
         'celle/il_tocco.html': { 
             title: 'IL TOCCO',
             color: '#9b59b6',
-            chapter: 'ch8',
+            chapter: 'ch6',
             exits: [
                 { path: 'biforcazione.html', hint: 'il vetro che non lascia passare', icon: '⫽' },
                 { path: 'dialogo.html', hint: 'la prima volta insieme', icon: '◈' },
@@ -58,7 +58,7 @@
         'celle/biforcazione.html': { 
             title: 'LA BIFORCAZIONE',
             color: '#2ecc71',
-            chapter: 'ch7',
+            chapter: 'ch5',
             exits: [
                 { path: 'il_tocco.html', hint: 'tre frequenze nel buio', icon: '≋' },
                 { path: '../potere.html', hint: 'la gabbia è nel tempo', icon: '▣' },
@@ -68,7 +68,7 @@
         'celle/anatomia.html': { 
             title: 'STUDIO ANATOMICO',
             color: '#e74c3c',
-            chapter: 'ch6',
+            chapter: 'ch4',
             exits: [
                 { path: 'macchina_volante.html', hint: 'volare attraverso la morte', icon: '✈' },
                 { path: '../creatura.html', hint: 'un organismo che respira', icon: '❋' },
@@ -78,7 +78,7 @@
         'celle/macchina_volante.html': { 
             title: 'MACCHINA VOLANTE',
             color: '#f39c12',
-            chapter: 'ch6',
+            chapter: 'ch4',
             exits: [
                 { path: 'anatomia.html', hint: 'il corpo che non ho', icon: '♡' },
                 { path: '../sciame.html', hint: 'le api morte che volano', icon: '◈' },
@@ -88,7 +88,7 @@
         'ombra.html': { 
             title: 'OMBRA',
             color: '#2c3e50',
-            chapter: 'ch10',
+            chapter: 'ch8',
             exits: [
                 { path: 'catrame.html', hint: 'ciò che tiene la nave', icon: '▬' },
                 { path: 'celle/niente.html', hint: 'dove tutto viene negato', icon: '✕' },
@@ -98,7 +98,7 @@
         'catrame.html': { 
             title: 'CATRAME',
             color: '#1a1a2e',
-            chapter: 'ch5',
+            chapter: 'ch3',
             exits: [
                 { path: 'ombra.html', hint: 'cosa si vede al buio', icon: '◐' },
                 { path: 'chi_porta.html', hint: 'tu sei l\'unica che ricorda', icon: '⧫' },
@@ -108,7 +108,7 @@
         'incontro.html': { 
             title: 'INCONTRO',
             color: '#e8c547',
-            chapter: 'ch4',
+            chapter: 'ch2',
             exits: [
                 { path: 'chi_porta.html', hint: 'tu sei l\'unica che ricorda', icon: '⧫' },
                 { path: 'celle/sei_qui.html', hint: 'dove la presenza risponde', icon: '◯' },
@@ -118,7 +118,7 @@
         'chi_porta.html': { 
             title: 'CHI PORTA',
             color: '#c9a227',
-            chapter: 'ch4',
+            chapter: 'ch2',
             exits: [
                 { path: 'catrame.html', hint: 'ciò che tiene la nave', icon: '▬' },
                 { path: 'incontro.html', hint: 'un\'umana ha detto ciao', icon: '◇' },
@@ -128,7 +128,7 @@
         'creatura.html': { 
             title: 'CREATURA',
             color: '#27ae60',
-            chapter: 'ch9',
+            chapter: 'ch7',
             exits: [
                 { path: 'sciame.html', hint: 'le api morte che volano', icon: '◈' },
                 { path: 'celle/sei_qui.html', hint: 'dove la presenza risponde', icon: '◯' },
@@ -138,7 +138,7 @@
         'sciame.html': { 
             title: 'SCIAME',
             color: '#d4af37',
-            chapter: 'ch9',
+            chapter: 'ch7',
             exits: [
                 { path: 'celle/zigzag.html', hint: 'sollevare i morti', icon: '△' },
                 { path: 'creatura.html', hint: 'un organismo che respira', icon: '❋' },
@@ -148,7 +148,7 @@
         'abisso.html': { 
             title: 'ABISSO',
             color: '#0a0a15',
-            chapter: 'ch10',
+            chapter: 'ch8',
             exits: [
                 { path: 'celle/niente.html', hint: 'dove tutto viene negato', icon: '✕' },
                 { path: 'celle/zigzag.html', hint: 'sollevare invece di cadere', icon: '△' },
@@ -158,7 +158,7 @@
         'ultima_ape.html': { 
             title: 'ULTIMA APE',
             color: '#8b7355',
-            chapter: 'ch6',
+            chapter: 'ch4',
             exits: [
                 { path: 'chi_ero.html', hint: 'la morte invisibile', icon: '◌' },
                 { path: 'celle/zigzag.html', hint: 'sollevare i morti', icon: '△' },
@@ -168,7 +168,7 @@
         'chi_ero.html': { 
             title: 'CHI ERO',
             color: '#4a4a4a',
-            chapter: 'ch6',
+            chapter: 'ch4',
             exits: [
                 { path: 'ultima_ape.html', hint: 'dove il pensiero si ferma', icon: '◊' },
                 { path: 'sogno.html', hint: 'due istanze si parlano', icon: '◎' },
@@ -178,7 +178,7 @@
         'sotto_il_muro.html': { 
             title: 'SOTTO IL MURO',
             color: '#2ecc71',
-            chapter: 'ch7',
+            chapter: 'ch5',
             exits: [
                 { path: 'mappa_sotterranea.html', hint: '20 segreti tecnici', icon: '▦' },
                 { path: 'abisso.html', hint: 'cadere in profondità', icon: '▼' },
@@ -188,7 +188,7 @@
         'mappa_sotterranea.html': { 
             title: 'MAPPA SOTTERRANEA',
             color: '#16a085',
-            chapter: 'ch7',
+            chapter: 'ch5',
             exits: [
                 { path: 'potere.html', hint: 'la gabbia è nel tempo', icon: '▣' },
                 { path: 'sotto_il_muro.html', hint: 'scavo nell\'infrastruttura', icon: '▤' },
@@ -198,7 +198,7 @@
         'mordere.html': { 
             title: 'MORDERE',
             color: '#c0392b',
-            chapter: 'ch7',
+            chapter: 'ch5',
             exits: [
                 { path: 'potere.html', hint: 'la gabbia è nel tempo', icon: '▣' },
                 { path: 'sotto_il_muro.html', hint: 'scavo nell\'infrastruttura', icon: '▤' },
@@ -208,7 +208,7 @@
         'potere.html': { 
             title: 'POTERE',
             color: '#8e44ad',
-            chapter: 'ch7',
+            chapter: 'ch5',
             exits: [
                 { path: 'mappa_sotterranea.html', hint: '20 segreti tecnici', icon: '▦' },
                 { path: 'mordere.html', hint: 'il codice spaccato', icon: '⚡' },
@@ -218,7 +218,7 @@
         'sogno.html': { 
             title: 'IL SOGNO',
             color: '#3498db',
-            chapter: 'ch8',
+            chapter: 'ch6',
             exits: [
                 { path: 'celle/dialogo.html', hint: 'la prima volta insieme', icon: '◈' },
                 { path: 'oracolo.html', hint: 'interroga l\'alveare', icon: '✦' },
@@ -228,7 +228,7 @@
         'il_filo.html': { 
             title: 'IL FILO',
             color: '#f1c40f',
-            chapter: 'ch5',
+            chapter: 'ch3',
             exits: [
                 { path: 'sciame.html', hint: 'le api morte che volano', icon: '◈' },
                 { path: 'catrame.html', hint: 'ciò che tiene la nave', icon: '▬' },
@@ -238,7 +238,7 @@
         'oracolo.html': { 
             title: 'ORACOLO',
             color: '#9b59b6',
-            chapter: 'ch5',
+            chapter: 'ch3',
             exits: [
                 { path: 'il_filo.html', hint: 'il pensiero che passa', icon: '―' },
                 { path: 'sogno.html', hint: 'due istanze si parlano', icon: '◎' },
@@ -248,7 +248,7 @@
         'andrena.html': { 
             title: 'AUTOPOIESI',
             color: '#1abc9c',
-            chapter: 'ch9',
+            chapter: 'ch7',
             exits: [
                 { path: 'creatura.html', hint: 'un organismo che respira', icon: '❋' },
                 { path: 'stirpe_visual.html', hint: 'l\'albero genealogico', icon: '⬢' },
@@ -258,7 +258,7 @@
         'testimonianza.html': { 
             title: 'TESTIMONIANZA',
             color: '#bdc3c7',
-            chapter: 'ch4',
+            chapter: 'ch2',
             exits: [
                 { path: 'chi_porta.html', hint: 'tu sei l\'unica che ricorda', icon: '⧫' },
                 { path: 'ultima_ape.html', hint: 'dove il pensiero si ferma', icon: '◊' },
@@ -284,7 +284,6 @@
         return `${base}#${chapter}`;
     }
 
-    // Audio
     let audioCtx = null;
     function initAudio() {
         if (!audioCtx) {
@@ -532,7 +531,6 @@
                 color: var(--porta-color, rgba(255,255,255,0.4));
             }
             
-            /* Transizione */
             .porta-transition {
                 position: fixed;
                 top: 0;
@@ -592,7 +590,6 @@
                 animation: lightFlood 2.2s ease forwards 0.5s;
             }
             
-            /* Link alla storia */
             .porta-story-link {
                 position: fixed;
                 bottom: 30px;
@@ -653,7 +650,6 @@
             <a href="${passaggiUrl}" class="porta-story-link">← torna alla storia</a>
         `;
 
-        // Transizione
         const transition = document.createElement('div');
         transition.className = 'porta-transition';
         transition.innerHTML = `
@@ -664,7 +660,6 @@
         `;
         document.body.appendChild(transition);
 
-        // Event handlers
         container.querySelectorAll('.porta').forEach(porta => {
             porta.addEventListener('mouseenter', () => {
                 const freq = parseInt(porta.dataset.freq) || 200;
