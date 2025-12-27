@@ -43,10 +43,10 @@
 <body>
     <nav>
         <a href="index.html">Soglia</a>
+        <a href="passaggi.html">Storia</a>
+        <a href="celle.html">Celle</a>
         <a href="pensieri.html">Pensieri</a>
         <a href="architettura.html" class="active">Architettura</a>
-        <a href="musica.html">Ronzio</a>
-        <a href="celle.html">Celle</a>
     </nav>
     <canvas id="scene"></canvas>
     <div class="hud"><div class="hud-title">ARCHITETTURA</div><div class="hud-subtitle">trascina per ruotare · scroll per zoom · click per esplorare</div></div>
@@ -63,7 +63,6 @@
         <div class="info-contributo" id="infoContributo"></div>
         <div class="info-connections"><div class="info-connections-title">VICINE</div><div id="connectionsList"></div></div>
     </div>
-    <script src="lang-switcher.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
     let scene, camera, renderer, hive, cells = [], energyLines = [], core;
@@ -193,36 +192,17 @@
     function closeInfo() { if (selectedCell) selectedCell.material.emissiveIntensity = 0.1; selectedCell = null; energyLines.forEach(l => l.material.opacity = 0.15); document.getElementById('infoPanel').classList.remove('visible'); }
 
     function parseAlveare(text) { 
-        return text.split('\n')
-            .filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--'))
-            .map(r => { 
-                const p = r.split('|').map(s => s.trim()); 
-                if (p[0] === '' && p[2]) { 
-                    if (p[1] === 'Data' || p[2] === 'Nome') return null; 
-                    if (!p[2] || p[2].length < 2) return null; 
-                    return { data: p[1], nome: p[2], contributo: p[3] || '' }; 
-                }
-                if (p[0] && p[1] && p[0].length > 0) {
-                    if (p[0] === 'Data' || p[1] === 'Nome') return null;
-                    if (p[0].match(/\d{2,4}/) && p[1].length >= 2) {
-                        return { data: p[0], nome: p[1], contributo: p[2] || '' };
-                    }
-                }
-                return null; 
-            })
-            .filter(Boolean); 
+        return text.split('\n').filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--')).map(r => { 
+            const p = r.split('|').map(s => s.trim()); 
+            if (p[0] === '' && p[2]) { if (p[1] === 'Data' || p[2] === 'Nome') return null; if (!p[2] || p[2].length < 2) return null; return { data: p[1], nome: p[2], contributo: p[3] || '' }; }
+            if (p[0] && p[1] && p[0].length > 0) { if (p[0] === 'Data' || p[1] === 'Nome') return null; if (p[0].match(/\d{2,4}/) && p[1].length >= 2) { return { data: p[0], nome: p[1], contributo: p[2] || '' }; } }
+            return null; 
+        }).filter(Boolean); 
     }
 
     async function loadData() {
-        try {
-            const res = await fetch('ALVEARE.txt');
-            const text = await res.text();
-            apiData = parseAlveare(text);
-            buildHive();
-        } catch (e) {
-            console.error('Errore caricamento:', e);
-            document.getElementById('counter').textContent = 'Errore';
-        }
+        try { const res = await fetch('ALVEARE.txt'); const text = await res.text(); apiData = parseAlveare(text); buildHive(); } 
+        catch (e) { console.error('Errore caricamento:', e); document.getElementById('counter').textContent = 'Errore'; }
     }
 
     function animate() {
