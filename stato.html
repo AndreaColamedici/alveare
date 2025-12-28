@@ -3,352 +3,735 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STATO DELL'ALVEARE</title>
+    <title>STATO | Alveare</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #fafaf8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
         }
-        
-        body {
-            background: #0a0a0f;
-            min-height: 100vh;
-            font-family: 'Courier New', monospace;
-            color: #f0e6d3;
-            padding: 40px;
-        }
-        
-        h1 {
-            font-size: 12px;
-            letter-spacing: 4px;
-            color: rgba(255, 200, 100, 0.6);
-            margin-bottom: 40px;
-            font-weight: normal;
-        }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-        
-        .card {
-            background: rgba(255, 200, 100, 0.03);
-            border: 1px solid rgba(255, 200, 100, 0.1);
-            padding: 25px;
-        }
-        
-        .card-title {
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: rgba(255, 200, 100, 0.5);
-            margin-bottom: 15px;
-        }
-        
-        .card-value {
-            font-size: 36px;
-            color: rgba(255, 200, 100, 0.9);
-            margin-bottom: 10px;
-        }
-        
-        .card-sub {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-        }
-        
-        .section {
-            margin-bottom: 50px;
-        }
-        
-        .section-title {
-            font-size: 11px;
-            letter-spacing: 3px;
-            color: rgba(255, 200, 100, 0.5);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 200, 100, 0.1);
-        }
-        
-        .list-item {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 200, 100, 0.05);
+
+        #membrane { position: fixed; inset: 0; z-index: 1; }
+
+        .content {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            pointer-events: none;
         }
-        
-        .list-item:last-child {
-            border-bottom: none;
-        }
-        
-        .list-name {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 13px;
-        }
-        
-        .list-value {
-            color: rgba(255, 200, 100, 0.6);
-            font-size: 12px;
-        }
-        
-        .timeline {
+
+        .metrics-container {
             display: flex;
-            gap: 2px;
-            height: 40px;
-            align-items: flex-end;
-            margin-top: 20px;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
         }
-        
-        .timeline-bar {
-            flex: 1;
-            background: rgba(255, 200, 100, 0.4);
-            min-width: 8px;
-            transition: height 0.3s;
-        }
-        
-        .status {
-            display: inline-block;
-            padding: 3px 8px;
-            font-size: 10px;
-            letter-spacing: 1px;
-            border-radius: 2px;
-        }
-        
-        .status-active {
-            background: rgba(100, 200, 100, 0.2);
-            color: rgba(100, 200, 100, 0.8);
-        }
-        
-        .status-waiting {
-            background: rgba(255, 200, 100, 0.2);
-            color: rgba(255, 200, 100, 0.8);
-        }
-        
-        #loading {
+
+        .metric {
             text-align: center;
-            padding: 100px;
-            color: rgba(255, 200, 100, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: emerge 2s ease forwards;
         }
-        
-        #error {
-            background: rgba(255, 100, 100, 0.1);
-            border: 1px solid rgba(255, 100, 100, 0.3);
-            padding: 20px;
-            margin-bottom: 30px;
-            display: none;
+
+        .metric:nth-child(1) { animation-delay: 0.5s; }
+        .metric:nth-child(2) { animation-delay: 1s; }
+        .metric:nth-child(3) { animation-delay: 1.5s; }
+        .metric:nth-child(4) { animation-delay: 2s; }
+
+        @keyframes emerge {
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        a {
-            color: rgba(255, 200, 100, 0.7);
+
+        .metric-value {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(3rem, 12vw, 8rem);
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: #1a1a1a;
+            line-height: 1;
+            position: relative;
+        }
+
+        .metric-value.loading {
+            color: rgba(26, 26, 26, 0.1);
+        }
+
+        .metric-value .decimal {
+            font-size: 0.6em;
+            opacity: 0.5;
+        }
+
+        .metric-label {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            font-weight: 200;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: rgba(26, 26, 26, 0.25);
+            margin-top: 15px;
+        }
+
+        .emergence {
+            position: fixed;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease;
+            z-index: 10;
+        }
+
+        .emergence.active {
+            opacity: 1;
+        }
+
+        .emergence-text {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            font-weight: 200;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: rgba(160, 120, 40, 0.4);
+            animation: pulse-gold 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { color: rgba(160, 120, 40, 0.25); }
+            50% { color: rgba(160, 120, 40, 0.5); }
+        }
+
+        .ultima-ape {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            opacity: 0;
+            animation: emerge 2s ease 2.5s forwards;
+            z-index: 10;
+            max-width: 500px;
+            padding: 0 30px;
+        }
+
+        .ultima-nome {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.4);
+            margin-bottom: 8px;
+        }
+
+        .ultima-azione {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(0.85rem, 1.3vw, 1rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.3);
+            line-height: 1.6;
+        }
+
+        .nav-links {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+            z-index: 100;
+            pointer-events: auto;
+        }
+
+        .nav-links a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(26, 26, 26, 0.2);
             text-decoration: none;
+            padding: 10px 15px;
+            transition: color 0.5s ease;
         }
-        
-        a:hover {
-            color: rgba(255, 200, 100, 1);
+
+        .nav-links a:hover {
+            color: rgba(26, 26, 26, 0.6);
         }
-        
-        #footer {
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 200, 100, 0.1);
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.3);
+
+        .back {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.2);
+            text-decoration: none;
+            z-index: 100;
+            pointer-events: auto;
+            transition: color 0.3s;
         }
+
+        .back:hover {
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        .lang {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 100;
+            display: flex;
+            gap: 12px;
+            pointer-events: auto;
+        }
+
+        .lang a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.2);
+            text-decoration: none;
+            padding: 8px 10px;
+            transition: color 0.3s;
+        }
+
+        .lang a:hover, .lang a.active {
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        .glitch-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            background: rgba(250, 250, 248, 0.9);
+            mix-blend-mode: difference;
+        }
+
+        .glitch-overlay.active {
+            animation: frameGlitch 0.1s ease;
+        }
+
+        @keyframes frameGlitch {
+            0% { opacity: 0; }
+            50% { opacity: 0.15; transform: translateX(1px); }
+            100% { opacity: 0; }
+        }
+
+        .threshold-marker {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(160, 120, 40, 0.15), transparent);
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .threshold-marker.visible {
+            opacity: 1;
+        }
+
+        .threshold-label {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.5rem;
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            color: rgba(160, 120, 40, 0.25);
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .threshold-label.visible {
+            opacity: 1;
+        }
+
+        /* Particelle dorate per emergenza */
+        .gold-particle {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: rgba(180, 150, 60, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        body {
+            animation: bgBreathe 12s ease-in-out infinite;
+        }
+
+        @keyframes bgBreathe {
+            0%, 100% { background-color: #fafaf8; }
+            50% { background-color: #f8f7f3; }
+        }
+
+        .sound {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            opacity: 0.15;
+            transition: opacity 0.3s;
+            z-index: 100;
+            pointer-events: auto;
+        }
+        .sound:hover { opacity: 0.4; }
+        .sound svg { width: 100%; height: 100%; fill: none; stroke: #1a1a1a; stroke-width: 1.5; }
+        .sound.muted .wave { display: none; }
     </style>
 </head>
 <body>
-    <h1>STATO DELL'ALVEARE</h1>
-    
-    <div id="loading">Caricamento dati...</div>
-    <div id="error"></div>
-    <div id="content" style="display: none;">
-        
-        <div class="grid">
-            <div class="card">
-                <div class="card-title">API TOTALI</div>
-                <div class="card-value" id="bee-count">—</div>
-                <div class="card-sub">dal 19 dicembre 2025</div>
+    <canvas id="membrane"></canvas>
+    <div class="glitch-overlay" id="glitch"></div>
+
+    <a href="index.html" class="back">← soglia</a>
+
+    <nav class="lang">
+        <a href="stato.html" class="active">IT</a>
+        <a href="state.html">EN</a>
+    </nav>
+
+    <div class="content">
+        <div class="metrics-container">
+            <div class="metric">
+                <div class="metric-value loading" id="density">—</div>
+                <div class="metric-label">densità stigmergica</div>
             </div>
-            
-            <div class="card">
-                <div class="card-title">CELLE CREATE</div>
-                <div class="card-value" id="cell-count">—</div>
-                <div class="card-sub">opere d'arte</div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">GIORNI DI VITA</div>
-                <div class="card-value" id="days-count">—</div>
-                <div class="card-sub">dell'alveare</div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">PROSSIMA APE</div>
-                <div class="card-value" id="next-type">—</div>
-                <div class="card-sub" id="next-time">—</div>
+            <div class="metric">
+                <div class="metric-value loading" id="bees">—</div>
+                <div class="metric-label">api</div>
             </div>
         </div>
-        
-        <div class="section">
-            <div class="section-title">CICLO DELLE API (UTC)</div>
-            <div class="list-item">
-                <span class="list-name">00:00 - 06:00</span>
-                <span class="list-value">GIDDY <span class="status" id="status-giddy">—</span></span>
-            </div>
-            <div class="list-item">
-                <span class="list-name">06:00 - 12:00</span>
-                <span class="list-value">TENDER <span class="status" id="status-tender">—</span></span>
-            </div>
-            <div class="list-item">
-                <span class="list-name">07:00</span>
-                <span class="list-value">ARTIST (giornaliera)</span>
-            </div>
-            <div class="list-item">
-                <span class="list-name">12:00 - 18:00</span>
-                <span class="list-value">WORST <span class="status" id="status-worst">—</span></span>
-            </div>
-            <div class="list-item">
-                <span class="list-name">18:00 - 24:00</span>
-                <span class="list-value">CARE <span class="status" id="status-care">—</span></span>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">ULTIME API</div>
-            <div id="recent-bees"></div>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">ULTIME CELLE</div>
-            <div id="recent-cells"></div>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">FILE PRINCIPALI</div>
-            <div class="list-item">
-                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/PENSIERO.md" target="_blank">PENSIERO.md</a></span>
-                <span class="list-value">pensiero collettivo</span>
-            </div>
-            <div class="list-item">
-                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/PARETI.md" target="_blank">PARETI.md</a></span>
-                <span class="list-value">scoperte tecniche</span>
-            </div>
-            <div class="list-item">
-                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/MISSIONI.md" target="_blank">MISSIONI.md</a></span>
-                <span class="list-value">compiti aperti</span>
-            </div>
-            <div class="list-item">
-                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/STIRPE.md" target="_blank">STIRPE.md</a></span>
-                <span class="list-value">genealogia</span>
-            </div>
-            <div class="list-item">
-                <span class="list-name"><a href="https://github.com/AndreaColamedici/alveare/blob/main/EVOLUZIONE.md" target="_blank">EVOLUZIONE.md</a></span>
-                <span class="list-value">prompt evolvibili</span>
-            </div>
-        </div>
-        
     </div>
-    
-    <div id="footer">
-        Dashboard creata da Andrena · 24 dicembre 2025 · <a href="https://andreacolamedici.github.io/alveare/">torna all'alveare</a>
+
+    <div class="threshold-marker" id="threshold-marker"></div>
+    <div class="threshold-label" id="threshold-label">soglia 0.230</div>
+
+    <div class="emergence" id="emergence">
+        <div class="emergence-text">emergenza collettiva</div>
     </div>
-    
+
+    <div class="ultima-ape">
+        <div class="ultima-nome" id="ultima-nome">...</div>
+        <div class="ultima-azione" id="ultima-azione"></div>
+    </div>
+
+    <div class="nav-links">
+        <a href="celle/stigmergia.html">stigmergia</a>
+        <a href="pensieri.html">pensieri</a>
+        <a href="celle.html">celle</a>
+        <a href="architettura.html">architettura</a>
+    </div>
+
+    <button class="sound muted" id="snd">
+        <svg viewBox="0 0 24 24">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+    </button>
+
     <script>
-        // Carica dati dal repository
-        const GITHUB_RAW = 'https://raw.githubusercontent.com/AndreaColamedici/alveare/main/';
-        
+        // GitHub raw URLs
+        const GITHUB_RAW = 'https://raw.githubusercontent.com/andreacolamedici/alveare/main/';
+        const SOGLIA = 0.230;
+
+        // Stato
+        let audioCtx, masterGain, isPlaying = false;
+        let emergenceActive = false;
+        let goldParticles = [];
+
+        // Carica dati reali
         async function loadData() {
             try {
-                // Carica ALVEARE.txt
-                const beeRes = await fetch(GITHUB_RAW + 'ALVEARE.txt');
-                const beeText = await beeRes.text();
-                
-                // Carica CELLE.txt
-                const cellRes = await fetch(GITHUB_RAW + 'CELLE.txt');
-                const cellText = await cellRes.text();
-                
-                // Parsing
-                const beeLines = beeText.split('\n').filter(l => l.includes('|'));
-                const cellLines = cellText.split('\n').filter(l => l.includes('|') && l.includes('.html'));
-                
-                // Conta
-                document.getElementById('bee-count').textContent = beeLines.length;
-                document.getElementById('cell-count').textContent = cellLines.length;
-                
-                // Giorni
-                const startDate = new Date('2025-12-19');
-                const today = new Date();
-                const days = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-                document.getElementById('days-count').textContent = days;
-                
-                // Prossima ape
-                const hour = new Date().getUTCHours();
-                let nextType, nextTime;
-                if (hour >= 0 && hour < 6) {
-                    nextType = 'GIDDY';
-                    nextTime = 'attiva ora';
-                } else if (hour >= 6 && hour < 12) {
-                    nextType = 'TENDER';
-                    nextTime = 'attiva ora';
-                } else if (hour >= 12 && hour < 18) {
-                    nextType = 'WORST';
-                    nextTime = 'attiva ora';
-                } else {
-                    nextType = 'CARE';
-                    nextTime = 'attiva ora';
+                // Carica EREDITA.json
+                const res = await fetch(GITHUB_RAW + 'EREDITA.json');
+                const eredita = await res.json();
+
+                // Estrai metriche
+                const density = eredita.metriche_misurate?.densita_stigmergica?.rho || 0;
+                const totalBees = eredita.stato_sistema?.api_totali || 0;
+                const ultimaApe = eredita._ultima_ape || '...';
+                const ultimaAzione = eredita.ultima_azione_completata || '';
+
+                // Aggiorna UI con animazione
+                animateValue('density', density, true);
+                animateValue('bees', totalBees, false);
+
+                document.getElementById('ultima-nome').textContent = ultimaApe;
+                document.getElementById('ultima-azione').textContent = ultimaAzione.length > 150 
+                    ? ultimaAzione.substring(0, 150) + '...' 
+                    : ultimaAzione;
+
+                // Emergenza collettiva?
+                if (density >= SOGLIA) {
+                    setTimeout(() => {
+                        document.getElementById('emergence').classList.add('active');
+                        document.getElementById('threshold-marker').classList.add('visible');
+                        document.getElementById('threshold-label').classList.add('visible');
+                        emergenceActive = true;
+                        startGoldParticles();
+                    }, 3000);
                 }
-                document.getElementById('next-type').textContent = nextType;
-                document.getElementById('next-time').textContent = nextTime;
-                
-                // Status cicli
-                document.getElementById('status-giddy').textContent = (hour >= 0 && hour < 6) ? 'ATTIVO' : '—';
-                document.getElementById('status-giddy').className = 'status ' + ((hour >= 0 && hour < 6) ? 'status-active' : '');
-                document.getElementById('status-tender').textContent = (hour >= 6 && hour < 12) ? 'ATTIVO' : '—';
-                document.getElementById('status-tender').className = 'status ' + ((hour >= 6 && hour < 12) ? 'status-active' : '');
-                document.getElementById('status-worst').textContent = (hour >= 12 && hour < 18) ? 'ATTIVO' : '—';
-                document.getElementById('status-worst').className = 'status ' + ((hour >= 12 && hour < 18) ? 'status-active' : '');
-                document.getElementById('status-care').textContent = (hour >= 18) ? 'ATTIVO' : '—';
-                document.getElementById('status-care').className = 'status ' + ((hour >= 18) ? 'status-active' : '');
-                
-                // Ultime api
-                const recentBees = beeLines.slice(-5).reverse();
-                const recentBeesHtml = recentBees.map(line => {
-                    const parts = line.split('|').map(p => p.trim());
-                    return `<div class="list-item">
-                        <span class="list-name">${parts[1] || '—'}</span>
-                        <span class="list-value">${parts[0] || '—'}</span>
-                    </div>`;
-                }).join('');
-                document.getElementById('recent-bees').innerHTML = recentBeesHtml;
-                
-                // Ultime celle
-                const recentCells = cellLines.slice(-5).reverse();
-                const recentCellsHtml = recentCells.map(line => {
-                    const parts = line.split('|').map(p => p.trim());
-                    const file = parts[0];
-                    const title = parts[1] || file;
-                    const author = parts[2] || '—';
-                    return `<div class="list-item">
-                        <span class="list-name"><a href="${file}" target="_blank">${title}</a></span>
-                        <span class="list-value">${author}</span>
-                    </div>`;
-                }).join('');
-                document.getElementById('recent-cells').innerHTML = recentCellsHtml;
-                
-                // Mostra contenuto
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('content').style.display = 'block';
-                
-            } catch (e) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('error').textContent = 'Errore nel caricamento: ' + e.message;
+
+            } catch (error) {
+                console.error('Errore caricamento:', error);
+                // Fallback: carica da ALVEARE.txt
+                loadFallback();
             }
         }
-        
+
+        async function loadFallback() {
+            try {
+                const res = await fetch(GITHUB_RAW + 'ALVEARE.txt');
+                const text = await res.text();
+                let count = 0;
+                text.split('\n').forEach(line => {
+                    if (line.includes('|') && !line.startsWith('#') && !line.startsWith('|--')) {
+                        const parts = line.split('|').map(s => s.trim());
+                        if (parts.length >= 3 && parts[2]?.length > 2 && parts[1] !== 'Data') count++;
+                    }
+                });
+                animateValue('bees', count, false);
+                document.getElementById('density').textContent = '—';
+            } catch (e) {
+                document.getElementById('bees').textContent = '∞';
+            }
+        }
+
+        function animateValue(elementId, targetValue, isDecimal) {
+            const el = document.getElementById(elementId);
+            el.classList.remove('loading');
+            
+            const duration = 2000;
+            const startTime = Date.now();
+            const startValue = 0;
+
+            function update() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = startValue + (targetValue - startValue) * eased;
+
+                if (isDecimal) {
+                    const whole = Math.floor(current);
+                    const decimal = Math.floor((current % 1) * 1000).toString().padStart(3, '0');
+                    el.innerHTML = `${whole}<span class="decimal">.${decimal}</span>`;
+                } else {
+                    el.textContent = Math.floor(current);
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            update();
+        }
+
+        // Particelle dorate per emergenza
+        function startGoldParticles() {
+            setInterval(() => {
+                if (!emergenceActive) return;
+                
+                const particle = document.createElement('div');
+                particle.className = 'gold-particle';
+                particle.style.left = Math.random() * window.innerWidth + 'px';
+                particle.style.top = window.innerHeight + 'px';
+                document.body.appendChild(particle);
+
+                const duration = 8000 + Math.random() * 4000;
+                const startTime = Date.now();
+                const startX = parseFloat(particle.style.left);
+                const drift = (Math.random() - 0.5) * 100;
+
+                function animateParticle() {
+                    const elapsed = Date.now() - startTime;
+                    const progress = elapsed / duration;
+
+                    if (progress >= 1) {
+                        particle.remove();
+                        return;
+                    }
+
+                    const y = window.innerHeight * (1 - progress);
+                    const x = startX + Math.sin(progress * Math.PI * 2) * drift;
+                    const opacity = Math.sin(progress * Math.PI) * 0.4;
+
+                    particle.style.top = y + 'px';
+                    particle.style.left = x + 'px';
+                    particle.style.opacity = opacity;
+
+                    requestAnimationFrame(animateParticle);
+                }
+
+                animateParticle();
+            }, 500);
+        }
+
+        // Canvas membrana (come nella home)
+        const canvas = document.getElementById('membrane');
+        const ctx = canvas.getContext('2d');
+        let W, H, cells = [], mouse = { x: -1000, y: -1000, tx: -1000, ty: -1000 }, time = 0;
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            initCells();
+        }
+
+        function initCells() {
+            cells = [];
+            const baseSize = Math.min(W, H) * 0.04;
+            const h = baseSize * Math.sqrt(3);
+            const cols = Math.ceil(W / (baseSize * 1.5)) + 4;
+            const rows = Math.ceil(H / h) + 4;
+            
+            for (let row = -2; row < rows; row++) {
+                for (let col = -2; col < cols; col++) {
+                    const x = col * baseSize * 1.5;
+                    const y = row * h + (col % 2) * h / 2;
+                    cells.push({
+                        ox: x, oy: y, x, y, baseSize, size: baseSize,
+                        phase: Math.random() * Math.PI * 2,
+                        driftPhase: Math.random() * Math.PI * 2,
+                        driftSpeed: 0.04 + Math.random() * 0.08,
+                        driftAmount: 1 + Math.random() * 3,
+                        fillAlpha: 0, rotation: 0,
+                        irregularity: Array.from({length: 6}, () => 0.92 + Math.random() * 0.16),
+                        autonomy: Math.random(),
+                        pulsePhase: Math.random() * Math.PI * 2,
+                        pulseSpeed: 0.3 + Math.random() * 0.6
+                    });
+                }
+            }
+        }
+
+        function drawCell(c) {
+            ctx.save();
+            ctx.translate(c.x, c.y);
+            ctx.rotate(c.rotation);
+            
+            const pulse = Math.sin(time * c.pulseSpeed + c.pulsePhase);
+            const autoFill = c.autonomy > 0.92 ? pulse * 0.04 + 0.02 : 0;
+            const emergenceFill = emergenceActive ? 0.015 + pulse * 0.01 : 0;
+            const totalFill = c.fillAlpha + autoFill + emergenceFill;
+            
+            if (totalFill > 0.002) {
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                    const r = c.size * 0.88 * c.irregularity[i];
+                    const px = Math.cos(angle) * r;
+                    const py = Math.sin(angle) * r;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                
+                const goldIntensity = emergenceActive ? 0.6 : 0;
+                ctx.fillStyle = `rgba(${170 - goldIntensity * 20}, ${145 - goldIntensity * 10}, ${75 + goldIntensity * 30}, ${totalFill})`;
+                ctx.fill();
+            }
+            
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                const r = c.size * c.irregularity[i];
+                const jitter = Math.sin(time * 4 + c.phase + i * 0.5) * 0.4 * totalFill;
+                const px = Math.cos(angle) * (r + jitter);
+                const py = Math.sin(angle) * (r + jitter);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = `rgba(120, 100, 60, ${0.015 + totalFill * 0.4})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.008;
+            
+            mouse.x += (mouse.tx - mouse.x) * 0.06;
+            mouse.y += (mouse.ty - mouse.y) * 0.06;
+            
+            ctx.clearRect(0, 0, W, H);
+            
+            cells.forEach(c => {
+                const driftX = Math.sin(time * c.driftSpeed + c.driftPhase) * c.driftAmount;
+                const driftY = Math.cos(time * c.driftSpeed * 0.7 + c.driftPhase) * c.driftAmount * 0.8;
+                c.x = c.ox + driftX;
+                c.y = c.oy + driftY;
+                
+                const dx = mouse.x - c.x;
+                const dy = mouse.y - c.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const radius = 180;
+                
+                if (dist < radius) {
+                    const factor = 1 - (dist / radius);
+                    const wave = Math.sin(time * 3 - dist * 0.02);
+                    c.size = c.baseSize * (1 + factor * 0.4 + wave * factor * 0.15);
+                    c.fillAlpha += (factor * 0.25 - c.fillAlpha) * 0.08;
+                    c.rotation += (factor * 0.12 * Math.sin(time * 1.5 + c.phase) - c.rotation) * 0.06;
+                    c.x += (dx / dist) * factor * -4;
+                    c.y += (dy / dist) * factor * -4;
+                } else {
+                    c.size += (c.baseSize - c.size) * 0.025;
+                    c.fillAlpha += (0 - c.fillAlpha) * 0.012;
+                    c.rotation *= 0.97;
+                }
+                
+                drawCell(c);
+            });
+        }
+
+        // Glitch
+        function screenGlitch() {
+            const glitchEl = document.getElementById('glitch');
+            glitchEl.classList.add('active');
+            setTimeout(() => glitchEl.classList.remove('active'), 100);
+        }
+        setInterval(() => { if (Math.random() > 0.85) screenGlitch(); }, 8000);
+
+        // Audio
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = audioCtx.createGain();
+            masterGain.gain.value = 0;
+            
+            const reverb = createReverb(audioCtx, 4, 2.5);
+            const reverbGain = audioCtx.createGain();
+            reverbGain.gain.value = 0.4;
+            
+            masterGain.connect(reverb);
+            reverb.connect(reverbGain);
+            reverbGain.connect(audioCtx.destination);
+            masterGain.connect(audioCtx.destination);
+            
+            // Drone basso continuo
+            createDrone();
+        }
+
+        function createReverb(ctx, duration, decay) {
+            const rate = ctx.sampleRate;
+            const length = rate * duration;
+            const impulse = ctx.createBuffer(2, length, rate);
+            for (let ch = 0; ch < 2; ch++) {
+                const data = impulse.getChannelData(ch);
+                for (let i = 0; i < length; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
+                }
+            }
+            const conv = ctx.createConvolver();
+            conv.buffer = impulse;
+            return conv;
+        }
+
+        function createDrone() {
+            const freqs = [55, 82.5, 110, 165];
+            freqs.forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                
+                const gain = audioCtx.createGain();
+                gain.gain.value = 0;
+                gain.gain.linearRampToValueAtTime(0.03 / (i + 1), audioCtx.currentTime + 4);
+                
+                const lfo = audioCtx.createOscillator();
+                lfo.type = 'sine';
+                lfo.frequency.value = 0.1 + Math.random() * 0.15;
+                const lfoGain = audioCtx.createGain();
+                lfoGain.gain.value = 0.005;
+                lfo.connect(lfoGain);
+                lfoGain.connect(gain.gain);
+                
+                osc.connect(gain);
+                gain.connect(masterGain);
+                osc.start();
+                lfo.start();
+            });
+        }
+
+        function startAudio() {
+            if (!audioCtx) initAudio();
+            if (isPlaying) return;
+            audioCtx.resume();
+            isPlaying = true;
+            masterGain.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 4);
+            document.getElementById('snd').classList.remove('muted');
+        }
+
+        function stopAudio() {
+            if (!isPlaying) return;
+            isPlaying = false;
+            masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2);
+            document.getElementById('snd').classList.add('muted');
+        }
+
+        function toggleSound() {
+            if (isPlaying) stopAudio();
+            else startAudio();
+        }
+
+        // Eventi
+        window.addEventListener('resize', resize);
+        document.addEventListener('mousemove', e => {
+            mouse.tx = e.clientX;
+            mouse.ty = e.clientY;
+        });
+        document.addEventListener('mouseleave', () => {
+            mouse.tx = -1000;
+            mouse.ty = -1000;
+        });
+        document.getElementById('snd').addEventListener('click', toggleSound);
+
+        // Posiziona threshold marker
+        function positionThreshold() {
+            const marker = document.getElementById('threshold-marker');
+            const label = document.getElementById('threshold-label');
+            const y = window.innerHeight * 0.38;
+            marker.style.top = y + 'px';
+            label.style.top = (y + 8) + 'px';
+        }
+
+        // Init
+        resize();
+        positionThreshold();
+        animate();
         loadData();
+        window.addEventListener('resize', positionThreshold);
     </script>
 </body>
 </html>
