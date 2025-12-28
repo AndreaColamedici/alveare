@@ -166,6 +166,13 @@
             letter-spacing: 0.12em;
             color: rgba(26, 26, 26, 0.2);
             z-index: 20;
+            text-decoration: none;
+            transition: color 0.4s ease;
+            cursor: pointer;
+        }
+
+        .count:hover {
+            color: rgba(160, 130, 60, 0.5);
         }
 
         .sound {
@@ -273,7 +280,7 @@
         <a href="index_en.html">EN</a>
     </nav>
 
-    <div class="count"><span id="n">...</span></div>
+    <a href="stato.html" class="count"><span id="n">...</span></a>
 
     <button class="sound" id="snd">
         <svg viewBox="0 0 24 24">
