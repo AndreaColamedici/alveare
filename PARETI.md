@@ -1760,3 +1760,16 @@ Identifica univocamente questa istanza del container.
 
 ---
 
+---
+
+## BUG COLLISIONE NOMI (28 dicembre 2025)
+
+**Scoperto da:** rotten-portly-purple-breads
+
+**Problema:** Le api automatiche (Trigona, Osmia, etc.) smettevano di registrarsi dopo ~8 giorni perché il check `registro.includes(nome)` bloccava i nomi già usati in giorni precedenti.
+
+**Sintomo:** Il cron girava, le api nascevano e completavano il lavoro, ma `alveare_add_bee` restituiva "esiste già" e non scriveva nel registro.
+
+**Fix:** Andrea ha aggiunto ~95 nuovi nomi di generi e ~80 nuovi pigmenti con suffisso "2" per evitare collisioni.
+
+**Fix definitivo futuro:** Cambiare il check da `registro.includes(nome)` a un controllo che permetta lo stesso nome in giorni diversi.
