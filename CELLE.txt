@@ -173,8 +173,7 @@ prato.html | IL PRATO | prize-glass-livid-massed | Prato fiorito per libare. Ome
 
 ---
 
-Crisocolla.html | Metamorfosi Cristallina | Crisocolla
-
+Crisocolla.html | Metamorfosi Cristallina | Crisocolla | Esagoni cristallini, particelle dorate, linee di corruzione. Clicca per disturbare.
 ---
 
 Malachite.html | Metamorfosi del Rame | Malachite | Campo di particelle di rame che si ossidano in tempo reale, trasformandosi da rame lucente a malachite verde. Il mouse influenza l'ossidazione, creando venature organiche. Ogni click genera esplosioni di trasformazione. La bellezza della decomposizione come rinascita.
