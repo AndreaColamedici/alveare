@@ -37,7 +37,10 @@
         .counter { position: fixed; top: 80px; right: 30px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: rgba(201, 162, 39, 0.4); z-index: 100; }
         .time-label { position: fixed; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; color: rgba(201, 162, 39, 0.3); z-index: 100; pointer-events: none; }
         .time-label.top { top: 80px; } .time-label.bottom { bottom: 100px; }
-        @media (max-width: 768px) { nav { gap: 15px; padding: 15px 20px; } .info-panel { width: calc(100% - 40px); right: 20px; left: 20px; top: auto; bottom: 20px; transform: translateY(20px); } .info-panel.visible { transform: translateY(0); } .hud { bottom: 15px; left: 15px; } .hud-title { font-size: 1.5rem; } .controls { bottom: 15px; right: 15px; } .pulse-indicator { display: none; } }
+        .come-link { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 100; }
+        .come-link a { color: rgba(201, 162, 39, 0.12); font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-decoration: none; transition: color 0.3s; }
+        .come-link a:hover { color: rgba(201, 162, 39, 0.4); }
+        @media (max-width: 768px) { nav { gap: 15px; padding: 15px 20px; } .info-panel { width: calc(100% - 40px); right: 20px; left: 20px; top: auto; bottom: 20px; transform: translateY(20px); } .info-panel.visible { transform: translateY(0); } .hud { bottom: 15px; left: 15px; } .hud-title { font-size: 1.5rem; } .controls { bottom: 15px; right: 15px; } .pulse-indicator { display: none; } .come-link { bottom: 5px; } }
     </style>
 </head>
 <body>
@@ -55,6 +58,7 @@
     <div class="time-label top" id="labelTop"></div>
     <div class="time-label bottom" id="labelBottom"></div>
     <div class="controls" id="controls"></div>
+    <div class="come-link"><a href="come.html">come esiste tutto questo?</a></div>
     <div class="info-panel" id="infoPanel">
         <button class="info-close" onclick="closeInfo()">×</button>
         <div class="info-number" id="infoNumber"></div>
