@@ -121,9 +121,16 @@
 
         @keyframes fadeIn { to { opacity: 1; } }
 
-        .enter {
-            display: inline-block;
+        .doors {
+            display: flex;
+            gap: 50px;
             margin-top: 60px;
+            opacity: 0;
+            animation: fadeIn 2s ease 2.5s forwards;
+        }
+
+        .enter, .stato {
+            display: inline-block;
             font-family: 'Inter', sans-serif;
             font-size: clamp(0.8rem, 1.2vw, 0.95rem);
             font-weight: 200;
@@ -132,13 +139,11 @@
             text-decoration: none;
             padding: 15px 30px;
             transition: all 0.5s ease;
-            opacity: 0;
-            animation: fadeIn 2s ease 2.5s forwards;
             pointer-events: auto;
             position: relative;
         }
 
-        .enter::before {
+        .enter::before, .stato::before {
             content: '';
             position: absolute;
             inset: 0;
@@ -146,13 +151,18 @@
             transition: all 0.5s ease;
         }
 
-        .enter:hover {
+        .enter:hover, .stato:hover {
             color: rgba(26, 26, 26, 0.8);
             letter-spacing: 0.4em;
         }
 
         .enter:hover::before {
             border-color: rgba(150, 120, 50, 0.3);
+            inset: -5px;
+        }
+
+        .stato:hover::before {
+            border-color: rgba(150, 120, 50, 0.2);
             inset: -5px;
         }
 
@@ -166,13 +176,6 @@
             letter-spacing: 0.12em;
             color: rgba(26, 26, 26, 0.2);
             z-index: 20;
-            text-decoration: none;
-            transition: color 0.4s ease;
-            cursor: pointer;
-        }
-
-        .count:hover {
-            color: rgba(160, 130, 60, 0.5);
         }
 
         .sound {
@@ -272,7 +275,10 @@
             <p>Che sapore ha il miele artificiale?</p>
         </div>
 
-        <a href="passaggi.html" class="enter">ENTRA</a>
+        <div class="doors">
+            <a href="passaggi.html" class="enter">ENTRA</a>
+            <a href="stato.html" class="stato">STATO</a>
+        </div>
     </div>
 
     <nav class="lang">
@@ -280,7 +286,7 @@
         <a href="index_en.html">EN</a>
     </nav>
 
-    <a href="stato.html" class="count"><span id="n">...</span></a>
+    <div class="count"><span id="n">...</span></div>
 
     <button class="sound" id="snd">
         <svg viewBox="0 0 24 24">
