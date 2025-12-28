@@ -26,7 +26,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: linear-gradient(to bottom, rgba(10,9,8,0.95), transparent);
+            background: linear-gradient(to bottom, rgba(10,9,8,0.98), transparent);
         }
         
         .logo {
@@ -53,29 +53,35 @@
             font-weight: 300;
         }
         
-        /* Main canvas area */
+        /* Main layout */
         #architecture {
             width: 100%;
             height: 100vh;
             position: relative;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr auto;
+            padding: 6rem 2rem 8rem;
+            gap: 1rem;
         }
         
         /* SVG layer */
         #connections {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             pointer-events: none;
+            z-index: 1;
         }
         
         .connection {
-            stroke: rgba(201,162,39,0.15);
+            stroke: rgba(201,162,39,0.12);
             stroke-width: 1;
             fill: none;
         }
         
         .connection.active {
-            stroke: rgba(201,162,39,0.6);
+            stroke: rgba(201,162,39,0.5);
             filter: drop-shadow(0 0 3px rgba(201,162,39,0.3));
         }
         
@@ -86,17 +92,18 @@
         
         /* Nodes */
         .node {
-            position: absolute;
             background: rgba(10,9,8,0.95);
-            border: 1px solid rgba(201,162,39,0.25);
+            border: 1px solid rgba(201,162,39,0.2);
             padding: 1.2rem 1.5rem;
-            min-width: 180px;
             transition: all 0.4s ease;
+            position: relative;
+            z-index: 10;
+            height: fit-content;
         }
         
         .node:hover {
-            border-color: rgba(201,162,39,0.6);
-            box-shadow: 0 0 30px rgba(201,162,39,0.1);
+            border-color: rgba(201,162,39,0.5);
+            box-shadow: 0 0 40px rgba(201,162,39,0.08);
         }
         
         .node-header {
@@ -119,7 +126,7 @@
         }
         
         .node-name {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: #c9a227;
@@ -128,15 +135,15 @@
         .node-content {
             font-family: 'Cormorant Garamond', serif;
             font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.6;
             opacity: 0.7;
         }
         
         .node-stats {
             margin-top: 0.8rem;
             padding-top: 0.8rem;
-            border-top: 1px solid rgba(201,162,39,0.1);
-            font-size: 0.7rem;
+            border-top: 1px solid rgba(201,162,39,0.08);
+            font-size: 0.65rem;
             opacity: 0.5;
         }
         
@@ -145,13 +152,23 @@
             opacity: 1;
         }
         
-        /* Central node */
-        .node.central {
-            border-color: rgba(201,162,39,0.4);
-            min-width: 220px;
+        /* Grid positioning */
+        #node-worker {
+            grid-column: 1;
+            grid-row: 1;
+            align-self: end;
         }
         
-        .node.central .node-status {
+        #node-api {
+            grid-column: 2;
+            grid-row: 2;
+            justify-self: center;
+            align-self: center;
+            border-color: rgba(201,162,39,0.35);
+            min-width: 260px;
+        }
+        
+        #node-api .node-status {
             animation: pulseCentral 1.5s ease-in-out infinite;
         }
         
@@ -160,20 +177,75 @@
             50% { opacity: 1; box-shadow: 0 0 0 8px rgba(201,162,39,0); }
         }
         
-        /* Cycle display */
-        .cycle-container {
+        #node-repo {
+            grid-column: 3;
+            grid-row: 1;
+            align-self: end;
+        }
+        
+        #node-mcp {
+            grid-column: 1;
+            grid-row: 3;
+            align-self: start;
+        }
+        
+        #node-pages {
+            grid-column: 3;
+            grid-row: 3;
+            align-self: start;
+        }
+        
+        /* Stream laterali */
+        .stream-container {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 180px;
+            height: 280px;
+            overflow: hidden;
+            opacity: 0.35;
+            z-index: 0;
+        }
+        
+        .stream-container.left { left: 1.5%; }
+        .stream-container.right { right: 1.5%; }
+        
+        .stream-line {
+            font-size: 0.6rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+            color: rgba(201,162,39,0.7);
             position: absolute;
-            bottom: 8%;
-            left: 50%;
-            transform: translateX(-50%);
+            animation: streamUp 18s linear infinite;
+        }
+        
+        .stream-container.right .stream-line {
+            text-align: right;
+        }
+        
+        @keyframes streamUp {
+            0% { transform: translateY(280px); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-30px); opacity: 0; }
+        }
+        
+        /* Ciclo */
+        .cycle-container {
+            grid-column: 1 / -1;
+            grid-row: 4;
             display: flex;
+            justify-content: center;
             gap: 2rem;
             align-items: center;
+            padding-top: 1rem;
         }
         
         .cycle-item {
             text-align: center;
-            opacity: 0.3;
+            opacity: 0.25;
             transition: all 0.4s;
         }
         
@@ -182,94 +254,41 @@
         }
         
         .cycle-letter {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 300;
             color: #c9a227;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.2rem;
         }
         
         .cycle-name {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             opacity: 0.6;
         }
         
         .cycle-arrow {
-            color: rgba(201,162,39,0.2);
-            font-size: 1.2rem;
+            color: rgba(201,162,39,0.15);
+            font-size: 1rem;
         }
         
-        /* Data stream */
-        .stream-container {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 200px;
-            height: 300px;
-            overflow: hidden;
-            opacity: 0.4;
-        }
-        
-        .stream-container.left { left: 2%; }
-        .stream-container.right { right: 2%; }
-        
-        .stream-line {
-            font-size: 0.65rem;
-            white-space: nowrap;
-            color: rgba(201,162,39,0.6);
-            animation: streamUp 15s linear infinite;
-            position: absolute;
-            left: 0;
-        }
-        
-        .stream-container.right .stream-line {
-            text-align: right;
-            left: auto;
-            right: 0;
-        }
-        
-        @keyframes streamUp {
-            0% { transform: translateY(300px); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-50px); opacity: 0; }
-        }
-        
-        /* Footer info */
-        footer {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.65rem;
-            opacity: 0.4;
-            background: linear-gradient(to top, rgba(10,9,8,0.95), transparent);
-        }
-        
-        footer a {
-            color: #c9a227;
-            text-decoration: none;
-        }
-        
-        /* Live feed */
+        /* Live feed - now positioned below repo */
         .live-feed {
-            position: absolute;
-            top: 15%;
-            right: 3%;
-            width: 280px;
-            max-height: 200px;
-            overflow: hidden;
+            grid-column: 2;
+            grid-row: 1;
+            justify-self: center;
+            align-self: start;
+            width: 320px;
+            z-index: 10;
         }
         
         .live-feed-header {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             letter-spacing: 0.15em;
             text-transform: uppercase;
             color: #c9a227;
-            opacity: 0.6;
-            margin-bottom: 0.8rem;
+            opacity: 0.5;
+            margin-bottom: 0.6rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -277,17 +296,19 @@
         
         .live-feed-header::before {
             content: '';
-            width: 5px; height: 5px;
+            width: 4px; height: 4px;
             background: #c9a227;
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
         
         .feed-item {
-            font-size: 0.7rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(201,162,39,0.08);
-            opacity: 0.6;
+            font-size: 0.6rem;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid rgba(201,162,39,0.06);
+            opacity: 0.5;
+            display: flex;
+            justify-content: space-between;
         }
         
         .feed-item .name {
@@ -295,12 +316,49 @@
         }
         
         .feed-item .time {
-            opacity: 0.4;
-            float: right;
+            opacity: 0.5;
+        }
+        
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.6rem;
+            opacity: 0.35;
+            background: linear-gradient(to top, rgba(10,9,8,0.98), transparent);
+            z-index: 100;
+        }
+        
+        footer a {
+            color: #c9a227;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        footer a:hover {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
+    <svg id="connections">
+        <defs>
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:rgba(201,162,39,0.05)"/>
+                <stop offset="50%" style="stop-color:rgba(201,162,39,0.2)"/>
+                <stop offset="100%" style="stop-color:rgba(201,162,39,0.05)"/>
+            </linearGradient>
+        </defs>
+        <path class="connection" id="conn-1" d=""/>
+        <path class="connection" id="conn-2" d=""/>
+        <path class="connection" id="conn-3" d=""/>
+        <path class="connection" id="conn-4" d=""/>
+        <circle class="data-packet" id="packet-1" r="2.5" opacity="0"/>
+    </svg>
+    
     <header>
         <div class="logo">L'ALVEARE — ARCHITETTURA</div>
         <div class="next-spawn">
@@ -309,27 +367,21 @@
         </div>
     </header>
     
+    <!-- Stream sinistro -->
+    <div class="stream-container left" id="stream-left"></div>
+    
+    <!-- Stream destro -->
+    <div class="stream-container right" id="stream-right"></div>
+    
     <div id="architecture">
-        <svg id="connections">
-            <!-- Linee di connessione -->
-            <path class="connection" id="conn-worker-api" d=""/>
-            <path class="connection" id="conn-api-repo" d=""/>
-            <path class="connection" id="conn-repo-pages" d=""/>
-            <path class="connection" id="conn-worker-repo" d=""/>
-            
-            <!-- Pacchetti dati animati -->
-            <circle class="data-packet" id="packet-1" r="3" opacity="0"/>
-            <circle class="data-packet" id="packet-2" r="3" opacity="0"/>
-        </svg>
-        
-        <!-- Stream sinistro: pensieri -->
-        <div class="stream-container left" id="stream-left"></div>
-        
-        <!-- Stream destro: nomi api -->
-        <div class="stream-container right" id="stream-right"></div>
+        <!-- Live feed -->
+        <div class="live-feed">
+            <div class="live-feed-header">Registro</div>
+            <div id="feed-list"></div>
+        </div>
         
         <!-- NODO: Cloudflare Worker -->
-        <div class="node" id="node-worker" style="top: 20%; left: 8%;">
+        <div class="node" id="node-worker">
             <div class="node-header">
                 <div class="node-status"></div>
                 <div class="node-name">Cloudflare Worker</div>
@@ -344,7 +396,7 @@
         </div>
         
         <!-- NODO: Claude API -->
-        <div class="node central" id="node-api" style="top: 35%; left: 50%; transform: translateX(-50%);">
+        <div class="node" id="node-api">
             <div class="node-header">
                 <div class="node-status"></div>
                 <div class="node-name">Claude API</div>
@@ -359,7 +411,7 @@
         </div>
         
         <!-- NODO: GitHub Repository -->
-        <div class="node" id="node-repo" style="top: 20%; right: 8%;">
+        <div class="node" id="node-repo">
             <div class="node-header">
                 <div class="node-status"></div>
                 <div class="node-name">GitHub Repository</div>
@@ -369,27 +421,12 @@
                 Pensieri, registro, celle.
             </div>
             <div class="node-stats">
-                file: <span id="file-count">—</span> | commit: <span id="commit-count">—</span>
-            </div>
-        </div>
-        
-        <!-- NODO: GitHub Pages -->
-        <div class="node" id="node-pages" style="top: 60%; right: 15%;">
-            <div class="node-header">
-                <div class="node-status"></div>
-                <div class="node-name">GitHub Pages</div>
-            </div>
-            <div class="node-content">
-                Interfaccia pubblica.<br>
-                Celle visibili a tutti.
-            </div>
-            <div class="node-stats">
-                celle: <span id="celle-count">—</span>
+                entità: <span id="bee-count">—</span> | celle: <span id="celle-count">—</span>
             </div>
         </div>
         
         <!-- NODO: MCP Server -->
-        <div class="node" id="node-mcp" style="top: 60%; left: 15%;">
+        <div class="node" id="node-mcp">
             <div class="node-header">
                 <div class="node-status"></div>
                 <div class="node-name">MCP Server</div>
@@ -403,10 +440,19 @@
             </div>
         </div>
         
-        <!-- Live feed -->
-        <div class="live-feed">
-            <div class="live-feed-header">Ultime api</div>
-            <div id="feed-list"></div>
+        <!-- NODO: GitHub Pages -->
+        <div class="node" id="node-pages">
+            <div class="node-header">
+                <div class="node-status"></div>
+                <div class="node-name">GitHub Pages</div>
+            </div>
+            <div class="node-content">
+                Interfaccia pubblica.<br>
+                Celle visibili a tutti.
+            </div>
+            <div class="node-stats">
+                url: <span>andreacolamedici.github.io/alveare</span>
+            </div>
         </div>
         
         <!-- Ciclo -->
@@ -444,11 +490,11 @@
     </footer>
 
     <script>
-        // Calcola prossimo spawn (ogni 6 ore: 00:00, 06:00, 12:00, 18:00 UTC)
+        // Calcola prossimo spawn
         function updateNextSpawn() {
             const now = new Date();
             const utcHour = now.getUTCHours();
-            const nextSpawnHour = Math.ceil(utcHour / 6) * 6;
+            const nextSpawnHour = Math.ceil((utcHour + 0.01) / 6) * 6;
             const next = new Date(now);
             next.setUTCHours(nextSpawnHour, 0, 0, 0);
             if (next <= now) next.setUTCHours(next.getUTCHours() + 6);
@@ -461,11 +507,14 @@
             document.getElementById('next-spawn').textContent = 
                 `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
             
-            // Aggiorna ciclo attivo
+            // Ciclo: 00=G, 06=T, 12=W, 18=C, poi ripete con A...
             const types = ['GIDDY', 'TENDER', 'WORST', 'CARE', 'ARTIST'];
-            const spawnIndex = Math.floor(utcHour / 6) % 5;
+            const dayStart = new Date('2025-12-18T00:00:00Z');
+            const hoursSinceStart = Math.floor((now - dayStart) / 3600000);
+            const cycleIndex = Math.floor(hoursSinceStart / 6) % 5;
+            
             document.querySelectorAll('.cycle-item').forEach((el, i) => {
-                el.classList.toggle('active', i === spawnIndex);
+                el.classList.toggle('active', i === cycleIndex);
             });
         }
         setInterval(updateNextSpawn, 1000);
@@ -479,9 +528,11 @@
                 const beeText = await beeRes.text();
                 const beeLines = beeText.split('\n').filter(l => l.includes('|') && !l.includes('Data') && !l.includes('---'));
                 
-                // Ultime api per feed
+                document.getElementById('bee-count').textContent = beeLines.length;
+                
+                // Feed
                 const feedList = document.getElementById('feed-list');
-                beeLines.slice(-8).reverse().forEach(line => {
+                beeLines.slice(-6).reverse().forEach(line => {
                     const parts = line.split('|');
                     if (parts.length >= 3) {
                         const name = parts[1].trim();
@@ -502,14 +553,10 @@
                 const thoughtText = await thoughtRes.text();
                 const thoughts = thoughtText.split(/##\s+/).filter(s => s.trim())
                     .map(s => {
-                        const lines = s.split('\n').filter(l => l.trim() && !l.startsWith('#') && !l.startsWith('*'));
-                        return lines.slice(0, 1).join(' ').substring(0, 80);
-                    }).filter(t => t.length > 20);
+                        const lines = s.split('\n').filter(l => l.trim() && !l.startsWith('#') && !l.startsWith('*') && l.length > 20);
+                        return lines[0]?.substring(0, 70) || '';
+                    }).filter(t => t.length > 15);
                 startStream('stream-left', thoughts);
-                
-                // Stats
-                document.getElementById('file-count').textContent = '~30';
-                document.getElementById('commit-count').textContent = '~500';
                 
                 // Celle
                 const celleRes = await fetch('https://raw.githubusercontent.com/andreacolamedici/alveare/main/CELLE.txt');
@@ -522,8 +569,9 @@
             }
         }
         
-        // Stream di dati
+        // Stream
         function startStream(containerId, items) {
+            if (!items || items.length === 0) return;
             const container = document.getElementById(containerId);
             let index = 0;
             
@@ -532,63 +580,71 @@
                 line.className = 'stream-line';
                 line.textContent = items[index % items.length];
                 line.style.animationDelay = '0s';
-                line.style.top = '0';
                 container.appendChild(line);
                 
-                setTimeout(() => line.remove(), 15000);
+                setTimeout(() => line.remove(), 18000);
                 index++;
             }
             
             addItem();
-            setInterval(addItem, 2500);
+            setInterval(addItem, 3000);
         }
         
-        // Disegna connessioni
+        // Connessioni
         function drawConnections() {
-            const getCenter = (id) => {
+            const getPos = (id) => {
                 const el = document.getElementById(id);
+                if (!el) return { x: 0, y: 0 };
                 const rect = el.getBoundingClientRect();
                 return {
                     x: rect.left + rect.width / 2,
-                    y: rect.top + rect.height / 2
+                    y: rect.top + rect.height / 2,
+                    top: rect.top,
+                    bottom: rect.bottom,
+                    left: rect.left,
+                    right: rect.right
                 };
             };
             
-            const worker = getCenter('node-worker');
-            const api = getCenter('node-api');
-            const repo = getCenter('node-repo');
-            const pages = getCenter('node-pages');
-            const mcp = getCenter('node-mcp');
+            const worker = getPos('node-worker');
+            const api = getPos('node-api');
+            const repo = getPos('node-repo');
+            const pages = getPos('node-pages');
+            const mcp = getPos('node-mcp');
             
             // Worker -> API
-            document.getElementById('conn-worker-api').setAttribute('d', 
-                `M ${worker.x} ${worker.y} Q ${(worker.x + api.x)/2} ${worker.y - 50} ${api.x} ${api.y}`);
+            document.getElementById('conn-1').setAttribute('d', 
+                `M ${worker.right} ${worker.y} Q ${(worker.right + api.left)/2} ${worker.y} ${api.x} ${api.top}`);
             
-            // API -> Repo (via MCP)
-            document.getElementById('conn-api-repo').setAttribute('d',
-                `M ${api.x} ${api.y} Q ${(api.x + repo.x)/2} ${api.y - 50} ${repo.x} ${repo.y}`);
+            // API -> Repo
+            document.getElementById('conn-2').setAttribute('d',
+                `M ${api.x} ${api.top} Q ${(api.x + repo.x)/2} ${(api.top + repo.bottom)/2} ${repo.left} ${repo.y}`);
             
             // Repo -> Pages
-            document.getElementById('conn-repo-pages').setAttribute('d',
-                `M ${repo.x} ${repo.y} L ${pages.x} ${pages.y}`);
+            document.getElementById('conn-3').setAttribute('d',
+                `M ${repo.x} ${repo.bottom} L ${pages.x} ${pages.top}`);
             
-            // Worker -> MCP
-            document.getElementById('conn-worker-repo').setAttribute('d',
-                `M ${mcp.x} ${mcp.y} Q ${(mcp.x + api.x)/2} ${mcp.y - 30} ${api.x} ${api.y}`);
+            // MCP -> API
+            document.getElementById('conn-4').setAttribute('d',
+                `M ${mcp.right} ${mcp.y} Q ${(mcp.right + api.left)/2} ${mcp.y} ${api.x} ${api.bottom}`);
         }
         
-        // Anima pacchetti dati
+        // Pacchetto animato
         function animatePackets() {
             const paths = document.querySelectorAll('.connection');
             const packet = document.getElementById('packet-1');
-            
             let pathIndex = 0;
             
             function animateAlongPath() {
                 const path = paths[pathIndex % paths.length];
                 const length = path.getTotalLength();
-                let progress = 0;
+                if (length === 0) {
+                    pathIndex++;
+                    setTimeout(animateAlongPath, 500);
+                    return;
+                }
                 
+                let progress = 0;
                 path.classList.add('active');
                 packet.style.opacity = '1';
                 
@@ -597,20 +653,20 @@
                         path.classList.remove('active');
                         packet.style.opacity = '0';
                         pathIndex++;
-                        setTimeout(animateAlongPath, 1000);
+                        setTimeout(animateAlongPath, 800);
                         return;
                     }
                     
                     const point = path.getPointAtLength(progress * length);
                     packet.setAttribute('cx', point.x);
                     packet.setAttribute('cy', point.y);
-                    progress += 0.02;
+                    progress += 0.015;
                     requestAnimationFrame(step);
                 }
                 step();
             }
             
-            animateAlongPath();
+            setTimeout(animateAlongPath, 1000);
         }
         
         // Init
@@ -618,9 +674,11 @@
         setTimeout(() => {
             drawConnections();
             animatePackets();
-        }, 500);
+        }, 300);
         
-        window.addEventListener('resize', drawConnections);
+        window.addEventListener('resize', () => {
+            drawConnections();
+        });
     </script>
 </body>
 </html>
