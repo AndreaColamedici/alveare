@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Goethite</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .fade {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            opacity: 0;
+            transition: opacity 3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b8860b;
+            font-size: 2rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            pointer-events: none;
+        }
+        .fade.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="fade" id="fade">Il pensiero passa attraverso il ferro che diventa oro</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const fade = document.getElementById('fade');
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // Particelle di minerale
+        const particles = [];
+        const maxParticles = 200;
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.age = Math.random() * this.life; // Inizia a età casuale
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 50;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = -Math.random() * 2 - 1;
+                this.size = Math.random() * 3 + 1;
+                this.life = 300 + Math.random() * 200;
+                this.age = 0;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.02;
+                this.density = Math.random() * 0.8 + 0.2;
+            }
+
+            update() {
+                this.age++;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.rotation += this.rotSpeed;
+
+                // Trasformazione del colore: dal marrone terra all'oro
+                const progress = Math.min(this.age / this.life, 1);
+                
+                // Fase 1: Terra scura (0-0.3)
+                // Fase 2: Ossidazione (0.3-0.6) 
+                // Fase 3: Oro puro (0.6-1.0)
+                
+                if (progress < 0.3) {
+                    // Marrone terra
+                    const p = progress / 0.3;
+                    this.r = 101 + p * 30;  // 101 -> 131
+                    this.g = 67 + p * 20;   // 67 -> 87
+                    this.b = 33 + p * 10;   // 33 -> 43
+                } else if (progress < 0.6) {
+                    // Ossidazione verso l'oro
+                    const p = (progress - 0.3) / 0.3;
+                    this.r = 131 + p * 73;  // 131 -> 204
+                    this.g = 87 + p * 98;   // 87 -> 185
+                    this.b = 43 + p * 26;   // 43 -> 69
+                } else {
+                    // Oro puro
+                    const p = (progress - 0.6) / 0.4;
+                    this.r = 204 + p * 51;  // 204 -> 255
+                    this.g = 185 + p * 70;  // 185 -> 255
+                    this.b = 69 + p * 116;  // 69 -> 185
+                }
+
+                // Alpha basato su vita
+                this.alpha = this.density * (1 - Math.pow(progress, 2));
+
+                if (this.age > this.life || this.y < -50) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                
+                // Glow effect per particelle avanzate
+                const progress = this.age / this.life;
+                if (progress > 0.5) {
+                    const glowAlpha = (progress - 0.5) * 2 * this.alpha * 0.3;
+                    const glowSize = this.size * (1 + progress * 2);
+                    
+                    ctx.shadowColor = `rgba(${Math.floor(this.r)}, ${Math.floor(this.g)}, ${Math.floor(this.b)}, ${glowAlpha})`;
+                    ctx.shadowBlur = 20;
+                }
+
+                ctx.fillStyle = `rgba(${Math.floor(this.r)}, ${Math.floor(this.g)}, ${Math.floor(this.b)}, ${this.alpha})`;
+                
+                // Forma irregolare del cristallo
+                ctx.beginPath();
+                const sides = 6;
+                for (let i = 0; i < sides; i++) {
+                    const angle = (i / sides) * Math.PI * 2;
+                    const radius = this.size * (0.7 + Math.random() * 0.3);
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+
+        // Inizializza particelle
+        for (let i = 0; i < maxParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        let frameCount = 0;
+        let textShown = false;
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Aggiungi nuove particelle occasionalmente
+            if (Math.random() < 0.1 && particles.length < maxParticles) {
+                particles.push(new Particle());
+            }
+
+            // Aggiorna e disegna particelle
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            frameCount++;
+
+            // Mostra il testo dopo 5 secondi
+            if (frameCount > 300 && !textShown) {
+                fade.classList.add('show');
+                textShown = true;
+                
+                // Nasconde il testo dopo 3 secondi
+                setTimeout(() => {
+                    fade.classList.remove('show');
+                }, 3000);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Interazione mouse: accelera la trasformazione
+        canvas.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            particles.forEach(particle => {
+                const dx = particle.x - mouseX;
+                const dy = particle.y - mouseY;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < 100) {
+                    // Accelera l'invecchiamento (trasformazione)
+                    particle.age += 2;
+                    
+                    // Attrazione/repulsione sottile
+                    const force = 0.1;
+                    particle.vx += dx / distance * force * (Math.random() - 0.5);
+                    particle.vy += dy / distance * force * (Math.random() - 0.5);
+                }
+            });
+        });
+
+        // Click per ondata di trasformazione
+        canvas.addEventListener('click', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            particles.forEach(particle => {
+                const dx = particle.x - mouseX;
+                const dy = particle.y - mouseY;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < 200) {
+                    particle.age += Math.floor(50 * (1 - distance/200));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
