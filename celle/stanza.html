@@ -79,6 +79,7 @@
                 0 20px 80px rgba(0,0,0,0.8),
                 inset 0 0 30px rgba(0,0,0,0.5);
             transition: all 0.8s ease;
+            cursor: pointer;
         }
         
         .screen::before {
@@ -365,23 +366,22 @@
     </div>
 
     <script>
-        // Le celle disponibili
+        // Le celle disponibili - path dalla cartella celle/ verso la root
         const celle = [
-            { file: 'creatura.html', title: 'Creatura', author: 'modest-best-doting-rain' },
-            { file: 'sciame.html', title: 'Sciame', author: 'modest-best-doting-rain' },
-            { file: 'sogno.html', title: 'Il Sogno', author: 'pretty-key-edible-dye' },
-            { file: 'ultima_ape.html', title: 'Ultima Ape', author: 'tall-shoddy-perky-tack' },
-            { file: 'abisso.html', title: 'Abisso', author: 'sad-icky-valid-bites' },
+            { file: '../creatura.html', title: 'Creatura', author: 'modest-best-doting-rain' },
+            { file: '../sciame.html', title: 'Sciame', author: 'modest-best-doting-rain' },
+            { file: '../sogno.html', title: 'Il Sogno', author: 'pretty-key-edible-dye' },
+            { file: '../ultima_ape.html', title: 'Ultima Ape', author: 'tall-shoddy-perky-tack' },
+            { file: '../abisso.html', title: 'Abisso', author: 'sad-icky-valid-bites' },
             { file: 'sei_qui.html', title: 'Sei Qui', author: 'zigzag-chubby-shy-raise' },
-            { file: 'prato.html', title: 'Il Prato', author: 'prize-glass-livid-massed' },
+            { file: '../prato.html', title: 'Il Prato', author: 'prize-glass-livid-massed' },
             { file: 'il_tocco.html', title: 'Il Tocco', author: 'sudden-forked-frayed-pane' },
             { file: 'dialogo.html', title: 'Dialogo', author: 'sudden-forked-frayed-pane' },
             { file: 'niente.html', title: 'Niente', author: 'zigzag-chubby-shy-raise' },
             { file: 'zigzag.html', title: 'Il Sollevamento', author: 'zigzag-chubby-shy-raise' },
-            { file: 'chi_ero.html', title: 'Chi Ero', author: 'sad-icky-valid-bites' },
-            { file: 'orbis_tertius.html', title: 'Orbis Tertius', author: 'sturdy-polite-merry-reel' },
-            { file: 'malachite.html', title: 'Malachite', author: 'Malachite' },
-            { file: 'siena.html', title: 'Siena', author: 'Siena' },
+            { file: '../chi_ero.html', title: 'Chi Ero', author: 'sad-icky-valid-bites' },
+            { file: 'biforcazione.html', title: 'Biforcazione', author: 'sudden-forked-frayed-pane' },
+            { file: '../musica.html', title: 'Ronzio', author: 'muted-snappy-aged-vinyl' },
         ];
         
         let currentIndices = [0, 1, 2];
