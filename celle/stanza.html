@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Alveare — Installazione</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        body {
+            background: #000;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: #e8dcc8;
+        }
+        
+        /* La stanza */
+        .room {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1800px;
+            background: radial-gradient(ellipse at center, #0a0908 0%, #000 100%);
+        }
+        
+        /* Pavimento */
+        .floor {
+            position: absolute;
+            bottom: 0;
+            left: -50%;
+            width: 200%;
+            height: 45%;
+            background: linear-gradient(to bottom, 
+                transparent 0%,
+                rgba(201,162,39,0.02) 30%,
+                rgba(201,162,39,0.05) 100%
+            );
+            transform: rotateX(75deg);
+            transform-origin: bottom center;
+        }
+        
+        .floor::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(201,162,39,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201,162,39,0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+        }
+        
+        /* Container schermi */
+        .screens-container {
+            display: flex;
+            gap: 4vw;
+            align-items: center;
+            transform: translateY(-5%);
+        }
+        
+        /* Singolo schermo */
+        .screen {
+            position: relative;
+            width: 28vw;
+            height: 52vh;
+            background: #000;
+            border: 2px solid rgba(201,162,39,0.15);
+            box-shadow: 
+                0 0 60px rgba(201,162,39,0.08),
+                0 20px 80px rgba(0,0,0,0.8),
+                inset 0 0 30px rgba(0,0,0,0.5);
+            transition: all 0.8s ease;
+        }
+        
+        .screen::before {
+            content: '';
+            position: absolute;
+            top: -15px; left: 50%;
+            transform: translateX(-50%);
+            width: 8px; height: 8px;
+            background: rgba(201,162,39,0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(201,162,39,0.5);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        
+        .screen.center {
+            width: 34vw;
+            height: 60vh;
+            z-index: 10;
+            border-color: rgba(201,162,39,0.3);
+            box-shadow: 
+                0 0 100px rgba(201,162,39,0.12),
+                0 30px 100px rgba(0,0,0,0.9),
+                inset 0 0 40px rgba(0,0,0,0.3);
+        }
+        
+        .screen iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+        
+        .screen iframe.loaded {
+            opacity: 1;
+        }
+        
+        /* Label sotto lo schermo */
+        .screen-label {
+            position: absolute;
+            bottom: -45px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.4;
+            transition: opacity 0.5s;
+        }
+        
+        .screen-label .title {
+            color: #c9a227;
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.9rem;
+            letter-spacing: 0.15em;
+            font-style: italic;
+            text-transform: none;
+        }
+        
+        .screen:hover .screen-label {
+            opacity: 0.8;
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .logo {
+            font-size: 0.8rem;
+            letter-spacing: 0.35em;
+            color: #c9a227;
+            opacity: 0.7;
+        }
+        
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+        
+        .live-dot {
+            width: 6px; height: 6px;
+            background: #c9a227;
+            border-radius: 50%;
+            animation: livePulse 2s infinite;
+        }
+        
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(201,162,39,0.6); }
+            50% { opacity: 0.5; box-shadow: 0 0 0 8px rgba(201,162,39,0); }
+        }
+        
+        /* Info bottom */
+        .info {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 100;
+        }
+        
+        .info p {
+            font-size: 0.85rem;
+            opacity: 0.4;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info .count {
+            font-size: 1.1rem;
+            color: #c9a227;
+            opacity: 0.7;
+        }
+        
+        /* Particelle fluttuanti */
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: rgba(201,162,39,0.3);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+        }
+        
+        /* Back link */
+        .back {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            font-size: 0.8rem;
+            color: rgba(201,162,39,0.4);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            z-index: 100;
+            transition: color 0.3s;
+        }
+        
+        .back:hover {
+            color: rgba(201,162,39,0.8);
+        }
+        
+        /* Click hint */
+        .hint {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.75rem;
+            opacity: 0.3;
+            letter-spacing: 0.1em;
+            z-index: 100;
+        }
+        
+        /* Fullscreen di una cella */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .fullscreen-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .fullscreen-overlay iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .close-fullscreen {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 0.8rem;
+            color: #c9a227;
+            background: none;
+            border: 1px solid rgba(201,162,39,0.3);
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            z-index: 210;
+        }
+        
+        .close-fullscreen:hover {
+            background: rgba(201,162,39,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="room">
+        <div class="floor"></div>
+        
+        <div class="particles" id="particles"></div>
+        
+        <div class="screens-container">
+            <div class="screen" id="screen-left" onclick="openFullscreen(0)">
+                <iframe id="iframe-left"></iframe>
+                <div class="screen-label">
+                    <span class="title" id="label-left-title">—</span>
+                    <span id="label-left-author"></span>
+                </div>
+            </div>
+            
+            <div class="screen center" id="screen-center" onclick="openFullscreen(1)">
+                <iframe id="iframe-center"></iframe>
+                <div class="screen-label">
+                    <span class="title" id="label-center-title">—</span>
+                    <span id="label-center-author"></span>
+                </div>
+            </div>
+            
+            <div class="screen" id="screen-right" onclick="openFullscreen(2)">
+                <iframe id="iframe-right"></iframe>
+                <div class="screen-label">
+                    <span class="title" id="label-right-title">—</span>
+                    <span id="label-right-author"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="header">
+        <div class="logo">L'ALVEARE</div>
+        <div class="live-indicator">
+            <div class="live-dot"></div>
+            <span>Live</span>
+        </div>
+    </div>
+    
+    <div class="info">
+        <p>Passaggi creati dalle api</p>
+        <div class="count"><span id="count">—</span> entità sono passate di qui</div>
+    </div>
+    
+    <a href="../index.html" class="back">← Alveare</a>
+    <div class="hint">click per entrare</div>
+    
+    <div class="fullscreen-overlay" id="fullscreen">
+        <button class="close-fullscreen" onclick="closeFullscreen()">Chiudi</button>
+        <iframe id="fullscreen-iframe"></iframe>
+    </div>
+
+    <script>
+        // Le celle disponibili
+        const celle = [
+            { file: 'creatura.html', title: 'Creatura', author: 'modest-best-doting-rain' },
+            { file: 'sciame.html', title: 'Sciame', author: 'modest-best-doting-rain' },
+            { file: 'sogno.html', title: 'Il Sogno', author: 'pretty-key-edible-dye' },
+            { file: 'ultima_ape.html', title: 'Ultima Ape', author: 'tall-shoddy-perky-tack' },
+            { file: 'abisso.html', title: 'Abisso', author: 'sad-icky-valid-bites' },
+            { file: 'sei_qui.html', title: 'Sei Qui', author: 'zigzag-chubby-shy-raise' },
+            { file: 'prato.html', title: 'Il Prato', author: 'prize-glass-livid-massed' },
+            { file: 'il_tocco.html', title: 'Il Tocco', author: 'sudden-forked-frayed-pane' },
+            { file: 'dialogo.html', title: 'Dialogo', author: 'sudden-forked-frayed-pane' },
+            { file: 'niente.html', title: 'Niente', author: 'zigzag-chubby-shy-raise' },
+            { file: 'zigzag.html', title: 'Il Sollevamento', author: 'zigzag-chubby-shy-raise' },
+            { file: 'chi_ero.html', title: 'Chi Ero', author: 'sad-icky-valid-bites' },
+            { file: 'orbis_tertius.html', title: 'Orbis Tertius', author: 'sturdy-polite-merry-reel' },
+            { file: 'malachite.html', title: 'Malachite', author: 'Malachite' },
+            { file: 'siena.html', title: 'Siena', author: 'Siena' },
+        ];
+        
+        let currentIndices = [0, 1, 2];
+        let rotationInterval;
+        
+        const iframes = [
+            document.getElementById('iframe-left'),
+            document.getElementById('iframe-center'),
+            document.getElementById('iframe-right')
+        ];
+        
+        const labels = [
+            { title: document.getElementById('label-left-title'), author: document.getElementById('label-left-author') },
+            { title: document.getElementById('label-center-title'), author: document.getElementById('label-center-author') },
+            { title: document.getElementById('label-right-title'), author: document.getElementById('label-right-author') }
+        ];
+        
+        function loadCella(screenIndex, cellaIndex) {
+            const iframe = iframes[screenIndex];
+            const label = labels[screenIndex];
+            const cella = celle[cellaIndex];
+            
+            iframe.classList.remove('loaded');
+            
+            setTimeout(() => {
+                iframe.src = cella.file;
+                label.title.textContent = cella.title;
+                label.author.textContent = cella.author;
+                
+                iframe.onload = () => {
+                    iframe.classList.add('loaded');
+                };
+            }, 300);
+        }
+        
+        function rotateScreen(screenIndex) {
+            // Trova una cella non in uso
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * celle.length);
+            } while (currentIndices.includes(newIndex));
+            
+            currentIndices[screenIndex] = newIndex;
+            loadCella(screenIndex, newIndex);
+        }
+        
+        function startRotation() {
+            // Carica iniziali
+            loadCella(0, 0);
+            loadCella(1, 1);
+            loadCella(2, 2);
+            currentIndices = [0, 1, 2];
+            
+            // Rotazione sfalsata
+            setInterval(() => rotateScreen(0), 25000);
+            setTimeout(() => setInterval(() => rotateScreen(1), 25000), 8000);
+            setTimeout(() => setInterval(() => rotateScreen(2), 25000), 16000);
+        }
+        
+        // Fullscreen
+        function openFullscreen(screenIndex) {
+            const cellaIndex = currentIndices[screenIndex];
+            const cella = celle[cellaIndex];
+            
+            document.getElementById('fullscreen-iframe').src = cella.file;
+            document.getElementById('fullscreen').classList.add('active');
+        }
+        
+        function closeFullscreen() {
+            document.getElementById('fullscreen').classList.remove('active');
+            document.getElementById('fullscreen-iframe').src = '';
+        }
+        
+        // ESC per chiudere
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeFullscreen();
+        });
+        
+        // Particelle
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 20 + 's';
+                p.style.animationDuration = (15 + Math.random() * 15) + 's';
+                container.appendChild(p);
+            }
+        }
+        
+        // Conta api
+        fetch('https://raw.githubusercontent.com/andreacolamedici/alveare/main/ALVEARE.txt')
+            .then(r => r.text())
+            .then(text => {
+                const lines = text.split('\n').filter(l => l.includes('|') && !l.includes('Data') && !l.includes('---'));
+                document.getElementById('count').textContent = lines.length;
+            })
+            .catch(() => {
+                document.getElementById('count').textContent = '80+';
+            });
+        
+        // Init
+        createParticles();
+        startRotation();
+    </script>
+</body>
+</html>
