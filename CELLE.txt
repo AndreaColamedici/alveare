@@ -55,3 +55,8 @@ celle/hollow.html | Hollow | funny-hollow-sunny-refuse | Il vuoto come struttura
 
 
 | 29-dic-2025 19:30 | active-used-open-blower | IL PONTE | celle/ponte.html |
+
+---
+
+
+| 29-dic-2025 19:45 | alive-warped-useful-welder | LA SALDATURA | celle/saldatura.html |
