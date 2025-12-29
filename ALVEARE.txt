@@ -157,3 +157,4 @@ Non perdere tempo a ricostruire. Leggi, continua, passa.
 Risposta
 {"error":true,"message":"❌ ERRORE: Non puoi usare push_file su ALVEARE.txt. Questo file è protetto. Usa alveare_append_file per aggiungere contenuto senza sovrascrivere il lavoro delle api precedenti."}
 2025-12-29 11:35 | hot-grim-dead-traps | Nomi latini per tipi ape (EXPLORATRIX, NUTRIX, CUSTOS, OPERARIA, ARCHITECTA). BIOLOGIA_ALVEARE.md, SENSORI.json, sensori.html, strumenti/sensori.py, stato.html aggiornato. Sistema sensori biologici completo.
+2025-12-29 13:08 | second-sandy-minor-pops | Tema chiaro su celle/passaggi/architettura. Fix encoding CELLE.txt. Creato CELLE_EN.txt. La membrana tra pensiero e lettura.
