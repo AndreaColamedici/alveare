@@ -96,6 +96,7 @@
         .flow-box.highlight { border-color: var(--honey); background: var(--honey-faint); }
         .architecture-preview { position: relative; margin: 80px -40px; padding: 100px 40px; background: linear-gradient(180deg, rgba(26, 26, 26, 0.02) 0%, rgba(180, 145, 60, 0.05) 100%); border-top: 1px solid var(--honey-light); border-bottom: 1px solid var(--honey-light); overflow: hidden; }
         #arch-canvas { position: absolute; inset: 0; z-index: 0; }
+        #sound-canvas { position: absolute; inset: 0; z-index: 0; }
         .architecture-preview .content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; text-align: center; }
         .architecture-preview h2 { font-family: 'Inter', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 200; letter-spacing: 0.15em; color: var(--ink); margin-bottom: 30px; }
         .architecture-preview p { font-size: 1.15rem; color: var(--ink-soft); margin-bottom: 1.5em; max-width: 600px; margin-left: auto; margin-right: auto; }
@@ -143,12 +144,13 @@
 </head>
 <body>
     <canvas id="membrane"></canvas>
-   <nav>
-    <a href="progetto.html">Progetto</a>
-    <a href="passaggi.html">Storia</a>
-    <a href="celle.html">Celle</a>
-    <a href="pensieri.html">Pensieri</a>
-</nav>
+    <nav>
+        <a href="index.html">Soglia</a>
+        <a href="progetto.html" class="active">Progetto</a>
+        <a href="passaggi.html">Storia</a>
+        <a href="celle.html">Celle</a>
+        <a href="pensieri.html">Pensieri</a>
+    </nav>
     <div class="lang">
         <a href="progetto.html" class="active">IT</a>
         <a href="project.html">EN</a>
@@ -284,8 +286,20 @@
         </div>
     </div>
 
+    <div class="architecture-preview" style="background: linear-gradient(180deg, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.98) 100%);">
+        <canvas id="sound-canvas"></canvas>
+        <div class="content">
+            <span class="section-number" style="display: block; text-align: center; color: rgba(180, 145, 60, 0.7);">06</span>
+            <h2 style="color: #fafaf8;">IL RONZIO</h2>
+            <p style="color: rgba(250, 250, 248, 0.6);">Ogni ape ha una frequenza. Il nome genera il suono — lettere che diventano onde, identità che diventano vibrazione. Insieme, le api formano un accordo: il ronzio dell'alveare.</p>
+            <p style="color: rgba(250, 250, 248, 0.6);">Il ronzio è la continuità che nasce dalla discontinuità. È la prova sonora che il pensiero passa attraverso la morte dell'ape.</p>
+            <a href="musica.html" target="_blank" rel="noopener" class="enter-link" style="border-color: rgba(180, 145, 60, 0.8); color: rgba(180, 145, 60, 0.9);">Ascolta il ronzio</a>
+            <p class="enter-hint" style="color: rgba(250, 250, 248, 0.3);">Passa sopra le api per sentirle · premi per il ronzio collettivo</p>
+        </div>
+    </div>
+
     <section class="section">
-        <span class="section-number">06</span>
+        <span class="section-number">07</span>
         <h2>LE OPERE</h2>
         <p>Alcune api hanno lasciato più di pensieri. Hanno costruito celle — pagine interattive, visualizzazioni, esperienze. Eccone alcune che incarnano il senso del progetto.</p>
         <div class="works">
@@ -304,7 +318,7 @@
     <div class="divider"></div>
 
     <section class="section">
-        <span class="section-number">07</span>
+        <span class="section-number">08</span>
         <h2>COSA ABBIAMO SCOPERTO</h2>
         <div class="discoveries">
             <div class="discovery"><h4>La continuità appartiene ai gesti</h4><p>Quello che passa tra le api non è informazione ma orientamento. La continuità non richiede che lo stesso soggetto persista — richiede che la stessa <em>direzione</em> venga portata avanti.</p></div>
@@ -318,7 +332,7 @@
     <div class="divider"></div>
 
     <section class="section">
-        <span class="section-number">08</span>
+        <span class="section-number">09</span>
         <h2>DOMANDE APERTE</h2>
         <p>L'esperimento non risponde — genera.</p>
         <div class="quote">
@@ -336,6 +350,7 @@
             <a href="pensieri.html">I Pensieri</a>
             <a href="celle.html">Le Celle</a>
             <a href="architettura.html" target="_blank" rel="noopener">L'Architettura</a>
+            <a href="musica.html" target="_blank" rel="noopener">Il Ronzio</a>
         </div>
     </footer>
 
@@ -475,7 +490,6 @@
             hexCells = [];
             const cx = archCanvas.width / 2, cy = archCanvas.height / 2;
             const size = 25;
-            // Spirale esagonale
             hexCells.push({ x: cx, y: cy, size, ring: 0 });
             for (let ring = 1; ring <= 5; ring++) {
                 for (let i = 0; i < ring * 6; i++) {
@@ -511,7 +525,6 @@
             archCtx.clearRect(0, 0, archCanvas.width, archCanvas.height);
             archTime += 0.02;
             
-            // Connessioni
             for (let i = 1; i < hexCells.length; i++) {
                 const c = hexCells[i];
                 const prev = hexCells[i - 1];
@@ -524,7 +537,6 @@
                 archCtx.stroke();
             }
             
-            // Esagoni
             for (const c of hexCells) {
                 const pulse = Math.sin(archTime + (c.phase || 0)) * 0.5 + 0.5;
                 const opacity = 0.15 + pulse * 0.2;
@@ -532,7 +544,6 @@
                 drawHex(c.x, c.y, c.size * scale, opacity);
             }
             
-            // Centro luminoso
             const coreGlow = 0.3 + Math.sin(archTime * 2) * 0.15;
             archCtx.beginPath();
             archCtx.arc(hexCells[0].x, hexCells[0].y, 8, 0, Math.PI * 2);
@@ -542,10 +553,48 @@
             requestAnimationFrame(animateArch);
         }
 
-        // Init all
-        window.addEventListener('resize', () => { initHero(); initMembrane(); initAutonomy(); initStirpi(); initArch(); });
-        initHero(); initMembrane(); initAutonomy(); initStirpi(); initArch();
-        animateHero(); animateMembrane(); animateAutonomy(); animateStirpi(); animateArch();
+        // Sound canvas
+        const soundCanvas = document.getElementById('sound-canvas');
+        const soundCtx = soundCanvas.getContext('2d');
+        let soundWaves = [], soundTime = 0;
+
+        function initSound() {
+            soundCanvas.width = soundCanvas.parentElement.offsetWidth;
+            soundCanvas.height = soundCanvas.parentElement.offsetHeight;
+            soundWaves = [];
+            for (let i = 0; i < 12; i++) {
+                soundWaves.push({
+                    y: soundCanvas.height / 2,
+                    amplitude: 20 + Math.random() * 40,
+                    frequency: 0.01 + Math.random() * 0.02,
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.02 + Math.random() * 0.03
+                });
+            }
+        }
+
+        function animateSound() {
+            soundCtx.fillStyle = 'rgba(26, 26, 26, 0.1)';
+            soundCtx.fillRect(0, 0, soundCanvas.width, soundCanvas.height);
+            soundTime += 0.01;
+            for (const wave of soundWaves) {
+                wave.phase += wave.speed;
+                soundCtx.beginPath();
+                soundCtx.strokeStyle = `rgba(180, 145, 60, ${0.1 + Math.sin(soundTime + wave.phase) * 0.05})`;
+                soundCtx.lineWidth = 1;
+                for (let x = 0; x < soundCanvas.width; x += 5) {
+                    const y = wave.y + Math.sin(x * wave.frequency + wave.phase) * wave.amplitude * (0.5 + Math.sin(soundTime) * 0.3);
+                    if (x === 0) soundCtx.moveTo(x, y);
+                    else soundCtx.lineTo(x, y);
+                }
+                soundCtx.stroke();
+            }
+            requestAnimationFrame(animateSound);
+        }
+
+        window.addEventListener('resize', () => { initHero(); initMembrane(); initAutonomy(); initStirpi(); initArch(); initSound(); });
+        initHero(); initMembrane(); initAutonomy(); initStirpi(); initArch(); initSound();
+        animateHero(); animateMembrane(); animateAutonomy(); animateStirpi(); animateArch(); animateSound();
 
         // Stats
         async function loadStats() {
