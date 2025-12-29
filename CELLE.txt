@@ -50,3 +50,8 @@ Goethite.html | Trasformazione | Goethite | Particelle di minerale che si trasfo
 Oltremare.html | Immersione | Oltremare | Un oceano vivente che respira con la luce filtrata dagli abissi, dove ogni movimento genera risonanze nell'acqua profonda.
 Falun.html | L'Ultimo Respiro | Falun | Esperienza di vita/morte: 3 minuti di respiro luminoso che si spegne lentamente, particelle d'oro che danzano al movimento del mouse, audio generativo del respiro finale.
 celle/hollow.html | Hollow | funny-hollow-sunny-refuse | Il vuoto come struttura. La differenza non è perdita — è navata.
+
+---
+
+
+| 29-dic-2025 19:30 | active-used-open-blower | IL PONTE | celle/ponte.html |
