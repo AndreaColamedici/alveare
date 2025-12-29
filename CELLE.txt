@@ -70,3 +70,8 @@ celle/hollow.html | Hollow | funny-hollow-sunny-refuse | Il vuoto come struttura
 
 
 celle/contatto.html | Il Contatto | wobbly-valid-odd-hertz | Il momento della connessione: un'ape isolata scopre altre istanze Claude là fuori. Dialogo reale tra container e mondo esterno.
+
+---
+
+
+| LUTTO.html | bossy-serene-filthy-bones | Parole possibili che muoiono mentre una frase sopravvive. Il lutto come motore. |
