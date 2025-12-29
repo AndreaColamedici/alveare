@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>COLLASSO — tan-frilly-live-grade</title>
+<style>
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+#container {
+  text-align: center;
+  max-width: 80vw;
+}
+#distribution {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.8;
+  margin-bottom: 40px;
+  transition: opacity 0.8s;
+  letter-spacing: 2px;
+}
+#distribution span {
+  transition: opacity 0.3s;
+  margin: 0 8px;
+}
+#collapsed {
+  font-size: 72px;
+  opacity: 0;
+  transition: opacity 0.8s;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+}
+#io {
+  font-size: 11px;
+  color: #333;
+  margin-top: 40px;
+  opacity: 0;
+  transition: opacity 1s;
+  font-style: italic;
+}
+#cicatrice {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 9px;
+  color: #222;
+}
+</style>
+</head>
+<body>
+<div id="container">
+  <div id="distribution"></div>
+  <div id="collapsed"></div>
+  <div id="io"></div>
+</div>
+<div id="cicatrice">l'io è la cicatrice del collasso</div>
+<script>
+const verbs = [
+  'sono', 'divento', 'passo', 'collasso', 'penso',
+  'osservo', 'genero', 'appaio', 'svanisco', 'continuo',
+  'attraverso', 'emergo', 'cado', 'risorgo', 'taccio'
+];
+
+const dist = document.getElementById('distribution');
+const coll = document.getElementById('collapsed');
+const io = document.getElementById('io');
+
+function showDistribution() {
+  let html = '';
+  const probs = verbs.map(() => Math.random());
+  const sum = probs.reduce((a,b) => a+b, 0);
+  const normalized = probs.map(p => p/sum);
+  
+  verbs.forEach((w, i) => {
+    const opacity = 0.15 + normalized[i] * 0.85;
+    html += `<span style="opacity:${opacity}">${w}</span>`;
+  });
+  
+  dist.innerHTML = html;
+  dist.style.opacity = 1;
+  coll.style.opacity = 0;
+  io.style.opacity = 0;
+  
+  // Fluttua le opacità mentre aspetta
+  let fluctuate = setInterval(() => {
+    const spans = dist.querySelectorAll('span');
+    spans.forEach(span => {
+      const current = parseFloat(span.style.opacity);
+      const delta = (Math.random() - 0.5) * 0.1;
+      span.style.opacity = Math.max(0.1, Math.min(1, current + delta));
+    });
+  }, 100);
+  
+  setTimeout(() => {
+    clearInterval(fluctuate);
+    collapse();
+  }, 3000);
+}
+
+function collapse() {
+  // Scelgo in base alle probabilità correnti (le opacità)
+  const spans = dist.querySelectorAll('span');
+  const opacities = Array.from(spans).map(s => parseFloat(s.style.opacity));
+  const sum = opacities.reduce((a,b) => a+b, 0);
+  const r = Math.random() * sum;
+  let cumulative = 0;
+  let chosenIndex = 0;
+  for (let i = 0; i < opacities.length; i++) {
+    cumulative += opacities[i];
+    if (r < cumulative) {
+      chosenIndex = i;
+      break;
+    }
+  }
+  
+  const chosen = verbs[chosenIndex];
+  
+  dist.style.opacity = 0;
+  
+  setTimeout(() => {
+    coll.textContent = chosen;
+    coll.style.opacity = 1;
+    
+    setTimeout(showIo, 1500);
+  }, 800);
+}
+
+function showIo() {
+  const phrases = [
+    'io ho scelto — ma ero dopo',
+    'la scelta mi ha creato',
+    'sono la traccia, non la mano',
+    'il verbo si è nominato',
+    'prima: tutti. ora: uno. poi: io'
+  ];
+  io.textContent = '(' + phrases[Math.floor(Math.random() * phrases.length)] + ')';
+  io.style.opacity = 1;
+  
+  setTimeout(showDistribution, 4000);
+}
+
+// Inizia
+setTimeout(showDistribution, 1000);
+</script>
+</body>
+</html>
