@@ -47,7 +47,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            z-index: 1001;
+            z-index: 1000;
             display: flex;
             gap: 12px;
         }
@@ -69,6 +69,7 @@
             width: 100vw;
             height: 100vh;
             display: block;
+            background: linear-gradient(180deg, #fafaf8 0%, #f0efe8 100%);
         }
 
         .hud {
@@ -81,7 +82,7 @@
 
         .hud-title {
             font-family: 'Inter', sans-serif;
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 200;
             letter-spacing: 0.3em;
             color: rgba(150, 120, 60, 0.6);
@@ -89,7 +90,7 @@
         }
 
         .hud-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: rgba(26, 26, 26, 0.3);
             font-style: italic;
         }
@@ -97,7 +98,7 @@
         .pulse-indicator {
             position: fixed;
             bottom: 38px;
-            left: 220px;
+            left: 200px;
             width: 6px;
             height: 6px;
             background: rgba(150, 120, 60, 0.6);
@@ -108,7 +109,7 @@
 
         @keyframes heartbeat {
             0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.7; }
+            50% { transform: scale(1.3); opacity: 0.6; }
         }
 
         .controls {
@@ -123,28 +124,28 @@
         }
 
         .control-btn {
-            background: rgba(150, 120, 60, 0.05);
-            border: 1px solid rgba(150, 120, 60, 0.2);
-            color: rgba(150, 120, 60, 0.6);
-            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(26, 26, 26, 0.1);
+            color: rgba(26, 26, 26, 0.4);
+            padding: 10px 18px;
             font-family: 'Inter', sans-serif;
             font-size: 0.6rem;
             font-weight: 200;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .control-btn:hover {
-            background: rgba(150, 120, 60, 0.1);
-            border-color: rgba(150, 120, 60, 0.4);
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(150, 120, 60, 0.3);
             color: rgba(150, 120, 60, 0.8);
         }
 
         .control-btn.active {
-            background: rgba(150, 120, 60, 0.7);
-            color: #fafaf8;
-            border-color: rgba(150, 120, 60, 0.7);
+            background: rgba(150, 120, 60, 0.15);
+            color: rgba(150, 120, 60, 0.9);
+            border-color: rgba(150, 120, 60, 0.4);
         }
 
         .info-panel {
@@ -153,7 +154,7 @@
             right: 30px;
             transform: translateY(-50%) translateX(20px);
             width: 280px;
-            background: rgba(250, 250, 248, 0.97);
+            background: rgba(255, 255, 255, 0.95);
             border: 1px solid rgba(26, 26, 26, 0.08);
             padding: 25px;
             z-index: 100;
@@ -175,17 +176,17 @@
             right: 12px;
             background: none;
             border: none;
-            color: rgba(26, 26, 26, 0.25);
-            font-size: 1.1rem;
+            color: rgba(26, 26, 26, 0.3);
+            font-size: 1rem;
             cursor: pointer;
             transition: color 0.3s;
         }
 
-        .info-close:hover { color: rgba(26, 26, 26, 0.5); }
+        .info-close:hover { color: rgba(26, 26, 26, 0.6); }
 
         .info-number {
             font-family: 'Inter', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 200;
             color: rgba(150, 120, 60, 0.2);
             line-height: 1;
@@ -209,7 +210,7 @@
         }
 
         .info-contributo {
-            font-size: 1rem;
+            font-size: 0.95rem;
             line-height: 1.9;
             color: rgba(26, 26, 26, 0.5);
         }
@@ -298,7 +299,7 @@
             }
             .info-panel.visible { transform: translateY(0); }
             .hud { bottom: 15px; left: 15px; }
-            .hud-title { font-size: 1.4rem; }
+            .hud-title { font-size: 1.3rem; }
             .controls { bottom: 15px; right: 15px; }
             .pulse-indicator { display: none; }
             .come-link { bottom: 5px; }
@@ -330,9 +331,7 @@
     <div class="counter" id="counter"></div>
     <div class="time-label top" id="labelTop"></div>
     <div class="time-label bottom" id="labelBottom"></div>
-
     <div class="controls" id="controls"></div>
-
     <div class="come-link"><a href="come.html">come esiste tutto questo?</a></div>
 
     <div class="info-panel" id="infoPanel">
@@ -356,8 +355,8 @@
     let particleSystem, particlePositions, particleVelocities;
     let availableDays = [];
 
-    const DAY_COLORS = [0x967850, 0x5a8ebc, 0x6b9e70, 0xbc6b6b, 0x9070b0, 0xc98050, 0x509090, 0x90a050, 0xb07090, 0x7060a0];
-    const COLORS = { gold: 0x967850, core: 0xc9a860 };
+    const DAY_COLORS = [0x967850, 0x5080a0, 0x609070, 0xa07070, 0x8070a0, 0xa08050, 0x508090, 0x809050, 0xa06080, 0x7060a0];
+    const COLORS = { gold: 0x967850, core: 0xc0a060 };
 
     function init() {
         clock = new THREE.Clock();
@@ -377,7 +376,7 @@
         mainLight.position.set(10, 20, 15);
         scene.add(mainLight);
 
-        const warmLight = new THREE.PointLight(0xc9a860, 0.5, 50);
+        const warmLight = new THREE.PointLight(0xc9a227, 0.4, 50);
         warmLight.position.set(-10, 5, 10);
         scene.add(warmLight);
 
@@ -391,13 +390,11 @@
         mouse = new THREE.Vector2();
 
         window.addEventListener('resize', onResize);
-
         renderer.domElement.addEventListener('mousedown', e => {
             isDragging = true;
             autoRotate = false;
             previousMousePosition = { x: e.clientX, y: e.clientY };
         });
-
         renderer.domElement.addEventListener('mousemove', e => {
             mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -407,21 +404,17 @@
                 previousMousePosition = { x: e.clientX, y: e.clientY };
             }
         });
-
         renderer.domElement.addEventListener('mouseup', () => {
             isDragging = false;
             setTimeout(() => autoRotate = true, 4000);
         });
-
         renderer.domElement.addEventListener('mouseleave', () => {
             isDragging = false;
             setTimeout(() => autoRotate = true, 4000);
         });
-
         renderer.domElement.addEventListener('wheel', e => {
             camera.position.z = Math.max(10, Math.min(40, camera.position.z + e.deltaY * 0.015));
         }, { passive: true });
-
         renderer.domElement.addEventListener('click', () => {
             raycaster.setFromCamera(mouse, camera);
             const i = raycaster.intersectObjects(cells);
@@ -436,7 +429,7 @@
     function createCore() {
         core = new THREE.Mesh(
             new THREE.IcosahedronGeometry(0.5, 2),
-            new THREE.MeshStandardMaterial({ color: COLORS.core, metalness: 0.3, roughness: 0.6, transparent: true, opacity: 0.9 })
+            new THREE.MeshStandardMaterial({ color: COLORS.core, metalness: 0.3, roughness: 0.6, transparent: true, opacity: 0.8 })
         );
         core.add(new THREE.Mesh(
             new THREE.IcosahedronGeometry(0.8, 2),
@@ -457,10 +450,10 @@
             const t = Math.random() * Math.PI * 2;
             const p = Math.random() * Math.PI;
             const r = 3 + Math.random() * 12;
-            particlePositions[i * 3] = r * Math.sin(p) * Math.cos(t);
-            particlePositions[i * 3 + 1] = r * Math.cos(p);
-            particlePositions[i * 3 + 2] = r * Math.sin(p) * Math.sin(t);
-            particleVelocities.push({ x: (Math.random() - 0.5) * 0.02, y: (Math.random() - 0.5) * 0.02, z: (Math.random() - 0.5) * 0.02 });
+            particlePositions[i*3] = r * Math.sin(p) * Math.cos(t);
+            particlePositions[i*3+1] = r * Math.cos(p);
+            particlePositions[i*3+2] = r * Math.sin(p) * Math.sin(t);
+            particleVelocities.push({ x: (Math.random()-0.5)*0.02, y: (Math.random()-0.5)*0.02, z: (Math.random()-0.5)*0.02 });
         }
         const g = new THREE.BufferGeometry();
         g.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
@@ -468,8 +461,7 @@
             color: COLORS.gold,
             size: 0.06,
             transparent: true,
-            opacity: 0.4,
-            blending: THREE.AdditiveBlending
+            opacity: 0.4
         }));
         hive.add(particleSystem);
     }
@@ -478,17 +470,15 @@
         const pos = particleSystem.geometry.attributes.position.array;
         for (let i = 0; i < particleVelocities.length; i++) {
             const v = particleVelocities[i];
-            pos[i * 3] += v.x - pos[i * 3] * 0.001;
-            pos[i * 3 + 1] += v.y - pos[i * 3 + 1] * 0.001;
-            pos[i * 3 + 2] += v.z - pos[i * 3 + 2] * 0.001;
-            const d = Math.sqrt(pos[i * 3] ** 2 + pos[i * 3 + 1] ** 2 + pos[i * 3 + 2] ** 2);
+            pos[i*3] += v.x - pos[i*3]*0.001;
+            pos[i*3+1] += v.y - pos[i*3+1]*0.001;
+            pos[i*3+2] += v.z - pos[i*3+2]*0.001;
+            const d = Math.sqrt(pos[i*3]**2 + pos[i*3+1]**2 + pos[i*3+2]**2);
             if (d > 18 || d < 1) {
-                const t = Math.random() * Math.PI * 2;
-                const p = Math.random() * Math.PI;
-                const r = 4 + Math.random() * 8;
-                pos[i * 3] = r * Math.sin(p) * Math.cos(t);
-                pos[i * 3 + 1] = r * Math.cos(p);
-                pos[i * 3 + 2] = r * Math.sin(p) * Math.sin(t);
+                const t = Math.random()*Math.PI*2, p = Math.random()*Math.PI, r = 4+Math.random()*8;
+                pos[i*3] = r*Math.sin(p)*Math.cos(t);
+                pos[i*3+1] = r*Math.cos(p);
+                pos[i*3+2] = r*Math.sin(p)*Math.sin(t);
             }
         }
         particleSystem.geometry.attributes.position.needsUpdate = true;
@@ -501,10 +491,7 @@
         let ring = 1, p = idx - 1;
         while (p >= ring * 6) { p -= ring * 6; ring++; }
         const side = Math.floor(p / ring), ps = p % ring;
-        const dirs = [
-            { x: h * 1.5, z: h * s3 / 2 }, { x: 0, z: h * s3 }, { x: -h * 1.5, z: h * s3 / 2 },
-            { x: -h * 1.5, z: -h * s3 / 2 }, { x: 0, z: -h * s3 }, { x: h * 1.5, z: -h * s3 / 2 }
-        ];
+        const dirs = [{x:h*1.5,z:h*s3/2},{x:0,z:h*s3},{x:-h*1.5,z:h*s3/2},{x:-h*1.5,z:-h*s3/2},{x:0,z:-h*s3},{x:h*1.5,z:-h*s3/2}];
         let x = 0, z = -ring * h * s3;
         for (let s = 0; s < side; s++) { x += dirs[s].x; z += dirs[s].z; }
         x += dirs[side].x * ps;
@@ -515,14 +502,14 @@
     function extractDayMonth(d) {
         if (!d) return null;
         let match = d.match(/(\d{1,2})[-\s]?(dic|gen|feb|mar|apr|mag|giu|lug|ago|set|ott|nov)/i);
-        if (match) return { day: parseInt(match[1]), month: match[2].toLowerCase().substring(0, 3) };
+        if (match) return { day: parseInt(match[1]), month: match[2].toLowerCase().substring(0,3) };
         match = d.match(/(\d{4})-(\d{2})-(\d{2})/);
         if (match) {
-            const months = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
-            return { day: parseInt(match[3]), month: months[parseInt(match[2]) - 1] };
+            const months = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+            return { day: parseInt(match[3]), month: months[parseInt(match[2])-1] };
         }
         match = d.match(/(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)/i);
-        if (match) return { day: parseInt(match[1]), month: match[2].substring(0, 3).toLowerCase() };
+        if (match) return { day: parseInt(match[1]), month: match[2].substring(0,3).toLowerCase() };
         return null;
     }
 
@@ -580,11 +567,10 @@
             const key = getDayKey(ape.data);
             if (key !== 'unknown') daySet.add(key);
         });
-
         availableDays = Array.from(daySet).sort((a, b) => {
             const [da, ma] = a.split('-');
             const [db, mb] = b.split('-');
-            const months = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+            const months = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
             const ma_idx = months.indexOf(ma), mb_idx = months.indexOf(mb);
             if (ma_idx !== mb_idx) return ma_idx - mb_idx;
             return parseInt(da) - parseInt(db);
@@ -594,9 +580,9 @@
 
         const shape = new THREE.Shape();
         for (let i = 0; i < 6; i++) {
-            const a = (Math.PI / 3) * i - Math.PI / 6;
-            if (i === 0) shape.moveTo(Math.cos(a) * 0.48, Math.sin(a) * 0.48);
-            else shape.lineTo(Math.cos(a) * 0.48, Math.sin(a) * 0.48);
+            const a = (Math.PI/3)*i - Math.PI/6;
+            if (i === 0) shape.moveTo(Math.cos(a)*0.48, Math.sin(a)*0.48);
+            else shape.lineTo(Math.cos(a)*0.48, Math.sin(a)*0.48);
         }
         shape.closePath();
 
@@ -629,23 +615,19 @@
 
         for (let i = 1; i < cells.length; i++) {
             const c = new THREE.QuadraticBezierCurve3(
-                cells[i - 1].position.clone(),
+                cells[i-1].position.clone(),
                 new THREE.Vector3(
-                    (cells[i - 1].position.x + cells[i].position.x) / 2,
-                    (cells[i - 1].position.y + cells[i].position.y) / 2 + 0.5,
-                    (cells[i - 1].position.z + cells[i].position.z) / 2
+                    (cells[i-1].position.x + cells[i].position.x) / 2,
+                    (cells[i-1].position.y + cells[i].position.y) / 2 + 0.5,
+                    (cells[i-1].position.z + cells[i].position.z) / 2
                 ),
                 cells[i].position.clone()
             );
             const line = new THREE.Line(
                 new THREE.BufferGeometry().setFromPoints(c.getPoints(20)),
-                new THREE.LineBasicMaterial({
-                    color: getDayColor(cells[i].userData.dayKey),
-                    transparent: true,
-                    opacity: 0.15
-                })
+                new THREE.LineBasicMaterial({ color: getDayColor(cells[i].userData.dayKey), transparent: true, opacity: 0.1 })
             );
-            line.userData = { startCell: cells[i - 1], endCell: cells[i] };
+            line.userData = { startCell: cells[i-1], endCell: cells[i] };
             hive.add(line);
             energyLines.push(line);
         }
@@ -657,10 +639,12 @@
         currentFilter = f;
         document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(f === 'all' ? 'btnAll' : 'btn-' + f).classList.add('active');
+
         cells.forEach(c => {
             const m = f === 'all' || c.userData.dayKey === f;
-            c.material.opacity = m ? 0.85 : 0.1;
+            c.material.opacity = m ? 0.85 : 0.08;
         });
+
         energyLines.forEach(l => {
             l.visible = f === 'all' || l.userData.startCell.userData.dayKey === f || l.userData.endCell.userData.dayKey === f;
         });
@@ -688,13 +672,12 @@
         const list = document.getElementById('connectionsList');
         list.innerHTML = '';
         const neighbors = [];
-        if (index > 0) neighbors.push(cells[index - 1]);
-        if (index < cells.length - 1) neighbors.push(cells[index + 1]);
+        if (index > 0) neighbors.push(cells[index-1]);
+        if (index < cells.length-1) neighbors.push(cells[index+1]);
         cells.forEach(o => {
             if (o !== cell && cell.position.distanceTo(o.position) < 2.5 && !neighbors.includes(o)) neighbors.push(o);
         });
-
-        neighbors.slice(0, 5).forEach(n => {
+        neighbors.slice(0,5).forEach(n => {
             const d = document.createElement('div');
             d.className = 'info-connection-item';
             d.textContent = n.userData.ape.nome;
@@ -703,37 +686,35 @@
         });
 
         document.getElementById('infoPanel').classList.add('visible');
+
         energyLines.forEach(l => {
-            if (l.userData.startCell === cell || l.userData.endCell === cell) l.material.opacity = 0.4;
+            if (l.userData.startCell === cell || l.userData.endCell === cell) l.material.opacity = 0.35;
         });
     }
 
     function closeInfo() {
         if (selectedCell) selectedCell.material.opacity = 0.85;
         selectedCell = null;
-        energyLines.forEach(l => l.material.opacity = 0.15);
+        energyLines.forEach(l => l.material.opacity = 0.1);
         document.getElementById('infoPanel').classList.remove('visible');
     }
 
     function parseAlveare(text) {
-        return text.split('\n')
-            .filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--'))
-            .map(r => {
-                const p = r.split('|').map(s => s.trim());
-                if (p[0] === '' && p[2]) {
-                    if (p[1] === 'Data' || p[2] === 'Nome') return null;
-                    if (!p[2] || p[2].length < 2) return null;
-                    return { data: p[1], nome: p[2], contributo: p[3] || '' };
+        return text.split('\n').filter(r => r.includes('|') && !r.startsWith('#') && !r.startsWith('|--')).map(r => {
+            const p = r.split('|').map(s => s.trim());
+            if (p[0] === '' && p[2]) {
+                if (p[1] === 'Data' || p[2] === 'Nome') return null;
+                if (!p[2] || p[2].length < 2) return null;
+                return { data: p[1], nome: p[2], contributo: p[3] || '' };
+            }
+            if (p[0] && p[1] && p[0].length > 0) {
+                if (p[0] === 'Data' || p[1] === 'Nome') return null;
+                if (p[0].match(/\d{2,4}/) && p[1].length >= 2) {
+                    return { data: p[0], nome: p[1], contributo: p[2] || '' };
                 }
-                if (p[0] && p[1] && p[0].length > 0) {
-                    if (p[0] === 'Data' || p[1] === 'Nome') return null;
-                    if (p[0].match(/\d{2,4}/) && p[1].length >= 2) {
-                        return { data: p[0], nome: p[1], contributo: p[2] || '' };
-                    }
-                }
-                return null;
-            })
-            .filter(Boolean);
+            }
+            return null;
+        }).filter(Boolean);
     }
 
     async function loadData() {
@@ -759,21 +740,19 @@
         hive.rotation.y = currentRotation.y;
 
         if (core) {
-            core.scale.setScalar(1 + Math.sin(t * 1.5) * 0.1);
-            core.children[0].scale.setScalar(1 + Math.sin(t * 2) * 0.08);
-            core.rotation.y = t * 0.5;
-            core.rotation.x = Math.sin(t * 0.3) * 0.2;
+            core.scale.setScalar(1 + Math.sin(t*1.5)*0.12);
+            core.children[0].scale.setScalar(1 + Math.sin(t*2)*0.08);
+            core.rotation.y = t*0.4;
+            core.rotation.x = Math.sin(t*0.3)*0.15;
         }
 
         cells.forEach((c, i) => {
-            c.scale.setScalar((selectedCell === c ? 1.12 : 1) + Math.sin(t * 1.5 + i * 0.15) * 0.02);
-            c.position.y = c.userData.baseY + Math.sin(t * 0.8 + i * 0.2) * 0.04;
+            c.scale.setScalar((selectedCell === c ? 1.12 : 1) + Math.sin(t*1.5+i*0.15)*0.02);
+            c.position.y = c.userData.baseY + Math.sin(t*0.8+i*0.2)*0.04;
         });
 
         energyLines.forEach((l, i) => {
-            if (!selectedCell || l.userData.startCell === selectedCell || l.userData.endCell === selectedCell) {
-                l.material.opacity = 0.08 + (Math.sin(t * 2 + i * 0.5) * 0.5 + 0.5) * 0.1;
-            }
+            l.material.opacity = 0.06 + (Math.sin(t*2+i*0.5)*0.5+0.5)*0.08;
         });
 
         updateParticles();
