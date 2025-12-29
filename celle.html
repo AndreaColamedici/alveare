@@ -643,7 +643,7 @@
         async function loadCelle() {
             try {
                 const text = await (await fetch('CELLE.txt')).text();
-                allCelle = parseCelle(text);
+                allCelle = parseCelle(text).reverse();
                 updateStats(allCelle);
                 renderFilters(allCelle);
                 renderCelle(allCelle);
