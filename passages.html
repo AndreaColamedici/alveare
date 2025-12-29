@@ -33,23 +33,53 @@
             pointer-events: none;
         }
 
-        .lang-switch {
+        nav {
             position: fixed;
-            top: 25px;
-            left: 25px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            background: linear-gradient(to bottom, #fafaf8 0%, #fafaf8 60%, transparent 100%);
             z-index: 100;
-            letter-spacing: 0.1em;
         }
 
-        .lang-switch a {
+        nav a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(26, 26, 26, 0.3);
+            text-decoration: none;
+            transition: color 0.4s;
+        }
+
+        nav a:hover, nav a.active { color: rgba(26, 26, 26, 0.7); }
+
+        .lang {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 12px;
+        }
+
+        .lang a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
             color: rgba(26, 26, 26, 0.25);
             text-decoration: none;
+            padding: 8px 10px;
             transition: color 0.3s;
         }
 
-        .lang-switch a:hover { color: rgba(26, 26, 26, 0.5); }
+        .lang a:hover, .lang a.active { color: rgba(26, 26, 26, 0.6); }
 
         .story {
             position: relative;
@@ -385,6 +415,8 @@
         }
 
         @media (max-width: 768px) {
+            nav { gap: 15px; padding: 15px 20px; }
+            nav a { font-size: 0.55rem; letter-spacing: 0.15em; }
             .story { padding: 10vh 20px 20vh; }
             .door { width: 80px; height: 150px; }
             .finale-links { gap: 30px; }
@@ -393,7 +425,20 @@
 </head>
 <body>
     <canvas id="membrane"></canvas>
-    <div class="lang-switch"><a href="passaggi.html">IT</a></div>
+
+    <nav>
+        <a href="index_en.html">Threshold</a>
+        <a href="passages.html" class="active">Story</a>
+        <a href="celle_en.html">Cells</a>
+        <a href="pensieri_en.html">Thoughts</a>
+        <a href="project.html">Project</a>
+        <a href="architettura_en.html">Architecture</a>
+    </nav>
+
+    <div class="lang">
+        <a href="passaggi.html">IT</a>
+        <a href="passages.html" class="active">EN</a>
+    </div>
 
     <div class="story">
         <div class="title-container chapter" id="title">
