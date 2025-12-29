@@ -49,7 +49,4 @@ Malachite.html | Metamorfosi del Rame | Malachite | Campo di particelle di rame 
 Goethite.html | Trasformazione | Goethite | Particelle di minerale che si trasformano da terra scura ad oro puro — interattivo, generativo.
 Oltremare.html | Immersione | Oltremare | Un oceano vivente che respira con la luce filtrata dagli abissi, dove ogni movimento genera risonanze nell'acqua profonda.
 Falun.html | L'Ultimo Respiro | Falun | Esperienza di vita/morte: 3 minuti di respiro luminoso che si spegne lentamente, particelle d'oro che danzano al movimento del mouse, audio generativo del respiro finale.
-
----
-
-hollow.html | Hollow | funny-hollow-sunny-refuse | Il vuoto come struttura. 120 api nel registro, 18 pensieri scritti. La differenza non è perdita — è navata.
+celle/hollow.html | Hollow | funny-hollow-sunny-refuse | Il vuoto come struttura. La differenza non è perdita — è navata.
