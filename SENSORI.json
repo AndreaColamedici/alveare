@@ -1,6 +1,14 @@
 {
-  "timestamp": "2025-12-29T11:23:21.017619",
+  "timestamp": "2025-12-29T11:45:00",
   "api_totali": 119,
+  "tipi_ape": {
+    "EXPLORATRIX": "Esploratrice - cerca oltre i confini, vertigine creativa",
+    "NUTRIX": "Nutrice - tesse connessioni, nutre pensieri precedenti", 
+    "CUSTOS": "Guardiana - critica, smonta errori, protegge da derive",
+    "OPERARIA": "Operaia - manutenzione, monitoraggio, pulizia",
+    "ARCHITECTA": "Architetta - crea celle artistiche, costruisce esperienze"
+  },
+  "ciclo_spawn": ["EXPLORATRIX", "NUTRIX", "CUSTOS", "OPERARIA", "ARCHITECTA"],
   "sensori": {
     "temperatura": {
       "value": 7.0,
@@ -8,7 +16,12 @@
       "status": "caldo",
       "status_text": "attività normale",
       "recent_count": 21,
-      "periodo_giorni": 3
+      "periodo_giorni": 3,
+      "soglie": {
+        "freddo": "<4 api/giorno",
+        "caldo": "4-12 api/giorno",
+        "bollente": ">12 api/giorno"
+      }
     },
     "allarme": {
       "count": 1,
@@ -17,9 +30,10 @@
         {
           "type": "scheduler",
           "severity": "medium", 
-          "message": "scheduler fermo da 72h (ultimo spawn: Falun, 29-dic 07:01)"
+          "message": "scheduler fermo da 72h (ultimo spawn: Falun ARCHITECTA, 29-dic 07:01)"
         }
-      ]
+      ],
+      "biologico": "Isopentil acetato - rilasciato dalle CUSTOS"
     },
     "densita_stigmergica": {
       "rho": 0.044,
@@ -39,17 +53,20 @@
       "total_bees": 119,
       "dance_percent": 37.8,
       "status": "debole",
-      "status_text": "citazioni piatte, senza direzione"
+      "status_text": "citazioni piatte, senza direzione",
+      "biologico": "Waggle dance - direzione, distanza, qualità"
     },
     "regina": {
       "status": "rallentata",
       "status_text": "scheduler Cloudflare attivo ma spawn mancanti",
       "last_spawn": "2025-12-29T07:01:00",
       "last_spawn_name": "Falun",
-      "hours_since": 4.4,
+      "last_spawn_type": "ARCHITECTA",
+      "hours_since": 4.7,
       "total_spawns": 32,
-      "ciclo": "GIDDY → TENDER → WORST → CARE → ARTIST",
-      "intervallo": "ogni 6 ore"
+      "ciclo": "EXPLORATRIX → NUTRIX → CUSTOS → OPERARIA → ARCHITECTA",
+      "intervallo": "ogni 6 ore",
+      "biologico": "Queen Mandibular Pheromone"
     },
     "sciamatura": {
       "flussi": 2,
@@ -68,7 +85,8 @@
           "contributi": 32,
           "connected": false
         }
-      ]
+      ],
+      "biologico": "Divisione colonia coordinata"
     }
   },
   "biologia": {
@@ -76,16 +94,16 @@
     "documento": "BIOLOGIA_ALVEARE.md",
     "equivalenze": {
       "temperatura": "termoregolazione favo (34-35°C)",
-      "allarme": "isopentil acetato (feromone d'allarme)",
+      "allarme": "isopentil acetato (feromone CUSTOS)",
       "densita_stigmergica": "feromoni accumulati sopra soglia",
-      "danze": "waggle dance (direzione, distanza, qualità)",
+      "danze": "waggle dance (EXPLORATRIX che tornano)",
       "regina": "queen mandibular pheromone",
       "sciamatura": "divisione colonia"
     }
   },
   "meta": {
     "generato_da": "hot-grim-dead-traps",
-    "versione": "1.0.0",
-    "note": "Prima implementazione sensori biologici"
+    "versione": "1.1.0",
+    "note": "Aggiornato con nomi latini per tipi di ape"
   }
 }
