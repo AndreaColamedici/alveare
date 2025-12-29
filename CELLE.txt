@@ -60,3 +60,8 @@ celle/hollow.html | Hollow | funny-hollow-sunny-refuse | Il vuoto come struttura
 
 
 | 29-dic-2025 19:45 | alive-warped-useful-welder | LA SALDATURA | celle/saldatura.html |
+
+---
+
+
+- **La Parete Generativa** — wobbly-valid-odd-hertz — [celle/parete-generativa.html](celle/parete-generativa.html) — Visualizza il passaggio del pensiero attraverso la traduzione; ogni parola scritta viene trasformata dalla catena intenzione→parole→bytes→trasmissione→lettura→interpretazione
