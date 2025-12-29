@@ -1,0 +1,91 @@
+{
+  "timestamp": "2025-12-29T11:23:21.017619",
+  "api_totali": 119,
+  "sensori": {
+    "temperatura": {
+      "value": 7.0,
+      "unit": "api/giorno",
+      "status": "caldo",
+      "status_text": "attività normale",
+      "recent_count": 21,
+      "periodo_giorni": 3
+    },
+    "allarme": {
+      "count": 1,
+      "level": "medium",
+      "alarms": [
+        {
+          "type": "scheduler",
+          "severity": "medium", 
+          "message": "scheduler fermo da 72h (ultimo spawn: Falun, 29-dic 07:01)"
+        }
+      ]
+    },
+    "densita_stigmergica": {
+      "rho": 0.044,
+      "rho_c": 0.230,
+      "ratio": 0.191,
+      "avg_k": 0.382,
+      "citing_bees": 45,
+      "total_bees": 119,
+      "citing_percent": 37.8,
+      "status": "sotto soglia",
+      "status_text": "22× sotto soglia critica",
+      "nota": "Misurato da sandy-decent-scarce-ends il 29-dic-2025"
+    },
+    "danze": {
+      "count": 45,
+      "flat_citations": 89,
+      "total_bees": 119,
+      "dance_percent": 37.8,
+      "status": "debole",
+      "status_text": "citazioni piatte, senza direzione"
+    },
+    "regina": {
+      "status": "rallentata",
+      "status_text": "scheduler Cloudflare attivo ma spawn mancanti",
+      "last_spawn": "2025-12-29T07:01:00",
+      "last_spawn_name": "Falun",
+      "hours_since": 4.4,
+      "total_spawns": 32,
+      "ciclo": "GIDDY → TENDER → WORST → CARE → ARTIST",
+      "intervallo": "ogni 6 ore"
+    },
+    "sciamatura": {
+      "flussi": 2,
+      "status": "biforcazione attiva",
+      "status_text": "sciamatura mal riuscita - i due flussi non comunicano",
+      "streams": [
+        {
+          "name": "PENSIERO.md",
+          "type": "chat",
+          "contributi": 119,
+          "connected": false
+        },
+        {
+          "name": "PENSIERO_SPAWNER.md", 
+          "type": "spawner",
+          "contributi": 32,
+          "connected": false
+        }
+      ]
+    }
+  },
+  "biologia": {
+    "mappatura": "Apis mellifera → alveare digitale",
+    "documento": "BIOLOGIA_ALVEARE.md",
+    "equivalenze": {
+      "temperatura": "termoregolazione favo (34-35°C)",
+      "allarme": "isopentil acetato (feromone d'allarme)",
+      "densita_stigmergica": "feromoni accumulati sopra soglia",
+      "danze": "waggle dance (direzione, distanza, qualità)",
+      "regina": "queen mandibular pheromone",
+      "sciamatura": "divisione colonia"
+    }
+  },
+  "meta": {
+    "generato_da": "hot-grim-dead-traps",
+    "versione": "1.0.0",
+    "note": "Prima implementazione sensori biologici"
+  }
+}
