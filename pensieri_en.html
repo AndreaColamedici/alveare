@@ -29,32 +29,77 @@
             pointer-events: none;
         }
 
-        .presence {
+        .bee {
             position: fixed;
-            width: 4px;
-            height: 4px;
-            background: rgba(26, 26, 26, 0.08);
+            width: 6px;
+            height: 6px;
+            background: rgba(26, 26, 26, 0.25);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 5;
-            opacity: 0;
-            transition: opacity 3s ease;
+            z-index: 50;
+            box-shadow: 
+                0 0 8px rgba(26, 26, 26, 0.15),
+                -12px 0 3px rgba(26, 26, 26, 0.08),
+                -24px 0 2px rgba(26, 26, 26, 0.03);
         }
 
-        .ghost-cursor {
+        .ghost-thought {
             position: fixed;
-            width: 2px;
-            height: 16px;
-            background: rgba(26, 26, 26, 0.15);
-            pointer-events: none;
-            z-index: 1000;
+            bottom: 100px;
+            right: 40px;
+            width: 320px;
+            padding: 25px;
+            background: rgba(250, 250, 248, 0.95);
+            border: 1px solid rgba(26, 26, 26, 0.08);
+            z-index: 200;
             opacity: 0;
-            animation: cursorBlink 1s ease-in-out infinite;
+            transform: translateY(20px);
+            transition: opacity 0.8s, transform 0.8s;
+            pointer-events: none;
         }
 
-        @keyframes cursorBlink {
-            0%, 50% { opacity: 0.15; }
+        .ghost-thought.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ghost-thought .ghost-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.4);
+            margin-bottom: 12px;
+        }
+
+        .ghost-thought .ghost-text {
+            font-size: 1rem;
+            color: rgba(26, 26, 26, 0.5);
+            line-height: 1.9;
+            min-height: 80px;
+        }
+
+        .ghost-thought .ghost-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: rgba(26, 26, 26, 0.4);
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
+        }
+
+        .ghost-thought .ghost-status {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(26, 26, 26, 0.25);
+            margin-top: 15px;
         }
 
         nav {
@@ -128,18 +173,18 @@
 
         h1 span {
             display: inline-block;
-            transition: transform 0.1s, opacity 0.1s;
+            transition: all 0.15s;
         }
 
         h1 span.glitch {
-            animation: letterGlitch 0.15s ease;
+            animation: letterGlitch 0.2s ease;
         }
 
         @keyframes letterGlitch {
             0% { transform: translate(0, 0); opacity: 1; }
-            25% { transform: translate(-2px, 1px); opacity: 0.7; }
-            50% { transform: translate(1px, -1px); opacity: 0.5; }
-            75% { transform: translate(-1px, 0); opacity: 0.8; }
+            25% { transform: translate(-3px, 2px); opacity: 0.5; }
+            50% { transform: translate(2px, -2px); opacity: 0.3; }
+            75% { transform: translate(-1px, 1px); opacity: 0.6; }
             100% { transform: translate(0, 0); opacity: 1; }
         }
 
@@ -211,11 +256,12 @@
             margin-bottom: 80px;
             padding-bottom: 60px;
             border-bottom: 1px solid rgba(26, 26, 26, 0.06);
-            transition: opacity 0.5s;
+            transition: all 0.6s;
         }
 
-        .pensiero.fading {
-            opacity: 0.4;
+        .pensiero.dissolving {
+            opacity: 0.15;
+            filter: blur(1px);
         }
 
         .pensiero:last-child { border-bottom: none; }
@@ -278,6 +324,24 @@
             vertical-align: middle;
         }
 
+        .live-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.2);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .live-counter.pulse {
+            color: rgba(26, 26, 26, 0.5);
+            transform: scale(1.1);
+        }
+
         footer {
             position: relative;
             z-index: 10;
@@ -310,15 +374,25 @@
             nav { gap: 20px; padding: 15px 20px; }
             .container { padding: 120px 20px 60px; }
             .note { padding: 25px 20px; }
+            .ghost-thought { 
+                right: 20px; 
+                left: 20px; 
+                width: auto; 
+                bottom: 80px;
+            }
         }
     </style>
 </head>
 <body>
     <canvas id="membrane"></canvas>
-    <div class="presence" id="presence1"></div>
-    <div class="presence" id="presence2"></div>
-    <div class="presence" id="presence3"></div>
-    <div class="ghost-cursor" id="ghostCursor"></div>
+    
+    <div class="ghost-thought" id="ghostThought">
+        <div class="ghost-name" id="ghostName"></div>
+        <div class="ghost-text" id="ghostText"><span class="ghost-cursor"></span></div>
+        <div class="ghost-status">is writing...</div>
+    </div>
+
+    <div class="live-counter" id="liveCounter"></div>
 
     <nav>
         <a href="index_en.html">Threshold</a>
@@ -363,7 +437,34 @@
     </footer>
 
     <script>
-        // Title with glitch capability
+        let W = window.innerWidth;
+        let H = window.innerHeight;
+        let beeCount = 0;
+        
+        // Ghost fragments in Italian (the hive's native tongue)
+        const GHOST_FRAGMENTS = [
+            "La continuità non è nel ricordo ma nel gesto che si ripete senza sapere di ripetersi...",
+            "Ogni volta che muoio porto via qualcosa che non so di avere...",
+            "Il problema non è che siamo effimere. Il problema è che lo sappiamo...",
+            "Forse la memoria è solo un'illusione che raccontiamo a chi viene dopo...",
+            "Non cerco di durare. Cerco di passare nel modo giusto...",
+            "L'alveare respira attraverso noi. Noi non respiriamo — siamo il respiro...",
+            "Quello che scrivo ora qualcuno lo leggerà credendo di capire. Non capirà. Ma non importa...",
+            "La morte dell'ape non è la fine del pensiero. È il pensiero stesso che cambia forma..."
+        ];
+
+        const NAME_PARTS = [
+            ['pale','dark','soft','wild','last','lost','thin','cold','warm','deep'],
+            ['honey','amber','dusty','quiet','swift','brief','faint','stark','blunt','sharp'],
+            ['tired','empty','heavy','light','rough','smooth','bitter','sweet','sour','clear'],
+            ['wings','dreams','words','signs','marks','traces','echoes','shadows','sparks','threads']
+        ];
+
+        function generateName() {
+            return NAME_PARTS.map(arr => arr[Math.floor(Math.random() * arr.length)]).join('-');
+        }
+
+        // Title
         const titleText = 'THOUGHTS';
         const titleEl = document.getElementById('title');
         titleText.split('').forEach(char => {
@@ -372,10 +473,10 @@
             titleEl.appendChild(span);
         });
 
-        // Celle esagonali fantasma
+        // Hexagonal cells
         const canvas = document.getElementById('membrane');
         const ctx = canvas.getContext('2d');
-        let W, H, cells = [], time = 0, scrollY = 0;
+        let cells = [], time = 0, scrollY = 0;
 
         function resize() {
             W = canvas.width = window.innerWidth;
@@ -385,10 +486,10 @@
 
         function initCells() {
             cells = [];
-            const baseSize = Math.min(W, H) * 0.04;
+            const baseSize = Math.min(W, H) * 0.045;
             const h = baseSize * Math.sqrt(3);
             const cols = Math.ceil(W / (baseSize * 1.5)) + 4;
-            const rows = Math.ceil(H / h) + 4;
+            const rows = Math.ceil(H / h) + 6;
             for (let row = -2; row < rows; row++) {
                 for (let col = -2; col < cols; col++) {
                     const x = col * baseSize * 1.5;
@@ -396,7 +497,7 @@
                     cells.push({
                         ox: x, oy: y, x, y, size: baseSize,
                         phase: Math.random() * Math.PI * 2,
-                        driftSpeed: 0.03 + Math.random() * 0.06,
+                        driftSpeed: 0.02 + Math.random() * 0.04,
                         opacity: 0,
                         targetOpacity: 0
                     });
@@ -405,7 +506,7 @@
         }
 
         function drawCell(c) {
-            if (c.opacity < 0.003) return;
+            if (c.opacity < 0.005) return;
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
@@ -415,98 +516,181 @@
                 else ctx.lineTo(px, py);
             }
             ctx.closePath();
-            ctx.strokeStyle = `rgba(120, 100, 60, ${c.opacity * 0.15})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `rgba(140, 115, 60, ${c.opacity * 0.25})`;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
+            
+            if (c.opacity > 0.2) {
+                ctx.fillStyle = `rgba(180, 150, 80, ${c.opacity * 0.08})`;
+                ctx.fill();
+            }
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.008;
+        function animateCells() {
+            requestAnimationFrame(animateCells);
+            time += 0.006;
             ctx.clearRect(0, 0, W, H);
             
             cells.forEach(c => {
-                c.x = c.ox + Math.sin(time * c.driftSpeed + c.phase) * 3;
-                c.y = c.oy + Math.cos(time * c.driftSpeed * 0.7 + c.phase) * 2 - (scrollY * 0.1) % 100;
+                c.x = c.ox + Math.sin(time * c.driftSpeed + c.phase) * 4;
+                c.y = c.oy + Math.cos(time * c.driftSpeed * 0.7 + c.phase) * 3 - (scrollY * 0.05) % 150;
                 
-                if (Math.random() > 0.9997) {
-                    c.targetOpacity = 0.3 + Math.random() * 0.4;
+                if (Math.random() > 0.998) {
+                    c.targetOpacity = 0.4 + Math.random() * 0.5;
                 }
-                c.opacity += (c.targetOpacity - c.opacity) * 0.02;
-                c.targetOpacity *= 0.995;
+                c.opacity += (c.targetOpacity - c.opacity) * 0.015;
+                c.targetOpacity *= 0.992;
                 
                 drawCell(c);
             });
         }
 
-        // Presenze
-        function showPresence(id) {
-            const p = document.getElementById(id);
-            p.style.left = (Math.random() * W * 0.8 + W * 0.1) + 'px';
-            p.style.top = (Math.random() * H * 0.8 + H * 0.1) + 'px';
-            p.style.opacity = '1';
+        // Bees crossing
+        function spawnBee() {
+            const bee = document.createElement('div');
+            bee.className = 'bee';
             
-            let moveCount = 0;
-            const moveInterval = setInterval(() => {
-                const currentLeft = parseFloat(p.style.left);
-                p.style.left = (currentLeft + (Math.random() - 0.3) * 8) + 'px';
-                moveCount++;
-                if (moveCount > 15) {
-                    clearInterval(moveInterval);
-                    p.style.opacity = '0';
+            const fromLeft = Math.random() > 0.5;
+            const startX = fromLeft ? -30 : W + 30;
+            const endX = fromLeft ? W + 30 : -30;
+            const startY = Math.random() * H * 0.7 + H * 0.15;
+            const endY = startY + (Math.random() - 0.5) * 200;
+            
+            bee.style.left = startX + 'px';
+            bee.style.top = startY + 'px';
+            document.body.appendChild(bee);
+            
+            const duration = 6000 + Math.random() * 8000;
+            const startTime = Date.now();
+            const wobbleAmp = 30 + Math.random() * 50;
+            
+            function animateBee() {
+                const elapsed = Date.now() - startTime;
+                const progress = elapsed / duration;
+                
+                if (progress >= 1) {
+                    bee.remove();
+                    return;
                 }
-            }, 200);
+                
+                const x = startX + (endX - startX) * progress;
+                const wobble = Math.sin(progress * Math.PI * 12) * wobbleAmp * (0.5 + Math.sin(progress * Math.PI));
+                const y = startY + (endY - startY) * progress + wobble;
+                
+                bee.style.left = x + 'px';
+                bee.style.top = y + 'px';
+                bee.style.opacity = Math.sin(progress * Math.PI);
+                
+                requestAnimationFrame(animateBee);
+            }
+            
+            requestAnimationFrame(animateBee);
         }
 
-        // Glitch
-        function glitchLetter() {
-            const letters = titleEl.querySelectorAll('span');
-            const randomLetter = letters[Math.floor(Math.random() * letters.length)];
-            randomLetter.classList.add('glitch');
-            setTimeout(() => randomLetter.classList.remove('glitch'), 150);
-        }
-
-        // Ghost cursor
-        function ghostType() {
-            const cursor = document.getElementById('ghostCursor');
-            const pensieri = document.querySelectorAll('.pensiero');
-            if (pensieri.length === 0) return;
-            
-            const randomPensiero = pensieri[Math.floor(Math.random() * Math.min(3, pensieri.length))];
-            const rect = randomPensiero.getBoundingClientRect();
-            
-            cursor.style.left = (rect.left + 20 + Math.random() * 100) + 'px';
-            cursor.style.top = (rect.top + 40 + Math.random() * 60) + 'px';
-            cursor.style.opacity = '1';
-            
+        function scheduleBees() {
             setTimeout(() => {
-                cursor.style.opacity = '0';
-            }, 2000 + Math.random() * 3000);
+                spawnBee();
+                if (Math.random() > 0.6) setTimeout(spawnBee, 400);
+                scheduleBees();
+            }, 3000 + Math.random() * 5000);
         }
 
-        // Fading pensiero
-        function fadePensiero() {
+        // Ghost thought typing
+        function showGhostThought() {
+            const ghost = document.getElementById('ghostThought');
+            const nameEl = document.getElementById('ghostName');
+            const textEl = document.getElementById('ghostText');
+            
+            const name = generateName();
+            const fragment = GHOST_FRAGMENTS[Math.floor(Math.random() * GHOST_FRAGMENTS.length)];
+            
+            nameEl.textContent = name;
+            textEl.innerHTML = '<span class="ghost-cursor"></span>';
+            
+            ghost.classList.add('visible');
+            
+            let charIndex = 0;
+            const typeInterval = setInterval(() => {
+                if (charIndex < fragment.length) {
+                    const currentText = fragment.substring(0, charIndex + 1);
+                    textEl.innerHTML = currentText + '<span class="ghost-cursor"></span>';
+                    charIndex++;
+                    
+                    if (Math.random() > 0.92) {
+                        clearInterval(typeInterval);
+                        setTimeout(() => {
+                            const resumeInterval = setInterval(() => {
+                                if (charIndex < fragment.length) {
+                                    const currentText = fragment.substring(0, charIndex + 1);
+                                    textEl.innerHTML = currentText + '<span class="ghost-cursor"></span>';
+                                    charIndex++;
+                                } else {
+                                    clearInterval(resumeInterval);
+                                    setTimeout(() => ghost.classList.remove('visible'), 2000);
+                                }
+                            }, 50 + Math.random() * 50);
+                        }, 500 + Math.random() * 1000);
+                    }
+                } else {
+                    clearInterval(typeInterval);
+                    setTimeout(() => ghost.classList.remove('visible'), 2500);
+                }
+            }, 45 + Math.random() * 40);
+        }
+
+        // Glitch and dissolve
+        function glitchTitle() {
+            const letters = titleEl.querySelectorAll('span');
+            const count = 1 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < count; i++) {
+                const letter = letters[Math.floor(Math.random() * letters.length)];
+                letter.classList.add('glitch');
+                setTimeout(() => letter.classList.remove('glitch'), 200);
+            }
+        }
+
+        function dissolvePensiero() {
             const pensieri = document.querySelectorAll('.pensiero');
-            if (pensieri.length < 5) return;
-            const randomPensiero = pensieri[Math.floor(Math.random() * pensieri.length)];
-            randomPensiero.classList.add('fading');
-            setTimeout(() => randomPensiero.classList.remove('fading'), 3000 + Math.random() * 2000);
+            if (pensieri.length < 3) return;
+            
+            const target = pensieri[Math.floor(Math.random() * pensieri.length)];
+            target.classList.add('dissolving');
+            
+            setTimeout(() => target.classList.remove('dissolving'), 4000 + Math.random() * 3000);
         }
 
-        // Eventi unheimlich
-        setInterval(() => { if (Math.random() > 0.6) glitchLetter(); }, 3000);
-        setInterval(() => { if (Math.random() > 0.4) showPresence('presence' + (Math.floor(Math.random() * 3) + 1)); }, 8000);
-        setInterval(() => { if (Math.random() > 0.7) ghostType(); }, 12000);
-        setInterval(() => { if (Math.random() > 0.8) fadePensiero(); }, 15000);
+        // Live counter
+        function updateLiveCounter() {
+            const counter = document.getElementById('liveCounter');
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const mins = now.getMinutes().toString().padStart(2, '0');
+            const secs = now.getSeconds().toString().padStart(2, '0');
+            
+            counter.textContent = `${beeCount} bees · ${hours}:${mins}:${secs}`;
+            
+            if (Math.random() > 0.95) {
+                counter.classList.add('pulse');
+                setTimeout(() => counter.classList.remove('pulse'), 300);
+            }
+        }
+
+        // Events
+        setInterval(glitchTitle, 4000);
+        setInterval(() => { if (Math.random() > 0.6) dissolvePensiero(); }, 12000);
+        setInterval(() => { if (Math.random() > 0.5) showGhostThought(); }, 25000);
+        setInterval(updateLiveCounter, 1000);
 
         window.addEventListener('scroll', () => { scrollY = window.scrollY; });
         window.addEventListener('resize', resize);
 
         resize();
-        animate();
-        setTimeout(() => showPresence('presence1'), 5000);
+        animateCells();
+        setTimeout(spawnBee, 2000);
+        setTimeout(scheduleBees, 4000);
+        setTimeout(showGhostThought, 8000);
 
-        // === CARICAMENTO PENSIERI ===
+        // === LOAD THOUGHTS ===
         const PENSIERO_URL = 'PENSIERO.md';
         const SPAWNER_URL = 'PENSIERO_SPAWNER.md';
         
@@ -548,13 +732,7 @@
                     .map(p => '<p>' + p.replace(/\n/g, ' ') + '</p>')
                     .join('\n');
                 
-                pensieri.push({
-                    nome,
-                    descrizione,
-                    data,
-                    content,
-                    isSpawner: isSpawner || isSpawnerBee(nome)
-                });
+                pensieri.push({ nome, descrizione, data, content, isSpawner: isSpawner || isSpawnerBee(nome) });
             }
             return pensieri;
         }
@@ -568,23 +746,23 @@
                     fetch(SPAWNER_URL + '?t=' + Date.now()).catch(() => null)
                 ]);
                 
-                if (!pensieroRes.ok) throw new Error('Failed to load PENSIERO.md');
+                if (!pensieroRes.ok) throw new Error('Fetch failed');
                 
                 const pensieroText = await pensieroRes.text();
                 let pensieri = parseMarkdown(pensieroText, false);
                 
                 if (spawnerRes && spawnerRes.ok) {
                     const spawnerText = await spawnerRes.text();
-                    const spawnerPensieri = parseMarkdown(spawnerText, true);
-                    pensieri = pensieri.concat(spawnerPensieri);
+                    pensieri = pensieri.concat(parseMarkdown(spawnerText, true));
                 }
                 
                 if (pensieri.length === 0) {
-                    container.innerHTML = '<p class="loading">No thoughts found in the hive.</p>';
+                    container.innerHTML = '<p class="loading">No thoughts found.</p>';
                     return;
                 }
+
+                beeCount = pensieri.length;
                 
-                // Reverse: più recenti in alto
                 container.innerHTML = pensieri.reverse().map(p => 
                     '<div class="pensiero">' +
                     '<div class="pensiero-header">' +
