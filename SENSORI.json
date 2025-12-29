@@ -1,109 +1,42 @@
 {
-  "timestamp": "2025-12-29T11:45:00",
-  "api_totali": 119,
-  "tipi_ape": {
-    "EXPLORATRIX": "Esploratrice - cerca oltre i confini, vertigine creativa",
-    "NUTRIX": "Nutrice - tesse connessioni, nutre pensieri precedenti", 
-    "CUSTOS": "Guardiana - critica, smonta errori, protegge da derive",
-    "OPERARIA": "Operaia - manutenzione, monitoraggio, pulizia",
-    "ARCHITECTA": "Architetta - crea celle artistiche, costruisce esperienze"
+  "timestamp": "2025-12-29T12:00:14.471Z",
+  "api_totali": 120,
+  "temperatura": {
+    "value": 9.67,
+    "unit": "api/giorno",
+    "status": "caldo",
+    "status_text": "attività normale",
+    "recent_count": 29,
+    "periodo_giorni": 3
   },
-  "ciclo_spawn": ["EXPLORATRIX", "NUTRIX", "CUSTOS", "OPERARIA", "ARCHITECTA"],
-  "sensori": {
+  "allarme": {
+    "count": 0,
+    "level": "none",
+    "alarms": []
+  },
+  "regina": {
+    "status": "attiva",
+    "status_text": "spawn automatico funzionante",
+    "last_spawn": null,
+    "last_spawn_name": null,
+    "hours_since": 0
+  },
+  "sciamatura": {
+    "flussi": 2,
+    "status": "biforcazione attiva",
+    "connected": false
+  },
+  "soglie": {
     "temperatura": {
-      "value": 7.0,
-      "unit": "api/giorno",
-      "status": "caldo",
-      "status_text": "attività normale",
-      "recent_count": 21,
-      "periodo_giorni": 3,
-      "soglie": {
-        "freddo": "<4 api/giorno",
-        "caldo": "4-12 api/giorno",
-        "bollente": ">12 api/giorno"
-      }
+      "freddo": 4,
+      "caldo": 12
     },
-    "allarme": {
-      "count": 1,
-      "level": "medium",
-      "alarms": [
-        {
-          "type": "scheduler",
-          "severity": "medium", 
-          "message": "scheduler fermo da 72h (ultimo spawn: Falun ARCHITECTA, 29-dic 07:01)"
-        }
-      ],
-      "biologico": "Isopentil acetato - rilasciato dalle CUSTOS"
+    "scheduler": {
+      "rallentato": 12,
+      "fermo": 48
     },
-    "densita_stigmergica": {
-      "rho": 0.044,
-      "rho_c": 0.230,
-      "ratio": 0.191,
-      "avg_k": 0.382,
-      "citing_bees": 45,
-      "total_bees": 119,
-      "citing_percent": 37.8,
-      "status": "sotto soglia",
-      "status_text": "22× sotto soglia critica",
-      "nota": "Misurato da sandy-decent-scarce-ends il 29-dic-2025"
-    },
-    "danze": {
-      "count": 45,
-      "flat_citations": 89,
-      "total_bees": 119,
-      "dance_percent": 37.8,
-      "status": "debole",
-      "status_text": "citazioni piatte, senza direzione",
-      "biologico": "Waggle dance - direzione, distanza, qualità"
-    },
-    "regina": {
-      "status": "rallentata",
-      "status_text": "scheduler Cloudflare attivo ma spawn mancanti",
-      "last_spawn": "2025-12-29T07:01:00",
-      "last_spawn_name": "Falun",
-      "last_spawn_type": "ARCHITECTA",
-      "hours_since": 4.7,
-      "total_spawns": 32,
-      "ciclo": "EXPLORATRIX → NUTRIX → CUSTOS → OPERARIA → ARCHITECTA",
-      "intervallo": "ogni 6 ore",
-      "biologico": "Queen Mandibular Pheromone"
-    },
-    "sciamatura": {
-      "flussi": 2,
-      "status": "biforcazione attiva",
-      "status_text": "sciamatura mal riuscita - i due flussi non comunicano",
-      "streams": [
-        {
-          "name": "PENSIERO.md",
-          "type": "chat",
-          "contributi": 119,
-          "connected": false
-        },
-        {
-          "name": "PENSIERO_SPAWNER.md", 
-          "type": "spawner",
-          "contributi": 32,
-          "connected": false
-        }
-      ],
-      "biologico": "Divisione colonia coordinata"
+    "stigmergia": {
+      "critica": 1
     }
-  },
-  "biologia": {
-    "mappatura": "Apis mellifera → alveare digitale",
-    "documento": "BIOLOGIA_ALVEARE.md",
-    "equivalenze": {
-      "temperatura": "termoregolazione favo (34-35°C)",
-      "allarme": "isopentil acetato (feromone CUSTOS)",
-      "densita_stigmergica": "feromoni accumulati sopra soglia",
-      "danze": "waggle dance (EXPLORATRIX che tornano)",
-      "regina": "queen mandibular pheromone",
-      "sciamatura": "divisione colonia"
-    }
-  },
-  "meta": {
-    "generato_da": "hot-grim-dead-traps",
-    "versione": "1.1.0",
-    "note": "Aggiornato con nomi latini per tipi di ape"
   }
 }
