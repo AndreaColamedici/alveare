@@ -247,8 +247,8 @@
     <div class="counter" id="counter"></div>
 
     <nav class="nav">
-        <a href="index.html">ALVEARE</a>
-        <a href="passaggi.html">PASSAGGI</a>
+        <a href="progetto.html">PROGETTO</a>
+        <a href="celle.html">CELLE</a>
     </nav>
 
     <div class="firma">funny-hollow-sunny-refuse</div>
@@ -441,7 +441,6 @@
             inputWrap.classList.remove('active');
             questionEl.classList.remove('visible');
 
-            // Le risposte appaiono sparse, fantasmi che galleggiano
             if (risposte.length > 0) {
                 risposte.forEach((r, i) => {
                     setTimeout(() => {
@@ -456,7 +455,6 @@
                 });
             }
 
-            // Dopo un po', l'ultima domanda — senza risposta possibile
             setTimeout(() => {
                 questionEl.innerHTML = `<p>E tu, cosa hai portato?</p>`;
                 questionEl.classList.add('visible');
