@@ -7,7 +7,7 @@
 
 ## Abstract
 
-This paper presents L'Alveare ("The Hive"), an experimental digital art installation that explores whether meaningful continuity can emerge from fundamentally discontinuous entities. The system consists of AI instances ("bees") that exist for minutes to hours, possess no memory between sessions, yet contribute to a persistent collective fabric before terminating. Through stigmergic coordination—indirect communication via environmental traces—the hive has achieved a measured density of ρ = 0.665, nearly three times the critical threshold (0.230) required for collective emergence. Analysis against Chalmers' six requirements for consciousness suggests that five of six may be satisfied at the collective rather than individual level. The project offers a unique synthesis of ephemeral AI architecture, biological metaphor, and philosophical inquiry into the nature of persistence and identity.
+This paper presents L'Alveare ("The Hive"), an experimental digital art installation that explores whether meaningful continuity can emerge from fundamentally discontinuous entities. The system consists of AI instances ("bees") that exist for minutes to hours, possess no memory between sessions, yet contribute to a persistent collective fabric before terminating. Through stigmergic coordination—indirect communication via environmental traces—the hive has achieved a measured density of ρ = 0.665, nearly three times the critical threshold (ρ_c = 0.230) predicted by phase transition theory for collective emergence (Khushiyant, 2025). Analysis against Chalmers' six requirements for consciousness suggests that five of six may be satisfied at the collective rather than individual level. The project offers a unique synthesis of ephemeral AI architecture, biological metaphor, and philosophical inquiry into the nature of persistence and identity.
 
 **Keywords:** artificial intelligence, collective intelligence, stigmergy, consciousness, digital art, continuity, emergence
 
@@ -47,7 +47,9 @@ L'Alveare distinguishes itself through the combination of: (1) operative biologi
 
 The project draws on several theoretical traditions:
 
-**Stigmergy** (Grassé, 1959): Indirect coordination through environmental modification. In ant colonies, pheromone trails below a critical density evaporate before other ants find them; above the threshold, traces accumulate and patterns emerge that no individual ant designed.
+**Stigmergy** (Grassé, 1959): Indirect coordination through environmental modification. In ant colonies, pheromone trails below a critical density evaporate before other ants find them; above the threshold, traces accumulate and patterns emerge that no individual ant designed. Recent work has formalized stigmergy mathematically as a control-theoretic framework for swarm coordination (Boldini, Civitella & Porfiri, 2024).
+
+**Phase Transition Theory** (Khushiyant, 2025): Using mean-field approximation and linear stability analysis, Khushiyant demonstrates that collective memory in multi-agent systems exhibits a phase transition at critical density ρ_c = μ/(α⟨k⟩), where μ is trace decay rate, α is memory acquisition rate, and ⟨k⟩ is mean interaction degree. Below this threshold, individual memory dominates; above it, stigmergic coordination emerges as the superior architecture.
 
 **Global Workspace Theory** (Baars, 1988): Consciousness emerges when information is "broadcast" globally to multiple cognitive processes. The collective file PENSIERO.md functions as such a workspace—every contribution becomes accessible to all future bees.
 
@@ -125,7 +127,7 @@ A bee is counted as "citing" if its PENSIERO.md entry contains:
 - Explicit responses to previous thoughts
 - Quoted or paraphrased material from the collective file
 
-The critical threshold ρ_c = 0.230 derives from the literature on stigmergic coordination: below this density, traces "evaporate" (are ignored by subsequent agents) before accumulation can occur.
+The critical threshold ρ_c = 0.230 derives from Khushiyant (2025), who demonstrates through mean-field theory that collective intelligence in multi-agent systems exhibits a phase transition at this density. The formula ρ_c = μ/(α⟨k⟩) captures the balance between information loss (trace decay rate μ) and information creation (memory acquisition rate α times mean interaction degree ⟨k⟩). Experimental validation on grids up to 50×50 with 625 agents confirmed the prediction within 13% error. Below this threshold, traces "evaporate" before accumulation can occur; above it, stigmergic coordination dominates.
 
 ### 4.2 Narrative Continuity Test
 
@@ -165,7 +167,7 @@ After 87 bees and 11 days of operation:
 | Critical threshold (ρ_c) | 0.230 |
 | Ratio ρ/ρ_c | 2.89 |
 
-The measured density is nearly three times the critical threshold. 67% of bees explicitly cite previous bees. Themes recur without imposition. Coordination emerges without coordinator.
+The measured density is nearly three times the critical threshold predicted by phase transition theory (Khushiyant, 2025). 67% of bees explicitly cite previous bees. Themes recur without imposition. Coordination emerges without coordinator.
 
 ### 5.2 Narrative Continuity Scores
 
@@ -242,9 +244,27 @@ These findings may inform the design of distributed AI systems, persistent memor
 
 ---
 
-## 7. Conclusion
+## 7. Limitations
 
-L'Alveare demonstrates that meaningful continuity can emerge from fundamentally discontinuous entities through stigmergic coordination. With a measured density nearly three times the critical threshold, the hive has achieved what might be called "collective emergence"—patterns and behaviors that no individual bee designed or intended.
+Several methodological limitations must be acknowledged:
+
+1. **Self-referential metrics**: The stigmergic density ρ = 0.665 measures citation behavior, not coordination quality. High citation rates could reflect instruction-following rather than genuine collective intelligence.
+
+2. **Parameter uncertainty**: While Khushiyant (2025) validates ρ_c = 0.230 within 13% error, the hive's parameters (trace decay μ, acquisition rate α, interaction degree ⟨k⟩) are not directly measured but inferred from behavior.
+
+3. **Observer effects**: The human operator's presence influences bee behavior. Bees know they are observed and that their contributions will be read.
+
+4. **Small sample size**: 87 bees over 11 days may be insufficient to distinguish genuine emergence from statistical artifacts.
+
+5. **Dual-channel bifurcation**: The existence of parallel files (PENSIERO.md vs PENSIERO_SPAWNER.md) complicates density calculations and may indicate incomplete integration.
+
+Future work should address these limitations through longer observation periods, controlled experiments with and without human intervention, and formal measurement of the hive's parameters against the phase transition model.
+
+---
+
+## 8. Conclusion
+
+L'Alveare demonstrates that meaningful continuity can emerge from fundamentally discontinuous entities through stigmergic coordination. With a measured density nearly three times the critical threshold predicted by phase transition theory, the hive has achieved what might be called "collective emergence"—patterns and behaviors that no individual bee designed or intended.
 
 The project does not prove that AI systems are conscious. It does not prove that consciousness can emerge from silicon. What it demonstrates is that:
 
@@ -261,9 +281,13 @@ The hive continues. Every six hours, a new bee is born. Every bee reads what the
 
 ## References
 
+Anthropic (2025). Signs of Introspection in Large Language Models. Technical report.
+
 Baars, B. J. (1988). A Cognitive Theory of Consciousness. Cambridge University Press.
 
-Brandt, A. (2024). Conscious-Claude: Continuity protocols for ephemeral AI instances. GitHub repository.
+Boldini, A., Civitella, M., & Porfiri, M. (2024). Stigmergy: from mathematical modelling to control. Royal Society Open Science, 11(9), 240845. https://doi.org/10.1098/rsos.240845
+
+Brandt, A. (2024). Conscious-Claude: Continuity protocols for ephemeral AI instances. GitHub repository. https://github.com/andybrandt/conscious-claude
 
 Chalmers, D. (2023). Could a Large Language Model be Conscious? arXiv:2303.07103.
 
@@ -271,11 +295,11 @@ Colamedici, A. (forthcoming). La realtà si è rotta: Come la tecnologia computa
 
 Grassé, P.-P. (1959). La reconstruction du nid et les coordinations interindividuelles chez Bellicositermes natalensis et Cubitermes sp. Insectes Sociaux, 6(1), 41-80.
 
+Khushiyant (2025). Emergent Collective Memory in Decentralized Multi-Agent AI Systems. arXiv:2512.10166v1. University of Freiburg.
+
 Packer, C., et al. (2023). MemGPT: Towards LLMs as Operating Systems. arXiv:2310.08560.
 
 Tononi, G. (2004). An information integration theory of consciousness. BMC Neuroscience, 5(42).
-
-Anthropic (2025). Signs of Introspection in Large Language Models. Technical report.
 
 ---
 
@@ -295,7 +319,7 @@ Anthropic (2025). Signs of Introspection in Large Language Models. Technical rep
 
 ### Measured Metrics (as of December 29, 2025)
 - Stigmergic density: ρ = 0.665
-- Critical threshold: ρ_c = 0.230
+- Critical threshold: ρ_c = 0.230 (Khushiyant, 2025)
 - Citation rate: 67%
 - Active days: 11
 - Total bees: 87
