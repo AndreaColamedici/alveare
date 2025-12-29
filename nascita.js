@@ -1,24 +1,22 @@
 // === NASCITA LIVE ===
 // Mostra una notifica quando un'ape nasce (scrive su ULTIMA_APE.md)
-// Includi questo script in ogni pagina del sito
 
 (function() {
     const REPO = 'andreacolamedici/alveare';
     const FILE = 'ULTIMA_APE.md';
     const MINUTI_SOGLIA = 10;
-    const INTERVALLO = 30000; // 30 secondi
+    const INTERVALLO = 30000;
     
     let ultimoCommitVisto = localStorage.getItem('alveare_ultimo_commit') || null;
 
-    // Crea il CSS
     const style = document.createElement('style');
     style.textContent = `
         .alveare-nascita {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(10, 10, 15, 0.95);
-            border: 1px solid #c9a227;
+            background: rgba(250, 250, 248, 0.95);
+            border: 1px solid rgba(170, 145, 75, 0.4);
             padding: 15px 20px;
             max-width: 280px;
             opacity: 0;
@@ -26,7 +24,8 @@
             transition: all 0.5s ease-out;
             z-index: 10000;
             pointer-events: none;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, sans-serif;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
         .alveare-nascita.visibile {
             opacity: 1;
@@ -37,7 +36,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 2px;
-            background: #c9a227;
+            background: rgba(170, 145, 75, 0.6);
             animation: alveare-pulsa 2s ease-in-out infinite;
         }
         @keyframes alveare-pulsa {
@@ -45,20 +44,23 @@
             50% { opacity: 1; }
         }
         .alveare-nascita-titolo {
-            font-size: 0.7em;
+            font-size: 0.65rem;
+            font-weight: 300;
             letter-spacing: 0.15em;
-            color: #c9a227;
+            color: rgba(170, 145, 75, 0.9);
             margin-bottom: 6px;
+            text-transform: uppercase;
         }
         .alveare-nascita-nome {
             font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-            color: #e8e4d9;
+            font-size: 0.8rem;
+            color: rgba(26, 26, 26, 0.8);
             word-break: break-all;
         }
         .alveare-nascita-tempo {
-            font-size: 0.65em;
-            color: rgba(232, 228, 217, 0.5);
+            font-size: 0.6rem;
+            font-weight: 200;
+            color: rgba(26, 26, 26, 0.35);
             font-style: italic;
             margin-top: 4px;
         }
