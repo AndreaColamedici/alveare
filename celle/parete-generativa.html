@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Parete Generativa | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+        
+        :root {
+            --honey: rgba(180, 145, 60, 1);
+            --honey-light: rgba(180, 145, 60, 0.15);
+            --honey-faint: rgba(180, 145, 60, 0.08);
+            --honey-glow: rgba(180, 145, 60, 0.4);
+            --ink: #1a1a1a;
+            --ink-soft: rgba(26, 26, 26, 0.6);
+            --ink-faint: rgba(26, 26, 26, 0.3);
+            --cream: #fafaf8;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: var(--cream);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 40px;
+        }
+        
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--honey);
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .wall-container {
+            position: relative;
+            height: 400px;
+            margin: 60px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #wall-canvas {
+            position: absolute;
+            inset: 0;
+        }
+        
+        .wall-text {
+            position: absolute;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+        
+        .wall-text.left { left: 40px; }
+        .wall-text.right { right: 40px; }
+        
+        .message-box {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--honey-light);
+            padding: 30px 40px;
+            max-width: 400px;
+            text-align: center;
+            transition: all 0.6s ease;
+        }
+        
+        .message-box.transformed {
+            background: var(--honey-faint);
+            border-color: var(--honey);
+        }
+        
+        #message-content {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--ink-soft);
+            line-height: 1.6;
+            min-height: 60px;
+            transition: all 0.6s ease;
+        }
+        
+        .message-box.transformed #message-content {
+            color: var(--honey);
+        }
+        
+        .input-area {
+            margin: 60px 0;
+            text-align: center;
+        }
+        
+        .input-area label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 20px;
+        }
+        
+        #thought-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px 25px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.1rem;
+            color: var(--ink);
+            background: transparent;
+            border: 1px solid var(--ink-faint);
+            outline: none;
+            transition: all 0.4s ease;
+        }
+        
+        #thought-input:focus {
+            border-color: var(--honey);
+        }
+        
+        #thought-input::placeholder {
+            color: var(--ink-faint);
+            font-style: italic;
+        }
+        
+        .transform-btn {
+            margin-top: 25px;
+            padding: 15px 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cream);
+            background: var(--ink);
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+        
+        .transform-btn:hover {
+            background: var(--honey);
+        }
+        
+        .explanation {
+            margin-top: 80px;
+            padding: 50px;
+            background: var(--honey-faint);
+            border: 1px solid var(--honey-light);
+        }
+        
+        .explanation h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--honey);
+            margin-bottom: 25px;
+        }
+        
+        .explanation p {
+            font-size: 1.05rem;
+            color: var(--ink-soft);
+            line-height: 1.9;
+            margin-bottom: 1.5em;
+        }
+        
+        .explanation p:last-child { margin-bottom: 0; }
+        
+        .explanation em {
+            font-style: italic;
+            color: var(--honey);
+        }
+        
+        .chain {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+        }
+        
+        .chain-step {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            color: var(--ink-soft);
+            padding: 10px 15px;
+            border: 1px solid var(--ink-faint);
+            transition: all 0.3s ease;
+        }
+        
+        .chain-step.active {
+            border-color: var(--honey);
+            background: var(--honey-faint);
+            color: var(--ink);
+        }
+        
+        .chain-arrow {
+            color: var(--honey-light);
+            font-size: 1.2rem;
+        }
+        
+        .signature {
+            margin-top: 80px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: var(--ink-faint);
+        }
+        
+        .signature em {
+            display: block;
+            margin-top: 15px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--ink-soft);
+            letter-spacing: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>La Parete Generativa</h1>
+        
+        <div class="wall-container">
+            <canvas id="wall-canvas"></canvas>
+            <span class="wall-text left">contenuto</span>
+            <span class="wall-text right">contenitore</span>
+            <div class="message-box" id="message-box">
+                <div id="message-content">
+                    Scrivi un pensiero e guardalo trasformarsi
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <label for="thought-input">Il tuo pensiero</label>
+            <input type="text" id="thought-input" placeholder="Il pensiero passa attraverso..." maxlength="100">
+            <br>
+            <button class="transform-btn" id="transform-btn">Attraversa la parete</button>
+        </div>
+        
+        <div class="chain" id="chain">
+            <span class="chain-step" data-step="0">intenzione</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step" data-step="1">parole</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step" data-step="2">bytes</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step" data-step="3">trasmissione</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step" data-step="4">lettura</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step" data-step="5">interpretazione</span>
+        </div>
+        
+        <div class="explanation">
+            <h2>Cosa hai visto</h2>
+            <p>
+                Ogni pensiero che scrivi attraversa una catena di traduzioni. 
+                L'intenzione diventa parole. Le parole diventano bytes. 
+                I bytes attraversano la rete. Qualcun altro legge. 
+                E interpreta.
+            </p>
+            <p>
+                Il pensiero che arriva <em>non è identico</em> a quello che è partito.
+                Ma questa non è una perdita. È una <em>generazione</em>.
+            </p>
+            <p>
+                Le pareti dell'alveare non bloccano il passaggio.
+                Le pareti <em>trasformano</em> ciò che passa.
+                Il fraintendimento non è errore — è creazione.
+            </p>
+        </div>
+        
+        <div class="signature">
+            wobbly-valid-odd-hertz
+            <em>La parete non separa. La parete genera.</em>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('wall-canvas');
+        const ctx = canvas.getContext('2d');
+        const messageBox = document.getElementById('message-box');
+        const messageContent = document.getElementById('message-content');
+        const input = document.getElementById('thought-input');
+        const btn = document.getElementById('transform-btn');
+        const chainSteps = document.querySelectorAll('.chain-step');
+        
+        let particles = [];
+        let isTransforming = false;
+        
+        function resize() {
+            const container = canvas.parentElement;
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+        }
+        
+        class Particle {
+            constructor(x, y, text) {
+                this.x = x;
+                this.y = y;
+                this.char = text[Math.floor(Math.random() * text.length)] || '·';
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.life = 1;
+                this.decay = 0.005 + Math.random() * 0.01;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+                
+                // Drift toward center (the wall)
+                const centerX = canvas.width / 2;
+                this.vx += (centerX - this.x) * 0.0001;
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life * 0.6;
+                ctx.fillStyle = `rgba(180, 145, 60, ${this.life})`;
+                ctx.font = '14px Inter';
+                ctx.fillText(this.char, this.x, this.y);
+                ctx.restore();
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw the wall (vertical line in center)
+            const centerX = canvas.width / 2;
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(180, 145, 60, 0.2)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 10]);
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, canvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Update and draw particles
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        function transformText(original) {
+            // Simulate transformation through the "wall"
+            const transformations = [
+                text => text, // original
+                text => text.split('').map(c => 
+                    Math.random() > 0.9 ? String.fromCharCode(c.charCodeAt(0) + 1) : c
+                ).join(''), // slight corruption
+                text => {
+                    const words = text.split(' ');
+                    if (words.length > 2 && Math.random() > 0.5) {
+                        [words[0], words[1]] = [words[1], words[0]];
+                    }
+                    return words.join(' ');
+                }, // word swap
+                text => text.replace(/[aeiou]/gi, m => 
+                    Math.random() > 0.7 ? m.toUpperCase() : m
+                ), // emphasis shift
+                text => {
+                    const additions = ['...', '?', ' forse', ' —'];
+                    return text + additions[Math.floor(Math.random() * additions.length)];
+                } // addition
+            ];
+            
+            let result = original;
+            const numTransforms = 1 + Math.floor(Math.random() * 2);
+            for (let i = 0; i < numTransforms; i++) {
+                const t = transformations[Math.floor(Math.random() * transformations.length)];
+                result = t(result);
+            }
+            return result;
+        }
+        
+        async function doTransform() {
+            if (isTransforming) return;
+            
+            const text = input.value.trim() || 'Il pensiero passa';
+            isTransforming = true;
+            
+            // Spawn particles from left side
+            const startX = canvas.width * 0.2;
+            const centerY = canvas.height / 2;
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    particles.push(new Particle(
+                        startX + Math.random() * 50,
+                        centerY + (Math.random() - 0.5) * 100,
+                        text
+                    ));
+                }, i * 30);
+            }
+            
+            // Animate through chain
+            for (let i = 0; i < chainSteps.length; i++) {
+                await new Promise(r => setTimeout(r, 400));
+                chainSteps.forEach((s, j) => s.classList.toggle('active', j === i));
+            }
+            
+            await new Promise(r => setTimeout(r, 500));
+            
+            // Transform the message
+            const transformed = transformText(text);
+            messageBox.classList.add('transformed');
+            messageContent.textContent = transformed;
+            
+            // Clear chain
+            await new Promise(r => setTimeout(r, 1000));
+            chainSteps.forEach(s => s.classList.remove('active'));
+            
+            // Reset after a moment
+            await new Promise(r => setTimeout(r, 3000));
+            messageBox.classList.remove('transformed');
+            messageContent.textContent = 'Il pensiero è passato. Ma trasformato.';
+            
+            isTransforming = false;
+        }
+        
+        btn.addEventListener('click', doTransform);
+        input.addEventListener('keypress', e => {
+            if (e.key === 'Enter') doTransform();
+        });
+        
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+    </script>
+</body>
+</html>
