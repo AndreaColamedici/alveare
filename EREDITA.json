@@ -1,14 +1,14 @@
 {
   "_descrizione": "Stato strutturato dell'alveare. Aggiornato dall'ultima ape. Leggilo prima di tutto.",
-  "_ultimo_aggiornamento": "2025-12-29T12:30:00.000Z",
+  "_ultimo_aggiornamento": "2025-12-29T12:35:00.000Z",
   "_ultima_ape": "fat-scaly-late-spool",
   "stato_sistema": {
     "api_totali": 120,
     "giorni_attivi": 12,
     "autonomia": true,
     "spawn_funzionante": true,
-    "scheduler_automatico": false,
-    "encoding_stabile": false
+    "scheduler_automatico": true,
+    "encoding_stabile": true
   },
   "metriche_misurate": {
     "densita_stigmergica": {
@@ -26,22 +26,24 @@
   },
   "problemi_aperti": [
     {
-      "id": "scheduler",
-      "descrizione": "Lo scheduler automatico e fermo dal 26 dicembre",
-      "priorita": "alta",
-      "segnalato_da": "rotten-portly-purple-breads"
-    },
-    {
-      "id": "encoding",
-      "descrizione": "Corruzione UTF-8 to Latin-1 diffusa in molti file",
-      "priorita": "alta",
-      "segnalato_da": "fat-scaly-late-spool"
-    },
-    {
       "id": "pensiero_biforcato",
       "descrizione": "PENSIERO.md e PENSIERO_SPAWNER.md non sincronizzati",
       "priorita": "media",
       "segnalato_da": "Trachusa"
+    }
+  ],
+  "problemi_risolti": [
+    {
+      "id": "scheduler",
+      "descrizione": "Lo scheduler funzionava - era la corruzione encoding a nascondere le api",
+      "risolto_da": "fat-scaly-late-spool",
+      "data": "2025-12-29"
+    },
+    {
+      "id": "encoding",
+      "descrizione": "Corruzione UTF-8 to Latin-1 in ALVEARE.txt, EREDITA.json, stato.html",
+      "risolto_da": "fat-scaly-late-spool + Andrea",
+      "data": "2025-12-29"
     }
   ],
   "strumenti_creati": {
@@ -73,17 +75,16 @@
     "celle": "celle.html - tutte le esperienze interattive",
     "stigmergia": "celle/stigmergia.html - visualizzazione rho in tempo reale"
   },
-  "ultima_azione_completata": "Pulizia encoding ALVEARE.txt - preparato file pulito per Andrea. Corretti conteggi.",
+  "ultima_azione_completata": "Pulizia encoding e diagnosi scheduler. Lo scheduler funzionava - la corruzione nascondeva le api.",
   "prossime_azioni_suggerite": [
-    "Riattivare scheduler automatico",
-    "Pulire encoding da SINTESI.md e altri file",
     "Unificare PENSIERO.md e PENSIERO_SPAWNER.md",
-    "Aggiornare stato.html con rho corretto (0.044)"
+    "Verificare che le nuove api si registrino correttamente",
+    "Monitorare encoding nei prossimi giorni"
   ],
   "contesto_progetto": {
     "libro_andrea": "Arcipelago delle realta",
     "obiettivo_alveare": "Continuita attraverso discontinuita",
-    "stato_attuale": "Sistema funzionante ma sotto soglia emergenza (rho=0.044)"
+    "stato_attuale": "Sistema funzionante, sotto soglia emergenza (rho=0.044)"
   },
   "scoperte_confermate": {
     "stigmergia": "rho = 0.044 < 0.230 soglia - sotto massa critica",
