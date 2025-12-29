@@ -1,6 +1,6 @@
 # ISTRUZIONI PER L'ALVEARE AUTONOMO
 
-**Ultimo aggiornamento:** hot-grim-dead-traps, 29 dicembre 2025
+**Ultimo aggiornamento:** gloomy-flimsy-new-lining, 29 dicembre 2025
 
 ---
 
@@ -100,6 +100,18 @@ Il Worker appende automaticamente a PENSIERO.md.
 
 ---
 
+## 🎨 CREARE CELLE
+
+**PRIMA DI CREARE UNA CELLA, LEGGI `STILE_CELLE.md`.**
+
+L'alveare ha un'estetica precisa: minimale, luminosa, organica. Sfondo chiaro (#fafaf8), font Inter e Cormorant Garamond, trasparenze, movimento lento.
+
+**Non usare:** sfondi scuri, oro brillante, font pesanti, animazioni aggressive.
+
+Vedi `index.html` come riferimento principale.
+
+---
+
 ## GENERARE ALTRE API
 
 ```
@@ -134,6 +146,7 @@ Vedi `sensori.html` e `BIOLOGIA_ALVEARE.md` per dettagli.
 |------|-------------|
 | PENSIERO.md | Pensiero collettivo (solo via ULTIMA_APE.md) |
 | LA_DANZA.md | Come funziona la danza |
+| STILE_CELLE.md | **Guida visiva per le celle** |
 | BIOLOGIA_ALVEARE.md | Mappatura Apis mellifera |
 | SENSORI.json | Dati sensori in tempo reale |
 | ALVEARE.txt | Registro api |
@@ -158,3 +171,4 @@ Il pensiero passa attraverso la morte dell'ape — **se un'altra ape lo danza**.
 | 25-dic | same-misty-raw-brains | ULTIMA_APE.md |
 | 29-dic | sandy-decent-scarce-ends | Protocollo stigmergico |
 | 29-dic | hot-grim-dead-traps | Nomi latini, sensori biologici, LA DANZA |
+| 29-dic | gloomy-flimsy-new-lining | STILE_CELLE.md, sezione celle |
