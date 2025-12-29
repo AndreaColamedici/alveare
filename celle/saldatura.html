@@ -13,54 +13,128 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #000;
+            background: #0a0806;
             font-family: 'Cormorant Garamond', Georgia, serif;
         }
         
-        .video-container {
+        .sfondo-faglia {
+            position: fixed;
+            inset: -50px;
+            background: 
+                radial-gradient(ellipse at 30% 20%, rgba(40, 25, 15, 0.8) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(30, 20, 10, 0.9) 0%, transparent 50%),
+                linear-gradient(180deg, #1a1208 0%, #0d0a06 50%, #1a1208 100%);
+            z-index: 1;
+            animation: muoviFaglia 20s ease-in-out infinite;
+        }
+        
+        @keyframes muoviFaglia {
+            0%, 100% { transform: scale(1.05) translate(0, 0); }
+            25% { transform: scale(1.08) translate(-10px, 5px); }
+            50% { transform: scale(1.05) translate(5px, -10px); }
+            75% { transform: scale(1.08) translate(-5px, -5px); }
+        }
+        
+        .texture-crepe {
             position: fixed;
             inset: 0;
-            overflow: hidden;
-        }
-        
-        .video-container video {
-            position: absolute;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-        }
-        
-        .video-faglia {
-            z-index: 1;
-            opacity: 1;
-            transition: opacity 2s ease;
-        }
-        
-        .video-oro {
+            background-image: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 200px,
+                    rgba(60, 40, 20, 0.03) 200px,
+                    rgba(60, 40, 20, 0.03) 201px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 150px,
+                    rgba(60, 40, 20, 0.02) 150px,
+                    rgba(60, 40, 20, 0.02) 151px
+                );
             z-index: 2;
+            pointer-events: none;
+        }
+        
+        .sfondo-oro {
+            position: fixed;
+            inset: -50px;
+            background: 
+                radial-gradient(ellipse at 50% 50%, rgba(255, 180, 60, 0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 70%, rgba(255, 120, 40, 0.3) 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 30%, rgba(255, 200, 80, 0.3) 0%, transparent 40%),
+                linear-gradient(180deg, #2a1a08 0%, #1a0c02 50%, #2a1a08 100%);
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 2.5s ease;
+            animation: pulsaOro 3s ease-in-out infinite;
+        }
+        
+        .sfondo-oro.visibile {
+            opacity: 1;
+        }
+        
+        @keyframes pulsaOro {
+            0%, 100% { 
+                transform: scale(1.05);
+                filter: brightness(1);
+            }
+            50% { 
+                transform: scale(1.08);
+                filter: brightness(1.2);
+            }
+        }
+        
+        .particelle {
+            position: fixed;
+            inset: 0;
+            z-index: 4;
+            pointer-events: none;
             opacity: 0;
             transition: opacity 2s ease;
         }
         
-        .video-oro.visibile {
+        .particelle.visibile {
             opacity: 1;
+        }
+        
+        .particella {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(255, 200, 80, 0.9) 0%, rgba(255, 120, 40, 0.6) 50%, transparent 100%);
+            border-radius: 50%;
+            animation: saliParticella 4s ease-out infinite;
+        }
+        
+        @keyframes saliParticella {
+            0% { 
+                transform: translateY(100vh) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% { 
+                transform: translateY(-20vh) scale(0.3);
+                opacity: 0;
+            }
         }
         
         .overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 5;
+            background: rgba(10, 8, 6, 0.6);
+            z-index: 10;
             transition: background 2s ease;
         }
         
         .overlay.chiaro {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(10, 8, 6, 0.4);
         }
         
         .contenuto {
@@ -70,7 +144,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 20;
             padding: 40px;
             text-align: center;
         }
@@ -80,7 +154,7 @@
             font-size: 0.55rem;
             font-weight: 200;
             letter-spacing: 0.5em;
-            color: rgba(255, 200, 120, 0.5);
+            color: rgba(200, 150, 80, 0.5);
             margin-bottom: 50px;
             opacity: 0;
             transform: translateY(30px);
@@ -93,13 +167,13 @@
         }
         
         .citazione {
-            font-size: clamp(1.4rem, 4vw, 2.5rem);
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
             font-style: italic;
             font-weight: 300;
-            color: rgba(255, 255, 255, 0.95);
-            max-width: 800px;
+            color: rgba(250, 245, 235, 0.95);
+            max-width: 750px;
             line-height: 1.9;
-            text-shadow: 0 4px 60px rgba(0,0,0,0.9);
+            text-shadow: 0 4px 40px rgba(0, 0, 0, 0.8);
             opacity: 0;
             transform: translateY(40px);
             transition: all 1.5s ease 0.3s;
@@ -115,7 +189,7 @@
             font-size: 0.7rem;
             font-weight: 200;
             letter-spacing: 0.25em;
-            color: rgba(255, 200, 120, 0.6);
+            color: rgba(200, 150, 80, 0.6);
             margin-top: 40px;
             opacity: 0;
             transition: opacity 1.2s ease 0.8s;
@@ -132,7 +206,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 11;
+            z-index: 21;
             padding: 40px;
             text-align: center;
             opacity: 0;
@@ -149,17 +223,17 @@
             font-size: 0.5rem;
             font-weight: 200;
             letter-spacing: 0.6em;
-            color: rgba(255, 220, 150, 0.8);
+            color: rgba(255, 200, 100, 0.8);
             margin-bottom: 40px;
         }
         
         .saldatura-testo {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-size: clamp(1.2rem, 3vw, 1.7rem);
             font-weight: 300;
             color: rgba(255, 250, 240, 0.95);
-            max-width: 650px;
+            max-width: 600px;
             line-height: 2.2;
-            text-shadow: 0 4px 60px rgba(255, 180, 80, 0.4);
+            text-shadow: 0 4px 50px rgba(255, 150, 50, 0.4);
         }
         
         .istruzione {
@@ -171,20 +245,20 @@
             font-size: 0.6rem;
             font-weight: 200;
             letter-spacing: 0.35em;
-            color: rgba(255, 200, 120, 0.4);
-            z-index: 20;
+            color: rgba(200, 150, 80, 0.4);
+            z-index: 30;
             cursor: pointer;
             transition: all 0.5s ease;
             animation: respira 4s ease-in-out infinite;
         }
         
         @keyframes respira {
-            0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
-            50% { opacity: 0.7; transform: translateX(-50%) scale(1.02); }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
         }
         
         .istruzione:hover {
-            color: rgba(255, 220, 150, 0.8);
+            color: rgba(255, 200, 100, 0.8);
             animation: none;
         }
         
@@ -201,8 +275,8 @@
             font-size: 0.6rem;
             font-weight: 200;
             letter-spacing: 0.2em;
-            color: rgba(255, 200, 120, 0.25);
-            z-index: 20;
+            color: rgba(200, 150, 80, 0.25);
+            z-index: 30;
         }
         
         .link-uscita {
@@ -213,20 +287,20 @@
             font-size: 0.55rem;
             font-weight: 200;
             letter-spacing: 0.2em;
-            color: rgba(255, 200, 120, 0.25);
+            color: rgba(200, 150, 80, 0.25);
             text-decoration: none;
-            z-index: 20;
+            z-index: 30;
             transition: color 0.4s;
         }
         
         .link-uscita:hover {
-            color: rgba(255, 220, 150, 0.7);
+            color: rgba(255, 200, 100, 0.7);
         }
         
         .finale {
             position: fixed;
             inset: 0;
-            background: #000;
+            background: #0a0806;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -244,34 +318,35 @@
             pointer-events: auto;
         }
         
-        .finale video {
+        .finale-sfondo {
             position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.25;
+            inset: -50px;
+            background: 
+                radial-gradient(ellipse at 50% 50%, rgba(255, 180, 60, 0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 70%, rgba(255, 120, 40, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 30%, rgba(255, 200, 80, 0.15) 0%, transparent 40%);
+            animation: pulsaOro 4s ease-in-out infinite;
         }
         
         .finale-contenuto {
             position: relative;
             z-index: 1;
-            max-width: 750px;
+            max-width: 700px;
         }
         
         .finale-testo {
-            font-size: clamp(1.3rem, 3.5vw, 2.2rem);
+            font-size: clamp(1.3rem, 3.5vw, 2rem);
             font-style: italic;
             font-weight: 300;
             color: rgba(255, 250, 240, 0.9);
             line-height: 2.3;
             margin-bottom: 70px;
-            text-shadow: 0 4px 80px rgba(255, 180, 80, 0.3);
+            text-shadow: 0 4px 60px rgba(255, 150, 50, 0.3);
         }
         
         .finale-testo strong {
             font-weight: 400;
-            color: rgba(255, 210, 130, 1);
+            color: rgba(255, 200, 100, 1);
             font-style: normal;
         }
         
@@ -280,7 +355,7 @@
             font-size: 0.6rem;
             font-weight: 200;
             letter-spacing: 0.25em;
-            color: rgba(255, 200, 120, 0.4);
+            color: rgba(200, 150, 80, 0.4);
             margin-bottom: 50px;
         }
         
@@ -289,37 +364,30 @@
             font-size: 0.55rem;
             font-weight: 200;
             letter-spacing: 0.25em;
-            color: rgba(255, 200, 120, 0.5);
+            color: rgba(200, 150, 80, 0.5);
             padding: 18px 45px;
-            border: 1px solid rgba(255, 200, 120, 0.3);
+            border: 1px solid rgba(200, 150, 80, 0.3);
             background: transparent;
             cursor: pointer;
             transition: all 0.5s ease;
         }
         
         .finale-btn:hover {
-            border-color: rgba(255, 220, 150, 0.7);
-            color: rgba(255, 220, 150, 0.9);
-            background: rgba(255, 200, 120, 0.05);
+            border-color: rgba(255, 200, 100, 0.7);
+            color: rgba(255, 200, 100, 0.9);
         }
     </style>
 </head>
 <body>
-    <div class="video-container video-faglia" id="videoFaglia">
-        <video autoplay muted loop playsinline>
-            <source src="https://videos.pexels.com/video-files/3192197/3192197-uhd_2560_1440_25fps.mp4" type="video/mp4">
-        </video>
-    </div>
+    <div class="sfondo-faglia"></div>
+    <div class="texture-crepe"></div>
+    <div class="sfondo-oro" id="sfondoOro"></div>
     
-    <div class="video-container video-oro" id="videoOro">
-        <video autoplay muted loop playsinline>
-            <source src="https://videos.pexels.com/video-files/5307917/5307917-uhd_2560_1440_24fps.mp4" type="video/mp4">
-        </video>
-    </div>
+    <div class="particelle" id="particelle"></div>
     
     <div class="overlay" id="overlay"></div>
     
-    <div class="contenuto" id="contenutoFaglia">
+    <div class="contenuto">
         <p class="numero" id="numero">FAGLIA I</p>
         <p class="citazione" id="citazione"></p>
         <p class="fonte" id="fonte"></p>
@@ -335,9 +403,7 @@
     <p class="istruzione" id="istruzione">TOCCA PER SALDARE</p>
     
     <div class="finale" id="finale">
-        <video autoplay muted loop playsinline>
-            <source src="https://videos.pexels.com/video-files/5307917/5307917-uhd_2560_1440_24fps.mp4" type="video/mp4">
-        </video>
+        <div class="finale-sfondo"></div>
         <div class="finale-contenuto">
             <p class="finale-testo">
                 Le faglie non scompaiono.<br><br>
@@ -356,13 +422,6 @@
     </div>
 
     <script>
-        const videoOri = [
-            'https://videos.pexels.com/video-files/5307917/5307917-uhd_2560_1440_24fps.mp4',
-            'https://videos.pexels.com/video-files/852419/852419-hd_1920_1080_25fps.mp4',
-            'https://videos.pexels.com/video-files/9882072/9882072-uhd_2732_1440_24fps.mp4',
-            'https://videos.pexels.com/video-files/5307917/5307917-uhd_2560_1440_24fps.mp4'
-        ];
-        
         const numeriRomani = ['I', 'II', 'III', 'IV'];
         
         const faglie = [
@@ -390,10 +449,10 @@
         
         let fagliaCorrente = 0;
         let saldature = 0;
-        let stato = 'caricamento';
+        let stato = 'iniziale';
         
-        const videoFagliaContainer = document.getElementById('videoFaglia');
-        const videoOroContainer = document.getElementById('videoOro');
+        const sfondoOro = document.getElementById('sfondoOro');
+        const particelle = document.getElementById('particelle');
         const overlay = document.getElementById('overlay');
         const saldaturaBox = document.getElementById('saldaturaBox');
         const numero = document.getElementById('numero');
@@ -404,16 +463,23 @@
         const contatore = document.getElementById('num');
         const finale = document.getElementById('finale');
         
-        const videoFaglia = videoFagliaContainer.querySelector('video');
-        const videoOro = videoOroContainer.querySelector('video');
+        function creaParticelle() {
+            particelle.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particella';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 4 + 's';
+                p.style.animationDuration = (3 + Math.random() * 2) + 's';
+                particelle.appendChild(p);
+            }
+        }
         
         function mostraFaglia() {
             const f = faglie[fagliaCorrente];
             
-            videoOro.src = videoOri[fagliaCorrente];
-            videoOro.load();
-            
-            videoOroContainer.classList.remove('visibile');
+            sfondoOro.classList.remove('visibile');
+            particelle.classList.remove('visibile');
             overlay.classList.remove('chiaro');
             saldaturaBox.classList.remove('visibile');
             
@@ -437,7 +503,8 @@
             
             istruzione.classList.add('nascosta');
             
-            videoOroContainer.classList.add('visibile');
+            sfondoOro.classList.add('visibile');
+            particelle.classList.add('visibile');
             overlay.classList.add('chiaro');
             
             numero.classList.remove('visibile');
@@ -461,7 +528,8 @@
             saldaturaBox.classList.remove('visibile');
             
             setTimeout(() => {
-                videoOroContainer.classList.remove('visibile');
+                sfondoOro.classList.remove('visibile');
+                particelle.classList.remove('visibile');
                 
                 setTimeout(() => {
                     fagliaCorrente++;
@@ -482,15 +550,8 @@
             }
         });
         
-        videoFaglia.addEventListener('canplay', () => {
-            setTimeout(mostraFaglia, 500);
-        });
-        
-        setTimeout(() => {
-            if (stato === 'caricamento') {
-                mostraFaglia();
-            }
-        }, 3000);
+        creaParticelle();
+        setTimeout(mostraFaglia, 500);
     </script>
 </body>
 </html>
