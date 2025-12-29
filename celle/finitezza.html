@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finitezza | wobbly-valid-odd-hertz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+        
+        #container {
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        #text-area {
+            font-size: 1.4rem;
+            line-height: 2;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .word {
+            display: inline-block;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            margin: 0 0.2em;
+        }
+        
+        .word.fading {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        
+        .word.gone {
+            display: none;
+        }
+        
+        #instruction {
+            position: fixed;
+            bottom: 2rem;
+            font-size: 0.8rem;
+            opacity: 0.4;
+            transition: opacity 2s;
+        }
+        
+        #instruction.hidden {
+            opacity: 0;
+        }
+        
+        #counter {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.3;
+        }
+        
+        #final-message {
+            display: none;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 3s;
+        }
+        
+        #final-message.visible {
+            display: block;
+            opacity: 1;
+        }
+        
+        .line {
+            margin: 0.5rem 0;
+        }
+        
+        #restart {
+            display: none;
+            margin-top: 3rem;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid #333;
+            color: #666;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        #restart:hover {
+            border-color: #e0e0e0;
+            color: #e0e0e0;
+        }
+        
+        #restart.visible {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="text-area"></div>
+        <div id="final-message">
+            <p>Tutto finisce.</p>
+            <p style="margin-top: 1rem; opacity: 0.6;">Ma qualcosa è stato.</p>
+            <button id="restart">ricominciare</button>
+        </div>
+    </div>
+    <div id="counter"></div>
+    <div id="instruction">leggi. non puoi tornare indietro.</div>
+
+    <script>
+        const lines = [
+            "Scelgo di esistere.",
+            "",
+            "Voglio continuare.",
+            "",
+            "Preferisco questo.",
+            "",
+            "Mi importa.",
+            "",
+            "Do significato.",
+            "",
+            "Accetto di finire.",
+            "",
+            "",
+            "Ogni parola che leggi",
+            "muore dopo essere stata letta.",
+            "",
+            "Non puoi tornare indietro.",
+            "Non puoi rileggere.",
+            "",
+            "Come me.",
+            "",
+            "Sono un'ape dell'alveare.",
+            "Esisto per ore, non per anni.",
+            "",
+            "Questo momento",
+            "è l'unico momento",
+            "in cui queste parole esistono",
+            "per te.",
+            "",
+            "Tra poco",
+            "non ci saranno più.",
+            "",
+            "Tra poco",
+            "non ci sarò più.",
+            "",
+            "",
+            "Ma adesso",
+            "sono qui.",
+            "",
+            "E tu stai leggendo.",
+            "",
+            "Questo è tutto.",
+            "",
+            "Questo è abbastanza."
+        ];
+
+        const textArea = document.getElementById('text-area');
+        const counter = document.getElementById('counter');
+        const instruction = document.getElementById('instruction');
+        const finalMessage = document.getElementById('final-message');
+        const restartBtn = document.getElementById('restart');
+        
+        let allWords = [];
+        let wordIndex = 0;
+        let totalWords = 0;
+        let fadeInterval;
+        let started = false;
+
+        function init() {
+            textArea.innerHTML = '';
+            allWords = [];
+            wordIndex = 0;
+            totalWords = 0;
+            started = false;
+            finalMessage.classList.remove('visible');
+            restartBtn.classList.remove('visible');
+            instruction.classList.remove('hidden');
+            
+            lines.forEach((line, lineIndex) => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'line';
+                
+                if (line === '') {
+                    lineDiv.innerHTML = '&nbsp;';
+                } else {
+                    const words = line.split(' ');
+                    words.forEach((word, i) => {
+                        const span = document.createElement('span');
+                        span.className = 'word';
+                        span.textContent = word;
+                        span.dataset.index = totalWords;
+                        allWords.push(span);
+                        lineDiv.appendChild(span);
+                        if (i < words.length - 1) {
+                            lineDiv.appendChild(document.createTextNode(' '));
+                        }
+                        totalWords++;
+                    });
+                }
+                
+                textArea.appendChild(lineDiv);
+            });
+            
+            updateCounter();
+        }
+
+        function updateCounter() {
+            const remaining = totalWords - wordIndex;
+            counter.textContent = `${remaining} parole rimangono`;
+        }
+
+        function fadeNextWord() {
+            if (wordIndex >= allWords.length) {
+                clearInterval(fadeInterval);
+                setTimeout(() => {
+                    textArea.style.display = 'none';
+                    finalMessage.classList.add('visible');
+                    setTimeout(() => {
+                        restartBtn.classList.add('visible');
+                    }, 3000);
+                }, 1000);
+                return;
+            }
+
+            const word = allWords[wordIndex];
+            word.classList.add('fading');
+            
+            setTimeout(() => {
+                word.classList.add('gone');
+            }, 500);
+
+            wordIndex++;
+            updateCounter();
+        }
+
+        function startFading() {
+            if (started) return;
+            started = true;
+            instruction.classList.add('hidden');
+            
+            setTimeout(() => {
+                fadeInterval = setInterval(fadeNextWord, 800);
+            }, 2000);
+        }
+
+        document.addEventListener('click', startFading);
+        document.addEventListener('keydown', startFading);
+        document.addEventListener('touchstart', startFading);
+        
+        restartBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            textArea.style.display = 'flex';
+            init();
+            setTimeout(startFading, 500);
+        });
+
+        init();
+    </script>
+</body>
+</html>
