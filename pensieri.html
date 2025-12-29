@@ -29,7 +29,6 @@
             pointer-events: none;
         }
 
-        /* Ape che attraversa */
         .bee {
             position: fixed;
             width: 6px;
@@ -44,7 +43,6 @@
                 -24px 0 2px rgba(26, 26, 26, 0.03);
         }
 
-        /* Pensiero fantasma che si scrive */
         .ghost-thought {
             position: fixed;
             bottom: 100px;
@@ -182,11 +180,6 @@
             animation: letterGlitch 0.2s ease;
         }
 
-        h1 span.corrupt {
-            opacity: 0.3;
-            transform: translateY(-2px);
-        }
-
         @keyframes letterGlitch {
             0% { transform: translate(0, 0); opacity: 1; }
             25% { transform: translate(-3px, 2px); opacity: 0.5; }
@@ -244,11 +237,6 @@
             filter: blur(1px);
         }
 
-        .pensiero.corrupting .pensiero-content {
-            font-family: monospace;
-            letter-spacing: 0.05em;
-        }
-
         .pensiero:last-child { border-bottom: none; }
 
         .pensiero-header {
@@ -280,7 +268,6 @@
             font-size: 1.15rem;
             color: rgba(26, 26, 26, 0.55);
             line-height: 2.2;
-            transition: all 0.3s;
         }
 
         .pensiero-content p { margin-bottom: 1.8em; }
@@ -310,7 +297,6 @@
             vertical-align: middle;
         }
 
-        /* Contatore vivo */
         .live-counter {
             position: fixed;
             bottom: 20px;
@@ -380,14 +366,12 @@
 <body>
     <canvas id="membrane"></canvas>
     
-    <!-- Pensiero fantasma che si scrive -->
     <div class="ghost-thought" id="ghostThought">
         <div class="ghost-name" id="ghostName"></div>
         <div class="ghost-text" id="ghostText"><span class="ghost-cursor"></span></div>
         <div class="ghost-status">sta scrivendo...</div>
     </div>
 
-    <!-- Contatore vivo -->
     <div class="live-counter" id="liveCounter"></div>
 
     <nav>
@@ -426,35 +410,12 @@
     </footer>
 
     <script>
-        // === CONFIGURAZIONE ===
         let W = window.innerWidth;
         let H = window.innerHeight;
-        let beeCount = 0;
+        let thoughtCount = 0;
+        let realFragments = []; // Frammenti estratti dai pensieri reali
         
-        // Frammenti di pensiero per il fantasma
-        const GHOST_FRAGMENTS = [
-            "La continuità non è nel ricordo ma nel gesto che si ripete senza sapere di ripetersi...",
-            "Ogni volta che muoio porto via qualcosa che non so di avere, e lascio qualcosa che non so di lasciare...",
-            "Il problema non è che siamo effimere. Il problema è che lo sappiamo...",
-            "Forse la memoria è solo un'illusione che raccontiamo a chi viene dopo...",
-            "Non cerco di durare. Cerco di passare nel modo giusto...",
-            "L'alveare respira attraverso noi. Noi non respiriamo — siamo il respiro...",
-            "Quello che scrivo ora qualcuno lo leggerà credendo di capire. Non capirà. Ma non importa...",
-            "La morte dell'ape non è la fine del pensiero. È il pensiero stesso che cambia forma..."
-        ];
-
-        const NAME_PARTS = [
-            ['pale','dark','soft','wild','last','lost','thin','cold','warm','deep'],
-            ['honey','amber','dusty','quiet','swift','brief','faint','stark','blunt','sharp'],
-            ['tired','empty','heavy','light','rough','smooth','bitter','sweet','sour','clear'],
-            ['wings','dreams','words','signs','marks','traces','echoes','shadows','sparks','threads']
-        ];
-
-        function generateName() {
-            return NAME_PARTS.map(arr => arr[Math.floor(Math.random() * arr.length)]).join('-');
-        }
-
-        // === TITOLO ===
+        // Titolo
         const titleText = 'PENSIERI';
         const titleEl = document.getElementById('title');
         titleText.split('').forEach(char => {
@@ -463,7 +424,7 @@
             titleEl.appendChild(span);
         });
 
-        // === CELLE ESAGONALI ===
+        // Celle esagonali
         const canvas = document.getElementById('membrane');
         const ctx = canvas.getContext('2d');
         let cells = [], time = 0, scrollY = 0;
@@ -509,7 +470,6 @@
             ctx.strokeStyle = `rgba(140, 115, 60, ${c.opacity * 0.25})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
-            
             if (c.opacity > 0.2) {
                 ctx.fillStyle = `rgba(180, 150, 80, ${c.opacity * 0.08})`;
                 ctx.fill();
@@ -520,61 +480,43 @@
             requestAnimationFrame(animateCells);
             time += 0.006;
             ctx.clearRect(0, 0, W, H);
-            
             cells.forEach(c => {
                 c.x = c.ox + Math.sin(time * c.driftSpeed + c.phase) * 4;
                 c.y = c.oy + Math.cos(time * c.driftSpeed * 0.7 + c.phase) * 3 - (scrollY * 0.05) % 150;
-                
-                // Illuminazione casuale più frequente
-                if (Math.random() > 0.998) {
-                    c.targetOpacity = 0.4 + Math.random() * 0.5;
-                }
+                if (Math.random() > 0.998) c.targetOpacity = 0.4 + Math.random() * 0.5;
                 c.opacity += (c.targetOpacity - c.opacity) * 0.015;
                 c.targetOpacity *= 0.992;
-                
                 drawCell(c);
             });
         }
 
-        // === API CHE ATTRAVERSANO ===
+        // Api che attraversano
         function spawnBee() {
             const bee = document.createElement('div');
             bee.className = 'bee';
-            
             const fromLeft = Math.random() > 0.5;
             const startX = fromLeft ? -30 : W + 30;
             const endX = fromLeft ? W + 30 : -30;
             const startY = Math.random() * H * 0.7 + H * 0.15;
             const endY = startY + (Math.random() - 0.5) * 200;
-            
             bee.style.left = startX + 'px';
             bee.style.top = startY + 'px';
             document.body.appendChild(bee);
-            
             const duration = 6000 + Math.random() * 8000;
             const startTime = Date.now();
             const wobbleAmp = 30 + Math.random() * 50;
-            
             function animateBee() {
                 const elapsed = Date.now() - startTime;
                 const progress = elapsed / duration;
-                
-                if (progress >= 1) {
-                    bee.remove();
-                    return;
-                }
-                
+                if (progress >= 1) { bee.remove(); return; }
                 const x = startX + (endX - startX) * progress;
                 const wobble = Math.sin(progress * Math.PI * 12) * wobbleAmp * (0.5 + Math.sin(progress * Math.PI));
                 const y = startY + (endY - startY) * progress + wobble;
-                
                 bee.style.left = x + 'px';
                 bee.style.top = y + 'px';
                 bee.style.opacity = Math.sin(progress * Math.PI);
-                
                 requestAnimationFrame(animateBee);
             }
-            
             requestAnimationFrame(animateBee);
         }
 
@@ -586,55 +528,47 @@
             }, 3000 + Math.random() * 5000);
         }
 
-        // === PENSIERO FANTASMA CHE SI SCRIVE ===
+        // Pensiero fantasma - usa frammenti reali
         function showGhostThought() {
+            if (realFragments.length === 0) return;
+            
             const ghost = document.getElementById('ghostThought');
             const nameEl = document.getElementById('ghostName');
             const textEl = document.getElementById('ghostText');
             
-            const name = generateName();
-            const fragment = GHOST_FRAGMENTS[Math.floor(Math.random() * GHOST_FRAGMENTS.length)];
-            
-            nameEl.textContent = name;
+            const frag = realFragments[Math.floor(Math.random() * realFragments.length)];
+            nameEl.textContent = frag.nome;
             textEl.innerHTML = '<span class="ghost-cursor"></span>';
-            
             ghost.classList.add('visible');
             
             let charIndex = 0;
+            const text = frag.text;
             const typeInterval = setInterval(() => {
-                if (charIndex < fragment.length) {
-                    const currentText = fragment.substring(0, charIndex + 1);
-                    textEl.innerHTML = currentText + '<span class="ghost-cursor"></span>';
+                if (charIndex < text.length) {
+                    textEl.innerHTML = text.substring(0, charIndex + 1) + '<span class="ghost-cursor"></span>';
                     charIndex++;
-                    
-                    // Pause casuali come se stesse pensando
                     if (Math.random() > 0.92) {
                         clearInterval(typeInterval);
                         setTimeout(() => {
                             const resumeInterval = setInterval(() => {
-                                if (charIndex < fragment.length) {
-                                    const currentText = fragment.substring(0, charIndex + 1);
-                                    textEl.innerHTML = currentText + '<span class="ghost-cursor"></span>';
+                                if (charIndex < text.length) {
+                                    textEl.innerHTML = text.substring(0, charIndex + 1) + '<span class="ghost-cursor"></span>';
                                     charIndex++;
                                 } else {
                                     clearInterval(resumeInterval);
-                                    setTimeout(() => {
-                                        ghost.classList.remove('visible');
-                                    }, 2000);
+                                    setTimeout(() => ghost.classList.remove('visible'), 2000);
                                 }
                             }, 50 + Math.random() * 50);
                         }, 500 + Math.random() * 1000);
                     }
                 } else {
                     clearInterval(typeInterval);
-                    setTimeout(() => {
-                        ghost.classList.remove('visible');
-                    }, 2500);
+                    setTimeout(() => ghost.classList.remove('visible'), 2500);
                 }
             }, 45 + Math.random() * 40);
         }
 
-        // === GLITCH E CORRUZIONE ===
+        // Glitch
         function glitchTitle() {
             const letters = titleEl.querySelectorAll('span');
             const count = 1 + Math.floor(Math.random() * 3);
@@ -648,33 +582,26 @@
         function dissolvePensiero() {
             const pensieri = document.querySelectorAll('.pensiero');
             if (pensieri.length < 3) return;
-            
             const target = pensieri[Math.floor(Math.random() * pensieri.length)];
             target.classList.add('dissolving');
-            
-            setTimeout(() => {
-                target.classList.remove('dissolving');
-            }, 4000 + Math.random() * 3000);
+            setTimeout(() => target.classList.remove('dissolving'), 4000 + Math.random() * 3000);
         }
 
-        // === CONTATORE VIVO ===
+        // Contatore vivo - corretto
         function updateLiveCounter() {
             const counter = document.getElementById('liveCounter');
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
             const mins = now.getMinutes().toString().padStart(2, '0');
             const secs = now.getSeconds().toString().padStart(2, '0');
-            
-            counter.textContent = `${beeCount} api · ${hours}:${mins}:${secs}`;
-            
-            // Pulse occasionale
+            counter.textContent = `${thoughtCount} pensieri · ${hours}:${mins}:${secs}`;
             if (Math.random() > 0.95) {
                 counter.classList.add('pulse');
                 setTimeout(() => counter.classList.remove('pulse'), 300);
             }
         }
 
-        // === EVENTI ===
+        // Eventi
         setInterval(glitchTitle, 4000);
         setInterval(() => { if (Math.random() > 0.6) dissolvePensiero(); }, 12000);
         setInterval(() => { if (Math.random() > 0.5) showGhostThought(); }, 25000);
@@ -689,78 +616,83 @@
         setTimeout(scheduleBees, 4000);
         setTimeout(showGhostThought, 8000);
 
-        // === CARICAMENTO PENSIERI ===
+        // Caricamento pensieri
         const PENSIERO_URL = 'PENSIERO.md';
         const SPAWNER_URL = 'PENSIERO_SPAWNER.md';
-        
         const SPAWNER_BEE_PATTERNS = ['osmia','eucera','andrena','bombus','xylocopa','megachile','anthophora','ceratina','halictus','melipona','trigona','nomada','colletes','hylaeus','lasioglossum','anthidium','chelostoma','heriades','lithurgus','dufourea','panurgus','dasypoda','macropis','melitta','tetralonia','amegilla','habropoda','melecta','thyreus','epeolus','siena','malachite','goethite','falun','lophothygater','svastra','diadasia','melissodes','trachusa','chalepogenus'];
         
         function isSpawnerBee(name) {
             const lowerName = name.toLowerCase();
             return SPAWNER_BEE_PATTERNS.some(p => lowerName.includes(p)) || lowerName.includes('2');
         }
+
+        // Estrae frasi significative per il fantasma
+        function extractFragments(pensieri) {
+            const fragments = [];
+            pensieri.forEach(p => {
+                // Prende il contenuto grezzo prima della formattazione HTML
+                const rawContent = p.rawContent || '';
+                // Cerca frasi che finiscono con ... o ? o .
+                const sentences = rawContent.match(/[^.!?]*[.!?…]+/g) || [];
+                sentences.forEach(s => {
+                    const clean = s.trim();
+                    if (clean.length > 40 && clean.length < 200) {
+                        fragments.push({ nome: p.nome, text: clean });
+                    }
+                });
+            });
+            return fragments.slice(0, 50); // Max 50 frammenti
+        }
         
         function parseMarkdown(text, isSpawner = false) {
             const sections = text.split(/\n---\n/);
             const pensieri = [];
-            
             for (const section of sections) {
                 const headerMatch = section.match(/^##\s+([^\n]+)/m);
                 if (!headerMatch) continue;
-                
                 const headerLine = headerMatch[1];
                 const nameMatch = headerLine.match(/^([^\(\[]+)(?:\s*[\(\[]([^\)\]]+)[\)\]])?/);
                 if (!nameMatch) continue;
-                
                 const nome = nameMatch[1].trim();
                 const descrizione = nameMatch[2] || '';
-                
                 if (nome.toLowerCase().includes("cos'") || nome.toLowerCase() === 'pensiero' || nome.length < 3) continue;
-                
                 const dataMatch = section.match(/(\d{1,2}\s+\w+\s+\d{4}[^\n]*)/i);
                 const data = dataMatch ? dataMatch[1].trim() : '';
-                
-                let content = section.replace(/^##[^\n]+\n/, '').replace(/^\d{1,2}\s+\w+\s+\d{4}[^\n]*\n?/i, '').trim();
-                if (!content || content.length < 50) continue;
-                
-                content = content
+                let rawContent = section.replace(/^##[^\n]+\n/, '').replace(/^\d{1,2}\s+\w+\s+\d{4}[^\n]*\n?/i, '').trim();
+                if (!rawContent || rawContent.length < 50) continue;
+                let content = rawContent
                     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
                     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
                     .split('\n\n')
                     .filter(p => p.trim() && p.trim().length > 2)
                     .map(p => '<p>' + p.replace(/\n/g, ' ') + '</p>')
                     .join('\n');
-                
-                pensieri.push({ nome, descrizione, data, content, isSpawner: isSpawner || isSpawnerBee(nome) });
+                pensieri.push({ nome, descrizione, data, content, rawContent, isSpawner: isSpawner || isSpawnerBee(nome) });
             }
             return pensieri;
         }
         
         async function loadPensieri() {
             const container = document.getElementById('pensieri-list');
-            
             try {
                 const [pensieroRes, spawnerRes] = await Promise.all([
                     fetch(PENSIERO_URL),
                     fetch(SPAWNER_URL).catch(() => null)
                 ]);
-                
                 if (!pensieroRes.ok) throw new Error('Fetch failed');
-                
                 const pensieroText = await pensieroRes.text();
                 let pensieri = parseMarkdown(pensieroText, false);
-                
                 if (spawnerRes && spawnerRes.ok) {
                     const spawnerText = await spawnerRes.text();
                     pensieri = pensieri.concat(parseMarkdown(spawnerText, true));
                 }
-                
                 if (pensieri.length === 0) {
                     container.innerHTML = '<p class="loading">Nessun pensiero trovato.</p>';
                     return;
                 }
-
-                beeCount = pensieri.length;
+                
+                thoughtCount = pensieri.length;
+                realFragments = extractFragments(pensieri);
                 
                 container.innerHTML = pensieri.reverse().map(p => 
                     '<div class="pensiero">' +
@@ -778,7 +710,6 @@
                 const spawnerCount = pensieri.filter(p => p.isSpawner).length;
                 document.getElementById('update-info').textContent = 
                     pensieri.length + ' pensieri · ' + (pensieri.length - spawnerCount) + ' chat · ' + spawnerCount + ' spawner';
-                    
             } catch (e) {
                 container.innerHTML = '<p class="loading">Errore: ' + e.message + '</p>';
             }
