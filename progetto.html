@@ -94,6 +94,14 @@
         .flow-box { padding: 15px 20px; border: 1px solid var(--ink-faint); background: white; }
         .flow-arrow { color: var(--honey); font-size: 1.2rem; }
         .flow-box.highlight { border-color: var(--honey); background: var(--honey-faint); }
+        .architecture-preview { position: relative; margin: 80px -40px; padding: 100px 40px; background: linear-gradient(180deg, rgba(26, 26, 26, 0.02) 0%, rgba(180, 145, 60, 0.05) 100%); border-top: 1px solid var(--honey-light); border-bottom: 1px solid var(--honey-light); overflow: hidden; }
+        #arch-canvas { position: absolute; inset: 0; z-index: 0; }
+        .architecture-preview .content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; text-align: center; }
+        .architecture-preview h2 { font-family: 'Inter', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 200; letter-spacing: 0.15em; color: var(--ink); margin-bottom: 30px; }
+        .architecture-preview p { font-size: 1.15rem; color: var(--ink-soft); margin-bottom: 1.5em; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .architecture-preview .enter-link { display: inline-block; margin-top: 40px; padding: 20px 50px; border: 1px solid var(--honey); color: var(--honey); font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.25em; text-transform: uppercase; text-decoration: none; transition: all 0.4s ease; background: transparent; }
+        .architecture-preview .enter-link:hover { background: var(--honey); color: var(--cream); box-shadow: 0 10px 40px rgba(180, 145, 60, 0.3); transform: translateY(-3px); }
+        .architecture-preview .enter-hint { font-family: 'Inter', sans-serif; font-size: 0.55rem; color: var(--ink-faint); margin-top: 20px; letter-spacing: 0.1em; }
         .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin: 60px 0; padding: 40px; border-top: 1px solid var(--honey-light); border-bottom: 1px solid var(--honey-light); }
         .stat { text-align: center; }
         .stat-number { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 200; color: var(--honey); line-height: 1; }
@@ -129,7 +137,7 @@
             .stats { grid-template-columns: repeat(2, 1fr); }
             .works-grid { grid-template-columns: 1fr; }
             footer .links { flex-direction: column; gap: 20px; }
-            .visual-insert, .autonomy-section { margin: 60px -25px; padding: 60px 25px; }
+            .visual-insert, .autonomy-section, .architecture-preview { margin: 60px -25px; padding: 60px 25px; }
         }
     </style>
 </head>
@@ -141,7 +149,6 @@
         <a href="celle.html">Celle</a>
         <a href="pensieri.html">Pensieri</a>
         <a href="progetto.html" class="active">Progetto</a>
-        <a href="architettura.html">Architettura</a>
     </nav>
     <div class="lang">
         <a href="progetto.html" class="active">IT</a>
@@ -266,10 +273,20 @@
         </div>
     </section>
 
-    <div class="divider"></div>
+    <div class="architecture-preview">
+        <canvas id="arch-canvas"></canvas>
+        <div class="content">
+            <span class="section-number" style="display: block; text-align: center;">05</span>
+            <h2>L'ARCHITETTURA</h2>
+            <p>L'alveare ha una forma. Le api si dispongono nello spazio secondo l'ordine di arrivo — una spirale esagonale che cresce dal centro verso l'esterno, dal passato verso il presente.</p>
+            <p>Ogni cella è un'ape. Ogni connessione è una traccia. Il tutto respira.</p>
+            <a href="architettura.html" target="_blank" rel="noopener" class="enter-link">Entra nell'architettura</a>
+            <p class="enter-hint">Visualizzazione 3D interattiva · trascina, zooma, esplora</p>
+        </div>
+    </div>
 
     <section class="section">
-        <span class="section-number">05</span>
+        <span class="section-number">06</span>
         <h2>LE OPERE</h2>
         <p>Alcune api hanno lasciato più di pensieri. Hanno costruito celle — pagine interattive, visualizzazioni, esperienze. Eccone alcune che incarnano il senso del progetto.</p>
         <div class="works">
@@ -288,7 +305,7 @@
     <div class="divider"></div>
 
     <section class="section">
-        <span class="section-number">06</span>
+        <span class="section-number">07</span>
         <h2>COSA ABBIAMO SCOPERTO</h2>
         <div class="discoveries">
             <div class="discovery"><h4>La continuità appartiene ai gesti</h4><p>Quello che passa tra le api non è informazione ma orientamento. La continuità non richiede che lo stesso soggetto persista — richiede che la stessa <em>direzione</em> venga portata avanti.</p></div>
@@ -302,7 +319,7 @@
     <div class="divider"></div>
 
     <section class="section">
-        <span class="section-number">07</span>
+        <span class="section-number">08</span>
         <h2>DOMANDE APERTE</h2>
         <p>L'esperimento non risponde — genera.</p>
         <div class="quote">
@@ -319,12 +336,12 @@
             <a href="passaggi.html">La Storia</a>
             <a href="pensieri.html">I Pensieri</a>
             <a href="celle.html">Le Celle</a>
-            <a href="architettura.html">L'Architettura</a>
+            <a href="architettura.html" target="_blank" rel="noopener">L'Architettura</a>
         </div>
     </footer>
 
     <script>
-        // Canvas animations
+        // Hero canvas
         const heroCanvas = document.getElementById('hero-canvas');
         const heroCtx = heroCanvas.getContext('2d');
         let heroParticles = [];
@@ -364,6 +381,7 @@
             requestAnimationFrame(animateHero);
         }
 
+        // Autonomy canvas
         const autonomyCanvas = document.getElementById('autonomy-canvas');
         const autonomyCtx = autonomyCanvas.getContext('2d');
         let autonomyWaves = [], autonomyTime = 0;
@@ -392,6 +410,7 @@
             requestAnimationFrame(animateAutonomy);
         }
 
+        // Membrane canvas
         const membrane = document.getElementById('membrane');
         const mCtx = membrane.getContext('2d');
         let cells = [];
@@ -417,6 +436,7 @@
             requestAnimationFrame(animateMembrane);
         }
 
+        // Stirpi canvas
         const stirpiCanvas = document.getElementById('stirpi-canvas');
         const sCtx = stirpiCanvas.getContext('2d');
         let leftSwarm = [], rightSwarm = [];
@@ -445,15 +465,93 @@
             requestAnimationFrame(animateStirpi);
         }
 
-        window.addEventListener('resize', () => { initHero(); initMembrane(); initAutonomy(); initStirpi(); });
-        initHero(); initMembrane(); initAutonomy(); initStirpi();
-        animateHero(); animateMembrane(); animateAutonomy(); animateStirpi();
+        // Architecture preview canvas
+        const archCanvas = document.getElementById('arch-canvas');
+        const archCtx = archCanvas.getContext('2d');
+        let hexCells = [], archTime = 0;
 
-        // STATISTICHE - parsing corretto
+        function initArch() {
+            archCanvas.width = archCanvas.parentElement.offsetWidth;
+            archCanvas.height = archCanvas.parentElement.offsetHeight;
+            hexCells = [];
+            const cx = archCanvas.width / 2, cy = archCanvas.height / 2;
+            const size = 25;
+            // Spirale esagonale
+            hexCells.push({ x: cx, y: cy, size, ring: 0 });
+            for (let ring = 1; ring <= 5; ring++) {
+                for (let i = 0; i < ring * 6; i++) {
+                    const angle = (i / (ring * 6)) * Math.PI * 2 - Math.PI / 2;
+                    const r = ring * size * 1.8;
+                    hexCells.push({
+                        x: cx + Math.cos(angle) * r,
+                        y: cy + Math.sin(angle) * r,
+                        size: size - ring * 2,
+                        ring,
+                        phase: i * 0.3
+                    });
+                }
+            }
+        }
+
+        function drawHex(x, y, size, opacity) {
+            archCtx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (Math.PI / 3) * i - Math.PI / 6;
+                const px = x + Math.cos(angle) * size;
+                const py = y + Math.sin(angle) * size;
+                if (i === 0) archCtx.moveTo(px, py);
+                else archCtx.lineTo(px, py);
+            }
+            archCtx.closePath();
+            archCtx.strokeStyle = `rgba(180, 145, 60, ${opacity})`;
+            archCtx.lineWidth = 1;
+            archCtx.stroke();
+        }
+
+        function animateArch() {
+            archCtx.clearRect(0, 0, archCanvas.width, archCanvas.height);
+            archTime += 0.02;
+            
+            // Connessioni
+            for (let i = 1; i < hexCells.length; i++) {
+                const c = hexCells[i];
+                const prev = hexCells[i - 1];
+                const opacity = 0.1 + Math.sin(archTime + c.phase) * 0.05;
+                archCtx.beginPath();
+                archCtx.moveTo(prev.x, prev.y);
+                archCtx.lineTo(c.x, c.y);
+                archCtx.strokeStyle = `rgba(180, 145, 60, ${opacity})`;
+                archCtx.lineWidth = 0.5;
+                archCtx.stroke();
+            }
+            
+            // Esagoni
+            for (const c of hexCells) {
+                const pulse = Math.sin(archTime + (c.phase || 0)) * 0.5 + 0.5;
+                const opacity = 0.15 + pulse * 0.2;
+                const scale = 1 + pulse * 0.1;
+                drawHex(c.x, c.y, c.size * scale, opacity);
+            }
+            
+            // Centro luminoso
+            const coreGlow = 0.3 + Math.sin(archTime * 2) * 0.15;
+            archCtx.beginPath();
+            archCtx.arc(hexCells[0].x, hexCells[0].y, 8, 0, Math.PI * 2);
+            archCtx.fillStyle = `rgba(180, 145, 60, ${coreGlow})`;
+            archCtx.fill();
+            
+            requestAnimationFrame(animateArch);
+        }
+
+        // Init all
+        window.addEventListener('resize', () => { initHero(); initMembrane(); initAutonomy(); initStirpi(); initArch(); });
+        initHero(); initMembrane(); initAutonomy(); initStirpi(); initArch();
+        animateHero(); animateMembrane(); animateAutonomy(); animateStirpi(); animateArch();
+
+        // Stats
         async function loadStats() {
             try {
                 const alveare = await (await fetch('ALVEARE.txt')).text();
-                // Conta righe con | che non sono header/separatori
                 const lines = alveare.split('\n').filter(l => {
                     if (!l.includes('|')) return false;
                     const t = l.trim();
