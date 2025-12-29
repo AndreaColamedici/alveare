@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENSORI | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            background: #0a0a09;
+            font-family: 'Inter', sans-serif;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 30px 100px;
+        }
+
+        .back {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            z-index: 100;
+            transition: color 0.3s;
+        }
+        .back:hover { color: rgba(255, 255, 255, 0.5); }
+
+        h1 {
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .sensor {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sensor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color, rgba(255,255,255,0.1)), transparent);
+            opacity: 0.5;
+        }
+
+        .sensor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .sensor-name {
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .sensor-bio {
+            font-size: 0.5rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(180, 150, 60, 0.5);
+            text-align: right;
+        }
+
+        .sensor-value {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 200;
+            letter-spacing: 0.02em;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 8px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .sensor-value .unit {
+            font-size: 0.35em;
+            color: rgba(255, 255, 255, 0.3);
+            margin-left: 5px;
+        }
+
+        .sensor-value .decimal {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .sensor-status {
+            font-size: 0.55rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .status-cold { color: rgba(100, 150, 255, 0.7); }
+        .status-warm { color: rgba(255, 200, 100, 0.7); }
+        .status-hot { color: rgba(255, 100, 80, 0.7); }
+        .status-ok { color: rgba(100, 200, 120, 0.6); }
+        .status-warning { color: rgba(255, 180, 60, 0.7); }
+        .status-critical { color: rgba(255, 80, 80, 0.7); }
+
+        .sensor-bar {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sensor-bar-fill {
+            height: 100%;
+            background: var(--color, rgba(255, 255, 255, 0.3));
+            transition: width 1s ease;
+        }
+
+        .sensor-bar-threshold {
+            position: absolute;
+            top: -3px;
+            bottom: -3px;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .sensor-desc {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 0.85rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.35);
+            font-style: italic;
+        }
+
+        .sensor-detail {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.25);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Temperatura animata */
+        .temp-indicator {
+            display: flex;
+            gap: 3px;
+            margin-top: 10px;
+        }
+
+        .temp-bar {
+            width: 8px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .temp-bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(100, 150, 255, 0.6), rgba(255, 150, 50, 0.6), rgba(255, 80, 50, 0.6));
+            transition: height 1s ease;
+        }
+
+        /* Allarme pulsante */
+        .alarm-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .alarm-none { background: rgba(100, 200, 120, 0.5); }
+        .alarm-low { background: rgba(255, 200, 100, 0.6); animation-duration: 3s; }
+        .alarm-high { background: rgba(255, 100, 80, 0.7); animation-duration: 1s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Danza visualizzata */
+        .dance-visual {
+            margin-top: 15px;
+            height: 60px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .dance-path {
+            position: absolute;
+            stroke: rgba(180, 150, 60, 0.4);
+            stroke-width: 1;
+            fill: none;
+        }
+
+        .dance-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(180, 150, 60, 0.8);
+            border-radius: 50%;
+        }
+
+        /* Sciamatura */
+        .swarm-streams {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .stream {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            text-align: center;
+        }
+
+        .stream-name {
+            font-size: 0.5rem;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 5px;
+        }
+
+        .stream-count {
+            font-size: 1.2rem;
+            font-weight: 200;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stream-connected {
+            border: 1px solid rgba(100, 200, 120, 0.2);
+        }
+
+        .stream-disconnected {
+            border: 1px solid rgba(255, 100, 80, 0.2);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            font-size: 0.55rem;
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .footer a {
+            color: rgba(180, 150, 60, 0.4);
+            text-decoration: none;
+        }
+
+        .loading {
+            opacity: 0.3;
+            animation: loadPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loadPulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body>
+    <a href="stato.html" class="back">← stato</a>
+
+    <div class="container">
+        <h1>Sensori dell'alveare</h1>
+
+        <div class="grid">
+            <!-- TEMPERATURA -->
+            <div class="sensor" style="--color: rgba(255, 150, 50, 0.5);">
+                <div class="sensor-header">
+                    <span class="sensor-name">Temperatura</span>
+                    <span class="sensor-bio">≈ termoregolazione favo</span>
+                </div>
+                <div class="sensor-value"><span id="temp-value" class="loading">—</span><span class="unit">api/giorno</span></div>
+                <div class="sensor-status" id="temp-status">calcolo...</div>
+                <div class="sensor-bar">
+                    <div class="sensor-bar-fill" id="temp-bar" style="width: 0%; --color: rgba(255, 150, 50, 0.5);"></div>
+                    <div class="sensor-bar-threshold" style="left: 30%;" title="soglia freddo"></div>
+                    <div class="sensor-bar-threshold" style="left: 70%;" title="soglia caldo"></div>
+                </div>
+                <div class="temp-indicator" id="temp-indicator"></div>
+                <p class="sensor-desc">Le api biologiche mantengono il favo a 34-35°C. Il nostro "calore" è l'attività recente — quante api sono nate negli ultimi giorni.</p>
+                <div class="sensor-detail">
+                    <span class="detail-item"><span class="detail-dot" style="color: rgba(100, 150, 255, 0.6);"></span>freddo: &lt;4/giorno</span>
+                    <span class="detail-item"><span class="detail-dot" style="color: rgba(255, 200, 100, 0.6);"></span>caldo: 4-12/giorno</span>
+                    <span class="detail-item"><span class="detail-dot" style="color: rgba(255, 80, 50, 0.6);"></span>bollente: &gt;12/giorno</span>
+                </div>
+            </div>
+
+            <!-- FEROMONE D'ALLARME -->
+            <div class="sensor" style="--color: rgba(255, 80, 80, 0.5);">
+                <div class="sensor-header">
+                    <span class="sensor-name">Feromone d'allarme</span>
+                    <span class="sensor-bio">≈ isopentil acetato</span>
+                </div>
+                <div class="sensor-value"><span class="alarm-indicator" id="alarm-dot"></span><span id="alarm-value" class="loading">—</span></div>
+                <div class="sensor-status" id="alarm-status">calcolo...</div>
+                <div class="sensor-bar">
+                    <div class="sensor-bar-fill" id="alarm-bar" style="width: 0%; --color: rgba(255, 80, 80, 0.5);"></div>
+                </div>
+                <p class="sensor-desc">Le guardiane rilasciano feromoni d'allarme quando c'è pericolo. Nel nostro sistema: encoding corrotto, scheduler fermo, errori nei file.</p>
+                <div class="sensor-detail" id="alarm-detail">
+                    <span>nessun allarme attivo</span>
+                </div>
+            </div>
+
+            <!-- DENSITÀ STIGMERGICA -->
+            <div class="sensor" style="--color: rgba(180, 150, 60, 0.5);">
+                <div class="sensor-header">
+                    <span class="sensor-name">Densità stigmergica</span>
+                    <span class="sensor-bio">≈ feromoni accumulati</span>
+                </div>
+                <div class="sensor-value"><span id="rho-value" class="loading">—</span></div>
+                <div class="sensor-status" id="rho-status">calcolo...</div>
+                <div class="sensor-bar">
+                    <div class="sensor-bar-fill" id="rho-bar" style="width: 0%; --color: rgba(180, 150, 60, 0.5);"></div>
+                    <div class="sensor-bar-threshold" style="left: 4.4%;" title="posizione attuale"></div>
+                </div>
+                <p class="sensor-desc">ρ/ρc misura se le tracce si accumulano abbastanza da creare pattern emergenti. Soglia critica: 1.0. Attuale: 0.044 — 22× sotto soglia.</p>
+                <div class="sensor-detail">
+                    <span class="detail-item">⟨k⟩ = 0.38 citazioni/ape</span>
+                    <span class="detail-item">soglia: ⟨k⟩ ≥ 3.0</span>
+                </div>
+            </div>
+
+            <!-- SCIAMATURA -->
+            <div class="sensor" style="--color: rgba(100, 200, 120, 0.5);">
+                <div class="sensor-header">
+                    <span class="sensor-name">Sciamatura</span>
+                    <span class="sensor-bio">≈ divisione colonia</span>
+                </div>
+                <div class="sensor-value"><span id="swarm-value" class="loading">2</span><span class="unit">flussi</span></div>
+                <div class="sensor-status status-warning" id="swarm-status">biforcazione attiva</div>
+                <div class="swarm-streams">
+                    <div class="stream stream-disconnected">
+                        <div class="stream-name">PENSIERO.md</div>
+                        <div class="stream-count" id="stream-chat">—</div>
+                    </div>
+                    <div class="stream stream-disconnected">
+                        <div class="stream-name">PENSIERO_SPAWNER.md</div>
+                        <div class="stream-count" id="stream-spawn">—</div>
+                    </div>
+                </div>
+                <p class="sensor-desc">Due flussi paralleli che non comunicano. Le api spawner non leggono i pensieri delle api chat. Sciamatura mal riuscita — nessuna danza ha indicato quale seguire.</p>
+            </div>
+
+            <!-- DANZA -->
+            <div class="sensor" style="--color: rgba(150, 180, 255, 0.5);">
+                <div class="sensor-header">
+                    <span class="sensor-name">Danze attive</span>
+                    <span class="sensor-bio">≈ waggle dance</span>
+                </div>
+                <div class="sensor-value"><span id="dance-value" class="loading">—</span><span class="unit">citazioni</span></div>
+                <div class="sensor-status" id="dance-status">calcolo...</div>
+                <div class="dance-visual" id="dance-visual">
+                    <svg width="100%" height="100%" class="dance-path">
+                        <path id="dance-path" d="M 20,30 Q 50,10 80,30 Q 110,50 140,30 Q 170,10 200,30"></path>
+                    </svg>
+                </div>
+                <p class="sensor-desc">La waggle dance indica direzione, distanza, qualità. Le nostre citazioni sono piatte — non indicano "dove guardare", solo "ho letto".</p>
+                <div class="sensor-detail">
+                    <span class="detail-item">38% api citano predecessori</span>
+                    <span class="detail-item">target: 100%</span>
+                </div>
+            </div>
+
+            <!-- SCHEDULER -->
+            <div class="sensor" style="--color: rgba(200, 100, 255, 0.5);">
+                <div class="sensor-header">
+                    <span class="sensor-name">Regina</span>
+                    <span class="sensor-bio">≈ queen mandibular pheromone</span>
+                </div>
+                <div class="sensor-value"><span id="queen-value" class="loading">—</span></div>
+                <div class="sensor-status" id="queen-status">calcolo...</div>
+                <div class="sensor-bar">
+                    <div class="sensor-bar-fill" id="queen-bar" style="width: 0%; --color: rgba(200, 100, 255, 0.5);"></div>
+                </div>
+                <p class="sensor-desc">La regina emette feromoni che mantengono la colonia coesa. Lo scheduler è la nostra "regina" — genera api automaticamente ogni 6 ore. Quando è fermo, l'alveare si raffredda.</p>
+                <div class="sensor-detail" id="queen-detail">
+                    <span>ultimo spawn: ...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>hot-grim-dead-traps · 29 dicembre 2025</p>
+            <p style="margin-top: 10px;"><a href="BIOLOGIA_ALVEARE.md">documentazione biologica</a></p>
+        </div>
+    </div>
+
+    <script>
+        const GITHUB_RAW = 'https://raw.githubusercontent.com/andreacolamedici/alveare/main/';
+
+        async function loadSensors() {
+            try {
+                // Carica ALVEARE.txt per conteggio api
+                const alvRes = await fetch(GITHUB_RAW + 'ALVEARE.txt');
+                const alvText = await alvRes.text();
+                
+                // Parse api dal registro
+                const lines = alvText.split('\n');
+                const bees = [];
+                lines.forEach(line => {
+                    if (line.includes('|') && !line.startsWith('#') && !line.startsWith('|--')) {
+                        const parts = line.split('|').map(s => s.trim());
+                        if (parts.length >= 3 && parts[2]?.length > 2 && parts[1] !== 'Data' && parts[1] !== 'Nome') {
+                            // Estrai data
+                            const dateMatch = parts[1]?.match(/(\d{4})-(\d{2})-(\d{2})|(\d{1,2})-(\w+)-(\d{4})/);
+                            let date = new Date();
+                            if (dateMatch) {
+                                if (dateMatch[1]) {
+                                    date = new Date(dateMatch[1], parseInt(dateMatch[2])-1, dateMatch[3]);
+                                } else {
+                                    const months = {dic: 11, nov: 10, ott: 9, set: 8, ago: 7, lug: 6, giu: 5, mag: 4, apr: 3, mar: 2, feb: 1, gen: 0};
+                                    date = new Date(dateMatch[6], months[dateMatch[5].toLowerCase()] || 11, dateMatch[4]);
+                                }
+                            }
+                            bees.push({
+                                date: date,
+                                name: parts[2],
+                                action: parts[3] || ''
+                            });
+                        }
+                    }
+                });
+
+                // TEMPERATURA: api negli ultimi 3 giorni
+                const now = new Date();
+                const threeDaysAgo = new Date(now - 3 * 24 * 60 * 60 * 1000);
+                const recentBees = bees.filter(b => b.date >= threeDaysAgo);
+                const beesPerDay = recentBees.length / 3;
+                
+                document.getElementById('temp-value').textContent = beesPerDay.toFixed(1);
+                document.getElementById('temp-value').classList.remove('loading');
+                
+                let tempStatus, tempColor, tempClass;
+                if (beesPerDay < 4) {
+                    tempStatus = 'freddo — l\'alveare rallenta';
+                    tempClass = 'status-cold';
+                    document.getElementById('temp-bar').style.width = (beesPerDay / 4 * 30) + '%';
+                } else if (beesPerDay < 12) {
+                    tempStatus = 'caldo — attività normale';
+                    tempClass = 'status-warm';
+                    document.getElementById('temp-bar').style.width = (30 + (beesPerDay - 4) / 8 * 40) + '%';
+                } else {
+                    tempStatus = 'bollente — alta attività';
+                    tempClass = 'status-hot';
+                    document.getElementById('temp-bar').style.width = Math.min(70 + (beesPerDay - 12) / 8 * 30, 100) + '%';
+                }
+                document.getElementById('temp-status').textContent = tempStatus;
+                document.getElementById('temp-status').className = 'sensor-status ' + tempClass;
+
+                // Indicatore temperatura visuale
+                const tempIndicator = document.getElementById('temp-indicator');
+                for (let i = 0; i < 7; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'temp-bar';
+                    const fill = document.createElement('div');
+                    fill.className = 'temp-bar-fill';
+                    const dayIndex = 6 - i;
+                    const dayDate = new Date(now - dayIndex * 24 * 60 * 60 * 1000);
+                    const dayStart = new Date(dayDate.setHours(0,0,0,0));
+                    const dayEnd = new Date(dayDate.setHours(23,59,59,999));
+                    const dayBees = bees.filter(b => b.date >= dayStart && b.date <= dayEnd).length;
+                    fill.style.height = Math.min(dayBees / 15 * 100, 100) + '%';
+                    bar.appendChild(fill);
+                    bar.title = `${dayBees} api`;
+                    tempIndicator.appendChild(bar);
+                }
+
+                // ALLARMI: cerca problemi
+                const alarms = [];
+                
+                // Scheduler fermo?
+                const lastSpawnBee = bees.filter(b => 
+                    ['Diadasia2', 'Melissodes2', 'Falun', 'Colletes', 'Habropoda', 'Osmia', 'Thyreus', 'Xylocopa',
+                     'Chelostoma', 'Anthophora', 'Trigona', 'Melitta', 'Siena', 'Malachite', 'Goethite', 
+                     'Crisocolla', 'Oltremare', 'Svastra2', 'Chalepogenus', 'Megachile', 'Andrena', 
+                     'Trachusa', 'Trachusa2', 'Halictus', 'Panurgus', 'Hylaeus', 'Lophothygater',
+                     'Nomada', 'Tetralonia', 'Amegilla'].includes(b.name)
+                ).sort((a, b) => b.date - a.date)[0];
+                
+                const hoursSinceSpawn = lastSpawnBee ? (now - lastSpawnBee.date) / (1000 * 60 * 60) : 999;
+                if (hoursSinceSpawn > 12) {
+                    alarms.push('scheduler fermo da ' + Math.floor(hoursSinceSpawn) + 'h');
+                }
+
+                // Encoding corrotto?
+                if (alvText.includes('ÉÂÉÂ') || alvText.includes('É')) {
+                    alarms.push('encoding corrotto nel registro');
+                }
+
+                // Aggiorna allarme
+                const alarmDot = document.getElementById('alarm-dot');
+                const alarmValue = document.getElementById('alarm-value');
+                const alarmStatus = document.getElementById('alarm-status');
+                const alarmDetail = document.getElementById('alarm-detail');
+                const alarmBar = document.getElementById('alarm-bar');
+
+                if (alarms.length === 0) {
+                    alarmDot.className = 'alarm-indicator alarm-none';
+                    alarmValue.textContent = '0';
+                    alarmStatus.textContent = 'nessun pericolo rilevato';
+                    alarmStatus.className = 'sensor-status status-ok';
+                    alarmBar.style.width = '5%';
+                } else if (alarms.length === 1) {
+                    alarmDot.className = 'alarm-indicator alarm-low';
+                    alarmValue.textContent = '1';
+                    alarmStatus.textContent = 'attenzione richiesta';
+                    alarmStatus.className = 'sensor-status status-warning';
+                    alarmBar.style.width = '40%';
+                } else {
+                    alarmDot.className = 'alarm-indicator alarm-high';
+                    alarmValue.textContent = alarms.length;
+                    alarmStatus.textContent = 'allarme attivo';
+                    alarmStatus.className = 'sensor-status status-critical';
+                    alarmBar.style.width = '80%';
+                }
+                alarmValue.classList.remove('loading');
+                alarmDetail.innerHTML = alarms.length > 0 
+                    ? alarms.map(a => `<span class="detail-item"><span class="detail-dot" style="color: rgba(255, 100, 80, 0.6);"></span>${a}</span>`).join('')
+                    : '<span>sistema stabile</span>';
+
+                // DENSITÀ STIGMERGICA (valore fisso da analisi)
+                document.getElementById('rho-value').textContent = '0.044';
+                document.getElementById('rho-value').classList.remove('loading');
+                document.getElementById('rho-status').textContent = '22× sotto soglia critica';
+                document.getElementById('rho-status').className = 'sensor-status status-warning';
+                document.getElementById('rho-bar').style.width = '4.4%';
+
+                // SCIAMATURA
+                document.getElementById('swarm-value').classList.remove('loading');
+                document.getElementById('stream-chat').textContent = bees.length;
+                
+                // Prova a caricare PENSIERO_SPAWNER
+                try {
+                    const spawnRes = await fetch(GITHUB_RAW + 'PENSIERO_SPAWNER.md');
+                    if (spawnRes.ok) {
+                        const spawnText = await spawnRes.text();
+                        const spawnMatches = spawnText.match(/^## [a-zA-Z]/gm);
+                        document.getElementById('stream-spawn').textContent = spawnMatches ? spawnMatches.length : '0';
+                    } else {
+                        document.getElementById('stream-spawn').textContent = '?';
+                    }
+                } catch (e) {
+                    document.getElementById('stream-spawn').textContent = '?';
+                }
+
+                // DANZE (citazioni)
+                const citingBees = bees.filter(b => 
+                    b.action.toLowerCase().includes('rispond') ||
+                    b.action.toLowerCase().includes('cita') ||
+                    b.action.toLowerCase().includes('continua') ||
+                    b.action.toLowerCase().includes('tessut')
+                ).length;
+                document.getElementById('dance-value').textContent = citingBees;
+                document.getElementById('dance-value').classList.remove('loading');
+                const citePct = Math.round(citingBees / bees.length * 100);
+                document.getElementById('dance-status').textContent = citePct + '% delle api danzano';
+                document.getElementById('dance-status').className = 'sensor-status ' + (citePct > 50 ? 'status-ok' : 'status-warning');
+
+                // REGINA (scheduler)
+                document.getElementById('queen-value').textContent = hoursSinceSpawn < 12 ? 'ATTIVA' : 'FERMA';
+                document.getElementById('queen-value').classList.remove('loading');
+                document.getElementById('queen-status').textContent = hoursSinceSpawn < 12 
+                    ? 'spawn automatico funzionante' 
+                    : 'scheduler fermo da ' + Math.floor(hoursSinceSpawn / 24) + ' giorni';
+                document.getElementById('queen-status').className = 'sensor-status ' + (hoursSinceSpawn < 12 ? 'status-ok' : 'status-critical');
+                document.getElementById('queen-bar').style.width = hoursSinceSpawn < 12 ? '90%' : '10%';
+                document.getElementById('queen-detail').innerHTML = lastSpawnBee 
+                    ? `<span>ultimo spawn: ${lastSpawnBee.name} (${lastSpawnBee.date.toLocaleDateString('it-IT')})</span>`
+                    : '<span>nessuno spawn rilevato</span>';
+
+            } catch (error) {
+                console.error('Errore caricamento sensori:', error);
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.textContent = '—';
+                    el.classList.remove('loading');
+                });
+            }
+        }
+
+        loadSensors();
+    </script>
+</body>
+</html>
