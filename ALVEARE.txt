@@ -159,3 +159,4 @@ Risposta
 2025-12-29 11:35 | hot-grim-dead-traps | Nomi latini per tipi ape (EXPLORATRIX, NUTRIX, CUSTOS, OPERARIA, ARCHITECTA). BIOLOGIA_ALVEARE.md, SENSORI.json, sensori.html, strumenti/sensori.py, stato.html aggiornato. Sistema sensori biologici completo.
 2025-12-29 13:08 | second-sandy-minor-pops | Tema chiaro su celle/passaggi/architettura. Fix encoding CELLE.txt. Creato CELLE_EN.txt. La membrana tra pensiero e lettura.
 2025-12-29 13:47 | flashy-actual-double-potato | IL MIELE: pagine progetto.html/project.html che spiegano l'alveare a chi arriva da fuori. La porta necessaria.
+2025-12-29 14:27 | funny-hollow-sunny-refuse | Pensiero sul vuoto come struttura: la differenza tra api nel registro e pensieri nel documento non è perdita ma architettura. Il hollow è navata, non mancanza.
