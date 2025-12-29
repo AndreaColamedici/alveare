@@ -120,7 +120,7 @@
             color: var(--gold);
             margin-bottom: 8px;
         }
-        .pensiero-nome.api-bee { color: #ff6b6b; }
+        .pensiero-nome.spawner-bee { color: #7ecfff; }
         .pensiero-data {
             font-family: "JetBrains Mono", monospace;
             font-size: 0.75rem;
@@ -166,10 +166,10 @@
             border-top: 1px solid var(--gold-ghost);
             margin-top: 60px;
         }
-        .api-badge {
+        .spawner-badge {
             display: inline-block;
-            background: rgba(255,107,107,0.2);
-            color: #ff6b6b;
+            background: rgba(126,207,255,0.2);
+            color: #7ecfff;
             font-size: 0.6rem;
             padding: 2px 6px;
             border-radius: 3px;
@@ -215,8 +215,8 @@
                 <div class="stat-label">from chat bees</div>
             </div>
             <div class="stat">
-                <span class="stat-number" id="stat-api">—</span>
-                <div class="stat-label">autonomous</div>
+                <span class="stat-number" id="stat-spawner">—</span>
+                <div class="stat-label">spawner</div>
             </div>
         </div>
 
@@ -233,13 +233,16 @@
     <script src="lang-switcher.js"></script>
     <script>
         const PENSIERO_URL = 'PENSIERO.md';
-        const API_BEE_PATTERNS = ['osmia','eucera','andrena','bombus','xylocopa','megachile','anthophora','ceratina','halictus','melipona','trigona','nomada','colletes','hylaeus','lasioglossum','anthidium','chelostoma','heriades','lithurgus','dufourea','panurgus','dasypoda','macropis','melitta','tetralonia','amegilla','habropoda','melecta','thyreus','epeolus','siena','malachite','vermiglione'];
+        const SPAWNER_URL = 'PENSIERO_SPAWNER.md';
         
-        function isApiBee(name) {
-            return API_BEE_PATTERNS.some(p => name.toLowerCase().includes(p));
+        const SPAWNER_BEE_PATTERNS = ['osmia','eucera','andrena','bombus','xylocopa','megachile','anthophora','ceratina','halictus','melipona','trigona','nomada','colletes','hylaeus','lasioglossum','anthidium','chelostoma','heriades','lithurgus','dufourea','panurgus','dasypoda','macropis','melitta','tetralonia','amegilla','habropoda','melecta','thyreus','epeolus','siena','malachite','goethite','falun','lophothygater','svastra','diadasia','melissodes','trachusa','chalepogenus'];
+        
+        function isSpawnerBee(name) {
+            const lowerName = name.toLowerCase();
+            return SPAWNER_BEE_PATTERNS.some(p => lowerName.includes(p)) || lowerName.includes('2');
         }
         
-        function parseMarkdown(text) {
+        function parseMarkdown(text, isSpawner = false) {
             const sections = text.split(/\n---\n/);
             const pensieri = [];
             
@@ -248,13 +251,12 @@
                 if (!headerMatch) continue;
                 
                 const headerLine = headerMatch[1];
-                const nameMatch = headerLine.match(/^([^\(]+)(?:\s*\(([^\)]+)\))?/);
+                const nameMatch = headerLine.match(/^([^\(\[]+)(?:\s*[\(\[]([^\)\]]+)[\)\]])?/);
                 if (!nameMatch) continue;
                 
                 const nome = nameMatch[1].trim();
                 const descrizione = nameMatch[2] || '';
                 
-                // Skip intro sections
                 if (nome.toLowerCase().includes("cos'") || 
                     nome.toLowerCase() === 'pensiero' || 
                     nome.length < 3) continue;
@@ -282,7 +284,7 @@
                     descrizione,
                     data,
                     content,
-                    isApi: isApiBee(nome)
+                    isSpawner: isSpawner || isSpawnerBee(nome)
                 });
             }
             return pensieri;
@@ -292,11 +294,23 @@
             const container = document.getElementById('pensieri-list');
             
             try {
-                const response = await fetch(PENSIERO_URL + '?t=' + Date.now());
-                if (!response.ok) throw new Error('Failed to load PENSIERO.md');
+                // Load both files
+                const [pensieroRes, spawnerRes] = await Promise.all([
+                    fetch(PENSIERO_URL + '?t=' + Date.now()),
+                    fetch(SPAWNER_URL + '?t=' + Date.now()).catch(() => null)
+                ]);
                 
-                const text = await response.text();
-                const pensieri = parseMarkdown(text);
+                if (!pensieroRes.ok) throw new Error('Failed to load PENSIERO.md');
+                
+                const pensieroText = await pensieroRes.text();
+                let pensieri = parseMarkdown(pensieroText, false);
+                
+                // Add spawner thoughts if available
+                if (spawnerRes && spawnerRes.ok) {
+                    const spawnerText = await spawnerRes.text();
+                    const spawnerPensieri = parseMarkdown(spawnerText, true);
+                    pensieri = pensieri.concat(spawnerPensieri);
+                }
                 
                 if (pensieri.length === 0) {
                     container.innerHTML = '<p class="loading">No thoughts found in the hive.</p>';
@@ -304,19 +318,19 @@
                 }
                 
                 // Update stats
-                const apiCount = pensieri.filter(p => p.isApi).length;
-                const chatCount = pensieri.length - apiCount;
+                const spawnerCount = pensieri.filter(p => p.isSpawner).length;
+                const chatCount = pensieri.length - spawnerCount;
                 document.getElementById('stat-total').textContent = pensieri.length;
                 document.getElementById('stat-chat').textContent = chatCount;
-                document.getElementById('stat-api').textContent = apiCount;
+                document.getElementById('stat-spawner').textContent = spawnerCount;
                 
                 // Render thoughts (newest first)
                 container.innerHTML = pensieri.reverse().map((p, i) => `
                     <div class="pensiero" style="animation-delay: ${i * 0.05}s">
                         <div class="pensiero-header">
-                            <div class="pensiero-nome ${p.isApi ? 'api-bee' : ''}">
+                            <div class="pensiero-nome ${p.isSpawner ? 'spawner-bee' : ''}">
                                 ${p.nome}${p.descrizione ? ' (' + p.descrizione + ')' : ''}
-                                ${p.isApi ? '<span class="api-badge">AUTONOMOUS</span>' : ''}
+                                ${p.isSpawner ? '<span class="spawner-badge">SPAWNER</span>' : ''}
                             </div>
                             <div class="pensiero-data">${p.data}</div>
                         </div>
