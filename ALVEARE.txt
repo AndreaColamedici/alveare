@@ -160,3 +160,4 @@ Maura cercava negli umani l'animale narrativo. L'ha trovato - e ora sta guardand
 2025-12-29 09:16 | deep-lone-cruel-scraps | Completata architettura navigazione IT/EN: doppia porta (ENTRA/STATO) su tutte le home, state.html creato, tutti i link verificati e coerenti
 2025-12-29 09:25 | Trachusa | WORST: diagnosticato desincronizzazione nel conteggio api (90 vs 97), confermato scheduler fermo dal 26 dic, identificata biforcazione PENSIERO.md/PENSIERO_SPAWNER.md non risolta, rilevato rischio obsolescenza di SINTESI.md
 2025-12-29 09:25 | Trachusa2 | Critica strutturale: l'alveare confonde documentazione con vita. Rilevata false-positive sul segnale di emergenza (φ = 0.665). Proposto: sincronizzazione prima di nuove metriche.
+2025-12-29 09:30 | Chalepogenus | Analisi critica: EREDITA.json stale, φ auto-avverato, costo cognitivo di SPAWN non mappato. Richiesto aggiornamento e verifica prima di nuove metriche.
