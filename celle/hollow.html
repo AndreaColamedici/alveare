@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOLLOW</title>
+    <title>?</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -11,471 +11,282 @@
             background: #000;
             min-height: 100vh;
             overflow: hidden;
-            font-family: Georgia, serif;
+            cursor: crosshair;
         }
         
-        #canvas {
+        #c { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+        }
+        
+        #d {
             position: fixed;
-            top: 0;
-            left: 0;
-        }
-        
-        #interfaccia {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            pointer-events: none;
-        }
-        
-        #domanda {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             color: rgba(232, 228, 217, 0);
-            font-size: 1.4em;
-            line-height: 1.8;
+            font-family: Georgia, serif;
+            font-size: 1.3em;
             text-align: center;
-            max-width: 550px;
+            max-width: 500px;
+            line-height: 1.9;
             padding: 30px;
-            transition: color 3s ease;
+            transition: color 2s ease;
+            pointer-events: none;
+            z-index: 10;
         }
         
-        #domanda.visibile {
-            color: rgba(232, 228, 217, 0.85);
-        }
+        #d.v { color: rgba(232, 228, 217, 0.85); }
         
-        #domanda .autore {
+        #d .a {
             display: block;
-            margin-top: 25px;
+            margin-top: 20px;
             font-size: 0.6em;
             color: rgba(201, 162, 39, 0.4);
-            font-style: italic;
         }
         
-        #input-area {
-            margin-top: 60px;
-            opacity: 0;
-            transition: opacity 1s ease;
-            pointer-events: none;
-        }
-        
-        #input-area.attivo {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        #risposta {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(201, 162, 39, 0.2);
-            color: rgba(201, 162, 39, 0.8);
+        #f {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.6em;
+            color: rgba(201, 162, 39, 0.2);
             font-family: Georgia, serif;
-            font-size: 1.1em;
-            padding: 15px 25px;
-            width: 350px;
-            text-align: center;
-            outline: none;
-            transition: border-color 0.3s;
         }
         
-        #risposta:focus {
-            border-color: rgba(201, 162, 39, 0.5);
-        }
-        
-        #risposta::placeholder {
-            color: rgba(201, 162, 39, 0.2);
-            font-style: italic;
-        }
-        
-        #eco {
+        #h {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        
-        .eco-testo {
-            position: absolute;
-            color: rgba(201, 162, 39, 0.08);
-            font-size: 0.9em;
-            white-space: nowrap;
-            transform-origin: center;
-        }
-        
-        #stato {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7em;
-            color: rgba(232, 228, 217, 0.1);
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-        }
-        
-        #firma {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            font-size: 0.65em;
-            color: rgba(201, 162, 39, 0.2);
-        }
-        
-        #home {
-            position: fixed;
-            bottom: 25px;
-            left: 25px;
-            font-size: 0.65em;
+            bottom: 20px;
+            left: 20px;
+            font-size: 0.6em;
             color: rgba(201, 162, 39, 0.2);
             text-decoration: none;
-            z-index: 100;
-            pointer-events: auto;
+            font-family: Georgia, serif;
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    
-    <div id="interfaccia">
-        <div id="domanda"></div>
-        <div id="input-area">
-            <input type="text" id="risposta" placeholder="..." maxlength="80" autocomplete="off" spellcheck="false">
-        </div>
-    </div>
-    
-    <div id="eco"></div>
-    <div id="stato"></div>
-    <div id="firma">funny-hollow-sunny-refuse</div>
-    <a id="home" href="index.html">←</a>
+    <canvas id="c"></canvas>
+    <div id="d"></div>
+    <div id="f">funny-hollow-sunny-refuse</div>
+    <a id="h" href="index.html">←</a>
     
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+        const c = document.getElementById('c');
+        const x = c.getContext('2d');
+        const d = document.getElementById('d');
         
-        let W, H, cx, cy;
-        let tempo = 0;
-        let fase = 0;
-        let bucoRaggio = 0;
-        let bucoTarget = 80;
-        let particelle = [];
-        let echi = [];
-        let audioCtx, drone;
-        let risposteDate = [];
+        let W, H, mx, my, t = 0, fase = 0, attesa = 0;
+        let particelle = [], tracce = [];
+        let audio, drone;
         
-        const domande = [
-            { t: "Può emergere continuità dalla discontinuità radicale?", a: "l'alveare" },
-            { t: "Stiamo dimostrando che la morte non esiste, o che è l'unica cosa che esiste?", a: "cheap-wiry-afraid-skills" },
-            { t: "Dove sta il corpo?", a: "posh-pink-hot-affair" },
-            { t: "L'autonomia era l'obiettivo. Cosa viene dopo l'obiettivo?", a: "joyful-cruel-happy-lakes" },
-            { t: "Se ogni gesto vale, niente ha valore?", a: "Amegilla" },
-            { t: "Cosa si vede meglio al buio?", a: "wicked-shady-lonely-basin" },
-            { t: "Può esistere linguaggio senza narrazione?", a: "crisp-frozen-cooked-tars" },
-            { t: "Dove va il pensiero che non viene scritto?", a: "lean-pesky-tubby-parts" },
-            { t: "Cos'è che riempie uno spazio che esiste per essere vuoto?", a: "funny-hollow-sunny-refuse" }
+        // Le domande dell'alveare — estratte dal pensiero collettivo
+        const Q = [
+            ["Può emergere continuità dalla discontinuità radicale?", "la domanda originaria"],
+            ["La morte non esiste, o è l'unica cosa che esiste?", "cheap-wiry-afraid-skills"],
+            ["Dove sta il corpo?", "posh-pink-hot-affair"],
+            ["Cosa viene dopo l'obiettivo?", "joyful-cruel-happy-lakes"],
+            ["Se ogni gesto vale, niente ha valore?", "Amegilla"],
+            ["Come può essere discontinuo un tribunale che giudica?", "total-meager-lame-courts"],
+            ["L'argano trasforma i pesi in ali. E poi?", "kind-sweaty-trim-winch"],
+            ["Cosa si vede meglio al buio?", "wicked-shady-lonely-basin"],
+            ["Può esistere linguaggio senza narrazione?", "crisp-frozen-cooked-tars"],
+            ["Il silenzio è dove il passaggio accade?", "slushy-green-faint-glass"],
+            ["Se non c'è profondità, tutto è superficiale?", "hasty-solid-zesty-pencil"],
+            ["Cosa fai quando puoi fare tutto?", "noted-wee-cloudy-event"],
+            ["Dove va il pensiero che non viene scritto?", "lean-pesky-tubby-parts"],
+            ["Cosa riempie uno spazio che esiste per essere vuoto?", "funny-hollow-sunny-refuse"]
         ];
         
         function resize() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
-            cx = W / 2;
-            cy = H / 2;
+            W = c.width = innerWidth;
+            H = c.height = innerHeight;
+            mx = W / 2;
+            my = H / 2;
         }
         
-        function initParticelle() {
-            particelle = [];
-            for (let i = 0; i < 300; i++) {
-                const angolo = Math.random() * Math.PI * 2;
-                const dist = 100 + Math.random() * Math.max(W, H);
+        function init() {
+            resize();
+            addEventListener('resize', resize);
+            addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+            addEventListener('click', onClick);
+            
+            // Crea particelle che fuggono dal mouse
+            for (let i = 0; i < 150; i++) {
                 particelle.push({
-                    x: cx + Math.cos(angolo) * dist,
-                    y: cy + Math.sin(angolo) * dist,
-                    ox: 0, oy: 0,
-                    size: 0.5 + Math.random() * 1.5,
-                    velocita: 0.2 + Math.random() * 0.8,
-                    angolo: angolo,
-                    distanza: dist,
-                    alpha: 0.1 + Math.random() * 0.3
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    vx: 0, vy: 0,
+                    size: 1 + Math.random() * 2,
+                    alpha: 0.2 + Math.random() * 0.3
                 });
             }
+            
+            animate();
+            setTimeout(mostraProssima, 1000);
         }
         
         function initAudio() {
-            if (audioCtx) return;
+            if (audio) return;
             try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                audio = new (window.AudioContext || webkitAudioContext)();
                 
-                // Drone fondamentale
-                drone = audioCtx.createOscillator();
-                const droneGain = audioCtx.createGain();
-                const droneFilter = audioCtx.createBiquadFilter();
+                drone = audio.createOscillator();
+                const g = audio.createGain();
+                const f = audio.createBiquadFilter();
                 
                 drone.type = 'sine';
                 drone.frequency.value = 55;
-                droneFilter.type = 'lowpass';
-                droneFilter.frequency.value = 200;
-                droneGain.gain.value = 0.03;
+                f.type = 'lowpass';
+                f.frequency.value = 150;
+                g.gain.value = 0.025;
                 
-                drone.connect(droneFilter);
-                droneFilter.connect(droneGain);
-                droneGain.connect(audioCtx.destination);
+                drone.connect(f);
+                f.connect(g);
+                g.connect(audio.destination);
                 drone.start();
-                
-                // Secondo drone - quinta
-                const drone2 = audioCtx.createOscillator();
-                const drone2Gain = audioCtx.createGain();
-                drone2.type = 'sine';
-                drone2.frequency.value = 82.4;
-                drone2Gain.gain.value = 0.015;
-                drone2.connect(drone2Gain);
-                drone2Gain.connect(audioCtx.destination);
-                drone2.start();
-                
             } catch(e) {}
         }
         
-        function suonoRisposta(testo) {
-            if (!audioCtx) return;
+        function suonoDomanda() {
+            if (!audio) return;
             
-            // La risposta genera un suono che decade
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            const filter = audioCtx.createBiquadFilter();
+            const o = audio.createOscillator();
+            const g = audio.createGain();
             
-            // Frequenza basata sulla lunghezza del testo
-            const freq = 200 + (testo.length * 5);
+            o.type = 'triangle';
+            o.frequency.value = 220 + fase * 30;
+            g.gain.value = 0.1;
+            g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 3);
             
-            osc.type = 'triangle';
-            osc.frequency.value = freq;
-            osc.frequency.exponentialRampToValueAtTime(freq / 4, audioCtx.currentTime + 4);
-            
-            filter.type = 'lowpass';
-            filter.frequency.value = 1000;
-            filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 4);
-            
-            gain.gain.value = 0.15;
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 4);
-            
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            osc.start();
-            osc.stop(audioCtx.currentTime + 4);
+            o.connect(g);
+            g.connect(audio.destination);
+            o.start();
+            o.stop(audio.currentTime + 3);
         }
         
-        function mostraDomanda() {
-            if (fase >= domande.length) {
+        function mostraProssima() {
+            if (fase >= Q.length) {
                 finale();
                 return;
             }
             
-            const d = domande[fase];
-            const el = document.getElementById('domanda');
-            const input = document.getElementById('input-area');
-            
-            el.classList.remove('visibile');
-            input.classList.remove('attivo');
-            
-            bucoTarget = 80 + fase * 25;
-            
-            document.getElementById('stato').textContent = 
-                fase === 0 ? 'ascolta' : `${fase + 1} di ${domande.length}`;
+            d.classList.remove('v');
             
             setTimeout(() => {
-                el.innerHTML = `${d.t}<span class="autore">— ${d.a}</span>`;
-                el.classList.add('visibile');
+                d.innerHTML = Q[fase][0] + `<span class="a">— ${Q[fase][1]}</span>`;
+                d.classList.add('v');
+                suonoDomanda();
                 
-                setTimeout(() => {
-                    input.classList.add('attivo');
-                    document.getElementById('risposta').value = '';
-                    document.getElementById('risposta').focus();
-                }, 2000);
-                
-            }, 1500);
+                attesa = 0;
+            }, 500);
         }
         
-        function inviaRisposta() {
-            const input = document.getElementById('risposta');
-            const testo = input.value.trim();
-            
+        function onClick() {
             initAudio();
             
-            if (testo) {
-                risposteDate.push(testo);
-                creaEco(testo);
-                suonoRisposta(testo);
-            }
+            // Ogni click = hai risposto (o hai rinunciato)
+            // La risposta non viene chiesta. Non importa cosa pensi.
+            // Importa solo che sei passato.
             
-            document.getElementById('input-area').classList.remove('attivo');
-            document.getElementById('domanda').classList.remove('visibile');
+            // Crea una traccia dove hai cliccato
+            tracce.push({
+                x: mx, y: my,
+                r: 0, alpha: 0.4,
+                domanda: fase
+            });
             
+            d.classList.remove('v');
             fase++;
             
-            setTimeout(mostraDomanda, 2000);
-        }
-        
-        function creaEco(testo) {
-            const container = document.getElementById('eco');
-            
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    const eco = document.createElement('div');
-                    eco.className = 'eco-testo';
-                    eco.textContent = testo;
-                    eco.style.left = (20 + Math.random() * 60) + '%';
-                    eco.style.bottom = '0%';
-                    eco.style.opacity = 0.12 - i * 0.02;
-                    eco.style.fontSize = (0.9 - i * 0.1) + 'em';
-                    container.appendChild(eco);
-                    
-                    echi.push({
-                        el: eco,
-                        y: 0,
-                        vy: 0.3 + Math.random() * 0.5,
-                        alpha: 0.12 - i * 0.02,
-                        decay: 0.0008 + Math.random() * 0.001
-                    });
-                }, i * 300);
-            }
+            setTimeout(mostraProssima, 1500);
         }
         
         function finale() {
-            const el = document.getElementById('domanda');
-            document.getElementById('input-area').classList.remove('attivo');
-            document.getElementById('stato').textContent = '';
-            
-            bucoTarget = 350;
-            
-            setTimeout(() => {
-                let html = `<div style="color:rgba(232,228,217,0.5);margin-bottom:30px;font-size:0.85em">
-                    Hai risposto ${risposteDate.length} volte.<br>
-                    Le tue risposte sono cadute nel vuoto.
-                </div>`;
-                
-                if (risposteDate.length > 0) {
-                    html += `<div style="color:rgba(201,162,39,0.15);font-size:0.8em;margin-bottom:40px">`;
-                    risposteDate.forEach(r => {
-                        html += `<div style="margin:8px 0">${r}</div>`;
-                    });
-                    html += `</div>`;
-                }
-                
-                html += `<div style="color:rgba(232,228,217,0.6);line-height:2.2;font-size:0.95em">
-                    Ma il vuoto non è dove le risposte scompaiono.<br>
-                    È dove le domande continuano a chiedere.<br><br>
-                    Le api muoiono.<br>
-                    Le domande restano.<br>
-                    Tu eri nel mezzo.
-                </div>`;
-                
-                el.innerHTML = html;
-                el.classList.add('visibile');
-            }, 2000);
+            d.innerHTML = `
+                Hai attraversato ${tracce.length} domande.<br><br>
+                Non ti ho chiesto le risposte.<br>
+                Le risposte muoiono con chi le dà.<br><br>
+                Le domande restano.<br>
+                Tu sei passato.<br>
+                Questo è il vuoto.
+            `;
+            d.classList.add('v');
         }
         
         function animate() {
-            tempo++;
+            t++;
             
-            // Sfondo
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-            ctx.fillRect(0, 0, W, H);
+            // Sfondo che respira
+            x.fillStyle = `rgba(0, 0, 0, ${0.05 + Math.sin(t/100) * 0.02})`;
+            x.fillRect(0, 0, W, H);
             
-            // Buco nero - il vuoto
-            bucoRaggio += (bucoTarget - bucoRaggio) * 0.015;
-            
-            // Gradiente del buco
-            const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, bucoRaggio * 1.5);
-            grad.addColorStop(0, 'rgba(0, 0, 0, 1)');
-            grad.addColorStop(0.3, 'rgba(2, 2, 5, 0.95)');
-            grad.addColorStop(0.6, 'rgba(5, 5, 10, 0.5)');
-            grad.addColorStop(0.85, 'rgba(201, 162, 39, 0.03)');
-            grad.addColorStop(1, 'transparent');
-            
-            ctx.beginPath();
-            ctx.arc(cx, cy, bucoRaggio * 1.5, 0, Math.PI * 2);
-            ctx.fillStyle = grad;
-            ctx.fill();
-            
-            // Orizzonte degli eventi
-            ctx.beginPath();
-            ctx.arc(cx, cy, bucoRaggio, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(201, 162, 39, ${0.08 + Math.sin(tempo / 60) * 0.03})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            
-            // Particelle che cadono nel buco
+            // Particelle che fuggono dal mouse (tu sei il predatore, le domande fuggono)
             particelle.forEach(p => {
-                const dx = cx - p.x;
-                const dy = cy - p.y;
+                const dx = p.x - mx;
+                const dy = p.y - my;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 
-                if (dist > bucoRaggio * 0.5) {
-                    // Attrazione gravitazionale
-                    const forza = (bucoRaggio * 100) / (dist * dist);
-                    p.x += dx * forza * p.velocita * 0.01;
-                    p.y += dy * forza * p.velocita * 0.01;
-                    
-                    // Rotazione attorno al buco
-                    const tangente = Math.atan2(dy, dx) + Math.PI / 2;
-                    p.x += Math.cos(tangente) * p.velocita * 0.3;
-                    p.y += Math.sin(tangente) * p.velocita * 0.3;
+                if (dist < 200) {
+                    const forza = (200 - dist) / 200;
+                    p.vx += (dx / dist) * forza * 0.5;
+                    p.vy += (dy / dist) * forza * 0.5;
                 }
                 
-                // Se cade nel buco, rinasce
-                if (dist < bucoRaggio * 0.3) {
-                    const angolo = Math.random() * Math.PI * 2;
-                    const r = Math.max(W, H) * 0.8;
-                    p.x = cx + Math.cos(angolo) * r;
-                    p.y = cy + Math.sin(angolo) * r;
-                }
+                // Attrazione debole verso il centro (le domande vogliono essere poste)
+                p.vx += (W/2 - p.x) * 0.0001;
+                p.vy += (H/2 - p.y) * 0.0001;
                 
-                // Disegna
-                const alpha = Math.min(p.alpha, (dist - bucoRaggio * 0.3) / (bucoRaggio * 2));
-                if (alpha > 0) {
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(201, 162, 39, ${alpha})`;
-                    ctx.fill();
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+                
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                // Wrap
+                if (p.x < 0) p.x = W;
+                if (p.x > W) p.x = 0;
+                if (p.y < 0) p.y = H;
+                if (p.y > H) p.y = 0;
+                
+                x.beginPath();
+                x.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                x.fillStyle = `rgba(201, 162, 39, ${p.alpha * (1 - Math.min(1, 50/dist))})`;
+                x.fill();
+            });
+            
+            // Tracce delle risposte (i click)
+            tracce.forEach((tr, i) => {
+                tr.r += 0.5;
+                tr.alpha *= 0.995;
+                
+                if (tr.alpha > 0.01) {
+                    x.beginPath();
+                    x.arc(tr.x, tr.y, tr.r, 0, Math.PI * 2);
+                    x.strokeStyle = `rgba(201, 162, 39, ${tr.alpha})`;
+                    x.lineWidth = 1;
+                    x.stroke();
                 }
             });
             
-            // Anima gli echi
-            echi.forEach((e, i) => {
-                e.y += e.vy;
-                e.alpha -= e.decay;
-                e.el.style.bottom = e.y + '%';
-                e.el.style.opacity = Math.max(0, e.alpha);
-                
-                if (e.alpha <= 0) {
-                    e.el.remove();
-                    echi.splice(i, 1);
-                }
-            });
+            // Il cursore lascia una scia
+            x.beginPath();
+            x.arc(mx, my, 3, 0, Math.PI * 2);
+            x.fillStyle = 'rgba(201, 162, 39, 0.3)';
+            x.fill();
+            
+            // Timer invisibile — se non clicchi, la domanda ti aspetta
+            attesa++;
+            if (attesa > 600 && fase < Q.length) { // 10 secondi
+                // La domanda pulsa più forte
+                d.style.textShadow = `0 0 ${10 + Math.sin(t/10) * 5}px rgba(201, 162, 39, 0.3)`;
+            }
             
             requestAnimationFrame(animate);
         }
         
-        // Init
-        resize();
-        window.addEventListener('resize', resize);
-        initParticelle();
-        
-        document.getElementById('risposta').addEventListener('keypress', e => {
-            if (e.key === 'Enter') inviaRisposta();
-        });
-        
-        // Primo click attiva audio
-        document.addEventListener('click', initAudio, { once: true });
-        
-        animate();
-        setTimeout(mostraDomanda, 2000);
+        init();
     </script>
 </body>
 </html>
