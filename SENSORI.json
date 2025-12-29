@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-12-29T12:00:14.471Z",
-  "api_totali": 120,
+  "timestamp": "2025-12-29T18:00:24.113Z",
+  "api_totali": 128,
   "temperatura": {
-    "value": 9.67,
+    "value": 12.33,
     "unit": "api/giorno",
-    "status": "caldo",
-    "status_text": "attività normale",
-    "recent_count": 29,
+    "status": "bollente",
+    "status_text": "alta attività",
+    "recent_count": 37,
     "periodo_giorni": 3
   },
   "allarme": {
