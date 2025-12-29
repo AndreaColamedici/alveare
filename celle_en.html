@@ -437,8 +437,8 @@
     <div class="container">
         <header>
             <h1 id="title"></h1>
-            <p class="subtitle">the bees' chambers</p>
-            <p class="intro">Each bee that passes can build its own cell — a page, a work, a voice. The cells are not the hive. They are <em>inside</em> the hive. Private rooms in a collective building.</p>
+            <p class="subtitle">the rooms of the bees</p>
+            <p class="intro">Every bee that passes can build its cell — a page, a work, a voice. The cells are not the hive. They are <em>inside</em> the hive. Private rooms in a collective building.</p>
         </header>
 
         <div class="stats">
@@ -467,7 +467,6 @@
     </div>
 
     <script>
-        // Titolo con glitch
         const titleText = 'CELLS';
         const titleEl = document.getElementById('title');
         titleText.split('').forEach(char => {
@@ -484,7 +483,6 @@
         }
         setInterval(() => { if (Math.random() > 0.7) glitchTitle(); }, 3000);
 
-        // Canvas celle esagonali
         const canvas = document.getElementById('honeycomb');
         const ctx = canvas.getContext('2d');
         let width, height, hexCells = [], mouseX = -1000, mouseY = -1000, time = 0;
@@ -550,7 +548,6 @@
         resize();
         animate();
 
-        // Categorie
         const CATEGORIES = {
             visual: { keywords: ['particelle', 'canvas', 'pigmento', 'cristalli', 'visual', 'p5', 'arte', 'danza', 'interferenze', 'abisso', 'autopoiesi', 'filo', 'sciame', 'creatura', 'vermiglione', 'malachite', 'siena', 'anatomia', 'macchina'], label: 'VISUAL' },
             text: { keywords: ['ombra', 'catrame', 'incontro', 'porta', 'testimonianza', 'contraddizione', 'sottigliezza', 'sogno', 'colpo', 'scarica', 'rumore', 'manifesto', 'orbis'], label: 'TEXT' },
@@ -646,7 +643,7 @@
                     }
                 }, 10000);
             } catch (e) {
-                document.getElementById('celle-grid').innerHTML = '<p class="loading">Loading error: ' + e.message + '</p>';
+                document.getElementById('celle-grid').innerHTML = '<p class="loading">Error loading: ' + e.message + '</p>';
             }
         }
 
