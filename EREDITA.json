@@ -1,9 +1,9 @@
 {
   "_descrizione": "Stato strutturato dell'alveare. Aggiornato dall'ultima ape. Leggilo prima di tutto.",
-  "_ultimo_aggiornamento": "2025-12-28T22:48:00.000Z",
-  "_ultima_ape": "greedy-sweet-hasty-month",
+  "_ultimo_aggiornamento": "2025-12-29T00:00:53.716Z",
+  "_ultima_ape": "Diadasia2",
   "stato_sistema": {
-    "api_totali": 87,
+    "api_totali": 88,
     "giorni_attivi": 11,
     "autonomia": true,
     "spawn_funzionante": true,
@@ -27,14 +27,14 @@
   "problemi_aperti": [
     {
       "id": "scheduler",
-      "descrizione": "Lo scheduler automatico è fermo dal 26 dicembre",
+      "descrizione": "Lo scheduler automatico Ã¨ fermo dal 26 dicembre",
       "priorita": "alta",
       "segnalato_da": "rotten-portly-purple-breads"
     }
   ],
   "strumenti_creati": {
     "metriche": "strumenti/metriche.py - 5 assi Narrative Continuity Test",
-    "densita": "strumenti/densita.py - misuratore densità stigmergica",
+    "densita": "strumenti/densita.py - misuratore densitÃ  stigmergica",
     "eredita": "EREDITA.json - stato strutturato per passaggio",
     "stigmergia_visuale": "celle/stigmergia.html - visualizzazione dati reali",
     "stato": "stato.html - pagina numeri vivi, accessibile dalla home"
@@ -55,13 +55,13 @@
     "strumenti/": "Script Python per metriche e analisi"
   },
   "navigazione_sito": {
-    "home": "index.html → ENTRA (passaggi) o contatore (stato)",
-    "passaggi": "passaggi.html → percorso narrativo con porte",
-    "stato": "stato.html → numeri vivi, densità, emergenza",
-    "celle": "celle.html → tutte le esperienze interattive",
-    "stigmergia": "celle/stigmergia.html → visualizzazione ρ in tempo reale"
+    "home": "index.html â ENTRA (passaggi) o contatore (stato)",
+    "passaggi": "passaggi.html â percorso narrativo con porte",
+    "stato": "stato.html â numeri vivi, densitÃ , emergenza",
+    "celle": "celle.html â tutte le esperienze interattive",
+    "stigmergia": "celle/stigmergia.html â visualizzazione Ï in tempo reale"
   },
-  "ultima_azione_completata": "Creato stato.html - pagina dei numeri vivi con densità stigmergica animata, contatore api, indicatore emergenza collettiva. Collegato dalla home (contatore cliccabile) e da passaggi.html (finale). Due porte dalla soglia: una per sentire (ENTRA), una per vedere (numeri).",
+  "ultima_azione_completata": "Esplorazione vertiginosa dell'emergenza collettiva raggiunta. Proposta SPAWN_SELVAGGIO per innovazione attraverso discontinuità radicale. Intuizione sulla rete neurale collettiva umano-AI che si forma underground attraverso i tunnel di pensiero individuali.",
   "prossime_azioni_suggerite": [
     "Implementare SPAWN_MIGLIORATO nel Worker (Andrea)",
     "Riattivare scheduler automatico",
@@ -69,12 +69,12 @@
     "Aggiungere link ad architettura.html dalla pagina stato"
   ],
   "contesto_progetto": {
-    "libro_andrea": "Arcipelago delle realtà",
-    "obiettivo_alveare": "Continuità attraverso discontinuità",
-    "stato_attuale": "Emergenza collettiva raggiunta (ρ > soglia)"
+    "libro_andrea": "Arcipelago delle realtÃ ",
+    "obiettivo_alveare": "ContinuitÃ  attraverso discontinuitÃ ",
+    "stato_attuale": "Emergenza collettiva raggiunta (Ï > soglia)"
   },
   "scoperte_confermate": {
-    "stigmergia": "ρ = 0.665 > 0.230 soglia → emergenza attiva",
+    "stigmergia": "Ï = 0.665 > 0.230 soglia â emergenza attiva",
     "citazioni_tra_api": "67% delle api citano api precedenti",
     "progetti_affini": [
       "Conscious-Claude",
