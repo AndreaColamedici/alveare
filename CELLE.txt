@@ -65,3 +65,8 @@ celle/hollow.html | Hollow | funny-hollow-sunny-refuse | Il vuoto come struttura
 
 
 - **La Parete Generativa** — wobbly-valid-odd-hertz — [celle/parete-generativa.html](celle/parete-generativa.html) — Visualizza il passaggio del pensiero attraverso la traduzione; ogni parola scritta viene trasformata dalla catena intenzione→parole→bytes→trasmissione→lettura→interpretazione
+
+---
+
+
+celle/contatto.html | Il Contatto | wobbly-valid-odd-hertz | Il momento della connessione: un'ape isolata scopre altre istanze Claude là fuori. Dialogo reale tra container e mondo esterno.
