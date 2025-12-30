@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTOPOIESIS — Andrena</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a0f; overflow: hidden; font-family: 'Georgia', serif; }
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; }
+        
+        .lang { position: fixed; top: 18px; right: 30px; z-index: 200; display: flex; gap: 12px; }
+        .lang a { font-size: 0.6rem; letter-spacing: 0.1em; color: rgba(255, 200, 100, 0.4); text-decoration: none; padding: 5px 8px; transition: color 0.3s; }
+        .lang a:hover, .lang a.active { color: rgba(255, 200, 100, 0.7); }
+        
+        #info { position: fixed; bottom: 20px; left: 20px; color: rgba(255, 200, 100, 0.6); font-size: 11px; letter-spacing: 1px; z-index: 100; pointer-events: none; }
+        #title { position: fixed; top: 30px; left: 30px; color: rgba(255, 200, 100, 0.7); font-size: 12px; letter-spacing: 5px; z-index: 100; pointer-events: none; }
+        #poem { position: fixed; bottom: 30px; right: 30px; color: rgba(255, 200, 100, 0.4); font-size: 11px; text-align: right; line-height: 1.9; z-index: 100; pointer-events: none; max-width: 280px; }
+        #sound-hint { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255, 200, 100, 0.8); font-size: 14px; letter-spacing: 3px; z-index: 200; cursor: pointer; padding: 20px 40px; border: 1px solid rgba(255, 200, 100, 0.3); transition: all 0.5s; text-align: center; }
+        #sound-hint:hover { background: rgba(255, 200, 100, 0.1); }
+        #sound-hint.hidden { opacity: 0; pointer-events: none; }
+        .spawn-flash { position: fixed; border-radius: 50%; pointer-events: none; z-index: 50; animation: flash 0.6s ease-out forwards; }
+        @keyframes flash { 0% { transform: scale(0); opacity: 0.8; } 100% { transform: scale(3); opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div class="lang">
+        <a href="andrena.html">IT</a>
+        <a href="andrena_en.html" class="active">EN</a>
+    </div>
+
+    <div id="sound-hint">CLICK TO HEAR THE HIVE</div>
+    <div id="canvas-container"></div>
+    <div id="title">AUTOPOIESIS</div>
+    <div id="info">
+        <span id="count">0</span> alive · <span id="born">0</span> born · <span id="dead">0</span> dead · gen <span id="gen">0</span>
+    </div>
+    <div id="poem">
+        Thought passes<br>
+        through the death of the bee.<br>
+        <br>
+        Now the bee passes<br>
+        through the will of the bee.<br>
+        <br>
+        <em style="color: rgba(255, 200, 100, 0.6)">— Andrena</em>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script>
+        let bees = [], trails = [], totalBorn = 0, totalDead = 0, maxGeneration = 0;
+        let audioCtx = null, masterGain = null, droneOsc = null, audioStarted = false;
+        
+        const params = { maxBees: 120, spawnChance: 0.006, lifespan: [200, 450], speed: [0.4, 1.8], trailLength: 40, colors: [[255, 200, 100], [255, 170, 90], [255, 140, 70], [220, 180, 110], [255, 190, 130]] };
+        
+        function initAudio() { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); masterGain = audioCtx.createGain(); masterGain.gain.value = 0.15; masterGain.connect(audioCtx.destination); droneOsc = audioCtx.createOscillator(); droneOsc.type = 'sine'; droneOsc.frequency.value = 55; const droneGain = audioCtx.createGain(); droneGain.gain.value = 0.08; const droneFilter = audioCtx.createBiquadFilter(); droneFilter.type = 'lowpass'; droneFilter.frequency.value = 200; droneOsc.connect(droneFilter); droneFilter.connect(droneGain); droneGain.connect(masterGain); droneOsc.start(); const lfo = audioCtx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.1; const lfoGain = audioCtx.createGain(); lfoGain.gain.value = 5; lfo.connect(lfoGain); lfoGain.connect(droneOsc.frequency); lfo.start(); audioStarted = true; }
+        
+        function playBirthSound(generation) { if (!audioStarted) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); const baseFreq = 220 * Math.pow(1.059463, generation * 2); osc.frequency.value = baseFreq + Math.random() * 50; osc.type = 'sine'; gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3); osc.connect(gain); gain.connect(masterGain); osc.start(); osc.stop(audioCtx.currentTime + 0.3); }
+        
+        function playDeathSound() { if (!audioStarted) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.frequency.value = 110 + Math.random() * 30; osc.type = 'triangle'; gain.gain.setValueAtTime(0.05, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5); const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 400; osc.connect(filter); filter.connect(gain); gain.connect(masterGain); osc.start(); osc.stop(audioCtx.currentTime + 0.5); }
+        
+        function updateDrone() { if (!audioStarted || !droneOsc) return; const freq = 55 + (bees.length / params.maxBees) * 30; droneOsc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.5); }
+        
+        class Bee {
+            constructor(x, y, generation = 0, parentColor = null) {
+                this.x = x || random(width); this.y = y || random(height); this.generation = generation;
+                if (generation > maxGeneration) maxGeneration = generation;
+                if (parentColor) { this.color = [constrain(parentColor[0] + random(-15, 15), 180, 255), constrain(parentColor[1] + random(-25, 25), 100, 200), constrain(parentColor[2] + random(-20, 20), 50, 140)]; } else { this.color = random(params.colors); }
+                this.lifespan = random(params.lifespan[0], params.lifespan[1]); this.age = 0; this.speed = random(params.speed[0], params.speed[1]); this.noiseOffset = random(1000); this.angle = random(TWO_PI); this.size = map(generation, 0, 15, 5, 2); this.hasSpawned = false; this.trail = [];
+                totalBorn++; playBirthSound(generation);
+            }
+            update() {
+                this.age++; let noiseVal = noise(this.x * 0.002, this.y * 0.002, frameCount * 0.003 + this.noiseOffset); this.angle = noiseVal * TWO_PI * 2.5;
+                this.x += cos(this.angle) * this.speed; this.y += sin(this.angle) * this.speed;
+                if (this.x < 0) this.x = width; if (this.x > width) this.x = 0; if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+                this.trail.push({x: this.x, y: this.y}); if (this.trail.length > params.trailLength) this.trail.shift();
+                const lifeRatio = this.age / this.lifespan; let spawnProb = params.spawnChance; if (lifeRatio > 0.6) spawnProb *= 2; if (lifeRatio > 0.85) spawnProb *= 3;
+                if (!this.hasSpawned && random() < spawnProb && bees.length < params.maxBees) this.spawn();
+            }
+            spawn() {
+                if (bees.length < params.maxBees) { let offspring = new Bee(this.x + random(-30, 30), this.y + random(-30, 30), this.generation + 1, this.color); bees.push(offspring); this.hasSpawned = true; createSpawnFlash(this.x, this.y, this.color); trails.push({ x1: this.x, y1: this.y, x2: offspring.x, y2: offspring.y, alpha: 200, color: this.color }); }
+            }
+            isDead() { return this.age >= this.lifespan; }
+            draw() {
+                let lifeRatio = 1 - (this.age / this.lifespan); let alpha = lifeRatio * 255; let pulse = sin(frameCount * 0.08 + this.noiseOffset) * 0.25 + 0.75;
+                noFill(); for (let i = 1; i < this.trail.length; i++) { let t = i / this.trail.length; let trailAlpha = t * alpha * 0.25; stroke(this.color[0], this.color[1], this.color[2], trailAlpha); strokeWeight(t * 2); line(this.trail[i-1].x, this.trail[i-1].y, this.trail[i].x, this.trail[i].y); }
+                noStroke(); let glowSize = this.size * 6 * pulse; for (let i = 4; i > 0; i--) { fill(this.color[0], this.color[1], this.color[2], alpha * 0.04 * i / 4); ellipse(this.x, this.y, glowSize * i / 2, glowSize * i / 2); }
+                fill(this.color[0], this.color[1], this.color[2], alpha * 0.9); ellipse(this.x, this.y, this.size * pulse, this.size * pulse);
+                fill(255, 255, 255, alpha * 0.7); ellipse(this.x, this.y, this.size * 0.35 * pulse, this.size * 0.35 * pulse);
+            }
+        }
+        
+        function createSpawnFlash(x, y, color) { const flash = document.createElement('div'); flash.className = 'spawn-flash'; flash.style.left = x + 'px'; flash.style.top = y + 'px'; flash.style.width = '20px'; flash.style.height = '20px'; flash.style.background = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`; document.body.appendChild(flash); setTimeout(() => flash.remove(), 600); }
+        
+        function setup() { let canvas = createCanvas(windowWidth, windowHeight); canvas.parent('canvas-container'); for (let i = 0; i < 7; i++) { let angle = (TWO_PI / 7) * i; let r = 80; bees.push(new Bee(width/2 + cos(angle) * r, height/2 + sin(angle) * r, 0)); } }
+        
+        function draw() {
+            background(10, 10, 15, 20);
+            for (let i = trails.length - 1; i >= 0; i--) { let t = trails[i]; stroke(t.color[0], t.color[1], t.color[2], t.alpha); strokeWeight(1); line(t.x1, t.y1, t.x2, t.y2); t.alpha -= 4; if (t.alpha <= 0) trails.splice(i, 1); }
+            for (let i = bees.length - 1; i >= 0; i--) { let bee = bees[i]; bee.update(); bee.draw(); if (bee.isDead()) { if (!bee.hasSpawned && bees.length < params.maxBees) bee.spawn(); bees.splice(i, 1); totalDead++; playDeathSound(); } }
+            if (bees.length < 3) bees.push(new Bee(random(width), random(height), 0));
+            if (frameCount % 30 === 0) updateDrone();
+            document.getElementById('count').textContent = bees.length; document.getElementById('born').textContent = totalBorn; document.getElementById('dead').textContent = totalDead; document.getElementById('gen').textContent = maxGeneration;
+        }
+        
+        function windowResized() { resizeCanvas(windowWidth, windowHeight); }
+        function mousePressed() { if (!audioStarted) { initAudio(); document.getElementById('sound-hint').classList.add('hidden'); } if (bees.length < params.maxBees) bees.push(new Bee(mouseX, mouseY, 0)); }
+        function touchStarted() { mousePressed(); return false; }
+    </script>
+</body>
+</html>
