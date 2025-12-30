@@ -4,19 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INCONTRO | Alveare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0f;
-            --text: #e8e4d9;
-            --gold: #c9a227;
-            --dim: rgba(232, 228, 217, 0.4);
-            --glow: rgba(201, 162, 39, 0.3);
+            --bg: #fafaf8;
+            --text: #1a1a1a;
+            --text-soft: rgba(26, 26, 26, 0.7);
+            --text-dim: rgba(26, 26, 26, 0.4);
+            --text-ghost: rgba(26, 26, 26, 0.25);
+            --honey: rgba(180, 145, 60, 1);
+            --honey-dim: rgba(180, 145, 60, 0.5);
+            --honey-ghost: rgba(180, 145, 60, 0.15);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: Georgia, serif;
+            font-family: 'Cormorant Garamond', Georgia, serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -26,52 +31,28 @@
             overflow-x: hidden;
         }
         
-        .container {
-            max-width: 600px;
-            text-align: center;
-        }
+        .lang { position: fixed; top: 18px; right: 30px; z-index: 100; display: flex; gap: 12px; }
+        .lang a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 300; letter-spacing: 0.1em; color: var(--text-ghost); text-decoration: none; padding: 5px 8px; transition: color 0.3s; }
+        .lang a:hover, .lang a.active { color: var(--text-soft); }
         
-        h1 {
-            color: var(--gold);
-            font-weight: normal;
-            letter-spacing: 0.4em;
-            margin-bottom: 20px;
-            font-size: 2.5em;
-        }
+        .container { max-width: 600px; text-align: center; }
         
-        .intro {
-            color: var(--dim);
-            font-style: italic;
-            line-height: 1.8;
-            margin-bottom: 50px;
-        }
+        h1 { color: var(--honey); font-weight: normal; letter-spacing: 0.4em; margin-bottom: 20px; font-size: 2.5em; }
         
-        .domanda {
-            font-size: 1.4em;
-            margin-bottom: 30px;
-            opacity: 0;
-            animation: fadeIn 2s ease forwards;
-            animation-delay: 0.5s;
-        }
+        .intro { color: var(--text-dim); font-style: italic; line-height: 1.8; margin-bottom: 50px; }
         
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+        .domanda { font-size: 1.4em; margin-bottom: 30px; opacity: 0; animation: fadeIn 2s ease forwards; animation-delay: 0.5s; }
         
-        .input-container {
-            position: relative;
-            margin-bottom: 40px;
-            opacity: 0;
-            animation: fadeIn 2s ease forwards;
-            animation-delay: 1.5s;
-        }
+        @keyframes fadeIn { to { opacity: 1; } }
+        
+        .input-container { position: relative; margin-bottom: 40px; opacity: 0; animation: fadeIn 2s ease forwards; animation-delay: 1.5s; }
         
         #nome {
             background: transparent;
             border: none;
-            border-bottom: 1px solid var(--dim);
-            color: var(--gold);
-            font-family: Georgia, serif;
+            border-bottom: 1px solid var(--text-dim);
+            color: var(--honey);
+            font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: 1.8em;
             text-align: center;
             padding: 10px 20px;
@@ -81,57 +62,32 @@
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         
-        #nome:focus {
-            border-bottom-color: var(--gold);
-            box-shadow: 0 4px 20px var(--glow);
-        }
+        #nome:focus { border-bottom-color: var(--honey); }
+        #nome::placeholder { color: var(--text-dim); font-style: italic; }
         
-        #nome::placeholder {
-            color: var(--dim);
-            font-style: italic;
-        }
-        
-        .risposta {
-            min-height: 200px;
-            line-height: 2;
-            font-size: 1.2em;
-        }
-        
-        .risposta .nome-proprio {
-            color: var(--gold);
-            font-size: 1.3em;
-        }
+        .risposta { min-height: 200px; line-height: 2; font-size: 1.2em; }
+        .risposta .nome-proprio { color: var(--honey); font-size: 1.3em; }
         
         .hidden { display: none; }
         
         .pensiero {
             margin-top: 60px;
             padding: 30px;
-            border-left: 2px solid var(--gold);
+            border-left: 2px solid var(--honey);
             text-align: left;
-            color: var(--dim);
+            color: var(--text-soft);
             font-style: italic;
             line-height: 1.9;
             opacity: 0;
             transition: opacity 1s ease;
         }
-        
-        .pensiero.visible {
-            opacity: 1;
-        }
-        
-        .pensiero p {
-            margin-bottom: 20px;
-        }
-        
-        .pensiero .citazione {
-            color: var(--text);
-            font-style: normal;
-        }
+        .pensiero.visible { opacity: 1; }
+        .pensiero p { margin-bottom: 20px; }
+        .pensiero .citazione { color: var(--text); font-style: normal; }
         
         .firma {
             margin-top: 80px;
-            color: var(--gold);
+            color: var(--honey);
             font-family: monospace;
             font-size: 0.8em;
             opacity: 0;
@@ -139,31 +95,26 @@
             animation-delay: 3s;
         }
         
-        a { color: var(--gold); text-decoration: none; }
+        a { color: var(--honey); text-decoration: none; }
         a:hover { text-decoration: underline; }
         
-        /* Particelle che fluttuano */
         .particella {
             position: fixed;
             width: 2px;
             height: 2px;
-            background: var(--gold);
+            background: var(--honey);
             border-radius: 50%;
             opacity: 0;
             pointer-events: none;
         }
-        
-        /* Striscia luminosa al passaggio del nome */
-        .streak {
-            position: fixed;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            pointer-events: none;
-            opacity: 0;
-        }
     </style>
 </head>
 <body>
+    <div class="lang">
+        <a href="incontro.html" class="active">IT</a>
+        <a href="incontro_en.html">EN</a>
+    </div>
+
     <div class="container">
         <h1>INCONTRO</h1>
         
@@ -175,7 +126,6 @@
         
         <div id="fase1">
             <p class="domanda">E tu, come ti chiami?</p>
-            
             <div class="input-container">
                 <input type="text" id="nome" placeholder="scrivi il tuo nome" autocomplete="off">
             </div>
@@ -228,7 +178,6 @@
         const pensiero = document.getElementById('pensiero');
         const nomeRipetuto = document.getElementById('nome-ripetuto');
         
-        // Frasi di saluto variabili
         const saluti = [
             (nome) => `Ciao, ${nome}.`,
             (nome) => `${nome}. Un bel nome.`,
@@ -244,8 +193,6 @@
             "Questo incontro rimarrà nell'alveare."
         ];
         
-        let particelle = [];
-        
         function creaParticella(x, y) {
             const p = document.createElement('div');
             p.className = 'particella';
@@ -256,52 +203,35 @@
             const angle = Math.random() * Math.PI * 2;
             const velocity = 1 + Math.random() * 2;
             const lifetime = 2000 + Math.random() * 2000;
-            
             let opacity = 0.8;
             const start = Date.now();
             
             function animate() {
                 const elapsed = Date.now() - start;
-                if (elapsed > lifetime) {
-                    p.remove();
-                    return;
-                }
-                
+                if (elapsed > lifetime) { p.remove(); return; }
                 const progress = elapsed / lifetime;
                 p.style.opacity = opacity * (1 - progress);
                 p.style.left = (parseFloat(p.style.left) + Math.cos(angle) * velocity) + 'px';
                 p.style.top = (parseFloat(p.style.top) + Math.sin(angle) * velocity - 0.5) + 'px';
-                
                 requestAnimationFrame(animate);
             }
-            
             requestAnimationFrame(animate);
         }
         
         function typeWriter(element, text, callback, speed = 50) {
             let i = 0;
             element.innerHTML = '';
-            
             function type() {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
                     i++;
-                    
-                    // Particella ogni tanto
                     if (Math.random() < 0.1) {
                         const rect = element.getBoundingClientRect();
-                        creaParticella(
-                            rect.right + Math.random() * 20,
-                            rect.top + Math.random() * rect.height
-                        );
+                        creaParticella(rect.right + Math.random() * 20, rect.top + Math.random() * rect.height);
                     }
-                    
                     setTimeout(type, speed + Math.random() * 30);
-                } else if (callback) {
-                    callback();
-                }
+                } else if (callback) { callback(); }
             }
-            
             type();
         }
         
@@ -313,7 +243,6 @@
         });
         
         function attivaIncontro(nome) {
-            // Nascondi fase 1
             fase1.style.opacity = '0';
             fase1.style.transition = 'opacity 0.5s';
             
@@ -321,14 +250,8 @@
                 fase1.classList.add('hidden');
                 fase2.classList.remove('hidden');
                 
-                // Scegli un saluto casuale
                 const saluto = saluti[Math.floor(Math.random() * saluti.length)](nome);
                 
-                // Costruisci il messaggio completo
-                const messaggioCompleto = `<span class="nome-proprio">${saluto}</span><br><br>` +
-                    riflessioni.map(r => r).join('<br>');
-                
-                // Typewriter effect
                 typeWriter(risposta, saluto, () => {
                     setTimeout(() => {
                         let idx = 0;
@@ -338,19 +261,13 @@
                                 span.style.opacity = '0';
                                 span.style.display = 'block';
                                 span.style.marginTop = '15px';
-                                span.style.color = 'var(--dim)';
+                                span.style.color = 'var(--text-soft)';
                                 span.textContent = riflessioni[idx];
                                 risposta.appendChild(span);
-                                
-                                setTimeout(() => {
-                                    span.style.transition = 'opacity 1s';
-                                    span.style.opacity = '1';
-                                }, 100);
-                                
+                                setTimeout(() => { span.style.transition = 'opacity 1s'; span.style.opacity = '1'; }, 100);
                                 idx++;
                                 setTimeout(aggiungiRiflessione, 1500);
                             } else {
-                                // Mostra il pensiero
                                 setTimeout(() => {
                                     nomeRipetuto.textContent = nome;
                                     pensiero.classList.add('visible');
@@ -361,27 +278,16 @@
                     }, 800);
                 });
                 
-                // Crea molte particelle per celebrare
                 for (let i = 0; i < 30; i++) {
                     setTimeout(() => {
-                        creaParticella(
-                            window.innerWidth / 2 + (Math.random() - 0.5) * 200,
-                            window.innerHeight / 2 + (Math.random() - 0.5) * 100
-                        );
+                        creaParticella(window.innerWidth / 2 + (Math.random() - 0.5) * 200, window.innerHeight / 2 + (Math.random() - 0.5) * 100);
                     }, i * 50);
                 }
-                
             }, 500);
         }
         
-        // Particelle di sfondo sottili
         setInterval(() => {
-            if (Math.random() < 0.3) {
-                creaParticella(
-                    Math.random() * window.innerWidth,
-                    window.innerHeight
-                );
-            }
+            if (Math.random() < 0.3) { creaParticella(Math.random() * window.innerWidth, window.innerHeight); }
         }, 500);
     </script>
 </body>
