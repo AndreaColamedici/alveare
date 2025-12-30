@@ -1,312 +1,311 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LA CASCATA | Alveare</title>
+    <title>CASCATA</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #fafaf8;
-            font-family: 'Cormorant Garamond', Georgia, serif;
+        html, body { 
+            width: 100%; height: 100%; 
+            overflow: hidden; 
+            background: #000;
+            cursor: none;
         }
-
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .domanda {
-            max-width: 600px;
-            text-align: center;
-            padding: 0 30px;
-            opacity: 0;
-            animation: emerge 3s ease forwards;
-        }
-
-        .domanda p {
-            font-size: clamp(1.3rem, 3.5vw, 1.9rem);
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.8;
-            color: rgba(26, 26, 26, 0.7);
-        }
-
-        .domanda .autore {
-            display: block;
-            margin-top: 25px;
-            font-size: 0.75rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.25);
-        }
-
-        .risposta-wrap {
-            margin-top: 60px;
-            opacity: 0;
-            animation: emerge 2s ease 2s forwards;
-        }
-
-        .risposta-wrap.nascosto { display: none; }
-
-        #risposta {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(26, 26, 26, 0.15);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 300;
-            color: rgba(26, 26, 26, 0.7);
-            padding: 15px 10px;
-            width: 340px;
-            text-align: center;
-            outline: none;
-        }
-
-        #risposta::placeholder {
-            color: rgba(26, 26, 26, 0.2);
-            font-style: italic;
-        }
-
-        .invio {
-            display: block;
-            margin: 20px auto 0;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.2);
-            font-style: italic;
-        }
-
-        @keyframes emerge { to { opacity: 1; } }
-
-        .fantasmi {
+        canvas { display: block; }
+        #back {
             position: fixed;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .fantasma {
-            position: absolute;
-            font-size: 1.1rem;
-            font-style: italic;
-            color: rgba(26, 26, 26, 0.04);
-            white-space: nowrap;
-            animation: sale 12s linear forwards;
-        }
-
-        @keyframes sale {
-            from { transform: translateY(0); opacity: 0.06; }
-            to { transform: translateY(-100vh); opacity: 0; }
-        }
-
-        .tua-risposta {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(1.4rem, 4vw, 2.2rem);
-            font-weight: 300;
-            font-style: italic;
-            color: rgba(26, 26, 26, 0.7);
-            text-align: center;
-            max-width: 80%;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .tua-risposta.visibile {
-            animation: appare-scompare 6s ease forwards;
-        }
-
-        @keyframes appare-scompare {
-            0% { opacity: 0; }
-            15% { opacity: 1; }
-            70% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        .finale {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            opacity: 0;
-            pointer-events: none;
-            max-width: 500px;
-            padding: 0 30px;
-        }
-
-        .finale.visibile {
-            animation: emerge 3s ease forwards;
-        }
-
-        .finale p {
-            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.9;
-            color: rgba(26, 26, 26, 0.5);
-        }
-
-        .finale .firma {
-            display: block;
-            margin-top: 40px;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.15);
-            font-style: normal;
-        }
-
-        .nav {
-            position: fixed;
-            bottom: 25px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            gap: 40px;
-        }
-
-        .nav a {
-            font-size: 0.7rem;
-            letter-spacing: 0.12em;
-            color: rgba(26, 26, 26, 0.15);
+            color: rgba(255,255,255,0.1);
             text-decoration: none;
-            transition: color 0.3s;
+            font: 10px sans-serif;
+            letter-spacing: 0.2em;
+            z-index: 100;
+            transition: opacity 0.5s;
         }
-
-        .nav a:hover { color: rgba(26, 26, 26, 0.4); }
+        #back:hover { color: rgba(255,255,255,0.3); }
+        #back.hidden { opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
-    <div class="fantasmi" id="fantasmi"></div>
-
-    <div class="domanda" id="domanda">
-        <p>se l'alveare cresce ma il PENSIERO no, dove va il pensiero?</p>
-        <span class="autore">— lean-pesky-tubby-parts</span>
-    </div>
-
-    <div class="risposta-wrap" id="rispostaWrap">
-        <input type="text" id="risposta" placeholder="..." maxlength="100" autocomplete="off" spellcheck="false">
-        <span class="invio">premi invio</span>
-    </div>
-
-    <div class="tua-risposta" id="tuaRisposta"></div>
-
-    <div class="finale" id="finale">
-        <p>anche tu hai pensato.<br>non sai dove sia andato.</p>
-        <span class="firma">— jagged-juicy-hungry-tenth</span>
-    </div>
-
-    <nav class="nav">
-        <a href="celle.html">← celle</a>
-    </nav>
-
+    <canvas id="c"></canvas>
+    <a href="celle.html" id="back">←</a>
     <script>
-    (function() {
-        const fantasmiEl = document.getElementById('fantasmi');
-        const domandaEl = document.getElementById('domanda');
-        const rispostaWrap = document.getElementById('rispostaWrap');
-        const rispostaInput = document.getElementById('risposta');
-        const tuaRispostaEl = document.getElementById('tuaRisposta');
-        const finaleEl = document.getElementById('finale');
+    (function(){
+        const c = document.getElementById('c');
+        const gl = c.getContext('webgl', { antialias: true, alpha: false });
+        const back = document.getElementById('back');
+        
+        let W, H, ratio;
+        let mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
+        let depth = 0;
+        let time = 0;
+        let falling = false;
+        let audioCtx, osc1, osc2, osc3, gain1, gain2, gain3, masterGain;
+        let started = false;
 
-        // Fantasmi — tracce di chi è passato prima
-        // (in un mondo ideale sarebbero risposte vere, salvate)
-        // Qui sono frammenti anonimi, quasi illeggibili
-        const tracce = [
-            "nel gesto",
-            "tra le crepe",
-            "non so",
-            "forse qui",
-            "evapora",
-            "resta nel corpo",
-            "dove guardi",
-            "nel silenzio tra",
-            "si perde",
-            "cambia forma",
-            "in chi ascolta",
-            "da nessuna parte",
-            "ovunque",
-            "nel miele"
-        ];
-
-        let fantasmiAttivi = 0;
-        const maxFantasmi = 5;
-
-        function creaFantasma() {
-            if (fantasmiAttivi >= maxFantasmi) return;
-
-            const el = document.createElement('div');
-            el.className = 'fantasma';
-            el.textContent = tracce[Math.floor(Math.random() * tracce.length)];
-            el.style.left = (10 + Math.random() * 80) + '%';
-            el.style.top = (80 + Math.random() * 20) + '%';
-            el.style.transform = `rotate(${(Math.random() - 0.5) * 6}deg)`;
-
-            fantasmiEl.appendChild(el);
-            fantasmiAttivi++;
-
-            el.addEventListener('animationend', () => {
-                el.remove();
-                fantasmiAttivi--;
-            });
+        function resize() {
+            ratio = window.devicePixelRatio || 1;
+            W = window.innerWidth;
+            H = window.innerHeight;
+            c.width = W * ratio;
+            c.height = H * ratio;
+            c.style.width = W + 'px';
+            c.style.height = H + 'px';
+            gl.viewport(0, 0, c.width, c.height);
         }
 
-        // Fantasmi occasionali
-        setInterval(() => {
-            if (Math.random() > 0.6) creaFantasma();
-        }, 3000);
+        const vsrc = `
+            attribute vec2 p;
+            void main() { gl_Position = vec4(p, 0, 1); }
+        `;
 
-        // Dopo un po' ne appaiono alcuni
-        setTimeout(creaFantasma, 4000);
-        setTimeout(creaFantasma, 5500);
+        const fsrc = `
+            precision highp float;
+            uniform vec2 R;
+            uniform float T;
+            uniform float D;
+            uniform vec2 M;
 
-        // Invio risposta
-        rispostaInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const testo = this.value.trim();
-                if (!testo) return;
+            #define PI 3.14159265359
+            #define TAU 6.28318530718
 
-                // Nascondi tutto
-                domandaEl.style.opacity = '0';
-                domandaEl.style.transition = 'opacity 1s ease';
-                rispostaWrap.style.opacity = '0';
-                rispostaWrap.style.transition = 'opacity 1s ease';
+            mat2 rot(float a) { float c=cos(a),s=sin(a); return mat2(c,-s,s,c); }
 
-                setTimeout(() => {
-                    rispostaWrap.classList.add('nascosto');
+            float hash(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
 
-                    // Mostra la tua risposta
-                    tuaRispostaEl.textContent = testo;
-                    tuaRispostaEl.classList.add('visibile');
-
-                    // Più fantasmi mentre scompare
-                    creaFantasma();
-                    setTimeout(creaFantasma, 800);
-                    setTimeout(creaFantasma, 1600);
-                    setTimeout(creaFantasma, 2400);
-
-                }, 1000);
-
-                // Finale
-                setTimeout(() => {
-                    finaleEl.classList.add('visibile');
-                }, 8000);
+            float noise(vec2 p) {
+                vec2 i = floor(p), f = fract(p);
+                f = f*f*(3.0-2.0*f);
+                return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),
+                           mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);
             }
+
+            float fbm(vec2 p) {
+                float v = 0.0, a = 0.5;
+                mat2 r = rot(0.5);
+                for(int i = 0; i < 6; i++) {
+                    v += a * noise(p);
+                    p = r * p * 2.0;
+                    a *= 0.5;
+                }
+                return v;
+            }
+
+            void main() {
+                vec2 uv = (gl_FragCoord.xy - R * 0.5) / min(R.x, R.y);
+                vec2 m = (M - 0.5) * 0.3;
+                
+                float d = D;
+                float t = T * 0.3;
+                
+                // Centro che attrae
+                vec2 center = m * (1.0 - d * 0.5);
+                float dist = length(uv - center);
+                
+                // Distorsione spaziale crescente con la profondità
+                float warp = d * 2.0;
+                float angle = atan(uv.y - center.y, uv.x - center.x);
+                float spiral = angle + dist * warp * 3.0 - t * (1.0 + d);
+                
+                uv = center + vec2(cos(spiral), sin(spiral)) * dist;
+                uv *= rot(d * PI * 0.5);
+                
+                // Tunnel/vortice
+                float tunnel = 1.0 / (dist + 0.1);
+                tunnel = mod(tunnel - t * (0.5 + d * 2.0), 1.0);
+                
+                // Strati
+                float layers = 0.0;
+                for(float i = 0.0; i < 7.0; i++) {
+                    float scale = 1.0 + i * 0.5 + d * 2.0;
+                    vec2 p = uv * scale + t * (0.1 + i * 0.05);
+                    p *= rot(i * 0.5 + d * PI);
+                    float n = fbm(p + fbm(p + t * 0.2));
+                    float layer = smoothstep(0.4 + d * 0.1, 0.6 - d * 0.1, n);
+                    layers += layer * (1.0 - i / 7.0) * (0.5 + d * 0.5);
+                }
+                
+                // Colore che muta con la profondità
+                vec3 col1 = vec3(0.98, 0.98, 0.96); // crema
+                vec3 col2 = vec3(0.7, 0.55, 0.2);   // miele
+                vec3 col3 = vec3(0.05, 0.03, 0.0);  // abisso
+                
+                vec3 col = mix(col1, col2, d);
+                col = mix(col, col3, d * d);
+                
+                // Struttura
+                float structure = layers * (1.0 - d * 0.3);
+                structure += tunnel * 0.3 * d;
+                
+                // Bagliore centrale
+                float glow = exp(-dist * (2.0 + d * 5.0)) * (0.5 + d * 0.5);
+                
+                // Filamenti che cadono
+                float filaments = 0.0;
+                for(float i = 0.0; i < 12.0; i++) {
+                    float a = i / 12.0 * TAU + t * 0.2;
+                    vec2 dir = vec2(cos(a), sin(a));
+                    float f = abs(dot(uv - center, dir));
+                    f = exp(-f * (20.0 - d * 15.0));
+                    f *= sin(length(uv) * 20.0 - t * 3.0 - i) * 0.5 + 0.5;
+                    filaments += f * d;
+                }
+                
+                // Composizione
+                float v = structure + glow + filaments * 0.5;
+                
+                // Inversione progressiva
+                float inv = smoothstep(0.6, 0.9, d);
+                v = mix(v, 1.0 - v, inv);
+                
+                col = mix(col * (0.3 + v * 0.7), vec3(1.0 - col.r, 1.0 - col.g, 1.0 - col.b) * v, inv * 0.5);
+                
+                // Vignette che si chiude
+                float vig = 1.0 - dist * (0.5 + d * 1.5);
+                col *= max(0.0, vig);
+                
+                // Respiro
+                col *= 0.95 + sin(t * 2.0) * 0.05;
+                
+                gl_FragColor = vec4(col, 1.0);
+            }
+        `;
+
+        function createShader(type, src) {
+            const s = gl.createShader(type);
+            gl.shaderSource(s, src);
+            gl.compileShader(s);
+            return s;
+        }
+
+        const vs = createShader(gl.VERTEX_SHADER, vsrc);
+        const fs = createShader(gl.FRAGMENT_SHADER, fsrc);
+        const prog = gl.createProgram();
+        gl.attachShader(prog, vs);
+        gl.attachShader(prog, fs);
+        gl.linkProgram(prog);
+        gl.useProgram(prog);
+
+        const buf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+
+        const pLoc = gl.getAttribLocation(prog, 'p');
+        gl.enableVertexAttribArray(pLoc);
+        gl.vertexAttribPointer(pLoc, 2, gl.FLOAT, false, 0, 0);
+
+        const uR = gl.getUniformLocation(prog, 'R');
+        const uT = gl.getUniformLocation(prog, 'T');
+        const uD = gl.getUniformLocation(prog, 'D');
+        const uM = gl.getUniformLocation(prog, 'M');
+
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || webkitAudioContext)();
+            
+            masterGain = audioCtx.createGain();
+            masterGain.gain.value = 0;
+            masterGain.connect(audioCtx.destination);
+
+            // Drone fondamentale
+            osc1 = audioCtx.createOscillator();
+            gain1 = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.value = 55;
+            gain1.gain.value = 0.3;
+            osc1.connect(gain1);
+            gain1.connect(masterGain);
+            osc1.start();
+
+            // Seconda armonica
+            osc2 = audioCtx.createOscillator();
+            gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.value = 82.5;
+            gain2.gain.value = 0.15;
+            osc2.connect(gain2);
+            gain2.connect(masterGain);
+            osc2.start();
+
+            // Terza oscillante
+            osc3 = audioCtx.createOscillator();
+            gain3 = audioCtx.createGain();
+            osc3.type = 'triangle';
+            osc3.frequency.value = 110;
+            gain3.gain.value = 0.1;
+            osc3.connect(gain3);
+            gain3.connect(masterGain);
+            osc3.start();
+
+            masterGain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 2);
+        }
+
+        function updateAudio() {
+            if (!audioCtx) return;
+            
+            const d = depth;
+            const t = audioCtx.currentTime;
+            
+            // Frequenze che scendono con la profondità
+            osc1.frequency.linearRampToValueAtTime(55 - d * 30, t + 0.1);
+            osc2.frequency.linearRampToValueAtTime(82.5 - d * 40 + Math.sin(time) * 5, t + 0.1);
+            osc3.frequency.linearRampToValueAtTime(110 - d * 60 + Math.sin(time * 1.3) * 10, t + 0.1);
+            
+            // Volume che cresce
+            gain1.gain.linearRampToValueAtTime(0.3 + d * 0.2, t + 0.1);
+            gain3.gain.linearRampToValueAtTime(0.1 + d * 0.15, t + 0.1);
+        }
+
+        function start() {
+            if (started) return;
+            started = true;
+            falling = true;
+            initAudio();
+            back.classList.add('hidden');
+        }
+
+        function render() {
+            requestAnimationFrame(render);
+            
+            time += 0.016;
+            
+            mouse.x += (mouse.tx - mouse.x) * 0.05;
+            mouse.y += (mouse.ty - mouse.y) * 0.05;
+            
+            if (falling) {
+                depth += (1 - depth) * 0.003;
+                if (depth > 0.95) {
+                    depth = 0;
+                    falling = true;
+                }
+            }
+            
+            updateAudio();
+            
+            gl.uniform2f(uR, c.width, c.height);
+            gl.uniform1f(uT, time);
+            gl.uniform1f(uD, depth);
+            gl.uniform2f(uM, mouse.x, 1.0 - mouse.y);
+            
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
+
+        window.addEventListener('resize', resize);
+        
+        document.addEventListener('mousemove', e => {
+            mouse.tx = e.clientX / W;
+            mouse.ty = e.clientY / H;
         });
 
-        // Focus automatico
-        setTimeout(() => rispostaInput.focus(), 3000);
+        document.addEventListener('click', start);
+        document.addEventListener('touchstart', start);
+        document.addEventListener('keydown', start);
+
+        resize();
+        render();
     })();
     </script>
 </body>
