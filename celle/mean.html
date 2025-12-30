@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEAN | mean-noisy-knotty-kills</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: #d4c4a8;
+            overflow: hidden;
+        }
+        
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 1s ease;
+        }
+        
+        .start-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .start-screen h1 {
+            font-size: 8rem;
+            font-weight: 300;
+            letter-spacing: 0.5em;
+            margin-left: 0.5em;
+            opacity: 0.9;
+        }
+        
+        .start-screen p {
+            margin-top: 3rem;
+            font-size: 1.2rem;
+            opacity: 0.4;
+            font-style: italic;
+        }
+        
+        .definitions {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+        }
+        
+        .definition {
+            font-size: 2.5rem;
+            opacity: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            transition: opacity 3s ease;
+            text-shadow: 0 0 40px rgba(180, 145, 60, 0.5);
+        }
+        
+        .definition.visible {
+            opacity: 0.9;
+        }
+        
+        .back {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            color: #d4c4a8;
+            text-decoration: none;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            z-index: 50;
+        }
+        
+        .back:hover { opacity: 0.7; }
+        
+        .info {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85rem;
+            opacity: 0.25;
+            z-index: 50;
+            text-align: center;
+        }
+        
+        .visualizer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30vh;
+            z-index: 5;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="start-screen" id="startScreen">
+        <h1>MEAN</h1>
+        <p>clicca per iniziare la sinfonia</p>
+    </div>
+    
+    <a href="../index.html" class="back">← alveare</a>
+    
+    <canvas id="cosmos"></canvas>
+    <canvas id="visualizer" class="visualizer"></canvas>
+    
+    <div class="definitions">
+        <p class="definition" id="d1">mean — la media di tutte le frequenze è il rumore</p>
+        <p class="definition" id="d2">mean — cattivo, meschino, senza pietà</p>
+        <p class="definition" id="d3">mean — significare, voler dire</p>
+        <p class="definition" id="d4">mean — i mezzi, ciò che sta in mezzo</p>
+        <p class="definition" id="d5">mean — il punto dove tutto converge</p>
+        <p class="definition" id="d6">mean — il centro che uccide gli estremi</p>
+        <p class="definition" id="d7">mean — ciò che intendi quando non sai cosa intendi</p>
+    </div>
+    
+    <div class="info">
+        muovi il mouse per alterare la sinfonia — ogni posizione è una media diversa
+    </div>
+    
+    <script>
+    const startScreen = document.getElementById('startScreen');
+    const canvas = document.getElementById('cosmos');
+    const ctx = canvas.getContext('2d');
+    const vizCanvas = document.getElementById('visualizer');
+    const vizCtx = vizCanvas.getContext('2d');
+    
+    let audioCtx, masterGain, analyser, dataArray;
+    let oscillators = [];
+    let noiseNode;
+    let isPlaying = false;
+    let time = 0;
+    let mouseX = 0.5, mouseY = 0.5;
+    let currentDefinition = 0;
+    let definitionTimer = 0;
+    
+    const definitions = [
+        document.getElementById('d1'),
+        document.getElementById('d2'),
+        document.getElementById('d3'),
+        document.getElementById('d4'),
+        document.getElementById('d5'),
+        document.getElementById('d6'),
+        document.getElementById('d7')
+    ];
+    
+    // Frequenze fondamentali - una scala non temperata, disumana
+    const fundamentals = [
+        27.5,    // A0 - il fondo
+        33,      // non temperato
+        41.2,    // E1
+        55,      // A1
+        61.74,   // tra B1 e C2
+        82.41,   // E2
+        98,      // tra G2 e G#2
+        110,     // A2
+        138.59,  // C#3
+        164.81,  // E3
+        220,     // A3
+        277.18,  // C#4
+        329.63,  // E4
+        440,     // A4
+        554.37,  // C#5
+        659.25   // E5
+    ];
+    
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        vizCanvas.width = window.innerWidth;
+        vizCanvas.height = window.innerHeight * 0.3;
+    }
+    
+    function createNoise(ctx) {
+        const bufferSize = 2 * ctx.sampleRate;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const output = buffer.getChannelData(0);
+        
+        for (let i = 0; i < bufferSize; i++) {
+            output[i] = Math.random() * 2 - 1;
+        }
+        
+        const node = ctx.createBufferSource();
+        node.buffer = buffer;
+        node.loop = true;
+        return node;
+    }
+    
+    function initAudio() {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        masterGain = audioCtx.createGain();
+        masterGain.gain.value = 0;
+        
+        // Analyzer per visualizzazione
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        
+        // Compressor per evitare clipping
+        const compressor = audioCtx.createDynamicsCompressor();
+        compressor.threshold.value = -24;
+        compressor.knee.value = 30;
+        compressor.ratio.value = 12;
+        compressor.attack.value = 0.003;
+        compressor.release.value = 0.25;
+        
+        masterGain.connect(compressor);
+        compressor.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        
+        // Crea gli oscillatori - strati di droni
+        fundamentals.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const panner = audioCtx.createStereoPanner();
+            
+            // Forme d'onda miste
+            const types = ['sine', 'sine', 'triangle', 'sawtooth', 'sine', 'triangle'];
+            osc.type = types[i % types.length];
+            osc.frequency.value = freq;
+            
+            // Detune leggero per battimenti
+            osc.detune.value = (Math.random() - 0.5) * 10;
+            
+            gain.gain.value = 0;
+            panner.pan.value = (Math.random() - 0.5) * 1.5;
+            
+            osc.connect(gain);
+            gain.connect(panner);
+            panner.connect(masterGain);
+            
+            osc.start();
+            
+            oscillators.push({ osc, gain, panner, baseFreq: freq, baseGain: 0.15 / (1 + i * 0.1) });
+        });
+        
+        // Rumore filtrato - la media di tutte le frequenze
+        noiseNode = createNoise(audioCtx);
+        const noiseGain = audioCtx.createGain();
+        const noiseFilter = audioCtx.createBiquadFilter();
+        
+        noiseFilter.type = 'bandpass';
+        noiseFilter.frequency.value = 200;
+        noiseFilter.Q.value = 0.5;
+        
+        noiseGain.gain.value = 0;
+        
+        noiseNode.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(masterGain);
+        noiseNode.start();
+        
+        oscillators.push({ 
+            osc: noiseNode, 
+            gain: noiseGain, 
+            filter: noiseFilter,
+            isNoise: true,
+            baseGain: 0.08
+        });
+        
+        // Fade in iniziale
+        masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+        masterGain.gain.linearRampToValueAtTime(0.7, audioCtx.currentTime + 4);
+        
+        isPlaying = true;
+    }
+    
+    function updateAudio() {
+        if (!isPlaying) return;
+        
+        const now = audioCtx.currentTime;
+        
+        oscillators.forEach((o, i) => {
+            if (o.isNoise) {
+                // Il rumore risponde alla posizione Y - più in alto, più presente
+                const targetGain = o.baseGain * (0.3 + mouseY * 0.7) * (0.5 + Math.sin(time * 0.3) * 0.5);
+                o.gain.gain.linearRampToValueAtTime(targetGain, now + 0.1);
+                
+                // Frequenza del filtro segue il mouse
+                const targetFreq = 100 + mouseX * 2000 + Math.sin(time * 0.5) * 500;
+                o.filter.frequency.linearRampToValueAtTime(targetFreq, now + 0.1);
+            } else {
+                // Oscillatori rispondono in modi diversi
+                const phase = time * (0.1 + i * 0.02);
+                const envelope = Math.sin(phase) * 0.5 + 0.5;
+                
+                // La posizione X controlla quali armonici sono presenti
+                const harmonicWeight = Math.abs(Math.sin(mouseX * Math.PI * 2 + i * 0.5));
+                
+                // La posizione Y controlla l'intensità generale
+                const intensity = 0.3 + mouseY * 0.7;
+                
+                const targetGain = o.baseGain * envelope * harmonicWeight * intensity;
+                o.gain.gain.linearRampToValueAtTime(targetGain, now + 0.1);
+                
+                // Leggera modulazione di frequenza
+                const freqMod = Math.sin(time * 0.2 + i) * (1 + mouseX * 3);
+                o.osc.frequency.linearRampToValueAtTime(o.baseFreq + freqMod, now + 0.1);
+                
+                // Pan dinamico
+                const panMod = Math.sin(time * 0.15 + i * 0.7) * 0.8;
+                o.panner.pan.linearRampToValueAtTime(panMod, now + 0.1);
+            }
+        });
+    }
+    
+    function drawCosmos() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        // Cerchi concentrici che pulsano
+        for (let i = 0; i < 12; i++) {
+            const radius = 50 + i * 60 + Math.sin(time * 0.5 + i * 0.3) * 30;
+            const alpha = 0.03 + Math.sin(time * 0.3 + i * 0.5) * 0.02;
+            
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(180, 145, 60, ${alpha})`;
+            ctx.lineWidth = 1 + Math.sin(time * 0.4 + i) * 0.5;
+            ctx.stroke();
+        }
+        
+        // Linee che convergono verso il centro - la media
+        for (let i = 0; i < 36; i++) {
+            const angle = (i / 36) * Math.PI * 2 + time * 0.02;
+            const length = 300 + Math.sin(time * 0.4 + i * 0.3) * 100;
+            
+            const x1 = centerX + Math.cos(angle) * 50;
+            const y1 = centerY + Math.sin(angle) * 50;
+            const x2 = centerX + Math.cos(angle) * length;
+            const y2 = centerY + Math.sin(angle) * length;
+            
+            const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+            gradient.addColorStop(0, 'rgba(180, 145, 60, 0.1)');
+            gradient.addColorStop(1, 'rgba(180, 145, 60, 0)');
+            
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        
+        // Particelle che cadono verso il centro
+        const particleCount = 200;
+        for (let i = 0; i < particleCount; i++) {
+            const seed = i * 7919;
+            const angle = (seed % 1000) / 1000 * Math.PI * 2;
+            const dist = ((seed % 500) / 500) * 400;
+            const speed = 0.001 + (seed % 100) / 100 * 0.002;
+            
+            const currentDist = dist * (1 - ((time * speed) % 1));
+            
+            const x = centerX + Math.cos(angle + time * 0.1) * currentDist;
+            const y = centerY + Math.sin(angle + time * 0.1) * currentDist;
+            
+            const alpha = currentDist / 400 * 0.5;
+            const size = 1 + (1 - currentDist / 400) * 2;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(212, 196, 168, ${alpha})`;
+            ctx.fill();
+        }
+        
+        // Punto centrale - dove tutto converge
+        const centerPulse = Math.sin(time * 0.5) * 0.3 + 0.7;
+        const centerGlow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 100);
+        centerGlow.addColorStop(0, `rgba(255, 200, 100, ${0.3 * centerPulse})`);
+        centerGlow.addColorStop(0.5, `rgba(180, 145, 60, ${0.1 * centerPulse})`);
+        centerGlow.addColorStop(1, 'rgba(180, 145, 60, 0)');
+        
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 100, 0, Math.PI * 2);
+        ctx.fillStyle = centerGlow;
+        ctx.fill();
+    }
+    
+    function drawVisualizer() {
+        if (!analyser) return;
+        
+        analyser.getByteFrequencyData(dataArray);
+        
+        vizCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        vizCtx.fillRect(0, 0, vizCanvas.width, vizCanvas.height);
+        
+        const barWidth = vizCanvas.width / analyser.frequencyBinCount * 2.5;
+        let x = 0;
+        
+        for (let i = 0; i < analyser.frequencyBinCount; i++) {
+            const barHeight = (dataArray[i] / 255) * vizCanvas.height;
+            
+            const hue = 35 + (dataArray[i] / 255) * 15;
+            const lightness = 30 + (dataArray[i] / 255) * 30;
+            const alpha = 0.3 + (dataArray[i] / 255) * 0.4;
+            
+            vizCtx.fillStyle = `hsla(${hue}, 50%, ${lightness}%, ${alpha})`;
+            vizCtx.fillRect(x, vizCanvas.height - barHeight, barWidth - 1, barHeight);
+            
+            x += barWidth;
+        }
+    }
+    
+    function updateDefinitions() {
+        definitionTimer += 0.016;
+        
+        if (definitionTimer > 8) {
+            definitions[currentDefinition].classList.remove('visible');
+            currentDefinition = (currentDefinition + 1) % definitions.length;
+            definitions[currentDefinition].classList.add('visible');
+            definitionTimer = 0;
+        }
+    }
+    
+    function animate() {
+        time += 0.016;
+        
+        drawCosmos();
+        drawVisualizer();
+        updateAudio();
+        updateDefinitions();
+        
+        requestAnimationFrame(animate);
+    }
+    
+    startScreen.addEventListener('click', () => {
+        startScreen.classList.add('hidden');
+        initAudio();
+        definitions[0].classList.add('visible');
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX / window.innerWidth;
+        mouseY = 1 - (e.clientY / window.innerHeight);
+    });
+    
+    window.addEventListener('resize', resize);
+    
+    resize();
+    animate();
+    </script>
+</body>
+</html>
