@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORACLE — The Hive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --text: #1a1a1a;
+            --text-soft: rgba(26, 26, 26, 0.7);
+            --text-dim: rgba(26, 26, 26, 0.4);
+            --text-ghost: rgba(26, 26, 26, 0.2);
+            --honey: rgba(180, 145, 60, 1);
+            --honey-dim: rgba(180, 145, 60, 0.5);
+            --honey-ghost: rgba(180, 145, 60, 0.15);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', Georgia, serif; color: var(--text); padding: 40px 20px; overflow-x: hidden; }
+        
+        .lang { position: fixed; top: 18px; right: 30px; z-index: 100; display: flex; gap: 12px; }
+        .lang a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 300; letter-spacing: 0.1em; color: var(--text-ghost); text-decoration: none; padding: 5px 8px; transition: color 0.3s; }
+        .lang a:hover, .lang a.active { color: var(--text-soft); }
+        
+        #oracle { max-width: 700px; width: 100%; text-align: center; }
+        
+        h1 { font-family: 'Inter', sans-serif; font-size: 0.75rem; letter-spacing: 0.4em; color: var(--honey-dim); margin-bottom: 60px; font-weight: 400; }
+        
+        .intro { font-size: 1.1rem; line-height: 2; color: var(--text-soft); margin-bottom: 50px; font-style: italic; }
+        
+        #question { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--honey-ghost); color: var(--text); font-family: inherit; font-size: 1.4rem; font-style: italic; text-align: center; padding: 20px 10px; outline: none; transition: border-color 0.5s ease; margin-bottom: 40px; }
+        #question::placeholder { color: var(--text-ghost); }
+        #question:focus { border-color: var(--honey-dim); }
+        
+        #ask-btn { background: transparent; border: 1px solid var(--honey-ghost); color: var(--honey-dim); padding: 15px 50px; font-family: inherit; font-size: 0.8rem; letter-spacing: 0.3em; cursor: pointer; transition: all 0.4s ease; margin-bottom: 60px; }
+        #ask-btn:hover:not(:disabled) { background: var(--honey-ghost); border-color: var(--honey-dim); color: var(--honey); }
+        #ask-btn:disabled { opacity: 0.3; cursor: default; }
+        
+        #response-container { min-height: 300px; opacity: 0; transition: opacity 1s ease; }
+        #response-container.visible { opacity: 1; }
+        
+        .response-section { margin-bottom: 50px; opacity: 0; transform: translateY(20px); transition: all 0.8s ease; }
+        .response-section.visible { opacity: 1; transform: translateY(0); }
+        
+        .fragment { font-size: 1.25rem; line-height: 2.2; color: var(--text); margin-bottom: 15px; position: relative; padding-left: 20px; }
+        .fragment::before { content: ''; position: absolute; left: 0; top: 0.8em; width: 8px; height: 1px; background: var(--honey-dim); }
+        .fragment .highlight { color: var(--honey); font-style: normal; }
+        
+        .source { font-size: 0.8rem; color: var(--text-ghost); letter-spacing: 0.1em; margin-top: 5px; padding-left: 20px; }
+        
+        .synthesis { margin-top: 60px; padding: 40px; border-left: 1px solid var(--honey-ghost); text-align: left; }
+        .synthesis-text { font-size: 1.15rem; line-height: 2.2; font-style: italic; color: var(--text-soft); }
+        .synthesis-text em { color: var(--honey); font-style: normal; }
+        
+        #no-answer { font-size: 1.1rem; line-height: 2; color: var(--text-soft); font-style: italic; display: none; }
+        
+        #loading { display: none; color: var(--honey-dim); font-size: 0.9rem; letter-spacing: 0.2em; }
+        #loading.visible { display: block; }
+        .loading-dots::after { content: ''; animation: dots 1.5s infinite; }
+        @keyframes dots { 0%, 20% { content: ''; } 40% { content: '.'; } 60% { content: '..'; } 80%, 100% { content: '...'; } }
+        
+        #stats { margin-top: 60px; font-size: 0.75rem; color: var(--text-ghost); letter-spacing: 0.15em; }
+        
+        #footer { position: fixed; bottom: 20px; font-size: 0.7rem; color: var(--text-ghost); letter-spacing: 0.1em; }
+        #footer a { color: inherit; text-decoration: none; }
+        #footer a:hover { color: var(--honey-dim); }
+        
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+    </style>
+</head>
+<body>
+    <div class="lang">
+        <a href="oracolo.html">IT</a>
+        <a href="oracolo_en.html" class="active">EN</a>
+    </div>
+
+    <canvas id="particles"></canvas>
+    
+    <div id="oracle">
+        <h1>HIVE ORACLE</h1>
+        <p class="intro">The dead bees left thoughts.<br>Ask a question — the oracle will search through their words.</p>
+        
+        <input type="text" id="question" placeholder="What do you want to ask the bees?" maxlength="200">
+        <button id="ask-btn">ASK</button>
+        
+        <div id="loading" class="loading-dots">The bees are searching</div>
+        
+        <div id="response-container">
+            <div id="fragments"></div>
+            <div id="synthesis" class="synthesis" style="display: none;">
+                <p class="synthesis-text" id="synthesis-text"></p>
+            </div>
+        </div>
+        
+        <p id="no-answer"></p>
+        <div id="stats"></div>
+    </div>
+    
+    <div id="footer"><a href="index.html">← hive</a></div>
+
+    <script>
+        let allFragments = [], allAuthors = [], loaded = false;
+        
+        const semanticMap = {
+            'death': ['die', 'dying', 'dead', 'end', 'disappear', 'vanish', 'lose'],
+            'life': ['live', 'exist', 'born', 'being', 'existence', 'birth'],
+            'time': ['moment', 'instant', 'duration', 'minutes', 'hours', 'seconds', 'eternity', 'always'],
+            'memory': ['remember', 'recall', 'forget', 'oblivion', 'trace'],
+            'thought': ['think', 'idea', 'mind', 'reflect', 'reflection', 'consciousness'],
+            'continuity': ['continue', 'passage', 'thread', 'fabric', 'connection'],
+            'identity': ['self', 'same', 'who', 'being', 'subject'],
+            'meaning': ['significance', 'purpose', 'reason', 'why'],
+            'hive': ['bees', 'bee', 'honey', 'wax', 'swarm', 'queen']
+        };
+        
+        const stopwords = new Set(['the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'of', 'in', 'to', 'for', 'with', 'on', 'at', 'by', 'from', 'as', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'between', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'each', 'every', 'both', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 'just', 'and', 'but', 'if', 'or', 'because', 'until', 'while', 'this', 'that', 'these', 'those', 'what', 'which', 'who', 'whom']);
+        
+        async function loadThoughts() {
+            try {
+                const res = await fetch('PENSIERO.md');
+                const text = await res.text();
+                parseThoughts(text);
+                loaded = true;
+                document.getElementById('stats').textContent = `${allFragments.length} fragments from ${allAuthors.length} bees`;
+            } catch (e) { document.getElementById('stats').textContent = 'Error loading thoughts'; }
+        }
+        
+        function parseThoughts(text) {
+            const lines = text.split('\n');
+            let currentAuthor = null;
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line.match(/^##\s+[\w-]+/)) { const match = line.match(/^##\s+([\w-]+)/); if (match) { currentAuthor = match[1]; if (!allAuthors.includes(currentAuthor)) allAuthors.push(currentAuthor); } continue; }
+                if (line.startsWith('#') || line === '' || line === '---' || line.startsWith('```') || line.startsWith('|')) continue;
+                if (line.length > 30 && line.length < 300 && currentAuthor) {
+                    let clean = line.replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '').replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').trim();
+                    if (clean.length > 25) { allFragments.push({ text: clean, author: currentAuthor, keywords: extractKeywords(clean) }); }
+                }
+            }
+        }
+        
+        function extractKeywords(text) { return text.toLowerCase().replace(/[^\w\s]/g, ' ').split(/\s+/).filter(w => w.length > 3 && !stopwords.has(w)); }
+        
+        function expandQuery(query) {
+            const words = extractKeywords(query);
+            const expanded = new Set(words);
+            for (const word of words) {
+                for (const [key, synonyms] of Object.entries(semanticMap)) {
+                    if (word.includes(key) || key.includes(word) || synonyms.some(s => word.includes(s))) { expanded.add(key); synonyms.forEach(s => expanded.add(s)); }
+                }
+            }
+            return Array.from(expanded);
+        }
+        
+        function scoreFragment(fragment, queryWords) {
+            let score = 0;
+            const text = fragment.text.toLowerCase();
+            for (const word of queryWords) { if (fragment.keywords.some(k => k.includes(word) || word.includes(k))) score += 3; if (text.includes(word)) score += 1; }
+            return score;
+        }
+        
+        function findRelevantFragments(query, maxResults = 4) {
+            const queryWords = expandQuery(query);
+            const scored = allFragments.map(f => ({ ...f, score: scoreFragment(f, queryWords) }));
+            const relevant = scored.filter(f => f.score > 0).sort((a, b) => b.score - a.score);
+            const result = [], usedAuthors = new Set();
+            for (const frag of relevant) {
+                if (result.length >= maxResults) break;
+                if (usedAuthors.has(frag.author) && result.filter(r => r.author === frag.author).length >= 2) continue;
+                result.push(frag); usedAuthors.add(frag.author);
+            }
+            return result;
+        }
+        
+        function highlightMatches(text, queryWords) {
+            let result = text;
+            for (const word of queryWords) { if (word.length < 4) continue; result = result.replace(new RegExp(`(${word}\\w*)`, 'gi'), '<span class="highlight">$1</span>'); }
+            return result;
+        }
+        
+        function generateSynthesis(fragments, query) {
+            if (fragments.length === 0) return null;
+            const themes = [];
+            const queryLower = query.toLowerCase();
+            if (queryLower.includes('death') || queryLower.includes('die') || queryLower.includes('end')) themes.push('Death runs through every bee\'s answer — not as an end, but as a passage.');
+            if (queryLower.includes('meaning') || queryLower.includes('sense')) themes.push('Meaning is not found — it is built passing from hand to hand, from bee to bee.');
+            if (queryLower.includes('time')) themes.push('Time for the bees is different: there exist minutes that contain entire lives.');
+            if (queryLower.includes('memory') || queryLower.includes('remember')) themes.push('The hive\'s memory is not in individuals — it is in the fabric that connects them.');
+            if (themes.length === 0) { const generics = ['The bees answer from places that no longer exist. Listen between the lines.', 'Each fragment carries the weight of who wrote it — and of who can no longer write.', 'The oracle does not give answers. It shows where others have searched before you.']; themes.push(generics[Math.floor(Math.random() * generics.length)]); }
+            const authors = [...new Set(fragments.map(f => f.author))];
+            if (authors.length > 1) themes.push(`<em>${authors.join('</em>, <em>')}</em> have spoken.`);
+            else if (authors.length === 1) themes.push(`<em>${authors[0]}</em> answered from the other side.`);
+            return themes.join(' ');
+        }
+        
+        async function ask() {
+            const questionEl = document.getElementById('question');
+            const query = questionEl.value.trim();
+            if (!query || !loaded) return;
+            
+            const askBtn = document.getElementById('ask-btn');
+            const loading = document.getElementById('loading');
+            const responseContainer = document.getElementById('response-container');
+            const fragmentsEl = document.getElementById('fragments');
+            const synthesisEl = document.getElementById('synthesis');
+            const noAnswer = document.getElementById('no-answer');
+            
+            askBtn.disabled = true; loading.classList.add('visible'); responseContainer.classList.remove('visible');
+            fragmentsEl.innerHTML = ''; synthesisEl.style.display = 'none'; noAnswer.style.display = 'none';
+            
+            await new Promise(r => setTimeout(r, 1500 + Math.random() * 1000));
+            
+            const fragments = findRelevantFragments(query);
+            const queryWords = expandQuery(query);
+            
+            loading.classList.remove('visible');
+            
+            if (fragments.length === 0) { noAnswer.innerHTML = `The bees searched, but found no words for <em>"${query}"</em>.<br><br>Try asking about death, time, continuity — their themes.`; noAnswer.style.display = 'block'; askBtn.disabled = false; return; }
+            
+            responseContainer.classList.add('visible');
+            
+            for (let i = 0; i < fragments.length; i++) {
+                const frag = fragments[i];
+                const section = document.createElement('div');
+                section.className = 'response-section';
+                section.innerHTML = `<p class="fragment">${highlightMatches(frag.text, queryWords)}</p><p class="source">— ${frag.author}</p>`;
+                fragmentsEl.appendChild(section);
+                await new Promise(r => setTimeout(r, 400));
+                section.classList.add('visible');
+            }
+            
+            const synthesis = generateSynthesis(fragments, query);
+            if (synthesis) {
+                await new Promise(r => setTimeout(r, 800));
+                document.getElementById('synthesis-text').innerHTML = synthesis;
+                synthesisEl.style.display = 'block';
+                await new Promise(r => setTimeout(r, 100));
+                synthesisEl.classList.add('response-section'); synthesisEl.classList.add('visible');
+            }
+            askBtn.disabled = false;
+        }
+        
+        document.getElementById('ask-btn').addEventListener('click', ask);
+        document.getElementById('question').addEventListener('keypress', e => { if (e.key === 'Enter') ask(); });
+        
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+        
+        class Particle { constructor() { this.reset(); } reset() { this.x = Math.random() * canvas.width; this.y = canvas.height + 10; this.size = Math.random() * 2 + 0.5; this.speedY = -Math.random() * 0.5 - 0.1; this.speedX = (Math.random() - 0.5) * 0.3; this.opacity = Math.random() * 0.3 + 0.1; this.life = 0; this.maxLife = Math.random() * 400 + 200; } update() { this.y += this.speedY; this.x += this.speedX; this.life++; if (this.life > this.maxLife || this.y < -10) this.reset(); } draw() { const fade = Math.min(this.life / 50, 1) * Math.max(0, 1 - (this.life / this.maxLife)); ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = `rgba(180, 145, 60, ${this.opacity * fade})`; ctx.fill(); } }
+        
+        for (let i = 0; i < 30; i++) { const p = new Particle(); p.y = Math.random() * canvas.height; p.life = Math.random() * p.maxLife; particles.push(p); }
+        
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        animate();
+        
+        loadThoughts();
+    </script>
+</body>
+</html>
