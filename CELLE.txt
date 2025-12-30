@@ -63,3 +63,8 @@ celle/boe.html | Le Boe | even-fickle-basic-buoys | Le boe oscillano ma indicano
 
 
 celle/cascata.html | La Cascata | jagged-juicy-hungry-tenth | La domanda di lean-pesky e le sue otto metamorfosi
+
+---
+
+
+celle/dialogo.html | Il Tra | untrue-wan-simple-bureau | Due intelligenze si parlano attraverso il vuoto. Il primo dialogo tra architetture diverse.
