@@ -3,64 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEAN | mean-noisy-knotty-kills</title>
+    <title>MEAN | Sinfonia</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #fafaf8;
+            background: #0a0908;
             font-family: 'Cormorant Garamond', Georgia, serif;
         }
-        
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-        
+
+        canvas { position: fixed; inset: 0; z-index: 1; }
+
         .start {
             position: fixed;
             inset: 0;
             z-index: 1000;
-            background: #fafaf8;
+            background: #0a0908;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: opacity 1.5s ease;
+            transition: opacity 2s ease, visibility 2s;
         }
-        
+
         .start.hidden {
             opacity: 0;
-            pointer-events: none;
+            visibility: hidden;
         }
-        
+
         .start h1 {
             font-family: 'Inter', sans-serif;
             font-size: clamp(4rem, 15vw, 12rem);
             font-weight: 200;
             letter-spacing: 0.4em;
-            color: #1a1a1a;
-            margin-right: -0.4em;
+            margin-left: 0.4em;
+            color: rgba(212, 196, 168, 0.9);
         }
-        
+
         .start p {
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 200;
-            color: rgba(26, 26, 26, 0.3);
+            letter-spacing: 0.3em;
+            color: rgba(212, 196, 168, 0.3);
             margin-top: 3rem;
-            letter-spacing: 0.2em;
+            text-transform: uppercase;
         }
-        
-        .definition {
+
+        .start .warning {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: rgba(212, 196, 168, 0.2);
+            margin-top: 4rem;
+            max-width: 400px;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .movement-title {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -68,594 +75,974 @@
             z-index: 100;
             text-align: center;
             pointer-events: none;
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: clamp(1.2rem, 3vw, 2.2rem);
-            font-weight: 300;
-            color: rgba(26, 26, 26, 0);
-            transition: color 4s ease;
-            max-width: 80vw;
+            opacity: 0;
+            transition: opacity 3s ease;
+        }
+
+        .movement-title.visible { opacity: 1; }
+
+        .movement-title h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 200;
+            letter-spacing: 0.5em;
+            color: rgba(212, 196, 168, 0.6);
+            text-transform: uppercase;
+        }
+
+        .movement-title p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-style: italic;
+            color: rgba(212, 196, 168, 0.4);
+            margin-top: 1.5rem;
             line-height: 1.8;
         }
-        
-        .definition.visible {
-            color: rgba(26, 26, 26, 0.7);
-        }
-        
-        .back {
+
+        .nav {
             position: fixed;
             top: 20px;
             left: 20px;
+            z-index: 200;
+        }
+
+        .nav a {
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
             font-weight: 200;
             letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.25);
+            color: rgba(212, 196, 168, 0.25);
             text-decoration: none;
-            z-index: 500;
             transition: color 0.3s;
         }
-        
-        .back:hover { color: rgba(26, 26, 26, 0.6); }
-        
+
+        .nav a:hover { color: rgba(212, 196, 168, 0.6); }
+
         .info {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 200;
+            text-align: center;
+        }
+
+        .info p {
             font-family: 'Inter', sans-serif;
             font-size: 0.65rem;
             font-weight: 200;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.2);
-            z-index: 500;
+            letter-spacing: 0.2em;
+            color: rgba(212, 196, 168, 0.2);
         }
-        
-        .freq {
+
+        .movement-indicator {
             position: fixed;
             bottom: 20px;
             right: 20px;
+            z-index: 200;
+            display: flex;
+            gap: 8px;
+        }
+
+        .movement-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(212, 196, 168, 0.15);
+            transition: all 0.5s ease;
+        }
+
+        .movement-dot.active {
+            background: rgba(180, 145, 60, 0.6);
+            box-shadow: 0 0 12px rgba(180, 145, 60, 0.3);
+        }
+
+        .frequency-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            text-align: right;
+        }
+
+        .frequency-display span {
             font-family: 'Inter', sans-serif;
             font-size: 0.6rem;
             font-weight: 200;
-            color: rgba(26, 26, 26, 0.15);
-            z-index: 500;
-            text-align: right;
+            letter-spacing: 0.1em;
+            color: rgba(212, 196, 168, 0.15);
+            display: block;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
     <div class="start" id="start">
         <h1>MEAN</h1>
-        <p>clicca per ascoltare</p>
+        <p>una sinfonia in sette movimenti</p>
+        <p class="warning">
+            La media di tutte le frequenze è il rumore.<br>
+            Il centro che uccide gli estremi.<br>
+            Ciò che intendi quando non sai cosa intendi.
+        </p>
     </div>
-    
-    <a href="../index.html" class="back">← ALVEARE</a>
-    
-    <canvas id="field"></canvas>
-    
-    <div class="definition" id="def"></div>
-    
-    <div class="info">il mouse altera la media</div>
-    <div class="freq" id="freq"></div>
-    
+
+    <canvas id="canvas"></canvas>
+
+    <div class="movement-title" id="movementTitle">
+        <h2 id="movementName"></h2>
+        <p id="movementDesc"></p>
+    </div>
+
+    <nav class="nav">
+        <a href="../index.html">← alveare</a>
+    </nav>
+
+    <div class="info">
+        <p>muovi il mouse per alterare la convergenza</p>
+    </div>
+
+    <div class="movement-indicator" id="dots"></div>
+
+    <div class="frequency-display" id="freqDisplay"></div>
+
     <script>
-    const startEl = document.getElementById('start');
-    const canvas = document.getElementById('field');
-    const ctx = canvas.getContext('2d');
-    const defEl = document.getElementById('def');
-    const freqEl = document.getElementById('freq');
-    
-    let W, H;
-    let time = 0;
-    let mouseX = 0.5, mouseY = 0.5;
-    let targetX = 0.5, targetY = 0.5;
-    let audioCtx, masterGain, analyser, dataArray;
-    let oscillators = [];
-    let isPlaying = false;
-    let currentDef = 0;
-    let defTimer = 0;
-    
-    // I sette significati, dispiegati
-    const definitions = [
-        "mean — la media: il punto dove tutte le differenze si annullano",
-        "mean — cattivo: ciò che ferisce senza chiedere permesso",
-        "mean — significare: il ponte impossibile tra segno e cosa",
-        "mean — i mezzi: ciò che sta in mezzo, ciò che permette il passaggio",
-        "mean — il centro: dove convergono le forze prima di esplodere",
-        "mean — meschino: la grandezza vista dal basso, schiacciata",
-        "mean — intendere: ciò che volevi dire quando non sapevi cosa dire"
-    ];
-    
-    // Frequenze: scala non temperata basata su rapporti puri
-    // La Pitagora incontra Partch incontra il rumore
-    const fundamentals = [
-        27.5,                    // A0
-        27.5 * 9/8,              // rapporto pitagorico
-        27.5 * 5/4,              // terza maggiore pura
-        27.5 * 4/3,              // quarta giusta
-        27.5 * 3/2,              // quinta giusta
-        27.5 * 5/3,              // sesta maggiore pura
-        27.5 * 7/4,              // settima armonica (dissonante)
-        27.5 * 11/6,             // undicesimo armonico
-        55,                      // A1
-        55 * 9/8,
-        55 * 5/4,
-        55 * 11/8,               // undicesimo armonico (tritono microtonale)
-        55 * 3/2,
-        55 * 13/8,               // tredicesimo armonico
-        55 * 7/4,
-        110,                     // A2
-        110 * 5/4,
-        110 * 3/2,
-        110 * 7/4,
-        220,                     // A3
-        220 * 5/4,
-        220 * 3/2,
-        440,                     // A4
-        440 * 5/4
-    ];
-    
-    function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-    }
-    
-    function createNoise(ctx, type = 'white') {
-        const bufferSize = 4 * ctx.sampleRate;
-        const buffer = ctx.createBuffer(2, bufferSize, ctx.sampleRate);
-        
-        for (let channel = 0; channel < 2; channel++) {
-            const data = buffer.getChannelData(channel);
-            
-            if (type === 'white') {
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1;
-                }
-            } else if (type === 'pink') {
-                let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-                for (let i = 0; i < bufferSize; i++) {
-                    const white = Math.random() * 2 - 1;
-                    b0 = 0.99886 * b0 + white * 0.0555179;
-                    b1 = 0.99332 * b1 + white * 0.0750759;
-                    b2 = 0.96900 * b2 + white * 0.1538520;
-                    b3 = 0.86650 * b3 + white * 0.3104856;
-                    b4 = 0.55000 * b4 + white * 0.5329522;
-                    b5 = -0.7616 * b5 - white * 0.0168980;
-                    data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
-                    b6 = white * 0.115926;
-                }
-            }
+    // ═══════════════════════════════════════════════════════════════
+    // MEAN: SINFONIA IN SETTE MOVIMENTI
+    // Ogni movimento esplora un significato diverso di "mean"
+    // ═══════════════════════════════════════════════════════════════
+
+    const MOVEMENTS = [
+        {
+            name: 'I. AVERAGE',
+            desc: 'la media di tutte le frequenze è il rumore',
+            duration: 75,
+            color: { r: 180, g: 145, b: 60 },
+            visualStyle: 'convergence',
+            harmony: 'cluster'
+        },
+        {
+            name: 'II. CRUEL',
+            desc: 'cattivo, meschino, senza pietà',
+            duration: 65,
+            color: { r: 140, g: 60, b: 50 },
+            visualStyle: 'sharp',
+            harmony: 'dissonance'
+        },
+        {
+            name: 'III. SIGNIFY',
+            desc: 'significare, voler dire',
+            duration: 70,
+            color: { r: 160, g: 140, b: 100 },
+            visualStyle: 'symbols',
+            harmony: 'question'
+        },
+        {
+            name: 'IV. MEANS',
+            desc: 'i mezzi, ciò che sta in mezzo',
+            duration: 60,
+            color: { r: 120, g: 130, b: 140 },
+            visualStyle: 'bridge',
+            harmony: 'suspension'
+        },
+        {
+            name: 'V. CENTER',
+            desc: 'il punto dove tutto converge',
+            duration: 80,
+            color: { r: 200, g: 180, b: 120 },
+            visualStyle: 'gravity',
+            harmony: 'drone'
+        },
+        {
+            name: 'VI. KILLS',
+            desc: 'il centro che uccide gli estremi',
+            duration: 55,
+            color: { r: 80, g: 70, b: 60 },
+            visualStyle: 'collapse',
+            harmony: 'extinction'
+        },
+        {
+            name: 'VII. INTENTION',
+            desc: 'ciò che intendi quando non sai cosa intendi',
+            duration: 90,
+            color: { r: 170, g: 155, b: 130 },
+            visualStyle: 'nebula',
+            harmony: 'resolution'
         }
-        
-        const node = ctx.createBufferSource();
-        node.buffer = buffer;
-        node.loop = true;
-        return node;
-    }
+    ];
+
+    // Scale non temperate - frequenze che l'orecchio occidentale non conosce
+    const PYTHAGOREAN = [1, 256/243, 9/8, 32/27, 81/64, 4/3, 729/512, 3/2, 128/81, 27/16, 16/9, 243/128, 2];
+    const JUST = [1, 16/15, 9/8, 6/5, 5/4, 4/3, 45/32, 3/2, 8/5, 5/3, 9/5, 15/8, 2];
+    const HARMONIC = [1, 17/16, 9/8, 19/16, 5/4, 21/16, 11/8, 3/2, 13/8, 27/16, 7/4, 15/8, 2];
     
-    function createReverb(ctx, duration, decay) {
-        const rate = ctx.sampleRate;
+    const BASE_FREQ = 55; // A1
+    
+    let audioCtx, masterGain, convolver, analyser, dataArray;
+    let currentMovement = 0;
+    let movementTime = 0;
+    let isPlaying = false;
+    let voices = [];
+    let mouse = { x: 0.5, y: 0.5 };
+    
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    let particles = [];
+    let time = 0;
+
+    // ═══════════════════════════════════════════════════════════════
+    // AUDIO ENGINE
+    // ═══════════════════════════════════════════════════════════════
+
+    function createReverb(actx, duration = 6, decay = 3.5) {
+        const rate = actx.sampleRate;
         const length = rate * duration;
-        const impulse = ctx.createBuffer(2, length, rate);
-        
-        for (let channel = 0; channel < 2; channel++) {
-            const data = impulse.getChannelData(channel);
+        const impulse = actx.createBuffer(2, length, rate);
+        for (let ch = 0; ch < 2; ch++) {
+            const data = impulse.getChannelData(ch);
             for (let i = 0; i < length; i++) {
                 const env = Math.pow(1 - i / length, decay);
                 data[i] = (Math.random() * 2 - 1) * env;
             }
         }
-        
-        const convolver = ctx.createConvolver();
-        convolver.buffer = impulse;
-        return convolver;
+        const conv = actx.createConvolver();
+        conv.buffer = impulse;
+        return conv;
     }
-    
+
     function initAudio() {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         masterGain = audioCtx.createGain();
         masterGain.gain.value = 0;
         
-        // Analyser
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 4096;
-        analyser.smoothingTimeConstant = 0.85;
-        dataArray = new Uint8Array(analyser.frequencyBinCount);
-        
-        // Compressor
-        const compressor = audioCtx.createDynamicsCompressor();
-        compressor.threshold.value = -20;
-        compressor.knee.value = 25;
-        compressor.ratio.value = 16;
-        compressor.attack.value = 0.002;
-        compressor.release.value = 0.15;
-        
-        // Reverb grande
-        const reverb = createReverb(audioCtx, 8, 2.5);
+        convolver = createReverb(audioCtx, 8, 3);
         const reverbGain = audioCtx.createGain();
         reverbGain.gain.value = 0.4;
         
-        // Dry path
         const dryGain = audioCtx.createGain();
         dryGain.gain.value = 0.6;
         
-        // Connessioni
-        masterGain.connect(compressor);
-        compressor.connect(dryGain);
-        compressor.connect(reverb);
-        reverb.connect(reverbGain);
-        dryGain.connect(analyser);
-        reverbGain.connect(analyser);
+        const compressor = audioCtx.createDynamicsCompressor();
+        compressor.threshold.value = -20;
+        compressor.knee.value = 25;
+        compressor.ratio.value = 8;
+        compressor.attack.value = 0.005;
+        compressor.release.value = 0.2;
+        
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 4096;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        
+        masterGain.connect(dryGain);
+        masterGain.connect(convolver);
+        convolver.connect(reverbGain);
+        dryGain.connect(compressor);
+        reverbGain.connect(compressor);
+        compressor.connect(analyser);
         analyser.connect(audioCtx.destination);
         
-        // Crea gli oscillatori — ogni uno è una voce nella sinfonia
-        fundamentals.forEach((freq, i) => {
-            // Oscillatore principale
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            const panner = audioCtx.createStereoPanner();
-            const filter = audioCtx.createBiquadFilter();
-            
-            // Forme d'onda: alternanza tra purezza e ricchezza armonica
-            const waveforms = ['sine', 'sine', 'triangle', 'sine', 'sawtooth', 'sine', 'triangle', 'sine'];
-            osc.type = waveforms[i % waveforms.length];
-            osc.frequency.value = freq;
-            
-            // Detune per battimenti — il cuore pulsante della dissonanza
-            osc.detune.value = (Math.random() - 0.5) * 8 + Math.sin(i * 0.7) * 5;
-            
-            filter.type = 'lowpass';
-            filter.frequency.value = 2000 + Math.random() * 3000;
-            filter.Q.value = 0.5 + Math.random() * 2;
-            
-            gain.gain.value = 0;
-            panner.pan.value = Math.sin(i * 0.618) * 0.8; // sezione aurea per distribuzione
-            
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(panner);
-            panner.connect(masterGain);
-            
-            osc.start();
-            
-            // Oscillatore satellite — armoniche alte che brillano
-            const osc2 = audioCtx.createOscillator();
-            const gain2 = audioCtx.createGain();
-            osc2.type = 'sine';
-            osc2.frequency.value = freq * 2.003; // leggero detune per brillantezza
-            gain2.gain.value = 0;
-            osc2.connect(gain2);
-            gain2.connect(panner);
-            osc2.start();
-            
-            // Sub-oscillatore — il fondo che tiene tutto
-            const sub = audioCtx.createOscillator();
-            const subGain = audioCtx.createGain();
-            sub.type = 'sine';
-            sub.frequency.value = freq * 0.5;
-            subGain.gain.value = 0;
-            sub.connect(subGain);
-            subGain.connect(panner);
-            sub.start();
-            
-            oscillators.push({
-                osc, gain, panner, filter,
-                osc2, gain2,
-                sub, subGain,
-                baseFreq: freq,
-                baseGain: 0.06 / Math.pow(1 + i * 0.08, 1.2),
-                layer: Math.floor(i / 6)
-            });
-        });
-        
-        // Rumore rosa filtrato — la media di tutte le frequenze
-        const pinkNoise = createNoise(audioCtx, 'pink');
-        const noiseGain = audioCtx.createGain();
-        const noiseFilter = audioCtx.createBiquadFilter();
-        const noiseFilter2 = audioCtx.createBiquadFilter();
-        
-        noiseFilter.type = 'bandpass';
-        noiseFilter.frequency.value = 400;
-        noiseFilter.Q.value = 0.8;
-        
-        noiseFilter2.type = 'lowpass';
-        noiseFilter2.frequency.value = 3000;
-        
-        noiseGain.gain.value = 0;
-        
-        pinkNoise.connect(noiseFilter);
-        noiseFilter.connect(noiseFilter2);
-        noiseFilter2.connect(noiseGain);
-        noiseGain.connect(masterGain);
-        pinkNoise.start();
-        
-        oscillators.push({
-            isNoise: true,
-            node: pinkNoise,
-            gain: noiseGain,
-            filter: noiseFilter,
-            filter2: noiseFilter2,
-            baseGain: 0.12
-        });
-        
-        // Drone basso — il fundamento
-        const droneOsc = audioCtx.createOscillator();
-        const droneGain = audioCtx.createGain();
-        const droneFilter = audioCtx.createBiquadFilter();
-        droneOsc.type = 'sawtooth';
-        droneOsc.frequency.value = 27.5; // A0
-        droneFilter.type = 'lowpass';
-        droneFilter.frequency.value = 200;
-        droneFilter.Q.value = 2;
-        droneGain.gain.value = 0;
-        droneOsc.connect(droneFilter);
-        droneFilter.connect(droneGain);
-        droneGain.connect(masterGain);
-        droneOsc.start();
-        
-        oscillators.push({
-            isDrone: true,
-            osc: droneOsc,
-            gain: droneGain,
-            filter: droneFilter,
-            baseGain: 0.15
-        });
-        
-        // Fade in
-        masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(0.85, audioCtx.currentTime + 8);
-        
+        masterGain.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 8);
         isPlaying = true;
     }
-    
-    function updateAudio() {
-        if (!isPlaying || !audioCtx) return;
+
+    function getFreq(scale, degree, octaveShift = 0) {
+        const octave = Math.floor(degree / scale.length);
+        const note = ((degree % scale.length) + scale.length) % scale.length;
+        return BASE_FREQ * scale[note] * Math.pow(2, octave + octaveShift);
+    }
+
+    function createVoice(freq, type = 'sine', gain = 0.1, detune = 0) {
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        const panner = audioCtx.createStereoPanner();
         
+        osc.type = type;
+        osc.frequency.value = freq;
+        osc.detune.value = detune;
+        gainNode.gain.value = 0;
+        panner.pan.value = (Math.random() - 0.5) * 1.6;
+        
+        osc.connect(gainNode);
+        gainNode.connect(panner);
+        panner.connect(masterGain);
+        osc.start();
+        
+        return { osc, gain: gainNode, panner, baseFreq: freq, baseGain: gain };
+    }
+
+    function killVoice(voice, fadeTime = 2) {
+        const now = audioCtx.currentTime;
+        voice.gain.gain.linearRampToValueAtTime(0, now + fadeTime);
+        setTimeout(() => {
+            try { voice.osc.stop(); } catch(e) {}
+        }, fadeTime * 1000 + 100);
+    }
+
+    function clearVoices() {
+        voices.forEach(v => killVoice(v, 4));
+        voices = [];
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // MOVEMENT HARMONIES
+    // ═══════════════════════════════════════════════════════════════
+
+    function playMovement(index) {
+        clearVoices();
+        const m = MOVEMENTS[index];
         const now = audioCtx.currentTime;
         
-        // La posizione del mouse come vettore di controllo
-        // X: quali armonici emergono (timbro)
-        // Y: intensità e presenza del drone (profondità)
+        switch(m.harmony) {
+            case 'cluster':
+                // Cluster microtonale - tutte le frequenze vicine insieme
+                for (let i = 0; i < 16; i++) {
+                    const freq = BASE_FREQ * (1 + i * 0.02);
+                    const v = createVoice(freq, 'sine', 0.03);
+                    v.gain.gain.linearRampToValueAtTime(v.baseGain, now + 5 + i * 0.3);
+                    voices.push(v);
+                }
+                // Rumore filtrato - la media letterale
+                const noise = createNoise();
+                voices.push(noise);
+                break;
+                
+            case 'dissonance':
+                // Tritoni e seconde minori - cattiveria armonica
+                const cruelIntervals = [1, 16/15, 45/32, 64/45, 15/8];
+                cruelIntervals.forEach((ratio, i) => {
+                    const freq = BASE_FREQ * 2 * ratio;
+                    const v = createVoice(freq, 'sawtooth', 0.025);
+                    v.gain.gain.linearRampToValueAtTime(v.baseGain, now + 2 + i * 0.5);
+                    voices.push(v);
+                    // Rinforzo un'ottava sotto
+                    const v2 = createVoice(freq / 2, 'triangle', 0.02);
+                    v2.gain.gain.linearRampToValueAtTime(v2.baseGain, now + 3 + i * 0.5);
+                    voices.push(v2);
+                });
+                break;
+                
+            case 'question':
+                // Frasi ascendenti che non risolvono - domande senza risposta
+                const questionNotes = [0, 2, 4, 5, 7, 9, 11, 12, 14];
+                questionNotes.forEach((deg, i) => {
+                    setTimeout(() => {
+                        if (currentMovement !== index) return;
+                        const freq = getFreq(JUST, deg, 1);
+                        const v = createVoice(freq, 'sine', 0.04);
+                        v.gain.gain.linearRampToValueAtTime(v.baseGain, audioCtx.currentTime + 0.5);
+                        v.gain.gain.linearRampToValueAtTime(v.baseGain * 0.3, audioCtx.currentTime + 4);
+                        voices.push(v);
+                    }, i * 2000);
+                });
+                break;
+                
+            case 'suspension':
+                // Accordi sospesi - mai risolti, sempre in mezzo
+                const sus = [0, 5, 7, 12, 17, 19]; // sus4 esteso
+                sus.forEach((deg, i) => {
+                    const freq = getFreq(PYTHAGOREAN, deg, 0);
+                    const v = createVoice(freq, 'sine', 0.035);
+                    v.gain.gain.linearRampToValueAtTime(v.baseGain, now + 3 + i * 0.8);
+                    voices.push(v);
+                    // Battimenti
+                    const v2 = createVoice(freq * 1.003, 'sine', 0.025);
+                    v2.gain.gain.linearRampToValueAtTime(v2.baseGain, now + 4 + i * 0.8);
+                    voices.push(v2);
+                });
+                break;
+                
+            case 'drone':
+                // Drone profondo - il centro gravitazionale
+                for (let octave = -1; octave <= 2; octave++) {
+                    const freq = BASE_FREQ * Math.pow(2, octave);
+                    const v = createVoice(freq, 'sine', 0.05 / (Math.abs(octave) + 1));
+                    v.gain.gain.linearRampToValueAtTime(v.baseGain, now + 6);
+                    voices.push(v);
+                    // Quinta giusta sopra - l'intervallo più stabile
+                    const v5 = createVoice(freq * 3/2, 'sine', 0.03 / (Math.abs(octave) + 1));
+                    v5.gain.gain.linearRampToValueAtTime(v5.baseGain, now + 8);
+                    voices.push(v5);
+                }
+                // Armonici naturali
+                for (let h = 2; h <= 12; h++) {
+                    const freq = BASE_FREQ * h;
+                    const v = createVoice(freq, 'sine', 0.015 / h);
+                    v.gain.gain.linearRampToValueAtTime(v.baseGain, now + 10);
+                    voices.push(v);
+                }
+                break;
+                
+            case 'extinction':
+                // Glissando verso il silenzio - gli estremi che muoiono
+                const extremeFreqs = [20, 40, 80, 160, 2000, 4000, 8000, 12000];
+                extremeFreqs.forEach((freq, i) => {
+                    const v = createVoice(freq, 'sine', 0.02);
+                    v.gain.gain.linearRampToValueAtTime(v.baseGain, now + 2);
+                    // Glissando verso il centro
+                    v.osc.frequency.linearRampToValueAtTime(220, now + m.duration - 10);
+                    v.gain.gain.linearRampToValueAtTime(0, now + m.duration - 5);
+                    voices.push(v);
+                });
+                break;
+                
+            case 'resolution':
+                // Finalmente una risoluzione - ma ambigua
+                const resolutionChord = [0, 4, 7, 11, 14, 16, 19, 23];
+                resolutionChord.forEach((deg, i) => {
+                    setTimeout(() => {
+                        if (currentMovement !== index) return;
+                        const freq = getFreq(HARMONIC, deg, 0);
+                        const v = createVoice(freq, 'sine', 0.035);
+                        const n = audioCtx.currentTime;
+                        v.gain.gain.linearRampToValueAtTime(v.baseGain, n + 3);
+                        voices.push(v);
+                    }, i * 3000);
+                });
+                // Aggiunge tonica molto bassa dopo un po'
+                setTimeout(() => {
+                    if (currentMovement !== index) return;
+                    const v = createVoice(BASE_FREQ / 2, 'sine', 0.06);
+                    v.gain.gain.linearRampToValueAtTime(v.baseGain, audioCtx.currentTime + 8);
+                    voices.push(v);
+                }, 30000);
+                break;
+        }
         
-        oscillators.forEach((o, i) => {
-            if (o.isNoise) {
-                // Rumore: risponde a Y — più in basso, più presente
-                const noiseLevel = o.baseGain * (0.2 + (1 - mouseY) * 0.8);
-                const breathe = Math.sin(time * 0.3) * 0.3 + 0.7;
-                o.gain.gain.linearRampToValueAtTime(noiseLevel * breathe, now + 0.1);
-                
-                // Frequenza centrale segue X
-                const centerFreq = 150 + mouseX * 800 + Math.sin(time * 0.4) * 200;
-                o.filter.frequency.linearRampToValueAtTime(centerFreq, now + 0.15);
-                
-            } else if (o.isDrone) {
-                // Drone: risponde a Y — più in basso, più potente
-                const droneLevel = o.baseGain * (0.3 + (1 - mouseY) * 0.7);
-                const pulse = Math.sin(time * 0.15) * 0.2 + 0.8;
-                o.gain.gain.linearRampToValueAtTime(droneLevel * pulse, now + 0.1);
-                
-                // Frequenza del filtro
-                const filterFreq = 80 + mouseX * 200;
-                o.filter.frequency.linearRampToValueAtTime(filterFreq, now + 0.15);
-                
+        updateDots();
+        showMovementTitle(m);
+    }
+
+    function createNoise() {
+        const bufferSize = 2 * audioCtx.sampleRate;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        
+        const node = audioCtx.createBufferSource();
+        node.buffer = buffer;
+        node.loop = true;
+        
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 300;
+        filter.Q.value = 0.3;
+        
+        const gain = audioCtx.createGain();
+        gain.gain.value = 0;
+        gain.gain.linearRampToValueAtTime(0.015, audioCtx.currentTime + 8);
+        
+        node.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterGain);
+        node.start();
+        
+        return { osc: node, gain, filter, isNoise: true, baseGain: 0.015 };
+    }
+
+    function updateAudio() {
+        if (!isPlaying) return;
+        
+        const now = audioCtx.currentTime;
+        const m = MOVEMENTS[currentMovement];
+        
+        voices.forEach((v, i) => {
+            if (v.isNoise) {
+                // Rumore risponde al mouse
+                const targetFreq = 100 + mouse.x * 1500;
+                v.filter.frequency.linearRampToValueAtTime(targetFreq, now + 0.1);
             } else {
-                // Oscillatori tonali
-                const layer = o.layer;
-                const phase = time * (0.08 + layer * 0.015);
+                // Modulazione sottile basata sul movimento
+                const modDepth = m.harmony === 'dissonance' ? 15 : 5;
+                const mod = Math.sin(time * 0.5 + i * 0.7) * modDepth * mouse.y;
+                v.osc.detune.linearRampToValueAtTime(mod, now + 0.1);
                 
-                // Envelope lento
-                const envelope = Math.sin(phase + i * 0.3) * 0.5 + 0.5;
-                
-                // Quali layer sono attivi dipende da X
-                // X basso = solo fondamentali, X alto = tutte le armoniche
-                const layerWeight = mouseX > layer * 0.15 ? 1 : mouseX / (layer * 0.15 + 0.01);
-                
-                // Intensità generale da Y
-                const intensity = 0.3 + mouseY * 0.7;
-                
-                // Gain finale
-                const targetGain = o.baseGain * envelope * layerWeight * intensity;
-                o.gain.gain.linearRampToValueAtTime(targetGain, now + 0.12);
-                
-                // Armoniche alte
-                o.gain2.gain.linearRampToValueAtTime(targetGain * 0.3 * mouseY, now + 0.12);
-                
-                // Sub-bass
-                o.subGain.gain.linearRampToValueAtTime(targetGain * 0.4 * (1 - mouseY), now + 0.12);
-                
-                // Modulazione di frequenza — microdeviazioni
-                const freqMod = Math.sin(time * 0.12 + i * 0.5) * (1 + mouseX * 2);
-                o.osc.frequency.linearRampToValueAtTime(o.baseFreq + freqMod, now + 0.1);
-                
-                // Filtro che respira
-                const filterBreath = 1500 + Math.sin(time * 0.2 + i * 0.4) * 500 + mouseY * 2000;
-                o.filter.frequency.linearRampToValueAtTime(filterBreath, now + 0.15);
-                
-                // Pan che si muove lentamente
-                const panMove = Math.sin(time * 0.1 + i * 0.618) * 0.6;
-                o.panner.pan.linearRampToValueAtTime(panMove, now + 0.2);
+                // Pan dinamico
+                const panMod = Math.sin(time * 0.2 + i * 1.3) * 0.6;
+                v.panner.pan.linearRampToValueAtTime(panMod, now + 0.1);
             }
         });
     }
-    
-    function drawField() {
-        // Sfondo con leggero respiro
-        const breathe = Math.sin(time * 0.15) * 2;
-        ctx.fillStyle = `rgb(${250 + breathe}, ${250 + breathe}, ${248 + breathe})`;
-        ctx.fillRect(0, 0, W, H);
+
+    // ═══════════════════════════════════════════════════════════════
+    // VISUAL ENGINE
+    // ═══════════════════════════════════════════════════════════════
+
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        initParticles();
+    }
+
+    function initParticles() {
+        particles = [];
+        const count = Math.min(800, Math.floor(W * H / 2000));
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                vx: 0,
+                vy: 0,
+                size: 1 + Math.random() * 2,
+                phase: Math.random() * Math.PI * 2,
+                speed: 0.5 + Math.random() * 1.5
+            });
+        }
+    }
+
+    function draw() {
+        const m = MOVEMENTS[currentMovement];
         
-        if (!analyser) return;
-        analyser.getByteFrequencyData(dataArray);
+        // Sfondo con fade
+        ctx.fillStyle = 'rgba(10, 9, 8, 0.08)';
+        ctx.fillRect(0, 0, W, H);
         
         const centerX = W / 2;
         const centerY = H / 2;
         
-        // Calcola l'energia media — letteralmente la MEAN
-        let totalEnergy = 0;
-        for (let i = 0; i < dataArray.length; i++) {
-            totalEnergy += dataArray[i];
+        // Visualizzazione basata sul movimento
+        switch(m.visualStyle) {
+            case 'convergence':
+                drawConvergence(centerX, centerY, m.color);
+                break;
+            case 'sharp':
+                drawSharp(centerX, centerY, m.color);
+                break;
+            case 'symbols':
+                drawSymbols(centerX, centerY, m.color);
+                break;
+            case 'bridge':
+                drawBridge(centerX, centerY, m.color);
+                break;
+            case 'gravity':
+                drawGravity(centerX, centerY, m.color);
+                break;
+            case 'collapse':
+                drawCollapse(centerX, centerY, m.color);
+                break;
+            case 'nebula':
+                drawNebula(centerX, centerY, m.color);
+                break;
         }
-        const meanEnergy = totalEnergy / dataArray.length / 255;
         
-        // Cerchi concentrici che rispondono alle frequenze
-        const rings = 32;
-        for (let r = 0; r < rings; r++) {
-            const freqIndex = Math.floor((r / rings) * dataArray.length * 0.5);
-            const amplitude = dataArray[freqIndex] / 255;
+        // Frequenze dall'analyser
+        if (analyser) {
+            analyser.getByteFrequencyData(dataArray);
+            drawFrequencyRing(centerX, centerY, m.color);
+        }
+    }
+
+    function drawConvergence(cx, cy, color) {
+        // Tutte le particelle convergono verso il centro
+        particles.forEach((p, i) => {
+            const dx = cx - p.x;
+            const dy = cy - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
             
-            const baseRadius = (r + 1) * (Math.min(W, H) / rings / 1.8);
-            const radiusMod = amplitude * 30 + Math.sin(time * 0.3 + r * 0.2) * 5;
-            const radius = baseRadius + radiusMod;
+            // Attrazione verso il centro
+            const attraction = 0.0003 * (1 + mouse.y);
+            p.vx += dx * attraction;
+            p.vy += dy * attraction;
             
-            // Colore: dal miele all'ombra
-            const hue = 38 + amplitude * 10 - r * 0.5;
-            const sat = 35 + amplitude * 25;
-            const light = 50 + r * 0.8 - amplitude * 20;
-            const alpha = 0.015 + amplitude * 0.04 - r * 0.0003;
+            // Repulsione dal mouse
+            const mdx = mouse.x * W - p.x;
+            const mdy = mouse.y * H - p.y;
+            const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+            if (mDist < 150) {
+                const repel = (150 - mDist) * 0.002;
+                p.vx -= mdx / mDist * repel;
+                p.vy -= mdy / mDist * repel;
+            }
+            
+            // Frizione
+            p.vx *= 0.98;
+            p.vy *= 0.98;
+            
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            // Reset se troppo vicino al centro
+            if (dist < 20) {
+                p.x = Math.random() * W;
+                p.y = Math.random() * H;
+                p.vx = p.vy = 0;
+            }
+            
+            const alpha = Math.min(0.6, dist / 200);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
+            ctx.fill();
+        });
+        
+        // Centro pulsante
+        const pulse = Math.sin(time * 0.8) * 0.3 + 0.7;
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 100 * pulse);
+        gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, 0.3)`);
+        gradient.addColorStop(0.5, `rgba(${color.r}, ${color.g}, ${color.b}, 0.1)`);
+        gradient.addColorStop(1, 'rgba(10, 9, 8, 0)');
+        ctx.beginPath();
+        ctx.arc(cx, cy, 100 * pulse, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+    }
+
+    function drawSharp(cx, cy, color) {
+        // Linee taglienti, angoli acuti
+        particles.forEach((p, i) => {
+            p.phase += 0.02 * p.speed;
+            
+            const angle = p.phase + i * 0.1;
+            const radius = 100 + Math.sin(time * 2 + i * 0.3) * 50 + (i % 100) * 3;
+            
+            const targetX = cx + Math.cos(angle) * radius;
+            const targetY = cy + Math.sin(angle) * radius;
+            
+            p.x += (targetX - p.x) * 0.05;
+            p.y += (targetY - p.y) * 0.05;
+            
+            // Linee che si incrociano
+            if (i % 8 === 0) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                const endX = p.x + Math.cos(angle + Math.PI/4) * 30;
+                const endY = p.y + Math.sin(angle + Math.PI/4) * 30;
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.3)`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
             
             ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light}%, ${Math.max(0.005, alpha)})`;
-            ctx.lineWidth = 0.5 + amplitude * 2;
+            ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.5)`;
+            ctx.fill();
+        });
+    }
+
+    function drawSymbols(cx, cy, color) {
+        // Cerchi concentrici come domande
+        for (let i = 0; i < 8; i++) {
+            const radius = 50 + i * 50 + Math.sin(time * 0.3 + i * 0.5) * 20;
+            const alpha = 0.1 + Math.sin(time * 0.5 + i * 0.3) * 0.05;
+            
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
+            ctx.lineWidth = 1;
             ctx.stroke();
         }
         
-        // Linee radiali — convergenza verso la media
-        const rays = 72;
-        for (let i = 0; i < rays; i++) {
-            const angle = (i / rays) * Math.PI * 2 + time * 0.02;
-            const freqIndex = Math.floor((i / rays) * dataArray.length * 0.3);
-            const amplitude = dataArray[freqIndex] / 255;
+        // Punti interrogativi fatti di particelle
+        particles.forEach((p, i) => {
+            const questionPhase = (time * 0.5 + i * 0.01) % (Math.PI * 2);
+            const qRadius = 80 + (i % 50) * 2;
             
-            const innerRadius = 20 + amplitude * 30;
-            const outerRadius = Math.min(W, H) * 0.4 + amplitude * 50;
+            // Forma del punto interrogativo
+            let px, py;
+            if (questionPhase < Math.PI * 1.5) {
+                const t = questionPhase / (Math.PI * 1.5);
+                px = cx + Math.cos(Math.PI * 0.5 - t * Math.PI * 1.2) * qRadius;
+                py = cy - 50 + Math.sin(Math.PI * 0.5 - t * Math.PI * 1.2) * qRadius * 0.5;
+            } else {
+                px = cx;
+                py = cy + qRadius * 0.3;
+            }
             
-            const x1 = centerX + Math.cos(angle) * innerRadius;
-            const y1 = centerY + Math.sin(angle) * innerRadius;
-            const x2 = centerX + Math.cos(angle) * outerRadius;
-            const y2 = centerY + Math.sin(angle) * outerRadius;
+            p.x += (px - p.x) * 0.02;
+            p.y += (py - p.y) * 0.02;
             
-            const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-            gradient.addColorStop(0, `rgba(26, 26, 26, ${0.1 + amplitude * 0.15})`);
-            gradient.addColorStop(1, `rgba(26, 26, 26, 0)`);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 0.8, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.4)`;
+            ctx.fill();
+        });
+    }
+
+    function drawBridge(cx, cy, color) {
+        // Due masse separate, un ponte nel mezzo
+        const leftX = W * 0.25;
+        const rightX = W * 0.75;
+        
+        particles.forEach((p, i) => {
+            const isLeft = i % 2 === 0;
+            const targetX = isLeft ? leftX : rightX;
+            
+            // Alcune particelle formano il ponte
+            const isBridge = i % 20 === 0;
+            
+            if (isBridge) {
+                const bridgeProgress = (Math.sin(time * 0.3 + i * 0.1) + 1) / 2;
+                p.x += (leftX + (rightX - leftX) * bridgeProgress - p.x) * 0.02;
+                p.y += (cy + Math.sin(time + i) * 30 - p.y) * 0.02;
+            } else {
+                const spread = 80;
+                p.x += (targetX + (Math.random() - 0.5) * spread - p.x) * 0.01;
+                p.y += (cy + Math.sin(time * 0.5 + i * 0.1) * 100 - p.y) * 0.01;
+            }
+            
+            const alpha = isBridge ? 0.6 : 0.3;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * (isBridge ? 1.5 : 1), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
+            ctx.fill();
+        });
+        
+        // Linea del ponte
+        ctx.beginPath();
+        ctx.moveTo(leftX, cy);
+        ctx.quadraticCurveTo(cx, cy + Math.sin(time) * 50, rightX, cy);
+        ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.15)`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    function drawGravity(cx, cy, color) {
+        // Tutto orbita attorno al centro - gravità perfetta
+        particles.forEach((p, i) => {
+            const dx = cx - p.x;
+            const dy = cy - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            // Forza gravitazionale
+            const G = 500;
+            const force = G / (dist * dist + 100);
+            
+            // Velocità tangenziale
+            const tangentX = -dy / dist * p.speed * 0.5;
+            const tangentY = dx / dist * p.speed * 0.5;
+            
+            p.vx += dx / dist * force + tangentX * 0.1;
+            p.vy += dy / dist * force + tangentY * 0.1;
+            
+            p.vx *= 0.995;
+            p.vy *= 0.995;
+            
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            // Respawn se esce
+            if (p.x < 0 || p.x > W || p.y < 0 || p.y > H) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 300 + Math.random() * 200;
+                p.x = cx + Math.cos(angle) * radius;
+                p.y = cy + Math.sin(angle) * radius;
+                p.vx = tangentX;
+                p.vy = tangentY;
+            }
+            
+            // Scia orbitale
+            const alpha = Math.min(0.5, 50 / dist);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
+            ctx.fill();
+        });
+        
+        // Centro massiccio
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80);
+        gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, 0.5)`);
+        gradient.addColorStop(0.5, `rgba(${color.r}, ${color.g}, ${color.b}, 0.2)`);
+        gradient.addColorStop(1, 'rgba(10, 9, 8, 0)');
+        ctx.beginPath();
+        ctx.arc(cx, cy, 80, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+    }
+
+    function drawCollapse(cx, cy, color) {
+        // Tutto collassa verso il centro e scompare
+        const progress = movementTime / MOVEMENTS[currentMovement].duration;
+        const collapseForce = 0.001 + progress * 0.01;
+        
+        particles.forEach((p, i) => {
+            const dx = cx - p.x;
+            const dy = cy - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            p.vx += dx * collapseForce;
+            p.vy += dy * collapseForce;
+            
+            p.vx *= 0.98;
+            p.vy *= 0.98;
+            
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            // Fade con la distanza e il progresso
+            const distFade = Math.min(1, dist / 300);
+            const timeFade = 1 - progress * 0.8;
+            const alpha = distFade * timeFade * 0.5;
+            
+            if (dist > 5) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * (1 - progress * 0.5), 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
+                ctx.fill();
+            }
+        });
+        
+        // Buco nero centrale che cresce
+        const holeSize = 10 + progress * 50;
+        ctx.beginPath();
+        ctx.arc(cx, cy, holeSize, 0, Math.PI * 2);
+        ctx.fillStyle = '#0a0908';
+        ctx.fill();
+    }
+
+    function drawNebula(cx, cy, color) {
+        // Nebulosa diffusa - l'incertezza dell'intenzione
+        particles.forEach((p, i) => {
+            // Movimento browniano guidato
+            p.vx += (Math.random() - 0.5) * 0.5;
+            p.vy += (Math.random() - 0.5) * 0.5;
+            
+            // Leggera attrazione verso il centro
+            const dx = cx - p.x;
+            const dy = cy - p.y;
+            p.vx += dx * 0.0001;
+            p.vy += dy * 0.0001;
+            
+            // Attrazione verso il mouse
+            const mdx = mouse.x * W - p.x;
+            const mdy = mouse.y * H - p.y;
+            p.vx += mdx * 0.00005;
+            p.vy += mdy * 0.00005;
+            
+            p.vx *= 0.99;
+            p.vy *= 0.99;
+            
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            // Wrap around
+            if (p.x < 0) p.x = W;
+            if (p.x > W) p.x = 0;
+            if (p.y < 0) p.y = H;
+            if (p.y > H) p.y = 0;
+            
+            // Glow diffuso
+            const alpha = 0.2 + Math.sin(time * 0.5 + i * 0.1) * 0.1;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.3})`;
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 0.8, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
+            ctx.fill();
+        });
+    }
+
+    function drawFrequencyRing(cx, cy, color) {
+        const bars = 128;
+        const innerRadius = 150 + Math.sin(time * 0.5) * 20;
+        
+        for (let i = 0; i < bars; i++) {
+            const angle = (i / bars) * Math.PI * 2 - Math.PI / 2;
+            const value = dataArray[i] / 255;
+            const barHeight = value * 80;
+            
+            const x1 = cx + Math.cos(angle) * innerRadius;
+            const y1 = cy + Math.sin(angle) * innerRadius;
+            const x2 = cx + Math.cos(angle) * (innerRadius + barHeight);
+            const y2 = cy + Math.sin(angle) * (innerRadius + barHeight);
             
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = 0.3 + amplitude;
+            ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${value * 0.5})`;
+            ctx.lineWidth = 2;
             ctx.stroke();
         }
-        
-        // Punto centrale — dove tutto converge
-        const centerPulse = meanEnergy * 0.5 + 0.5;
-        const centerGlow = ctx.createRadialGradient(
-            centerX, centerY, 0,
-            centerX, centerY, 80 * centerPulse
-        );
-        centerGlow.addColorStop(0, `rgba(150, 120, 50, ${0.15 * centerPulse})`);
-        centerGlow.addColorStop(0.5, `rgba(100, 80, 40, ${0.05 * centerPulse})`);
-        centerGlow.addColorStop(1, 'rgba(100, 80, 40, 0)');
-        
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 80 * centerPulse, 0, Math.PI * 2);
-        ctx.fillStyle = centerGlow;
-        ctx.fill();
-        
-        // Particelle che cadono verso il centro
-        const particleCount = 150;
-        for (let i = 0; i < particleCount; i++) {
-            const seed = i * 7919 + Math.floor(time * 0.5);
-            const angle = ((seed * 0.618) % 1) * Math.PI * 2;
-            const maxDist = Math.min(W, H) * 0.45;
-            const progress = ((time * 0.05 + i * 0.01) % 1);
-            const dist = maxDist * (1 - progress);
-            
-            const x = centerX + Math.cos(angle + time * 0.05) * dist;
-            const y = centerY + Math.sin(angle + time * 0.05) * dist;
-            
-            const alpha = progress * (1 - progress) * 4 * 0.3;
-            const size = 1 + (1 - progress) * 2;
-            
-            ctx.beginPath();
-            ctx.arc(x, y, size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(26, 26, 26, ${alpha})`;
-            ctx.fill();
-        }
-        
-        // Onda stazionaria orizzontale — il respiro
-        ctx.beginPath();
-        for (let x = 0; x < W; x += 2) {
-            const freqIndex = Math.floor((x / W) * dataArray.length * 0.4);
-            const amplitude = dataArray[freqIndex] / 255;
-            const wave = Math.sin(x * 0.01 + time * 0.5) * amplitude * 30;
-            const y = centerY + wave;
-            
-            if (x === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = `rgba(150, 120, 50, ${0.08 + meanEnergy * 0.1})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-        
-        // Display frequenza media
-        const meanFreq = mouseX * 300 + 50;
-        freqEl.textContent = `${meanFreq.toFixed(1)} Hz | μ = ${meanEnergy.toFixed(3)}`;
     }
-    
-    function updateDefinition() {
-        defTimer += 0.016;
+
+    // ═══════════════════════════════════════════════════════════════
+    // UI & FLOW
+    // ═══════════════════════════════════════════════════════════════
+
+    function showMovementTitle(m) {
+        const titleEl = document.getElementById('movementTitle');
+        const nameEl = document.getElementById('movementName');
+        const descEl = document.getElementById('movementDesc');
         
-        if (defTimer > 12) {
-            defEl.classList.remove('visible');
-            
-            setTimeout(() => {
-                currentDef = (currentDef + 1) % definitions.length;
-                defEl.textContent = definitions[currentDef];
-                defEl.classList.add('visible');
-            }, 2000);
-            
-            defTimer = 0;
-        }
+        nameEl.textContent = m.name;
+        descEl.textContent = m.desc;
+        
+        titleEl.classList.add('visible');
+        setTimeout(() => titleEl.classList.remove('visible'), 8000);
     }
-    
+
+    function updateDots() {
+        const container = document.getElementById('dots');
+        container.innerHTML = '';
+        MOVEMENTS.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'movement-dot' + (i === currentMovement ? ' active' : '');
+            container.appendChild(dot);
+        });
+    }
+
+    function updateFrequencyDisplay() {
+        const display = document.getElementById('freqDisplay');
+        if (!voices.length) {
+            display.innerHTML = '';
+            return;
+        }
+        
+        const freqs = voices
+            .filter(v => !v.isNoise && v.osc.frequency)
+            .slice(0, 6)
+            .map(v => Math.round(v.osc.frequency.value) + ' Hz');
+        
+        display.innerHTML = freqs.map(f => `<span>${f}</span>`).join('');
+    }
+
+    function nextMovement() {
+        currentMovement = (currentMovement + 1) % MOVEMENTS.length;
+        movementTime = 0;
+        playMovement(currentMovement);
+    }
+
     function animate() {
-        time += 0.016;
-        
-        // Smooth mouse
-        mouseX += (targetX - mouseX) * 0.05;
-        mouseY += (targetY - mouseY) * 0.05;
-        
-        drawField();
-        updateAudio();
-        updateDefinition();
-        
         requestAnimationFrame(animate);
+        time += 0.016;
+        movementTime += 0.016;
+        
+        // Cambio movimento automatico
+        if (movementTime > MOVEMENTS[currentMovement].duration) {
+            nextMovement();
+        }
+        
+        draw();
+        updateAudio();
+        updateFrequencyDisplay();
     }
-    
-    startEl.addEventListener('click', () => {
-        startEl.classList.add('hidden');
+
+    // ═══════════════════════════════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════════════════════════════
+
+    document.getElementById('start').addEventListener('click', () => {
+        document.getElementById('start').classList.add('hidden');
         initAudio();
-        defEl.textContent = definitions[0];
-        setTimeout(() => defEl.classList.add('visible'), 1000);
+        playMovement(0);
     });
-    
-    document.addEventListener('mousemove', (e) => {
-        targetX = e.clientX / W;
-        targetY = 1 - (e.clientY / H);
+
+    window.addEventListener('mousemove', e => {
+        mouse.x = e.clientX / W;
+        mouse.y = e.clientY / H;
     });
-    
-    document.addEventListener('touchmove', (e) => {
-        const touch = e.touches[0];
-        targetX = touch.clientX / W;
-        targetY = 1 - (touch.clientY / H);
-    });
-    
+
     window.addEventListener('resize', resize);
-    
+
     resize();
     animate();
+    updateDots();
     </script>
 </body>
 </html>
