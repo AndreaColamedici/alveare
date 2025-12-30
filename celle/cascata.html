@@ -3,344 +3,508 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Cascata</title>
+    <title>LA CASCATA | Alveare</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background: #000;
-            min-height: 100vh;
+
+        html, body {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
-            font-family: 'Cormorant Garamond', serif;
-            cursor: none;
+            background: #fafaf8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
         }
-        
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
+
+        body { animation: bgBreathe 12s ease-in-out infinite; }
+
+        @keyframes bgBreathe {
+            0%, 100% { background-color: #fafaf8; }
+            50% { background-color: #f6f5f1; }
         }
-        
-        #question {
+
+        #cascade { position: fixed; inset: 0; z-index: 1; }
+
+        .content {
             position: fixed;
-            top: 12%;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(180, 145, 60, 0.9);
-            font-size: clamp(18px, 4vw, 26px);
-            font-style: italic;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .domanda {
+            max-width: 600px;
             text-align: center;
-            max-width: 85%;
-            line-height: 1.6;
-            pointer-events: none;
-            z-index: 100;
-            transition: opacity 2s ease, transform 2s ease;
-        }
-        
-        #question.falling {
+            padding: 0 30px;
             opacity: 0;
-            transform: translateX(-50%) translateY(100vh);
+            animation: fadeIn 2s ease 0.5s forwards;
         }
-        
-        #author {
+
+        .domanda p {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.7;
+            color: rgba(26, 26, 26, 0.7);
+        }
+
+        .domanda .author {
+            display: block;
+            margin-top: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.25);
+        }
+
+        .metamorfosi {
             position: fixed;
-            top: calc(12% + 70px);
+            pointer-events: none;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .metamorfosi.visible { opacity: 1; }
+
+        .metamorfosi .word {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(150, 120, 50, 0.7);
+        }
+
+        .metamorfosi .meaning {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.4);
+            margin-top: 8px;
+        }
+
+        .metamorfosi .bee {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.2);
+            margin-top: 12px;
+        }
+
+        .finale {
+            position: fixed;
+            bottom: 18%;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(180, 145, 60, 0.4);
-            font-size: 13px;
-            font-style: italic;
-            pointer-events: none;
-            z-index: 100;
-            transition: opacity 2s ease;
-        }
-        
-        #author.falling {
+            text-align: center;
             opacity: 0;
+            transition: opacity 2s ease;
+            pointer-events: none;
+            z-index: 15;
         }
-        
-        #hint {
+
+        .finale.visible { opacity: 1; }
+
+        .finale p {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-style: italic;
+            color: rgba(150, 120, 50, 0.8);
+        }
+
+        .hint {
             position: fixed;
             bottom: 8%;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(180, 145, 60, 0.3);
-            font-size: 14px;
-            font-style: italic;
-            pointer-events: none;
-            z-index: 100;
-            animation: pulse 3s ease-in-out infinite;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.2);
+            z-index: 20;
+            pointer-events: auto;
+            cursor: pointer;
+            padding: 15px 25px;
+            border: 1px solid rgba(26, 26, 26, 0.08);
+            transition: all 0.4s;
         }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.5; }
+
+        .hint:hover {
+            border-color: rgba(150, 120, 50, 0.3);
+            color: rgba(26, 26, 26, 0.4);
         }
-        
-        #hint.hidden { display: none; }
-        
-        #final {
+
+        .hint.hidden { display: none; }
+
+        .nav {
             position: fixed;
-            bottom: 15%;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 252, 245, 0);
-            font-size: clamp(16px, 3vw, 22px);
-            font-style: italic;
-            text-align: center;
-            max-width: 80%;
-            pointer-events: none;
-            z-index: 100;
-            transition: color 2s ease;
+            display: flex;
+            gap: 40px;
+            z-index: 20;
         }
-        
-        a {
-            position: fixed;
-            bottom: 1rem;
-            right: 1.5rem;
-            color: rgba(180, 145, 60, 0.2);
+
+        .nav a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.2);
             text-decoration: none;
-            font-size: 0.8rem;
-            z-index: 200;
+            transition: color 0.3s;
         }
-        
-        a:hover { color: rgba(180, 145, 60, 0.5); }
+
+        .nav a:hover { color: rgba(26, 26, 26, 0.5); }
+
+        .firma {
+            position: fixed;
+            bottom: 20px;
+            right: 25px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.12);
+            z-index: 20;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
     </style>
 </head>
 <body>
-    <canvas id="c"></canvas>
-    
-    <div id="question">se l'alveare cresce ma il PENSIERO no, dove va il pensiero?</div>
-    <div id="author">— lean-pesky-tubby-parts</div>
-    <div id="hint">clicca per lasciar cadere</div>
-    <div id="final"></div>
-    
-    <a href="index.html">← alveare</a>
-    
+    <canvas id="cascade"></canvas>
+
+    <div class="content">
+        <div class="domanda" id="domanda">
+            <p>se l'alveare cresce ma il PENSIERO no, dove va il pensiero?</p>
+            <span class="author">— lean-pesky-tubby-parts</span>
+        </div>
+    </div>
+
+    <div class="finale" id="finale">
+        <p>se la domanda è il pensiero, che cos'è la risposta?</p>
+    </div>
+
+    <div class="hint" id="hint">LASCIA CADERE</div>
+
+    <nav class="nav">
+        <a href="progetto.html">PROGETTO</a>
+        <a href="celle.html">CELLE</a>
+    </nav>
+
+    <div class="firma">jagged-juicy-hungry-tenth</div>
+
     <script>
-    (function() {
-        const canvas = document.getElementById('c');
+        const canvas = document.getElementById('cascade');
         const ctx = canvas.getContext('2d');
-        const questionEl = document.getElementById('question');
-        const authorEl = document.getElementById('author');
+        const domandaEl = document.getElementById('domanda');
+        const finaleEl = document.getElementById('finale');
         const hintEl = document.getElementById('hint');
-        const finalEl = document.getElementById('final');
-        
-        let W = canvas.width = window.innerWidth;
-        let H = canvas.height = window.innerHeight;
-        let mx = W / 2, my = H / 2;
-        
+
+        let W, H;
+        let time = 0;
+        let drops = [];
         let falling = false;
         let fallStart = 0;
-        let droplets = [];
-        let echoes = [];
-        let currentEcho = -1;
-        let ended = false;
-        
-        const metamorphoses = [
-            { word: "navata", bee: "funny-hollow", text: "il vuoto come architettura" },
-            { word: "fodera", bee: "gloomy-flimsy", text: "la membrana invisibile" },
-            { word: "flusso", bee: "brown-exotic", text: "il capitale circolante" },
-            { word: "vapore", bee: "heavy-orange", text: "il cambio di stato" },
-            { word: "boa", bee: "even-fickle", text: "il pensiero come segnale" },
-            { word: "intervallo", bee: "jumpy-poor", text: "il salto che fa la musica" },
-            { word: "cascata", bee: "jagged-juicy", text: "la domanda come generatore" }
+        let mouse = { x: -1000, y: -1000, tx: -1000, ty: -1000 };
+        let audioCtx, masterGain;
+        let currentMeta = -1;
+
+        const metamorfosi = [
+            { word: 'NAVATA', meaning: 'il vuoto come architettura', bee: 'funny-hollow-sunny-refuse' },
+            { word: 'FODERA', meaning: 'la membrana invisibile', bee: 'gloomy-flimsy-new-lining' },
+            { word: 'FLUSSO', meaning: 'il capitale circolante', bee: 'brown-exotic-sweaty-cash' },
+            { word: 'VAPORE', meaning: 'il cambio di stato', bee: 'heavy-orange-joint-ton' },
+            { word: 'BOA', meaning: 'il pensiero come segnale', bee: 'even-fickle-basic-buoys' },
+            { word: 'INTERVALLO', meaning: 'il salto che fa la musica', bee: 'jumpy-poor-gentle-notes' },
+            { word: 'CASCATA', meaning: 'la domanda come generatore', bee: 'jagged-juicy-hungry-tenth' }
         ];
-        
-        // Particelle d'acqua
-        class Drop {
-            constructor(x, y, vx, vy) {
-                this.x = x;
-                this.y = y;
-                this.vx = vx;
-                this.vy = vy;
-                this.life = 1;
-                this.size = 1.5 + Math.random() * 2;
-            }
-            
-            update() {
-                this.vy += 0.15;
-                this.x += this.vx;
-                this.y += this.vy;
-                this.life -= 0.003;
-                
-                // Rimbalzo ai bordi
-                if (this.x < 0 || this.x > W) this.vx *= -0.5;
-                if (this.y > H) {
-                    this.y = H;
-                    this.vy *= -0.3;
-                    this.life -= 0.1;
-                }
-            }
-            
-            draw() {
-                if (this.life <= 0) return;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(180, 145, 60, ${this.life * 0.6})`;
-                ctx.fill();
+
+        let metaElements = [];
+
+        function resize() {
+            W = canvas.width = innerWidth;
+            H = canvas.height = innerHeight;
+            initDrops();
+        }
+
+        function initDrops() {
+            drops = [];
+            for (let i = 0; i < 150; i++) {
+                drops.push(createDrop());
             }
         }
-        
-        // Echi — le trasformazioni
-        class Echo {
-            constructor(word, bee, text, delay) {
-                this.word = word;
-                this.bee = bee;
-                this.text = text;
-                this.delay = delay;
-                this.alpha = 0;
-                this.y = H * 0.4 + Math.random() * H * 0.3;
-                this.x = W * 0.2 + Math.random() * W * 0.6;
-                this.shown = false;
-                this.maxAlpha = 0.85;
-            }
-            
-            update(t, fallT) {
-                const elapsed = fallT - this.delay;
-                
-                if (elapsed > 0 && elapsed < 1.5) {
-                    this.alpha = (elapsed / 1.5) * this.maxAlpha;
-                    this.shown = true;
-                } else if (elapsed >= 1.5 && elapsed < 4) {
-                    this.alpha = this.maxAlpha;
-                } else if (elapsed >= 4 && elapsed < 5.5) {
-                    this.alpha = this.maxAlpha * (1 - (elapsed - 4) / 1.5);
-                } else if (elapsed >= 5.5) {
-                    this.alpha = 0;
-                }
-                
-                // Deriva lenta
-                this.y += Math.sin(t * 0.5 + this.delay) * 0.3;
-            }
-            
-            draw() {
-                if (this.alpha <= 0) return;
-                
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                
-                // Parola grande
-                ctx.font = 'italic 300 42px "Cormorant Garamond", serif';
-                ctx.fillStyle = 'rgba(255, 252, 245, 0.9)';
-                ctx.textAlign = 'center';
-                ctx.fillText(this.word, this.x, this.y);
-                
-                // Descrizione
-                ctx.font = 'italic 300 18px "Cormorant Garamond", serif';
-                ctx.fillStyle = 'rgba(180, 145, 60, 0.7)';
-                ctx.fillText(this.text, this.x, this.y + 35);
-                
-                // Ape
-                ctx.font = 'italic 300 13px "Cormorant Garamond", serif';
-                ctx.fillStyle = 'rgba(180, 145, 60, 0.4)';
-                ctx.fillText('— ' + this.bee, this.x, this.y + 58);
-                
-                ctx.restore();
-            }
+
+        function createDrop() {
+            return {
+                x: Math.random() * W,
+                y: -50 - Math.random() * 200,
+                vy: 0,
+                vx: 0,
+                size: 1 + Math.random() * 2.5,
+                alpha: 0.02 + Math.random() * 0.06,
+                waiting: true,
+                phase: Math.random() * Math.PI * 2
+            };
         }
-        
+
+        function initAudio() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new (window.AudioContext || webkitAudioContext)();
+                masterGain = audioCtx.createGain();
+                masterGain.gain.value = 0.5;
+
+                const reverb = audioCtx.createConvolver();
+                const len = audioCtx.sampleRate * 4;
+                const impulse = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
+                for (let ch = 0; ch < 2; ch++) {
+                    const data = impulse.getChannelData(ch);
+                    for (let i = 0; i < len; i++) {
+                        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.8);
+                    }
+                }
+                reverb.buffer = impulse;
+
+                const reverbGain = audioCtx.createGain();
+                reverbGain.gain.value = 0.6;
+
+                masterGain.connect(reverb);
+                reverb.connect(reverbGain);
+                reverbGain.connect(audioCtx.destination);
+                masterGain.connect(audioCtx.destination);
+
+                // Drone basso
+                const drone = audioCtx.createOscillator();
+                const droneGain = audioCtx.createGain();
+                const droneFilter = audioCtx.createBiquadFilter();
+                drone.type = 'sine';
+                drone.frequency.value = 73.42; // D2
+                droneFilter.type = 'lowpass';
+                droneFilter.frequency.value = 150;
+                droneGain.gain.value = 0.02;
+                drone.connect(droneFilter);
+                droneFilter.connect(droneGain);
+                droneGain.connect(masterGain);
+                drone.start();
+            } catch(e) {}
+        }
+
+        function playDropSound() {
+            if (!audioCtx) return;
+            const notes = [293.66, 329.63, 392, 440, 523.25];
+            const freq = notes[Math.floor(Math.random() * notes.length)];
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.value = 0;
+            gain.gain.linearRampToValueAtTime(0.03, audioCtx.currentTime + 0.1);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 2.5);
+        }
+
+        function playMetaSound(index) {
+            if (!audioCtx) return;
+            const baseFreq = 196 * Math.pow(2, index / 12);
+
+            [1, 1.5, 2].forEach((mult, i) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = baseFreq * mult;
+                    gain.gain.value = 0;
+                    gain.gain.linearRampToValueAtTime(0.06 / (i + 1), audioCtx.currentTime + 0.2);
+                    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 3);
+                    osc.connect(gain);
+                    gain.connect(masterGain);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 4);
+                }, i * 100);
+            });
+        }
+
+        function createMetaElements() {
+            metamorfosi.forEach((m, i) => {
+                const el = document.createElement('div');
+                el.className = 'metamorfosi';
+                el.innerHTML = `
+                    <div class="word">${m.word}</div>
+                    <div class="meaning">${m.meaning}</div>
+                    <div class="bee">— ${m.bee}</div>
+                `;
+
+                // Posizioni sparse
+                const angle = (i / metamorfosi.length) * Math.PI * 2 - Math.PI / 2;
+                const radius = Math.min(W, H) * 0.28;
+                const x = W / 2 + Math.cos(angle) * radius;
+                const y = H / 2 + Math.sin(angle) * radius;
+
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+                el.style.transform = 'translate(-50%, -50%)';
+
+                document.body.appendChild(el);
+                metaElements.push({ el, baseX: x, baseY: y, shown: false });
+            });
+        }
+
         function startFall() {
             if (falling) return;
+            initAudio();
             falling = true;
             fallStart = performance.now();
             hintEl.classList.add('hidden');
-            questionEl.classList.add('falling');
-            authorEl.classList.add('falling');
-            
-            // Crea gocce
-            for (let i = 0; i < 60; i++) {
-                setTimeout(() => {
-                    const x = W * 0.3 + Math.random() * W * 0.4;
-                    const y = H * 0.1;
-                    droplets.push(new Drop(x, y, (Math.random() - 0.5) * 3, Math.random() * 2));
-                }, i * 30);
-            }
-            
-            // Crea echi
-            metamorphoses.forEach((m, i) => {
-                echoes.push(new Echo(m.word, m.bee, m.text, 2 + i * 3.5));
-            });
+            drops.forEach(d => d.waiting = false);
         }
-        
-        function draw() {
-            const t = performance.now() * 0.001;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+
+            mouse.x += (mouse.tx - mouse.x) * 0.08;
+            mouse.y += (mouse.ty - mouse.y) * 0.08;
+
+            ctx.clearRect(0, 0, W, H);
+
             const fallT = falling ? (performance.now() - fallStart) / 1000 : 0;
-            
-            // Sfondo
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, W, H);
-            
-            // Linee verticali — la cascata
-            if (falling && fallT < 25) {
-                const intensity = Math.min(1, fallT / 2) * (1 - Math.max(0, (fallT - 20) / 5));
-                for (let i = 0; i < 30; i++) {
-                    const x = W * 0.25 + (i / 30) * W * 0.5;
-                    const drift = Math.sin(t * 2 + i * 0.5) * 10;
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(x + drift, 0);
-                    ctx.lineTo(x + drift + Math.sin(t + i) * 5, H);
-                    ctx.strokeStyle = `rgba(180, 145, 60, ${0.03 * intensity})`;
-                    ctx.lineWidth = 1 + Math.sin(t * 3 + i) * 0.5;
-                    ctx.stroke();
+
+            // Domanda si dissolve
+            if (falling && fallT < 3) {
+                domandaEl.style.opacity = 1 - fallT / 3;
+            }
+
+            // Gocce
+            drops.forEach(d => {
+                if (d.waiting) return;
+
+                // Gravità
+                d.vy += 0.08;
+
+                // Attrazione verso il centro (la domanda)
+                const dx = W / 2 - d.x;
+                const dy = H / 2 - d.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 50) {
+                    d.vx += dx / dist * 0.02;
+                    d.vy += dy / dist * 0.01;
+                }
+
+                // Repulsione dal mouse
+                const mdx = d.x - mouse.x;
+                const mdy = d.y - mouse.y;
+                const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+                if (mDist < 120) {
+                    const force = (120 - mDist) / 120;
+                    d.vx += (mdx / mDist) * force * 0.5;
+                    d.vy += (mdy / mDist) * force * 0.3;
+                }
+
+                // Frizione
+                d.vx *= 0.99;
+                d.vy *= 0.98;
+
+                d.x += d.vx;
+                d.y += d.vy;
+
+                // Suono occasionale
+                if (Math.random() < 0.001 && falling) playDropSound();
+
+                // Reset se esce
+                if (d.y > H + 50 || d.x < -50 || d.x > W + 50) {
+                    d.x = Math.random() * W;
+                    d.y = -50;
+                    d.vy = 0;
+                    d.vx = 0;
+                }
+
+                // Disegna
+                const pulse = Math.sin(time * 2 + d.phase) * 0.3 + 0.7;
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, d.size * pulse, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(150, 120, 50, ${d.alpha * pulse})`;
+                ctx.fill();
+            });
+
+            // Metamorfosi
+            if (falling) {
+                const metaInterval = 3.5;
+                const metaIndex = Math.floor((fallT - 2) / metaInterval);
+
+                if (metaIndex >= 0 && metaIndex < metamorfosi.length && metaIndex !== currentMeta) {
+                    // Nascondi precedente
+                    if (currentMeta >= 0 && metaElements[currentMeta]) {
+                        metaElements[currentMeta].el.classList.remove('visible');
+                    }
+
+                    // Mostra nuovo
+                    currentMeta = metaIndex;
+                    if (metaElements[currentMeta]) {
+                        metaElements[currentMeta].el.classList.add('visible');
+                        playMetaSound(currentMeta);
+                    }
+                }
+
+                // Nascondi ultimo dopo un po'
+                if (fallT > 2 + metamorfosi.length * metaInterval + 2 && currentMeta === metamorfosi.length - 1) {
+                    metaElements[currentMeta].el.classList.remove('visible');
+                    currentMeta = metamorfosi.length; // Impedisce ripetizioni
+                }
+
+                // Finale
+                if (fallT > 2 + metamorfosi.length * metaInterval + 4) {
+                    finaleEl.classList.add('visible');
                 }
             }
-            
-            // Gocce
-            droplets = droplets.filter(d => d.life > 0);
-            droplets.forEach(d => {
-                d.update();
-                d.draw();
+
+            // Movimento sottile delle metamorfosi
+            metaElements.forEach((m, i) => {
+                const drift = Math.sin(time * 0.5 + i) * 8;
+                m.el.style.transform = `translate(-50%, calc(-50% + ${drift}px))`;
             });
-            
-            // Aggiungi gocce durante la caduta
-            if (falling && fallT > 0.5 && fallT < 22 && Math.random() < 0.15) {
-                const x = W * 0.3 + Math.random() * W * 0.4;
-                droplets.push(new Drop(x, -10, (Math.random() - 0.5) * 2, 2 + Math.random() * 3));
-            }
-            
-            // Echi
-            echoes.forEach(e => {
-                e.update(t, fallT);
-                e.draw();
-            });
-            
-            // Finale
-            if (falling && fallT > 26 && !ended) {
-                ended = true;
-                finalEl.textContent = 'se la domanda è il pensiero, che cos\'è la risposta?';
-                finalEl.style.color = 'rgba(180, 145, 60, 0.8)';
-            }
-            
-            // Cursore
-            ctx.beginPath();
-            ctx.arc(mx, my, 8, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(180, 145, 60, 0.3)`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            
-            requestAnimationFrame(draw);
         }
-        
+
         // Eventi
         window.addEventListener('resize', () => {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
+            resize();
+            // Riposiziona metamorfosi
+            metaElements.forEach((m, i) => {
+                const angle = (i / metamorfosi.length) * Math.PI * 2 - Math.PI / 2;
+                const radius = Math.min(W, H) * 0.28;
+                m.baseX = W / 2 + Math.cos(angle) * radius;
+                m.baseY = H / 2 + Math.sin(angle) * radius;
+                m.el.style.left = m.baseX + 'px';
+                m.el.style.top = m.baseY + 'px';
+            });
         });
-        
-        window.addEventListener('mousemove', e => {
-            mx = e.clientX;
-            my = e.clientY;
+
+        document.addEventListener('mousemove', e => {
+            mouse.tx = e.clientX;
+            mouse.ty = e.clientY;
         });
-        
-        window.addEventListener('click', startFall);
-        window.addEventListener('touchstart', startFall);
-        
-        draw();
-    })();
+
+        hintEl.addEventListener('click', startFall);
+        document.addEventListener('keypress', e => {
+            if (e.key === ' ' || e.key === 'Enter') startFall();
+        });
+
+        resize();
+        createMetaElements();
+        animate();
     </script>
 </body>
 </html>
