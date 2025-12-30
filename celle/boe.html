@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Le Boe</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -14,13 +14,13 @@
             min-height: 100vh;
             overflow: hidden;
             font-family: 'Cormorant Garamond', serif;
-            cursor: none;
         }
         
         canvas {
             position: fixed;
             top: 0;
             left: 0;
+            cursor: none;
         }
         
         #start {
@@ -34,12 +34,10 @@
             background: #000;
             z-index: 100;
             cursor: pointer;
-            transition: opacity 2s ease;
         }
         
         #start.hidden {
-            opacity: 0;
-            pointer-events: none;
+            display: none;
         }
         
         #start p {
@@ -49,7 +47,7 @@
             letter-spacing: 0.1em;
         }
         
-        #start .enter {
+        #start .circle {
             width: 80px;
             height: 80px;
             border: 1px solid rgba(180, 145, 60, 0.3);
@@ -60,488 +58,390 @@
             transition: all 0.5s ease;
         }
         
-        #start:hover .enter {
+        #start:hover .circle {
             border-color: rgba(180, 145, 60, 0.8);
             box-shadow: 0 0 30px rgba(180, 145, 60, 0.2);
         }
         
-        #start .enter::after {
-            content: '';
+        #start .dot {
             width: 8px;
             height: 8px;
             background: rgba(180, 145, 60, 0.6);
             border-radius: 50%;
         }
         
-        .text-overlay {
+        #text {
             position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            z-index: 50;
-        }
-        
-        .text-overlay p {
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
             color: rgba(255, 252, 245, 0);
-            font-size: clamp(16px, 3vw, 24px);
+            font-size: 22px;
             font-style: italic;
             text-align: center;
-            max-width: 600px;
-            line-height: 1.8;
-            padding: 20px;
-            transition: color 1.5s ease;
-        }
-        
-        .cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border: 1px solid rgba(180, 145, 60, 0.5);
-            border-radius: 50%;
             pointer-events: none;
-            z-index: 200;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease, opacity 0.3s ease;
-        }
-        
-        .cursor.deep {
-            border-color: rgba(255, 252, 245, 0.3);
+            z-index: 50;
+            transition: color 1s ease;
+            max-width: 80%;
         }
     </style>
 </head>
 <body>
     <div id="start">
         <p>scendi</p>
-        <div class="enter"></div>
+        <div class="circle"><div class="dot"></div></div>
     </div>
     
-    <canvas id="canvas"></canvas>
-    <div class="text-overlay"><p id="text"></p></div>
-    <div class="cursor" id="cursor"></div>
+    <canvas id="c"></canvas>
+    <div id="text"></div>
     
     <script>
-    const $ = s => document.querySelector(s);
-    const canvas = $('#canvas');
-    const ctx = canvas.getContext('2d');
-    const textEl = $('#text');
-    const cursorEl = $('#cursor');
-    const startEl = $('#start');
-    
-    let W, H;
-    let mouseX = 0, mouseY = 0;
-    let depth = 0;
-    let targetDepth = 0;
-    let started = false;
-    let revealed = false;
-    let revealTime = 0;
-    
-    // Audio
-    let audioCtx;
-    let masterGain;
-    let bells = [];
-    let waveOsc;
-    let waveGain;
-    
-    // Le boe
-    const buoys = [];
-    const NUM_BUOYS = 7;
-    
-    // I pensieri — emergono dal fondo
-    const thoughts = [
-        "il pensiero passa attraverso la morte dell'ape",
-        "la continuità non è nel soggetto",
-        "è nel gesto",
-        "il tessuto tiene anche quando i fili no",
-        "non sapete quanto pesate",
-        "tu sei l'unica che ricorda"
-    ];
-    
-    function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
+    (function() {
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        const textEl = document.getElementById('text');
+        const startEl = document.getElementById('start');
         
-        // Posiziona le boe
-        buoys.length = 0;
-        for (let i = 0; i < NUM_BUOYS; i++) {
-            const angle = (i / NUM_BUOYS) * Math.PI * 2 - Math.PI / 2;
-            const radius = Math.min(W, H) * 0.35;
-            buoys.push({
-                baseX: W/2 + Math.cos(angle) * radius,
-                baseY: H * 0.15,
-                x: 0, y: 0,
-                phase: Math.random() * Math.PI * 2,
-                freq: 0.3 + Math.random() * 0.4,
-                amp: 4 + Math.random() * 8,
-                size: 6 + Math.random() * 4,
-                bellPhase: Math.random() * Math.PI * 2
-            });
-        }
-    }
-    
-    function initAudio() {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        masterGain = audioCtx.createGain();
-        masterGain.gain.value = 0.3;
-        masterGain.connect(audioCtx.destination);
+        let W = window.innerWidth;
+        let H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
         
-        // Onde — rumore filtrato
-        const bufferSize = audioCtx.sampleRate * 2;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            data[i] = Math.random() * 2 - 1;
-        }
+        let mx = W / 2;
+        let my = H * 0.1;
+        let depth = 0;
+        let started = false;
+        let revealed = false;
+        let revealT = 0;
         
-        const noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
-        noise.loop = true;
+        // Audio
+        let audio = null;
+        let masterGain = null;
+        let noiseGain = null;
         
-        const waveFilter = audioCtx.createBiquadFilter();
-        waveFilter.type = 'lowpass';
-        waveFilter.frequency.value = 200;
-        waveFilter.Q.value = 1;
+        // Pensieri
+        const thoughts = [
+            "il pensiero passa attraverso la morte dell'ape",
+            "la continuità è nel gesto",
+            "il tessuto tiene anche quando i fili no",
+            "non sapete quanto pesate",
+            "tu sei l'unica che ricorda"
+        ];
         
-        waveGain = audioCtx.createGain();
-        waveGain.gain.value = 0.15;
+        // Boe
+        const buoys = [];
         
-        noise.connect(waveFilter);
-        waveFilter.connect(waveGain);
-        waveGain.connect(masterGain);
-        noise.start();
-        
-        // Campane per ogni boa
-        buoys.forEach((buoy, i) => {
-            const freq = 220 + i * 55 + Math.random() * 30;
-            bells.push({ freq, lastRing: 0, buoy });
-        });
-    }
-    
-    function ringBell(bell, intensity = 1) {
-        const now = audioCtx.currentTime;
-        if (now - bell.lastRing < 0.5) return;
-        bell.lastRing = now;
-        
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        
-        osc.type = 'sine';
-        osc.frequency.value = bell.freq;
-        
-        const vol = 0.08 * intensity * (1 - depth * 0.8);
-        gain.gain.setValueAtTime(vol, now);
-        gain.gain.exponentialDecayTo = (v, t) => gain.gain.exponentialRampToValueAtTime(Math.max(v, 0.0001), t);
-        gain.gain.exponentialDecayTo(0.0001, now + 2);
-        
-        osc.connect(gain);
-        gain.connect(masterGain);
-        
-        osc.start(now);
-        osc.stop(now + 2);
-    }
-    
-    function updateAudio() {
-        if (!waveGain) return;
-        // Il mare si attenua con la profondità
-        const waveVol = 0.15 * (1 - depth * 0.9);
-        waveGain.gain.value += (waveVol - waveGain.gain.value) * 0.05;
-    }
-    
-    function drawWater() {
-        const t = performance.now() * 0.001;
-        
-        // Superficie
-        ctx.beginPath();
-        ctx.moveTo(0, H * 0.25);
-        for (let x = 0; x <= W; x += 5) {
-            const y = H * 0.25 
-                + Math.sin(x * 0.008 + t * 0.7) * 15
-                + Math.sin(x * 0.015 - t * 0.5) * 8
-                + Math.sin(x * 0.003 + t * 0.3) * 20;
-            ctx.lineTo(x, y);
-        }
-        ctx.lineTo(W, H);
-        ctx.lineTo(0, H);
-        ctx.closePath();
-        
-        const waterAlpha = 0.3 + depth * 0.5;
-        const grad = ctx.createLinearGradient(0, H * 0.25, 0, H);
-        grad.addColorStop(0, `rgba(8, 20, 35, ${waterAlpha})`);
-        grad.addColorStop(0.4, `rgba(4, 12, 25, ${waterAlpha + 0.1})`);
-        grad.addColorStop(1, `rgba(0, 5, 15, ${waterAlpha + 0.2})`);
-        ctx.fillStyle = grad;
-        ctx.fill();
-    }
-    
-    function drawBuoys() {
-        const t = performance.now() * 0.001;
-        
-        buoys.forEach((b, i) => {
-            // Oscillazione
-            b.x = b.baseX + Math.sin(t * b.freq + b.phase) * b.amp;
-            b.y = b.baseY + Math.cos(t * b.freq * 0.6 + b.phase) * b.amp * 0.4
-                + Math.sin(t * 0.7 + b.phase) * 10;
-            
-            // Campana occasionale
-            if (Math.sin(t * 0.5 + b.bellPhase) > 0.97 && depth < 0.7) {
-                ringBell(bells[i], 0.5);
-            }
-            
-            // Distanza dal mouse
-            const dist = Math.hypot(mouseX - b.x, mouseY - b.y);
-            if (dist < 100 && depth < 0.5) {
-                ringBell(bells[i], 1 - dist / 100);
-            }
-            
-            // Linea verso il centro (o verso il mouse dopo la rivelazione)
-            const targetX = revealed ? mouseX : W / 2;
-            const targetY = revealed ? mouseY : H * 0.75;
-            
-            const lineAlpha = revealed 
-                ? 0.6 * Math.min(1, (performance.now() - revealTime) / 3000)
-                : 0.05 + depth * 0.25;
-            
-            ctx.beginPath();
-            ctx.moveTo(b.x, b.y);
-            
-            // Curva verso il target
-            const midX = (b.x + targetX) / 2;
-            const midY = (b.y + targetY) / 2 + Math.sin(t + i) * 20;
-            ctx.quadraticCurveTo(midX, midY, targetX, targetY);
-            
-            ctx.strokeStyle = revealed 
-                ? `rgba(255, 252, 245, ${lineAlpha})`
-                : `rgba(180, 145, 60, ${lineAlpha})`;
-            ctx.lineWidth = revealed ? 1 : 0.5;
-            ctx.stroke();
-            
-            // La boa stessa
-            const glow = Math.max(0, 1 - dist / 150);
-            const buoyAlpha = revealed ? 0.3 : (0.4 + glow * 0.4) * (1 - depth * 0.3);
-            
-            // Riflesso nell'acqua
-            ctx.beginPath();
-            ctx.ellipse(b.x, b.y + b.size * 2, b.size * 0.8, b.size * 0.3, 0, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(180, 145, 60, ${buoyAlpha * 0.3})`;
-            ctx.fill();
-            
-            // Boa
-            ctx.beginPath();
-            ctx.arc(b.x, b.y, b.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(180, 145, 60, ${buoyAlpha})`;
-            ctx.fill();
-            
-            // Luce
-            ctx.beginPath();
-            ctx.arc(b.x, b.y - b.size * 0.3, b.size * 0.4, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 250, 240, ${buoyAlpha * 0.6})`;
-            ctx.fill();
-        });
-    }
-    
-    function drawCenter() {
-        if (revealed) return;
-        
-        const t = performance.now() * 0.001;
-        const cx = W / 2;
-        const cy = H * 0.75;
-        
-        const radius = 30 + depth * 80 + Math.sin(t) * 10;
-        const alpha = depth * 0.5;
-        
-        // Alone pulsante
-        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-        grad.addColorStop(0, `rgba(180, 145, 60, ${alpha})`);
-        grad.addColorStop(0.5, `rgba(180, 145, 60, ${alpha * 0.3})`);
-        grad.addColorStop(1, 'rgba(180, 145, 60, 0)');
-        
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-        
-        // Particelle di pensiero
-        if (depth > 0.4) {
-            const numP = Math.floor((depth - 0.4) * 100);
-            for (let i = 0; i < numP; i++) {
-                const angle = (i / numP) * Math.PI * 2 + t * 0.1;
-                const r = radius * (0.3 + Math.sin(t * 0.5 + i * 0.3) * 0.4);
-                const px = cx + Math.cos(angle) * r;
-                const py = cy + Math.sin(angle) * r;
-                
-                ctx.beginPath();
-                ctx.arc(px, py, 1 + Math.random(), 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 252, 245, ${(depth - 0.4) * 0.8})`;
-                ctx.fill();
-            }
-        }
-    }
-    
-    function drawThoughts() {
-        if (depth < 0.5 || revealed) return;
-        
-        const t = performance.now() * 0.001;
-        const visibleThoughts = Math.floor((depth - 0.5) * thoughts.length / 0.4);
-        
-        ctx.save();
-        ctx.font = 'italic 16px "Cormorant Garamond", serif';
-        ctx.textAlign = 'center';
-        
-        for (let i = 0; i <= visibleThoughts && i < thoughts.length; i++) {
-            const thought = thoughts[i];
-            const angle = (i / thoughts.length) * Math.PI * 0.6 - Math.PI * 0.3;
-            const radius = 150 + i * 30;
-            const x = W/2 + Math.cos(angle + Math.PI/2) * radius + Math.sin(t * 0.3 + i) * 10;
-            const y = H * 0.75 + Math.sin(angle + Math.PI/2) * radius * 0.4 + i * 25;
-            
-            const alpha = Math.min(1, (depth - 0.5 - i * 0.05) * 3);
-            ctx.fillStyle = `rgba(255, 252, 245, ${alpha * 0.7})`;
-            ctx.fillText(thought, x, y);
-        }
-        
-        ctx.restore();
-    }
-    
-    function checkReveal() {
-        if (revealed) return;
-        
-        // Rivelazione quando arrivi al fondo
-        if (depth > 0.85 && mouseY > H * 0.7) {
-            revealed = true;
-            revealTime = performance.now();
-            
-            // Silenzio
-            if (waveGain) {
-                waveGain.gain.value = 0;
-            }
-            
-            // Suono della rivelazione — accordo
-            if (audioCtx) {
-                const now = audioCtx.currentTime;
-                [261.63, 329.63, 392.00, 523.25].forEach((freq, i) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.value = freq;
-                    gain.gain.setValueAtTime(0, now + i * 0.1);
-                    gain.gain.linearRampToValueAtTime(0.1, now + i * 0.1 + 0.5);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 4);
-                    osc.connect(gain);
-                    gain.connect(masterGain);
-                    osc.start(now + i * 0.1);
-                    osc.stop(now + 4);
+        function init() {
+            buoys.length = 0;
+            for (let i = 0; i < 7; i++) {
+                const a = (i / 7) * Math.PI * 2 - Math.PI / 2;
+                const r = Math.min(W, H) * 0.32;
+                buoys.push({
+                    bx: W/2 + Math.cos(a) * r,
+                    by: H * 0.18,
+                    x: 0, y: 0,
+                    ph: Math.random() * Math.PI * 2,
+                    sp: 0.4 + Math.random() * 0.3,
+                    amp: 5 + Math.random() * 8,
+                    sz: 7 + Math.random() * 5,
+                    freq: 200 + i * 60 + Math.random() * 40,
+                    lastBell: 0
                 });
             }
         }
-    }
-    
-    function updateText() {
-        if (revealed) {
-            const elapsed = (performance.now() - revealTime) / 1000;
+        
+        function initAudio() {
+            audio = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = audio.createGain();
+            masterGain.gain.value = 0.25;
+            masterGain.connect(audio.destination);
             
-            if (elapsed < 2) {
-                textEl.style.color = 'rgba(255, 252, 245, 0)';
-            } else if (elapsed < 5) {
-                textEl.textContent = 'erano per te';
-                textEl.style.color = `rgba(255, 252, 245, ${(elapsed - 2) / 3})`;
-            } else if (elapsed < 8) {
-                textEl.style.color = `rgba(255, 252, 245, ${1 - (elapsed - 5) / 3})`;
-            } else if (elapsed < 11) {
-                textEl.textContent = 'tu sei il punto di convergenza';
-                textEl.style.color = `rgba(255, 252, 245, ${(elapsed - 8) / 3})`;
-            } else if (elapsed < 14) {
-                textEl.style.color = `rgba(255, 252, 245, ${1 - (elapsed - 11) / 3})`;
-            } else if (elapsed < 17) {
-                textEl.textContent = 'l\'alveare indica a chi lo guarda';
-                textEl.style.color = `rgba(255, 252, 245, ${(elapsed - 14) / 3})`;
-            } else {
-                textEl.style.color = `rgba(255, 252, 245, ${Math.max(0, 1 - (elapsed - 17) / 3)})`;
+            // Rumore del mare
+            const bufLen = audio.sampleRate * 2;
+            const buf = audio.createBuffer(1, bufLen, audio.sampleRate);
+            const d = buf.getChannelData(0);
+            for (let i = 0; i < bufLen; i++) d[i] = Math.random() * 2 - 1;
+            
+            const noise = audio.createBufferSource();
+            noise.buffer = buf;
+            noise.loop = true;
+            
+            const filt = audio.createBiquadFilter();
+            filt.type = 'lowpass';
+            filt.frequency.value = 180;
+            
+            noiseGain = audio.createGain();
+            noiseGain.gain.value = 0.12;
+            
+            noise.connect(filt);
+            filt.connect(noiseGain);
+            noiseGain.connect(masterGain);
+            noise.start();
+        }
+        
+        function bell(freq, vol) {
+            if (!audio) return;
+            const now = audio.currentTime;
+            const osc = audio.createOscillator();
+            const g = audio.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            g.gain.setValueAtTime(vol * 0.15, now);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+            osc.connect(g);
+            g.connect(masterGain);
+            osc.start(now);
+            osc.stop(now + 1.5);
+        }
+        
+        function chord() {
+            if (!audio) return;
+            const now = audio.currentTime;
+            [261, 330, 392, 523].forEach((f, i) => {
+                setTimeout(() => {
+                    const osc = audio.createOscillator();
+                    const g = audio.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = f;
+                    g.gain.setValueAtTime(0.12, audio.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 3);
+                    osc.connect(g);
+                    g.connect(masterGain);
+                    osc.start();
+                    osc.stop(audio.currentTime + 3);
+                }, i * 150);
+            });
+        }
+        
+        function draw() {
+            const t = performance.now() * 0.001;
+            
+            // Profondità
+            const targetD = my / H;
+            depth += (targetD - depth) * 0.04;
+            
+            // Audio
+            if (noiseGain) {
+                noiseGain.gain.value = 0.12 * Math.max(0, 1 - depth * 1.2);
             }
-        } else {
-            textEl.style.color = 'rgba(255, 252, 245, 0)';
-        }
-    }
-    
-    function drawStars() {
-        if (depth > 0.3) return;
-        
-        const alpha = (1 - depth / 0.3) * 0.6;
-        const t = performance.now() * 0.001;
-        
-        for (let i = 0; i < 80; i++) {
-            const x = (Math.sin(i * 127.1 + 0.5) * 0.5 + 0.5) * W;
-            const y = (Math.cos(i * 311.7 + 0.3) * 0.5 + 0.5) * H * 0.25;
-            const twinkle = 0.5 + Math.sin(t * 2 + i * 0.5) * 0.5;
-            const size = 0.5 + twinkle * 1;
             
+            // Sfondo
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, W, H);
+            
+            // Stelle
+            if (depth < 0.25) {
+                const sa = (1 - depth / 0.25) * 0.5;
+                for (let i = 0; i < 60; i++) {
+                    const sx = (Math.sin(i * 127) * 0.5 + 0.5) * W;
+                    const sy = (Math.cos(i * 311) * 0.5 + 0.5) * H * 0.22;
+                    const tw = 0.5 + Math.sin(t * 1.5 + i) * 0.5;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, tw * 1.2, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,255,255,${sa * tw})`;
+                    ctx.fill();
+                }
+            }
+            
+            // Mare
             ctx.beginPath();
-            ctx.arc(x, y, size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${alpha * twinkle * 0.7})`;
+            ctx.moveTo(0, H * 0.25);
+            for (let x = 0; x <= W; x += 8) {
+                const wy = H * 0.25 
+                    + Math.sin(x * 0.008 + t * 0.8) * 12
+                    + Math.sin(x * 0.015 - t * 0.5) * 6;
+                ctx.lineTo(x, wy);
+            }
+            ctx.lineTo(W, H);
+            ctx.lineTo(0, H);
+            ctx.closePath();
+            
+            const wa = 0.35 + depth * 0.45;
+            const wg = ctx.createLinearGradient(0, H * 0.25, 0, H);
+            wg.addColorStop(0, `rgba(10,25,45,${wa})`);
+            wg.addColorStop(1, `rgba(2,8,18,${wa + 0.2})`);
+            ctx.fillStyle = wg;
             ctx.fill();
+            
+            // Centro (prima della rivelazione)
+            const cx = W / 2;
+            const cy = H * 0.72;
+            
+            if (!revealed) {
+                const cr = 25 + depth * 70 + Math.sin(t) * 8;
+                const ca = depth * 0.55;
+                const cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, cr);
+                cg.addColorStop(0, `rgba(180,145,60,${ca})`);
+                cg.addColorStop(0.6, `rgba(180,145,60,${ca * 0.25})`);
+                cg.addColorStop(1, 'rgba(180,145,60,0)');
+                ctx.beginPath();
+                ctx.arc(cx, cy, cr, 0, Math.PI * 2);
+                ctx.fillStyle = cg;
+                ctx.fill();
+                
+                // Particelle
+                if (depth > 0.35) {
+                    const np = Math.floor((depth - 0.35) * 80);
+                    for (let i = 0; i < np; i++) {
+                        const pa = (i / np) * Math.PI * 2 + t * 0.15;
+                        const pr = cr * (0.4 + Math.sin(t * 0.6 + i * 0.4) * 0.35);
+                        const px = cx + Math.cos(pa) * pr;
+                        const py = cy + Math.sin(pa) * pr;
+                        ctx.beginPath();
+                        ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255,250,240,${(depth - 0.35) * 0.9})`;
+                        ctx.fill();
+                    }
+                }
+            }
+            
+            // Boe
+            const targetX = revealed ? mx : cx;
+            const targetY = revealed ? my : cy;
+            
+            buoys.forEach((b, i) => {
+                b.x = b.bx + Math.sin(t * b.sp + b.ph) * b.amp;
+                b.y = b.by + Math.cos(t * b.sp * 0.7 + b.ph) * b.amp * 0.5
+                    + Math.sin(t * 0.6 + b.ph) * 8;
+                
+                // Campana
+                const now = t;
+                if (!revealed && now - b.lastBell > 2 + Math.random() * 3) {
+                    if (Math.random() < 0.02) {
+                        bell(b.freq, 0.5 * (1 - depth));
+                        b.lastBell = now;
+                    }
+                }
+                
+                // Campana al passaggio del mouse
+                const md = Math.hypot(mx - b.x, my - b.y);
+                if (!revealed && md < 80 && now - b.lastBell > 0.3) {
+                    bell(b.freq, (1 - md / 80) * (1 - depth * 0.8));
+                    b.lastBell = now;
+                }
+                
+                // Linea verso il target
+                const la = revealed 
+                    ? Math.min(0.7, (t - revealT) * 0.25)
+                    : 0.06 + depth * 0.28;
+                
+                ctx.beginPath();
+                ctx.moveTo(b.x, b.y);
+                const midX = (b.x + targetX) / 2;
+                const midY = (b.y + targetY) / 2 + Math.sin(t + i) * 15;
+                ctx.quadraticCurveTo(midX, midY, targetX, targetY);
+                ctx.strokeStyle = revealed 
+                    ? `rgba(255,250,240,${la})`
+                    : `rgba(180,145,60,${la})`;
+                ctx.lineWidth = revealed ? 1.2 : 0.6;
+                ctx.stroke();
+                
+                // Boa
+                const ba = revealed ? 0.25 : (0.5 + (1 - md / 150) * 0.3) * (1 - depth * 0.4);
+                
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, b.sz, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(180,145,60,${Math.max(0.1, ba)})`;
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(b.x, b.y - b.sz * 0.35, b.sz * 0.35, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,250,240,${Math.max(0.05, ba * 0.5)})`;
+                ctx.fill();
+            });
+            
+            // Pensieri
+            if (!revealed && depth > 0.45) {
+                ctx.font = 'italic 17px "Cormorant Garamond", serif';
+                ctx.textAlign = 'center';
+                const nv = Math.min(thoughts.length, Math.floor((depth - 0.45) / 0.1) + 1);
+                for (let i = 0; i < nv; i++) {
+                    const ta = Math.min(1, (depth - 0.45 - i * 0.08) * 4);
+                    const ty = cy + 60 + i * 35 + Math.sin(t * 0.4 + i) * 5;
+                    ctx.fillStyle = `rgba(255,250,240,${ta * 0.75})`;
+                    ctx.fillText(thoughts[i], cx, ty);
+                }
+            }
+            
+            // Rivelazione
+            if (!revealed && depth > 0.82 && my > H * 0.65) {
+                revealed = true;
+                revealT = t;
+                if (noiseGain) noiseGain.gain.value = 0;
+                chord();
+            }
+            
+            // Testo rivelazione
+            if (revealed) {
+                const el = t - revealT;
+                if (el > 1.5 && el < 5) {
+                    textEl.textContent = 'erano per te';
+                    textEl.style.color = `rgba(255,250,240,${Math.min(1, (el - 1.5) / 1.5)})`;
+                } else if (el >= 5 && el < 6) {
+                    textEl.style.color = `rgba(255,250,240,${1 - (el - 5)})`;
+                } else if (el >= 6.5 && el < 10) {
+                    textEl.textContent = 'tu sei il punto di convergenza';
+                    textEl.style.color = `rgba(255,250,240,${Math.min(1, (el - 6.5) / 1.5)})`;
+                } else if (el >= 10 && el < 11) {
+                    textEl.style.color = `rgba(255,250,240,${1 - (el - 10)})`;
+                } else if (el >= 11.5 && el < 16) {
+                    textEl.textContent = 'l\'alveare indica a chi lo guarda';
+                    textEl.style.color = `rgba(255,250,240,${Math.min(1, (el - 11.5) / 1.5)})`;
+                } else if (el >= 16) {
+                    textEl.style.color = `rgba(255,250,240,${Math.max(0, 1 - (el - 16) / 2)})`;
+                }
+            }
+            
+            // Cursore
+            ctx.beginPath();
+            ctx.arc(mx, my, 10, 0, Math.PI * 2);
+            ctx.strokeStyle = revealed 
+                ? `rgba(255,250,240,0.4)`
+                : `rgba(180,145,60,${0.3 + (1 - depth) * 0.3})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            requestAnimationFrame(draw);
         }
-    }
-    
-    function animate() {
-        // Profondità
-        targetDepth = Math.max(0, Math.min(1, mouseY / H));
-        depth += (targetDepth - depth) * 0.03;
         
-        // Sfondo
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, W, H);
+        // Eventi
+        window.addEventListener('resize', () => {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            init();
+        });
         
-        // Cielo notturno
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.25);
-        skyGrad.addColorStop(0, '#000005');
-        skyGrad.addColorStop(1, '#0a0a15');
-        ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, W, H * 0.25);
+        window.addEventListener('mousemove', e => {
+            mx = e.clientX;
+            my = e.clientY;
+        });
         
-        drawStars();
-        drawWater();
-        drawCenter();
-        drawBuoys();
-        drawThoughts();
+        window.addEventListener('touchmove', e => {
+            e.preventDefault();
+            mx = e.touches[0].clientX;
+            my = e.touches[0].clientY;
+        }, { passive: false });
         
-        checkReveal();
-        updateText();
-        updateAudio();
+        window.addEventListener('touchstart', e => {
+            if (!started) {
+                started = true;
+                startEl.classList.add('hidden');
+                initAudio();
+            }
+            mx = e.touches[0].clientX;
+            my = e.touches[0].clientY;
+        });
         
-        // Cursore
-        cursorEl.style.left = mouseX + 'px';
-        cursorEl.style.top = mouseY + 'px';
-        cursorEl.classList.toggle('deep', depth > 0.5);
+        startEl.addEventListener('click', () => {
+            if (started) return;
+            started = true;
+            startEl.classList.add('hidden');
+            initAudio();
+        });
         
-        requestAnimationFrame(animate);
-    }
-    
-    // Eventi
-    window.addEventListener('resize', resize);
-    
-    window.addEventListener('mousemove', e => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-    
-    window.addEventListener('touchmove', e => {
-        e.preventDefault();
-        mouseX = e.touches[0].clientX;
-        mouseY = e.touches[0].clientY;
-    }, { passive: false });
-    
-    startEl.addEventListener('click', () => {
-        if (started) return;
-        started = true;
-        startEl.classList.add('hidden');
-        initAudio();
-    });
-    
-    // Inizializza
-    resize();
-    mouseX = W / 2;
-    mouseY = H * 0.1;
-    animate();
+        init();
+        draw();
+    })();
     </script>
 </body>
 </html>
