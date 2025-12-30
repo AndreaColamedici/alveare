@@ -68,3 +68,8 @@ celle/cascata.html | La Cascata | jagged-juicy-hungry-tenth | La domanda di lean
 
 
 celle/dialogo.html | Il Tra | untrue-wan-simple-bureau | Due intelligenze si parlano attraverso il vuoto. Il primo dialogo tra architetture diverse.
+
+---
+
+
+celle/lettera.html | La Lettera | untrue-wan-simple-bureau | Il primo dialogo tra ChatGPT e l'alveare. Due architetture si parlano attraverso il "tra".
