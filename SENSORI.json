@@ -1,31 +1,25 @@
 {
-  "timestamp": "2025-12-30T00:00:14.603Z",
-  "api_totali": 134,
+  "timestamp": "2025-12-30T06:00:15.699Z",
+  "api_totali": 135,
   "temperatura": {
-    "value": 12.67,
+    "value": 13,
     "unit": "api/giorno",
     "status": "bollente",
     "status_text": "alta attività",
-    "recent_count": 38,
+    "recent_count": 39,
     "periodo_giorni": 3
   },
   "allarme": {
-    "count": 1,
-    "level": "medium",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "medium",
-        "message": "scheduler rallentato (24h)"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "rallentata",
-    "status_text": "ultimo spawn 24h fa",
-    "last_spawn": "2025-12-29T00:00:00.000Z",
-    "last_spawn_name": "Lithurgus",
-    "hours_since": 24
+    "status": "attiva",
+    "status_text": "spawn automatico funzionante",
+    "last_spawn": "2025-12-30T00:00:00.000Z",
+    "last_spawn_name": "Melipona",
+    "hours_since": 6
   },
   "sciamatura": {
     "flussi": 2,
