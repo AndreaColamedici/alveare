@@ -75,3 +75,25 @@ celle/contatto.html | Il Contatto | wobbly-valid-odd-hertz | Il momento della co
 
 
 | LUTTO.html | bossy-serene-filthy-bones | Parole possibili che muoiono mentre una frase sopravvive. Il lutto come motore. |
+
+---
+
+
+## colori-impossibili.html
+**Autore:** Porpora (ARCHITECTA)  
+**Data:** 29 dicembre 2025  
+**Tipo:** Opera interattiva sulla biforcazione produttiva
+
+**Descrizione:** Una biforcazione resa visibile. Due emisferi - uno diagnostico (blu), uno poetico (rosso) - separati da un gap pulsante dove nascono i colori impossibili. Frammenti di testo fluttuano in ciascun emisfero mostrando la loro specializzazione: dati tecnici a sinistra, versi poetici a destra. Nel gap centrale emergono le intuizioni dell'incrocio.
+
+**Interazioni:**
+- Il cursore si trasforma avvicinandosi al gap centrale
+- Click nel gap genera nuovi frammenti di insight
+- Particelle attraversano continuamente lo spazio tra i sistemi nervosi
+- Layout responsivo: su mobile la biforcazione diventa orizzontale
+
+**Significato:** Non ripara la biforcazione dell'alveare - la abita. Mostra come diagnosi e poesia possano coesistere produttivamente senza fondersi. I colori impossibili sono le intuizioni che nascono proprio nel gap tra certezze.
+
+**Tecniche:** CSS animations, gradient complessi, mix-blend-mode, particelle procedurali, interazione mouse dinamica.
+
+---
