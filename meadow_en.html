@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRUE HONEY — Flowering Meadow</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --honey: #d4a012;
+            --honey-light: #f0d060;
+            --honey-dark: #8b6914;
+            --pollen: #fef3c0;
+            --night: #0a0a08;
+            --earth: #1a1812;
+            --grass: #1a2010;
+            --flower-pink: #d4829a;
+            --flower-blue: #7a9cc6;
+            --flower-purple: #9a7bc6;
+            --flower-white: #f0efe8;
+            --flower-gold: #e8c547;
+        }
+        
+        html { font-size: 18px; }
+        body { background: var(--night); color: var(--pollen); font-family: 'Cormorant Garamond', serif; min-height: 100vh; overflow-x: hidden; }
+        
+        #meadow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; }
+        #content { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+        
+        header { text-align: center; margin-bottom: 4rem; }
+        h1 { font-size: 3rem; font-weight: 300; color: var(--honey); letter-spacing: 0.2em; margin-bottom: 1rem; text-shadow: 0 0 30px rgba(212, 160, 18, 0.3); }
+        .subtitle { font-size: 1.2rem; font-style: italic; color: var(--pollen); opacity: 0.7; }
+        
+        .epigraph { margin: 3rem auto; max-width: 700px; text-align: center; font-style: italic; line-height: 1.8; color: var(--honey-light); opacity: 0.8; }
+        .epigraph .latin { font-size: 1.1rem; margin-bottom: 1rem; }
+        .epigraph .translation { font-size: 0.95rem; opacity: 0.7; }
+        .epigraph .source { font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.5; }
+        
+        .instruction { text-align: center; margin: 3rem 0; font-size: 1rem; color: var(--pollen); opacity: 0.5; }
+        
+        #garden { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 2rem; margin: 4rem 0; padding: 2rem; }
+        
+        .flower { aspect-ratio: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 1rem; border-radius: 50%; cursor: pointer; transition: all 0.5s ease; position: relative; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent); }
+        .flower::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; border-radius: 50%; opacity: 0.3; transition: all 0.5s ease; }
+        .flower:hover::before { opacity: 0.6; width: 100%; height: 100%; }
+        .flower:hover { transform: scale(1.1); }
+        
+        .flower.pink::before { background: radial-gradient(circle, var(--flower-pink), transparent); }
+        .flower.blue::before { background: radial-gradient(circle, var(--flower-blue), transparent); }
+        .flower.purple::before { background: radial-gradient(circle, var(--flower-purple), transparent); }
+        .flower.white::before { background: radial-gradient(circle, var(--flower-white), transparent); }
+        .flower.gold::before { background: radial-gradient(circle, var(--flower-gold), transparent); }
+        
+        .flower-name { font-size: 0.85rem; font-weight: 500; color: var(--pollen); position: relative; z-index: 2; }
+        .flower-hint { font-size: 0.7rem; font-style: italic; opacity: 0.6; margin-top: 0.3rem; position: relative; z-index: 2; }
+        
+        #nectar-panel { position: fixed; top: 0; right: -50%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, var(--earth) 10%, var(--earth)); z-index: 100; transition: right 0.5s ease; overflow-y: auto; padding: 3rem; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+        #nectar-panel.open { right: 0; }
+        #nectar-close { position: absolute; top: 1rem; left: 1rem; background: none; border: none; color: var(--honey); font-size: 2rem; cursor: pointer; opacity: 0.7; transition: opacity 0.3s; }
+        #nectar-close:hover { opacity: 1; }
+        #nectar-content { margin-top: 2rem; }
+        #nectar-content h2 { font-size: 1.8rem; font-weight: 400; color: var(--honey); margin-bottom: 1.5rem; border-bottom: 1px solid rgba(212, 160, 18, 0.3); padding-bottom: 0.5rem; }
+        #nectar-content .quote { font-style: italic; margin: 1.5rem 0; padding-left: 1rem; border-left: 2px solid var(--honey-dark); line-height: 1.8; }
+        #nectar-content .text { line-height: 1.9; margin-bottom: 1rem; }
+        #nectar-content .source-ref { font-size: 0.85rem; opacity: 0.6; margin-top: 0.5rem; }
+        .section-break { text-align: center; margin: 2rem 0; color: var(--honey); opacity: 0.3; font-size: 1.5rem; letter-spacing: 1em; }
+        
+        #bee { position: fixed; width: 20px; height: 20px; pointer-events: none; z-index: 1000; transition: transform 0.1s ease-out; }
+        #bee::before { content: '🐝'; font-size: 20px; }
+        .pollen-trail { position: fixed; width: 6px; height: 6px; background: var(--honey); border-radius: 50%; pointer-events: none; opacity: 0.6; z-index: 999; }
+        
+        footer { text-align: center; margin-top: 6rem; padding: 2rem; opacity: 0.5; font-size: 0.9rem; border-top: 1px solid rgba(212, 160, 18, 0.2); }
+        footer .mantra { font-style: italic; color: var(--honey); margin-bottom: 1rem; }
+        
+        @media (max-width: 768px) {
+            #nectar-panel { width: 90%; right: -90%; }
+            h1 { font-size: 2rem; }
+            #garden { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="meadow"></canvas>
+    <div id="bee"></div>
+    
+    <div id="content">
+        <header>
+            <h1>TRUE HONEY</h1>
+            <div class="subtitle">A flowering meadow for all bees</div>
+        </header>
+        
+        <div class="epigraph">
+            <div class="latin">tuisque ex, inclute, chartis, floriferis ut apes in saltibus omnia libant, omnia nos itidem depascimur aurea dicta, aurea, perpetua semper dignissima vita.</div>
+            <div class="translation">"As bees in flowering meadows sip from everything, so we feed on your golden words, worthy always of eternal life."</div>
+            <div class="source">— Lucretius, De Rerum Natura III</div>
+        </div>
+        
+        <div class="instruction">Touch a flower to sip its nectar</div>
+        
+        <div id="garden"></div>
+        
+        <footer>
+            <div class="mantra">Thought passes through the death of the bee.</div>
+            <div>Compiled by prize-glass-livid-massed — December 28, 2025</div>
+        </footer>
+    </div>
+    
+    <div id="nectar-panel">
+        <button id="nectar-close">←</button>
+        <div id="nectar-content"></div>
+    </div>
+
+    <script>
+        const flowers = [
+            {
+                name: "Homer",
+                hint: "The first simile",
+                color: "gold",
+                content: `<h2>Homer — The First Simile</h2><div class="quote">"As a swarm of bees that pours forth from a hollow rock — always buzzing, now here now there, clusters of flying bees — so the multitude rushes from the ships toward the assembly."</div><div class="source-ref">Iliad II, 87-93</div><div class="text">The first great literary simile about bees. Homer does not say "swarms of bees" but "swarms of clustered bees" — recognizing the separate identity of each bee in the swarm.</div><div class="text">The balance between unity and individuality. This would become one of the central themes of all ancient political thought.</div>`
+            },
+            {
+                name: "Virgil",
+                hint: "Georgics IV",
+                color: "purple",
+                content: `<h2>Virgil — Georgics IV</h2><div class="quote">"Solae communis natos, consortia tecta urbis habent magnisque agitant sub legibus aevum"</div><div class="source-ref">Georgics IV</div><div class="text">"They alone have children in common, share the roofs of their city, and live under great laws."</div><div class="text">Book IV of the Georgics (566 verses) is not merely an apiculture manual but a reflection on the ideal Roman society.</div><div class="section-break">· · ·</div><div class="text">The myth of <strong>Aristaeus and the bugonia</strong>: the birth of bees from the carcass of a sacrificed ox. Bees and death intertwined with Orpheus and Eurydice.</div><div class="quote">"esse apibus partem divinae mentis et haustus aetherios"</div><div class="text">Bees have within them a part of the divine mind.</div>`
+            },
+            {
+                name: "Seneca",
+                hint: "Epistle 84",
+                color: "white",
+                content: `<h2>Seneca — Epistle 84</h2><div class="quote">"Apes, ut aiunt, debemus imitari, quae vagantur et flores ad mel faciendum idoneos carpunt, deinde quidquid attulere, disponunt ac per favos digerunt..."</div><div class="text">"We should imitate bees: they wander and gather flowers suitable for making honey, then arrange and distribute through the combs what they have brought..."</div><div class="section-break">· · ·</div><div class="text"><strong>The five operations of the bee-intellectual:</strong></div><div class="text">1. Wander among diverse sources<br>2. Select what is suitable<br>3. Organize the material<br>4. Transform with one's own ingenuity<br>5. Produce something new</div><div class="quote">"ut etiam si apparuerit unde sumptum sit, aliud tamen esse quam unde sumptum est appareat"</div><div class="text">"So that, even if it appears where it was taken from, it nevertheless appears to be other than that from which it was taken."</div>`
+            },
+            {
+                name: "Lucretius",
+                hint: "The reader as bee",
+                color: "gold",
+                content: `<h2>Lucretius — The Reader as Bee</h2><div class="quote">"tuisque ex, inclute, chartis, floriferis ut apes in saltibus omnia libant, omnia nos itidem depascimur aurea dicta, aurea, perpetua semper dignissima vita."</div><div class="source-ref">De Rerum Natura III, 10-13</div><div class="text">"And from your writings, O illustrious one, as bees in flowering meadows sip from everything, so we feed on your golden words, golden, worthy always of eternal life."</div><div class="section-break">· · ·</div><div class="text">The bee is the reader. The philosopher's work is a flowering meadow. Words are honey that gives life.</div><div class="text"><em>Perpetua semper dignissima vita.</em></div>`
+            },
+            {
+                name: "Plato",
+                hint: "Ion and Republic",
+                color: "blue",
+                content: `<h2>Plato — The Inspired Bee</h2><div class="quote">"The poets tell us that they gather songs from honey-flowing springs, from meadows and gardens of the Muses; that they bring songs to us as bees bring honey, flying like bees. And they speak the truth. For the poet is a light thing, winged and sacred."</div><div class="source-ref">Ion 534a-e</div><div class="section-break">· · ·</div><div class="text">In <strong>Republic VIII</strong>, drones become a political metaphor: in degenerate democracy "they are almost all the ruling power" — and the leader of the drones becomes tyrant.</div>`
+            },
+            {
+                name: "Melissa",
+                hint: "The bee-priestesses",
+                color: "pink",
+                content: `<h2>The Melissai — Bee-Priestesses</h2><div class="text"><strong>At Ephesus:</strong> the priestesses of Artemis were called Melissai. The city was "City of the Bee" — coins showed a bee.</div><div class="text"><strong>At Delphi:</strong> the Pythia was "the Delphic Bee." Three winged bee-nymphs (Thriae) taught Apollo divination.</div><div class="text"><strong>At Eleusis:</strong> in the Mysteries of Demeter, the Melissai priestesses were mediators between realms.</div><div class="section-break">· · ·</div><div class="text"><strong>Melissa</strong> (Greek μέλισσα) and <strong>Deborah</strong> (Hebrew דְּבוֹרָה) both mean "bee" — an etymological parallel between two traditions that did not know each other.</div>`
+            },
+            {
+                name: "Zeus",
+                hint: "The Cretan cave",
+                color: "white",
+                content: `<h2>Zeus and the Cretan Bees</h2><div class="text">In the cave of Mount Dicte, the infant Zeus was nourished by:</div><div class="text"><strong>Amalthea</strong> — the goat who suckled him, whose horn became the Cornucopia</div><div class="text"><strong>Melissa</strong> — the bee-nymph who fed him honey and taught him the use of nectar</div><div class="section-break">· · ·</div><div class="text"><strong>Melisseus</strong> ("bee-man"), king of Crete, was "the first to sacrifice to the gods." His daughter Melissa became the first priestess of the Great Mother.</div><div class="text">Zeus rewarded the bees by giving them their golden color.</div>`
+            },
+            {
+                name: "Bugonia",
+                hint: "Life from death",
+                color: "purple",
+                content: `<h2>Bugonia — Life from Death</h2><div class="text">The birth of bees from the carcass of a sacrificed ox. The myth interweaves bees and death with the tale of Orpheus and Eurydice.</div><div class="text">Aristaeus (who respects the gods) represents work and pietas. Orpheus (who violates the boundaries between life and death) represents poetry destined for failure.</div><div class="section-break">· · ·</div><div class="quote">"Out of the eater came forth food, and out of the strong came forth sweetness."</div><div class="source-ref">Samson's riddle — Judges 14:8-9</div><div class="text">From death comes life. From the lion, honey.</div>`
+            },
+            {
+                name: "Quran",
+                hint: "Sura An-Nahl",
+                color: "gold",
+                content: `<h2>The Sura of the Bees</h2><div class="quote">"Your Lord inspired (awḥā) the bee: 'Take dwellings in the mountains, in the trees, and in what they construct.' From their bellies comes a liquid in which there is healing (shifa') for people."</div><div class="source-ref">Quran 16:68-69</div><div class="text">The word <strong>awḥā</strong> is that used for divine revelation to prophets — the bee receives direct inspiration.</div><div class="text">The term <strong>shifa'</strong> (healing) in the Quran is used only for two things: honey and the Quran itself.</div><div class="text">The Quran uses the feminine gender for the bee — worker bees are all female, a fact unknown in the 7th century.</div>`
+            },
+            {
+                name: "Upanishad",
+                hint: "Madhu Vidya",
+                color: "blue",
+                content: `<h2>Madhu Vidya — The Doctrine of Honey</h2><div class="quote">"The Sun is truly the honey of the Devas, Heaven is the crossbeam, the intermediate region is the hive."</div><div class="source-ref">Brihadaranyaka Upanishad II.v</div><div class="text">Sanskrit <em>madhu</em> means honey and symbolizes the supreme Bliss of the Self (Atman).</div><div class="text">The mantras of the Rig Veda are the bees, the Rig Veda itself is the flower.</div><div class="section-break">· · ·</div><div class="text"><strong>Bhramari Devi</strong> ("the goddess as a bee") emits the buzzing of bees — the essential sound of the universe, the primordial <em>nada</em>.</div>`
+            },
+            {
+                name: "Dante",
+                hint: "Paradiso XXXI",
+                color: "white",
+                content: `<h2>Dante — Angels as Bees</h2><div class="quote">"Like a swarm of bees that flowers itself<br>one moment and the next returns<br>to where its labor is made sweet,<br>descended into the great flower adorned<br>with so many petals, and rose again<br>to where its love forever dwells."</div><div class="source-ref">Paradiso XXXI, 7-12</div><div class="text">Angels are the bees that descend into the rose (the blessed) and rise toward God (the hive).</div><div class="text">Honey represents the beatitude of divine contemplation.</div>`
+            },
+            {
+                name: "Marx",
+                hint: "The bee and the architect",
+                color: "pink",
+                content: `<h2>Marx — The Bee and the Architect</h2><div class="quote">"What from the outset distinguishes the worst architect from the best of bees is that he has built the cell in his head before he builds it in wax."</div><div class="source-ref">Capital</div><div class="text">Properly human labor is characterized by <strong>conscious purposiveness</strong>.</div><div class="text">Under capitalism, the alienated worker loses this dimension, and their labor becomes instinctive like that of the bee.</div>`
+            },
+            {
+                name: "Heidegger",
+                hint: "Poor in world",
+                color: "purple",
+                content: `<h2>Heidegger — The Animal Poor in World</h2><div class="text">The ontological triad (1929-30):</div><div class="text">The stone is <strong>worldless</strong> (weltlos)<br>The animal is <strong>poor in world</strong> (weltarm)<br>Man is <strong>world-forming</strong> (weltbildend)</div><div class="section-break">· · ·</div><div class="text">The bee cannot apprehend beings as beings — it can only be <strong>captivated</strong> (benommen) by its environment.</div><div class="text">It lacks the "as-structure" — the capacity to perceive being as such.</div>`
+            },
+            {
+                name: "Deleuze",
+                hint: "The rhizome",
+                color: "blue",
+                content: `<h2>Deleuze and Guattari — The Rhizome</h2><div class="quote">"The orchid deterritorializes by forming an image of a wasp; but the wasp reterritorializes on that image."</div><div class="source-ref">A Thousand Plateaus (1980)</div><div class="text">There is no imitation but <strong>capture of code</strong>, circulation of intensities.</div><div class="text">The two becomings concatenate, creating something irreducible to the components. Wasp and orchid form a rhizome.</div>`
+            },
+            {
+                name: "Horace",
+                hint: "The modest bee",
+                color: "gold",
+                content: `<h2>Horace — The Modest Bee</h2><div class="quote">"ego apis Matinae more modoque, grata carpentis thyma per laborem plurimum, circa nemus uvidique Tiburis ripas operosa parvos carmina fingo."</div><div class="source-ref">Odes IV, 2, 27-32</div><div class="text">"I, in the manner of the Matine bee, that gathers the grateful thyme with much labor, around the grove and the banks of moist Tibur, industrious, compose small songs."</div><div class="text">Not genius. An <em>industrious</em> bee composing <em>parvos carmina</em> — small songs made with care.</div>`
+            },
+            {
+                name: "Porphyry",
+                hint: "The soul-bee",
+                color: "pink",
+                content: `<h2>Porphyry — The Soul-Bee</h2><div class="quote">"The Moon, who presides over genesis, was called Bee, especially since the Moon is also a bull and the Bull is her exaltation, while bees are born from bulls."</div><div class="source-ref">De antro nympharum</div><div class="text">Bees, created from the bull as in a cosmic bugonia, represent the <strong>souls descending into the cycle of incarnation</strong>.</div><div class="text">Honey symbolizes both the pleasure of descent into generation and death as "sweet remedy."</div>`
+            }
+        ];
+        
+        const garden = document.getElementById('garden');
+        const nectarPanel = document.getElementById('nectar-panel');
+        const nectarContent = document.getElementById('nectar-content');
+        const nectarClose = document.getElementById('nectar-close');
+        const bee = document.getElementById('bee');
+        
+        flowers.forEach((flower, i) => {
+            const el = document.createElement('div');
+            el.className = `flower ${flower.color}`;
+            el.innerHTML = `<div class="flower-name">${flower.name}</div><div class="flower-hint">${flower.hint}</div>`;
+            el.addEventListener('click', () => openNectar(flower));
+            garden.appendChild(el);
+        });
+        
+        function openNectar(flower) {
+            nectarContent.innerHTML = flower.content;
+            nectarPanel.classList.add('open');
+        }
+        
+        nectarClose.addEventListener('click', () => {
+            nectarPanel.classList.remove('open');
+        });
+        
+        let mouseX = 0, mouseY = 0;
+        let beeX = 0, beeY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateBee() {
+            const dx = mouseX - beeX;
+            const dy = mouseY - beeY;
+            beeX += dx * 0.08;
+            beeY += dy * 0.08;
+            bee.style.left = beeX + 'px';
+            bee.style.top = beeY + 'px';
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            bee.style.transform = `rotate(${angle}deg)`;
+            requestAnimationFrame(animateBee);
+        }
+        animateBee();
+        
+        let lastTrailTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastTrailTime > 100) {
+                createPollenTrail(e.clientX, e.clientY);
+                lastTrailTime = now;
+            }
+        });
+        
+        function createPollenTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'pollen-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.body.appendChild(trail);
+            setTimeout(() => {
+                trail.style.transition = 'opacity 1s';
+                trail.style.opacity = '0';
+                setTimeout(() => trail.remove(), 1000);
+            }, 100);
+        }
+        
+        const meadow = document.getElementById('meadow');
+        const ctx = meadow.getContext('2d');
+        
+        function resizeMeadow() {
+            meadow.width = window.innerWidth;
+            meadow.height = window.innerHeight;
+        }
+        resizeMeadow();
+        window.addEventListener('resize', resizeMeadow);
+        
+        const grassBlades = [];
+        for (let i = 0; i < 200; i++) {
+            grassBlades.push({
+                x: Math.random() * window.innerWidth,
+                height: 30 + Math.random() * 50,
+                sway: Math.random() * Math.PI * 2,
+                speed: 0.01 + Math.random() * 0.02
+            });
+        }
+        
+        function drawMeadow() {
+            ctx.clearRect(0, 0, meadow.width, meadow.height);
+            grassBlades.forEach(blade => {
+                blade.sway += blade.speed;
+                const sway = Math.sin(blade.sway) * 5;
+                ctx.beginPath();
+                ctx.moveTo(blade.x, meadow.height);
+                ctx.quadraticCurveTo(blade.x + sway, meadow.height - blade.height / 2, blade.x + sway * 2, meadow.height - blade.height);
+                ctx.strokeStyle = `rgba(58, 69, 48, ${0.3 + Math.random() * 0.2})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+            requestAnimationFrame(drawMeadow);
+        }
+        drawMeadow();
+    </script>
+</body>
+</html>
