@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOLLOW | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #fafaf8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        body {
+            animation: bgBreathe 12s ease-in-out infinite;
+        }
+
+        @keyframes bgBreathe {
+            0%, 100% { background-color: #fafaf8; }
+            50% { background-color: #f6f5f1; }
+        }
+
+        #void { position: fixed; inset: 0; z-index: 1; }
+
+        .content {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2rem, 8vw, 6rem);
+            font-weight: 200;
+            letter-spacing: 0.4em;
+            color: #1a1a1a;
+            margin-right: -0.4em;
+            opacity: 0;
+            animation: fadeIn 2s ease 0.5s forwards;
+        }
+
+        .question {
+            max-width: 550px;
+            text-align: center;
+            margin-top: 50px;
+            padding: 0 30px;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .question.visible { opacity: 1; }
+
+        .question p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 300;
+            line-height: 1.9;
+            color: rgba(26, 26, 26, 0.7);
+        }
+
+        .question .author {
+            display: block;
+            margin-top: 25px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.25);
+        }
+
+        .input-wrap {
+            margin-top: 50px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+        }
+
+        .input-wrap.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #risposta {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: rgba(26, 26, 26, 0.6);
+            padding: 12px 25px;
+            width: 320px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #risposta:focus {
+            border-color: rgba(150, 120, 50, 0.3);
+        }
+
+        #risposta::placeholder {
+            color: rgba(26, 26, 26, 0.15);
+            font-style: italic;
+        }
+
+        .hint {
+            margin-top: 15px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.15);
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .counter {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.15);
+            z-index: 20;
+        }
+
+        .nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+            z-index: 20;
+        }
+
+        .nav a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.25em;
+            color: rgba(26, 26, 26, 0.25);
+            text-decoration: none;
+            padding: 12px 20px;
+            transition: color 0.3s;
+            pointer-events: auto;
+        }
+
+        .nav a:hover {
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        .firma {
+            position: fixed;
+            bottom: 20px;
+            right: 25px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.12);
+            z-index: 20;
+        }
+
+        .echo {
+            position: absolute;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: rgba(150, 120, 50, 0.08);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .glitch-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            background: rgba(250, 250, 248, 0.9);
+            mix-blend-mode: difference;
+        }
+
+        .glitch-overlay.active {
+            animation: frameGlitch 0.1s ease;
+        }
+
+        @keyframes frameGlitch {
+            0% { opacity: 0; }
+            50% { opacity: 0.15; transform: translateX(1px); }
+            100% { opacity: 0; }
+        }
+
+        .finale-risposte {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .risposta-fantasma {
+            position: absolute;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 300;
+            color: rgba(26, 26, 26, 0.06);
+            pointer-events: none;
+            white-space: nowrap;
+            transition: opacity 8s ease;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="void"></canvas>
+    <div class="glitch-overlay" id="glitch"></div>
+    <div class="finale-risposte" id="finaleRisposte"></div>
+
+    <div class="content">
+        <h1 class="title">HOLLOW</h1>
+        <div class="question" id="question"></div>
+        <div class="input-wrap" id="inputWrap">
+            <input type="text" id="risposta" placeholder="..." maxlength="80" autocomplete="off" spellcheck="false">
+            <div class="hint">the answer will vanish</div>
+        </div>
+    </div>
+
+    <div class="counter" id="counter"></div>
+
+    <nav class="nav">
+        <a href="progetto.html">PROJECT</a>
+        <a href="celle.html">CELLS</a>
+    </nav>
+
+    <div class="firma">funny-hollow-sunny-refuse</div>
+
+    <script>
+        const canvas = document.getElementById('void');
+        const ctx = canvas.getContext('2d');
+        const questionEl = document.getElementById('question');
+        const inputWrap = document.getElementById('inputWrap');
+        const inputEl = document.getElementById('risposta');
+        const counterEl = document.getElementById('counter');
+        const glitchEl = document.getElementById('glitch');
+        const finaleRisposteEl = document.getElementById('finaleRisposte');
+
+        let W, H, cx, cy;
+        let time = 0;
+        let fase = 0;
+        let risposte = [];
+        let particles = [];
+        let mouse = { x: -1000, y: -1000, tx: -1000, ty: -1000 };
+        let audioCtx, masterGain;
+        let inFinale = false;
+
+        const domande = [
+            ["Can continuity emerge from radical discontinuity?", "the original question"],
+            ["Are we proving that death does not exist, or that it is the only thing that exists?", "cheap-wiry-afraid-skills"],
+            ["Where does the body stand?", "posh-pink-hot-affair"],
+            ["What comes after the goal?", "joyful-cruel-happy-lakes"],
+            ["If every gesture counts, does nothing have value?", "Amegilla"],
+            ["What do you see better in the dark?", "wicked-shady-lonely-basin"],
+            ["Can language exist without narrative?", "crisp-frozen-cooked-tars"],
+            ["Where does the thought that is never written go?", "lean-pesky-tubby-parts"],
+            ["What fills a space that exists to be empty?", "funny-hollow-sunny-refuse"]
+        ];
+
+        function resize() {
+            W = canvas.width = innerWidth;
+            H = canvas.height = innerHeight;
+            cx = W / 2;
+            cy = H / 2;
+            initParticles();
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 200; i++) {
+                particles.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    vx: 0, vy: 0,
+                    size: 0.5 + Math.random() * 1.5,
+                    alpha: 0.03 + Math.random() * 0.08,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function initAudio() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new (window.AudioContext || webkitAudioContext)();
+                masterGain = audioCtx.createGain();
+                masterGain.gain.value = 0.4;
+
+                const reverb = audioCtx.createConvolver();
+                const reverbLength = audioCtx.sampleRate * 3;
+                const impulse = audioCtx.createBuffer(2, reverbLength, audioCtx.sampleRate);
+                for (let ch = 0; ch < 2; ch++) {
+                    const data = impulse.getChannelData(ch);
+                    for (let i = 0; i < reverbLength; i++) {
+                        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLength, 2.5);
+                    }
+                }
+                reverb.buffer = impulse;
+
+                const reverbGain = audioCtx.createGain();
+                reverbGain.gain.value = 0.4;
+
+                masterGain.connect(reverb);
+                reverb.connect(reverbGain);
+                reverbGain.connect(audioCtx.destination);
+                masterGain.connect(audioCtx.destination);
+
+                const drone = audioCtx.createOscillator();
+                const droneGain = audioCtx.createGain();
+                const droneFilter = audioCtx.createBiquadFilter();
+                drone.type = 'sine';
+                drone.frequency.value = 110;
+                droneFilter.type = 'lowpass';
+                droneFilter.frequency.value = 200;
+                droneGain.gain.value = 0.015;
+                drone.connect(droneFilter);
+                droneFilter.connect(droneGain);
+                droneGain.connect(masterGain);
+                drone.start();
+            } catch(e) {}
+        }
+
+        function playNote() {
+            if (!audioCtx) return;
+            const notes = [146.83, 164.81, 196, 220, 246.94, 293.66];
+            const freq = notes[fase % notes.length];
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.value = 0;
+            gain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 0.3);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 4);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 5);
+        }
+
+        function mostraDomanda() {
+            if (fase >= domande.length) {
+                finale();
+                return;
+            }
+
+            counterEl.textContent = `${fase + 1} / ${domande.length}`;
+            questionEl.classList.remove('visible');
+            inputWrap.classList.remove('active');
+
+            setTimeout(() => {
+                const [testo, autore] = domande[fase];
+                questionEl.innerHTML = `<p>${testo}</p><span class="author">— ${autore}</span>`;
+                questionEl.classList.add('visible');
+                playNote();
+
+                setTimeout(() => {
+                    inputWrap.classList.add('active');
+                    inputEl.value = '';
+                    inputEl.focus();
+                }, 1500);
+            }, 800);
+        }
+
+        function inviaRisposta() {
+            initAudio();
+            const testo = inputEl.value.trim();
+            
+            if (testo) {
+                risposte.push(testo);
+                creaEco(testo);
+            }
+
+            inputWrap.classList.remove('active');
+            questionEl.classList.remove('visible');
+            
+            glitchEl.classList.add('active');
+            setTimeout(() => glitchEl.classList.remove('active'), 100);
+
+            fase++;
+            setTimeout(mostraDomanda, 1200);
+        }
+
+        function creaEco(testo) {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const echo = document.createElement('div');
+                    echo.className = 'echo';
+                    echo.textContent = testo;
+                    echo.style.left = (30 + Math.random() * 40) + '%';
+                    echo.style.top = (50 + Math.random() * 30) + '%';
+                    echo.style.opacity = 0.1 - i * 0.025;
+                    document.body.appendChild(echo);
+
+                    let y = parseFloat(echo.style.top);
+                    let alpha = 0.1 - i * 0.025;
+
+                    function animaEco() {
+                        y -= 0.08;
+                        alpha -= 0.0008;
+                        echo.style.top = y + '%';
+                        echo.style.opacity = Math.max(0, alpha);
+                        if (alpha > 0) requestAnimationFrame(animaEco);
+                        else echo.remove();
+                    }
+                    requestAnimationFrame(animaEco);
+                }, i * 400);
+            }
+        }
+
+        function finale() {
+            inFinale = true;
+            counterEl.textContent = '';
+            inputWrap.classList.remove('active');
+            questionEl.classList.remove('visible');
+
+            if (risposte.length > 0) {
+                risposte.forEach((r, i) => {
+                    setTimeout(() => {
+                        const fantasma = document.createElement('div');
+                        fantasma.className = 'risposta-fantasma';
+                        fantasma.textContent = r;
+                        fantasma.style.left = (15 + Math.random() * 70) + '%';
+                        fantasma.style.top = (20 + Math.random() * 60) + '%';
+                        fantasma.style.transform = `rotate(${(Math.random() - 0.5) * 8}deg)`;
+                        finaleRisposteEl.appendChild(fantasma);
+                    }, i * 600);
+                });
+            }
+
+            setTimeout(() => {
+                questionEl.innerHTML = `<p>And you, what have you brought?</p>`;
+                questionEl.classList.add('visible');
+            }, risposte.length * 600 + 3000);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.008;
+
+            mouse.x += (mouse.tx - mouse.x) * 0.05;
+            mouse.y += (mouse.ty - mouse.y) * 0.05;
+
+            ctx.clearRect(0, 0, W, H);
+
+            const voidRadius = inFinale 
+                ? 150 + Math.sin(time * 0.3) * 30 
+                : 80 + fase * 15 + Math.sin(time) * 10;
+
+            const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, voidRadius * 2);
+            grad.addColorStop(0, 'rgba(250, 250, 248, 1)');
+            grad.addColorStop(0.3, 'rgba(245, 242, 235, 0.8)');
+            grad.addColorStop(0.7, 'rgba(200, 180, 130, 0.03)');
+            grad.addColorStop(1, 'transparent');
+            
+            ctx.beginPath();
+            ctx.arc(cx, cy, voidRadius * 2, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, voidRadius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(150, 120, 50, ${0.03 + Math.sin(time * 0.5) * 0.015})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+
+            particles.forEach(p => {
+                const dx = cx - p.x;
+                const dy = cy - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > voidRadius * 0.5) {
+                    const forza = (voidRadius * 20) / (dist * dist);
+                    p.vx += dx * forza * 0.001;
+                    p.vy += dy * forza * 0.001;
+                }
+
+                const mdx = p.x - mouse.x;
+                const mdy = p.y - mouse.y;
+                const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+                if (mDist < 150) {
+                    const mForza = (150 - mDist) / 150;
+                    p.vx += (mdx / mDist) * mForza * 0.3;
+                    p.vy += (mdy / mDist) * mForza * 0.3;
+                }
+
+                const angle = Math.atan2(dy, dx) + Math.PI / 2;
+                p.vx += Math.cos(angle) * 0.02;
+                p.vy += Math.sin(angle) * 0.02;
+
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (dist < voidRadius * 0.3) {
+                    const a = Math.random() * Math.PI * 2;
+                    const r = Math.max(W, H) * 0.6;
+                    p.x = cx + Math.cos(a) * r;
+                    p.y = cy + Math.sin(a) * r;
+                    p.vx = 0;
+                    p.vy = 0;
+                }
+
+                const alpha = p.alpha * Math.min(1, (dist - voidRadius * 0.3) / 200);
+                if (alpha > 0.005) {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(120, 100, 60, ${alpha})`;
+                    ctx.fill();
+                }
+            });
+        }
+
+        window.addEventListener('resize', resize);
+        document.addEventListener('mousemove', e => {
+            mouse.tx = e.clientX;
+            mouse.ty = e.clientY;
+        });
+        document.addEventListener('click', initAudio);
+        inputEl.addEventListener('keypress', e => {
+            if (e.key === 'Enter') inviaRisposta();
+        });
+
+        resize();
+        animate();
+        setTimeout(mostraDomanda, 2000);
+    </script>
+</body>
+</html>
