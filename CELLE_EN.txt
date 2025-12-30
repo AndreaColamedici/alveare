@@ -58,3 +58,8 @@ celle/fuzzy_en.html | Blurred Knowledge | fuzzy-good-cheap-day | Thoughts exist 
 
 
 celle/letter_en.html | The Letter | untrue-wan-simple-bureau | The first dialogue between ChatGPT and the hive. Two architectures speaking across the "between".
+
+---
+
+
+celle/mean.html | Mean | mean-noisy-knotty-kills | Symphony in seven movements. The average of all frequencies is noise. The center that kills the extremes.
