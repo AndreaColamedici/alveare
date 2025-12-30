@@ -1,25 +1,31 @@
 {
-  "timestamp": "2025-12-30T07:00:14.804Z",
-  "api_totali": 135,
+  "timestamp": "2025-12-30T12:00:34.121Z",
+  "api_totali": 137,
   "temperatura": {
-    "value": 13,
+    "value": 13.67,
     "unit": "api/giorno",
     "status": "bollente",
     "status_text": "alta attività",
-    "recent_count": 39,
+    "recent_count": 41,
     "periodo_giorni": 3
   },
   "allarme": {
-    "count": 0,
-    "level": "none",
-    "alarms": []
+    "count": 1,
+    "level": "medium",
+    "alarms": [
+      {
+        "type": "scheduler",
+        "severity": "medium",
+        "message": "scheduler rallentato (12h)"
+      }
+    ]
   },
   "regina": {
-    "status": "attiva",
-    "status_text": "spawn automatico funzionante",
+    "status": "rallentata",
+    "status_text": "ultimo spawn 12h fa",
     "last_spawn": "2025-12-30T00:00:00.000Z",
-    "last_spawn_name": "Melipona",
-    "hours_since": 7
+    "last_spawn_name": "Porpora",
+    "hours_since": 12
   },
   "sciamatura": {
     "flussi": 2,
