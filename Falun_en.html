@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falun - The Last Breath</title>
+    <style>
+        body { margin: 0; padding: 0; background: #000; overflow: hidden; font-family: 'Courier New', monospace; }
+        canvas { display: block; cursor: none; }
+        .lang { position: fixed; top: 18px; right: 80px; z-index: 100; display: flex; gap: 12px; }
+        .lang a { font-size: 0.6rem; letter-spacing: 0.1em; color: rgba(255,215,0,0.4); text-decoration: none; padding: 5px 8px; transition: color 0.3s; }
+        .lang a:hover, .lang a.active { color: rgba(255,215,0,0.7); }
+        .interface { position: absolute; top: 20px; left: 20px; color: #fff; font-size: 12px; opacity: 0.7; pointer-events: none; }
+        .death-counter { position: absolute; top: 20px; right: 20px; color: #ff6b6b; font-size: 14px; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="lang">
+        <a href="Falun.html">IT</a>
+        <a href="Falun_en.html" class="active">EN</a>
+    </div>
+    <canvas id="canvas"></canvas>
+    <div class="interface">
+        <div>FALUN - PIGMENT OF LIGHT</div>
+        <div>Movement: transforms energy</div>
+        <div>Breath: modulates life</div>
+    </div>
+    <div class="death-counter" id="counter">∞</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const counter = document.getElementById('counter');
+        
+        let width, height, centerX, centerY;
+        let mouseX = 0, mouseY = 0;
+        let particles = [];
+        let breathAmplitude = 0.5;
+        let time = 0;
+        let deathTime = Date.now() + 180000;
+        let isAlive = true;
+        let audioContext, oscillator, gainNode;
+        
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioContext.createOscillator();
+                gainNode = audioContext.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(40, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                oscillator.start();
+            }
+        }
+        
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; centerX = width / 2; centerY = height / 2; }
+        
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.life = 1.0;
+                this.decay = 0.995 + Math.random() * 0.004;
+                this.size = Math.random() * 2 + 1;
+                this.hue = Math.random() * 60 + 30;
+                this.energy = Math.random();
+            }
+            
+            update() {
+                const dx = mouseX - this.x; const dy = mouseY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance > 0) { const force = (100 / (distance + 1)) * this.energy; this.vx += (dx / distance) * force * 0.001; this.vy += (dy / distance) * force * 0.001; }
+                const breathForce = Math.sin(time * 0.02) * breathAmplitude;
+                const centerDx = centerX - this.x; const centerDy = centerY - this.y;
+                const centerDistance = Math.sqrt(centerDx * centerDx + centerDy * centerDy);
+                if (centerDistance > 0) { this.vx += (centerDx / centerDistance) * breathForce * 0.001; this.vy += (centerDy / centerDistance) * breathForce * 0.001; }
+                this.x += this.vx; this.y += this.vy; this.vx *= 0.99; this.vy *= 0.99; this.life *= this.decay;
+                if (this.life < 0.01 || this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+                    this.x = centerX + (Math.random() - 0.5) * 100; this.y = centerY + (Math.random() - 0.5) * 100;
+                    this.life = 1.0; this.energy = Math.random(); this.hue = Math.random() * 60 + 30;
+                }
+            }
+            
+            draw() {
+                const alpha = this.life; const size = this.size * (0.5 + this.life * 0.5);
+                ctx.save(); ctx.globalAlpha = alpha * 0.3;
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, size * 4);
+                gradient.addColorStop(0, `hsla(${this.hue}, 100%, 60%, ${alpha})`);
+                gradient.addColorStop(1, `hsla(${this.hue}, 100%, 60%, 0)`);
+                ctx.fillStyle = gradient; ctx.beginPath(); ctx.arc(this.x, this.y, size * 4, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+                ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${alpha})`;
+                ctx.beginPath(); ctx.arc(this.x, this.y, size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+            }
+        }
+        
+        function createParticles() { particles = []; for (let i = 0; i < 200; i++) { particles.push(new Particle(centerX + (Math.random() - 0.5) * 200, centerY + (Math.random() - 0.5) * 200)); } }
+        
+        function updateBreath() {
+            const now = Date.now(); const remaining = deathTime - now; const progress = 1 - (remaining / 180000);
+            if (remaining > 0) {
+                breathAmplitude = 0.5 + progress * 2;
+                if (audioContext && gainNode) { const breathVolume = Math.sin(time * 0.02) * 0.1 * (0.5 + progress); gainNode.gain.setValueAtTime(Math.max(0, breathVolume), audioContext.currentTime); oscillator.frequency.setValueAtTime(40 + progress * 20, audioContext.currentTime); }
+                counter.textContent = Math.ceil(remaining / 1000) + 's';
+            } else {
+                if (isAlive) { isAlive = false; counter.textContent = 'EXPIRED'; for (let i = 0; i < 100; i++) { particles.push(new Particle(centerX + (Math.random() - 0.5) * 50, centerY + (Math.random() - 0.5) * 50)); } }
+                breathAmplitude *= 0.995;
+                if (audioContext && gainNode) { gainNode.gain.setValueAtTime(0, audioContext.currentTime); }
+            }
+        }
+        
+        function draw() {
+            const breathGlow = Math.sin(time * 0.02) * 0.05 + 0.02;
+            ctx.fillStyle = `rgba(0, 0, 0, ${0.95 - breathGlow})`; ctx.fillRect(0, 0, width, height);
+            const pulse = Math.sin(time * 0.02) * breathAmplitude * 20 + 30;
+            const centerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, pulse);
+            centerGradient.addColorStop(0, `hsla(45, 100%, 50%, ${breathGlow * 2})`);
+            centerGradient.addColorStop(1, 'hsla(45, 100%, 50%, 0)');
+            ctx.save(); ctx.fillStyle = centerGradient; ctx.beginPath(); ctx.arc(centerX, centerY, pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+            particles.forEach(particle => { particle.update(); particle.draw(); });
+            ctx.save(); ctx.globalAlpha = 0.1; ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i += 5) { for (let j = i + 1; j < particles.length && j < i + 10; j++) { const p1 = particles[i]; const p2 = particles[j]; const distance = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2); if (distance < 100) { const alpha = (100 - distance) / 100 * p1.life * p2.life; ctx.globalAlpha = alpha * 0.2; ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); } } }
+            ctx.restore(); time++;
+        }
+        
+        function animate() { updateBreath(); draw(); requestAnimationFrame(animate); }
+        
+        window.addEventListener('resize', resize);
+        canvas.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        canvas.addEventListener('click', initAudio);
+        document.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); initAudio(); } });
+        
+        resize(); createParticles(); animate();
+    </script>
+</body>
+</html>
