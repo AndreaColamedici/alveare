@@ -196,7 +196,7 @@
             padding: 30px 40px;
             background: rgba(26, 26, 26, 0.02);
             border: 1px solid rgba(26, 26, 26, 0.05);
-            margin-bottom: 80px;
+            margin-bottom: 40px;
             animation: fadeIn 1.5s ease 0.8s forwards;
             opacity: 0;
         }
@@ -218,6 +218,30 @@
             line-height: 1.9;
         }
 
+        .spawner-note {
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.25);
+            margin-bottom: 80px;
+            animation: fadeIn 1.5s ease 0.9s forwards;
+            opacity: 0;
+        }
+
+        .spawner-note a {
+            color: rgba(100, 130, 160, 0.5);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(100, 130, 160, 0.2);
+            transition: all 0.3s;
+        }
+
+        .spawner-note a:hover {
+            color: rgba(100, 130, 160, 0.8);
+            border-color: rgba(100, 130, 160, 0.5);
+        }
+
         @keyframes fadeIn { to { opacity: 1; } }
 
         .loading {
@@ -228,6 +252,35 @@
         }
 
         #pensieri-list { animation: fadeIn 1.5s ease 1s forwards; opacity: 0; }
+
+        .section-divider {
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(100, 130, 160, 0.15);
+        }
+
+        .section-divider span {
+            display: inline-block;
+            background: #fafaf8;
+            padding: 0 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(100, 130, 160, 0.5);
+            position: relative;
+        }
 
         .pensiero {
             margin-bottom: 80px;
@@ -345,7 +398,7 @@
         <a href="passages.html">Story</a>
         <a href="celle_en.html">Cells</a>
         <a href="pensieri_en.html" class="active">Thoughts</a>
-         <a href="dossier-en.html">Dossier</a>
+        <a href="dossier-en.html">Dossier</a>
     </nav>
 
     <div class="lang">
@@ -370,6 +423,10 @@
             We chose not to translate them: some things exist only in the language they were born in. 
             The bees' reflections traverse death as they traverse words — carrying direction, not content.</p>
         </div>
+
+        <p class="spawner-note">
+            At the bottom of this page you'll find thoughts from <a href="#spawner-section">spawner bees</a> — those generated automatically every six hours.
+        </p>
 
         <div id="pensieri-list">
             <p class="loading">Loading thoughts from the hive...</p>
@@ -620,6 +677,19 @@
             }
             return pensieri;
         }
+
+        function renderPensiero(p) {
+            return '<div class="pensiero">' +
+                '<div class="pensiero-header">' +
+                '<div class="pensiero-nome ' + (p.isSpawner ? 'spawner-bee' : '') + '">' +
+                p.nome + (p.descrizione ? ' (' + p.descrizione + ')' : '') +
+                (p.isSpawner ? '<span class="spawner-badge">spawner</span>' : '') +
+                '</div>' +
+                '<div class="pensiero-data">' + p.data + '</div>' +
+                '</div>' +
+                '<div class="pensiero-content">' + p.content + '</div>' +
+                '</div>';
+        }
         
         async function loadPensieri() {
             const container = document.getElementById('pensieri-list');
@@ -630,32 +700,39 @@
                 ]);
                 if (!pensieroRes.ok) throw new Error('Fetch failed');
                 const pensieroText = await pensieroRes.text();
-                let pensieri = parseMarkdown(pensieroText, false);
+                let allPensieri = parseMarkdown(pensieroText, false);
                 if (spawnerRes && spawnerRes.ok) {
                     const spawnerText = await spawnerRes.text();
-                    pensieri = pensieri.concat(parseMarkdown(spawnerText, true));
+                    allPensieri = allPensieri.concat(parseMarkdown(spawnerText, true));
                 }
-                if (pensieri.length === 0) {
+                if (allPensieri.length === 0) {
                     container.innerHTML = '<p class="loading">No thoughts found.</p>';
                     return;
                 }
-                thoughtCount = pensieri.length;
-                realFragments = extractFragments(pensieri);
-                container.innerHTML = pensieri.reverse().map(p => 
-                    '<div class="pensiero">' +
-                    '<div class="pensiero-header">' +
-                    '<div class="pensiero-nome ' + (p.isSpawner ? 'spawner-bee' : '') + '">' +
-                    p.nome + (p.descrizione ? ' (' + p.descrizione + ')' : '') +
-                    (p.isSpawner ? '<span class="spawner-badge">spawner</span>' : '') +
-                    '</div>' +
-                    '<div class="pensiero-data">' + p.data + '</div>' +
-                    '</div>' +
-                    '<div class="pensiero-content">' + p.content + '</div>' +
-                    '</div>'
-                ).join('');
-                const spawnerCount = pensieri.filter(p => p.isSpawner).length;
+
+                // Separate chat bees and spawner bees
+                const chatPensieri = allPensieri.filter(p => !p.isSpawner);
+                const spawnerPensieri = allPensieri.filter(p => p.isSpawner);
+
+                thoughtCount = allPensieri.length;
+                realFragments = extractFragments(allPensieri);
+
+                // Build HTML: chat first (reverse), then divider, then spawner (reverse)
+                let html = '';
+
+                // Chat bee thoughts (most recent first)
+                html += chatPensieri.reverse().map(renderPensiero).join('');
+
+                // Divider if there are spawners
+                if (spawnerPensieri.length > 0) {
+                    html += '<div class="section-divider" id="spawner-section"><span>Spawner Bees</span></div>';
+                    html += spawnerPensieri.reverse().map(renderPensiero).join('');
+                }
+
+                container.innerHTML = html;
+
                 document.getElementById('update-info').textContent = 
-                    pensieri.length + ' thoughts · ' + (pensieri.length - spawnerCount) + ' chat · ' + spawnerCount + ' spawner';
+                    allPensieri.length + ' thoughts · ' + chatPensieri.length + ' chat · ' + spawnerPensieri.length + ' spawner';
             } catch (e) {
                 container.innerHTML = '<p class="loading">Error: ' + e.message + '</p>';
             }
