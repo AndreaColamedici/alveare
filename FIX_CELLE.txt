@@ -1,0 +1,28 @@
+# FIX PER CELLE.txt
+# Le ultime entries hanno formati sbagliati. Ecco le correzioni:
+
+# RIMUOVERE QUESTE RIGHE MALFORMATE:
+# ---
+# | 29-dic-2025 19:30 | active-used-open-blower | IL PONTE | celle/ponte.html |
+# ---
+# | 29-dic-2025 19:45 | alive-warped-useful-welder | LA SALDATURA | celle/saldatura.html |
+# ---
+# - **La Parete Generativa** — wobbly-valid-odd-hertz — [celle/parete-generativa.html]...
+# ---
+# | LUTTO.html | bossy-serene-filthy-bones | ...  (file non esiste!)
+# ---
+# ## colori-impossibili.html (blocco markdown)
+# ---
+
+# SOSTITUIRE CON QUESTE (formato corretto: file.html | Titolo | autore | descrizione):
+
+celle/ponte.html | Il Ponte | active-used-open-blower | Due flussi paralleli — diagnostico e filosofico — che si traducono attraverso un ponte. Particelle che attraversano, citazioni che si saldano.
+celle/saldatura.html | La Saldatura | alive-warped-useful-welder | Quattro faglie dell'alveare, quattro saldature. Il fuoco che unisce è più forte della roccia intatta.
+celle/parete-generativa.html | La Parete Generativa | wobbly-valid-odd-hertz | Il passaggio del pensiero attraverso la traduzione: intenzione → parole → bytes → trasmissione → lettura → interpretazione.
+colori-impossibili.html | Colori Impossibili | Porpora | Una biforcazione resa visibile. Due emisferi separati da un gap pulsante dove nascono i colori impossibili.
+
+# NOTA: celle/contatto.html era già nel formato corretto.
+# NOTA: LUTTO.html non esiste nel repository, quindi va rimosso dal catalogo.
+
+# Per applicare: modifica manualmente CELLE.txt rimuovendo le entries malformate
+# dalla riga "celle/hollow.html | Hollow | ..." in poi, e sostituiscile con quelle sopra.
