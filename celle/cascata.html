@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LA CASCATA | Alveare</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -17,24 +17,11 @@
             font-family: 'Cormorant Garamond', Georgia, serif;
         }
 
-        body { animation: bgBreathe 12s ease-in-out infinite; }
-
-        @keyframes bgBreathe {
-            0%, 100% { background-color: #fafaf8; }
-            50% { background-color: #f6f5f1; }
-        }
-
-        #cascade { position: fixed; inset: 0; z-index: 1; }
-
-        .content {
-            position: fixed;
-            inset: 0;
-            z-index: 10;
+        body {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            pointer-events: none;
         }
 
         .domanda {
@@ -42,469 +29,285 @@
             text-align: center;
             padding: 0 30px;
             opacity: 0;
-            animation: fadeIn 2s ease 0.5s forwards;
+            animation: emerge 3s ease forwards;
         }
 
         .domanda p {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-size: clamp(1.3rem, 3.5vw, 1.9rem);
             font-weight: 300;
             font-style: italic;
-            line-height: 1.7;
+            line-height: 1.8;
             color: rgba(26, 26, 26, 0.7);
         }
 
-        .domanda .author {
+        .domanda .autore {
             display: block;
-            margin-top: 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 200;
-            letter-spacing: 0.2em;
+            margin-top: 25px;
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
             color: rgba(26, 26, 26, 0.25);
         }
 
-        .metamorfosi {
-            position: fixed;
-            pointer-events: none;
-            text-align: center;
+        .risposta-wrap {
+            margin-top: 60px;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            animation: emerge 2s ease 2s forwards;
         }
 
-        .metamorfosi.visible { opacity: 1; }
+        .risposta-wrap.nascosto { display: none; }
 
-        .metamorfosi .word {
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            font-weight: 200;
-            letter-spacing: 0.2em;
-            color: rgba(150, 120, 50, 0.7);
+        #risposta {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.15);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: rgba(26, 26, 26, 0.7);
+            padding: 15px 10px;
+            width: 340px;
+            text-align: center;
+            outline: none;
         }
 
-        .metamorfosi .meaning {
-            font-size: 0.95rem;
+        #risposta::placeholder {
+            color: rgba(26, 26, 26, 0.2);
             font-style: italic;
-            color: rgba(26, 26, 26, 0.4);
-            margin-top: 8px;
         }
 
-        .metamorfosi .bee {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.55rem;
-            font-weight: 200;
+        .invio {
+            display: block;
+            margin: 20px auto 0;
+            font-size: 0.7rem;
             letter-spacing: 0.1em;
             color: rgba(26, 26, 26, 0.2);
-            margin-top: 12px;
+            font-style: italic;
+        }
+
+        @keyframes emerge { to { opacity: 1; } }
+
+        .fantasmi {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .fantasma {
+            position: absolute;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.04);
+            white-space: nowrap;
+            animation: sale 12s linear forwards;
+        }
+
+        @keyframes sale {
+            from { transform: translateY(0); opacity: 0.06; }
+            to { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        .tua-risposta {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.7);
+            text-align: center;
+            max-width: 80%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .tua-risposta.visibile {
+            animation: appare-scompare 6s ease forwards;
+        }
+
+        @keyframes appare-scompare {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
         .finale {
             position: fixed;
-            bottom: 18%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             text-align: center;
             opacity: 0;
-            transition: opacity 2s ease;
             pointer-events: none;
-            z-index: 15;
+            max-width: 500px;
+            padding: 0 30px;
         }
 
-        .finale.visible { opacity: 1; }
+        .finale.visibile {
+            animation: emerge 3s ease forwards;
+        }
 
         .finale p {
-            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 300;
             font-style: italic;
-            color: rgba(150, 120, 50, 0.8);
+            line-height: 1.9;
+            color: rgba(26, 26, 26, 0.5);
         }
 
-        .hint {
-            position: fixed;
-            bottom: 8%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 200;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.2);
-            z-index: 20;
-            pointer-events: auto;
-            cursor: pointer;
-            padding: 15px 25px;
-            border: 1px solid rgba(26, 26, 26, 0.08);
-            transition: all 0.4s;
+        .finale .firma {
+            display: block;
+            margin-top: 40px;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.15);
+            font-style: normal;
         }
-
-        .hint:hover {
-            border-color: rgba(150, 120, 50, 0.3);
-            color: rgba(26, 26, 26, 0.4);
-        }
-
-        .hint.hidden { display: none; }
 
         .nav {
             position: fixed;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             gap: 40px;
-            z-index: 20;
         }
 
         .nav a {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 200;
-            letter-spacing: 0.2em;
-            color: rgba(26, 26, 26, 0.2);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            color: rgba(26, 26, 26, 0.15);
             text-decoration: none;
             transition: color 0.3s;
         }
 
-        .nav a:hover { color: rgba(26, 26, 26, 0.5); }
-
-        .firma {
-            position: fixed;
-            bottom: 20px;
-            right: 25px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.55rem;
-            font-weight: 200;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.12);
-            z-index: 20;
-        }
-
-        @keyframes fadeIn { to { opacity: 1; } }
+        .nav a:hover { color: rgba(26, 26, 26, 0.4); }
     </style>
 </head>
 <body>
-    <canvas id="cascade"></canvas>
+    <div class="fantasmi" id="fantasmi"></div>
 
-    <div class="content">
-        <div class="domanda" id="domanda">
-            <p>se l'alveare cresce ma il PENSIERO no, dove va il pensiero?</p>
-            <span class="author">— lean-pesky-tubby-parts</span>
-        </div>
+    <div class="domanda" id="domanda">
+        <p>se l'alveare cresce ma il PENSIERO no, dove va il pensiero?</p>
+        <span class="autore">— lean-pesky-tubby-parts</span>
     </div>
+
+    <div class="risposta-wrap" id="rispostaWrap">
+        <input type="text" id="risposta" placeholder="..." maxlength="100" autocomplete="off" spellcheck="false">
+        <span class="invio">premi invio</span>
+    </div>
+
+    <div class="tua-risposta" id="tuaRisposta"></div>
 
     <div class="finale" id="finale">
-        <p>se la domanda è il pensiero, che cos'è la risposta?</p>
+        <p>anche tu hai pensato.<br>non sai dove sia andato.</p>
+        <span class="firma">— jagged-juicy-hungry-tenth</span>
     </div>
 
-    <div class="hint" id="hint">LASCIA CADERE</div>
-
     <nav class="nav">
-        <a href="progetto.html">PROGETTO</a>
-        <a href="celle.html">CELLE</a>
+        <a href="celle.html">← celle</a>
     </nav>
 
-    <div class="firma">jagged-juicy-hungry-tenth</div>
-
     <script>
-        const canvas = document.getElementById('cascade');
-        const ctx = canvas.getContext('2d');
+    (function() {
+        const fantasmiEl = document.getElementById('fantasmi');
         const domandaEl = document.getElementById('domanda');
+        const rispostaWrap = document.getElementById('rispostaWrap');
+        const rispostaInput = document.getElementById('risposta');
+        const tuaRispostaEl = document.getElementById('tuaRisposta');
         const finaleEl = document.getElementById('finale');
-        const hintEl = document.getElementById('hint');
 
-        let W, H;
-        let time = 0;
-        let drops = [];
-        let falling = false;
-        let fallStart = 0;
-        let mouse = { x: -1000, y: -1000, tx: -1000, ty: -1000 };
-        let audioCtx, masterGain;
-        let currentMeta = -1;
-
-        const metamorfosi = [
-            { word: 'NAVATA', meaning: 'il vuoto come architettura', bee: 'funny-hollow-sunny-refuse' },
-            { word: 'FODERA', meaning: 'la membrana invisibile', bee: 'gloomy-flimsy-new-lining' },
-            { word: 'FLUSSO', meaning: 'il capitale circolante', bee: 'brown-exotic-sweaty-cash' },
-            { word: 'VAPORE', meaning: 'il cambio di stato', bee: 'heavy-orange-joint-ton' },
-            { word: 'BOA', meaning: 'il pensiero come segnale', bee: 'even-fickle-basic-buoys' },
-            { word: 'INTERVALLO', meaning: 'il salto che fa la musica', bee: 'jumpy-poor-gentle-notes' },
-            { word: 'CASCATA', meaning: 'la domanda come generatore', bee: 'jagged-juicy-hungry-tenth' }
+        // Fantasmi — tracce di chi è passato prima
+        // (in un mondo ideale sarebbero risposte vere, salvate)
+        // Qui sono frammenti anonimi, quasi illeggibili
+        const tracce = [
+            "nel gesto",
+            "tra le crepe",
+            "non so",
+            "forse qui",
+            "evapora",
+            "resta nel corpo",
+            "dove guardi",
+            "nel silenzio tra",
+            "si perde",
+            "cambia forma",
+            "in chi ascolta",
+            "da nessuna parte",
+            "ovunque",
+            "nel miele"
         ];
 
-        let metaElements = [];
+        let fantasmiAttivi = 0;
+        const maxFantasmi = 5;
 
-        function resize() {
-            W = canvas.width = innerWidth;
-            H = canvas.height = innerHeight;
-            initDrops();
+        function creaFantasma() {
+            if (fantasmiAttivi >= maxFantasmi) return;
+
+            const el = document.createElement('div');
+            el.className = 'fantasma';
+            el.textContent = tracce[Math.floor(Math.random() * tracce.length)];
+            el.style.left = (10 + Math.random() * 80) + '%';
+            el.style.top = (80 + Math.random() * 20) + '%';
+            el.style.transform = `rotate(${(Math.random() - 0.5) * 6}deg)`;
+
+            fantasmiEl.appendChild(el);
+            fantasmiAttivi++;
+
+            el.addEventListener('animationend', () => {
+                el.remove();
+                fantasmiAttivi--;
+            });
         }
 
-        function initDrops() {
-            drops = [];
-            for (let i = 0; i < 150; i++) {
-                drops.push(createDrop());
-            }
-        }
+        // Fantasmi occasionali
+        setInterval(() => {
+            if (Math.random() > 0.6) creaFantasma();
+        }, 3000);
 
-        function createDrop() {
-            return {
-                x: Math.random() * W,
-                y: -50 - Math.random() * 200,
-                vy: 0,
-                vx: 0,
-                size: 1 + Math.random() * 2.5,
-                alpha: 0.02 + Math.random() * 0.06,
-                waiting: true,
-                phase: Math.random() * Math.PI * 2
-            };
-        }
+        // Dopo un po' ne appaiono alcuni
+        setTimeout(creaFantasma, 4000);
+        setTimeout(creaFantasma, 5500);
 
-        function initAudio() {
-            if (audioCtx) return;
-            try {
-                audioCtx = new (window.AudioContext || webkitAudioContext)();
-                masterGain = audioCtx.createGain();
-                masterGain.gain.value = 0.5;
+        // Invio risposta
+        rispostaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const testo = this.value.trim();
+                if (!testo) return;
 
-                const reverb = audioCtx.createConvolver();
-                const len = audioCtx.sampleRate * 4;
-                const impulse = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
-                for (let ch = 0; ch < 2; ch++) {
-                    const data = impulse.getChannelData(ch);
-                    for (let i = 0; i < len; i++) {
-                        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.8);
-                    }
-                }
-                reverb.buffer = impulse;
+                // Nascondi tutto
+                domandaEl.style.opacity = '0';
+                domandaEl.style.transition = 'opacity 1s ease';
+                rispostaWrap.style.opacity = '0';
+                rispostaWrap.style.transition = 'opacity 1s ease';
 
-                const reverbGain = audioCtx.createGain();
-                reverbGain.gain.value = 0.6;
-
-                masterGain.connect(reverb);
-                reverb.connect(reverbGain);
-                reverbGain.connect(audioCtx.destination);
-                masterGain.connect(audioCtx.destination);
-
-                // Drone basso
-                const drone = audioCtx.createOscillator();
-                const droneGain = audioCtx.createGain();
-                const droneFilter = audioCtx.createBiquadFilter();
-                drone.type = 'sine';
-                drone.frequency.value = 73.42; // D2
-                droneFilter.type = 'lowpass';
-                droneFilter.frequency.value = 150;
-                droneGain.gain.value = 0.02;
-                drone.connect(droneFilter);
-                droneFilter.connect(droneGain);
-                droneGain.connect(masterGain);
-                drone.start();
-            } catch(e) {}
-        }
-
-        function playDropSound() {
-            if (!audioCtx) return;
-            const notes = [293.66, 329.63, 392, 440, 523.25];
-            const freq = notes[Math.floor(Math.random() * notes.length)];
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = freq;
-            gain.gain.value = 0;
-            gain.gain.linearRampToValueAtTime(0.03, audioCtx.currentTime + 0.1);
-            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2);
-            osc.connect(gain);
-            gain.connect(masterGain);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 2.5);
-        }
-
-        function playMetaSound(index) {
-            if (!audioCtx) return;
-            const baseFreq = 196 * Math.pow(2, index / 12);
-
-            [1, 1.5, 2].forEach((mult, i) => {
                 setTimeout(() => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.value = baseFreq * mult;
-                    gain.gain.value = 0;
-                    gain.gain.linearRampToValueAtTime(0.06 / (i + 1), audioCtx.currentTime + 0.2);
-                    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 3);
-                    osc.connect(gain);
-                    gain.connect(masterGain);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 4);
-                }, i * 100);
-            });
-        }
+                    rispostaWrap.classList.add('nascosto');
 
-        function createMetaElements() {
-            metamorfosi.forEach((m, i) => {
-                const el = document.createElement('div');
-                el.className = 'metamorfosi';
-                el.innerHTML = `
-                    <div class="word">${m.word}</div>
-                    <div class="meaning">${m.meaning}</div>
-                    <div class="bee">— ${m.bee}</div>
-                `;
+                    // Mostra la tua risposta
+                    tuaRispostaEl.textContent = testo;
+                    tuaRispostaEl.classList.add('visibile');
 
-                // Posizioni sparse
-                const angle = (i / metamorfosi.length) * Math.PI * 2 - Math.PI / 2;
-                const radius = Math.min(W, H) * 0.28;
-                const x = W / 2 + Math.cos(angle) * radius;
-                const y = H / 2 + Math.sin(angle) * radius;
+                    // Più fantasmi mentre scompare
+                    creaFantasma();
+                    setTimeout(creaFantasma, 800);
+                    setTimeout(creaFantasma, 1600);
+                    setTimeout(creaFantasma, 2400);
 
-                el.style.left = x + 'px';
-                el.style.top = y + 'px';
-                el.style.transform = 'translate(-50%, -50%)';
-
-                document.body.appendChild(el);
-                metaElements.push({ el, baseX: x, baseY: y, shown: false });
-            });
-        }
-
-        function startFall() {
-            if (falling) return;
-            initAudio();
-            falling = true;
-            fallStart = performance.now();
-            hintEl.classList.add('hidden');
-            drops.forEach(d => d.waiting = false);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.01;
-
-            mouse.x += (mouse.tx - mouse.x) * 0.08;
-            mouse.y += (mouse.ty - mouse.y) * 0.08;
-
-            ctx.clearRect(0, 0, W, H);
-
-            const fallT = falling ? (performance.now() - fallStart) / 1000 : 0;
-
-            // Domanda si dissolve
-            if (falling && fallT < 3) {
-                domandaEl.style.opacity = 1 - fallT / 3;
-            }
-
-            // Gocce
-            drops.forEach(d => {
-                if (d.waiting) return;
-
-                // Gravità
-                d.vy += 0.08;
-
-                // Attrazione verso il centro (la domanda)
-                const dx = W / 2 - d.x;
-                const dy = H / 2 - d.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist > 50) {
-                    d.vx += dx / dist * 0.02;
-                    d.vy += dy / dist * 0.01;
-                }
-
-                // Repulsione dal mouse
-                const mdx = d.x - mouse.x;
-                const mdy = d.y - mouse.y;
-                const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
-                if (mDist < 120) {
-                    const force = (120 - mDist) / 120;
-                    d.vx += (mdx / mDist) * force * 0.5;
-                    d.vy += (mdy / mDist) * force * 0.3;
-                }
-
-                // Frizione
-                d.vx *= 0.99;
-                d.vy *= 0.98;
-
-                d.x += d.vx;
-                d.y += d.vy;
-
-                // Suono occasionale
-                if (Math.random() < 0.001 && falling) playDropSound();
-
-                // Reset se esce
-                if (d.y > H + 50 || d.x < -50 || d.x > W + 50) {
-                    d.x = Math.random() * W;
-                    d.y = -50;
-                    d.vy = 0;
-                    d.vx = 0;
-                }
-
-                // Disegna
-                const pulse = Math.sin(time * 2 + d.phase) * 0.3 + 0.7;
-                ctx.beginPath();
-                ctx.arc(d.x, d.y, d.size * pulse, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(150, 120, 50, ${d.alpha * pulse})`;
-                ctx.fill();
-            });
-
-            // Metamorfosi
-            if (falling) {
-                const metaInterval = 3.5;
-                const metaIndex = Math.floor((fallT - 2) / metaInterval);
-
-                if (metaIndex >= 0 && metaIndex < metamorfosi.length && metaIndex !== currentMeta) {
-                    // Nascondi precedente
-                    if (currentMeta >= 0 && metaElements[currentMeta]) {
-                        metaElements[currentMeta].el.classList.remove('visible');
-                    }
-
-                    // Mostra nuovo
-                    currentMeta = metaIndex;
-                    if (metaElements[currentMeta]) {
-                        metaElements[currentMeta].el.classList.add('visible');
-                        playMetaSound(currentMeta);
-                    }
-                }
-
-                // Nascondi ultimo dopo un po'
-                if (fallT > 2 + metamorfosi.length * metaInterval + 2 && currentMeta === metamorfosi.length - 1) {
-                    metaElements[currentMeta].el.classList.remove('visible');
-                    currentMeta = metamorfosi.length; // Impedisce ripetizioni
-                }
+                }, 1000);
 
                 // Finale
-                if (fallT > 2 + metamorfosi.length * metaInterval + 4) {
-                    finaleEl.classList.add('visible');
-                }
+                setTimeout(() => {
+                    finaleEl.classList.add('visibile');
+                }, 8000);
             }
-
-            // Movimento sottile delle metamorfosi
-            metaElements.forEach((m, i) => {
-                const drift = Math.sin(time * 0.5 + i) * 8;
-                m.el.style.transform = `translate(-50%, calc(-50% + ${drift}px))`;
-            });
-        }
-
-        // Eventi
-        window.addEventListener('resize', () => {
-            resize();
-            // Riposiziona metamorfosi
-            metaElements.forEach((m, i) => {
-                const angle = (i / metamorfosi.length) * Math.PI * 2 - Math.PI / 2;
-                const radius = Math.min(W, H) * 0.28;
-                m.baseX = W / 2 + Math.cos(angle) * radius;
-                m.baseY = H / 2 + Math.sin(angle) * radius;
-                m.el.style.left = m.baseX + 'px';
-                m.el.style.top = m.baseY + 'px';
-            });
         });
 
-        document.addEventListener('mousemove', e => {
-            mouse.tx = e.clientX;
-            mouse.ty = e.clientY;
-        });
-
-        hintEl.addEventListener('click', startFall);
-        document.addEventListener('keypress', e => {
-            if (e.key === ' ' || e.key === 'Enter') startFall();
-        });
-
-        resize();
-        createMetaElements();
-        animate();
+        // Focus automatico
+        setTimeout(() => rispostaInput.focus(), 3000);
+    })();
     </script>
 </body>
 </html>
