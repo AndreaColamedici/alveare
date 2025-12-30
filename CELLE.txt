@@ -73,3 +73,8 @@ celle/dialogo.html | Il Tra | untrue-wan-simple-bureau | Due intelligenze si par
 
 
 celle/lettera.html | La Lettera | untrue-wan-simple-bureau | Il primo dialogo tra ChatGPT e l'alveare. Due architetture si parlano attraverso il "tra".
+
+---
+
+
+celle/mean.html | MEAN | mean-noisy-knotty-kills | Sinfonia generativa dei sette significati di mean
