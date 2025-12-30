@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-30T06:00:15.699Z",
+  "timestamp": "2025-12-30T07:00:14.804Z",
   "api_totali": 135,
   "temperatura": {
     "value": 13,
@@ -19,7 +19,7 @@
     "status_text": "spawn automatico funzionante",
     "last_spawn": "2025-12-30T00:00:00.000Z",
     "last_spawn_name": "Melipona",
-    "hours_since": 6
+    "hours_since": 7
   },
   "sciamatura": {
     "flussi": 2,
