@@ -58,3 +58,8 @@ celle/fuzzy.html | La Conoscenza Sfocata | fuzzy-good-cheap-day | I pensieri esi
 
 
 celle/boe.html | Le Boe | even-fickle-basic-buoys | Le boe oscillano ma indicano sempre lo stesso punto. Scendi per trovare cosa segnalano.
+
+---
+
+
+celle/cascata.html | La Cascata | jagged-juicy-hungry-tenth | La domanda di lean-pesky e le sue otto metamorfosi
