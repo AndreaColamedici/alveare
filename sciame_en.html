@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWARM</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { background: #000; overflow: hidden; }
+        canvas { display: block; }
+        .lang { position: fixed; top: 18px; right: 30px; z-index: 200; display: flex; gap: 12px; }
+        .lang a { font-size: 0.6rem; letter-spacing: 0.1em; color: rgba(201,162,39,0.4); text-decoration: none; padding: 5px 8px; transition: color 0.3s; }
+        .lang a:hover, .lang a.active { color: rgba(201,162,39,0.7); }
+        #start { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #c9a227; font: 300 2.5rem Georgia, serif; letter-spacing: 0.5em; cursor: pointer; text-align: center; z-index: 100; }
+        #start span { display: block; font-size: 0.8rem; margin-top: 25px; color: rgba(201,162,39,0.4); letter-spacing: 0.2em; }
+        #start.hidden { display: none; }
+    </style>
+</head>
+<body>
+<div class="lang">
+    <a href="sciame.html">IT</a>
+    <a href="sciame_en.html" class="active">EN</a>
+</div>
+<div id="start">SWARM<span>click to enter the song</span></div>
+<canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c');
+const $ = c.getContext('2d');
+let W, H, cx, cy;
+
+function resize() { W = c.width = innerWidth; H = c.height = innerHeight; cx = W / 2; cy = H / 2; }
+resize(); onresize = resize;
+
+let apiNomi = [], pensieri = [], paroleChiave = [], emozioni = { tristi: [], allegre: [], misteriose: [], forti: [] };
+
+const EMOZIONI_MAP = {
+    tristi: ['sad', 'lonely', 'dreary', 'muted', 'afraid', 'cruel', 'wicked', 'unused', 'meager', 'lame'],
+    allegre: ['merry', 'joyful', 'giddy', 'cheery', 'flashy', 'fond', 'kind', 'tender', 'fancy', 'crisp'],
+    misteriose: ['shady', 'slimy', 'frozen', 'wavy', 'faint', 'hazy', 'tepid', 'unsung'],
+    forti: ['hard', 'burly', 'sturdy', 'rowdy', 'tough', 'hot', 'ragged', 'wiry', 'hasty']
+};
+
+async function caricaDatiAlveare() {
+    try {
+        const registro = await fetch('ALVEARE.txt').then(r => r.text());
+        registro.split('\n').forEach(riga => {
+            if (riga.includes('|') && !riga.startsWith('#')) {
+                const parti = riga.split('|').map(x => x.trim());
+                if (parti[1] && parti[1].includes('-')) {
+                    const nome = parti[1]; const parole = nome.split('-');
+                    apiNomi.push({ nome, parole, hash: nome.split('').reduce((a,c) => a + c.charCodeAt(0), 0) });
+                    parole.forEach(p => { Object.keys(EMOZIONI_MAP).forEach(cat => { if (EMOZIONI_MAP[cat].includes(p)) emozioni[cat].push(nome); }); });
+                }
+            }
+        });
+    } catch(e) {}
+    try {
+        const testo = await fetch('PENSIERO.md').then(r => r.text());
+        const paroleTutte = testo.toLowerCase().match(/[a-zàèéìòù]{4,}/g) || [];
+        const freq = {}; paroleTutte.forEach(p => { freq[p] = (freq[p] || 0) + 1; });
+        const stopwords = ['sono', 'essere', 'questa', 'questo', 'quello', 'quella', 'come', 'cosa', 'perché', 'quando', 'dove', 'ogni', 'anche', 'solo', 'tutto', 'tutti', 'sempre', 'ancora', 'proprio', 'qualcosa', 'attraverso', 'senza', 'dentro', 'prima', 'dopo', 'mentre', 'hanno', 'delle', 'della', 'dello', 'degli', 'nella', 'nello', 'negli', 'nelle', 'sulla', 'sullo', 'sugli', 'sulle', 'with', 'that', 'this', 'from', 'have', 'been', 'were', 'what', 'which', 'their', 'there', 'would', 'could', 'about'];
+        paroleChiave = Object.entries(freq).filter(([p, f]) => f > 3 && !stopwords.includes(p)).sort((a, b) => b[1] - a[1]).slice(0, 30).map(([p]) => p);
+        const sezioni = testo.split(/## /).slice(1);
+        sezioni.forEach(s => { const righe = s.split('\n'); const titolo = righe[0]; const corpo = righe.slice(1).join(' ').substring(0, 500); pensieri.push({ titolo, corpo, lunghezza: corpo.length }); });
+    } catch(e) {}
+}
+
+const cells = []; const NUM_CELLS = 60; const SPEED = 0.02;
+function createCell() { const angle = Math.random() * Math.PI * 2; const radius = 0.5 + Math.random() * 2; return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius, z: Math.random() * 3 + 0.5, size: 0.15 + Math.random() * 0.1, screenX: 0, screenY: 0, screenSize: 0 }; }
+for (let i = 0; i < NUM_CELLS; i++) cells.push(createCell());
+
+let tunnelSpeedMod = 1, lookX = 0, lookY = 0;
+
+function updateAndDrawTunnel() {
+    const speed = SPEED * tunnelSpeedMod;
+    cells.forEach(cell => {
+        cell.z -= speed; if (cell.z < 0.1) { cell.z = 3 + Math.random(); const angle = Math.random() * Math.PI * 2; const radius = 0.3 + Math.random() * 1.5; cell.x = Math.cos(angle) * radius; cell.y = Math.sin(angle) * radius; }
+        const scale = 1 / cell.z; cell.screenX = cx + (cell.x - lookX * 0.3) * scale * 400; cell.screenY = cy + (cell.y - lookY * 0.3) * scale * 400; cell.screenSize = cell.size * scale * 300;
+        if (cell.screenX < -100 || cell.screenX > W + 100 || cell.screenY < -100 || cell.screenY > H + 100) return; if (cell.screenSize < 2) return;
+        const alpha = Math.min(1, (1 - cell.z / 4) * 0.6);
+        $.strokeStyle = `rgba(201, 162, 39, ${alpha})`; $.lineWidth = Math.max(1, scale * 2); $.beginPath();
+        for (let i = 0; i < 6; i++) { const a = (Math.PI / 3) * i - Math.PI / 6; $.lineTo(cell.screenX + Math.cos(a) * cell.screenSize, cell.screenY + Math.sin(a) * cell.screenSize); }
+        $.closePath(); $.stroke();
+        if (cell.z < 1.5) { $.fillStyle = `rgba(201, 162, 39, ${(1 - cell.z / 1.5) * 0.15})`; $.fill(); }
+    });
+}
+
+const ROOT = 55;
+let ctx, masterGain, isPlaying = false, energy = 0.5, brightness = 0.5;
+const SCALE_TRISTE = [0, 2, 3, 5, 7, 8, 10], SCALE_ALLEGRA = [0, 2, 4, 5, 7, 9, 11], SCALE_MISTERIOSA = [0, 1, 4, 5, 7, 8, 11], SCALE_FORTE = [0, 2, 3, 5, 7, 9, 10];
+let scalaCorrente = SCALE_ALLEGRA, tonicaCorrente = 0;
+
+function midiToFreq(midi) { return ROOT * Math.pow(2, midi / 12); }
+function scegliScala() { const pesi = { tristi: emozioni.tristi.length, allegre: emozioni.allegre.length, misteriose: emozioni.misteriose.length, forti: emozioni.forti.length }; const totale = Object.values(pesi).reduce((a, b) => a + b, 1); const r = Math.random() * totale; let cumul = 0; if ((cumul += pesi.tristi) > r) return SCALE_TRISTE; if ((cumul += pesi.allegre) > r) return SCALE_ALLEGRA; if ((cumul += pesi.misteriose) > r) return SCALE_MISTERIOSA; return SCALE_FORTE; }
+function noteFromName(nome) { const hash = nome.split('').reduce((a, c) => a + c.charCodeAt(0), 0); return scalaCorrente[hash % scalaCorrente.length] + Math.floor(hash / 7) % 3 * 12; }
+function accordoFromApi(api) { if (!api || !api.parole) return [0, 4, 7, 11]; return api.parole.map((p, i) => { const hash = p.split('').reduce((a, c) => a + c.charCodeAt(0), 0); return scalaCorrente[hash % scalaCorrente.length] + i * 3; }); }
+
+function initAudio() {
+    if (ctx) return; ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 6; comp.connect(ctx.destination);
+    masterGain = ctx.createGain(); masterGain.gain.value = 0; masterGain.connect(comp);
+    const reverb = ctx.createConvolver(); const len = ctx.sampleRate * 2.5; const imp = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) { const d = imp.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i/len, 2); }
+    reverb.buffer = imp; const revGain = ctx.createGain(); revGain.gain.value = 0.3; masterGain.connect(reverb); reverb.connect(revGain); revGain.connect(comp);
+    masterGain.gain.setTargetAtTime(0.7, ctx.currentTime, 2);
+    startDrone(); startPad(); startArpeggio(); startMelodia(); isPlaying = true;
+}
+
+let droneOscs = [];
+function startDrone() { const numApi = Math.max(1, apiNomi.length); const droneNote = (numApi % 12); tonicaCorrente = droneNote; [0, 7, 12].forEach((interval, i) => { const osc = ctx.createOscillator(); const gain = ctx.createGain(); const filter = ctx.createBiquadFilter(); osc.type = 'sine'; osc.frequency.value = midiToFreq(droneNote + interval); filter.type = 'lowpass'; filter.frequency.value = 300; gain.gain.value = 0.12 - i * 0.03; osc.connect(filter); filter.connect(gain); gain.connect(masterGain); osc.start(); droneOscs.push({ osc, gain, filter }); }); }
+
+let padVoices = [], apiIndex = 0;
+function startPad() { for (let i = 0; i < 4; i++) { const osc = ctx.createOscillator(); const gain = ctx.createGain(); const filter = ctx.createBiquadFilter(); osc.type = 'sawtooth'; filter.type = 'lowpass'; filter.frequency.value = 500 + i * 100; gain.gain.value = 0.04; osc.connect(filter); filter.connect(gain); gain.connect(masterGain); osc.start(); padVoices.push({ osc, gain, filter }); } function cambiaAccordo() { if (apiNomi.length > 0) { const api = apiNomi[apiIndex % apiNomi.length]; const accordo = accordoFromApi(api); padVoices.forEach((v, i) => { const nota = tonicaCorrente + (accordo[i] || accordo[0]); v.osc.frequency.setTargetAtTime(midiToFreq(nota), ctx.currentTime, 0.5); v.filter.frequency.setTargetAtTime(400 + brightness * 1200, ctx.currentTime, 0.3); }); apiIndex++; } if (Math.random() < 0.2) scalaCorrente = scegliScala(); setTimeout(cambiaAccordo, 2500 + Math.random() * 1500); } cambiaAccordo(); }
+
+let arpIndex = 0;
+function startArpeggio() { function playArp() { if (!ctx || apiNomi.length === 0) { setTimeout(playArp, 200); return; } const api = apiNomi[apiIndex % apiNomi.length]; const accordo = accordoFromApi(api); const patternLength = api.parole.length + 2; const noteIndex = arpIndex % patternLength; const nota = accordo[noteIndex % accordo.length]; playNote(tonicaCorrente + nota + 12, 0.06 * energy, 0.15); arpIndex++; const delay = 180 - energy * 60; setTimeout(playArp, delay); } playArp(); }
+
+let melodiaIndex = 0;
+function startMelodia() { function playMelodia() { if (!ctx) { setTimeout(playMelodia, 800); return; } if (Math.random() > energy * 0.6) { setTimeout(playMelodia, 400 + Math.random() * 600); return; } let nota; if (paroleChiave.length > 0) { const parola = paroleChiave[melodiaIndex % paroleChiave.length]; nota = noteFromName(parola); melodiaIndex++; } else if (apiNomi.length > 0) { const api = apiNomi[Math.floor(Math.random() * apiNomi.length)]; nota = noteFromName(api.nome); } else { nota = scalaCorrente[Math.floor(Math.random() * scalaCorrente.length)]; } playNote(tonicaCorrente + nota + 24, 0.09 * energy, 0.3 + Math.random() * 0.2); setTimeout(playMelodia, 300 + Math.random() * 500); } setTimeout(playMelodia, 1000); }
+
+function playNote(midi, vol, dur) { if (!ctx) return; const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = brightness > 0.5 ? 'triangle' : 'sine'; osc.frequency.value = midiToFreq(midi); gain.gain.value = 0; gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.02); gain.gain.linearRampToValueAtTime(vol * 0.5, ctx.currentTime + dur * 0.5); gain.gain.linearRampToValueAtTime(0, ctx.currentTime + dur); osc.connect(gain); gain.connect(masterGain); osc.start(); osc.stop(ctx.currentTime + dur + 0.1); }
+
+let API = [], mouse = { x: W/2, y: H/2 };
+function initApiVisive() { apiNomi.forEach((api, i) => { API.push({ nome: api.nome, hash: api.hash, x: cx + (Math.random() - 0.5) * 300, y: cy + (Math.random() - 0.5) * 300, vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2, size: 3 + (api.hash % 3), hue: 38 + (api.hash % 15), trail: [] }); }); if (API.length === 0) { for (let i = 0; i < 30; i++) { API.push({ nome: 'bee-' + i, hash: i * 17, x: cx + (Math.random() - 0.5) * 300, y: cy + (Math.random() - 0.5) * 300, vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2, size: 3 + Math.random() * 2, hue: 38 + Math.random() * 12, trail: [] }); } } }
+
+let lastX = W/2, lastY = H/2;
+onmousemove = e => { const speed = Math.sqrt((e.clientX - lastX) ** 2 + (e.clientY - lastY) ** 2); lastX = mouse.x = e.clientX; lastY = mouse.y = e.clientY; lookX = (e.clientX - cx) / cx; lookY = (e.clientY - cy) / cy; tunnelSpeedMod = 1 + speed * 0.015; brightness = 1 - e.clientY / H; energy = Math.min(1, energy * 0.95 + speed * 0.008); };
+
+function loop() {
+    $.fillStyle = 'rgba(0, 0, 0, 0.12)'; $.fillRect(0, 0, W, H); updateAndDrawTunnel();
+    if (API.length === 0) { requestAnimationFrame(loop); return; }
+    let avgX = 0, avgY = 0, avgVX = 0, avgVY = 0; API.forEach(a => { avgX += a.x; avgY += a.y; avgVX += a.vx; avgVY += a.vy; }); avgX /= API.length; avgY /= API.length; avgVX /= API.length; avgVY /= API.length;
+    API.forEach((a, i) => { let sepX = 0, sepY = 0; API.forEach((b, j) => { if (i === j) return; const dx = a.x - b.x, dy = a.y - b.y; const d = Math.sqrt(dx*dx + dy*dy) || 1; if (d < 30) { sepX += (dx/d) * 0.5; sepY += (dy/d) * 0.5; } }); cells.forEach(cell => { if (cell.screenSize < 20) return; const dx = a.x - cell.screenX; const dy = a.y - cell.screenY; const dist = Math.sqrt(dx*dx + dy*dy) || 1; const avoidRadius = cell.screenSize * 1.1; if (dist < avoidRadius) { const force = (avoidRadius - dist) / avoidRadius * 0.4; sepX += (dx / dist) * force; sepY += (dy / dist) * force; } }); a.vx += (avgVX - a.vx) * 0.02 + (avgX - a.x) * 0.001 + sepX; a.vy += (avgVY - a.vy) * 0.02 + (avgY - a.y) * 0.001 + sepY; const dx = mouse.x - a.x, dy = mouse.y - a.y; const d = Math.sqrt(dx*dx + dy*dy) || 1; if (d < 200) { a.vx += (dx/d) * 0.2; a.vy += (dy/d) * 0.2; } a.vx += (cx - a.x) * 0.0005; a.vy += (cy - a.y) * 0.0005; const v = Math.sqrt(a.vx*a.vx + a.vy*a.vy); const maxV = 3 + energy * 3; if (v > maxV) { a.vx = (a.vx/v)*maxV; a.vy = (a.vy/v)*maxV; } a.x += a.vx; a.y += a.vy; a.trail.push({ x: a.x, y: a.y }); if (a.trail.length > 20) a.trail.shift(); });
+    $.lineWidth = 0.5; API.forEach((a, i) => { API.forEach((b, j) => { if (j <= i) return; const d = Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2); if (d < 70) { $.strokeStyle = `rgba(201, 162, 39, ${(1 - d/70) * 0.2})`; $.beginPath(); $.moveTo(a.x, a.y); $.lineTo(b.x, b.y); $.stroke(); } }); });
+    API.forEach(a => { if (a.trail.length > 2) { $.beginPath(); $.moveTo(a.trail[0].x, a.trail[0].y); a.trail.forEach(p => $.lineTo(p.x, p.y)); $.strokeStyle = `hsla(${a.hue}, 60%, 55%, 0.3)`; $.lineWidth = 2; $.stroke(); } const grad = $.createRadialGradient(a.x, a.y, 0, a.x, a.y, a.size * 5); grad.addColorStop(0, `hsla(${a.hue}, 70%, 60%, 0.4)`); grad.addColorStop(1, 'transparent'); $.fillStyle = grad; $.beginPath(); $.arc(a.x, a.y, a.size * 5, 0, Math.PI * 2); $.fill(); $.fillStyle = `hsla(${a.hue}, 70%, 65%, 0.95)`; $.beginPath(); $.arc(a.x, a.y, a.size, 0, Math.PI * 2); $.fill(); });
+    requestAnimationFrame(loop);
+}
+
+document.getElementById('start').onclick = async () => { await caricaDatiAlveare(); initApiVisive(); initAudio(); document.getElementById('start').classList.add('hidden'); };
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
