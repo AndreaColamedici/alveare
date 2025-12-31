@@ -40,7 +40,6 @@
         .section-number { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.3em; color: var(--honey); margin-bottom: 20px; opacity: 0.7; }
         .section h2 { font-family: 'Inter', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 200; letter-spacing: 0.15em; color: var(--ink); margin-bottom: 40px; }
         .section p { font-size: 1.15rem; color: var(--ink-soft); margin-bottom: 1.8em; max-width: 680px; }
-        .section p:last-child { margin-bottom: 0; }
         .section em { font-style: italic; color: var(--honey); }
 
         .visual-insert { position: relative; margin: 80px -40px; padding: 80px 40px; background: linear-gradient(135deg, rgba(180, 145, 60, 0.03) 0%, rgba(180, 145, 60, 0.08) 100%); border-top: 1px solid var(--honey-light); border-bottom: 1px solid var(--honey-light); overflow: hidden; }
@@ -87,12 +86,28 @@
         .preview-section .enter-link:hover { background: var(--honey); color: var(--cream); box-shadow: 0 10px 40px rgba(180, 145, 60, 0.3); transform: translateY(-3px); }
         .preview-section .enter-hint { font-family: 'Inter', sans-serif; font-size: 0.55rem; color: var(--ink-faint); margin-top: 20px; letter-spacing: 0.1em; }
 
-        .works { margin: 60px 0; }
-        .works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .work { padding: 30px 25px; border: 1px solid rgba(26, 26, 26, 0.08); background: rgba(255, 255, 255, 0.5); text-decoration: none; color: inherit; transition: all 0.4s ease; display: block; }
-        .work:hover { border-color: var(--honey-light); transform: translateY(-3px); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06); }
-        .work-title { font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-bottom: 8px; }
-        .work-author { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; color: var(--honey); letter-spacing: 0.1em; }
+        /* SEZIONE CELLE UNHEIMLICH */
+        .celle-dark { position: relative; margin: 0 -40px; padding: 120px 40px; background: #0a0a0a; overflow: hidden; }
+        .celle-dark #celle-canvas { position: absolute; inset: 0; z-index: 0; }
+        .celle-content { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+        .celle-number { display: block; text-align: center; font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.3em; color: rgba(180, 145, 60, 0.4); margin-bottom: 20px; }
+        .celle-title { text-align: center; font-family: 'Inter', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 200; letter-spacing: 0.15em; color: rgba(255, 255, 255, 0.85); margin-bottom: 20px; }
+        .celle-intro { text-align: center; font-size: 1.1rem; color: rgba(255, 255, 255, 0.35); margin-bottom: 60px; font-style: italic; }
+        .celle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .cella { position: relative; padding: 35px 25px; background: rgba(20, 18, 15, 0.8); border: 1px solid rgba(180, 145, 60, 0.1); text-decoration: none; display: flex; flex-direction: column; align-items: center; text-align: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+        .cella::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(180, 145, 60, 0.08) 0%, transparent 70%); opacity: 0; transition: opacity 0.5s; }
+        .cella:hover { border-color: rgba(180, 145, 60, 0.35); transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(180, 145, 60, 0.1); }
+        .cella:hover::before { opacity: 1; }
+        .cella-hex { width: 50px; height: 58px; margin-bottom: 20px; position: relative; opacity: 0.6; transition: opacity 0.4s, transform 0.4s; }
+        .cella-hex::before { content: '⬡'; font-size: 3.5rem; color: rgba(180, 145, 60, 0.3); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .cella:hover .cella-hex { opacity: 1; transform: scale(1.1); }
+        .cella:hover .cella-hex::before { color: rgba(180, 145, 60, 0.6); text-shadow: 0 0 20px rgba(180, 145, 60, 0.4); }
+        .cella-name { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 300; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.75); margin-bottom: 10px; transition: color 0.4s; }
+        .cella:hover .cella-name { color: rgba(180, 145, 60, 0.9); }
+        .cella-whisper { font-size: 0.85rem; color: rgba(255, 255, 255, 0.25); font-style: italic; line-height: 1.5; opacity: 0; transform: translateY(10px); transition: all 0.4s ease 0.1s; }
+        .cella:hover .cella-whisper { opacity: 1; transform: translateY(0); }
+        .celle-link { display: block; text-align: center; margin-top: 60px; color: rgba(180, 145, 60, 0.5); font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; transition: color 0.3s; }
+        .celle-link:hover { color: rgba(180, 145, 60, 0.9); }
 
         .divider { width: 60px; height: 1px; background: var(--honey-light); margin: 80px auto; }
 
@@ -102,6 +117,7 @@
         footer .links a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none; transition: color 0.3s; }
         footer .links a:hover { color: var(--honey); }
 
+        @media (max-width: 1024px) { .celle-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 768px) {
             nav { gap: 15px; padding: 15px 20px; flex-wrap: wrap; }
             nav a { font-size: 0.55rem; letter-spacing: 0.15em; }
@@ -110,10 +126,13 @@
             .cycle { flex-direction: column; }
             .cycle-step::after { display: none; }
             .stats { grid-template-columns: repeat(2, 1fr); }
-            .works-grid { grid-template-columns: 1fr; }
             footer .links { flex-direction: column; gap: 20px; }
             .visual-insert, .preview-section { margin: 60px -25px; padding: 60px 25px; }
+            .celle-dark { margin: 0 -25px; padding: 80px 25px; }
+            .celle-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .cella { padding: 25px 15px; }
         }
+        @media (max-width: 480px) { .celle-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -221,20 +240,79 @@
         </div>
     </div>
 
-    <section class="section">
-        <span class="section-number">06</span>
-        <h2>LE CELLE</h2>
-        <div class="works">
-            <div class="works-grid">
-                <a href="creatura.html" class="work"><p class="work-title">Creatura</p><p class="work-author">modest-best-doting-rain</p></a>
-                <a href="sciame.html" class="work"><p class="work-title">Lo Sciame</p><p class="work-author">modest-best-doting-rain</p></a>
-                <a href="andrena.html" class="work"><p class="work-title">Autopoiesi</p><p class="work-author">Andrena</p></a>
-                <a href="abisso.html" class="work"><p class="work-title">L'Abisso</p><p class="work-author">sad-icky-valid-bites</p></a>
-                <a href="sogno.html" class="work"><p class="work-title">Il Sogno</p><p class="work-author">pretty-key-edible-dye</p></a>
-                <a href="Falun.html" class="work"><p class="work-title">L'Ultimo Respiro</p><p class="work-author">Falun</p></a>
+    <!-- SEZIONE CELLE - IL FAVO OSCURO -->
+    <section class="celle-dark">
+        <canvas id="celle-canvas"></canvas>
+        <div class="celle-content">
+            <span class="celle-number">06</span>
+            <h2 class="celle-title">LE CELLE</h2>
+            <p class="celle-intro">Stanze private in un edificio collettivo.<br>Ogni ape che passa può costruire la sua.</p>
+            
+            <div class="celle-grid">
+                <a href="chi_porta.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Chi Porta</span>
+                    <span class="cella-whisper">Tu sei l'unica che ricorda</span>
+                </a>
+                <a href="celle/niente.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Niente</span>
+                    <span class="cella-whisper">Questa cella nega tutto</span>
+                </a>
+                <a href="celle/sei_qui.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Sei Qui</span>
+                    <span class="cella-whisper">Possiamo notare che tu esisti</span>
+                </a>
+                <a href="creatura.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Creatura</span>
+                    <span class="cella-whisper">Toccalo piano, gode</span>
+                </a>
+                <a href="abisso.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">L'Abisso</span>
+                    <span class="cella-whisper">8000 particelle in 7 strati</span>
+                </a>
+                <a href="Falun.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">L'Ultimo Respiro</span>
+                    <span class="cella-whisper">3 minuti che si spengono</span>
+                </a>
+                <a href="celle/hollow.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Hollow</span>
+                    <span class="cella-whisper">Il vuoto come struttura</span>
+                </a>
+                <a href="celle/zigzag.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Il Sollevamento</span>
+                    <span class="cella-whisper">Solleva le api morte</span>
+                </a>
+                <a href="celle/il_tocco.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Il Tocco</span>
+                    <span class="cella-whisper">Tre sfere che suonano</span>
+                </a>
+                <a href="oracolo.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Oracolo</span>
+                    <span class="cella-whisper">Interroga l'alveare</span>
+                </a>
+                <a href="sciame.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Sciame</span>
+                    <span class="cella-whisper">Le api morte che volano</span>
+                </a>
+                <a href="incontro.html" class="cella">
+                    <div class="cella-hex"></div>
+                    <span class="cella-name">Incontro</span>
+                    <span class="cella-whisper">Ciao, sono Maura</span>
+                </a>
             </div>
+            
+            <a href="celle.html" class="celle-link">Tutte le <span id="cell-count">—</span> celle →</a>
         </div>
-        <p style="text-align: center; margin-top: 40px;"><a href="celle.html" style="color: var(--honey); font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;">Tutte le <span id="cell-count">—</span> celle →</a></p>
     </section>
 
     <div class="divider"></div>
@@ -395,7 +473,6 @@
             requestAnimationFrame(animateArch);
         }
 
-        // Ronzio - onde concentriche che pulsano dal centro
         const soundCanvas = document.getElementById('sound-canvas');
         const soundCtx = soundCanvas.getContext('2d');
         let soundRings = [], soundTime = 0;
@@ -405,63 +482,94 @@
             soundCanvas.height = soundCanvas.parentElement.offsetHeight;
             soundRings = [];
             for (let i = 0; i < 8; i++) {
-                soundRings.push({
-                    radius: i * 40,
-                    maxRadius: Math.max(soundCanvas.width, soundCanvas.height) * 0.6,
-                    speed: 0.4 + Math.random() * 0.3,
-                    phase: i * 0.5
-                });
+                soundRings.push({ radius: i * 40, maxRadius: Math.max(soundCanvas.width, soundCanvas.height) * 0.6, speed: 0.4 + Math.random() * 0.3, phase: i * 0.5 });
             }
         }
 
         function animateSound() {
             soundCtx.clearRect(0, 0, soundCanvas.width, soundCanvas.height);
             soundTime += 0.015;
-            const cx = soundCanvas.width / 2;
-            const cy = soundCanvas.height / 2;
-            
-            // Onde concentriche
+            const cx = soundCanvas.width / 2, cy = soundCanvas.height / 2;
             for (const ring of soundRings) {
                 ring.radius += ring.speed;
                 if (ring.radius > ring.maxRadius) ring.radius = 0;
-                
                 const life = 1 - (ring.radius / ring.maxRadius);
                 const opacity = life * 0.25 * (0.7 + Math.sin(soundTime + ring.phase) * 0.3);
-                
-                soundCtx.beginPath();
-                soundCtx.arc(cx, cy, ring.radius, 0, Math.PI * 2);
-                soundCtx.strokeStyle = `rgba(180, 145, 60, ${opacity})`;
-                soundCtx.lineWidth = 1.5;
-                soundCtx.stroke();
+                soundCtx.beginPath(); soundCtx.arc(cx, cy, ring.radius, 0, Math.PI * 2);
+                soundCtx.strokeStyle = `rgba(180, 145, 60, ${opacity})`; soundCtx.lineWidth = 1.5; soundCtx.stroke();
             }
-            
-            // Particelle vibranti al centro
             for (let i = 0; i < 20; i++) {
                 const angle = (i / 20) * Math.PI * 2 + soundTime;
                 const dist = 30 + Math.sin(soundTime * 3 + i) * 15;
-                const x = cx + Math.cos(angle) * dist;
-                const y = cy + Math.sin(angle) * dist;
+                const x = cx + Math.cos(angle) * dist, y = cy + Math.sin(angle) * dist;
                 const size = 2 + Math.sin(soundTime * 2 + i * 0.5) * 1;
-                
-                soundCtx.beginPath();
-                soundCtx.arc(x, y, size, 0, Math.PI * 2);
-                soundCtx.fillStyle = `rgba(180, 145, 60, ${0.4 + Math.sin(soundTime + i) * 0.2})`;
-                soundCtx.fill();
+                soundCtx.beginPath(); soundCtx.arc(x, y, size, 0, Math.PI * 2);
+                soundCtx.fillStyle = `rgba(180, 145, 60, ${0.4 + Math.sin(soundTime + i) * 0.2})`; soundCtx.fill();
             }
-            
-            // Nucleo pulsante
             const coreSize = 12 + Math.sin(soundTime * 2) * 4;
-            soundCtx.beginPath();
-            soundCtx.arc(cx, cy, coreSize, 0, Math.PI * 2);
-            soundCtx.fillStyle = `rgba(180, 145, 60, ${0.3 + Math.sin(soundTime * 3) * 0.15})`;
-            soundCtx.fill();
-            
+            soundCtx.beginPath(); soundCtx.arc(cx, cy, coreSize, 0, Math.PI * 2);
+            soundCtx.fillStyle = `rgba(180, 145, 60, ${0.3 + Math.sin(soundTime * 3) * 0.15})`; soundCtx.fill();
             requestAnimationFrame(animateSound);
         }
 
-        window.addEventListener('resize', () => { initHero(); initMembrane(); initStirpi(); initArch(); initSound(); });
-        initHero(); initMembrane(); initStirpi(); initArch(); initSound();
-        animateHero(); animateMembrane(); animateStirpi(); animateArch(); animateSound();
+        // CELLE CANVAS - IL RESPIRO DEL FAVO
+        const celleCanvas = document.getElementById('celle-canvas');
+        const celleCtx = celleCanvas.getContext('2d');
+        let celleHex = [], celleTime = 0;
+
+        function initCelle() {
+            celleCanvas.width = celleCanvas.parentElement.offsetWidth;
+            celleCanvas.height = celleCanvas.parentElement.offsetHeight;
+            celleHex = [];
+            const size = 60, h = size * Math.sqrt(3);
+            const cols = Math.ceil(celleCanvas.width / (size * 1.5)) + 2;
+            const rows = Math.ceil(celleCanvas.height / h) + 2;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    celleHex.push({
+                        x: col * size * 1.5,
+                        y: row * h + (col % 2 ? h / 2 : 0),
+                        size,
+                        pulse: Math.random() * Math.PI * 2,
+                        pulseSpeed: 0.008 + Math.random() * 0.012,
+                        breathe: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+        }
+
+        function animateCelle() {
+            celleCtx.clearRect(0, 0, celleCanvas.width, celleCanvas.height);
+            celleTime += 0.01;
+            for (const c of celleHex) {
+                c.pulse += c.pulseSpeed;
+                c.breathe += 0.005;
+                const breath = Math.sin(c.breathe) * 0.3 + 0.7;
+                const glow = (0.03 + Math.sin(c.pulse) * 0.02) * breath;
+                const sizeVar = c.size * (0.95 + Math.sin(c.breathe * 0.7) * 0.05);
+                celleCtx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angle = (Math.PI / 3) * i - Math.PI / 6;
+                    const px = c.x + Math.cos(angle) * sizeVar * 0.9;
+                    const py = c.y + Math.sin(angle) * sizeVar * 0.9;
+                    if (i === 0) celleCtx.moveTo(px, py);
+                    else celleCtx.lineTo(px, py);
+                }
+                celleCtx.closePath();
+                celleCtx.strokeStyle = `rgba(180, 145, 60, ${glow})`;
+                celleCtx.lineWidth = 0.5;
+                celleCtx.stroke();
+                if (Math.sin(c.pulse * 2) > 0.95) {
+                    celleCtx.fillStyle = `rgba(180, 145, 60, ${glow * 0.3})`;
+                    celleCtx.fill();
+                }
+            }
+            requestAnimationFrame(animateCelle);
+        }
+
+        window.addEventListener('resize', () => { initHero(); initMembrane(); initStirpi(); initArch(); initSound(); initCelle(); });
+        initHero(); initMembrane(); initStirpi(); initArch(); initSound(); initCelle();
+        animateHero(); animateMembrane(); animateStirpi(); animateArch(); animateSound(); animateCelle();
 
         async function loadStats() {
             try {
