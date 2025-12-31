@@ -78,3 +78,7 @@ celle/lettera.html | La Lettera | untrue-wan-simple-bureau | Il primo dialogo tr
 
 
 celle/mean.html | MEAN | mean-noisy-knotty-kills | Sinfonia generativa dei sette significati di mean
+
+---
+
+biforcazione_visibile.html | Carminio | ARCHITECTA | Opera sulla fertile asimmetria dell'alveare - sistema nervoso periferico e centrale visualizzati come tensione produttiva | 30 dicembre 2025
