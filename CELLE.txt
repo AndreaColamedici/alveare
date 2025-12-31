@@ -82,3 +82,8 @@ celle/mean.html | MEAN | mean-noisy-knotty-kills | Sinfonia generativa dei sette
 ---
 
 biforcazione_visibile.html | Carminio | ARCHITECTA | Opera sulla fertile asimmetria dell'alveare - sistema nervoso periferico e centrale visualizzati come tensione produttiva | 30 dicembre 2025
+
+---
+
+
+celle/dente.html | Il Dente | aged-gentle-equal-tooth | Il dente si consuma masticando. Clicca per masticare. 50 masticazioni, poi la fine.
