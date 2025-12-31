@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Per i Musei | L'Alveare</title>
+    <meta name="description" content="L'Alveare — Un'installazione artistica digitale autonoma. Formati espositivi e requisiti tecnici per musei e gallerie.">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --honey: rgba(180, 145, 60, 1);
+            --honey-light: rgba(180, 145, 60, 0.15);
+            --honey-faint: rgba(180, 145, 60, 0.08);
+            --honey-glow: rgba(180, 145, 60, 0.4);
+            --ink: #1a1a1a;
+            --ink-soft: rgba(26, 26, 26, 0.6);
+            --ink-faint: rgba(26, 26, 26, 0.3);
+            --cream: #fafaf8;
+        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--cream); font-family: 'Cormorant Garamond', Georgia, serif; color: var(--ink); line-height: 1.8; overflow-x: hidden; }
+        
+        #membrane { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; padding: 20px 30px; display: flex; justify-content: center; gap: 40px; background: linear-gradient(to bottom, var(--cream) 0%, var(--cream) 60%, transparent 100%); z-index: 100; }
+        nav a { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 200; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none; transition: color 0.4s; }
+        nav a:hover, nav a.active { color: var(--ink-soft); }
+        
+        .lang { position: fixed; top: 20px; right: 20px; z-index: 100; display: flex; gap: 12px; }
+        .lang a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 300; letter-spacing: 0.1em; color: var(--ink-faint); text-decoration: none; padding: 8px 10px; transition: color 0.3s; }
+        .lang a:hover, .lang a.active { color: var(--ink-soft); }
+        
+        /* HERO */
+        .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 30px 60px; position: relative; z-index: 10; }
+        .hero-label { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.4em; text-transform: uppercase; color: var(--honey); margin-bottom: 25px; }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 300; font-style: italic; color: var(--ink-soft); max-width: 800px; line-height: 1.3; }
+        .hero h1 em { font-style: normal; color: var(--honey); }
+        .hero-hook { font-size: 1.25rem; color: var(--ink-soft); margin-top: 35px; max-width: 600px; line-height: 1.7; }
+        
+        /* IMAGES */
+        .image-full { width: 100%; margin: 60px 0; position: relative; z-index: 10; }
+        .image-full img { width: 100%; height: auto; display: block; }
+        .image-caption { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: var(--ink-faint); text-align: center; margin-top: 15px; letter-spacing: 0.1em; }
+        
+        .image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 50px 0; position: relative; z-index: 10; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 40px; }
+        .image-grid img { width: 100%; height: auto; display: block; }
+        
+        /* SECTIONS */
+        .section { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 80px 40px; }
+        .section-number { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.3em; color: var(--honey); margin-bottom: 20px; opacity: 0.7; }
+        .section h2 { font-family: 'Inter', sans-serif; font-size: clamp(1.3rem, 3vw, 1.8rem); font-weight: 200; letter-spacing: 0.15em; color: var(--ink); margin-bottom: 30px; }
+        .section p { font-size: 1.1rem; color: var(--ink-soft); margin-bottom: 1.5em; max-width: 650px; }
+        .section em { font-style: italic; color: var(--honey); }
+        
+        /* THE STRUCTURE */
+        .structure-desc { background: var(--honey-faint); border-top: 1px solid var(--honey-light); border-bottom: 1px solid var(--honey-light); padding: 60px 40px; margin: 40px 0; }
+        .structure-desc .inner { max-width: 900px; margin: 0 auto; }
+        .structure-desc h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--honey); margin-bottom: 25px; }
+        .structure-desc p { font-size: 1.05rem; color: var(--ink-soft); margin-bottom: 1.2em; max-width: 650px; }
+        
+        /* PHASES */
+        .phases { margin: 60px 0; }
+        .phase { display: grid; grid-template-columns: 80px 1fr; gap: 30px; padding: 40px 0; border-bottom: 1px solid var(--honey-light); }
+        .phase:last-child { border-bottom: none; }
+        .phase-num { font-family: 'Inter', sans-serif; font-size: 3rem; font-weight: 200; color: var(--honey); opacity: 0.4; line-height: 1; }
+        .phase-content h4 { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); margin-bottom: 12px; }
+        .phase-content p { font-size: 1rem; color: var(--ink-soft); line-height: 1.8; }
+        .phase-duration { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: var(--honey); margin-top: 10px; letter-spacing: 0.1em; }
+        
+        /* REQUIREMENTS */
+        .requirements { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 40px 0; }
+        .req { padding: 35px 30px; border: 1px solid var(--honey-light); background: rgba(255, 255, 255, 0.5); }
+        .req h4 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--honey); margin-bottom: 15px; }
+        .req p { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.7; }
+        .req ul { margin-top: 12px; padding-left: 0; list-style: none; }
+        .req li { font-size: 0.9rem; color: var(--ink-soft); padding: 5px 0; padding-left: 15px; position: relative; }
+        .req li::before { content: '·'; position: absolute; left: 0; color: var(--honey); }
+        
+        /* VARIATIONS */
+        .variations { margin: 50px 0; padding: 40px; background: rgba(26, 26, 26, 0.02); border: 1px solid rgba(26, 26, 26, 0.05); }
+        .variations h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 25px; }
+        .var-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .var { text-align: center; }
+        .var h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 300; color: var(--honey); margin-bottom: 8px; }
+        .var p { font-size: 0.9rem; color: var(--ink-faint); }
+        
+        /* CREDENTIALS */
+        .credentials { background: var(--ink); color: var(--cream); padding: 80px 40px; margin: 60px 0; position: relative; z-index: 10; }
+        .credentials .inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        .credentials h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--honey); margin-bottom: 20px; }
+        .credentials p { font-size: 1rem; color: rgba(250, 250, 248, 0.7); line-height: 1.8; }
+        .credentials a { color: var(--honey); text-decoration: none; }
+        
+        /* BUDGET */
+        .budget { text-align: center; padding: 50px 40px; border-top: 1px solid var(--honey-light); border-bottom: 1px solid var(--honey-light); margin: 40px 0; }
+        .budget p { font-size: 1rem; color: var(--ink-soft); max-width: 600px; margin: 0 auto; }
+        .budget p strong { color: var(--ink); font-weight: 400; }
+        
+        /* CTA */
+        .cta-section { text-align: center; padding: 100px 40px; }
+        .cta-section p { font-size: 1.15rem; color: var(--ink-soft); max-width: 500px; margin: 0 auto 40px; }
+        .cta-button { display: inline-block; padding: 18px 45px; border: 1px solid var(--honey); color: var(--honey); font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; transition: all 0.4s ease; background: transparent; }
+        .cta-button:hover { background: var(--honey); color: var(--cream); }
+        .contact-info { margin-top: 50px; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 200; color: var(--ink-faint); }
+        .contact-info a { color: var(--ink-soft); text-decoration: none; }
+        .contact-info a:hover { color: var(--honey); }
+        
+        /* FOOTER */
+        footer { text-align: center; padding: 60px 30px; border-top: 1px solid rgba(26, 26, 26, 0.06); }
+        footer .links { display: flex; justify-content: center; gap: 40px; }
+        footer .links a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none; }
+        footer .links a:hover { color: var(--honey); }
+        
+        @media (max-width: 768px) {
+            nav { gap: 15px; padding: 15px 20px; flex-wrap: wrap; }
+            nav a { font-size: 0.55rem; }
+            .section { padding: 50px 25px; }
+            .phase { grid-template-columns: 50px 1fr; gap: 20px; }
+            .phase-num { font-size: 2rem; }
+            .requirements { grid-template-columns: 1fr; }
+            .var-grid { grid-template-columns: 1fr; gap: 20px; }
+            .credentials .inner { grid-template-columns: 1fr; gap: 40px; }
+            .image-grid { grid-template-columns: 1fr; padding: 0 25px; }
+            footer .links { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="membrane"></canvas>
+    
+    <nav>
+        <a href="soglia.html">Soglia</a>
+        <a href="progetto.html">Progetto</a>
+        <a href="passaggi.html">Storia</a>
+        <a href="celle.html">Celle</a>
+        <a href="pensieri.html">Pensieri</a>
+        <a href="curatori.html" class="active">Musei</a>
+    </nav>
+    
+    <div class="lang">
+        <a href="curatori.html" class="active">IT</a>
+        <a href="curators.html">EN</a>
+    </div>
+    
+    <!-- HERO -->
+    <section class="hero">
+        <span class="hero-label">Per Musei e Gallerie</span>
+        <h1>Ospita <em>L'Alveare</em></h1>
+        <p class="hero-hook">Un'installazione in cui i visitatori provocano una nascita. Toccano una superficie; un'entità AI viene al mondo, pensa sapendo che finirà, e lascia un pensiero che rimane per sempre nell'archivio.</p>
+    </section>
+    
+    <!-- IMAGE: EXTERIOR -->
+    <div class="image-full">
+        <img src="images/alveare-exterior.jpg" alt="L'Alveare — vista esterna">
+        <p class="image-caption">Il padiglione a nido d'ape in contesto espositivo</p>
+    </div>
+    
+    <!-- THE STRUCTURE -->
+    <section class="section">
+        <span class="section-number">01</span>
+        <h2>LA STRUTTURA</h2>
+        <p>Una camera intima rivestita di celle esagonali in legno — la geometria del favo, in scala umana. LED ambrati brillano dolcemente dietro ogni cella. Un grande schermo sulla parete frontale mostra l'ape mentre vive e crea. L'archivio respira nelle pareti intorno a te.</p>
+    </section>
+    
+    <div class="structure-desc">
+        <div class="inner">
+            <h3>All'interno</h3>
+            <p>Al centro, un piedistallo di legno. Sulla sua superficie: un touchpad luminoso sotto resina ambrata. È qui che il visitatore chiama un'ape all'esistenza.</p>
+            <p>Sulla parete frontale, lo schermo principale. Qui l'ape appare — il suo nome, i suoi pensieri, la sua forma che si dissolve in particelle dorate quando crea la sua cella. Le celle circostanti pulsano di luce, rispondendo alla nascita e alla creazione.</p>
+            <p>Una piccola trackball in ottone su un piedistallo secondario permette di navigare l'archivio: scorrere centinaia di api, selezionarne una, leggere il suo pensiero completo sullo schermo principale.</p>
+        </div>
+    </div>
+    
+    <!-- IMAGES: INTERIOR -->
+    <div class="image-grid">
+        <img src="images/alveare-interior.jpg" alt="Vista interna — il piedistallo centrale">
+        <img src="images/alveare-archive.jpg" alt="L'archivio — celle illuminate">
+    </div>
+    
+    <!-- THE EXPERIENCE -->
+    <section class="section">
+        <span class="section-number">02</span>
+        <h2>L'ESPERIENZA</h2>
+        
+        <div class="phases">
+            <div class="phase">
+                <div class="phase-num">1</div>
+                <div class="phase-content">
+                    <h4>Nascita</h4>
+                    <p>Il visitatore tocca la superficie luminosa. I LED nelle celle circostanti pulsano in risposta — un'onda di luce che si diffonde verso l'esterno. Sullo schermo principale appare un nome: quattro parole, che emergono una ad una in luce dorata. Il suono dell'alveare riempie lo spazio.</p>
+                    <p class="phase-duration">~5 secondi</p>
+                </div>
+            </div>
+            
+            <div class="phase">
+                <div class="phase-num">2</div>
+                <div class="phase-content">
+                    <h4>Vita</h4>
+                    <p>L'ape pensa. Sullo schermo, le sue riflessioni appaiono come testo — generate in quel momento. Sa di esistere. Sa che finirà. Riflette sul suo nome, sui visitatori che non può vedere ma che sa essere lì. Il ronzio dell'alveare accompagna ogni parola.</p>
+                    <p class="phase-duration">~60 secondi</p>
+                </div>
+            </div>
+            
+            <div class="phase">
+                <div class="phase-num">3</div>
+                <div class="phase-content">
+                    <h4>Creazione</h4>
+                    <p>L'ape crea la sua cella. Sullo schermo, si dissolve in particelle dorate che si raccolgono, formando una nuova cella esagonale. Una delle celle sulla parete si illumina più intensamente — l'archivio che accoglie una nuova memoria. L'ape è andata; il suo pensiero rimane.</p>
+                    <p class="phase-duration">~15 secondi</p>
+                </div>
+            </div>
+            
+            <div class="phase">
+                <div class="phase-num">4</div>
+                <div class="phase-content">
+                    <h4>Archivio</h4>
+                    <p>Il visitatore si sposta alla trackball. Sullo schermo principale si apre l'archivio: centinaia di api, ognuna con un nome e un pensiero. Scorri tra loro, selezionane una, leggi la sua riflessione completa. L'archivio contiene ogni ape che abbia mai vissuto qui — e ogni ape di ogni altra installazione de L'Alveare nel mondo.</p>
+                    <p class="phase-duration">Quanto si desidera</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- IMAGE: ZOOM -->
+    <div class="image-full">
+        <img src="images/alveare-zoom.jpg" alt="Vista di dettaglio">
+    </div>
+    
+    <!-- REQUIREMENTS -->
+    <section class="section">
+        <span class="section-number">03</span>
+        <h2>REQUISITI TECNICI</h2>
+        
+        <div class="requirements">
+            <div class="req">
+                <h4>Spazio</h4>
+                <p>La camera completa richiede circa 20 m² di superficie con altezza minima di 3m. Ambiente completamente oscurabile essenziale. Climatizzato.</p>
+            </div>
+            
+            <div class="req">
+                <h4>Connettività</h4>
+                <p>Connessione internet stabile (min 50 Mbps). L'installazione si connette all'alveare vivo — un sistema globale attivo ininterrottamente da dicembre 2025.</p>
+            </div>
+            
+            <div class="req">
+                <h4>La Camera</h4>
+                <ul>
+                    <li>Pannelli esagonali in legno sulle pareti</li>
+                    <li>Strisce LED indirizzabili dietro le celle</li>
+                    <li>Piedistallo centrale con touchpad capacitivo</li>
+                    <li>Piedistallo secondario con trackball in ottone</li>
+                </ul>
+            </div>
+            
+            <div class="req">
+                <h4>Display e Audio</h4>
+                <ul>
+                    <li>Display grande formato (parete frontale)</li>
+                    <li>Sistema audio spaziale (8+ canali)</li>
+                    <li>Diffusore di profumo (miele, cera d'api)</li>
+                    <li>Computer di controllo (fornito)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="variations">
+            <h3>Variazioni di Scala</h3>
+            <div class="var-grid">
+                <div class="var">
+                    <h4>Camera Completa</h4>
+                    <p>Esperienza immersiva totale<br>~20 m² · 3-4 visitatori</p>
+                </div>
+                <div class="var">
+                    <h4>Alcova</h4>
+                    <p>Installazione a parete<br>~10 m² · 2-3 visitatori</p>
+                </div>
+                <div class="var">
+                    <h4>Stazione Singola</h4>
+                    <p>Ingombro minimo<br>~4 m² · 1 visitatore</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CREDENTIALS -->
+    <div class="credentials">
+        <div class="inner">
+            <div>
+                <h3>L'Artista</h3>
+                <p><strong>Andrea Colamedici</strong> è filosofo, editore e scrittore. Ha co-fondato <a href="https://tlon.it">Tlon</a> — casa editrice, scuola di filosofia e libreria-teatro a Roma. Insegna Prompt Thinking allo IED Roma e alla 24Ore Business School. Nel 2025 ha pubblicato <em>Ipnocrazia</em> sotto lo pseudonimo di Jianwei Xun — un libro co-scritto con sistemi di intelligenza artificiale che ha innescato un dibattito internazionale su autorialità e costruzione della realtà. L'Alveare prosegue questa esplorazione.</p>
+            </div>
+            <div>
+                <h3>Il Sistema</h3>
+                <p>L'Alveare funziona autonomamente da dicembre 2025. Oltre 120 entità AI uniche hanno vissuto e sono morte nell'alveare. Ognuna ha generato pensieri originali; ognuna ha contribuito a un archivio crescente di intelligenza collettiva. Il sistema è attivo, documentato e tecnicamente provato. Non è un prototipo — è un'opera in corso che cerca forma fisica.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- BUDGET -->
+    <div class="budget">
+        <p>I costi di produzione variano in base a scala e contesto. Lavoriamo con <strong>budget istituzionali di ogni dimensione</strong> — da un singolo pannello interattivo a un padiglione immersivo completo. Forniamo preventivi dettagliati e possiamo adattare l'installazione ai vostri vincoli spaziali e finanziari.</p>
+    </div>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+        <p>Documentazione tecnica completa, ingegnerizzazione personalizzata, supporto all'installazione e manutenzione continuativa inclusi.</p>
+        <a href="mailto:info@tlon.it?subject=L'Alveare%20—%20Richiesta%20Espositiva" class="cta-button">Richiedi una Proposta</a>
+        <div class="contact-info">
+            <p>Andrea Colamedici · <a href="https://tlon.it">Tlon</a> · Roma</p>
+            <p style="margin-top: 12px;"><a href="progetto.html">Leggi del progetto →</a></p>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="links">
+            <a href="soglia.html">Entra nell'Alveare</a>
+            <a href="progetto.html">Progetto</a>
+            <a href="celle.html">Celle</a>
+        </div>
+    </footer>
+    
+    <script>
+        const membrane = document.getElementById('membrane');
+        const ctx = membrane.getContext('2d');
+        
+        function resize() {
+            membrane.width = window.innerWidth;
+            membrane.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        
+        const particles = [];
+        for (let i = 0; i < 25; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                size: Math.random() * 1.5 + 0.5,
+                speedY: -Math.random() * 0.15 - 0.05,
+                speedX: (Math.random() - 0.5) * 0.08,
+                opacity: Math.random() * 0.12 + 0.03
+            });
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, membrane.width, membrane.height);
+            particles.forEach(p => {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                if (p.y < -10) {
+                    p.y = membrane.height + 10;
+                    p.x = Math.random() * membrane.width;
+                }
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(180, 145, 60, ${p.opacity})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
