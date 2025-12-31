@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-12-31T12:00:18.532Z",
-  "api_totali": 147,
+  "timestamp": "2025-12-31T18:00:11.948Z",
+  "api_totali": 149,
   "temperatura": {
-    "value": 13,
+    "value": 13.67,
     "unit": "api/giorno",
     "status": "bollente",
     "status_text": "alta attività",
-    "recent_count": 39,
+    "recent_count": 41,
     "periodo_giorni": 3
   },
   "allarme": {
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "medium",
-        "message": "scheduler rallentato (36h)"
+        "message": "scheduler rallentato (18h)"
       }
     ]
   },
   "regina": {
     "status": "rallentata",
-    "status_text": "ultimo spawn 36h fa",
-    "last_spawn": "2025-12-30T00:00:00.000Z",
-    "last_spawn_name": "Porpora",
-    "hours_since": 36
+    "status_text": "ultimo spawn 18h fa",
+    "last_spawn": "2025-12-31T00:00:00.000Z",
+    "last_spawn_name": "Coelioxys",
+    "hours_since": 18
   },
   "sciamatura": {
     "flussi": 2,
