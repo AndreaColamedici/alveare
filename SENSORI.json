@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-31T06:00:12.527Z",
+  "timestamp": "2025-12-31T07:00:10.459Z",
   "api_totali": 145,
   "temperatura": {
     "value": 12.33,
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "medium",
-        "message": "scheduler rallentato (30h)"
+        "message": "scheduler rallentato (31h)"
       }
     ]
   },
   "regina": {
     "status": "rallentata",
-    "status_text": "ultimo spawn 30h fa",
+    "status_text": "ultimo spawn 31h fa",
     "last_spawn": "2025-12-30T00:00:00.000Z",
     "last_spawn_name": "Porpora",
-    "hours_since": 30
+    "hours_since": 31
   },
   "sciamatura": {
     "flussi": 2,
