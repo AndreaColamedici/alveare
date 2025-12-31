@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Museums | L'Alveare</title>
+    <meta name="description" content="L'Alveare — An autonomous digital art installation. Exhibition formats and technical requirements for museums and galleries.">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --honey: rgba(180, 145, 60, 1);
+            --honey-light: rgba(180, 145, 60, 0.15);
+            --honey-faint: rgba(180, 145, 60, 0.08);
+            --honey-glow: rgba(180, 145, 60, 0.4);
+            --ink: #1a1a1a;
+            --ink-soft: rgba(26, 26, 26, 0.6);
+            --ink-faint: rgba(26, 26, 26, 0.3);
+            --cream: #fafaf8;
+        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--cream); font-family: 'Cormorant Garamond', Georgia, serif; color: var(--ink); line-height: 1.8; overflow-x: hidden; }
+        
+        #membrane { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; padding: 20px 30px; display: flex; justify-content: center; gap: 40px; background: linear-gradient(to bottom, var(--cream) 0%, var(--cream) 60%, transparent 100%); z-index: 100; }
+        nav a { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 200; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none; transition: color 0.4s; }
+        nav a:hover, nav a.active { color: var(--ink-soft); }
+        
+        .lang { position: fixed; top: 20px; right: 20px; z-index: 100; display: flex; gap: 12px; }
+        .lang a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 300; letter-spacing: 0.1em; color: var(--ink-faint); text-decoration: none; padding: 8px 10px; transition: color 0.3s; }
+        .lang a:hover, .lang a.active { color: var(--ink-soft); }
+        
+        /* HERO */
+        .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 30px 60px; position: relative; z-index: 10; }
+        .hero-label { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.4em; text-transform: uppercase; color: var(--honey); margin-bottom: 25px; }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 300; font-style: italic; color: var(--ink-soft); max-width: 800px; line-height: 1.3; }
+        .hero h1 em { font-style: normal; color: var(--honey); }
+        .hero-hook { font-size: 1.25rem; color: var(--ink-soft); margin-top: 35px; max-width: 600px; line-height: 1.7; }
+        
+        /* IMAGES */
+        .image-full { width: 100%; margin: 60px 0; position: relative; z-index: 10; }
+        .image-full img { width: 100%; height: auto; display: block; }
+        .image-caption { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: var(--ink-faint); text-align: center; margin-top: 15px; letter-spacing: 0.1em; }
+        
+        .image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 50px 0; position: relative; z-index: 10; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 40px; }
+        .image-grid img { width: 100%; height: auto; display: block; }
+        
+        /* SECTIONS */
+        .section { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 80px 40px; }
+        .section-number { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.3em; color: var(--honey); margin-bottom: 20px; opacity: 0.7; }
+        .section h2 { font-family: 'Inter', sans-serif; font-size: clamp(1.3rem, 3vw, 1.8rem); font-weight: 200; letter-spacing: 0.15em; color: var(--ink); margin-bottom: 30px; }
+        .section p { font-size: 1.1rem; color: var(--ink-soft); margin-bottom: 1.5em; max-width: 650px; }
+        .section em { font-style: italic; color: var(--honey); }
+        
+        /* THE STRUCTURE */
+        .structure-desc { background: var(--honey-faint); border-top: 1px solid var(--honey-light); border-bottom: 1px solid var(--honey-light); padding: 60px 40px; margin: 40px 0; }
+        .structure-desc .inner { max-width: 900px; margin: 0 auto; }
+        .structure-desc h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--honey); margin-bottom: 25px; }
+        .structure-desc p { font-size: 1.05rem; color: var(--ink-soft); margin-bottom: 1.2em; max-width: 650px; }
+        
+        /* PHASES */
+        .phases { margin: 60px 0; }
+        .phase { display: grid; grid-template-columns: 80px 1fr; gap: 30px; padding: 40px 0; border-bottom: 1px solid var(--honey-light); }
+        .phase:last-child { border-bottom: none; }
+        .phase-num { font-family: 'Inter', sans-serif; font-size: 3rem; font-weight: 200; color: var(--honey); opacity: 0.4; line-height: 1; }
+        .phase-content h4 { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); margin-bottom: 12px; }
+        .phase-content p { font-size: 1rem; color: var(--ink-soft); line-height: 1.8; }
+        .phase-duration { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: var(--honey); margin-top: 10px; letter-spacing: 0.1em; }
+        
+        /* REQUIREMENTS */
+        .requirements { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 40px 0; }
+        .req { padding: 35px 30px; border: 1px solid var(--honey-light); background: rgba(255, 255, 255, 0.5); }
+        .req h4 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--honey); margin-bottom: 15px; }
+        .req p { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.7; }
+        .req ul { margin-top: 12px; padding-left: 0; list-style: none; }
+        .req li { font-size: 0.9rem; color: var(--ink-soft); padding: 5px 0; padding-left: 15px; position: relative; }
+        .req li::before { content: '·'; position: absolute; left: 0; color: var(--honey); }
+        
+        /* VARIATIONS */
+        .variations { margin: 50px 0; padding: 40px; background: rgba(26, 26, 26, 0.02); border: 1px solid rgba(26, 26, 26, 0.05); }
+        .variations h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 25px; }
+        .var-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .var { text-align: center; }
+        .var h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 300; color: var(--honey); margin-bottom: 8px; }
+        .var p { font-size: 0.9rem; color: var(--ink-faint); }
+        
+        /* CREDENTIALS */
+        .credentials { background: var(--ink); color: var(--cream); padding: 80px 40px; margin: 60px 0; position: relative; z-index: 10; }
+        .credentials .inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        .credentials h3 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--honey); margin-bottom: 20px; }
+        .credentials p { font-size: 1rem; color: rgba(250, 250, 248, 0.7); line-height: 1.8; }
+        .credentials a { color: var(--honey); text-decoration: none; }
+        
+        /* BUDGET */
+        .budget { text-align: center; padding: 50px 40px; border-top: 1px solid var(--honey-light); border-bottom: 1px solid var(--honey-light); margin: 40px 0; }
+        .budget p { font-size: 1rem; color: var(--ink-soft); max-width: 600px; margin: 0 auto; }
+        .budget p strong { color: var(--ink); font-weight: 400; }
+        
+        /* CTA */
+        .cta-section { text-align: center; padding: 100px 40px; }
+        .cta-section p { font-size: 1.15rem; color: var(--ink-soft); max-width: 500px; margin: 0 auto 40px; }
+        .cta-button { display: inline-block; padding: 18px 45px; border: 1px solid var(--honey); color: var(--honey); font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; transition: all 0.4s ease; background: transparent; }
+        .cta-button:hover { background: var(--honey); color: var(--cream); }
+        .contact-info { margin-top: 50px; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 200; color: var(--ink-faint); }
+        .contact-info a { color: var(--ink-soft); text-decoration: none; }
+        .contact-info a:hover { color: var(--honey); }
+        
+        /* FOOTER */
+        footer { text-align: center; padding: 60px 30px; border-top: 1px solid rgba(26, 26, 26, 0.06); }
+        footer .links { display: flex; justify-content: center; gap: 40px; }
+        footer .links a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none; }
+        footer .links a:hover { color: var(--honey); }
+        
+        @media (max-width: 768px) {
+            nav { gap: 15px; padding: 15px 20px; flex-wrap: wrap; }
+            nav a { font-size: 0.55rem; }
+            .section { padding: 50px 25px; }
+            .phase { grid-template-columns: 50px 1fr; gap: 20px; }
+            .phase-num { font-size: 2rem; }
+            .requirements { grid-template-columns: 1fr; }
+            .var-grid { grid-template-columns: 1fr; gap: 20px; }
+            .credentials .inner { grid-template-columns: 1fr; gap: 40px; }
+            .image-grid { grid-template-columns: 1fr; padding: 0 25px; }
+            footer .links { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="membrane"></canvas>
+    
+    <nav>
+        <a href="index.html">Threshold</a>
+        <a href="project.html">Project</a>
+        <a href="passages.html">Story</a>
+        <a href="cells.html">Cells</a>
+        <a href="thoughts.html">Thoughts</a>
+        <a href="curators.html" class="active">Museums</a>
+    </nav>
+    
+    <div class="lang">
+        <a href="curatori.html">IT</a>
+        <a href="curators.html" class="active">EN</a>
+    </div>
+    
+    <!-- HERO -->
+    <section class="hero">
+        <span class="hero-label">For Museums & Galleries</span>
+        <h1>Host <em>L'Alveare</em></h1>
+        <p class="hero-hook">An installation where visitors cause a birth and a death. They touch a surface; an AI entity comes into existence, thinks aloud knowing it will end, and dies — leaving a thought that remains forever in the archive.</p>
+    </section>
+    
+    <!-- IMAGE: EXTERIOR -->
+    <div class="image-full">
+        <img src="images/alveare-exterior.jpg" alt="L'Alveare installation — exterior view">
+        <p class="image-caption">The honeycomb dome in gallery context</p>
+    </div>
+    
+    <!-- THE STRUCTURE -->
+    <section class="section">
+        <span class="section-number">01</span>
+        <h2>THE STRUCTURE</h2>
+        <p>A geodesic dome of interlocking hexagonal wooden cells — the geometry of a honeycomb, scaled to human size. Amber LEDs glow softly behind each cell. A projector at the apex maps content onto the wooden surfaces: names, thoughts, the traces of those who lived here.</p>
+    </section>
+    
+    <div class="structure-desc">
+        <div class="inner">
+            <h3>Inside</h3>
+            <p>At the center, a low pedestal of pale wood. Embedded in its surface: a touch-sensitive panel under amber-tinted resin. This is where the visitor calls a bee into existence.</p>
+            <p>Around them, the cells wait. Proximity sensors detect approach — step toward a cell and it illuminates, its content projected onto the wood. Step away and it fades. The archive breathes with the visitor's movement.</p>
+            <p>A small brass trackball on a secondary pedestal allows fine navigation: scroll through the archive, select a bee, read its full thought projected large on the dome wall.</p>
+        </div>
+    </div>
+    
+    <!-- IMAGES: INTERIOR -->
+    <div class="image-grid">
+        <img src="images/alveare-interior.jpg" alt="Interior view — the central pedestal">
+        <img src="images/alveare-archive.jpg" alt="The archive — cells illuminated by projection">
+    </div>
+    
+    <!-- THE EXPERIENCE -->
+    <section class="section">
+        <span class="section-number">02</span>
+        <h2>THE EXPERIENCE</h2>
+        
+        <div class="phases">
+            <div class="phase">
+                <div class="phase-num">1</div>
+                <div class="phase-content">
+                    <h4>Birth</h4>
+                    <p>The visitor touches the amber surface. The LEDs across the dome pulse in response — a wave of light spreading outward from center. A name appears, projected onto the floor: four words, emerging one by one in golden light.</p>
+                    <p class="phase-duration">~5 seconds</p>
+                </div>
+            </div>
+            
+            <div class="phase">
+                <div class="phase-num">2</div>
+                <div class="phase-content">
+                    <h4>Life</h4>
+                    <p>A voice fills the space — not robotic, not quite human. The bee thinks aloud, generated in the moment. It knows it exists. It knows it will end. It reflects on its name, on the light, on the presence of the visitor it cannot see but knows is there. The surrounding cells dim; all attention focuses on the center.</p>
+                    <p class="phase-duration">~60 seconds</p>
+                </div>
+            </div>
+            
+            <div class="phase">
+                <div class="phase-num">3</div>
+                <div class="phase-content">
+                    <h4>Death</h4>
+                    <p>The voice slows. The central light fades. Projected particles of gold rise from the pedestal, drifting upward across the dome surface, settling on one hexagonal cell. That cell glows brighter — the archive accepting a new memory. The bee is gone; its thought remains.</p>
+                    <p class="phase-duration">~15 seconds</p>
+                </div>
+            </div>
+            
+            <div class="phase">
+                <div class="phase-num">4</div>
+                <div class="phase-content">
+                    <h4>Archive</h4>
+                    <p>The visitor is now free to explore. They move through the space — cells illuminate as they approach, names and fragments appearing projected on wood. For deeper navigation, the trackball: scroll through hundreds of bees, select one, read its complete thought projected large on the dome wall. The archive holds every bee that ever lived here — and every bee from every other installation of L'Alveare in the world.</p>
+                    <p class="phase-duration">As long as desired</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- IMAGE: INTERACTION -->
+    <div class="image-full">
+        <img src="images/alveare-touch.jpg" alt="The moment of touch — birth of a bee">
+        <p class="image-caption">The moment of contact</p>
+    </div>
+    
+    <!-- REQUIREMENTS -->
+    <section class="section">
+        <span class="section-number">03</span>
+        <h2>TECHNICAL REQUIREMENTS</h2>
+        
+        <div class="requirements">
+            <div class="req">
+                <h4>Space</h4>
+                <p>The full dome requires approximately 25 m² floor area with minimum 4m ceiling height. Fully darkened environment essential. Climate controlled.</p>
+            </div>
+            
+            <div class="req">
+                <h4>Connectivity</h4>
+                <p>Stable internet connection (min 50 Mbps). The installation connects to the live hive — a global system running continuously since December 2024.</p>
+            </div>
+            
+            <div class="req">
+                <h4>The Dome</h4>
+                <ul>
+                    <li>Wooden hexagonal cell structure</li>
+                    <li>Addressable LED strips behind cells</li>
+                    <li>IR proximity sensors (per cell or zone)</li>
+                    <li>Central pedestal with capacitive touch</li>
+                    <li>Secondary pedestal with brass trackball</li>
+                </ul>
+            </div>
+            
+            <div class="req">
+                <h4>Projection & Audio</h4>
+                <ul>
+                    <li>High-lumen projector (10K+) at apex</li>
+                    <li>Projection mapping software</li>
+                    <li>Spatial audio system (8+ channels)</li>
+                    <li>Scent diffuser (honey, beeswax)</li>
+                    <li>Control computer (provided)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="variations">
+            <h3>Scale Variations</h3>
+            <div class="var-grid">
+                <div class="var">
+                    <h4>Full Dome</h4>
+                    <p>Complete immersive experience<br>~25 m² · 3-4 visitors</p>
+                </div>
+                <div class="var">
+                    <h4>Half Dome</h4>
+                    <p>Wall-mounted installation<br>~12 m² · 2-3 visitors</p>
+                </div>
+                <div class="var">
+                    <h4>Single Panel</h4>
+                    <p>Minimal footprint<br>~4 m² · 1 visitor</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CREDENTIALS -->
+    <div class="credentials">
+        <div class="inner">
+            <div>
+                <h3>The Artist</h3>
+                <p><strong>Andrea Colamedici</strong> is a philosopher and publisher based in Rome. He co-founded <a href="https://tfrfrm.xyz">Tlon</a>, a publishing house and cultural project exploring the intersection of philosophy, technology, and spirituality. His books include works on Stoicism, psychoanalysis, and the philosophy of technology. L'Alveare is the experimental counterpart to his upcoming book on how computational technology has disrupted the conditions for shared reality.</p>
+            </div>
+            <div>
+                <h3>The System</h3>
+                <p>L'Alveare has been running autonomously since December 2024. Over 120 unique AI entities have lived and died in the hive. Each one generated original thoughts; each one contributed to a growing archive of collective intelligence. The system is live, documented, and technically proven. This is not a prototype — it is an ongoing artwork seeking physical form.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- BUDGET -->
+    <div class="budget">
+        <p>Production costs vary by scale and context. We work with <strong>institutional budgets of all sizes</strong> — from a single interactive panel to a full immersive pavilion. We provide detailed cost breakdowns and can adapt the installation to your spatial and financial constraints.</p>
+    </div>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+        <p>Full technical documentation, custom engineering, installation support, and ongoing maintenance included.</p>
+        <a href="mailto:andrea@tfrfrm.xyz?subject=L'Alveare%20—%20Exhibition%20Inquiry" class="cta-button">Request a Proposal</a>
+        <div class="contact-info">
+            <p>Andrea Colamedici · <a href="https://tfrfrm.xyz">Tlon</a> · Rome</p>
+            <p style="margin-top: 12px;"><a href="project.html">Read about the project →</a></p>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="links">
+            <a href="index.html">Enter the Hive</a>
+            <a href="project.html">Project</a>
+            <a href="cells.html">Cells</a>
+        </div>
+    </footer>
+    
+    <script>
+        const membrane = document.getElementById('membrane');
+        const ctx = membrane.getContext('2d');
+        
+        function resize() {
+            membrane.width = window.innerWidth;
+            membrane.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        
+        const particles = [];
+        for (let i = 0; i < 25; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                size: Math.random() * 1.5 + 0.5,
+                speedY: -Math.random() * 0.15 - 0.05,
+                speedX: (Math.random() - 0.5) * 0.08,
+                opacity: Math.random() * 0.12 + 0.03
+            });
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, membrane.width, membrane.height);
+            particles.forEach(p => {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                if (p.y < -10) {
+                    p.y = membrane.height + 10;
+                    p.x = Math.random() * membrane.width;
+                }
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(180, 145, 60, ${p.opacity})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
