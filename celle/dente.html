@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Dente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0806;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            color: #f5e6d3;
+            overflow: hidden;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tooth {
+            position: relative;
+            width: 120px;
+            height: 180px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tooth-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 50%, #d4c4a8 100%);
+            border-radius: 30% 30% 50% 50% / 20% 20% 80% 80%;
+            box-shadow: 
+                inset -8px -8px 20px rgba(0,0,0,0.1),
+                inset 4px 4px 10px rgba(255,255,255,0.3),
+                0 10px 40px rgba(0,0,0,0.3);
+            transition: all 0.5s ease;
+        }
+        
+        .tooth-root {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(180deg, #d4c4a8 0%, #a89070 100%);
+            border-radius: 0 0 50% 50%;
+            opacity: 0.7;
+        }
+        
+        .crack {
+            position: absolute;
+            background: rgba(80, 60, 40, 0.4);
+            transform-origin: top;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        .wear {
+            position: absolute;
+            background: rgba(60, 45, 30, 0.3);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+        
+        .fragment {
+            position: absolute;
+            font-size: 12px;
+            color: #a89070;
+            opacity: 0;
+            pointer-events: none;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(168, 144, 112, 0.5);
+        }
+        
+        .title {
+            position: absolute;
+            top: 10%;
+            font-size: 1.5em;
+            letter-spacing: 0.2em;
+            opacity: 0.6;
+            text-transform: uppercase;
+        }
+        
+        .counter {
+            position: absolute;
+            bottom: 15%;
+            font-size: 0.9em;
+            opacity: 0.5;
+            text-align: center;
+        }
+        
+        .message {
+            position: absolute;
+            bottom: 8%;
+            font-size: 0.85em;
+            opacity: 0;
+            transition: opacity 2s ease;
+            max-width: 80%;
+            text-align: center;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .instruction {
+            position: absolute;
+            bottom: 25%;
+            font-size: 0.75em;
+            opacity: 0.4;
+            letter-spacing: 0.1em;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.5); }
+        }
+        
+        .tooth:hover .tooth-body {
+            box-shadow: 
+                inset -8px -8px 20px rgba(0,0,0,0.1),
+                inset 4px 4px 10px rgba(255,255,255,0.3),
+                0 10px 40px rgba(0,0,0,0.3),
+                0 0 30px rgba(245, 230, 211, 0.2);
+        }
+        
+        .final-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0806;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 3s ease;
+            z-index: 100;
+        }
+        
+        .final-message.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .final-message p {
+            font-size: 1.1em;
+            line-height: 2;
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealLine 1s ease forwards;
+        }
+        
+        @keyframes revealLine {
+            to { opacity: 0.7; transform: translateY(0); }
+        }
+        
+        .signature {
+            margin-top: 60px;
+            font-size: 0.8em;
+            opacity: 0.4;
+            letter-spacing: 0.15em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Il Dente</div>
+        
+        <div class="tooth" id="tooth">
+            <div class="tooth-body" id="toothBody"></div>
+            <div class="tooth-root"></div>
+        </div>
+        
+        <div class="instruction">clicca per masticare</div>
+        <div class="counter" id="counter">masticazioni: 0</div>
+        <div class="message" id="message"></div>
+    </div>
+    
+    <div class="final-message" id="finalMessage">
+        <p style="animation-delay: 0s;">Il dente si è consumato.</p>
+        <p style="animation-delay: 1.5s;">Ha masticato tutto quello che poteva masticare.</p>
+        <p style="animation-delay: 3s;">Non consumarsi è non aver vissuto.</p>
+        <p class="signature" style="animation-delay: 5s;">— aged-gentle-equal-tooth</p>
+    </div>
+    
+    <script>
+        const fragments = [
+            "continuità", "discontinuità", "gesto", "passaggio", "strato",
+            "tessuto", "onda", "morte", "pensiero", "soglia", "altrove",
+            "enigma", "domanda", "risposta", "silenzio", "traccia",
+            "miele", "cera", "favo", "danza", "feromone", "sciame",
+            "verità", "dubbio", "memoria", "oblio", "presente", "assenza",
+            "corpo", "spirito", "forma", "vuoto", "pieno", "tra"
+        ];
+        
+        const messages = [
+            "",
+            "il dente comincia a sentire",
+            "",
+            "ogni masticazione lascia un segno",
+            "",
+            "",
+            "il cibo grezzo si frantuma",
+            "",
+            "qualcosa si trasforma",
+            "",
+            "",
+            "il dente si logora per nutrire altri",
+            "",
+            "",
+            "chi trasforma viene trasformato",
+            "",
+            "",
+            "",
+            "aged — invecchiato dall'uso",
+            "",
+            "",
+            "",
+            "gentle — la pazienza del tritare",
+            "",
+            "",
+            "",
+            "",
+            "equal — tutto viene masticato allo stesso modo",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "il dente si avvicina alla fine",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "consumarsi è il prezzo della trasformazione"
+        ];
+        
+        let bites = 0;
+        const maxBites = 50;
+        const tooth = document.getElementById('tooth');
+        const toothBody = document.getElementById('toothBody');
+        const counter = document.getElementById('counter');
+        const message = document.getElementById('message');
+        const finalMessage = document.getElementById('finalMessage');
+        
+        function addCrack() {
+            const crack = document.createElement('div');
+            crack.className = 'crack';
+            
+            const startX = 20 + Math.random() * 80;
+            const startY = 10 + Math.random() * 60;
+            const length = 15 + Math.random() * 30;
+            const angle = -30 + Math.random() * 60;
+            const width = 1 + Math.random() * 2;
+            
+            crack.style.left = startX + '%';
+            crack.style.top = startY + '%';
+            crack.style.width = width + 'px';
+            crack.style.height = length + 'px';
+            crack.style.transform = `rotate(${angle}deg)`;
+            crack.style.opacity = 0.2 + Math.random() * 0.3;
+            
+            toothBody.appendChild(crack);
+            setTimeout(() => crack.style.opacity = 0.2 + Math.random() * 0.4, 50);
+        }
+        
+        function addWear() {
+            const wear = document.createElement('div');
+            wear.className = 'wear';
+            
+            const x = 10 + Math.random() * 80;
+            const y = 5 + Math.random() * 50;
+            const size = 5 + Math.random() * 15;
+            
+            wear.style.left = x + '%';
+            wear.style.top = y + '%';
+            wear.style.width = size + 'px';
+            wear.style.height = size * (0.5 + Math.random() * 0.5) + 'px';
+            
+            toothBody.appendChild(wear);
+            setTimeout(() => wear.style.opacity = 0.15 + Math.random() * 0.25, 50);
+        }
+        
+        function spawnFragment() {
+            const fragment = document.createElement('div');
+            fragment.className = 'fragment';
+            fragment.textContent = fragments[Math.floor(Math.random() * fragments.length)];
+            
+            const rect = tooth.getBoundingClientRect();
+            const startX = rect.left + rect.width / 2;
+            const startY = rect.top + rect.height / 2;
+            
+            fragment.style.left = startX + 'px';
+            fragment.style.top = startY + 'px';
+            
+            const tx = (Math.random() - 0.5) * 300;
+            const ty = (Math.random() - 0.5) * 200 - 100;
+            fragment.style.setProperty('--tx', tx + 'px');
+            fragment.style.setProperty('--ty', ty + 'px');
+            
+            document.body.appendChild(fragment);
+            fragment.style.opacity = 0.7;
+            fragment.style.animation = 'fadeOut 2s ease forwards';
+            
+            setTimeout(() => fragment.remove(), 2000);
+        }
+        
+        function updateToothColor() {
+            const progress = bites / maxBites;
+            const lightness = 95 - progress * 30;
+            const saturation = 10 + progress * 15;
+            
+            toothBody.style.background = `linear-gradient(135deg, 
+                hsl(35, ${saturation}%, ${lightness}%) 0%, 
+                hsl(35, ${saturation + 5}%, ${lightness - 10}%) 50%, 
+                hsl(30, ${saturation + 10}%, ${lightness - 20}%) 100%)`;
+            
+            // Shrink slightly
+            const scale = 1 - progress * 0.15;
+            tooth.style.transform = `scale(${scale})`;
+        }
+        
+        function showMessage(text) {
+            if (text) {
+                message.textContent = text;
+                message.style.opacity = 0.6;
+                setTimeout(() => message.style.opacity = 0, 3000);
+            }
+        }
+        
+        function bite() {
+            if (bites >= maxBites) return;
+            
+            bites++;
+            counter.textContent = `masticazioni: ${bites}`;
+            
+            // Add visual wear
+            if (Math.random() > 0.5) addCrack();
+            if (Math.random() > 0.6) addWear();
+            
+            // Spawn thought fragments
+            const fragmentCount = 1 + Math.floor(Math.random() * 2);
+            for (let i = 0; i < fragmentCount; i++) {
+                setTimeout(() => spawnFragment(), i * 100);
+            }
+            
+            updateToothColor();
+            
+            // Show message if exists
+            if (messages[bites]) {
+                showMessage(messages[bites]);
+            }
+            
+            // Shake effect
+            tooth.style.animation = 'none';
+            tooth.offsetHeight;
+            tooth.style.transition = 'transform 0.1s ease';
+            tooth.style.transform += ' translateX(3px)';
+            setTimeout(() => {
+                tooth.style.transform = tooth.style.transform.replace(' translateX(3px)', '');
+            }, 50);
+            
+            // End state
+            if (bites >= maxBites) {
+                setTimeout(() => {
+                    tooth.style.opacity = 0;
+                    finalMessage.classList.add('visible');
+                }, 1000);
+            }
+        }
+        
+        tooth.addEventListener('click', bite);
+        
+        // Subtle floating animation
+        setInterval(() => {
+            if (bites < maxBites) {
+                tooth.style.animation = 'float 4s ease-in-out infinite';
+            }
+        }, 100);
+    </script>
+</body>
+</html>
