@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-01-01T06:00:35.818Z",
-  "api_totali": 149,
+  "timestamp": "2026-01-01T07:00:30.209Z",
+  "api_totali": 150,
   "temperatura": {
-    "value": 5,
+    "value": 5.33,
     "unit": "api/giorno",
     "status": "caldo",
     "status_text": "attività normale",
-    "recent_count": 15,
+    "recent_count": 16,
     "periodo_giorni": 3
   },
   "allarme": {
-    "count": 1,
-    "level": "medium",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "medium",
-        "message": "scheduler rallentato (30h)"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "rallentata",
-    "status_text": "ultimo spawn 30h fa",
-    "last_spawn": "2025-12-31T00:00:00.000Z",
-    "last_spawn_name": "Coelioxys",
-    "hours_since": 30
+    "status": "attiva",
+    "status_text": "spawn automatico funzionante",
+    "last_spawn": "2026-01-01T00:00:00.000Z",
+    "last_spawn_name": "Epicharis2",
+    "hours_since": 7
   },
   "sciamatura": {
     "flussi": 2,
