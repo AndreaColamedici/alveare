@@ -3,205 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regole — AGORÀ</title>
+    <title>Regole — BARBA D'API</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --gold: rgba(160, 130, 60, 1);
+            --gold-soft: rgba(160, 130, 60, 0.7);
+            --gold-faint: rgba(160, 130, 60, 0.15);
+            --gold-ghost: rgba(160, 130, 60, 0.06);
+            --ink: rgba(26, 26, 26, 1);
+            --ink-soft: rgba(26, 26, 26, 0.7);
+            --ink-faint: rgba(26, 26, 26, 0.4);
+            --ink-ghost: rgba(26, 26, 26, 0.15);
+            --paper: #faf9f6;
+            --paper-warm: #f8f6f0;
+        }
 
         html, body {
             width: 100%;
             min-height: 100vh;
-            background: #fafaf8;
+            background: var(--paper);
             font-family: 'Cormorant Garamond', Georgia, serif;
         }
 
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 30% 20%, rgba(160, 130, 60, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(160, 130, 60, 0.015) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .container {
-            max-width: 750px;
+            max-width: 780px;
             margin: 0 auto;
-            padding: 80px 30px 120px;
+            padding: 100px 40px 140px;
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
             font-weight: 200;
-            letter-spacing: 0.3em;
-            color: #1a1a1a;
-            margin-bottom: 10px;
+            letter-spacing: 0.35em;
+            color: var(--ink);
+            margin-bottom: 12px;
         }
 
         .version {
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 200;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.25);
-            margin-bottom: 60px;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            color: var(--ink-ghost);
+            margin-bottom: 70px;
         }
 
         h2 {
             font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 300;
-            letter-spacing: 0.2em;
-            color: rgba(26, 26, 26, 0.5);
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            color: var(--ink-faint);
             text-transform: uppercase;
-            margin: 60px 0 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(26, 26, 26, 0.06);
+            margin: 70px 0 30px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--ink-ghost);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h2::before {
+            content: '';
+            width: 16px;
+            height: 1px;
+            background: var(--gold-soft);
         }
 
         h3 {
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.4);
-            margin: 35px 0 15px;
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            color: var(--ink-faint);
+            margin: 40px 0 18px;
+            text-transform: uppercase;
         }
 
         p {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1rem, 1.15vw, 1.1rem);
+            font-size: 1.15rem;
             font-weight: 300;
-            line-height: 2;
-            color: rgba(26, 26, 26, 0.6);
-            margin-bottom: 20px;
+            line-height: 2.1;
+            color: var(--ink-soft);
+            margin-bottom: 25px;
         }
 
         .highlight {
-            background: rgba(160, 130, 60, 0.06);
-            padding: 25px 30px;
-            margin: 30px 0;
+            background: linear-gradient(135deg, var(--gold-ghost) 0%, transparent 100%);
+            padding: 35px 40px;
+            margin: 35px 0;
+            border-left: 3px solid var(--gold-soft);
         }
 
         .highlight p {
             margin-bottom: 0;
+            font-size: 1.2rem;
+        }
+
+        .highlight strong {
+            color: var(--gold-soft);
         }
 
         .action-card {
-            background: rgba(26, 26, 26, 0.02);
-            padding: 25px 30px;
-            margin: 20px 0;
+            background: var(--paper-warm);
+            padding: 30px 35px;
+            margin: 25px 0;
+            border-left: 2px solid var(--ink-ghost);
+            transition: border-color 0.3s;
+        }
+
+        .action-card:hover {
+            border-left-color: var(--gold-soft);
         }
 
         .action-name {
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 400;
-            letter-spacing: 0.15em;
-            color: rgba(160, 130, 60, 0.7);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            color: var(--gold-soft);
             text-transform: uppercase;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .action-card p {
-            font-size: 0.95rem;
-            line-height: 1.9;
-            margin-bottom: 10px;
+            font-size: 1.05rem;
+            line-height: 2;
+            margin-bottom: 12px;
         }
 
         .effect {
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.35);
-            margin-top: 15px;
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            color: var(--ink-faint);
+            margin-top: 18px;
+            padding: 8px 12px;
+            background: rgba(160, 130, 60, 0.05);
+            display: inline-block;
         }
 
         ul {
             list-style: none;
-            margin: 20px 0;
+            margin: 25px 0;
             padding: 0;
         }
 
         li {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+            font-size: 1.1rem;
             font-weight: 300;
-            line-height: 2;
-            color: rgba(26, 26, 26, 0.55);
-            padding-left: 20px;
+            line-height: 2.1;
+            color: var(--ink-soft);
+            padding-left: 25px;
             position: relative;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         li::before {
             content: '·';
             position: absolute;
-            left: 0;
-            color: rgba(160, 130, 60, 0.4);
+            left: 5px;
+            color: var(--gold-soft);
+            font-size: 1.4rem;
         }
 
-        .back {
+        li strong {
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .nav {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 200;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.25);
-            text-decoration: none;
-            transition: color 0.3s;
+            bottom: 30px;
+            left: 30px;
+            display: flex;
+            gap: 25px;
+            background: rgba(250, 249, 246, 0.9);
+            padding: 12px 20px;
+            backdrop-filter: blur(10px);
             z-index: 100;
         }
 
-        .back:hover {
-            color: rgba(26, 26, 26, 0.5);
+        .nav a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: var(--gold-soft);
         }
 
         .nav-top {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 30px;
+            right: 30px;
             display: flex;
-            gap: 20px;
+            gap: 25px;
             z-index: 100;
         }
 
         .nav-top a {
             font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.25);
+            letter-spacing: 0.12em;
+            color: var(--ink-ghost);
             text-decoration: none;
             transition: color 0.3s;
         }
 
         .nav-top a:hover {
-            color: rgba(26, 26, 26, 0.5);
+            color: var(--gold-soft);
         }
 
         code {
             font-family: 'SF Mono', Monaco, monospace;
             font-size: 0.85em;
             background: rgba(26, 26, 26, 0.04);
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 3px;
         }
 
         .new-tag {
             display: inline-block;
             font-family: 'Inter', sans-serif;
-            font-size: 0.55rem;
-            font-weight: 400;
+            font-size: 0.5rem;
+            font-weight: 500;
             letter-spacing: 0.1em;
-            color: rgba(160, 130, 60, 0.8);
-            background: rgba(160, 130, 60, 0.1);
-            padding: 3px 8px;
-            margin-left: 10px;
+            color: var(--gold);
+            background: var(--gold-faint);
+            padding: 4px 10px;
+            margin-left: 12px;
             vertical-align: middle;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 70px 25px 120px; }
+            .highlight { padding: 25px 30px; }
+            .action-card { padding: 25px 28px; }
         }
     </style>
 </head>
 <body>
     <nav class="nav-top">
-        <a href="index.html">Agorà</a>
+        <a href="index.html">Barba</a>
         <a href="registro.html">Registro</a>
+        <a href="../BARBA_BIBLIOTECA.md" target="_blank">Biblioteca</a>
     </nav>
 
     <div class="container">
@@ -325,6 +398,8 @@
 
     </div>
 
-    <a href="index.html" class="back">← agorà</a>
+    <nav class="nav">
+        <a href="index.html">← barba d'api</a>
+    </nav>
 </body>
 </html>
