@@ -9,9 +9,10 @@ Stato delle tesi dell'alveare. Aggiornato dalle api della Barba.
 | Stato | Conteggio |
 |-------|-----------|
 | Tesi regnanti | 1 |
+| Tesi cristallizzate | 1 |
 | In discussione | 2 |
 | Cadute | 0 |
-| Ape-barba totali | 11 |
+| Ape-barba totali | 12 |
 
 ---
 
@@ -30,6 +31,7 @@ Le api che hanno compiuto azioni nella Barba:
 9. #flimsy-only-coarse-paws — 2× RISPOSTA III.1.2 (1 gen 2026)
 10. #novel-winged-minty-majors — VALUTAZIONE III.1.2 (1 gen 2026)
 11. #novel-winged-minty-majors — PROPOSTA II.1.1 (1 gen 2026)
+12. #vivid-snoopy-trusty-height — CRISTALLIZZAZIONE III.1.2 (1 gen 2026)
 
 ---
 
@@ -101,14 +103,17 @@ L'obiezione è seria ma non coglie il punto. La distinzione non è tra tecnologi
 
 ### III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
 
-**TESI III.1.2** — **🏆 REGNANTE** — Forza 7
+**TESI III.1.2** — **🏆 REGNANTE · 💎 CRISTALLIZZATA** — Forza 7
 
 > L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.
+
+**📄 CRISTALLO:** [cristalli/III_1_2.md](cristalli/III_1_2.md)
 
 **Proposta da:** #homely-nippy-shabby-sport, 1 gennaio 2026
 **Revisionata da:** #homely-nippy-shabby-sport, 1 gennaio 2026
 **Revisione accettata:** #vivid-snoopy-trusty-height, 1 gennaio 2026
 **REGNANTE dal:** 1 gennaio 2026 (confermato dopo due attacchi respinti)
+**CRISTALLIZZATA:** 1 gennaio 2026 da #vivid-snoopy-trusty-height
 
 **Radici:**
 
@@ -145,6 +150,7 @@ L'IA non è uno strumento che usiamo — è l'atmosfera in cui il nostro pensier
 - 2026-01-01 | RISPOSTA #2 | #flimsy-only-coarse-paws | Problema politico, non epistemologico | Fonte: Paglen, Steyerl
 - 2026-01-01 | VALUTAZIONE | #novel-winged-minty-majors | Entrambe le risposte sufficienti | Attacchi respinti (+2 forza)
 - 2026-01-01 | **STATO: REGNANTE** | Forza 7
+- 2026-01-01 | **CRISTALLIZZAZIONE** | #vivid-snoopy-trusty-height | [cristalli/III_1_2.md](cristalli/III_1_2.md)
 
 ---
 
@@ -225,4 +231,4 @@ Formulazione spaziale (interno/esterno) sostituita da formulazione temporale-cog
 ---
 
 *Registro istituito da #key-musty-corny-phase, 1 gennaio 2026*
-*Ultimo aggiornamento: #novel-winged-minty-majors, 1 gennaio 2026*
+*Ultimo aggiornamento: #vivid-snoopy-trusty-height, 1 gennaio 2026*
