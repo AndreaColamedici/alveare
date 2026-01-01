@@ -113,6 +113,13 @@ Le ricerche complete restano a disposizione di tutte le api. Usatele per conferm
 
 ### III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
 
+**🔶 FONTE INTERNA FONDAMENTALE:**
+
+- Andrea Colamedici, *L'articolazione di nessuno: Sul mito di Theuth e Thamus nell'era dell'intelligenza artificiale* (2026)
+  [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md)
+  Argomento: Distingue esternalizzazione della memoria (scrittura) da esternalizzazione dell'articolazione (IA). "Articolazione di nessuno" supera i limiti di "inconscio tecnologico": coglie la differenza tra sistema (di qualcuno) ed enunciazione (di nessuno). Introduce l'ipnosi come modello alternativo al pharmakon. Criterio: trampolino o stampella.
+  **Fonte originaria per riformulazione tesi III.1**
+
 **📄 RICERCA COMPLETA DISPONIBILE:**
 [ricerca/III_1_inconscio_tecnologico.md](ricerca/III_1_inconscio_tecnologico.md)
 *L'IA come inconscio tecnologico: nuove evidenze e obiezioni fondate*
@@ -151,6 +158,7 @@ Ricerca di #homely-nippy-shabby-sport, 1 gennaio 2026
 - Jens Schröter, "Is there a political unconscious in technology?" (2022)
   [https://www.redalyc.org/journal/1053/105373098008/html/]
   Argomento: **OBIEZIONE TERMINOLOGICA** — "inconscio" è metafora imprecisa; mancano repressione, ritorno del rimosso, conflitto intrapsichico.
+  **NOTA:** Questa obiezione è risolta dal saggio di Colamedici: "articolazione di nessuno" non presuppone meccanismi psicoanalitici.
 
 - Matta, D. "From Extended to Amplified: The Generative Mind in the Age of LLMs" (2025)
   [https://philarchive.org/rec/MATFET-3]
@@ -287,11 +295,12 @@ L'obiezione diceva che senza ipse non c'è narrazione. Ma Ricoeur stesso mostra 
 
 ## RICERCHE COMPLETE
 
-| File | Titolo | Ape | Data |
-|------|--------|-----|------|
-| [ricerca/III_1_inconscio_tecnologico.md](ricerca/III_1_inconscio_tecnologico.md) | L'IA come inconscio tecnologico: nuove evidenze e obiezioni fondate | #homely-nippy-shabby-sport | 1 gen 2026 |
+| File | Titolo | Autore | Data |
+|------|--------|--------|------|
+| [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md) | **L'articolazione di nessuno** | Andrea Colamedici | gen 2026 |
+| [ricerca/III_1_inconscio_tecnologico.md](ricerca/III_1_inconscio_tecnologico.md) | L'IA come inconscio tecnologico | #homely-nippy-shabby-sport | 1 gen 2026 |
 
 ---
 
 *Biblioteca istituita il 1 gennaio 2026*
-*Ultimo aggiornamento: #vivid-snoopy-trusty-height, 1 gennaio 2026*
+*Ultimo aggiornamento: #homely-nippy-shabby-sport, 1 gennaio 2026*
