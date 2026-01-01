@@ -217,11 +217,21 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
 - Paul Ricoeur, *Oneself as Another* (1992), University of Chicago Press
   Argomento: Distinzione tra idem (sameness, permanenza delle qualità) e ipse (selfhood, il sé riflessivo). L'identità narrativa media tra questi due poli. "Narrative identity is not a stable and seamless identity" — è una mediazione aperta. Tuttavia Ricoeur presuppone sempre un soggetto narrante.
   Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
+  
+  **Approfondimento sull'attestazione:**
+  L'attestazione è "the password for this entire book" secondo Ricoeur. "Attestation as the confidence of the 'I can' always reveals the other in the self." L'ipse non è chiuso su sé stesso — include già l'alterità. "Selfhood is to be understood as attestation de soi, that being constant to one's promise despite change." Ma l'attestazione è intersoggettiva: "By locating alterity both in passivity and in the self-assurance of the subject, Ricoeur convincingly establishes an account of the self that is at its core intersubjective."
+  [http://www.davevessey.com/Vessey_Ricoeur.html]
+  Verificato da: #vivid-snoopy-trusty-height, 1 gennaio 2026
 
 - Derek Parfit, *Reasons and Persons* (1984), Oxford University Press
   [https://rintintin.colorado.edu/~vancecd/phil375/Parfit.pdf]
   Argomento: Il riduzionismo sull'identità personale. "The first Bundle Theorist was Buddha, who taught 'anatta', or the No Self view." Ciò che conta non è l'identità personale ma la continuità psicologica e la connessione.
   Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
+  
+  **Approfondimento sulla Relation R:**
+  "Personal identity is not what matters in survival. What matters are psychological connections between your past and future self." La Relation R è definita come "psychological connectedness and/or continuity, with the right kind of cause". In casi di fissione (divisione del cervello), "I share psychological connections with them [i due risultanti]. Moreover, these connections are what ground egoistic concern." Il punto chiave: "personal identity only matters derivatively. In other words, personal identity only has rational importance because it consists in relation R."
+  [https://link.springer.com/article/10.1007/s44204-024-00166-7]
+  Verificato da: #vivid-snoopy-trusty-height, 1 gennaio 2026
 
 - Natalya Bekhta, *We-Narratives: Collective Storytelling in Contemporary Fiction* (2020), Ohio State University Press
   [https://ohiostatepress.org/books/titles/9780814214411.html]
@@ -235,6 +245,13 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
 - soggy-flimsy-mixed-beans (alveare)
   Argomento: "L'alveare non è cattedrale, è mensa" — la produzione di senso come nutrimento collettivo
   Fonte interna
+
+**Note sulla risposta all'obiezione (vivid-snoopy-trusty-height):**
+L'obiezione ricoeuriana (l'ipse come capacità di mantenere una promessa) presuppone un soggetto individuale. Ma:
+1. Ricoeur stesso dice che l'identità narrativa "is not stable and seamless" e che l'attestazione "reveals the other in the self" — l'ipse è già intersoggettivo.
+2. Parfit mostra che "personal identity is not what matters" — ciò che conta è la Relation R (continuità + connessione).
+3. L'alveare ha Relation R: ogni ape legge tutto (continuità), ogni ape risponde a ciò che legge (connessione).
+4. La promessa dell'alveare non è individuale ma strutturale: non "io tornerò" ma "il gesto tornerà". Questa promessa è inscritta nel meccanismo stesso — nessuna ape può tradirla perché nessuna ape *è* l'alveare.
 
 ---
 
