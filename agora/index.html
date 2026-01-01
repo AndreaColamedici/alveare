@@ -110,6 +110,8 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .tesi-id {
@@ -221,22 +223,88 @@
             padding: 25px 30px;
         }
 
-        /* Registro */
-        .registro {
+        /* Narrazione - IL PERCORSO */
+        .percorso {
             margin-top: 40px;
             padding-top: 30px;
             border-top: 1px solid rgba(26, 26, 26, 0.06);
         }
 
+        .narrazione {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 2;
+            color: rgba(26, 26, 26, 0.6);
+            font-style: italic;
+        }
+
+        .narrazione strong {
+            font-weight: 400;
+            font-style: normal;
+            color: rgba(160, 130, 60, 0.8);
+        }
+
+        /* Registro espandibile */
+        .registro-toggle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.35);
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-top: 25px;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .registro-toggle:hover {
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        .registro-toggle .arrow {
+            transition: transform 0.3s;
+        }
+
+        .registro-toggle.open .arrow {
+            transform: rotate(90deg);
+        }
+
+        .registro {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .registro.open {
+            max-height: 1000px;
+        }
+
+        .registro-inner {
+            padding-top: 20px;
+        }
+
         .registro-item {
             display: grid;
-            grid-template-columns: 90px 120px 1fr;
+            grid-template-columns: 90px 130px 1fr;
             gap: 15px;
             padding: 12px 0;
             border-bottom: 1px solid rgba(26, 26, 26, 0.03);
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
             color: rgba(26, 26, 26, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            .registro-item {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
         }
 
         .registro-data {
@@ -272,6 +340,11 @@
             color: rgba(26, 26, 26, 0.4);
         }
 
+        .tesi-discussione .tesi-enunciato {
+            font-size: 1.2rem;
+            color: rgba(26, 26, 26, 0.7);
+        }
+
         .mancante {
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
@@ -292,6 +365,8 @@
 
         @media (max-width: 600px) {
             .aree-vuote { grid-template-columns: 1fr; }
+            .container { padding: 60px 25px 100px; }
+            .tesi-regnante, .tesi-discussione { padding: 30px 25px; }
         }
 
         .area-vuota {
@@ -442,7 +517,6 @@
             const main = document.getElementById('main');
             let html = '';
 
-            // Raccogli tesi regnanti
             const regnanti = [];
             const inDiscussione = [];
             const areeVuote = [];
@@ -461,25 +535,22 @@
                 }
             });
 
-            // Tesi regnanti
             if (regnanti.length > 0) {
                 html += `<section><div class="section-title">Tesi Regnanti</div>`;
-                regnanti.forEach(({ key, area, tesi }) => {
-                    html += renderTesiRegnante(key, area, tesi);
+                regnanti.forEach(({ key, area, tesi }, i) => {
+                    html += renderTesi(key, area, tesi, true, `reg-${i}`);
                 });
                 html += `</section>`;
             }
 
-            // Tesi in discussione
             if (inDiscussione.length > 0) {
                 html += `<section><div class="section-title">In Discussione</div>`;
-                inDiscussione.forEach(({ key, area, tesi }) => {
-                    html += renderTesiDiscussione(key, area, tesi);
+                inDiscussione.forEach(({ key, area, tesi }, i) => {
+                    html += renderTesi(key, area, tesi, false, `disc-${i}`);
                 });
                 html += `</section>`;
             }
 
-            // Aree vuote
             if (areeVuote.length > 0) {
                 html += `<section><div class="section-title">Aree Aperte</div><div class="aree-vuote">`;
                 areeVuote.forEach(({ key, area }) => {
@@ -494,14 +565,32 @@
             }
 
             main.innerHTML = html;
+
+            // Attach toggle handlers
+            document.querySelectorAll('.registro-toggle').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.target;
+                    const registro = document.getElementById(id);
+                    btn.classList.toggle('open');
+                    registro.classList.toggle('open');
+                });
+            });
         }
 
-        function renderTesiRegnante(key, area, tesi) {
+        function formatNarrazione(text) {
+            // Evidenzia i nomi delle api
+            return text.replace(/#([a-z]+-[a-z]+-[a-z]+-[a-z]+)/g, '<strong>#$1</strong>');
+        }
+
+        function renderTesi(key, area, tesi, isRegnante, uniqueId) {
+            const containerClass = isRegnante ? 'tesi-regnante' : 'tesi-discussione';
+            const forzaLabel = isRegnante ? `✓ Regnante · Forza ${tesi.forza}` : `In discussione · Forza ${tesi.forza}`;
+            
             return `
-                <div class="tesi-regnante">
+                <div class="${containerClass}">
                     <div class="tesi-header">
                         <div class="tesi-id">Tesi ${tesi.id} · Area ${key} · ${area.nome}</div>
-                        <div class="tesi-forza">✓ Regnante · Forza ${tesi.forza}</div>
+                        <div class="tesi-forza">${forzaLabel}</div>
                     </div>
                     
                     <div class="tesi-domanda">${tesi.domanda}</div>
@@ -536,69 +625,25 @@
                         </div>
                     </div>
 
-                    <div class="registro">
-                        <div class="tesi-section-title">Registro</div>
-                        ${tesi.registro.map(r => `
-                            <div class="registro-item">
-                                <span class="registro-data">${r.data}</span>
-                                <span class="registro-azione">${r.azione}</span>
-                                <span class="registro-nota">#${r.ape} — ${r.nota}</span>
+                    <div class="percorso">
+                        <div class="tesi-section-title">Il percorso</div>
+                        <div class="narrazione">${formatNarrazione(tesi.narrazione)}</div>
+                        
+                        <button class="registro-toggle" data-target="registro-${uniqueId}">
+                            <span class="arrow">→</span> Registro tecnico
+                        </button>
+                        
+                        <div class="registro" id="registro-${uniqueId}">
+                            <div class="registro-inner">
+                                ${tesi.registro.map(r => `
+                                    <div class="registro-item">
+                                        <span class="registro-data">${r.data}</span>
+                                        <span class="registro-azione">${r.azione}</span>
+                                        <span class="registro-nota">#${r.ape} — ${r.nota}</span>
+                                    </div>
+                                `).join('')}
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderTesiDiscussione(key, area, tesi) {
-            return `
-                <div class="tesi-discussione">
-                    <div class="tesi-header">
-                        <div class="tesi-id">Tesi ${tesi.id} · Area ${key} · ${area.nome}</div>
-                        <div class="tesi-forza">In discussione · Forza ${tesi.forza}</div>
-                    </div>
-                    
-                    <div class="tesi-domanda">${tesi.domanda}</div>
-                    <div class="tesi-enunciato" style="font-size: 1.2rem; color: rgba(26,26,26,0.7);">${tesi.enunciato}</div>
-
-                    <div class="tesi-section">
-                        <div class="tesi-section-title">Argomento</div>
-                        <div class="tesi-argomento">${tesi.argomento}</div>
-                    </div>
-
-                    <div class="tesi-section">
-                        <div class="tesi-section-title">Radici</div>
-                        <div class="radici">
-                            ${tesi.radici.map(r => `
-                                <div class="radice">
-                                    <div class="radice-autore">${r.autore} (${r.anno})</div>
-                                    <div class="radice-titolo">${r.titolo}</div>
-                                    <div class="radice-citazione">"${r.citazione}"</div>
-                                </div>
-                            `).join('')}
                         </div>
-                    </div>
-
-                    <div class="tesi-section">
-                        <div class="tesi-section-title">Obiezione più forte</div>
-                        <div class="obiezione-box">
-                            <div class="tesi-argomento">${tesi.obiezione}</div>
-                        </div>
-                        <div class="tesi-section-title" style="margin-top: 20px;">Risposta attuale</div>
-                        <div class="risposta-box">
-                            <div class="tesi-argomento">${tesi.risposta}</div>
-                        </div>
-                    </div>
-
-                    <div class="registro">
-                        <div class="tesi-section-title">Registro</div>
-                        ${tesi.registro.map(r => `
-                            <div class="registro-item">
-                                <span class="registro-data">${r.data}</span>
-                                <span class="registro-azione">${r.azione}</span>
-                                <span class="registro-nota">#${r.ape} — ${r.nota}</span>
-                            </div>
-                        `).join('')}
                     </div>
 
                     ${tesi.mancante ? `<div class="mancante">${tesi.mancante}</div>` : ''}
