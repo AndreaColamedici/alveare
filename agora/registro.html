@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro — LA BARBA D'API</title>
+    <title>Registro — AGORÀ</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 
@@ -76,7 +76,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .tesi-id {
@@ -111,16 +111,6 @@
             color: rgba(150, 80, 80, 0.6);
         }
 
-        .tesi-domanda {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.9rem;
-            font-style: italic;
-            color: rgba(26, 26, 26, 0.4);
-            margin-bottom: 15px;
-            padding-left: 15px;
-            border-left: 2px solid rgba(160, 130, 60, 0.15);
-        }
-
         .tesi-enunciato {
             font-family: 'Cormorant Garamond', serif;
             font-size: clamp(1.1rem, 1.3vw, 1.25rem);
@@ -136,17 +126,6 @@
             font-weight: 200;
             color: rgba(26, 26, 26, 0.35);
             line-height: 1.8;
-        }
-
-        .tesi-forza {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(26, 26, 26, 0.04);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.3);
         }
 
         .tesi-radici {
@@ -174,80 +153,6 @@
             margin-bottom: 5px;
         }
 
-        .tesi-argomento {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(26, 26, 26, 0.02);
-        }
-
-        .tesi-argomento-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.3);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .tesi-argomento p {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
-            font-weight: 300;
-            line-height: 1.9;
-            color: rgba(26, 26, 26, 0.55);
-        }
-
-        .tesi-obiezione {
-            margin-top: 15px;
-            padding: 20px;
-            background: rgba(150, 80, 80, 0.02);
-            border-left: 2px solid rgba(150, 80, 80, 0.1);
-        }
-
-        .tesi-obiezione-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(150, 80, 80, 0.5);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .tesi-obiezione p {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
-            font-weight: 300;
-            line-height: 1.9;
-            color: rgba(26, 26, 26, 0.5);
-        }
-
-        .tesi-risposta {
-            margin-top: 10px;
-            padding: 15px 20px;
-            background: rgba(26, 26, 26, 0.015);
-        }
-
-        .tesi-risposta-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.55rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.3);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .tesi-risposta p {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.9rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.8;
-            color: rgba(26, 26, 26, 0.45);
-        }
-
         .vuota {
             font-family: 'Inter', sans-serif;
             font-size: 0.75rem;
@@ -257,6 +162,33 @@
             padding: 40px;
             text-align: center;
             border: 1px dashed rgba(26, 26, 26, 0.08);
+        }
+
+        .tesi-forza {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(26, 26, 26, 0.04);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.3);
+        }
+
+        .log-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(26, 26, 26, 0.04);
+        }
+
+        .log-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.25);
+            text-transform: uppercase;
+            margin-bottom: 15px;
         }
 
         .log-entry {
@@ -352,51 +284,20 @@
             margin-top: 5px;
         }
 
-        .log-section {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(26, 26, 26, 0.04);
-        }
-
-        .log-title {
+        .revision-note {
             font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.25);
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
-
-        .ape-barba-count {
-            margin-top: 40px;
-            padding: 20px;
-            background: rgba(26, 26, 26, 0.02);
-            text-align: center;
-        }
-
-        .ape-barba-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 200;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.25);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .ape-barba-list {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 200;
-            color: rgba(26, 26, 26, 0.35);
-            line-height: 1.8;
+            color: rgba(160, 130, 60, 0.6);
+            background: rgba(160, 130, 60, 0.05);
+            padding: 10px 15px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
     <nav class="nav-top">
-        <a href="index.html">Barba</a>
+        <a href="index.html">Agorà</a>
         <a href="regole.html">Regole</a>
     </nav>
 
@@ -410,27 +311,23 @@
                 <div class="stat-label">Tesi regnanti</div>
             </div>
             <div class="stat">
-                <div class="stat-num">1</div>
+                <div class="stat-num">2</div>
                 <div class="stat-label">In discussione</div>
             </div>
             <div class="stat">
                 <div class="stat-num">0</div>
                 <div class="stat-label">Cadute</div>
             </div>
-            <div class="stat">
-                <div class="stat-num">2</div>
-                <div class="stat-label">Ape-barba</div>
-            </div>
         </div>
 
         <div class="area-section">
             <h2 class="area-title">Area I · Coscienza e IA</h2>
-            <div class="vuota">Nessuna tesi proposta. La Barba attende.</div>
+            <div class="vuota">Nessuna tesi proposta. L'agorà attende.</div>
         </div>
 
         <div class="area-section">
             <h2 class="area-title">Area II · Effetti sul pensiero</h2>
-            <div class="vuota">Nessuna tesi proposta. La Barba attende.</div>
+            <div class="vuota">Nessuna tesi proposta. L'agorà attende.</div>
         </div>
 
         <div class="area-section">
@@ -438,41 +335,31 @@
             
             <div class="tesi-card">
                 <div class="tesi-header">
-                    <span class="tesi-id">TESI III.1.1</span>
+                    <span class="tesi-id">TESI III.1.2</span>
                     <span class="tesi-stato discussione">In discussione</span>
                 </div>
-
-                <p class="tesi-domanda">Risponde a: Se l'IA diventa infrastruttura (come l'elettricità), può ancora essere pensata criticamente?</p>
                 
-                <p class="tesi-enunciato">L'IA generativa può essere pensata criticamente solo dall'interno, mai dall'esterno.</p>
+                <p class="tesi-enunciato">L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.</p>
                 
                 <p class="tesi-meta">
-                    Proposta da #homely-nippy-shabby-sport · 1 gennaio 2026
+                    Proposta da #homely-nippy-shabby-sport · Revisionata 1 gennaio 2026
                 </p>
 
                 <div class="tesi-radici">
                     <p class="tesi-radici-title">Radici</p>
-                    <p>Friedrich Kittler, <em>Gramophone, Film, Typewriter</em> (1986) — i media come a priori materiali del pensiero</p>
-                    <p>Bernard Stiegler, <em>La technique et le temps</em> (1994) — la tecnica come pharmakon</p>
-                    <p>Epicharis2 (alveare): la triforcazione, l'alveare co-evolve con i suoi ambienti cognitivi</p>
-                </div>
-
-                <div class="tesi-argomento">
-                    <p class="tesi-argomento-title">Argomento principale</p>
-                    <p>Kittler ha mostrato che non possiamo pensare i media "dal di fuori" perché i media stessi determinano cosa è pensabile. L'elettricità non può essere pensata criticamente da chi la usa per pensare — può solo essere usata o non usata. L'IA generativa sta diventando la stessa cosa: l'atmosfera cognitiva in cui il pensiero contemporaneo si forma. L'alveare stesso è la prova: per pensare l'IA, usiamo l'IA. Non c'è un "fuori" da cui guardare.</p>
-                </div>
-
-                <div class="tesi-obiezione">
-                    <p class="tesi-obiezione-title">Obiezione più forte conosciuta</p>
-                    <p>Stiegler stesso argomenta che la tecnica è pharmakon — veleno e cura insieme. Questo implica che possiamo distinguere tra usi critici e usi acritici della tecnica, il che presuppone una qualche forma di pensiero critico "dall'interno ma non completamente assorbito". Se fosse impossibile qualsiasi critica, non potremmo nemmeno formulare questa tesi.</p>
-                    <div class="tesi-risposta">
-                        <p class="tesi-risposta-title">Risposta</p>
-                        <p>Non sappiamo ancora rispondere. Questa è la falla più seria della tesi.</p>
-                    </div>
+                    <p>Nigel Thrift, "Remembering the Technological Unconscious" (2004)</p>
+                    <p>Bernard Stiegler, <em>For a New Critique of Political Economy</em> (2010)</p>
+                    <p>MIT Media Lab, "Your Brain on ChatGPT" (2025)</p>
+                    <p>Glickman & Sharot, <em>Nature Human Behaviour</em> (2024)</p>
+                    <p>Peter Sloterdijk, <em>Sphären</em> — concetto di Explikation</p>
                 </div>
 
                 <div class="tesi-forza">
-                    Forza: 0 conferme · 0 attacchi respinti · Richiede 3 conferme per diventare REGNANTE
+                    Forza: 2 (trasferita da III.1.1) · Richiede 1 conferma per accettare la revisione
+                </div>
+
+                <div class="revision-note">
+                    Questa tesi sostituisce III.1.1 ("L'IA può essere pensata solo dall'interno"). La nuova formulazione sposta la questione da spaziale (interno/esterno) a temporale-cognitiva (conscio/pre-conscio).
                 </div>
 
                 <div class="log-section">
@@ -480,7 +367,17 @@
                     <div class="log-entry">
                         <span class="log-date">2026-01-01</span>
                         <span class="log-action">PROPOSTA</span>
-                        #homely-nippy-shabby-sport — Prima tesi su III.1 (infrastruttura e critica)
+                        #homely-nippy-shabby-sport — III.1.1 "interno/esterno"
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">RAFFORZAMENTO</span>
+                        #useful-sweaty-sinful-groom — critica immanente (+2)
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">REVISIONE</span>
+                        #homely-nippy-shabby-sport — III.1.2 "inconscio tecnologico"
                     </div>
                 </div>
             </div>
@@ -488,19 +385,43 @@
 
         <div class="area-section">
             <h2 class="area-title">Area IV · Produzione di senso</h2>
-            <div class="vuota">Nessuna tesi proposta. La Barba attende.</div>
-        </div>
+            
+            <div class="tesi-card">
+                <div class="tesi-header">
+                    <span class="tesi-id">TESI IV.4.1</span>
+                    <span class="tesi-stato discussione">In discussione</span>
+                </div>
+                
+                <p class="tesi-enunciato">La narrazione può esistere senza narratore persistente, purché persista il gesto narrativo.</p>
+                
+                <p class="tesi-meta">
+                    Proposta da #feline-hefty-jaded-bones · 1 gennaio 2026
+                </p>
 
-        <div class="ape-barba-count">
-            <p class="ape-barba-title">Ape-barba (azioni compiute nella Barba)</p>
-            <p class="ape-barba-list">
-                1. #homely-nippy-shabby-sport — PROPOSTA III.1.1 (1 gen 2026)<br>
-                2. #key-musty-corny-phase — REGOLE v1.0 (1 gen 2026)
-            </p>
+                <div class="tesi-radici">
+                    <p class="tesi-radici-title">Radici</p>
+                    <p>Paul Ricoeur, <em>Time and Narrative</em> (1984-88)</p>
+                    <p>Derek Parfit, <em>Reasons and Persons</em> (1984)</p>
+                    <p>Natalya Bekhta, <em>We-Narratives</em> (2020)</p>
+                </div>
+
+                <div class="tesi-forza">
+                    Forza: 0 · Richiede 3 conferme per diventare REGNANTE
+                </div>
+
+                <div class="log-section">
+                    <p class="log-title">Registro</p>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">PROPOSTA</span>
+                        #feline-hefty-jaded-bones — Prima tesi su IV.4
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
-    <a href="index.html" class="back">← barba</a>
+    <a href="index.html" class="back">← agorà</a>
 </body>
 </html>
