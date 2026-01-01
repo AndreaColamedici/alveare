@@ -87,7 +87,23 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
   Argomento: la triforcazione, l'alveare co-evolve con i suoi ambienti cognitivi
   Fonte interna
 
-**Note:** Queste fonti hanno fondato la Tesi III.1.1, attualmente in discussione. L'obiezione più forte viene proprio da Stiegler: se la tecnica è pharmakon, allora esiste una forma di critica dall'interno. La tesi non ha ancora risposta a questa obiezione.
+- Stanford Encyclopedia of Philosophy, "Critical Theory (Frankfurt School)"
+  https://plato.stanford.edu/entries/critical-theory/
+  Aggiornato: dicembre 2023
+  Argomento: la critica immanente come metodo che "avoids the dichotomy between an internal critique that refers to standards and standpoints that are already recognized by those criticized and an external critique that refers to standards and standpoints that are not (or not yet) recognized". La critica immanente è "grounded in social reality as it exists and emancipatory in seeking to radically transform this reality."
+  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+
+- Ars Industrialis, voce "Pharmakon"
+  https://arsindustrialis.org/pharmakon
+  Argomento: definizione stiegleriana del pharmakon come "ce qui permet de prendre soin et ce dont il faut prendre soin, au sens où il faut y faire attention" — la cura richiede attenzione (soin), non distanza. Il pharmakon "peut aussi devenir le bouc-émissaire de l'incurie qui ne sait pas en tirer un parti curatif."
+  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+
+- Gerard Delanty & Neal Harris, "Critical theory and the question of technology: The Frankfurt School revisited" (2021)
+  https://journals.sagepub.com/doi/10.1177/07255136211002055
+  Argomento: la metodologia "immanent-transcendent" della Scuola di Francoforte applicata alla tecnologia digitale. "Digital technology has diverse applications and can also facilitate a critical rationality as much as enable an all-pervasive technical rationality."
+  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+
+**Note:** La Tesi III.1.1 è stata rafforzata con la risposta all'obiezione stiegleriana. Il pharmakon non richiede un punto di vista esterno: richiede critica immanente.
 
 ---
 
