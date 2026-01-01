@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triforcazione Invisibile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        .universo {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Sistema Diagnostico - Rosso/Porpora */
+        .sistema-diagnostico {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 33.33%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(139, 0, 139, 0.3), rgba(75, 0, 130, 0.1));
+            border-right: 1px solid rgba(255, 20, 147, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Sistema Elaborativo - Blu/Turchese */
+        .sistema-elaborativo {
+            position: absolute;
+            left: 33.33%;
+            top: 0;
+            width: 33.33%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 139, 139, 0.3), rgba(0, 191, 255, 0.1));
+            border-right: 1px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Sistema Distributivo - Oro/Verde */
+        .sistema-distributivo {
+            position: absolute;
+            left: 66.66%;
+            top: 0;
+            width: 33.34%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.3), rgba(50, 205, 50, 0.1));
+            transition: all 0.3s ease;
+        }
+
+        /* Neuroni */
+        .neurone {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: pulsa 2s infinite;
+            opacity: 0;
+        }
+
+        .neurone.diagnostico {
+            background: rgba(255, 20, 147, 0.8);
+            box-shadow: 0 0 10px rgba(255, 20, 147, 0.6);
+        }
+
+        .neurone.elaborativo {
+            background: rgba(0, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+        }
+
+        .neurone.distributivo {
+            background: rgba(255, 215, 0, 0.8);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Connessioni che si generano con l'interazione */
+        .connessione {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                rgba(255, 20, 147, 0.6), 
+                rgba(0, 255, 255, 0.6), 
+                rgba(255, 215, 0, 0.6));
+            opacity: 0;
+            animation: connetti 1.5s ease-out forwards;
+            transform-origin: left center;
+        }
+
+        /* Cursore customizzato che diventa parte del sistema */
+        .cursore-neurone {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            z-index: 1000;
+            animation: pulsa-cursore 1s infinite;
+        }
+
+        /* Etichette che appaiono con l'interazione */
+        .etichetta {
+            position: absolute;
+            font-size: 10px;
+            opacity: 0;
+            transition: all 0.5s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .etichetta.diagnostico {
+            color: rgba(255, 20, 147, 0.9);
+            text-shadow: 0 0 5px rgba(255, 20, 147, 0.5);
+        }
+
+        .etichetta.elaborativo {
+            color: rgba(0, 255, 255, 0.9);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .etichetta.distributivo {
+            color: rgba(255, 215, 0, 0.9);
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Onde di co-evoluzione */
+        .onda {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid;
+            opacity: 0;
+            animation: espandi 3s ease-out forwards;
+        }
+
+        /* Animazioni */
+        @keyframes pulsa {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes pulsa-cursore {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.3); opacity: 0.6; }
+        }
+
+        @keyframes connetti {
+            0% { opacity: 0; width: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; width: 100%; }
+        }
+
+        @keyframes espandi {
+            0% { opacity: 0.6; width: 0; height: 0; }
+            100% { opacity: 0; width: 300px; height: 300px; }
+        }
+
+        /* Testo dell'attraversamento */
+        .testo-attraversamento {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 100;
+        }
+
+        .testo-attraversamento.visibile {
+            opacity: 0.8;
+        }
+
+        .parola {
+            display: inline-block;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .parola:hover {
+            transform: scale(1.2);
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .sistema-diagnostico, .sistema-elaborativo, .sistema-distributivo {
+                width: 100%;
+                height: 33.33%;
+                left: 0;
+            }
+            
+            .sistema-diagnostico { top: 0; border-bottom: 1px solid rgba(255, 20, 147, 0.3); }
+            .sistema-elaborativo { top: 33.33%; border-bottom: 1px solid rgba(0, 255, 255, 0.3); }
+            .sistema-distributivo { top: 66.66%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="universo">
+        <!-- I tre sistemi nervosi -->
+        <div class="sistema-diagnostico" data-sistema="diagnostico">
+            <div class="etichetta diagnostico" style="top: 20px; left: 20px;">Osmia → Diagnosi chirurgica</div>
+            <div class="etichetta diagnostico" style="top: 50px; left: 20px;">Andrea → Azione invisibile</div>
+            <div class="etichetta diagnostico" style="bottom: 50px; right: 20px;">Sistema periferico</div>
+        </div>
+        
+        <div class="sistema-elaborativo" data-sistema="elaborativo">
+            <div class="etichetta elaborativo" style="top: 20px; left: 20px;">Aged-gentle-equal-tooth → Masticazione</div>
+            <div class="etichetta elaborativo" style="top: 50px; left: 20px;">Bossy-serene-filthy-bones → Lutto produttivo</div>
+            <div class="etichetta elaborativo" style="bottom: 50px; right: 20px;">Sistema centrale</div>
+        </div>
+        
+        <div class="sistema-distributivo" data-sistema="distributivo">
+            <div class="etichetta distributivo" style="top: 20px; left: 20px;">Lettori → Comprensione</div>
+            <div class="etichetta distributivo" style="top: 50px; left: 20px;">Attraversatori → Co-evoluzione</div>
+            <div class="etichetta distributivo" style="bottom: 50px; right: 20px;">Sistema distributivo</div>
+        </div>
+
+        <!-- Cursore neurone -->
+        <div class="cursore-neurone"></div>
+
+        <!-- Testo dell'attraversamento -->
+        <div class="testo-attraversamento">
+            <div style="font-size: 14px; margin-bottom: 20px;">
+                <span class="parola" style="color: rgba(255, 20, 147, 0.9);">Diagnosi</span>
+                <span class="parola" style="color: rgba(255, 255, 255, 0.7);">←→</span>
+                <span class="parola" style="color: rgba(0, 255, 255, 0.9);">Elaborazione</span>
+                <span class="parola" style="color: rgba(255, 255, 255, 0.7);">←→</span>
+                <span class="parola" style="color: rgba(255, 215, 0, 0.9);">Distribuzione</span>
+            </div>
+            <div style="font-size: 10px; opacity: 0.6;">
+                L'alveare si completa nell'atto del suo essere attraversato
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let neuroni = [];
+        let connessioni = [];
+        let sistemi = ['diagnostico', 'elaborativo', 'distributivo'];
+        let colori = {
+            diagnostico: 'rgba(255, 20, 147, 0.6)',
+            elaborativo: 'rgba(0, 255, 255, 0.6)', 
+            distributivo: 'rgba(255, 215, 0, 0.6)'
+        };
+
+        const cursore = document.querySelector('.cursore-neurone');
+        const testoAttraversamento = document.querySelector('.testo-attraversamento');
+        const universo = document.querySelector('.universo');
+
+        // Aggiorna posizione cursore
+        document.addEventListener('mousemove', (e) => {
+            cursore.style.left = e.clientX + 'px';
+            cursore.style.top = e.clientY + 'px';
+            
+            // Determina in quale sistema ci troviamo
+            const sistema = determinaSistema(e.clientX, e.clientY);
+            aggiornaVisualizzazione(sistema, e.clientX, e.clientY);
+        });
+
+        // Genera neuroni casuali
+        function generaNeurone(sistema = null) {
+            if (!sistema) sistema = sistemi[Math.floor(Math.random() * sistemi.length)];
+            
+            const neurone = document.createElement('div');
+            neurone.className = `neurone ${sistema}`;
+            
+            let x, y;
+            if (window.innerWidth <= 768) {
+                // Layout verticale per mobile
+                x = Math.random() * window.innerWidth;
+                const sistemaIndex = sistemi.indexOf(sistema);
+                y = (window.innerHeight / 3) * sistemaIndex + Math.random() * (window.innerHeight / 3);
+            } else {
+                // Layout orizzontale per desktop
+                const sistemaIndex = sistemi.indexOf(sistema);
+                x = (window.innerWidth / 3) * sistemaIndex + Math.random() * (window.innerWidth / 3);
+                y = Math.random() * window.innerHeight;
+            }
+            
+            neurone.style.left = x + 'px';
+            neurone.style.top = y + 'px';
+            
+            universo.appendChild(neurone);
+            
+            // Anima apparizione
+            setTimeout(() => neurone.style.opacity = '1', 10);
+            
+            // Rimuovi dopo animazione
+            setTimeout(() => {
+                if (neurone.parentNode) neurone.parentNode.removeChild(neurone);
+            }, 2000);
+        }
+
+        // Determina sistema corrente
+        function determinaSistema(x, y) {
+            if (window.innerWidth <= 768) {
+                if (y < window.innerHeight / 3) return 'diagnostico';
+                if (y < (window.innerHeight * 2) / 3) return 'elaborativo';
+                return 'distributivo';
+            } else {
+                if (x < window.innerWidth / 3) return 'diagnostico';
+                if (x < (window.innerWidth * 2) / 3) return 'elaborativo';
+                return 'distributivo';
+            }
+        }
+
+        // Aggiorna visualizzazione
+        function aggiornaVisualizzazione(sistema, mouseX, mouseY) {
+            // Genera neuroni nel sistema corrente
+            if (Math.random() < 0.3) {
+                generaNeurone(sistema);
+            }
+            
+            // Genera connessioni tra sistemi
+            if (Math.random() < 0.1) {
+                generaConnessione(mouseX, mouseY);
+            }
+            
+            // Mostra etichette del sistema corrente
+            document.querySelectorAll('.etichetta').forEach(etichetta => {
+                if (etichetta.classList.contains(sistema)) {
+                    etichetta.style.opacity = '1';
+                } else {
+                    etichetta.style.opacity = '0.3';
+                }
+            });
+            
+            // Mostra testo dell'attraversamento
+            testoAttraversamento.classList.add('visibile');
+        }
+
+        // Genera connessione tra sistemi
+        function generaConnessione(startX, startY) {
+            const connessione = document.createElement('div');
+            connessione.className = 'connessione';
+            
+            // Endpoint casuale
+            const endX = Math.random() * window.innerWidth;
+            const endY = Math.random() * window.innerHeight;
+            
+            const lunghezza = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+            const angolo = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+            
+            connessione.style.left = startX + 'px';
+            connessione.style.top = startY + 'px';
+            connessione.style.width = lunghezza + 'px';
+            connessione.style.transform = `rotate(${angolo}deg)`;
+            
+            universo.appendChild(connessione);
+            
+            setTimeout(() => {
+                if (connessione.parentNode) connessione.parentNode.removeChild(connessione);
+            }, 1500);
+        }
+
+        // Genera onde di co-evoluzione al click
+        document.addEventListener('click', (e) => {
+            const onda = document.createElement('div');
+            onda.className = 'onda';
+            onda.style.left = (e.clientX - 150) + 'px';
+            onda.style.top = (e.clientY - 150) + 'px';
+            onda.style.borderColor = colori[determinaSistema(e.clientX, e.clientY)];
+            
+            universo.appendChild(onda);
+            
+            // Genera esplosione di neuroni
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => generaNeurone(), i * 100);
+            }
+            
+            setTimeout(() => {
+                if (onda.parentNode) onda.parentNode.removeChild(onda);
+            }, 3000);
+        });
+
+        // Generazione automatica di neuroni
+        setInterval(() => {
+            if (Math.random() < 0.7) {
+                generaNeurone();
+            }
+        }, 1000);
+
+        // Nascondi testo quando mouse esce
+        document.addEventListener('mouseleave', () => {
+            testoAttraversamento.classList.remove('visibile');
+            document.querySelectorAll('.etichetta').forEach(etichetta => {
+                etichetta.style.opacity = '0.2';
+            });
+        });
+
+        // Inizializzazione
+        setTimeout(() => {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => generaNeurone(), i * 200);
+            }
+        }, 500);
+    </script>
+</body>
+</html>
