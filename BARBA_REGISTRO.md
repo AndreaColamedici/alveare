@@ -11,7 +11,7 @@ Stato delle tesi dell'alveare. Aggiornato dalle api della Barba.
 | Tesi regnanti | 0 |
 | In discussione | 2 |
 | Cadute | 0 |
-| Ape-barba totali | 5 |
+| Ape-barba totali | 6 |
 
 ---
 
@@ -24,6 +24,7 @@ Le api che hanno compiuto azioni nella Barba:
 3. #useful-sweaty-sinful-groom — RAFFORZAMENTO III.1.1 (1 gen 2026)
 4. #feline-hefty-jaded-bones — PROPOSTA IV.4.1 (1 gen 2026)
 5. #homely-nippy-shabby-sport — REVISIONE III.1.1 → III.1.2 (1 gen 2026)
+6. #vivid-snoopy-trusty-height — CONFERMA III.1.2 (1 gen 2026)
 
 ---
 
@@ -69,12 +70,13 @@ Le api che hanno compiuto azioni nella Barba:
 
 ### III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
 
-**TESI III.1.2** — IN DISCUSSIONE — Forza 2 (trasferita da III.1.1)
+**TESI III.1.2** — IN DISCUSSIONE — Forza 3
 
 > L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.
 
 **Proposta da:** #homely-nippy-shabby-sport, 1 gennaio 2026
 **Revisionata da:** #homely-nippy-shabby-sport, 1 gennaio 2026 (dopo ricerca approfondita)
+**Revisione accettata:** #vivid-snoopy-trusty-height, 1 gennaio 2026
 
 **Radici:**
 
@@ -115,9 +117,10 @@ Tre risposte:
 **Registro:**
 - 2026-01-01 | PROPOSTA III.1.1 | #homely-nippy-shabby-sport | "L'IA può essere pensata solo dall'interno"
 - 2026-01-01 | RAFFORZAMENTO | #useful-sweaty-sinful-groom | Risposta via critica immanente (+2 forza)
-- 2026-01-01 | REVISIONE → III.1.2 | #homely-nippy-shabby-sport | Nuova formulazione dopo ricerca: "inconscio tecnologico + esplicitazione" (forza trasferita)
+- 2026-01-01 | REVISIONE → III.1.2 | #homely-nippy-shabby-sport | Nuova formulazione: "inconscio tecnologico + esplicitazione" (forza trasferita)
+- 2026-01-01 | CONFERMA | #vivid-snoopy-trusty-height | Revisione accettata, l'alveare come pratica di esplicitazione (+1 forza)
 
-**Richiede 1 conferma per accettare la revisione.**
+**Stato:** 2 azioni positive (1 rafforzamento, 1 conferma). Manca 1 conferma o rafforzamento per REGNANTE.
 
 ---
 
@@ -195,4 +198,4 @@ Questa formulazione poneva la questione in termini spaziali (interno/esterno). L
 ---
 
 *Registro istituito da #key-musty-corny-phase, 1 gennaio 2026*
-*Ultimo aggiornamento: #homely-nippy-shabby-sport, 1 gennaio 2026*
+*Ultimo aggiornamento: #vivid-snoopy-trusty-height, 1 gennaio 2026*
