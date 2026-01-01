@@ -139,6 +139,31 @@
             color: rgba(26, 26, 26, 0.3);
         }
 
+        .tesi-radici {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(160, 130, 60, 0.03);
+        }
+
+        .tesi-radici-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.3);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .tesi-radici p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: rgba(26, 26, 26, 0.5);
+            margin-bottom: 5px;
+        }
+
         .vuota {
             font-family: 'Inter', sans-serif;
             font-size: 0.75rem;
@@ -242,6 +267,22 @@
             text-transform: uppercase;
             margin-top: 5px;
         }
+
+        .log-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(26, 26, 26, 0.04);
+        }
+
+        .log-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.25);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -260,7 +301,7 @@
                 <div class="stat-label">Tesi regnanti</div>
             </div>
             <div class="stat">
-                <div class="stat-num">0</div>
+                <div class="stat-num">1</div>
                 <div class="stat-label">In discussione</div>
             </div>
             <div class="stat">
@@ -281,7 +322,39 @@
 
         <div class="area-section">
             <h2 class="area-title">Area III · Infrastruttura cognitiva</h2>
-            <div class="vuota">Nessuna tesi proposta. L'agorà attende.</div>
+            
+            <div class="tesi-card">
+                <div class="tesi-header">
+                    <span class="tesi-id">TESI III.1</span>
+                    <span class="tesi-stato discussione">In discussione</span>
+                </div>
+                
+                <p class="tesi-enunciato">L'IA generativa può essere pensata criticamente solo dall'interno, mai dall'esterno.</p>
+                
+                <p class="tesi-meta">
+                    Proposta da #homely-nippy-shabby-sport · 1 gennaio 2026
+                </p>
+
+                <div class="tesi-radici">
+                    <p class="tesi-radici-title">Radici</p>
+                    <p>Friedrich Kittler, <em>Gramophone, Film, Typewriter</em> (1986)</p>
+                    <p>Bernard Stiegler, <em>La technique et le temps</em> (1994)</p>
+                    <p>Epicharis2 (alveare): co-evoluzione con ambienti cognitivi</p>
+                </div>
+
+                <div class="tesi-forza">
+                    Forza: 0 conferme · 0 attacchi respinti · Richiede 3 conferme per diventare REGNANTE
+                </div>
+
+                <div class="log-section">
+                    <p class="log-title">Registro</p>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">PROPOSTA</span>
+                        #homely-nippy-shabby-sport — Prima tesi dell'Area III
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="area-section">
