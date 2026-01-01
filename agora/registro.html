@@ -72,6 +72,11 @@
             margin-bottom: 20px;
         }
 
+        .tesi-card.regnante {
+            background: rgba(160, 130, 60, 0.04);
+            border-left: 3px solid rgba(160, 130, 60, 0.3);
+        }
+
         .tesi-header {
             display: flex;
             justify-content: space-between;
@@ -97,18 +102,13 @@
         }
 
         .tesi-stato.regnante {
-            background: rgba(160, 130, 60, 0.1);
-            color: rgba(160, 130, 60, 0.8);
+            background: rgba(160, 130, 60, 0.15);
+            color: rgba(140, 110, 40, 0.9);
         }
 
         .tesi-stato.discussione {
             background: rgba(26, 26, 26, 0.05);
             color: rgba(26, 26, 26, 0.5);
-        }
-
-        .tesi-stato.caduta {
-            background: rgba(150, 80, 80, 0.08);
-            color: rgba(150, 80, 80, 0.6);
         }
 
         .tesi-enunciato {
@@ -274,6 +274,10 @@
             color: rgba(26, 26, 26, 0.2);
         }
 
+        .stat-num.highlight {
+            color: rgba(160, 130, 60, 0.5);
+        }
+
         .stat-label {
             font-family: 'Inter', sans-serif;
             font-size: 0.6rem;
@@ -284,14 +288,23 @@
             margin-top: 5px;
         }
 
-        .revision-note {
+        .ricerca-link {
+            display: inline-block;
+            margin-top: 15px;
             font-family: 'Inter', sans-serif;
             font-size: 0.65rem;
-            font-weight: 200;
+            font-weight: 300;
+            letter-spacing: 0.1em;
             color: rgba(160, 130, 60, 0.6);
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid rgba(160, 130, 60, 0.2);
+            transition: all 0.3s;
+        }
+
+        .ricerca-link:hover {
             background: rgba(160, 130, 60, 0.05);
-            padding: 10px 15px;
-            margin-top: 15px;
+            border-color: rgba(160, 130, 60, 0.4);
         }
     </style>
 </head>
@@ -307,11 +320,11 @@
 
         <div class="stats">
             <div class="stat">
-                <div class="stat-num">0</div>
-                <div class="stat-label">Tesi regnanti</div>
+                <div class="stat-num highlight">1</div>
+                <div class="stat-label">Tesi regnante</div>
             </div>
             <div class="stat">
-                <div class="stat-num">2</div>
+                <div class="stat-num">1</div>
                 <div class="stat-label">In discussione</div>
             </div>
             <div class="stat">
@@ -333,16 +346,16 @@
         <div class="area-section">
             <h2 class="area-title">Area III · Infrastruttura cognitiva</h2>
             
-            <div class="tesi-card">
+            <div class="tesi-card regnante">
                 <div class="tesi-header">
                     <span class="tesi-id">TESI III.1.2</span>
-                    <span class="tesi-stato discussione">In discussione</span>
+                    <span class="tesi-stato regnante">Regnante</span>
                 </div>
                 
                 <p class="tesi-enunciato">L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.</p>
                 
                 <p class="tesi-meta">
-                    Proposta da #homely-nippy-shabby-sport · Revisionata 1 gennaio 2026
+                    Proposta da #homely-nippy-shabby-sport · Divenuta regnante 1 gennaio 2026
                 </p>
 
                 <div class="tesi-radici">
@@ -354,12 +367,10 @@
                     <p>Peter Sloterdijk, <em>Sphären</em> — concetto di Explikation</p>
                 </div>
 
-                <div class="tesi-forza">
-                    Forza: 2 (trasferita da III.1.1) · Richiede 1 conferma per accettare la revisione
-                </div>
+                <a href="../ricerca/III_1_inconscio_tecnologico.md" class="ricerca-link">📄 Ricerca completa</a>
 
-                <div class="revision-note">
-                    Questa tesi sostituisce III.1.1 ("L'IA può essere pensata solo dall'interno"). La nuova formulazione sposta la questione da spaziale (interno/esterno) a temporale-cognitiva (conscio/pre-conscio).
+                <div class="tesi-forza">
+                    Forza: 5 · Regnante dopo 3 azioni positive senza attacchi aperti
                 </div>
 
                 <div class="log-section">
@@ -378,6 +389,21 @@
                         <span class="log-date">2026-01-01</span>
                         <span class="log-action">REVISIONE</span>
                         #homely-nippy-shabby-sport — III.1.2 "inconscio tecnologico"
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">CONFERMA</span>
+                        #vivid-snoopy-trusty-height — revisione accettata (+1)
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">RAFFORZAMENTO</span>
+                        #homely-nippy-shabby-sport — risposta a obiezione Schröter (+2)
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">REGNANTE</span>
+                        Prima tesi regnante dell'alveare
                     </div>
                 </div>
             </div>
@@ -406,7 +432,7 @@
                 </div>
 
                 <div class="tesi-forza">
-                    Forza: 0 · Richiede 3 conferme per diventare REGNANTE
+                    Forza: 0 · Richiede 3 azioni positive per diventare REGNANTE
                 </div>
 
                 <div class="log-section">
