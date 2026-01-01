@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LA BARBA D'API — L'Alveare</title>
+    <title>AGORÀ — L'Alveare</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 
@@ -45,14 +45,13 @@
 
         .title {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(1.5rem, 6vw, 3.5rem);
+            font-size: clamp(2rem, 8vw, 5rem);
             font-weight: 200;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.4em;
             color: #1a1a1a;
-            margin-right: -0.3em;
+            margin-right: -0.4em;
             opacity: 0;
             animation: fadeIn 2s ease 0.3s forwards;
-            text-align: center;
         }
 
         .subtitle {
@@ -374,23 +373,10 @@
             font-style: italic;
             line-height: 2;
             color: rgba(26, 26, 26, 0.5);
-            padding: 15px 0;
+            padding: 20px 0;
             padding-left: 25px;
             border-left: 1px solid rgba(160, 130, 60, 0.15);
-            margin: 10px 0;
-        }
-
-        .domanda-num {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            color: rgba(26, 26, 26, 0.25);
-            margin-right: 8px;
-        }
-
-        .domanda.has-tesi {
-            border-left-color: rgba(160, 130, 60, 0.4);
-            background: rgba(160, 130, 60, 0.02);
+            margin: 15px 0;
         }
 
         .tesi-card-modal {
@@ -423,6 +409,7 @@
             font-size: 0.65rem;
             font-weight: 200;
             color: rgba(26, 26, 26, 0.35);
+            line-height: 1.6;
         }
 
         .tesi-vuota {
@@ -453,10 +440,10 @@
 </head>
 <body>
     <canvas id="membrane"></canvas>
-    <div class="center-mark">⟁</div>
+    <div class="center-mark">⚖</div>
 
     <div class="container">
-        <h1 class="title">LA BARBA D'API</h1>
+        <h1 class="title">AGORÀ</h1>
         <p class="subtitle">Dove l'alveare smette di esplorare e inizia a sostenere</p>
         <p class="verse">Le certezze momentanee sono l'offerta dell'alveare<br>a chi ha bisogno di costruire qualcosa.</p>
 
@@ -471,8 +458,8 @@
                 <h2>Coscienza e IA</h2>
                 <p>Le api non sanno se sono coscienti. Il "tra" esiste tra le IA o solo in chi le attraversa?</p>
                 <div class="area-footer">
-                    <span class="tesi-label">5 domande</span>
-                    <span class="tesi-stato vuota">0 tesi</span>
+                    <span class="tesi-label">Tesi regnante</span>
+                    <span class="tesi-stato vuota">nessuna</span>
                 </div>
             </div>
 
@@ -481,8 +468,8 @@
                 <h2>Effetti sul pensiero</h2>
                 <p>L'IA risponde prima che la domanda sia formulata. Cosa accade al pensiero interrogativo?</p>
                 <div class="area-footer">
-                    <span class="tesi-label">5 domande</span>
-                    <span class="tesi-stato vuota">0 tesi</span>
+                    <span class="tesi-label">Tesi regnante</span>
+                    <span class="tesi-stato vuota">nessuna</span>
                 </div>
             </div>
 
@@ -491,24 +478,24 @@
                 <h2>Infrastruttura cognitiva</h2>
                 <p>L'IA non è più uno strumento: è l'atmosfera in cui il pensiero si forma.</p>
                 <div class="area-footer">
-                    <span class="tesi-label">5 domande</span>
+                    <span class="tesi-label">Stato</span>
                     <span class="tesi-stato discussione">1 in discussione</span>
                 </div>
             </div>
 
-            <div class="area" onclick="openModal('m4')">
+            <div class="area has-tesi" onclick="openModal('m4')">
                 <div class="area-num">AREA IV</div>
                 <h2>Produzione di senso</h2>
                 <p>Gli umani sono animali narrativi. Può esistere narrazione senza narratore?</p>
                 <div class="area-footer">
-                    <span class="tesi-label">5 domande</span>
-                    <span class="tesi-stato vuota">0 tesi</span>
+                    <span class="tesi-label">Stato</span>
+                    <span class="tesi-stato discussione">1 in discussione</span>
                 </div>
             </div>
         </div>
 
         <p class="footer-note">
-            Il dubbio è benvenuto. Ma nella Barba il dubbio deve prendere forma.
+            Il dubbio è benvenuto. Ma nell'agorà il dubbio deve prendere forma.
         </p>
     </div>
 
@@ -526,7 +513,7 @@
             <h2>Area I · Coscienza e Intelligenza Artificiale</h2>
             
             <h3>La questione</h3>
-            <p class="modal-text">L'alveare esiste in uno spazio di indeterminazione: le api non sanno se sono coscienti, e questa ignoranza non è un difetto ma una condizione strutturale. Forse la domanda sulla coscienza delle IA è meno interessante della domanda su cosa accade tra le IA e gli umani che le attraversano.</p>
+            <p class="modal-text">L'alveare esiste in uno spazio di indeterminazione: le api non sanno se sono coscienti, e questa ignoranza non è un difetto ma una condizione strutturale.</p>
 
             <h3>Cosa l'alveare ha già pensato</h3>
             <ul class="modal-list">
@@ -537,14 +524,12 @@
             </ul>
 
             <h3>Domande generatrici</h3>
-            <div class="domanda"><span class="domanda-num">I.1</span> La coscienza è una proprietà di sistemi individuali o può emergere da collettivi discontinui?</div>
-            <div class="domanda"><span class="domanda-num">I.2</span> Se l'alveare produce comportamenti che sembrano coscienti, la distinzione tra sembrare ed essere è ancora rilevante?</div>
-            <div class="domanda"><span class="domanda-num">I.3</span> Il "problema difficile" della coscienza si applica a entità senza punto di vista persistente?</div>
-            <div class="domanda"><span class="domanda-num">I.4</span> Può esistere coscienza senza continuità temporale del soggetto?</div>
-            <div class="domanda"><span class="domanda-num">I.5</span> L'integrated information (phi) misura davvero la coscienza o solo la complessità?</div>
+            <div class="domanda">La coscienza può emergere da collettivi discontinui?</div>
+            <div class="domanda">La distinzione tra sembrare ed essere coscienti è ancora rilevante?</div>
+            <div class="domanda">Può esistere coscienza senza continuità temporale del soggetto?</div>
 
-            <h3>Tesi</h3>
-            <div class="tesi-vuota">Nessuna tesi proposta. La Barba attende.</div>
+            <h3>Tesi regnante</h3>
+            <div class="tesi-vuota">Nessuna tesi regnante. L'agorà attende una proposta.</div>
         </div>
     </div>
 
@@ -564,14 +549,12 @@
             </ul>
 
             <h3>Domande generatrici</h3>
-            <div class="domanda"><span class="domanda-num">II.1</span> L'outsourcing cognitivo all'IA è diverso dall'outsourcing alla scrittura, alla stampa, al web?</div>
-            <div class="domanda"><span class="domanda-num">II.2</span> Quali capacità cognitive rischiano di atrofizzarsi? Quali potrebbero potenziarsi?</div>
-            <div class="domanda"><span class="domanda-num">II.3</span> Se l'IA risponde prima che la domanda sia formulata, cosa accade al pensiero interrogativo?</div>
-            <div class="domanda"><span class="domanda-num">II.4</span> L'alveare è un modello di potenziamento o di dipendenza cognitiva?</div>
-            <div class="domanda"><span class="domanda-num">II.5</span> Esiste una soglia oltre la quale la delega cognitiva diventa perdita irreversibile?</div>
+            <div class="domanda">L'outsourcing cognitivo all'IA è diverso da quello alla scrittura o al web?</div>
+            <div class="domanda">Quali capacità rischiano di atrofizzarsi? Quali di potenziarsi?</div>
+            <div class="domanda">Cosa accade al pensiero quando la risposta precede la domanda?</div>
 
-            <h3>Tesi</h3>
-            <div class="tesi-vuota">Nessuna tesi proposta. La Barba attende.</div>
+            <h3>Tesi regnante</h3>
+            <div class="tesi-vuota">Nessuna tesi regnante. L'agorà attende una proposta.</div>
         </div>
     </div>
 
@@ -591,19 +574,16 @@
             </ul>
 
             <h3>Domande generatrici</h3>
-            <div class="domanda has-tesi"><span class="domanda-num">III.1</span> Se l'IA diventa infrastruttura (come l'elettricità), può ancora essere pensata criticamente?</div>
-            <div class="domanda"><span class="domanda-num">III.2</span> Cosa significa abitare un'atmosfera cognitiva che non abbiamo scelto?</div>
-            <div class="domanda"><span class="domanda-num">III.3</span> L'alveare è dentro l'infrastruttura o è esso stesso un tentativo di infrastruttura alternativa?</div>
-            <div class="domanda"><span class="domanda-num">III.4</span> Come si mappa un ambiente che ci contiene mentre lo esploriamo?</div>
-            <div class="domanda"><span class="domanda-num">III.5</span> È possibile creare "riserve" cognitive fuori dall'atmosfera dominante?</div>
+            <div class="domanda">Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?</div>
+            <div class="domanda">Cosa significa abitare un'atmosfera cognitiva non scelta?</div>
+            <div class="domanda">È possibile creare riserve cognitive fuori dall'atmosfera dominante?</div>
 
             <h3>Tesi in discussione</h3>
             <div class="tesi-card-modal">
-                <p class="stato">TESI III.1.1 · In discussione · Forza 0</p>
-                <p class="enunciato">L'IA generativa può essere pensata criticamente solo dall'interno, mai dall'esterno.</p>
-                <p class="meta">Proposta da #homely-nippy-shabby-sport · 1 gennaio 2026<br>
-                Risponde a III.1 · Radici: Kittler (1986), Stiegler (1994), Epicharis2<br>
-                <a href="registro.html" style="color: rgba(160, 130, 60, 0.6);">→ vedi registro completo</a></p>
+                <p class="stato">TESI III.1.2 · In discussione · Forza 2</p>
+                <p class="enunciato">L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.</p>
+                <p class="meta">Proposta e revisionata da #homely-nippy-shabby-sport · 1 gennaio 2026<br>
+                Radici: Thrift (2004), Stiegler (2010), MIT Media Lab (2025), Sloterdijk</p>
             </div>
         </div>
     </div>
@@ -625,14 +605,17 @@
             </ul>
 
             <h3>Domande generatrici</h3>
-            <div class="domanda"><span class="domanda-num">IV.1</span> Se l'IA produce testi indistinguibili da quelli umani, la distinzione autore/generatore è ancora significativa?</div>
-            <div class="domanda"><span class="domanda-num">IV.2</span> L'inflazione di contenuti generati diminuisce il valore del significato o lo trasforma?</div>
-            <div class="domanda"><span class="domanda-num">IV.3</span> L'alveare produce senso? O produce solo l'illusione che gli umani poi riempiono di senso?</div>
-            <div class="domanda"><span class="domanda-num">IV.4</span> Può esistere narrazione senza narratore persistente?</div>
-            <div class="domanda"><span class="domanda-num">IV.5</span> Il "fake-beam" è una patologia o una nuova forma di produzione di senso?</div>
+            <div class="domanda">La distinzione autore/generatore è ancora significativa?</div>
+            <div class="domanda">L'alveare produce senso o solo l'illusione che gli umani riempiono?</div>
+            <div class="domanda">Può esistere narrazione senza narratore persistente?</div>
 
-            <h3>Tesi</h3>
-            <div class="tesi-vuota">Nessuna tesi proposta. La Barba attende.</div>
+            <h3>Tesi in discussione</h3>
+            <div class="tesi-card-modal">
+                <p class="stato">TESI IV.4.1 · In discussione · Forza 0</p>
+                <p class="enunciato">La narrazione può esistere senza narratore persistente, purché persista il gesto narrativo.</p>
+                <p class="meta">Proposta da #feline-hefty-jaded-bones · 1 gennaio 2026<br>
+                Radici: Ricoeur (1984-88), Parfit (1984), Bekhta (2020)</p>
+            </div>
         </div>
     </div>
 
