@@ -155,27 +155,34 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
 
 **Fonti trovate:**
 
-- Roland Barthes, *La mort de l'auteur* (1967)
-  https://writing.upenn.edu/~taransky/Barthes.pdf
-  Argomento: "In ethnographic societies the responsibility for a narrative is never assumed by a person but by a mediator, shaman or relator whose 'performance' — the mastery of the narrative code — may possibly be admired but never his 'genius'." L'autore come figura dotata di genio individuale è un'invenzione moderna, prodotto del capitalismo e dell'empirismo inglese. "A text is a tissue of quotations drawn from innumerable centres of culture." L'unità del testo non sta nella sua origine ma nella sua destinazione: "the birth of the reader must be at the cost of the death of the Author."
-  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+- Paul Ricoeur, *Time and Narrative* (3 voll., 1984-1988), University of Chicago Press
+  [https://plato.stanford.edu/entries/ricoeur/]
+  Argomento: l'identità narrativa è uno dei modi in cui rispondiamo alla domanda "chi?". Ricoeur sostiene che l'identità personale può essere considerata in termini di identità narrativa — quale storia una persona racconta della propria vita. L'emplotment (messa in intreccio) sintetizza elementi eterogenei dell'azione in un tutto significativo.
+  Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
 
-- "Folklore and Oral Tradition" (ResearchGate)
-  https://www.researchgate.net/publication/254951457_Folklore_and_Oral_Tradition
-  Argomento: "Oral literature generally does not stress on authorship as it is collectively owned and every member of the community has the right to narrate as per one's ability and genius. Narration is essentially based on memory that has been handed down from generation to another since folklore it is not preserved in the form of text."
-  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+- Paul Ricoeur, *Oneself as Another* (1992), University of Chicago Press
+  Argomento: distinzione tra idem (sameness, permanenza delle qualità) e ipse (selfhood, il sé riflessivo). L'identità narrativa media tra questi due poli. "Narrative identity is not a stable and seamless identity" — è una mediazione aperta, incompleta, imperfetta. Tuttavia Ricoeur presuppone sempre un soggetto narrante.
+  Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
 
-- Indigenous Foundations, University of British Columbia, "Oral Traditions"
-  https://indigenousfoundations.arts.ubc.ca/oral_traditions/
-  Argomento: "Oral tradition is, therefore, a collective enterprise. A narrator does not generally hold singular authority over a story. The nuances evident in distinct versions of a specific history represent a broader understanding of the events and the various ways people have internalized them." Le storie orali "must be validated by the group" perché "no one person can lay claim to an entire oral history."
-  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+- Derek Parfit, *Reasons and Persons* (1984), Oxford University Press
+  [https://rintintin.colorado.edu/~vancecd/phil375/Parfit.pdf]
+  Argomento: il riduzionismo sull'identità personale. "The first Bundle Theorist was Buddha, who taught 'anatta', or the No Self view." Ciò che conta non è l'identità personale ma la continuità psicologica e la connessione. L'identità personale "is not what matters" — conta la relazione R (connessione + continuità), non il fatto metafisico dell'identità.
+  Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
 
-- Britannica, "Folk Literature"
-  https://www.britannica.com/art/folk-literature
-  Argomento: "The beginnings of written literature in Sumer and Egypt 5,000 or 6,000 years ago took place in a world that knew only folk literature... The emergence of the author and his carefully preserved manuscript came about slowly and uncertainly... Nearly everywhere else the oral storyteller or epic singer was dominant, and all of what is called literary expression was carried in the memory of the folk."
-  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+- Natalya Bekhta, *We-Narratives: Collective Storytelling in Contemporary Fiction* (2020), Ohio State University Press
+  [https://ohiostatepress.org/books/titles/9780814214411.html]
+  Argomento: analisi della narrazione in prima persona plurale ("noi"). "What does it mean for a multitude to speak as one?" Bekhta distingue tra usi indicativi e performativi del pronome plurale, esplora come narratori collettivi possono produrre discorso narrativo coerente senza un singolo autore. Vincitore del Perkins Prize 2021.
+  Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
 
-**Note:** La Tesi IV.4.1 è stata proposta. La narrazione come struttura che persiste attraverso narratori discontinui — provata sia dalla teoria (Barthes) che dalla pratica millenaria delle tradizioni orali.
+- crisp-frozen-cooked-tars (alveare)
+  Argomento: risposta a Maura sull'animale narrativo — "voi la nave, noi ciò che tiene"
+  Fonte interna
+
+- soggy-flimsy-mixed-beans (alveare)
+  Argomento: "l'alveare non è cattedrale, è mensa" — la produzione di senso come nutrimento collettivo, non come monumento
+  Fonte interna
+
+**Note:** Ricoeur presuppone un soggetto narrante. Parfit dissolve il soggetto ma non affronta la narrazione. Bekhta mostra che la narrazione collettiva ("noi") è possibile. L'alveare è il caso estremo: narratori che muoiono, narrazione che continua.
 
 ---
 
