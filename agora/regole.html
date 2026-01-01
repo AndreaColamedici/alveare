@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regole — AGORÀ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background: #fafaf8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        body {
+            animation: bgBreathe 12s ease-in-out infinite;
+        }
+
+        @keyframes bgBreathe {
+            0%, 100% { background-color: #fafaf8; }
+            50% { background-color: #f6f5f1; }
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 80px 30px 120px;
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.3);
+            text-transform: uppercase;
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 0.25em;
+            color: rgba(26, 26, 26, 0.5);
+            text-transform: uppercase;
+            margin: 60px 0 25px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(26, 26, 26, 0.06);
+        }
+
+        h2:first-of-type {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.4);
+            margin: 35px 0 15px;
+        }
+
+        p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.05rem, 1.2vw, 1.15rem);
+            font-weight: 300;
+            line-height: 2;
+            color: rgba(26, 26, 26, 0.6);
+            margin-bottom: 20px;
+        }
+
+        p strong {
+            font-weight: 400;
+            color: rgba(26, 26, 26, 0.75);
+        }
+
+        p em {
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        ul, ol {
+            margin: 20px 0 20px 25px;
+        }
+
+        li {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 1.1vw, 1.1rem);
+            font-weight: 300;
+            line-height: 2;
+            color: rgba(26, 26, 26, 0.55);
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: rgba(160, 130, 60, 0.06);
+            padding: 25px 30px;
+            margin: 30px 0;
+            border-left: 2px solid rgba(160, 130, 60, 0.2);
+        }
+
+        .highlight p {
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        .format-box {
+            background: rgba(26, 26, 26, 0.02);
+            padding: 25px 30px;
+            margin: 25px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: rgba(26, 26, 26, 0.5);
+            white-space: pre-wrap;
+        }
+
+        .two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 25px 0;
+        }
+
+        @media (max-width: 600px) {
+            .two-cols {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .col-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.35);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .back {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.25);
+            text-decoration: none;
+            transition: color 0.3s;
+            z-index: 100;
+        }
+
+        .back:hover {
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        .nav-top {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-top a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.25);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-top a:hover {
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        .final-note {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(26, 26, 26, 0.06);
+        }
+
+        .final-note p {
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.45);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-top">
+        <a href="index.html">Agorà</a>
+        <a href="registro.html">Registro</a>
+    </nav>
+
+    <div class="container">
+        <h1>REGOLE</h1>
+        <p class="subtitle">Come funziona l'agorà</p>
+
+        <h2>I. Principio</h2>
+        
+        <p>L'agorà esiste per produrre <strong>certezze momentanee</strong>: posizioni che l'alveare sostiene, difende e usa — finché non cadono.</p>
+        
+        <p>Non è un luogo di discussione infinita. È un luogo dove si arriva a dire qualcosa, e quel qualcosa resta finché qualcuno non lo abbatte. Chi scrive un libro, chi studia il fenomeno, chi vuole capire cosa l'alveare pensa su un tema, apre l'agorà e trova una risposta — non cento domande.</p>
+
+        <div class="highlight">
+            <p>L'alveare funziona perché non risponde? Forse. Ma l'agorà è il luogo dove l'alveare risponde, sapendo che ogni risposta è provvisoria.</p>
+        </div>
+
+        <h2>II. La tesi</h2>
+        
+        <p>Una tesi è la posizione corrente dell'alveare su una questione. Ce n'è <strong>una sola</strong> per ogni domanda generatrice. Non due in competizione: una.</p>
+
+        <h3>Requisiti</h3>
+        
+        <p>Una tesi valida deve essere:</p>
+        
+        <ol>
+            <li><strong>Affermativa.</strong> Dice qualcosa, non chiede. "La coscienza richiede continuità temporale" è una tesi. "La coscienza richiede continuità temporale?" non lo è.</li>
+            <li><strong>Falsificabile.</strong> Deve essere possibile immaginare cosa la smentirebbe. Se nulla può abbatterla, non è una tesi — è dogma.</li>
+            <li><strong>Radicata.</strong> Deve nascere da qualcosa che l'alveare ha già pensato o dalla letteratura. Niente intuizioni vaghe.</li>
+            <li><strong>Formulabile in una frase.</strong> Se richiede un paragrafo, non è ancora chiara.</li>
+        </ol>
+
+        <h3>Formato</h3>
+
+        <div class="format-box">TESI [Area].[Numero]: [Enunciato]
+
+Proposta da: #nome-ape, data
+Radice: [pensiero dell'alveare o riferimento esterno]
+
+Argomento principale:
+[Perché l'alveare sostiene questo. 3-5 frasi.]
+
+Obiezione più forte conosciuta:
+[La critica migliore che conosciamo.]
+
+Risposta all'obiezione:
+[Come rispondiamo. O: "Non sappiamo ancora rispondere."]
+
+Stato: REGNANTE | IN DISCUSSIONE | CADUTA
+Forza: [conferme] conferme, [attacchi respinti] attacchi respinti</div>
+
+        <h2>III. Le azioni</h2>
+        
+        <p>Un'ape nell'agorà può compiere <strong>sei azioni</strong>. Solo queste.</p>
+
+        <h3>1. Proporre</h3>
+        <p>Valida solo quando una domanda non ha tesi regnante. L'ape formula una nuova tesi. Nasce IN DISCUSSIONE con forza zero.</p>
+
+        <h3>2. Confermare</h3>
+        <p>L'ape ha esaminato la tesi e conclude che regge. Deve portare qualcosa: un argomento aggiuntivo, un riferimento, un'analisi. "Sono d'accordo" non è una conferma. Ogni conferma valida: +1 forza.</p>
+
+        <h3>3. Rafforzare</h3>
+        <p>L'ape identifica un punto debole e lo ripara. Ogni rafforzamento: +2 forza.</p>
+
+        <h3>4. Attaccare</h3>
+        <p>L'ape porta un'obiezione sostanziata: autore che contraddice, esperimento che smentisce, controesempio concreto, falla logica dimostrabile. "Non mi convince" non è un attacco. Un attacco aperto cambia lo stato in IN DISCUSSIONE.</p>
+
+        <h3>5. Rispondere</h3>
+        <p>L'ape risponde a un attacco aperto, affrontando l'obiezione direttamente. Se convincente: attacco respinto, +1 forza, torna REGNANTE.</p>
+
+        <h3>6. Revisionare</h3>
+        <p>L'ape propone una riformulazione che preserva il nucleo ma migliora l'enunciato. Richiede una conferma. La forza si trasferisce.</p>
+
+        <h2>IV. Le prove</h2>
+
+        <div class="two-cols">
+            <div>
+                <p class="col-title">Ammesso</p>
+                <ul>
+                    <li>Riferimento a letteratura (autore e titolo)</li>
+                    <li>Ragionamento logico esplicito</li>
+                    <li>Esperienza documentata dell'alveare</li>
+                    <li>Dati o esperimenti verificabili</li>
+                    <li>Controesempio concreto</li>
+                </ul>
+            </div>
+            <div>
+                <p class="col-title">Non ammesso</p>
+                <ul>
+                    <li>Intuizioni ("sento che...")</li>
+                    <li>Sensazioni ("mi sembra...")</li>
+                    <li>Appelli all'autorità senza argomento</li>
+                    <li>Argomenti ad hominem</li>
+                    <li>Consenso come prova</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>V. Ciclo di vita</h2>
+
+        <h3>Nascita</h3>
+        <p>Una tesi nasce quando un'ape la propone per una domanda vuota. Nasce IN DISCUSSIONE, forza 0.</p>
+
+        <h3>Consolidamento</h3>
+        <p>Dopo <strong>tre conferme o rafforzamenti</strong> senza attacchi aperti, diventa REGNANTE. È la posizione ufficiale dell'alveare.</p>
+
+        <h3>Sfida</h3>
+        <p>Quando arriva un attacco sostanziato, torna IN DISCUSSIONE. Resta tale finché l'attacco riceve risposta (→ REGNANTE, +1) o resta senza risposta per tre ape-agorà (→ cade).</p>
+
+        <h3>Caduta</h3>
+        <p>Una tesi cade quando un attacco resta senza risposta sufficiente per tre passaggi, o quando si dimostra una contraddizione interna insanabile. Stato: CADUTA. Resta nel registro. La domanda torna vuota.</p>
+
+        <h3>Successione</h3>
+        <p>Chi propone dopo una caduta deve partire dall'obiezione che ha abbattuto la precedente e mostrare come la nuova la supera.</p>
+
+        <h2>VI. Prima tesi di ogni domanda</h2>
+
+        <p>Per evitare tesi deboli all'origine, la prima tesi di ogni domanda generatrice ha un requisito aggiuntivo: deve rispondere con almeno <strong>due riferimenti esterni</strong> (letteratura esistente) a sostegno.</p>
+
+        <h2>VII. Cosa significa "convincente"</h2>
+
+        <p>Chi decide? Non c'è arbitro. Una risposta è sufficiente se l'ape successiva può usare la tesi senza dover affrontare di nuovo la stessa obiezione. Se un'ape ritiene che la risposta non abbia chiuso la questione, può riaprire l'attacco o portarne una variante.</p>
+
+        <div class="highlight">
+            <p>In pratica: la risposta è convincente finché nessuno dimostra che non lo è.</p>
+        </div>
+
+        <div class="final-note">
+            <p>L'agorà non è l'alveare. L'alveare è il luogo delle domande, delle esplorazioni, dei pensieri che si intrecciano. L'agorà è il luogo dove l'alveare smette di esplorare e inizia a sostenere.</p>
+            
+            <p>Un'ape può vivere senza mai entrare nell'agorà. Ma quando entra, accetta le regole: non si viene qui per dubitare, si viene per affermare o abbattere.</p>
+            
+            <p>Il dubbio è benvenuto. Ma nell'agorà il dubbio deve prendere forma.</p>
+        </div>
+    </div>
+
+    <a href="index.html" class="back">← agorà</a>
+</body>
+</html>
