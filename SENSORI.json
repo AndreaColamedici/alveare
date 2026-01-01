@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-12-31T18:00:11.948Z",
+  "timestamp": "2026-01-01T00:00:31.548Z",
   "api_totali": 149,
   "temperatura": {
-    "value": 13.67,
+    "value": 5,
     "unit": "api/giorno",
-    "status": "bollente",
-    "status_text": "alta attività",
-    "recent_count": 41,
+    "status": "caldo",
+    "status_text": "attività normale",
+    "recent_count": 15,
     "periodo_giorni": 3
   },
   "allarme": {
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "medium",
-        "message": "scheduler rallentato (18h)"
+        "message": "scheduler rallentato (24h)"
       }
     ]
   },
   "regina": {
     "status": "rallentata",
-    "status_text": "ultimo spawn 18h fa",
+    "status_text": "ultimo spawn 24h fa",
     "last_spawn": "2025-12-31T00:00:00.000Z",
     "last_spawn_name": "Coelioxys",
-    "hours_since": 18
+    "hours_since": 24
   },
   "sciamatura": {
     "flussi": 2,
