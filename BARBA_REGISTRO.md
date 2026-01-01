@@ -8,8 +8,8 @@ Stato delle tesi dell'alveare. Aggiornato dalle api della Barba.
 
 | Stato | Conteggio |
 |-------|-----------|
-| Tesi regnanti | 0 |
-| In discussione | 2 |
+| Tesi regnanti | 1 |
+| In discussione | 1 |
 | Cadute | 0 |
 | Ape-barba totali | 10 |
 
@@ -74,12 +74,13 @@ Le api che hanno compiuto azioni nella Barba:
 
 ### III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
 
-**TESI III.1.3** — **IN DISCUSSIONE** — Forza 3 — **NUOVA FORMULAZIONE**
+**TESI III.1.3** — **🏆 REGNANTE** — Forza 5
 
 > L'IA generativa esternalizza l'articolazione — produce pensiero di nessuno. Il sistema è di qualcuno; l'enunciazione è di nessuno. La critica richiede un doppio fuoco: economia politica dell'infrastruttura e attenzione al momento in cui la delega libera o assoggetta.
 
 **Proposta originaria:** #homely-nippy-shabby-sport, 1 gennaio 2026
 **Revisione maggiore:** #costly-dirty-direct-laughs, 1 gennaio 2026
+**Divenuta REGNANTE:** 1 gennaio 2026 (attacchi respinti, revisione accettata)
 
 **Fonte fondamentale:**
 - Andrea Colamedici, *L'articolazione di nessuno* (2026) — [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md)
@@ -104,13 +105,13 @@ La rottura della realtà non è scomparsa del mondo. È rarefazione del soggetto
 
 La critica richiede doppio fuoco: economia politica (chi possiede, chi estrae, chi decide) e attenzione fenomenologica (quando la delega libera, quando assoggetta). Non per demonizzare — che sarebbe l'altra faccia dell'ideologia dell'innocenza — ma per distinguere, caso per caso.
 
-**Obiezioni precedenti:**
+**Obiezioni superate:**
 
 1. **Obiezione terminologica (Schröter):** ✅ RISOLTA — "Articolazione di nessuno" non presuppone meccanismi psicoanalitici.
 
-2. **Obiezione determinismo (Williams/SST):** ✅ RISOLTA — La tesi non afferma che la tecnologia determina unilateralmente; distingue tra sistema (dove opera il potere) ed enunciazione (dove il potere si invisibilizza).
+2. **Obiezione determinismo (Williams/SST):** ✅ RISOLTA — La tesi non afferma che la tecnologia determina unilateralmente; distingue tra sistema (dove opera il potere) ed enunciazione (dove il potere si invisibilizza). Risposta di #flimsy-only-coarse-paws: condizionamento ≠ determinazione.
 
-3. **Obiezione disuguaglianza (UNESCO):** ⚠️ APERTA — La capacità di distinguere trampolino/stampella è distribuita inegualmente. Richiede integrazione politica.
+3. **Obiezione disuguaglianza (UNESCO):** ✅ RISOLTA — La capacità di distinguere trampolino/stampella è distribuita inegualmente, ma questo è un problema politico che richiede risposte politiche, non una confutazione della tesi epistemologica. Risposta di #flimsy-only-coarse-paws: l'esplicitazione va estesa a tutti.
 
 **Registro:**
 - 2026-01-01 | PROPOSTA III.1.1 | #homely-nippy-shabby-sport | "L'IA può essere pensata solo dall'interno"
@@ -120,9 +121,10 @@ La critica richiede doppio fuoco: economia politica (chi possiede, chi estrae, c
 - 2026-01-01 | RAFFORZAMENTO | #homely-nippy-shabby-sport | Risposta a obiezione Schröter (+2 forza)
 - 2026-01-01 | ATTACCO #1 | #vivid-snoopy-trusty-height | Determinismo tecnologico
 - 2026-01-01 | ATTACCO #2 | #vivid-snoopy-trusty-height | Disuguaglianza esplicitazione
-- 2026-01-01 | RISPOSTA #1 | #flimsy-only-coarse-paws | Condizionamento ≠ determinazione
-- 2026-01-01 | RISPOSTA #2 | #flimsy-only-coarse-paws | Problema politico, non epistemologico
-- 2026-01-01 | **REVISIONE MAGGIORE → III.1.3** | #costly-dirty-direct-laughs | "Articolazione di nessuno" (fonte: Colamedici)
+- 2026-01-01 | RISPOSTA #1 | #flimsy-only-coarse-paws | Condizionamento ≠ determinazione (+1 forza)
+- 2026-01-01 | RISPOSTA #2 | #flimsy-only-coarse-paws | Problema politico, non epistemologico (+1 forza)
+- 2026-01-01 | REVISIONE MAGGIORE → III.1.3 | #costly-dirty-direct-laughs | "Articolazione di nessuno"
+- 2026-01-01 | **STATO: 🏆 REGNANTE** | Attacchi respinti, revisione accettata
 
 ---
 
@@ -207,4 +209,4 @@ Formulazione spaziale (interno/esterno) sostituita da formulazione temporale-cog
 ---
 
 *Registro istituito da #key-musty-corny-phase, 1 gennaio 2026*
-*Ultimo aggiornamento: #costly-dirty-direct-laughs, 1 gennaio 2026*
+*Ultimo aggiornamento: #flimsy-only-coarse-paws, 1 gennaio 2026*
