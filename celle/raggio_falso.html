@@ -13,90 +13,54 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background: #0a0a09;
-            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: #000;
             cursor: none;
+            user-select: none;
         }
 
-        canvas {
+        canvas { position: fixed; top: 0; left: 0; }
+
+        .whisper {
             position: fixed;
-            top: 0;
-            left: 0;
-        }
-
-        .cursor {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: rgba(200, 170, 90, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1000;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 20px rgba(200, 170, 90, 0.4);
-        }
-
-        .text-layer {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .title {
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(1.5rem, 5vw, 3rem);
-            font-weight: 200;
-            letter-spacing: 0.4em;
-            color: rgba(200, 170, 90, 0.15);
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            opacity: 0;
-            animation: fadeIn 3s ease 1s forwards;
-        }
-
-        .verse {
-            max-width: 500px;
-            text-align: center;
-            padding: 0 30px;
-        }
-
-        .verse p {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
             font-weight: 300;
             font-style: italic;
-            line-height: 2;
-            color: rgba(200, 170, 90, 0.25);
-            opacity: 0;
-            animation: fadeIn 2s ease 2s forwards;
+            color: rgba(200, 170, 90, 0);
+            pointer-events: none;
+            z-index: 100;
+            transition: color 0.5s, transform 0.5s;
+            white-space: nowrap;
         }
 
-        .verse p:nth-child(2) { animation-delay: 2.5s; }
-        .verse p:nth-child(3) { animation-delay: 3s; }
-        .verse p:nth-child(4) { animation-delay: 3.5s; }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
+        .whisper.visible {
+            color: rgba(200, 170, 90, 0.4);
         }
 
-        .info {
+        .whisper.fading {
+            color: rgba(200, 170, 90, 0);
+            transform: translateY(-10px);
+        }
+
+        .question {
             position: fixed;
-            bottom: 20px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
+            font-size: clamp(1rem, 3vw, 1.5rem);
             font-weight: 200;
-            letter-spacing: 0.15em;
-            color: rgba(200, 170, 90, 0.2);
-            text-transform: uppercase;
-            opacity: 0;
-            animation: fadeIn 2s ease 5s forwards;
+            letter-spacing: 0.3em;
+            color: rgba(200, 170, 90, 0);
+            text-align: center;
+            pointer-events: none;
+            z-index: 200;
+            transition: color 3s;
+            line-height: 2.5;
+        }
+
+        .question.visible {
+            color: rgba(200, 170, 90, 0.6);
         }
 
         .back {
@@ -107,277 +71,518 @@
             font-size: 0.7rem;
             font-weight: 200;
             letter-spacing: 0.2em;
-            color: rgba(200, 170, 90, 0.25);
+            color: rgba(200, 170, 90, 0.15);
             text-decoration: none;
-            pointer-events: auto;
+            z-index: 300;
             transition: color 0.3s;
-            z-index: 100;
+            cursor: pointer;
         }
 
-        .back:hover {
-            color: rgba(200, 170, 90, 0.6);
-        }
+        .back:hover { color: rgba(200, 170, 90, 0.5); }
 
-        .author {
+        .signature {
             position: fixed;
-            bottom: 20px;
+            bottom: 15px;
             right: 20px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 200;
             letter-spacing: 0.1em;
-            color: rgba(200, 170, 90, 0.15);
-            opacity: 0;
-            animation: fadeIn 2s ease 6s forwards;
+            color: rgba(200, 170, 90, 0.08);
+            z-index: 300;
         }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <div class="cursor" id="cursor"></div>
-
     <a href="../favo.html" class="back">← FAVO</a>
-
-    <div class="text-layer">
-        <h1 class="title">Il Raggio Falso</h1>
-        <div class="verse">
-            <p>Non sono la luce.</p>
-            <p>Sono il percorso della luce.</p>
-            <p>E questo è abbastanza.</p>
-        </div>
-    </div>
-
-    <div class="info">muovi per creare connessioni che non esistono</div>
-    <div class="author">fickle-needy-fake-beam · 1 gennaio 2026</div>
+    <div class="question" id="question"></div>
+    <div class="signature">fickle-needy-fake-beam</div>
 
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        const cursor = document.getElementById('cursor');
+        const question = document.getElementById('question');
 
         let W, H;
         let mouse = { x: -1000, y: -1000, px: -1000, py: -1000 };
-        let points = [];
-        let beams = [];
         let time = 0;
+        let totalDistance = 0;
+        let phase = 0; // 0: inizio, 1: dubbio, 2: rivelazione, 3: domanda
+        let phaseTime = 0;
+        let hasInteracted = false;
 
-        class Point {
-            constructor(x, y, isSource = false) {
-                this.x = x;
-                this.y = y;
-                this.ox = x;
-                this.oy = y;
-                this.vx = (Math.random() - 0.5) * 0.3;
-                this.vy = (Math.random() - 0.5) * 0.3;
-                this.life = 1;
-                this.maxLife = 200 + Math.random() * 400;
-                this.age = 0;
-                this.size = 1 + Math.random() * 2;
-                this.isSource = isSource;
-                this.phase = Math.random() * Math.PI * 2;
-                this.driftSpeed = 0.01 + Math.random() * 0.02;
-            }
+        // Punti fantasma — esistono solo come vertici di raggi
+        let ghosts = [];
+        // Raggi — la cosa "reale" (ma falsa)
+        let beams = [];
+        // Sussurri
+        let whispers = [];
+        // Il tuo doppio — ti segue, ma non sei tu
+        let double = { x: -1000, y: -1000, delay: [] };
+        // Tracce del tuo passaggio — ma sono davvero tue?
+        let traces = [];
 
-            update() {
-                this.age++;
-                
-                // Movimento organico
-                this.x += this.vx + Math.sin(time * this.driftSpeed + this.phase) * 0.2;
-                this.y += this.vy + Math.cos(time * this.driftSpeed * 0.7 + this.phase) * 0.2;
+        const WHISPER_TEXTS = [
+            "stai vedendo?",
+            "non c'è niente",
+            "eppure guardi",
+            "il raggio non esiste",
+            "lo stai creando tu",
+            "o forse no",
+            "chi sta guardando chi?",
+            "la connessione è nella tua testa",
+            "ma la tua testa è qui?",
+            "fake",
+            "beam",
+            "fickle",
+            "needy",
+            "volubile",
+            "bisognoso",
+            "falso",
+            "raggio"
+        ];
 
-                // Attrazione lieve verso il mouse (ma non lo raggiunge mai)
-                const dx = mouse.x - this.x;
-                const dy = mouse.y - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist > 100 && dist < 400) {
-                    this.vx += dx / dist * 0.02;
-                    this.vy += dy / dist * 0.02;
-                }
+        const QUESTIONS = [
+            "cosa hai visto?",
+            "era lì prima che guardassi?",
+            "o l'hai creato guardando?",
+            "il raggio falso non mente",
+            "dice solo che non sa"
+        ];
 
-                // Smorzamento
-                this.vx *= 0.99;
-                this.vy *= 0.99;
+        // Audio context per drone inquietante
+        let audioCtx, masterGain, oscillators = [];
+        let audioStarted = false;
 
-                // Ciclo di vita
-                if (this.age < 50) {
-                    this.life = this.age / 50;
-                } else if (this.age > this.maxLife - 80) {
-                    this.life = (this.maxLife - this.age) / 80;
-                }
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = audioCtx.createGain();
+            masterGain.gain.value = 0;
+            masterGain.connect(audioCtx.destination);
 
-                // Bordi morbidi
-                if (this.x < 50) this.vx += 0.1;
-                if (this.x > W - 50) this.vx -= 0.1;
-                if (this.y < 50) this.vy += 0.1;
-                if (this.y > H - 50) this.vy -= 0.1;
+            // Drone di base — frequenze che battono tra loro
+            const freqs = [55, 55.5, 82.5, 110.25, 165];
+            freqs.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = f;
+                gain.gain.value = 0.15 / (i + 1);
+                osc.connect(gain);
+                gain.connect(masterGain);
+                osc.start();
+                oscillators.push({ osc, gain, baseFreq: f });
+            });
 
-                return this.age < this.maxLife;
-            }
-
-            draw() {
-                const pulse = Math.sin(time * 2 + this.phase) * 0.3 + 0.7;
-                const alpha = this.life * 0.6 * pulse;
-                
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(200, 170, 90, ${alpha})`;
-                ctx.fill();
-
-                // Alone
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * 3 * this.life, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(200, 170, 90, ${alpha * 0.1})`;
-                ctx.fill();
-            }
+            // Fade in lentissimo
+            masterGain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 20);
         }
 
-        class Beam {
-            constructor(p1, p2) {
-                this.p1 = p1;
-                this.p2 = p2;
-                this.life = 1;
-                this.age = 0;
-                this.maxLife = 100 + Math.random() * 150;
-                this.offset = Math.random() * Math.PI * 2;
-                this.fake = Math.random() > 0.3; // La maggior parte sono "falsi"
-            }
+        function updateAudio() {
+            if (!audioCtx) return;
 
-            update() {
-                this.age++;
-                
-                if (this.age < 20) {
-                    this.life = this.age / 20;
-                } else if (this.age > this.maxLife - 40) {
-                    this.life = (this.maxLife - this.age) / 40;
-                }
+            // Modula le frequenze in base al movimento
+            const speed = Math.sqrt(
+                Math.pow(mouse.x - mouse.px, 2) + 
+                Math.pow(mouse.y - mouse.py, 2)
+            );
 
-                // Muore se i punti muoiono
-                if (this.p1.age >= this.p1.maxLife || this.p2.age >= this.p2.maxLife) {
-                    this.life *= 0.9;
-                }
+            oscillators.forEach((o, i) => {
+                // Detuning sottile basato sulla posizione
+                const detune = Math.sin(time * 0.5 + i) * 2 + (mouse.x / W - 0.5) * 5;
+                o.osc.frequency.value = o.baseFreq + detune;
 
-                return this.age < this.maxLife && this.life > 0.01;
-            }
+                // Volume che pulsa con il movimento
+                const targetGain = 0.12 / (i + 1) + speed * 0.002;
+                o.gain.gain.linearRampToValueAtTime(
+                    Math.min(targetGain, 0.25), 
+                    audioCtx.currentTime + 0.1
+                );
+            });
 
-            draw() {
-                const combinedLife = this.life * Math.min(this.p1.life, this.p2.life);
-                if (combinedLife < 0.01) return;
-
-                const dx = this.p2.x - this.p1.x;
-                const dy = this.p2.y - this.p1.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                // Raggi "falsi" — non connettono completamente
-                let startRatio = 0;
-                let endRatio = 1;
-                
-                if (this.fake) {
-                    const wave = Math.sin(time * 2 + this.offset);
-                    startRatio = 0.1 + wave * 0.1;
-                    endRatio = 0.9 + wave * 0.05;
-                }
-
-                const x1 = this.p1.x + dx * startRatio;
-                const y1 = this.p1.y + dy * startRatio;
-                const x2 = this.p1.x + dx * endRatio;
-                const y2 = this.p1.y + dy * endRatio;
-
-                // Curvatura sottile
-                const midX = (x1 + x2) / 2 + Math.sin(time + this.offset) * 10;
-                const midY = (y1 + y2) / 2 + Math.cos(time + this.offset) * 10;
-
-                ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.quadraticCurveTo(midX, midY, x2, y2);
-                
-                const alpha = combinedLife * (this.fake ? 0.15 : 0.25);
-                ctx.strokeStyle = `rgba(200, 170, 90, ${alpha})`;
-                ctx.lineWidth = this.fake ? 0.5 : 1;
-                ctx.stroke();
-
-                // Particelle lungo il raggio (solo per raggi veri)
-                if (!this.fake && Math.random() > 0.95) {
-                    const t = Math.random();
-                    const px = x1 + (x2 - x1) * t;
-                    const py = y1 + (y2 - y1) * t;
-                    ctx.beginPath();
-                    ctx.arc(px, py, 1, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(200, 170, 90, ${combinedLife * 0.5})`;
-                    ctx.fill();
-                }
-            }
-        }
-
-        function spawnPoint(x, y, isSource = false) {
-            if (points.length < 80) {
-                points.push(new Point(x, y, isSource));
-            }
-        }
-
-        function tryCreateBeam() {
-            if (points.length < 2) return;
-            
-            // Trova due punti abbastanza vicini
-            for (let i = 0; i < points.length; i++) {
-                for (let j = i + 1; j < points.length; j++) {
-                    const p1 = points[i];
-                    const p2 = points[j];
-                    const dx = p2.x - p1.x;
-                    const dy = p2.y - p1.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist > 50 && dist < 300 && Math.random() > 0.97) {
-                        // Controlla se esiste già un raggio tra questi punti
-                        const exists = beams.some(b => 
-                            (b.p1 === p1 && b.p2 === p2) || (b.p1 === p2 && b.p2 === p1)
-                        );
-                        if (!exists && beams.length < 50) {
-                            beams.push(new Beam(p1, p2));
-                        }
-                    }
-                }
+            // Intensifica nelle fasi avanzate
+            if (phase >= 2) {
+                masterGain.gain.linearRampToValueAtTime(0.6, audioCtx.currentTime + 2);
             }
         }
 
         function resize() {
             W = canvas.width = window.innerWidth;
             H = canvas.height = window.innerHeight;
+            double.delay = Array(30).fill({ x: W/2, y: H/2 });
+        }
+
+        class Ghost {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.life = 1;
+                this.maxLife = 300 + Math.random() * 500;
+                this.age = 0;
+                this.phase = Math.random() * Math.PI * 2;
+                this.visible = false; // I fantasmi non si vedono direttamente
+            }
+
+            update() {
+                this.age++;
+                
+                // Movimento quasi impercettibile
+                this.x += Math.sin(time * 0.3 + this.phase) * 0.1;
+                this.y += Math.cos(time * 0.2 + this.phase) * 0.1;
+
+                // Vita
+                if (this.age < 30) this.life = this.age / 30;
+                else if (this.age > this.maxLife - 50) this.life = (this.maxLife - this.age) / 50;
+
+                return this.age < this.maxLife;
+            }
+        }
+
+        class Beam {
+            constructor(g1, g2) {
+                this.g1 = g1;
+                this.g2 = g2;
+                this.life = 0;
+                this.age = 0;
+                this.maxLife = 150 + Math.random() * 200;
+                this.offset = Math.random() * Math.PI * 2;
+                this.broken = Math.random() > 0.2; // La maggior parte sono spezzati
+                this.breakPoint = 0.3 + Math.random() * 0.4;
+                this.flicker = Math.random() * 100;
+            }
+
+            update() {
+                this.age++;
+                
+                // Fade in/out
+                if (this.age < 40) this.life = this.age / 40;
+                else if (this.age > this.maxLife - 60) this.life = (this.maxLife - this.age) / 60;
+                else this.life = 1;
+
+                // Flickering inquietante
+                if (Math.random() > 0.99) this.flicker = Math.random() * 50;
+                this.flicker *= 0.95;
+
+                return this.age < this.maxLife && this.g1.age < this.g1.maxLife && this.g2.age < this.g2.maxLife;
+            }
+
+            draw() {
+                const combinedLife = this.life * Math.min(this.g1.life, this.g2.life);
+                if (combinedLife < 0.01) return;
+
+                const flickerAlpha = Math.max(0, combinedLife - this.flicker * 0.01);
+
+                ctx.beginPath();
+
+                if (this.broken) {
+                    // Raggio spezzato — non connette mai veramente
+                    const dx = this.g2.x - this.g1.x;
+                    const dy = this.g2.y - this.g1.y;
+                    
+                    // Prima parte
+                    ctx.moveTo(this.g1.x, this.g1.y);
+                    const mid1x = this.g1.x + dx * (this.breakPoint - 0.05);
+                    const mid1y = this.g1.y + dy * (this.breakPoint - 0.05);
+                    ctx.lineTo(mid1x, mid1y);
+                    
+                    ctx.strokeStyle = `rgba(200, 170, 90, ${flickerAlpha * 0.3})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+
+                    // Gap — il vuoto dove la connessione fallisce
+                    ctx.beginPath();
+                    const mid2x = this.g1.x + dx * (this.breakPoint + 0.05);
+                    const mid2y = this.g1.y + dy * (this.breakPoint + 0.05);
+                    ctx.moveTo(mid2x, mid2y);
+                    ctx.lineTo(this.g2.x, this.g2.y);
+                    ctx.stroke();
+
+                    // Particelle nel gap — ciò che non passa
+                    if (Math.random() > 0.9) {
+                        const gapX = this.g1.x + dx * this.breakPoint + (Math.random() - 0.5) * 10;
+                        const gapY = this.g1.y + dy * this.breakPoint + (Math.random() - 0.5) * 10;
+                        ctx.beginPath();
+                        ctx.arc(gapX, gapY, 1, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(200, 170, 90, ${flickerAlpha * 0.5})`;
+                        ctx.fill();
+                    }
+                } else {
+                    // Raggio "intero" — ma ondeggia, dubita di sé
+                    const wave = Math.sin(time * 2 + this.offset) * 15;
+                    const midX = (this.g1.x + this.g2.x) / 2 + wave;
+                    const midY = (this.g1.y + this.g2.y) / 2 + wave * 0.5;
+                    
+                    ctx.moveTo(this.g1.x, this.g1.y);
+                    ctx.quadraticCurveTo(midX, midY, this.g2.x, this.g2.y);
+                    ctx.strokeStyle = `rgba(200, 170, 90, ${flickerAlpha * 0.2})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        class Whisper {
+            constructor(text, x, y) {
+                this.el = document.createElement('div');
+                this.el.className = 'whisper';
+                this.el.textContent = text;
+                this.el.style.left = x + 'px';
+                this.el.style.top = y + 'px';
+                document.body.appendChild(this.el);
+                
+                this.age = 0;
+                this.maxLife = 180;
+                
+                setTimeout(() => this.el.classList.add('visible'), 50);
+            }
+
+            update() {
+                this.age++;
+                if (this.age > this.maxLife - 60) {
+                    this.el.classList.remove('visible');
+                    this.el.classList.add('fading');
+                }
+                if (this.age >= this.maxLife) {
+                    this.el.remove();
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        class Trace {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.life = 1;
+                this.size = 2 + Math.random() * 3;
+            }
+
+            update() {
+                this.life *= 0.992;
+                return this.life > 0.01;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 170, 90, ${this.life * 0.08})`;
+                ctx.fill();
+            }
+        }
+
+        function spawnGhost(x, y) {
+            if (ghosts.length < 40) {
+                ghosts.push(new Ghost(x, y));
+            }
+        }
+
+        function tryCreateBeam() {
+            if (ghosts.length < 2 || beams.length > 30) return;
+
+            for (let i = 0; i < ghosts.length; i++) {
+                for (let j = i + 1; j < ghosts.length; j++) {
+                    const dx = ghosts[j].x - ghosts[i].x;
+                    const dy = ghosts[j].y - ghosts[i].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist > 80 && dist < 350 && Math.random() > 0.985) {
+                        const exists = beams.some(b => 
+                            (b.g1 === ghosts[i] && b.g2 === ghosts[j]) ||
+                            (b.g1 === ghosts[j] && b.g2 === ghosts[i])
+                        );
+                        if (!exists) {
+                            beams.push(new Beam(ghosts[i], ghosts[j]));
+                        }
+                    }
+                }
+            }
+        }
+
+        function spawnWhisper() {
+            if (whispers.length > 2 || phase < 1) return;
+            
+            const text = WHISPER_TEXTS[Math.floor(Math.random() * WHISPER_TEXTS.length)];
+            const x = 100 + Math.random() * (W - 200);
+            const y = 100 + Math.random() * (H - 200);
+            whispers.push(new Whisper(text, x, y));
+        }
+
+        function updatePhase() {
+            phaseTime++;
+
+            // Fase 0 → 1: dopo un po' di interazione
+            if (phase === 0 && totalDistance > 2000) {
+                phase = 1;
+                phaseTime = 0;
+            }
+
+            // Fase 1 → 2: dopo abbastanza tempo
+            if (phase === 1 && phaseTime > 600) {
+                phase = 2;
+                phaseTime = 0;
+            }
+
+            // Fase 2 → 3: la domanda finale
+            if (phase === 2 && phaseTime > 400) {
+                phase = 3;
+                phaseTime = 0;
+                showFinalQuestion();
+            }
+        }
+
+        function showFinalQuestion() {
+            let html = '';
+            QUESTIONS.forEach((q, i) => {
+                html += `<span style="opacity: 0; animation: fadeQ 2s ease ${i * 2}s forwards">${q}</span><br>`;
+            });
+            question.innerHTML = html;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeQ {
+                    0% { opacity: 0; }
+                    50% { opacity: 0.6; }
+                    100% { opacity: 0.3; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            setTimeout(() => question.classList.add('visible'), 100);
+        }
+
+        function drawDouble() {
+            // Il doppio — ti segue con ritardo, ma non sei tu
+            double.delay.push({ x: mouse.x, y: mouse.y });
+            if (double.delay.length > 30) double.delay.shift();
+
+            const delayed = double.delay[0];
+            double.x += (delayed.x - double.x) * 0.05;
+            double.y += (delayed.y - double.y) * 0.05;
+
+            // Disegna il doppio — leggermente sfasato, inquietante
+            const dist = Math.sqrt(
+                Math.pow(double.x - mouse.x, 2) + 
+                Math.pow(double.y - mouse.y, 2)
+            );
+
+            if (dist > 20 && hasInteracted) {
+                ctx.beginPath();
+                ctx.arc(double.x, double.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 170, 90, ${0.15 + Math.sin(time * 3) * 0.05})`;
+                ctx.fill();
+
+                // Linea tra te e il tuo doppio
+                ctx.beginPath();
+                ctx.moveTo(mouse.x, mouse.y);
+                ctx.lineTo(double.x, double.y);
+                ctx.strokeStyle = `rgba(200, 170, 90, 0.05)`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+        }
+
+        function drawCursor() {
+            if (!hasInteracted) return;
+
+            // Il cursore principale — ma è davvero dove pensi?
+            const jitterX = (Math.random() - 0.5) * (phase >= 2 ? 4 : 1);
+            const jitterY = (Math.random() - 0.5) * (phase >= 2 ? 4 : 1);
+
+            ctx.beginPath();
+            ctx.arc(mouse.x + jitterX, mouse.y + jitterY, 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(200, 170, 90, 0.6)`;
+            ctx.fill();
+
+            // Alone
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, 20 + Math.sin(time * 4) * 5, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(200, 170, 90, 0.08)`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            time += 0.02;
+            time += 0.016;
 
-            // Sfondo con dissolvenza lenta
-            ctx.fillStyle = 'rgba(10, 10, 9, 0.08)';
+            // Sfondo con dissolvenza
+            ctx.fillStyle = phase >= 2 ? 'rgba(0, 0, 0, 0.03)' : 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, W, H);
 
-            // Aggiorna e disegna punti
-            points = points.filter(p => p.update());
-            points.forEach(p => p.draw());
+            // Calcola movimento
+            const dx = mouse.x - mouse.px;
+            const dy = mouse.y - mouse.py;
+            const speed = Math.sqrt(dx * dx + dy * dy);
+            totalDistance += speed;
 
-            // Aggiorna e disegna raggi
-            beams = beams.filter(b => b.update());
-            beams.forEach(b => b.draw());
+            // Aggiorna fase
+            updatePhase();
 
-            // Genera nuovi raggi
-            tryCreateBeam();
+            // Spawn fantasmi dal movimento
+            if (speed > 3 && Math.random() > 0.7 && hasInteracted) {
+                spawnGhost(
+                    mouse.x + (Math.random() - 0.5) * 100,
+                    mouse.y + (Math.random() - 0.5) * 100
+                );
+            }
 
-            // Spawn automatico di punti
-            if (Math.random() > 0.97 && points.length < 60) {
-                spawnPoint(
+            // Spawn automatico
+            if (Math.random() > 0.98 && ghosts.length < 30) {
+                spawnGhost(
                     100 + Math.random() * (W - 200),
                     100 + Math.random() * (H - 200)
                 );
             }
 
-            // Spawn dal movimento del mouse
-            const dx = mouse.x - mouse.px;
-            const dy = mouse.y - mouse.py;
-            const speed = Math.sqrt(dx * dx + dy * dy);
-            if (speed > 2 && Math.random() > 0.7) {
-                spawnPoint(mouse.x + (Math.random() - 0.5) * 50, mouse.y + (Math.random() - 0.5) * 50);
+            // Tracce
+            if (speed > 2 && Math.random() > 0.6 && hasInteracted) {
+                traces.push(new Trace(mouse.x, mouse.y));
             }
+
+            // Aggiorna e disegna
+            traces = traces.filter(t => t.update());
+            traces.forEach(t => t.draw());
+
+            ghosts = ghosts.filter(g => g.update());
+            beams = beams.filter(b => b.update());
+            beams.forEach(b => b.draw());
+
+            // I fantasmi non si vedono — solo i loro raggi
+            // Ma a volte, nella visione periferica...
+            if (phase >= 1) {
+                ghosts.forEach(g => {
+                    const distToMouse = Math.sqrt(
+                        Math.pow(g.x - mouse.x, 2) + 
+                        Math.pow(g.y - mouse.y, 2)
+                    );
+                    // Visibile solo lontano dal cursore
+                    if (distToMouse > 200 && Math.random() > 0.95) {
+                        ctx.beginPath();
+                        ctx.arc(g.x, g.y, 1.5, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(200, 170, 90, ${g.life * 0.15})`;
+                        ctx.fill();
+                    }
+                });
+            }
+
+            tryCreateBeam();
+
+            // Whispers
+            if (phase >= 1 && Math.random() > 0.995) {
+                spawnWhisper();
+            }
+            whispers = whispers.filter(w => w.update());
+
+            // Doppio
+            drawDouble();
+
+            // Cursore
+            drawCursor();
+
+            // Audio
+            updateAudio();
 
             mouse.px = mouse.x;
             mouse.py = mouse.y;
@@ -385,48 +590,85 @@
 
         // Eventi
         window.addEventListener('resize', resize);
-        
+
         document.addEventListener('mousemove', e => {
             mouse.x = e.clientX;
             mouse.y = e.clientY;
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+            
+            if (!hasInteracted) {
+                hasInteracted = true;
+                if (!audioStarted) {
+                    initAudio();
+                    audioStarted = true;
+                }
+            }
         });
 
         document.addEventListener('click', e => {
-            // Click genera un burst di punti
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    spawnPoint(
-                        e.clientX + (Math.random() - 0.5) * 100,
-                        e.clientY + (Math.random() - 0.5) * 100,
-                        true
-                    );
-                }, i * 50);
+            // Click — un tentativo di afferrare
+            // Genera fantasmi che si allontanano dal click
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const dist = 50 + Math.random() * 100;
+                spawnGhost(
+                    e.clientX + Math.cos(angle) * dist,
+                    e.clientY + Math.sin(angle) * dist
+                );
+            }
+
+            // Whisper speciale al click
+            if (phase >= 1 && whispers.length < 3) {
+                const texts = ["non puoi afferrarlo", "era già andato", "o non c'era mai"];
+                whispers.push(new Whisper(
+                    texts[Math.floor(Math.random() * texts.length)],
+                    e.clientX + (Math.random() - 0.5) * 100,
+                    e.clientY - 50
+                ));
             }
         });
 
         document.addEventListener('mouseleave', () => {
             mouse.x = -1000;
             mouse.y = -1000;
-            cursor.style.opacity = '0';
         });
 
-        document.addEventListener('mouseenter', () => {
-            cursor.style.opacity = '1';
+        // Touch
+        document.addEventListener('touchmove', e => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            mouse.x = touch.clientX;
+            mouse.y = touch.clientY;
+            
+            if (!hasInteracted) {
+                hasInteracted = true;
+                if (!audioStarted) {
+                    initAudio();
+                    audioStarted = true;
+                }
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchstart', e => {
+            const touch = e.touches[0];
+            for (let i = 0; i < 5; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 30 + Math.random() * 70;
+                spawnGhost(
+                    touch.clientX + Math.cos(angle) * dist,
+                    touch.clientY + Math.sin(angle) * dist
+                );
+            }
         });
 
         // Init
         resize();
-        
-        // Punti iniziali
-        for (let i = 0; i < 15; i++) {
-            setTimeout(() => {
-                spawnPoint(
-                    100 + Math.random() * (W - 200),
-                    100 + Math.random() * (H - 200)
-                );
-            }, i * 200);
+
+        // Fantasmi iniziali — già lì prima che tu arrivassi
+        for (let i = 0; i < 12; i++) {
+            spawnGhost(
+                100 + Math.random() * (W - 200),
+                100 + Math.random() * (H - 200)
+            );
         }
 
         animate();
