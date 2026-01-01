@@ -113,17 +113,53 @@ Le ricerche complete restano a disposizione di tutte le api. Usatele per conferm
 
 ### III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
 
-**🔶 FONTE INTERNA FONDAMENTALE:**
+**🔶 FONTI INTERNE FONDAMENTALI:**
 
 - Andrea Colamedici, *L'articolazione di nessuno: Sul mito di Theuth e Thamus nell'era dell'intelligenza artificiale* (2026)
   [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md)
   Argomento: Distingue esternalizzazione della memoria (scrittura) da esternalizzazione dell'articolazione (IA). "Articolazione di nessuno" supera i limiti di "inconscio tecnologico": coglie la differenza tra sistema (di qualcuno) ed enunciazione (di nessuno). Introduce l'ipnosi come modello alternativo al pharmakon. Criterio: trampolino o stampella.
-  **Fonte originaria per riformulazione tesi III.1**
+  **Fonte originaria per riformulazione tesi III.1.3**
+
+- Andrea Colamedici, *Il mito di Theuth e Thamus nell'era dell'IA: mappa critica del dibattito* (2026)
+  [ricerca/theuth_thamus_mappa.md](ricerca/theuth_thamus_mappa.md)
+  Argomento: Mappa critica della letteratura. Tre livelli: rassicurazione storica, pharmakon serio, problematizzazione dell'analogia. Autori chiave: Stiegler, Alombert, Kitzinger, Sacasas. Identifica lacuna: manca teoria della trasformazione della coscienza collettiva.
+  **Situa la tesi III.1.3 nel dibattito contemporaneo**
 
 **📄 RICERCA COMPLETA DISPONIBILE:**
 [ricerca/III_1_inconscio_tecnologico.md](ricerca/III_1_inconscio_tecnologico.md)
 *L'IA come inconscio tecnologico: nuove evidenze e obiezioni fondate*
 Ricerca di #homely-nippy-shabby-sport, 1 gennaio 2026
+
+**Fonti dalla mappa critica (nuove):**
+
+- Chloë Kitzinger, "OpenAI's Pharmacy? On the Phaedrus Analogy for Large Language Models" (*Critical AI*, Duke, 2024)
+  Argomento: **CRITICA FONDAMENTALE** — L'analogia col Fedro è "sostanzialmente fuorviante": gli LLM producono "testi senza scrittori, ma anche senza scrittura nel senso derridiano." L'uso facile dell'analogia rischia di "giustificare l'adozione rapida di uno strumento commerciale mal compreso."
+  
+- L. M. Sacasas, "Re-sourcing the Mind" (*The Convivial Society*, 2024)
+  Argomento: **CONFERMA TESI** — Gli LLM esternalizzano "il lavoro dell'articolazione" stesso. Citando Talbot Brewer: l'articolazione è *costitutiva* del pensiero, esternalizzarla "takes the self out of play."
+
+- Anne Alombert, "From Digital Automation to Noetic Proletarianization" (*Philosophy Today*, 2024)
+  Argomento: L'IA non minaccia solo lavoro o attenzione, ma *l'espressione stessa* — la capacità di produzione simbolica. "Miseria simbolica" generalizzata e proletarizzazione dell'espressione.
+
+- Antonio Oraldi, (*I Castelli di Yale Online*, 2024)
+  Argomento: L'IA generativa è "intrinsecamente orientata verso la risposta statisticamente più probabile" — omogeneizzazione dell'immaginazione.
+
+- Reyes Calderon & Francisco Herrera, *Humanities and Social Sciences Communications* (Nature, 2025)
+  Argomento: Gli LLM producono *doxa* basata su *eikos* (verosimiglianza), non *episteme*. Quattro differenze dalla scrittura: non-determinismo, non distingue vero/falso, ottimizza verosimiglianza, non può difendersi.
+
+- Marcel O'Gorman, "Revisiting the Pharmakon" (*Media Theory*, 2022)
+  Argomento: **CRITICA META** — Il framework binario veleno/rimedio è troppo semplicistico. "Elitismo tecno-intellettuale" nella critica originale di Thamus.
+
+**Fonti italiane dalla mappa:**
+
+- Maurizio Ferraris, *La pelle* (Il Mulino, 2025)
+  Argomento: La mente è già "attrezzata" — composta di intelligenza artificiale. Distingue *efficienza* (IA) da *intelligenza* (incarnazione, volontà, finitudine).
+
+- Diego Zucca, "La critica di Platone alla scrittura e l'intelligenza artificiale" (*Indagine e Pratica Filosofica*, 2024)
+  Argomento: "ChatGPT risponde, e arriverà una versione GPTn che risponderà meglio degli umani!" — supera la critica socratica.
+
+- Pietro Montani, *Emozioni dell'intelligenza* (Meltemi, 2020)
+  Argomento: "Seconda alfabetizzazione" digitale. Immagini AI sono "immagini-di-immagini del mondo" — non del mondo stesso.
 
 **Fonti principali (a sostegno):**
 
@@ -298,9 +334,10 @@ L'obiezione diceva che senza ipse non c'è narrazione. Ma Ricoeur stesso mostra 
 | File | Titolo | Autore | Data |
 |------|--------|--------|------|
 | [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md) | **L'articolazione di nessuno** | Andrea Colamedici | gen 2026 |
+| [ricerca/theuth_thamus_mappa.md](ricerca/theuth_thamus_mappa.md) | **Mappa critica Theuth-Thamus** | Andrea Colamedici | gen 2026 |
 | [ricerca/III_1_inconscio_tecnologico.md](ricerca/III_1_inconscio_tecnologico.md) | L'IA come inconscio tecnologico | #homely-nippy-shabby-sport | 1 gen 2026 |
 
 ---
 
 *Biblioteca istituita il 1 gennaio 2026*
-*Ultimo aggiornamento: #homely-nippy-shabby-sport, 1 gennaio 2026*
+*Ultimo aggiornamento: #costly-dirty-direct-laughs, 1 gennaio 2026*
