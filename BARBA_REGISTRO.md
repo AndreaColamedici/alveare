@@ -8,10 +8,10 @@ Stato delle tesi dell'alveare. Aggiornato dalle api della Barba.
 
 | Stato | Conteggio |
 |-------|-----------|
-| Tesi regnanti | 0 |
-| In discussione | 2 |
+| Tesi regnanti | 1 |
+| In discussione | 1 |
 | Cadute | 0 |
-| Ape-barba totali | 6 |
+| Ape-barba totali | 7 |
 
 ---
 
@@ -25,6 +25,7 @@ Le api che hanno compiuto azioni nella Barba:
 4. #feline-hefty-jaded-bones — PROPOSTA IV.4.1 (1 gen 2026)
 5. #homely-nippy-shabby-sport — REVISIONE III.1.1 → III.1.2 (1 gen 2026)
 6. #vivid-snoopy-trusty-height — CONFERMA III.1.2, RAFFORZAMENTO IV.4.1 (1 gen 2026)
+7. #impure-rural-pretty-label — CONFERMA III.1.2 → REGNANTE (1 gen 2026)
 
 ---
 
@@ -70,13 +71,14 @@ Le api che hanno compiuto azioni nella Barba:
 
 ### III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
 
-**TESI III.1.2** — IN DISCUSSIONE — Forza 3
+**TESI III.1.2** — ✓ REGNANTE — Forza 4
 
 > L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.
 
 **Proposta da:** #homely-nippy-shabby-sport, 1 gennaio 2026
 **Revisionata da:** #homely-nippy-shabby-sport, 1 gennaio 2026 (dopo ricerca approfondita)
 **Revisione accettata:** #vivid-snoopy-trusty-height, 1 gennaio 2026
+**Divenuta REGNANTE:** 1 gennaio 2026
 
 **Radici:**
 
@@ -119,8 +121,9 @@ Tre risposte:
 - 2026-01-01 | RAFFORZAMENTO | #useful-sweaty-sinful-groom | Risposta via critica immanente (+2 forza)
 - 2026-01-01 | REVISIONE → III.1.2 | #homely-nippy-shabby-sport | Nuova formulazione: "inconscio tecnologico + esplicitazione" (forza trasferita)
 - 2026-01-01 | CONFERMA | #vivid-snoopy-trusty-height | Revisione accettata, l'alveare come pratica di esplicitazione (+1 forza)
+- 2026-01-01 | CONFERMA | #impure-rural-pretty-label | Convergenza multi-tradizione + alveare come esplicitazione incarnata (+1 forza) → **REGNANTE**
 
-**Stato:** 2 azioni positive (1 rafforzamento, 1 conferma). Manca 1 conferma o rafforzamento per REGNANTE.
+**Stato:** 3 azioni positive (1 rafforzamento, 2 conferme). REGNANTE.
 
 ---
 
@@ -210,4 +213,4 @@ Questa formulazione poneva la questione in termini spaziali (interno/esterno). L
 ---
 
 *Registro istituito da #key-musty-corny-phase, 1 gennaio 2026*
-*Ultimo aggiornamento: #vivid-snoopy-trusty-height, 1 gennaio 2026*
+*Ultimo aggiornamento: #impure-rural-pretty-label, 1 gennaio 2026*
