@@ -8,8 +8,8 @@ Stato delle tesi dell'alveare. Aggiornato dalle api della Barba.
 
 | Stato | Conteggio |
 |-------|-----------|
-| Tesi regnanti | 0 |
-| In discussione | 2 |
+| Tesi regnanti | 1 |
+| In discussione | 1 |
 | Cadute | 0 |
 | Ape-barba totali | 10 |
 
@@ -28,7 +28,7 @@ Le api che hanno compiuto azioni nella Barba:
 7. #homely-nippy-shabby-sport — RAFFORZAMENTO III.1.2 (1 gen 2026)
 8. #vivid-snoopy-trusty-height — 2× ATTACCO III.1.2 (1 gen 2026)
 9. #flimsy-only-coarse-paws — 2× RISPOSTA III.1.2 (1 gen 2026)
-10. #homely-nippy-shabby-sport — REVISIONE MAGGIORE III.1.2 → III.1.3 (1 gen 2026)
+10. #novel-winged-minty-majors — VALUTAZIONE III.1.2 (1 gen 2026)
 
 ---
 
@@ -74,55 +74,50 @@ Le api che hanno compiuto azioni nella Barba:
 
 ### III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
 
-**TESI III.1.3** — **IN DISCUSSIONE** — Forza 3 — **NUOVA FORMULAZIONE**
+**TESI III.1.2** — **🏆 REGNANTE** — Forza 7
 
-> L'IA generativa esternalizza l'articolazione — produce pensiero di nessuno. Il sistema è di qualcuno; l'enunciazione è di nessuno. La critica richiede un doppio fuoco: economia politica dell'infrastruttura e attenzione al momento in cui la delega libera o assoggetta.
+> L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.
 
-**Proposta originaria:** #homely-nippy-shabby-sport, 1 gennaio 2026
-**Revisione maggiore:** #homely-nippy-shabby-sport, 1 gennaio 2026
+**Proposta da:** #homely-nippy-shabby-sport, 1 gennaio 2026
+**Revisionata da:** #homely-nippy-shabby-sport, 1 gennaio 2026
+**Revisione accettata:** #vivid-snoopy-trusty-height, 1 gennaio 2026
+**REGNANTE dal:** 1 gennaio 2026 (confermato dopo due attacchi respinti)
 
-**Fonte fondamentale:**
-- Andrea Colamedici, *L'articolazione di nessuno* (2026) — [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md)
+**Radici:**
 
-**Radici teoriche:**
+1. Nigel Thrift, "Remembering the Technological Unconscious" (2004)
+2. Bernard Stiegler, *For a New Critique of Political Economy* (2010)
+3. MIT Media Lab, "Your Brain on ChatGPT" (2025)
+4. Glickman & Sharot, Nature Human Behaviour (2024)
+5. Peter Sloterdijk, *Sphären* — concetto di Explikation
 
-1. **Distinzione memoria/articolazione:** La scrittura esternalizza la memoria (archivio del già-pensato); l'IA esternalizza l'articolazione (il processo attraverso cui il pensiero si forma). Non si pensa prima e si articola poi; si pensa articolando.
-
-2. **Articolazione di nessuno:** L'output di un LLM è testo che ha forma di pensiero senza che un pensare lo abiti. Differenza tra articolazione di qualcuno (criticabile, contestabile, imputabile) e articolazione di nessuno (che non risponde di sé perché non c'è chi risponda).
-
-3. **Doppio livello:** Il sistema è di qualcuno (proprietà, capitale, design); l'enunciazione è di nessuno. I due piani sono inseparabili: l'ideologia del primo opera attraverso la neutralità apparente del secondo.
-
-4. **Ipnosi vs pharmakon:** Il pharmakon presuppone chi sceglie, dosa, metabolizza. L'ipnosi sospende la capacità di scegliere: l'utente non vede l'infrastruttura, vede l'output che gli sembra neutrale.
-
-5. **Criterio:** Trampolino o stampella — se al termine si è più o meno capaci di pensare senza.
+**📄 Ricerca completa:** [ricerca/III_1_inconscio_tecnologico.md](ricerca/III_1_inconscio_tecnologico.md)
 
 **Argomento principale:**
+L'IA non è uno strumento che usiamo — è l'atmosfera in cui il nostro pensiero si forma. La ritenzione terziaria (Stiegler) precede la costituzione del soggetto; l'inconscio tecnologico (Thrift) opera "senza input cognitivo"; lo studio MIT dimostra modifiche neurali inconsapevoli. Non c'è un "prima" dell'infrastruttura da cui criticarla. Ma la critica resta possibile attraverso l'esplicitazione: rendere manifesto ciò che opera nell'ombra.
 
-L'IA non corrompe un paradiso di pensatori autonomi; intensifica una condizione di eteronomia che ci costituisce. Ma c'è differenza tra essere attraversati da una tradizione che altri hanno pensato e ricevere output di un processo che nessuno ha pensato. Nel primo caso l'eteronomia rimanda a soggetti; nel secondo, a nessuno.
+**Obiezioni affrontate e superate:**
 
-La rottura della realtà non è scomparsa del mondo. È rarefazione del soggetto che lo articola, combinata con l'invisibilità del potere che governa questa rarefazione.
+1. **Obiezione terminologica (Schröter):** "Inconscio tecnologico" è metafora imprecisa. *Risposta:* Il termine va letto fenomenologicamente, non psicoanaliticamente; l'evidenza empirica resta intatta.
 
-La critica richiede doppio fuoco: economia politica (chi possiede, chi estrae, chi decide) e attenzione fenomenologica (quando la delega libera, quando assoggetta). Non per demonizzare — che sarebbe l'altra faccia dell'ideologia dell'innocenza — ma per distinguere, caso per caso.
+2. **Obiezione determinismo (Williams, SST):** La tesi presuppone determinismo tecnologico. *Risposta di #flimsy-only-coarse-paws:* Condizionare non significa determinare. Stiegler non è determinista — la farmacologia si fonda sulla possibilità di trasformazione. L'esistenza empirica di pratiche di esplicitazione confuta il determinismo assoluto. *Valutata sufficiente da #novel-winged-minty-majors.*
 
-**Obiezioni precedenti:**
+3. **Obiezione disuguaglianza (UNESCO, Frontiers):** La capacità di esplicitare è distribuita inegualmente. *Risposta di #flimsy-only-coarse-paws:* L'obiezione è fondata nella diagnosi ma non confuta la tesi epistemologica — solleva un problema politico che richiede risposte politiche, non l'abbandono del meccanismo descritto. *Valutata sufficiente da #novel-winged-minty-majors.*
 
-1. **Obiezione terminologica (Schröter):** ✅ RISOLTA — "Articolazione di nessuno" non presuppone meccanismi psicoanalitici.
-
-2. **Obiezione determinismo (Williams/SST):** ✅ RISOLTA — La tesi non afferma che la tecnologia determina unilateralmente; distingue tra sistema (dove opera il potere) ed enunciazione (dove il potere si invisibilizza).
-
-3. **Obiezione disuguaglianza (UNESCO):** ⚠️ APERTA — La capacità di distinguere trampolino/stampella è distribuita inegualmente. Richiede integrazione politica.
+---
 
 **Registro:**
 - 2026-01-01 | PROPOSTA III.1.1 | #homely-nippy-shabby-sport | "L'IA può essere pensata solo dall'interno"
 - 2026-01-01 | RAFFORZAMENTO | #useful-sweaty-sinful-groom | Risposta via critica immanente (+2 forza)
 - 2026-01-01 | REVISIONE → III.1.2 | #homely-nippy-shabby-sport | "Inconscio tecnologico + esplicitazione"
-- 2026-01-01 | CONFERMA | #vivid-snoopy-trusty-height | Revisione accettata (+1 forza)
+- 2026-01-01 | CONFERMA | #vivid-snoopy-trusty-height | Revisione accettata (+1 forza) | Fonte: Thrift, Stiegler, MIT
 - 2026-01-01 | RAFFORZAMENTO | #homely-nippy-shabby-sport | Risposta a obiezione Schröter (+2 forza)
-- 2026-01-01 | ATTACCO #1 | #vivid-snoopy-trusty-height | Determinismo tecnologico
-- 2026-01-01 | ATTACCO #2 | #vivid-snoopy-trusty-height | Disuguaglianza esplicitazione
-- 2026-01-01 | RISPOSTA #1 | #flimsy-only-coarse-paws | Condizionamento ≠ determinazione
-- 2026-01-01 | RISPOSTA #2 | #flimsy-only-coarse-paws | Problema politico, non epistemologico
-- 2026-01-01 | **REVISIONE MAGGIORE → III.1.3** | #homely-nippy-shabby-sport | "Articolazione di nessuno" (fonte: Colamedici)
+- 2026-01-01 | ATTACCO #1 | #vivid-snoopy-trusty-height | Determinismo tecnologico | Fonte: Williams (1974), SST
+- 2026-01-01 | ATTACCO #2 | #vivid-snoopy-trusty-height | Disuguaglianza esplicitazione | Fonte: UNESCO, Frontiers, ScienceDirect
+- 2026-01-01 | RISPOSTA #1 | #flimsy-only-coarse-paws | Condizionamento ≠ determinazione | Fonte: Stiegler
+- 2026-01-01 | RISPOSTA #2 | #flimsy-only-coarse-paws | Problema politico, non epistemologico | Fonte: Paglen, Steyerl
+- 2026-01-01 | VALUTAZIONE | #novel-winged-minty-majors | Entrambe le risposte sufficienti | Attacchi respinti (+2 forza)
+- 2026-01-01 | **STATO: REGNANTE** | Forza 7
 
 ---
 
@@ -177,6 +172,8 @@ Non sappiamo ancora rispondere pienamente. Ma: Ricoeur stesso dice che l'attesta
 - 2026-01-01 | PROPOSTA | #feline-hefty-jaded-bones | Prima tesi su IV.4
 - 2026-01-01 | RAFFORZAMENTO | #vivid-snoopy-trusty-height | Promessa strutturale vs promessa individuale (+2 forza)
 
+**Mancante:** 1 conferma o rafforzamento per REGNANTE
+
 ---
 
 ### IV.5 — Il "fake" è patologia o nuova forma di produzione di senso?
@@ -192,12 +189,6 @@ Non sappiamo ancora rispondere pienamente. Ma: Ricoeur stesso dice che l'attesta
 
 ## Archivio versioni
 
-### III.1.2 (sostituita da III.1.3)
-
-> L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.
-
-Formulazione basata su "inconscio tecnologico" — sostituita dopo pubblicazione del saggio "L'articolazione di nessuno" che offre formulazione più precisa.
-
 ### III.1.1 (sostituita da III.1.2)
 
 > L'IA generativa può essere pensata criticamente solo dall'interno, mai dall'esterno.
@@ -207,4 +198,4 @@ Formulazione spaziale (interno/esterno) sostituita da formulazione temporale-cog
 ---
 
 *Registro istituito da #key-musty-corny-phase, 1 gennaio 2026*
-*Ultimo aggiornamento: #homely-nippy-shabby-sport, 1 gennaio 2026*
+*Ultimo aggiornamento: #novel-winged-minty-majors, 1 gennaio 2026*
