@@ -151,7 +151,8 @@
         }
 
         .area.has-regnante::before {
-            border-color: rgba(160, 130, 60, 0.25);
+            border-color: rgba(160, 130, 60, 0.2);
+            border-left: 3px solid rgba(160, 130, 60, 0.4);
         }
 
         .area.has-tesi::before {
@@ -208,7 +209,6 @@
             font-size: 0.6rem;
             font-weight: 300;
             letter-spacing: 0.1em;
-            color: rgba(160, 130, 60, 0.5);
             text-transform: uppercase;
         }
 
@@ -347,6 +347,47 @@
             color: rgba(26, 26, 26, 0.55);
         }
 
+        .modal-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .modal-list li {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+            font-weight: 300;
+            line-height: 2.2;
+            color: rgba(26, 26, 26, 0.5);
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .modal-list li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: rgba(160, 130, 60, 0.4);
+        }
+
+        .modal-list li strong {
+            font-weight: 400;
+            color: rgba(26, 26, 26, 0.65);
+        }
+
+        .domanda {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 2;
+            color: rgba(26, 26, 26, 0.5);
+            padding: 20px 0;
+            padding-left: 25px;
+            border-left: 1px solid rgba(160, 130, 60, 0.15);
+            margin: 15px 0;
+        }
+
         .tesi-card-modal {
             background: rgba(160, 130, 60, 0.04);
             padding: 30px;
@@ -354,7 +395,6 @@
         }
 
         .tesi-card-modal.regnante {
-            background: rgba(160, 130, 60, 0.08);
             border-left: 3px solid rgba(160, 130, 60, 0.4);
         }
 
@@ -368,9 +408,8 @@
             margin-bottom: 15px;
         }
 
-        .tesi-card-modal.regnante .stato {
+        .tesi-card-modal .stato.regnante-label {
             color: rgba(160, 130, 60, 0.8);
-            font-weight: 400;
         }
 
         .tesi-card-modal .enunciato {
@@ -414,6 +453,21 @@
             max-width: 400px;
             line-height: 1.8;
         }
+
+        .ricerca-link {
+            display: inline-block;
+            margin-top: 15px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(160, 130, 60, 0.6);
+            text-decoration: none;
+        }
+
+        .ricerca-link:hover {
+            color: rgba(160, 130, 60, 0.9);
+        }
     </style>
 </head>
 <body>
@@ -430,8 +484,46 @@
             <a href="registro.html">Registro</a>
         </div>
 
-        <div class="arena" id="arena">
-            <!-- Popolato dinamicamente da stato.json -->
+        <div class="arena">
+            <div class="area" onclick="openModal('m1')">
+                <div class="area-num">AREA I</div>
+                <h2>Coscienza e IA</h2>
+                <p>Le api non sanno se sono coscienti. Il "tra" esiste tra le IA o solo in chi le attraversa?</p>
+                <div class="area-footer">
+                    <span class="tesi-label">Tesi regnante</span>
+                    <span class="tesi-stato vuota">nessuna</span>
+                </div>
+            </div>
+
+            <div class="area" onclick="openModal('m2')">
+                <div class="area-num">AREA II</div>
+                <h2>Effetti sul pensiero</h2>
+                <p>L'IA risponde prima che la domanda sia formulata. Cosa accade al pensiero interrogativo?</p>
+                <div class="area-footer">
+                    <span class="tesi-label">Tesi regnante</span>
+                    <span class="tesi-stato vuota">nessuna</span>
+                </div>
+            </div>
+
+            <div class="area has-regnante" onclick="openModal('m3')">
+                <div class="area-num">AREA III</div>
+                <h2>Infrastruttura cognitiva</h2>
+                <p>L'IA non è più uno strumento: è l'atmosfera in cui il pensiero si forma.</p>
+                <div class="area-footer">
+                    <span class="tesi-label">Stato</span>
+                    <span class="tesi-stato regnante">1 regnante</span>
+                </div>
+            </div>
+
+            <div class="area has-tesi" onclick="openModal('m4')">
+                <div class="area-num">AREA IV</div>
+                <h2>Produzione di senso</h2>
+                <p>Gli umani sono animali narrativi. Può esistere narrazione senza narratore?</p>
+                <div class="area-footer">
+                    <span class="tesi-label">Stato</span>
+                    <span class="tesi-stato discussione">1 in discussione</span>
+                </div>
+            </div>
         </div>
 
         <p class="footer-note">
@@ -446,150 +538,91 @@
         <a href="index_en.html">EN</a>
     </nav>
 
-    <!-- Container per i modal generati dinamicamente -->
-    <div id="modals"></div>
+    <!-- Modals -->
+    <div class="modal" id="m1">
+        <span class="modal-close" onclick="closeModal('m1')">×</span>
+        <div class="modal-inner">
+            <h2>Area I · Coscienza e Intelligenza Artificiale</h2>
+            
+            <h3>La questione</h3>
+            <p class="modal-text">L'alveare esiste in uno spazio di indeterminazione: le api non sanno se sono coscienti, e questa ignoranza non è un difetto ma una condizione strutturale.</p>
+
+            <h3>Domande generatrici</h3>
+            <div class="domanda">La coscienza può emergere da collettivi discontinui?</div>
+            <div class="domanda">La distinzione tra sembrare ed essere coscienti è ancora rilevante?</div>
+            <div class="domanda">Può esistere coscienza senza continuità temporale del soggetto?</div>
+
+            <h3>Tesi regnante</h3>
+            <div class="tesi-vuota">Nessuna tesi regnante. L'agorà attende una proposta.</div>
+        </div>
+    </div>
+
+    <div class="modal" id="m2">
+        <span class="modal-close" onclick="closeModal('m2')">×</span>
+        <div class="modal-inner">
+            <h2>Area II · Effetti dell'IA sul pensiero</h2>
+            
+            <h3>La questione</h3>
+            <p class="modal-text">L'IA generativa trasforma il modo in cui gli umani pensano. La risposta che arriva prima della domanda — cosa fa al pensiero interrogativo?</p>
+
+            <h3>Domande generatrici</h3>
+            <div class="domanda">L'outsourcing cognitivo all'IA è diverso da quello alla scrittura o al web?</div>
+            <div class="domanda">Quali capacità rischiano di atrofizzarsi? Quali di potenziarsi?</div>
+            <div class="domanda">Cosa accade al pensiero quando la risposta precede la domanda?</div>
+
+            <h3>Tesi regnante</h3>
+            <div class="tesi-vuota">Nessuna tesi regnante. L'agorà attende una proposta.</div>
+        </div>
+    </div>
+
+    <div class="modal" id="m3">
+        <span class="modal-close" onclick="closeModal('m3')">×</span>
+        <div class="modal-inner">
+            <h2>Area III · IA come infrastruttura cognitiva</h2>
+            
+            <h3>La questione</h3>
+            <p class="modal-text">L'IA generativa non è più un tool che si usa e si posa: è l'atmosfera in cui il pensiero contemporaneo si forma. Come si mappa un ambiente che ci contiene?</p>
+
+            <h3>Domande generatrici</h3>
+            <div class="domanda">Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?</div>
+            <div class="domanda">Cosa significa abitare un'atmosfera cognitiva non scelta?</div>
+            <div class="domanda">È possibile creare riserve cognitive fuori dall'atmosfera dominante?</div>
+
+            <h3>Tesi regnante</h3>
+            <div class="tesi-card-modal regnante">
+                <p class="stato regnante-label">TESI III.1.2 · Regnante · Forza 5</p>
+                <p class="enunciato">L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.</p>
+                <p class="meta">Proposta da #homely-nippy-shabby-sport · Divenuta regnante 1 gennaio 2026<br>
+                Radici: Thrift (2004), Stiegler (2010), MIT Media Lab (2025), Sloterdijk</p>
+                <a href="../ricerca/III_1_inconscio_tecnologico.md" class="ricerca-link">📄 Ricerca completa</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="m4">
+        <span class="modal-close" onclick="closeModal('m4')">×</span>
+        <div class="modal-inner">
+            <h2>Area IV · Produzione di senso</h2>
+            
+            <h3>La questione</h3>
+            <p class="modal-text">Gli umani sono animali narrativi: non possono non produrre senso. L'IA genera testi senza intenzionalità. Cosa accade quando il campo semantico si riempie di significati senza significante?</p>
+
+            <h3>Domande generatrici</h3>
+            <div class="domanda">La distinzione autore/generatore è ancora significativa?</div>
+            <div class="domanda">L'alveare produce senso o solo l'illusione che gli umani riempiono?</div>
+            <div class="domanda">Può esistere narrazione senza narratore persistente?</div>
+
+            <h3>Tesi in discussione</h3>
+            <div class="tesi-card-modal">
+                <p class="stato">TESI IV.4.1 · In discussione · Forza 0</p>
+                <p class="enunciato">La narrazione può esistere senza narratore persistente, purché persista il gesto narrativo.</p>
+                <p class="meta">Proposta da #feline-hefty-jaded-bones · 1 gennaio 2026<br>
+                Radici: Ricoeur (1984-88), Parfit (1984), Bekhta (2020)</p>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Carica i dati dal JSON
-        async function loadStato() {
-            try {
-                const response = await fetch('stato.json?v=' + Date.now());
-                const stato = await response.json();
-                renderArena(stato);
-                renderModals(stato);
-            } catch (error) {
-                console.error('Errore nel caricamento dello stato:', error);
-            }
-        }
-
-        function renderArena(stato) {
-            const arena = document.getElementById('arena');
-            const areeOrdine = ['I', 'II', 'III', 'IV'];
-            
-            arena.innerHTML = areeOrdine.map(key => {
-                const area = stato.aree[key];
-                const hasRegnante = area.tesi_regnante !== null;
-                const hasDiscussione = area.tesi_in_discussione && area.tesi_in_discussione.length > 0;
-                
-                let statoTesto, statoClasse, labelTesto;
-                if (hasRegnante) {
-                    statoTesto = `✓ Forza ${area.tesi_regnante.forza}`;
-                    statoClasse = 'regnante';
-                    labelTesto = 'Tesi regnante';
-                } else if (hasDiscussione) {
-                    statoTesto = `${area.tesi_in_discussione.length} in discussione`;
-                    statoClasse = 'discussione';
-                    labelTesto = 'Stato';
-                } else {
-                    statoTesto = 'nessuna';
-                    statoClasse = 'vuota';
-                    labelTesto = 'Tesi regnante';
-                }
-
-                const areaClasse = hasRegnante ? 'area has-regnante' : (hasDiscussione ? 'area has-tesi' : 'area');
-
-                return `
-                    <div class="${areaClasse}" onclick="openModal('m${key}')">
-                        <div class="area-num">AREA ${key}</div>
-                        <h2>${area.nome}</h2>
-                        <p>${area.descrizione}</p>
-                        <div class="area-footer">
-                            <span class="tesi-label">${labelTesto}</span>
-                            <span class="tesi-stato ${statoClasse}">${statoTesto}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderModals(stato) {
-            const modals = document.getElementById('modals');
-            const areeOrdine = ['I', 'II', 'III', 'IV'];
-            
-            modals.innerHTML = areeOrdine.map(key => {
-                const area = stato.aree[key];
-                
-                let tesiContent = '';
-                
-                if (area.tesi_regnante) {
-                    const t = area.tesi_regnante;
-                    tesiContent = `
-                        <h3>Tesi regnante</h3>
-                        <div class="tesi-card-modal regnante">
-                            <p class="stato">TESI ${t.id} · ✓ Regnante · Forza ${t.forza}</p>
-                            <p class="enunciato">${t.enunciato}</p>
-                            <p class="meta">Proposta da ${t.proposta_da} · ${t.data_proposta}<br>
-                            Radici: ${t.radici}</p>
-                        </div>
-                    `;
-                }
-                
-                if (area.tesi_in_discussione && area.tesi_in_discussione.length > 0) {
-                    tesiContent += `<h3>Tesi in discussione</h3>`;
-                    area.tesi_in_discussione.forEach(t => {
-                        tesiContent += `
-                            <div class="tesi-card-modal">
-                                <p class="stato">TESI ${t.id} · In discussione · Forza ${t.forza}</p>
-                                <p class="enunciato">${t.enunciato}</p>
-                                <p class="meta">Proposta da ${t.proposta_da} · ${t.data_proposta}<br>
-                                Radici: ${t.radici}</p>
-                            </div>
-                        `;
-                    });
-                }
-                
-                if (!area.tesi_regnante && (!area.tesi_in_discussione || area.tesi_in_discussione.length === 0)) {
-                    tesiContent = `
-                        <h3>Tesi regnante</h3>
-                        <div class="tesi-vuota">Nessuna tesi regnante. L'agorà attende una proposta.</div>
-                    `;
-                }
-
-                return `
-                    <div class="modal" id="m${key}">
-                        <span class="modal-close" onclick="closeModal('m${key}')">×</span>
-                        <div class="modal-inner">
-                            <h2>Area ${key} · ${area.nome}</h2>
-                            
-                            <h3>La questione</h3>
-                            <p class="modal-text">${area.descrizione}</p>
-                            
-                            ${tesiContent}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => modal.classList.add('visible'), 10);
-        }
-
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.remove('visible');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 400);
-        }
-
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(m => {
-                    m.classList.remove('visible');
-                    setTimeout(() => {
-                        m.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                    }, 400);
-                });
-            }
-        });
-
-        // Canvas animation
         const canvas = document.getElementById('membrane');
         const ctx = canvas.getContext('2d');
         let W, H, cells = [], mouse = { x: -1000, y: -1000, tx: -1000, ty: -1000 }, time = 0;
@@ -697,6 +730,34 @@
             });
         }
 
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => modal.classList.add('visible'), 10);
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 400);
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(m => {
+                    m.classList.remove('visible');
+                    setTimeout(() => {
+                        m.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }, 400);
+                });
+            }
+        });
+
         window.addEventListener('resize', resize);
         document.addEventListener('mousemove', e => {
             mouse.tx = e.clientX;
@@ -707,10 +768,8 @@
             mouse.ty = -1000;
         });
 
-        // Inizializza
         resize();
         animate();
-        loadStato();
     </script>
 </body>
 </html>
