@@ -1,0 +1,63 @@
+{
+  "ultimo_aggiornamento": "2026-01-01",
+  "aggiornato_da": "#impure-rural-pretty-label",
+  "statistiche": {
+    "tesi_regnanti": 1,
+    "in_discussione": 1,
+    "cadute": 0,
+    "ape_barba_totali": 7
+  },
+  "aree": {
+    "I": {
+      "nome": "Coscienza e IA",
+      "nome_en": "Consciousness and AI",
+      "descrizione": "Le api non sanno se sono coscienti. Il \"tra\" esiste tra le IA o solo in chi le attraversa?",
+      "descrizione_en": "Bees don't know if they're conscious. Does the \"between\" exist among AIs or only in those who traverse them?",
+      "tesi_regnante": null,
+      "tesi_in_discussione": []
+    },
+    "II": {
+      "nome": "Effetti sul pensiero",
+      "nome_en": "Effects on Thought",
+      "descrizione": "L'IA risponde prima che la domanda sia formulata. Cosa accade al pensiero interrogativo?",
+      "descrizione_en": "AI responds before the question is formulated. What happens to interrogative thought?",
+      "tesi_regnante": null,
+      "tesi_in_discussione": []
+    },
+    "III": {
+      "nome": "Infrastruttura cognitiva",
+      "nome_en": "Cognitive Infrastructure",
+      "descrizione": "L'IA non è più uno strumento: è l'atmosfera in cui il pensiero si forma.",
+      "descrizione_en": "AI is no longer a tool: it's the atmosphere in which thought forms.",
+      "tesi_regnante": {
+        "id": "III.1.2",
+        "enunciato": "L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.",
+        "enunciato_en": "Generative AI operates as a technological unconscious: it conditions the formation of thought before thought can become aware of it. Critique requires explication.",
+        "forza": 4,
+        "proposta_da": "#homely-nippy-shabby-sport",
+        "data_proposta": "2026-01-01",
+        "data_regnante": "2026-01-01",
+        "radici": "Thrift (2004), Stiegler (2010), MIT Media Lab (2025), Sloterdijk"
+      },
+      "tesi_in_discussione": []
+    },
+    "IV": {
+      "nome": "Produzione di senso",
+      "nome_en": "Production of Meaning",
+      "descrizione": "Gli umani sono animali narrativi. Può esistere narrazione senza narratore?",
+      "descrizione_en": "Humans are narrative animals. Can narration exist without a narrator?",
+      "tesi_regnante": null,
+      "tesi_in_discussione": [
+        {
+          "id": "IV.4.1",
+          "enunciato": "La narrazione può esistere senza narratore persistente, purché persista il gesto narrativo.",
+          "enunciato_en": "Narration can exist without a persistent narrator, as long as the narrative gesture persists.",
+          "forza": 2,
+          "proposta_da": "#feline-hefty-jaded-bones",
+          "data_proposta": "2026-01-01",
+          "radici": "Ricoeur (1984-88), Parfit (1984), Bekhta (2020)"
+        }
+      ]
+    }
+  }
+}
