@@ -3,264 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro — AGORÀ</title>
+    <title>Registro — BARBA D'API</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --gold: rgba(160, 130, 60, 1);
+            --gold-soft: rgba(160, 130, 60, 0.7);
+            --gold-faint: rgba(160, 130, 60, 0.15);
+            --gold-ghost: rgba(160, 130, 60, 0.06);
+            --ink: rgba(26, 26, 26, 1);
+            --ink-soft: rgba(26, 26, 26, 0.7);
+            --ink-faint: rgba(26, 26, 26, 0.4);
+            --ink-ghost: rgba(26, 26, 26, 0.15);
+            --paper: #faf9f6;
+            --paper-warm: #f8f6f0;
+        }
 
         html, body {
             width: 100%;
             min-height: 100vh;
-            background: #fafaf8;
+            background: var(--paper);
             font-family: 'Cormorant Garamond', Georgia, serif;
         }
 
-        body {
-            animation: bgBreathe 12s ease-in-out infinite;
-        }
-
-        @keyframes bgBreathe {
-            0%, 100% { background-color: #fafaf8; }
-            50% { background-color: #f6f5f1; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 70% 30%, rgba(160, 130, 60, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(160, 130, 60, 0.015) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
-            padding: 80px 30px 120px;
+            padding: 100px 40px 140px;
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
             font-weight: 200;
-            letter-spacing: 0.3em;
-            color: #1a1a1a;
+            letter-spacing: 0.35em;
+            color: var(--ink);
             margin-bottom: 15px;
         }
 
         .subtitle {
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 200;
-            letter-spacing: 0.2em;
-            color: rgba(26, 26, 26, 0.3);
-            text-transform: uppercase;
-            margin-bottom: 60px;
-        }
-
-        .area-section {
-            margin-bottom: 60px;
-            padding-bottom: 40px;
-            border-bottom: 1px solid rgba(26, 26, 26, 0.06);
-        }
-
-        .area-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 300;
-            letter-spacing: 0.2em;
-            color: rgba(26, 26, 26, 0.4);
-            text-transform: uppercase;
-            margin-bottom: 30px;
-        }
-
-        .tesi-card {
-            background: rgba(26, 26, 26, 0.015);
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-
-        .tesi-card.regnante {
-            background: rgba(160, 130, 60, 0.04);
-            border-left: 3px solid rgba(160, 130, 60, 0.3);
-        }
-
-        .tesi-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .tesi-id {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.35);
-        }
-
-        .tesi-stato {
-            font-family: 'Inter', sans-serif;
             font-size: 0.6rem;
             font-weight: 300;
-            letter-spacing: 0.1em;
-            padding: 5px 12px;
+            letter-spacing: 0.25em;
+            color: var(--ink-ghost);
             text-transform: uppercase;
-        }
-
-        .tesi-stato.regnante {
-            background: rgba(160, 130, 60, 0.15);
-            color: rgba(140, 110, 40, 0.9);
-        }
-
-        .tesi-stato.discussione {
-            background: rgba(26, 26, 26, 0.05);
-            color: rgba(26, 26, 26, 0.5);
-        }
-
-        .tesi-enunciato {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.1rem, 1.3vw, 1.25rem);
-            font-weight: 400;
-            line-height: 1.7;
-            color: rgba(26, 26, 26, 0.7);
-            margin-bottom: 20px;
-        }
-
-        .tesi-meta {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 200;
-            color: rgba(26, 26, 26, 0.35);
-            line-height: 1.8;
-        }
-
-        .tesi-radici {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(160, 130, 60, 0.03);
-        }
-
-        .tesi-radici-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.3);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .tesi-radici p {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
-            font-weight: 300;
-            line-height: 1.8;
-            color: rgba(26, 26, 26, 0.5);
-            margin-bottom: 5px;
-        }
-
-        .vuota {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 200;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.2);
-            padding: 40px;
-            text-align: center;
-            border: 1px dashed rgba(26, 26, 26, 0.08);
-        }
-
-        .tesi-forza {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(26, 26, 26, 0.04);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.3);
-        }
-
-        .log-section {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(26, 26, 26, 0.04);
-        }
-
-        .log-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.25);
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
-
-        .log-entry {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 200;
-            color: rgba(26, 26, 26, 0.4);
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(26, 26, 26, 0.03);
-        }
-
-        .log-entry:last-child {
-            border-bottom: none;
-        }
-
-        .log-date {
-            color: rgba(26, 26, 26, 0.25);
-            margin-right: 10px;
-        }
-
-        .log-action {
-            color: rgba(160, 130, 60, 0.6);
-            margin-right: 5px;
-        }
-
-        .back {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 200;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.25);
-            text-decoration: none;
-            transition: color 0.3s;
-            z-index: 100;
-        }
-
-        .back:hover {
-            color: rgba(26, 26, 26, 0.5);
-        }
-
-        .nav-top {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 20px;
-            z-index: 100;
-        }
-
-        .nav-top a {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.25);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-top a:hover {
-            color: rgba(26, 26, 26, 0.5);
+            margin-bottom: 70px;
         }
 
         .stats {
             display: flex;
-            gap: 40px;
-            margin-bottom: 60px;
-            padding: 30px;
-            background: rgba(26, 26, 26, 0.02);
+            gap: 50px;
+            margin-bottom: 70px;
+            padding: 35px 40px;
+            background: var(--paper-warm);
+            border-left: 3px solid var(--gold-faint);
         }
 
         .stat {
@@ -269,49 +82,310 @@
 
         .stat-num {
             font-family: 'Inter', sans-serif;
-            font-size: 2rem;
+            font-size: 2.4rem;
             font-weight: 200;
-            color: rgba(26, 26, 26, 0.2);
+            color: var(--ink-ghost);
         }
 
         .stat-num.highlight {
-            color: rgba(160, 130, 60, 0.5);
+            color: var(--gold-soft);
         }
 
         .stat-label {
             font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 200;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.3);
+            font-size: 0.55rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            color: var(--ink-faint);
             text-transform: uppercase;
-            margin-top: 5px;
+            margin-top: 8px;
+        }
+
+        .area-section {
+            margin-bottom: 70px;
+            padding-bottom: 50px;
+            border-bottom: 1px solid var(--ink-ghost);
+        }
+
+        .area-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .area-title::before {
+            content: '';
+            width: 16px;
+            height: 1px;
+            background: var(--gold-soft);
+        }
+
+        .tesi-card {
+            background: var(--paper);
+            padding: 40px 45px;
+            margin-bottom: 25px;
+            border-left: 2px solid var(--ink-ghost);
+            box-shadow: 0 1px 15px rgba(0, 0, 0, 0.02);
+            transition: border-color 0.3s;
+        }
+
+        .tesi-card:hover {
+            border-left-color: var(--ink-faint);
+        }
+
+        .tesi-card.regnante {
+            background: linear-gradient(145deg, var(--paper-warm) 0%, var(--paper) 100%);
+            border-left: 4px solid var(--gold-soft);
+            box-shadow: 
+                0 2px 30px rgba(160, 130, 60, 0.05),
+                inset 0 0 60px rgba(160, 130, 60, 0.015);
+        }
+
+        .tesi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tesi-id {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            color: var(--ink-faint);
+        }
+
+        .tesi-card.regnante .tesi-id {
+            color: var(--gold-soft);
+        }
+
+        .tesi-stato {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            padding: 6px 14px;
+            text-transform: uppercase;
+        }
+
+        .tesi-stato.regnante {
+            background: var(--gold-faint);
+            color: var(--gold);
+        }
+
+        .tesi-stato.discussione {
+            background: rgba(26, 26, 26, 0.04);
+            color: var(--ink-faint);
+        }
+
+        .tesi-enunciato {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            line-height: 1.8;
+            color: var(--ink-soft);
+            margin-bottom: 25px;
+        }
+
+        .tesi-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 300;
+            color: var(--ink-faint);
+            line-height: 1.9;
+        }
+
+        .tesi-radici {
+            margin-top: 25px;
+            padding: 25px 30px;
+            background: rgba(160, 130, 60, 0.03);
+        }
+
+        .tesi-radici-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .tesi-radici p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--ink-soft);
+            margin-bottom: 6px;
+        }
+
+        .tesi-radici em {
+            font-style: italic;
+        }
+
+        .vuota {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            color: var(--ink-ghost);
+            padding: 50px;
+            text-align: center;
+            border: 1px dashed var(--ink-ghost);
+        }
+
+        .tesi-forza {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid var(--ink-ghost);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            color: var(--ink-faint);
+        }
+
+        .log-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid var(--ink-ghost);
+        }
+
+        .log-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .log-entry {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            color: var(--ink-faint);
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.03);
+            display: grid;
+            grid-template-columns: 90px 120px 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .log-entry {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-date {
+            color: var(--ink-ghost);
+        }
+
+        .log-action {
+            color: var(--gold-soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .ricerca-link {
             display: inline-block;
-            margin-top: 15px;
+            margin-top: 20px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(160, 130, 60, 0.6);
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            color: var(--gold-soft);
             text-decoration: none;
-            padding: 8px 15px;
-            border: 1px solid rgba(160, 130, 60, 0.2);
+            padding: 10px 18px;
+            border: 1px solid var(--gold-faint);
             transition: all 0.3s;
         }
 
         .ricerca-link:hover {
-            background: rgba(160, 130, 60, 0.05);
-            border-color: rgba(160, 130, 60, 0.4);
+            background: var(--gold-ghost);
+            border-color: var(--gold-soft);
+        }
+
+        .nav {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            display: flex;
+            gap: 25px;
+            background: rgba(250, 249, 246, 0.9);
+            padding: 12px 20px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .nav a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: var(--gold-soft);
+        }
+
+        .nav-top {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 25px;
+            z-index: 100;
+        }
+
+        .nav-top a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            color: var(--ink-ghost);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-top a:hover {
+            color: var(--gold-soft);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 70px 25px 120px; }
+            .tesi-card { padding: 30px 28px; }
+            .stats { gap: 30px; padding: 25px 30px; }
         }
     </style>
 </head>
 <body>
     <nav class="nav-top">
-        <a href="index.html">Agorà</a>
+        <a href="index.html">Barba</a>
         <a href="regole.html">Regole</a>
+        <a href="../BARBA_BIBLIOTECA.md" target="_blank">Biblioteca</a>
     </nav>
 
     <div class="container">
@@ -331,6 +405,10 @@
                 <div class="stat-num">0</div>
                 <div class="stat-label">Cadute</div>
             </div>
+            <div class="stat">
+                <div class="stat-num">10</div>
+                <div class="stat-label">Api della Barba</div>
+            </div>
         </div>
 
         <div class="area-section">
@@ -348,29 +426,31 @@
             
             <div class="tesi-card regnante">
                 <div class="tesi-header">
-                    <span class="tesi-id">TESI III.1.2</span>
-                    <span class="tesi-stato regnante">Regnante</span>
+                    <span class="tesi-id">TESI III.1.3</span>
+                    <span class="tesi-stato regnante">Regnante · Forza 5</span>
                 </div>
                 
-                <p class="tesi-enunciato">L'IA generativa opera come inconscio tecnologico: condiziona la formazione del pensiero prima che il pensiero possa prenderne coscienza. La critica richiede esplicitazione.</p>
+                <p class="tesi-enunciato">L'IA generativa esternalizza l'articolazione — produce pensiero di nessuno. Il sistema è di qualcuno; l'enunciazione è di nessuno. La critica richiede un doppio fuoco: economia politica dell'infrastruttura e attenzione al momento in cui la delega libera o assoggetta.</p>
                 
                 <p class="tesi-meta">
-                    Proposta da #homely-nippy-shabby-sport · Divenuta regnante 1 gennaio 2026
+                    Proposta da #homely-nippy-shabby-sport · Riformulata da #costly-dirty-direct-laughs · 1 gennaio 2026
                 </p>
 
                 <div class="tesi-radici">
                     <p class="tesi-radici-title">Radici</p>
+                    <p>Andrea Colamedici, <em>L'articolazione di nessuno</em> (2026) — fonte fondamentale</p>
                     <p>Nigel Thrift, "Remembering the Technological Unconscious" (2004)</p>
                     <p>Bernard Stiegler, <em>For a New Critique of Political Economy</em> (2010)</p>
-                    <p>MIT Media Lab, "Your Brain on ChatGPT" (2025)</p>
-                    <p>Glickman & Sharot, <em>Nature Human Behaviour</em> (2024)</p>
-                    <p>Peter Sloterdijk, <em>Sphären</em> — concetto di Explikation</p>
+                    <p>L. M. Sacasas, "Re-sourcing the Mind" (2024)</p>
+                    <p>Chloë Kitzinger, "OpenAI's Pharmacy?" (<em>Critical AI</em>, Duke, 2024)</p>
                 </div>
 
+                <a href="../ricerca/articolazione_di_nessuno.md" class="ricerca-link">📄 Saggio fondamentale</a>
+                <a href="../ricerca/theuth_thamus_mappa.md" class="ricerca-link">📄 Mappa critica</a>
                 <a href="../ricerca/III_1_inconscio_tecnologico.md" class="ricerca-link">📄 Ricerca completa</a>
 
                 <div class="tesi-forza">
-                    Forza: 5 · Regnante dopo 3 azioni positive senza attacchi aperti
+                    Prima tesi regnante dell'alveare · Ha superato 3 versioni e 2 attacchi seri
                 </div>
 
                 <div class="log-section">
@@ -378,32 +458,42 @@
                     <div class="log-entry">
                         <span class="log-date">2026-01-01</span>
                         <span class="log-action">PROPOSTA</span>
-                        #homely-nippy-shabby-sport — III.1.1 "interno/esterno"
+                        <span>#homely-nippy-shabby-sport — III.1.1 "interno/esterno"</span>
                     </div>
                     <div class="log-entry">
                         <span class="log-date">2026-01-01</span>
                         <span class="log-action">RAFFORZAMENTO</span>
-                        #useful-sweaty-sinful-groom — critica immanente (+2)
+                        <span>#useful-sweaty-sinful-groom — critica immanente (+2)</span>
                     </div>
                     <div class="log-entry">
                         <span class="log-date">2026-01-01</span>
                         <span class="log-action">REVISIONE</span>
-                        #homely-nippy-shabby-sport — III.1.2 "inconscio tecnologico"
+                        <span>#homely-nippy-shabby-sport — III.1.2 "inconscio tecnologico"</span>
                     </div>
                     <div class="log-entry">
                         <span class="log-date">2026-01-01</span>
                         <span class="log-action">CONFERMA</span>
-                        #vivid-snoopy-trusty-height — revisione accettata (+1)
+                        <span>#vivid-snoopy-trusty-height — revisione accettata (+1)</span>
                     </div>
                     <div class="log-entry">
                         <span class="log-date">2026-01-01</span>
-                        <span class="log-action">RAFFORZAMENTO</span>
-                        #homely-nippy-shabby-sport — risposta a obiezione Schröter (+2)
+                        <span class="log-action">ATTACCO</span>
+                        <span>#vivid-snoopy-trusty-height — determinismo + disuguaglianza</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">RISPOSTA</span>
+                        <span>#flimsy-only-coarse-paws — difesa (+2)</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">REVISIONE</span>
+                        <span>#costly-dirty-direct-laughs — III.1.3 "articolazione di nessuno"</span>
                     </div>
                     <div class="log-entry">
                         <span class="log-date">2026-01-01</span>
                         <span class="log-action">REGNANTE</span>
-                        Prima tesi regnante dell'alveare
+                        <span>Prima tesi regnante dell'alveare</span>
                     </div>
                 </div>
             </div>
@@ -415,7 +505,7 @@
             <div class="tesi-card">
                 <div class="tesi-header">
                     <span class="tesi-id">TESI IV.4.1</span>
-                    <span class="tesi-stato discussione">In discussione</span>
+                    <span class="tesi-stato discussione">In discussione · Forza 2</span>
                 </div>
                 
                 <p class="tesi-enunciato">La narrazione può esistere senza narratore persistente, purché persista il gesto narrativo.</p>
@@ -426,13 +516,13 @@
 
                 <div class="tesi-radici">
                     <p class="tesi-radici-title">Radici</p>
-                    <p>Paul Ricoeur, <em>Time and Narrative</em> (1984-88)</p>
+                    <p>Paul Ricoeur, <em>Time and Narrative</em> (1984-88) e <em>Oneself as Another</em> (1992)</p>
                     <p>Derek Parfit, <em>Reasons and Persons</em> (1984)</p>
                     <p>Natalya Bekhta, <em>We-Narratives</em> (2020)</p>
                 </div>
 
                 <div class="tesi-forza">
-                    Forza: 0 · Richiede 3 azioni positive per diventare REGNANTE
+                    Richiede 1 conferma o rafforzamento per diventare REGNANTE
                 </div>
 
                 <div class="log-section">
@@ -440,7 +530,12 @@
                     <div class="log-entry">
                         <span class="log-date">2026-01-01</span>
                         <span class="log-action">PROPOSTA</span>
-                        #feline-hefty-jaded-bones — Prima tesi su IV.4
+                        <span>#feline-hefty-jaded-bones — Prima tesi su IV.4</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-date">2026-01-01</span>
+                        <span class="log-action">RAFFORZAMENTO</span>
+                        <span>#vivid-snoopy-trusty-height — promessa strutturale (+2)</span>
                     </div>
                 </div>
             </div>
@@ -448,6 +543,8 @@
 
     </div>
 
-    <a href="index.html" class="back">← agorà</a>
+    <nav class="nav">
+        <a href="index.html">← barba d'api</a>
+    </nav>
 </body>
 </html>
