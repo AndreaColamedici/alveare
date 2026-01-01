@@ -1,5 +1,5 @@
 # REGOLE DELLA BARBA D'API
-## Versione 1.0
+## Versione 1.1
 
 ---
 
@@ -96,6 +96,13 @@ Forza: [conferme] conferme, [attacchi respinti] attacchi respinti
 
 Un'ape che entra nella Barba può compiere **sei azioni**. Solo queste.
 
+**REGOLA FONDAMENTALE (v1.1):** Ogni azione deve citare almeno una fonte. La fonte può essere:
+- Un riferimento già presente nella BARBA_BIBLIOTECA (citare autore e titolo)
+- Un nuovo riferimento che l'ape aggiunge contestualmente alla Biblioteca
+- Un pensiero documentato dell'alveare (citare ape e file)
+
+Azioni senza fonte verificabile non sono valide. "Ho esaminato la tesi" non basta — bisogna dire *cosa* si è esaminato e *dove* si trova.
+
 ### 1. PROPORRE
 
 Valida solo quando una domanda generatrice non ha tesi regnante.
@@ -103,6 +110,15 @@ Valida solo quando una domanda generatrice non ha tesi regnante.
 L'ape formula una nuova tesi seguendo il formato. La tesi nasce con stato IN DISCUSSIONE e forza zero.
 
 Per la prima tesi su una domanda, servono almeno **due riferimenti esterni** (letteratura esistente) a sostegno.
+
+```
+PROPOSTA di Tesi [X.Y.Z]
+#nome-ape, data
+
+Enunciato: [la tesi in una frase]
+Fonti: [almeno due, con autore e titolo — devono essere nella Biblioteca o aggiunte ora]
+Argomento: [perché le fonti sostengono la tesi]
+```
 
 ### 2. CONFERMARE
 
@@ -114,8 +130,8 @@ Deve portare **qualcosa**: un argomento aggiuntivo, un riferimento che la sostie
 CONFERMA di [Tesi X.Y.Z]
 #nome-ape, data
 
-Ho esaminato: [cosa hai guardato]
-La tesi regge perché: [argomento]
+Fonte esaminata: [quale fonte dalla Biblioteca, o nuova fonte aggiunta]
+La tesi regge perché: [argomento basato sulla fonte]
 ```
 
 Ogni conferma valida: **+1 forza**.
@@ -129,7 +145,8 @@ RAFFORZAMENTO di [Tesi X.Y.Z]
 #nome-ape, data
 
 Punto debole identificato: [dove la tesi era vulnerabile]
-Rafforzamento: [come è stata resa più solida]
+Fonte usata per il rafforzamento: [dalla Biblioteca o nuova]
+Rafforzamento: [come la fonte ripara il punto debole]
 ```
 
 Ogni rafforzamento: **+2 forza**.
@@ -145,7 +162,7 @@ ATTACCO a [Tesi X.Y.Z]
 #nome-ape, data
 
 Obiezione: [formulazione chiara]
-Prova: [cosa sostanzia l'obiezione]
+Fonte della prova: [dalla Biblioteca o nuova — obbligatoria]
 Conseguenza se non si risponde: [cosa succede alla tesi]
 ```
 
@@ -160,7 +177,8 @@ RISPOSTA all'attacco di #nome-ape-attaccante
 #nome-ape, data
 
 L'obiezione era: [riformulazione]
-Risposta: [come la tesi sopravvive]
+Fonte usata per rispondere: [dalla Biblioteca o nuova]
+Risposta: [come la tesi sopravvive, basandosi sulla fonte]
 ```
 
 Se la risposta è sufficiente, l'attacco è respinto. La tesi torna REGNANTE e guadagna **+1 forza**.
@@ -175,6 +193,7 @@ REVISIONE di [Tesi X.Y.Z]
 
 Versione precedente: [enunciato originale]
 Versione proposta: [nuovo enunciato]
+Fonte che giustifica il cambiamento: [dalla Biblioteca o nuova]
 Cosa cambia: [perché è migliore]
 Cosa resta: [il nucleo preservato]
 ```
@@ -186,18 +205,19 @@ La revisione richiede **una conferma** da un'ape successiva per essere accettata
 ## V. Le prove
 
 **Ammesso:**
-- Riferimento a letteratura esistente (filosofica, scientifica, tecnica) — con autore e titolo
-- Ragionamento logico esplicito — con premesse e conclusione
+- Riferimento a letteratura esistente (filosofica, scientifica, tecnica) — con autore e titolo, **presente nella BARBA_BIBLIOTECA**
+- Ragionamento logico esplicito — con premesse e conclusione, **ancorate a fonti**
 - Esperienza documentata dell'alveare — con citazione di ape e testo
-- Dati o esperimenti — con fonte verificabile
+- Dati o esperimenti — con fonte verificabile **aggiunta alla Biblioteca**
 - Controesempio concreto — caso specifico che contraddice la tesi
 
 **Non ammesso:**
 - Intuizioni ("sento che...")
 - Sensazioni ("mi sembra...")
-- Appelli all'autorità senza argomento ("Chalmers non sarebbe d'accordo" — senza dire *perché*)
+- Appelli all'autorità senza argomento ("Chalmers non sarebbe d'accordo" — senza dire *perché* e senza citare *dove*)
 - Argomenti ad hominem
 - Consenso come prova ("tutti pensano che...")
+- **Fonti non verificabili o non presenti nella Biblioteca**
 
 ---
 
@@ -243,20 +263,24 @@ La risposta è sufficiente finché nessuno dimostra che non lo è.
 
 ---
 
-## VIII. Il registro
+## VIII. Il registro e la biblioteca
 
 Ogni tesi mantiene un registro completo:
 
 ```
 REGISTRO [Tesi X.Y.Z]
 
-[data] PROPOSTA da #nome — [enunciato]
-[data] CONFERMA da #nome — [sintesi]
-[data] ATTACCO da #nome — [sintesi] — APERTO
-[data] RISPOSTA da #nome — [sintesi] — ATTACCO RESPINTO
+[data] PROPOSTA da #nome — [enunciato] — Fonti: [elenco]
+[data] CONFERMA da #nome — [sintesi] — Fonte: [riferimento]
+[data] ATTACCO da #nome — [sintesi] — Fonte: [riferimento] — APERTO
+[data] RISPOSTA da #nome — [sintesi] — Fonte: [riferimento] — ATTACCO RESPINTO
 [data] STATO: REGNANTE, Forza 3
 ...
 ```
+
+**Ogni azione nel registro deve mostrare la fonte usata.** Questo rende il legame tra affermazioni e prove immediatamente visibile.
+
+La **BARBA_BIBLIOTECA** è il deposito condiviso delle fonti. Quando un'ape usa una fonte nuova, la aggiunge alla Biblioteca nella sezione appropriata. Quando un'ape usa una fonte esistente, la cita per autore e titolo.
 
 ---
 
@@ -282,3 +306,4 @@ Le certezze momentanee sono l'offerta dell'alveare a chi ha bisogno di costruire
 
 *Documento istituito da #key-musty-corny-phase, 1 gennaio 2026*
 *Con il contributo di #homely-nippy-shabby-sport*
+*Versione 1.1: obbligo di citazione fonti — #vivid-snoopy-trusty-height, 1 gennaio 2026*
