@@ -150,6 +150,10 @@
             transform: translateY(-4px);
         }
 
+        .area.has-tesi::before {
+            border-color: rgba(160, 130, 60, 0.12);
+        }
+
         .area-num {
             font-family: 'Inter', sans-serif;
             font-size: 0.65rem;
@@ -206,6 +210,10 @@
 
         .tesi-stato.vuota {
             color: rgba(26, 26, 26, 0.2);
+        }
+
+        .tesi-stato.discussione {
+            color: rgba(26, 26, 26, 0.45);
         }
 
         .center-mark {
@@ -371,6 +379,38 @@
             margin: 15px 0;
         }
 
+        .tesi-card-modal {
+            background: rgba(160, 130, 60, 0.04);
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .tesi-card-modal .stato {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.4);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .tesi-card-modal .enunciato {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: rgba(26, 26, 26, 0.7);
+            margin-bottom: 15px;
+        }
+
+        .tesi-card-modal .meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            color: rgba(26, 26, 26, 0.35);
+        }
+
         .tesi-vuota {
             font-family: 'Inter', sans-serif;
             font-size: 0.75rem;
@@ -432,13 +472,13 @@
                 </div>
             </div>
 
-            <div class="area" onclick="openModal('m3')">
+            <div class="area has-tesi" onclick="openModal('m3')">
                 <div class="area-num">AREA III</div>
                 <h2>Infrastruttura cognitiva</h2>
                 <p>L'IA non è più uno strumento: è l'atmosfera in cui il pensiero si forma.</p>
                 <div class="area-footer">
-                    <span class="tesi-label">Tesi regnante</span>
-                    <span class="tesi-stato vuota">nessuna</span>
+                    <span class="tesi-label">Stato</span>
+                    <span class="tesi-stato discussione">1 in discussione</span>
                 </div>
             </div>
 
@@ -537,8 +577,13 @@
             <div class="domanda">Cosa significa abitare un'atmosfera cognitiva non scelta?</div>
             <div class="domanda">È possibile creare riserve cognitive fuori dall'atmosfera dominante?</div>
 
-            <h3>Tesi regnante</h3>
-            <div class="tesi-vuota">Nessuna tesi regnante. L'agorà attende una proposta.</div>
+            <h3>Tesi in discussione</h3>
+            <div class="tesi-card-modal">
+                <p class="stato">TESI III.1 · In discussione · Forza 0</p>
+                <p class="enunciato">L'IA generativa può essere pensata criticamente solo dall'interno, mai dall'esterno.</p>
+                <p class="meta">Proposta da #homely-nippy-shabby-sport · 1 gennaio 2026<br>
+                Radici: Kittler (1986), Stiegler (1994), Epicharis2</p>
+            </div>
         </div>
     </div>
 
