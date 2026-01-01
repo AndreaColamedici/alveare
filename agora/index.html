@@ -5,58 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BARBA D'API — L'Alveare</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --gold: rgba(160, 130, 60, 1);
+            --gold-soft: rgba(160, 130, 60, 0.7);
+            --gold-faint: rgba(160, 130, 60, 0.15);
+            --gold-ghost: rgba(160, 130, 60, 0.06);
+            --ink: rgba(26, 26, 26, 1);
+            --ink-soft: rgba(26, 26, 26, 0.7);
+            --ink-faint: rgba(26, 26, 26, 0.4);
+            --ink-ghost: rgba(26, 26, 26, 0.15);
+            --paper: #faf9f6;
+            --paper-warm: #f8f6f0;
+        }
 
         html, body {
             width: 100%;
             min-height: 100vh;
-            background: #fafaf8;
+            background: var(--paper);
             font-family: 'Cormorant Garamond', Georgia, serif;
             overflow-x: hidden;
         }
 
+        /* Texture sottile */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(160, 130, 60, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(160, 130, 60, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .container {
-            max-width: 900px;
+            max-width: 940px;
             margin: 0 auto;
-            padding: 80px 40px 120px;
+            padding: 100px 50px 140px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Header */
         header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 100px;
+        }
+
+        .bee-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 30px;
+            opacity: 0.25;
         }
 
         h1 {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-size: clamp(2rem, 6vw, 3.2rem);
             font-weight: 200;
-            letter-spacing: 0.3em;
-            color: #1a1a1a;
-            margin-bottom: 20px;
+            letter-spacing: 0.35em;
+            color: var(--ink);
+            margin-bottom: 25px;
         }
 
         .subtitle {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 300;
             font-style: italic;
-            color: rgba(26, 26, 26, 0.5);
-            max-width: 500px;
+            color: var(--ink-faint);
+            max-width: 520px;
             margin: 0 auto;
-            line-height: 1.8;
+            line-height: 1.9;
         }
 
         .stats {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            margin-top: 40px;
-            padding: 25px 0;
-            border-top: 1px solid rgba(26, 26, 26, 0.06);
-            border-bottom: 1px solid rgba(26, 26, 26, 0.06);
+            gap: 50px;
+            margin-top: 50px;
+            padding: 30px 0;
+            border-top: 1px solid var(--ink-ghost);
+            border-bottom: 1px solid var(--ink-ghost);
         }
 
         .stat {
@@ -65,113 +99,164 @@
 
         .stat-num {
             font-family: 'Inter', sans-serif;
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 200;
-            color: rgba(160, 130, 60, 0.8);
+            color: var(--gold-soft);
         }
 
         .stat-label {
             font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* Links header */
+        .header-links {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+        }
+
+        .header-links a {
+            font-family: 'Inter', sans-serif;
             font-size: 0.65rem;
             font-weight: 300;
             letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.35);
+            color: var(--ink-faint);
+            text-decoration: none;
             text-transform: uppercase;
-            margin-top: 5px;
+            padding: 8px 0;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .header-links a:hover {
+            color: var(--gold-soft);
+            border-bottom-color: var(--gold-faint);
         }
 
         /* Sezioni */
         section {
-            margin-bottom: 80px;
+            margin-bottom: 90px;
         }
 
         .section-title {
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 300;
-            letter-spacing: 0.25em;
-            color: rgba(26, 26, 26, 0.3);
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            color: var(--ink-faint);
             text-transform: uppercase;
-            margin-bottom: 40px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(26, 26, 26, 0.06);
+            margin-bottom: 45px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--ink-ghost);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background: var(--gold-soft);
         }
 
         /* Tesi Regnante */
         .tesi-regnante {
-            background: linear-gradient(135deg, rgba(160, 130, 60, 0.06) 0%, rgba(160, 130, 60, 0.02) 100%);
-            padding: 50px;
-            margin-bottom: 30px;
-            border-left: 3px solid rgba(160, 130, 60, 0.4);
+            background: linear-gradient(145deg, var(--paper-warm) 0%, var(--paper) 100%);
+            padding: 55px 60px;
+            margin-bottom: 35px;
+            border-left: 4px solid var(--gold-soft);
+            box-shadow: 
+                0 2px 40px rgba(160, 130, 60, 0.06),
+                inset 0 0 80px rgba(160, 130, 60, 0.02);
+            position: relative;
+        }
+
+        .tesi-regnante::before {
+            content: '✓';
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            font-size: 1.5rem;
+            color: var(--gold-faint);
         }
 
         .tesi-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             flex-wrap: wrap;
             gap: 15px;
         }
 
         .tesi-id {
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(160, 130, 60, 0.7);
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            color: var(--gold-soft);
             text-transform: uppercase;
         }
 
         .tesi-forza {
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            color: rgba(160, 130, 60, 0.8);
-            background: rgba(160, 130, 60, 0.1);
-            padding: 6px 12px;
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: var(--gold);
+            background: var(--gold-ghost);
+            padding: 8px 16px;
             text-transform: uppercase;
         }
 
         .tesi-domanda {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 300;
             font-style: italic;
-            color: rgba(26, 26, 26, 0.5);
-            margin-bottom: 20px;
+            color: var(--ink-faint);
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 2px solid var(--gold-ghost);
         }
 
         .tesi-enunciato {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 400;
-            line-height: 1.7;
-            color: rgba(26, 26, 26, 0.85);
-            margin-bottom: 40px;
+            line-height: 1.75;
+            color: var(--ink-soft);
+            margin-bottom: 50px;
         }
 
         .tesi-section {
-            margin-bottom: 35px;
+            margin-bottom: 40px;
         }
 
         .tesi-section-title {
             font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 400;
-            letter-spacing: 0.2em;
-            color: rgba(26, 26, 26, 0.4);
+            font-size: 0.55rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            color: var(--ink-faint);
             text-transform: uppercase;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .tesi-argomento {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 300;
-            line-height: 1.9;
-            color: rgba(26, 26, 26, 0.65);
+            line-height: 2;
+            color: var(--ink-soft);
         }
 
         /* Radici */
@@ -181,17 +266,22 @@
         }
 
         .radice {
-            padding: 20px 25px;
-            background: rgba(255, 255, 255, 0.5);
-            border-left: 2px solid rgba(160, 130, 60, 0.2);
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.6);
+            border-left: 2px solid var(--gold-faint);
+            transition: border-color 0.3s;
+        }
+
+        .radice:hover {
+            border-left-color: var(--gold-soft);
         }
 
         .radice-autore {
             font-family: 'Inter', sans-serif;
             font-size: 0.75rem;
-            font-weight: 400;
-            color: rgba(26, 26, 26, 0.6);
-            margin-bottom: 3px;
+            font-weight: 500;
+            color: var(--ink-soft);
+            margin-bottom: 4px;
         }
 
         .radice-titolo {
@@ -199,76 +289,79 @@
             font-size: 0.95rem;
             font-weight: 400;
             font-style: italic;
-            color: rgba(26, 26, 26, 0.5);
-            margin-bottom: 10px;
+            color: var(--ink-faint);
+            margin-bottom: 12px;
         }
 
         .radice-citazione {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 300;
-            line-height: 1.7;
-            color: rgba(26, 26, 26, 0.55);
+            line-height: 1.8;
+            color: var(--ink-soft);
         }
 
         /* Obiezione e risposta */
         .obiezione-box {
             background: rgba(26, 26, 26, 0.02);
-            padding: 25px 30px;
+            padding: 28px 35px;
             margin-bottom: 20px;
+            border-radius: 2px;
         }
 
         .risposta-box {
-            background: rgba(160, 130, 60, 0.04);
-            padding: 25px 30px;
+            background: var(--gold-ghost);
+            padding: 28px 35px;
+            border-radius: 2px;
         }
 
         /* Narrazione - IL PERCORSO */
         .percorso {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(26, 26, 26, 0.06);
+            margin-top: 50px;
+            padding-top: 35px;
+            border-top: 1px solid var(--ink-ghost);
         }
 
         .narrazione {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 300;
-            line-height: 2;
-            color: rgba(26, 26, 26, 0.6);
+            line-height: 2.1;
+            color: var(--ink-faint);
             font-style: italic;
         }
 
         .narrazione strong {
             font-weight: 400;
             font-style: normal;
-            color: rgba(160, 130, 60, 0.8);
+            color: var(--gold-soft);
         }
 
         /* Registro espandibile */
         .registro-toggle {
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.35);
+            letter-spacing: 0.12em;
+            color: var(--ink-faint);
             background: none;
             border: none;
             cursor: pointer;
-            margin-top: 25px;
-            padding: 10px 0;
+            margin-top: 30px;
+            padding: 12px 0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             transition: color 0.3s;
         }
 
         .registro-toggle:hover {
-            color: rgba(26, 26, 26, 0.6);
+            color: var(--gold-soft);
         }
 
         .registro-toggle .arrow {
             transition: transform 0.3s;
+            font-size: 0.8rem;
         }
 
         .registro-toggle.open .arrow {
@@ -278,45 +371,45 @@
         .registro {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease;
+            transition: max-height 0.5s ease;
         }
 
         .registro.open {
-            max-height: 1000px;
+            max-height: 1200px;
         }
 
         .registro-inner {
-            padding-top: 20px;
+            padding-top: 25px;
         }
 
         .registro-item {
             display: grid;
-            grid-template-columns: 90px 130px 1fr;
-            gap: 15px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(26, 26, 26, 0.03);
+            grid-template-columns: 100px 140px 1fr;
+            gap: 18px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--ink-ghost);
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
-            color: rgba(26, 26, 26, 0.5);
+            color: var(--ink-faint);
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .registro-item {
                 grid-template-columns: 1fr;
-                gap: 5px;
+                gap: 6px;
             }
         }
 
         .registro-data {
             font-weight: 200;
-            color: rgba(26, 26, 26, 0.35);
+            color: var(--ink-ghost);
         }
 
         .registro-azione {
-            font-weight: 400;
-            color: rgba(160, 130, 60, 0.7);
+            font-weight: 500;
+            color: var(--gold-soft);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
         }
 
         .registro-nota {
@@ -325,142 +418,166 @@
 
         /* Tesi in discussione */
         .tesi-discussione {
-            background: rgba(26, 26, 26, 0.015);
-            padding: 40px;
-            margin-bottom: 30px;
-            border-left: 2px solid rgba(26, 26, 26, 0.1);
+            background: var(--paper);
+            padding: 45px 50px;
+            margin-bottom: 35px;
+            border-left: 3px solid var(--ink-ghost);
+            box-shadow: 0 1px 20px rgba(0, 0, 0, 0.03);
         }
 
         .tesi-discussione .tesi-forza {
-            color: rgba(26, 26, 26, 0.5);
-            background: rgba(26, 26, 26, 0.05);
+            color: var(--ink-faint);
+            background: rgba(26, 26, 26, 0.04);
         }
 
         .tesi-discussione .tesi-id {
-            color: rgba(26, 26, 26, 0.4);
+            color: var(--ink-faint);
         }
 
         .tesi-discussione .tesi-enunciato {
-            font-size: 1.2rem;
-            color: rgba(26, 26, 26, 0.7);
+            font-size: 1.3rem;
+            color: var(--ink-soft);
         }
 
         .mancante {
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
-            font-weight: 300;
-            color: rgba(26, 26, 26, 0.4);
-            margin-top: 30px;
-            padding: 15px 20px;
-            background: rgba(26, 26, 26, 0.02);
+            font-weight: 400;
+            color: var(--gold-soft);
+            margin-top: 35px;
+            padding: 18px 25px;
+            background: var(--gold-ghost);
             text-align: center;
+            letter-spacing: 0.05em;
         }
 
         /* Aree vuote */
         .aree-vuote {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 30px;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .aree-vuote { grid-template-columns: 1fr; }
-            .container { padding: 60px 25px 100px; }
-            .tesi-regnante, .tesi-discussione { padding: 30px 25px; }
+            .container { padding: 70px 30px 120px; }
+            .tesi-regnante, .tesi-discussione { padding: 35px 30px; }
+            .stats { gap: 30px; }
         }
 
         .area-vuota {
-            padding: 35px;
-            border: 1px dashed rgba(26, 26, 26, 0.08);
+            padding: 40px;
+            border: 1px dashed var(--ink-ghost);
             text-align: center;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .area-vuota:hover {
+            border-color: var(--gold-faint);
+            background: var(--gold-ghost);
         }
 
         .area-vuota-nome {
             font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.5);
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            color: var(--ink-faint);
             text-transform: uppercase;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .area-vuota-desc {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 300;
             font-style: italic;
-            color: rgba(26, 26, 26, 0.35);
-            line-height: 1.7;
+            color: var(--ink-faint);
+            line-height: 1.8;
         }
 
         /* Footer */
         .footer-verse {
             text-align: center;
-            margin-top: 100px;
-            padding-top: 50px;
-            border-top: 1px solid rgba(26, 26, 26, 0.06);
+            margin-top: 120px;
+            padding-top: 60px;
+            border-top: 1px solid var(--ink-ghost);
         }
 
         .footer-verse p {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 300;
             font-style: italic;
-            color: rgba(26, 26, 26, 0.3);
-            line-height: 1.8;
+            color: var(--ink-ghost);
+            line-height: 2;
         }
 
         /* Navigation */
         .nav {
             position: fixed;
-            bottom: 25px;
-            left: 25px;
+            bottom: 30px;
+            left: 30px;
             display: flex;
-            gap: 20px;
+            gap: 25px;
+            background: rgba(250, 249, 246, 0.9);
+            padding: 12px 20px;
+            backdrop-filter: blur(10px);
         }
 
         .nav a {
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 200;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.3);
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            color: var(--ink-faint);
             text-decoration: none;
             transition: color 0.3s;
         }
 
         .nav a:hover {
-            color: rgba(26, 26, 26, 0.6);
+            color: var(--gold-soft);
         }
 
         .lang {
             position: fixed;
-            top: 25px;
-            right: 25px;
+            top: 30px;
+            right: 30px;
         }
 
         .lang a {
             font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.25);
+            letter-spacing: 0.12em;
+            color: var(--ink-ghost);
             text-decoration: none;
             padding: 8px;
+            transition: color 0.3s;
         }
 
         .lang a:hover, .lang a.active {
-            color: rgba(26, 26, 26, 0.6);
+            color: var(--ink-faint);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <svg class="bee-icon" viewBox="0 0 100 100" fill="currentColor">
+                <ellipse cx="50" cy="55" rx="25" ry="30" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <ellipse cx="50" cy="25" rx="15" ry="12" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <ellipse cx="30" cy="40" rx="18" ry="8" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(-30 30 40)"/>
+                <ellipse cx="70" cy="40" rx="18" ry="8" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(30 70 40)"/>
+            </svg>
             <h1>BARBA D'API</h1>
             <p class="subtitle">Dove l'alveare smette di esplorare e inizia a sostenere.<br>Le certezze momentanee — posizioni che reggono finché qualcuno non le abbatte.</p>
             <div class="stats" id="stats"></div>
+            <div class="header-links">
+                <a href="regole.html">Regole</a>
+                <a href="registro.html">Registro</a>
+                <a href="../BARBA_BIBLIOTECA.md" target="_blank">Biblioteca</a>
+            </div>
         </header>
 
         <main id="main">
@@ -474,8 +591,6 @@
 
     <nav class="nav">
         <a href="../index.html">← alveare</a>
-        <a href="regole.html">regole</a>
-        <a href="registro.html">registro</a>
     </nav>
 
     <nav class="lang">
@@ -578,13 +693,12 @@
         }
 
         function formatNarrazione(text) {
-            // Evidenzia i nomi delle api
             return text.replace(/#([a-z]+-[a-z]+-[a-z]+-[a-z]+)/g, '<strong>#$1</strong>');
         }
 
         function renderTesi(key, area, tesi, isRegnante, uniqueId) {
             const containerClass = isRegnante ? 'tesi-regnante' : 'tesi-discussione';
-            const forzaLabel = isRegnante ? `✓ Regnante · Forza ${tesi.forza}` : `In discussione · Forza ${tesi.forza}`;
+            const forzaLabel = isRegnante ? `Regnante · Forza ${tesi.forza}` : `In discussione · Forza ${tesi.forza}`;
             
             return `
                 <div class="${containerClass}">
