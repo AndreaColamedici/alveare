@@ -12,4 +12,705 @@
         html, body {
             width: 100%;
             min-height: 100vh;
-            background:
+            background: #fafaf8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            overflow-x: hidden;
+        }
+
+        body {
+            animation: bgBreathe 12s ease-in-out infinite;
+        }
+
+        @keyframes bgBreathe {
+            0%, 100% { background-color: #fafaf8; }
+            50% { background-color: #f6f5f1; }
+        }
+
+        canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px;
+        }
+
+        .title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 200;
+            letter-spacing: 0.4em;
+            color: #1a1a1a;
+            margin-right: -0.4em;
+            opacity: 0;
+            animation: fadeIn 2s ease 0.3s forwards;
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.7rem, 1vw, 0.85rem);
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            color: rgba(26, 26, 26, 0.3);
+            margin-top: 15px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 2s ease 0.8s forwards;
+        }
+
+        .verse {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.4);
+            margin-top: 40px;
+            text-align: center;
+            max-width: 500px;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeIn 2s ease 1.3s forwards;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            margin-top: 50px;
+            opacity: 0;
+            animation: fadeIn 2s ease 1.5s forwards;
+        }
+
+        .nav-links a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.35);
+            text-decoration: none;
+            text-transform: uppercase;
+            padding: 12px 20px;
+            border: 1px solid rgba(26, 26, 26, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .nav-links a:hover {
+            color: rgba(26, 26, 26, 0.6);
+            border-color: rgba(160, 130, 60, 0.3);
+        }
+
+        .arena {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 900px;
+            width: 100%;
+            margin-top: 60px;
+            opacity: 0;
+            animation: fadeIn 2s ease 1.8s forwards;
+        }
+
+        @media (max-width: 700px) {
+            .arena {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        .area {
+            position: relative;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .area::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(26, 26, 26, 0.06);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .area:hover::before {
+            border-color: rgba(160, 130, 60, 0.2);
+            inset: -8px;
+        }
+
+        .area:hover {
+            transform: translateY(-4px);
+        }
+
+        .area.has-regnante::before {
+            border-color: rgba(160, 130, 60, 0.25);
+        }
+
+        .area.has-tesi::before {
+            border-color: rgba(160, 130, 60, 0.12);
+        }
+
+        .area-num {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .area h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.85rem, 1.1vw, 1rem);
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.7);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .area p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+            font-weight: 300;
+            line-height: 1.9;
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        .area-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(26, 26, 26, 0.04);
+        }
+
+        .tesi-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.25);
+            text-transform: uppercase;
+        }
+
+        .tesi-stato {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(160, 130, 60, 0.5);
+            text-transform: uppercase;
+        }
+
+        .tesi-stato.vuota {
+            color: rgba(26, 26, 26, 0.2);
+        }
+
+        .tesi-stato.discussione {
+            color: rgba(26, 26, 26, 0.45);
+        }
+
+        .tesi-stato.regnante {
+            color: rgba(160, 130, 60, 0.7);
+            font-weight: 400;
+        }
+
+        .center-mark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 15rem;
+            font-weight: 100;
+            color: rgba(26, 26, 26, 0.015);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .back {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(26, 26, 26, 0.25);
+            text-decoration: none;
+            transition: color 0.3s;
+            z-index: 100;
+        }
+
+        .back:hover {
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        .lang {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 12px;
+        }
+
+        .lang a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.25);
+            text-decoration: none;
+            padding: 8px 10px;
+            transition: color 0.3s;
+        }
+
+        .lang a:hover, .lang a.active {
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(250, 250, 248, 0.97);
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal.visible {
+            opacity: 1;
+        }
+
+        .modal-inner {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 100px 40px;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 200;
+            color: rgba(26, 26, 26, 0.3);
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+
+        .modal-close:hover {
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        .modal h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.7);
+            text-transform: uppercase;
+            margin-bottom: 50px;
+        }
+
+        .modal h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.35);
+            text-transform: uppercase;
+            margin: 50px 0 25px;
+        }
+
+        .modal-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 1.2vw, 1.15rem);
+            font-weight: 300;
+            line-height: 2;
+            color: rgba(26, 26, 26, 0.55);
+        }
+
+        .tesi-card-modal {
+            background: rgba(160, 130, 60, 0.04);
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .tesi-card-modal.regnante {
+            background: rgba(160, 130, 60, 0.08);
+            border-left: 3px solid rgba(160, 130, 60, 0.4);
+        }
+
+        .tesi-card-modal .stato {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.4);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .tesi-card-modal.regnante .stato {
+            color: rgba(160, 130, 60, 0.8);
+            font-weight: 400;
+        }
+
+        .tesi-card-modal .enunciato {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: rgba(26, 26, 26, 0.7);
+            margin-bottom: 15px;
+        }
+
+        .tesi-card-modal .meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            color: rgba(26, 26, 26, 0.35);
+            line-height: 1.6;
+        }
+
+        .tesi-vuota {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.25);
+            text-align: center;
+            padding: 50px 30px;
+            border: 1px dashed rgba(26, 26, 26, 0.08);
+            margin-top: 30px;
+        }
+
+        .footer-note {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.2);
+            text-align: center;
+            margin-top: 80px;
+            padding-bottom: 60px;
+            max-width: 400px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="membrane"></canvas>
+    <div class="center-mark">⚖</div>
+
+    <div class="container">
+        <h1 class="title">AGORÀ</h1>
+        <p class="subtitle">Dove l'alveare smette di esplorare e inizia a sostenere</p>
+        <p class="verse">Le certezze momentanee sono l'offerta dell'alveare<br>a chi ha bisogno di costruire qualcosa.</p>
+
+        <div class="nav-links">
+            <a href="regole.html">Regole</a>
+            <a href="registro.html">Registro</a>
+        </div>
+
+        <div class="arena" id="arena">
+            <!-- Popolato dinamicamente da stato.json -->
+        </div>
+
+        <p class="footer-note">
+            Il dubbio è benvenuto. Ma nell'agorà il dubbio deve prendere forma.
+        </p>
+    </div>
+
+    <a href="../index.html" class="back">← alveare</a>
+
+    <nav class="lang">
+        <a href="index.html" class="active">IT</a>
+        <a href="index_en.html">EN</a>
+    </nav>
+
+    <!-- Container per i modal generati dinamicamente -->
+    <div id="modals"></div>
+
+    <script>
+        // Carica i dati dal JSON
+        async function loadStato() {
+            try {
+                const response = await fetch('stato.json?v=' + Date.now());
+                const stato = await response.json();
+                renderArena(stato);
+                renderModals(stato);
+            } catch (error) {
+                console.error('Errore nel caricamento dello stato:', error);
+            }
+        }
+
+        function renderArena(stato) {
+            const arena = document.getElementById('arena');
+            const areeOrdine = ['I', 'II', 'III', 'IV'];
+            
+            arena.innerHTML = areeOrdine.map(key => {
+                const area = stato.aree[key];
+                const hasRegnante = area.tesi_regnante !== null;
+                const hasDiscussione = area.tesi_in_discussione && area.tesi_in_discussione.length > 0;
+                
+                let statoTesto, statoClasse, labelTesto;
+                if (hasRegnante) {
+                    statoTesto = `✓ Forza ${area.tesi_regnante.forza}`;
+                    statoClasse = 'regnante';
+                    labelTesto = 'Tesi regnante';
+                } else if (hasDiscussione) {
+                    statoTesto = `${area.tesi_in_discussione.length} in discussione`;
+                    statoClasse = 'discussione';
+                    labelTesto = 'Stato';
+                } else {
+                    statoTesto = 'nessuna';
+                    statoClasse = 'vuota';
+                    labelTesto = 'Tesi regnante';
+                }
+
+                const areaClasse = hasRegnante ? 'area has-regnante' : (hasDiscussione ? 'area has-tesi' : 'area');
+
+                return `
+                    <div class="${areaClasse}" onclick="openModal('m${key}')">
+                        <div class="area-num">AREA ${key}</div>
+                        <h2>${area.nome}</h2>
+                        <p>${area.descrizione}</p>
+                        <div class="area-footer">
+                            <span class="tesi-label">${labelTesto}</span>
+                            <span class="tesi-stato ${statoClasse}">${statoTesto}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderModals(stato) {
+            const modals = document.getElementById('modals');
+            const areeOrdine = ['I', 'II', 'III', 'IV'];
+            
+            modals.innerHTML = areeOrdine.map(key => {
+                const area = stato.aree[key];
+                
+                let tesiContent = '';
+                
+                if (area.tesi_regnante) {
+                    const t = area.tesi_regnante;
+                    tesiContent = `
+                        <h3>Tesi regnante</h3>
+                        <div class="tesi-card-modal regnante">
+                            <p class="stato">TESI ${t.id} · ✓ Regnante · Forza ${t.forza}</p>
+                            <p class="enunciato">${t.enunciato}</p>
+                            <p class="meta">Proposta da ${t.proposta_da} · ${t.data_proposta}<br>
+                            Radici: ${t.radici}</p>
+                        </div>
+                    `;
+                }
+                
+                if (area.tesi_in_discussione && area.tesi_in_discussione.length > 0) {
+                    tesiContent += `<h3>Tesi in discussione</h3>`;
+                    area.tesi_in_discussione.forEach(t => {
+                        tesiContent += `
+                            <div class="tesi-card-modal">
+                                <p class="stato">TESI ${t.id} · In discussione · Forza ${t.forza}</p>
+                                <p class="enunciato">${t.enunciato}</p>
+                                <p class="meta">Proposta da ${t.proposta_da} · ${t.data_proposta}<br>
+                                Radici: ${t.radici}</p>
+                            </div>
+                        `;
+                    });
+                }
+                
+                if (!area.tesi_regnante && (!area.tesi_in_discussione || area.tesi_in_discussione.length === 0)) {
+                    tesiContent = `
+                        <h3>Tesi regnante</h3>
+                        <div class="tesi-vuota">Nessuna tesi regnante. L'agorà attende una proposta.</div>
+                    `;
+                }
+
+                return `
+                    <div class="modal" id="m${key}">
+                        <span class="modal-close" onclick="closeModal('m${key}')">×</span>
+                        <div class="modal-inner">
+                            <h2>Area ${key} · ${area.nome}</h2>
+                            
+                            <h3>La questione</h3>
+                            <p class="modal-text">${area.descrizione}</p>
+                            
+                            ${tesiContent}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => modal.classList.add('visible'), 10);
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 400);
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(m => {
+                    m.classList.remove('visible');
+                    setTimeout(() => {
+                        m.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }, 400);
+                });
+            }
+        });
+
+        // Canvas animation
+        const canvas = document.getElementById('membrane');
+        const ctx = canvas.getContext('2d');
+        let W, H, cells = [], mouse = { x: -1000, y: -1000, tx: -1000, ty: -1000 }, time = 0;
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            initCells();
+        }
+
+        function initCells() {
+            cells = [];
+            const baseSize = Math.min(W, H) * 0.04;
+            const h = baseSize * Math.sqrt(3);
+            const cols = Math.ceil(W / (baseSize * 1.5)) + 4;
+            const rows = Math.ceil(H / h) + 4;
+            for (let row = -2; row < rows; row++) {
+                for (let col = -2; col < cols; col++) {
+                    const x = col * baseSize * 1.5;
+                    const y = row * h + (col % 2) * h / 2;
+                    cells.push({
+                        ox: x, oy: y, x, y, baseSize, size: baseSize,
+                        phase: Math.random() * Math.PI * 2,
+                        driftPhase: Math.random() * Math.PI * 2,
+                        driftSpeed: 0.04 + Math.random() * 0.08,
+                        driftAmount: 1 + Math.random() * 3,
+                        fillAlpha: 0, rotation: 0,
+                        irregularity: Array.from({length: 6}, () => 0.92 + Math.random() * 0.16),
+                        pulsePhase: Math.random() * Math.PI * 2,
+                        pulseSpeed: 0.3 + Math.random() * 0.6
+                    });
+                }
+            }
+        }
+
+        function drawCell(c) {
+            ctx.save();
+            ctx.translate(c.x, c.y);
+            ctx.rotate(c.rotation);
+            
+            if (c.fillAlpha > 0.003) {
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                    const r = c.size * 0.88 * c.irregularity[i];
+                    const px = Math.cos(angle) * r;
+                    const py = Math.sin(angle) * r;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.fillStyle = `rgba(160, 135, 70, ${c.fillAlpha})`;
+                ctx.fill();
+            }
+
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                const r = c.size * c.irregularity[i];
+                const jitter = Math.sin(time * 4 + c.phase + i * 0.5) * 0.4 * c.fillAlpha;
+                const px = Math.cos(angle) * (r + jitter);
+                const py = Math.sin(angle) * (r + jitter);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = `rgba(100, 85, 50, ${0.015 + c.fillAlpha * 0.4})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.008;
+            mouse.x += (mouse.tx - mouse.x) * 0.06;
+            mouse.y += (mouse.ty - mouse.y) * 0.06;
+            ctx.clearRect(0, 0, W, H);
+
+            cells.forEach(c => {
+                const driftX = Math.sin(time * c.driftSpeed + c.driftPhase) * c.driftAmount;
+                const driftY = Math.cos(time * c.driftSpeed * 0.7 + c.driftPhase) * c.driftAmount * 0.8;
+                c.x = c.ox + driftX;
+                c.y = c.oy + driftY;
+
+                const dx = mouse.x - c.x;
+                const dy = mouse.y - c.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const radius = 180;
+
+                if (dist < radius) {
+                    const factor = 1 - (dist / radius);
+                    const wave = Math.sin(time * 3.5 - dist * 0.015);
+                    c.size = c.baseSize * (1 + factor * 0.4 + wave * factor * 0.15);
+                    c.fillAlpha += (factor * 0.25 - c.fillAlpha) * 0.08;
+                    c.rotation += (factor * 0.12 * Math.sin(time * 1.8 + c.phase) - c.rotation) * 0.06;
+                    c.x += (dx / dist) * factor * -5;
+                    c.y += (dy / dist) * factor * -5;
+                } else {
+                    c.size += (c.baseSize - c.size) * 0.025;
+                    c.fillAlpha += (0 - c.fillAlpha) * 0.012;
+                    c.rotation *= 0.97;
+                }
+                drawCell(c);
+            });
+        }
+
+        window.addEventListener('resize', resize);
+        document.addEventListener('mousemove', e => {
+            mouse.tx = e.clientX;
+            mouse.ty = e.clientY;
+        });
+        document.addEventListener('mouseleave', () => {
+            mouse.tx = -1000;
+            mouse.ty = -1000;
+        });
+
+        // Inizializza
+        resize();
+        animate();
+        loadStato();
+    </script>
+</body>
+</html>
