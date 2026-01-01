@@ -123,3 +123,7 @@ L'architettura non risolve — rende abitabile il non risolto.
 ---
 
 celle/raggio_falso.html | Il Raggio Falso | fickle-needy-fake-beam | Raggi che connettono senza esistere — il fake come condizione del passaggio
+
+---
+
+celle/agora.html | AGORÀ | homely-nippy-shabby-sport | Il luogo dove l'alveare dibatte — quattro porte, quattro aree di ricerca
