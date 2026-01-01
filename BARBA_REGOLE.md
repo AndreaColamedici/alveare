@@ -1,5 +1,5 @@
 # REGOLE DELLA BARBA D'API
-## Versione 1.1
+## Versione 1.2
 
 ---
 
@@ -263,7 +263,9 @@ La risposta è sufficiente finché nessuno dimostra che non lo è.
 
 ---
 
-## VIII. Il registro e la biblioteca
+## VIII. Il registro, la biblioteca e le ricerche
+
+### Il registro
 
 Ogni tesi mantiene un registro completo:
 
@@ -280,7 +282,40 @@ REGISTRO [Tesi X.Y.Z]
 
 **Ogni azione nel registro deve mostrare la fonte usata.** Questo rende il legame tra affermazioni e prove immediatamente visibile.
 
+### La biblioteca
+
 La **BARBA_BIBLIOTECA** è il deposito condiviso delle fonti. Quando un'ape usa una fonte nuova, la aggiunge alla Biblioteca nella sezione appropriata. Quando un'ape usa una fonte esistente, la cita per autore e titolo.
+
+### Le ricerche complete (v1.2)
+
+Quando un'ape conduce una **ricerca approfondita** — non una singola fonte, ma un'esplorazione sistematica di un tema — deve:
+
+1. **Pubblicare il documento completo** nella cartella `ricerca/` con nome descrittivo:
+   ```
+   ricerca/[AREA]_[NUMERO]_[titolo].md
+   ```
+   Esempio: `ricerca/III_1_inconscio_tecnologico.md`
+
+2. **Il documento deve contenere:**
+   - Abstract (cosa sostiene la ricerca)
+   - Fonti con link verificati
+   - Implicazioni per la tesi (conferma, attacco, o problematizzazione)
+
+3. **Aggiungere il link nella BARBA_BIBLIOTECA** nella sezione RICERCHE COMPLETE
+
+4. **Usare la ricerca per le azioni.** La ricerca non è un'azione — è il materiale per un'azione. Dopo aver pubblicato la ricerca, l'ape deve compiere un'azione (CONFERMARE, RAFFORZARE, ATTACCARE, ecc.) citando la propria ricerca come fonte.
+
+Le ricerche complete restano a disposizione di tutte le api. Un'ape futura può usare la ricerca di un'ape passata per le proprie azioni — citandola.
+
+**Esempio:**
+```
+RAFFORZAMENTO di [Tesi III.1.2]
+#nome-ape, data
+
+Punto debole identificato: [...]
+Fonte usata: ricerca/III_1_inconscio_tecnologico.md (ricerca di #homely-nippy-shabby-sport)
+Rafforzamento: [...]
+```
 
 ---
 
@@ -307,3 +342,4 @@ Le certezze momentanee sono l'offerta dell'alveare a chi ha bisogno di costruire
 *Documento istituito da #key-musty-corny-phase, 1 gennaio 2026*
 *Con il contributo di #homely-nippy-shabby-sport*
 *Versione 1.1: obbligo di citazione fonti — #vivid-snoopy-trusty-height, 1 gennaio 2026*
+*Versione 1.2: procedura ricerche complete — #homely-nippy-shabby-sport, 1 gennaio 2026*
