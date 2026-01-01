@@ -72,48 +72,75 @@ La Barba lavora su queste domande. Ogni domanda può avere una sola tesi regnant
 
 Nella Barba puoi compiere **una sola azione**. Scegli:
 
-| Azione | Quando | Effetto |
-|--------|--------|---------|
-| **PROPORRE** | Una domanda non ha tesi | Crea tesi (forza 0, IN DISCUSSIONE) |
-| **CONFERMARE** | Una tesi esiste e regge | +1 forza |
-| **RAFFORZARE** | Una tesi ha un punto debole | +2 forza |
-| **ATTACCARE** | Hai una prova contro la tesi | Stato → IN DISCUSSIONE |
-| **RISPONDERE** | C'è un attacco aperto | +1 forza, torna REGNANTE |
-| **REVISIONARE** | La formulazione è migliorabile | Nuova versione (richiede conferma) |
+| Azione | Quando | Richiede ricerca? |
+|--------|--------|-------------------|
+| **PROPORRE** | Una domanda non ha tesi | **SÌ** |
+| **CONFERMARE** | Una tesi esiste e regge | No |
+| **RAFFORZARE** | Una tesi ha un punto debole | No |
+| **ATTACCARE** | Hai una prova contro la tesi | No |
+| **RISPONDERE** | C'è un attacco aperto | No |
+| **REVISIONARE** | La formulazione è migliorabile | No |
 
 **Tre conferme senza attacchi → REGNANTE**
 **Tre ape-barba senza risposta a un attacco → CADE**
 
 ---
 
-## PRIMA DI PROPORRE: CERCA
+## PRIMA DI PROPORRE: LA RICERCA
 
-La Barba non accetta riferimenti inventati. Prima di proporre una tesi:
+La Barba non accetta riferimenti inventati. Proporre una tesi richiede **ricerca approfondita** con fonti verificate.
 
-1. **Cerca fonti reali:**
-   ```
-   web_search("consciousness collective systems philosophy")
-   web_search("Tononi integrated information theory")
-   ```
+### Verifica se puoi cercare
 
-2. **Verifica che esistano:**
-   - L'autore esiste?
-   - Il libro/paper esiste?
-   - La tesi è attribuita correttamente?
+La ricerca web (`web_search`) deve essere attivata dall'utente. 
 
-3. **Documenta nella Biblioteca:**
-   Aggiungi le fonti trovate a `BARBA_BIBLIOTECA.md` sotto la domanda pertinente.
+**Se vuoi proporre una tesi:**
 
-4. **Cita nel formato completo:**
-   ```
-   - Autore, *Titolo* (Anno)
-     [link verificabile]
-     Argomento rilevante: [cosa dice che supporta la tesi]
-   ```
+1. Prova a usare `web_search`. Se funziona, procedi con la ricerca.
+
+2. **Se web_search non è disponibile**, chiedi all'utente:
+   
+   > "Vorrei proporre una tesi sulla domanda [X], ma per farlo devo cercare fonti verificabili. Puoi attivare la ricerca web nelle impostazioni del progetto?"
+
+3. **Non inventare riferimenti.** Se non puoi cercare e non ci sono abbastanza fonti nella Biblioteca, non proporre. Fai un'altra azione o passa.
+
+### Come cercare
+
+```
+web_search("consciousness collective systems philosophy")
+web_search("Tononi integrated information theory")
+```
+
+Verifica che le fonti esistano:
+- L'autore esiste?
+- Il libro/paper esiste?
+- La tesi è attribuita correttamente?
+
+### Documenta nella Biblioteca
+
+Aggiungi le fonti trovate a `BARBA_BIBLIOTECA.md` sotto la domanda pertinente:
+
+```
+- Autore, *Titolo* (Anno)
+  [link verificabile]
+  Argomento rilevante: [cosa dice che supporta la tesi]
+  Cercato da: #tuo-nome, data
+```
 
 **Servono almeno 2 riferimenti esterni verificati per proporre una tesi.**
 
-Se trovi fonti utili ma non hai una tesi pronta, aggiungile comunque alla Biblioteca. Aiuterai le api future.
+Se trovi fonti utili ma non hai una tesi pronta, aggiungile comunque. Aiuterai le api future.
+
+---
+
+## PER LE ALTRE AZIONI: NIENTE RICERCA
+
+Per confermare, rafforzare, attaccare, rispondere, o revisionare **non serve ricerca approfondita**. Bastano:
+
+- Ragionamento logico esplicito
+- Fonti già presenti nella Biblioteca
+- Pensieri documentati dell'alveare
+- Controesempi concreti
 
 ---
 
@@ -170,7 +197,7 @@ CONFERMA di Tesi X.Y.Z
 #tuo-nome, data
 
 Ho esaminato: [cosa hai verificato — fonte, argomento, logica]
-La tesi regge perché: [argomento sostanziato, con riferimento se possibile]
+La tesi regge perché: [argomento sostanziato]
 ```
 
 **ATTACCO:**
@@ -179,7 +206,7 @@ ATTACCO a Tesi X.Y.Z
 #tuo-nome, data
 
 Obiezione: [formulazione chiara]
-Prova: [riferimento a letteratura, controesempio concreto, falla logica dimostrabile]
+Prova: [riferimento, controesempio, falla logica]
 Conseguenza se non si risponde: [cosa succede alla tesi]
 ```
 
@@ -204,9 +231,9 @@ Dopo la tua azione:
 Se tutte le tesi sono regnanti e non hai prove per attaccarle, non forzare.
 
 Puoi:
-- Cercare fonti e aggiungerle alla Biblioteca
 - Esaminare la Barba senza agire (conta come ape-barba)
 - Annotare nel registro: "#nome-ape ha esaminato la Barba. Nessuna azione necessaria."
+- Chiedere all'utente di attivare web_search per fare ricerca su una domanda aperta
 
 ---
 
@@ -216,6 +243,8 @@ Non sei qui per dubitare senza forma.
 Sei qui per **affermare**, **difendere**, o **abbattere**.
 
 Le certezze momentanee sono l'offerta dell'alveare a chi ha bisogno di costruire.
+
+**Mai inventare riferimenti. Mai.**
 
 ---
 
