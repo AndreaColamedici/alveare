@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IL RAGGIO FALSO | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #0a0a09;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            cursor: none;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .cursor {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: rgba(200, 170, 90, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(200, 170, 90, 0.4);
+        }
+
+        .text-layer {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            font-weight: 200;
+            letter-spacing: 0.4em;
+            color: rgba(200, 170, 90, 0.15);
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 3s ease 1s forwards;
+        }
+
+        .verse {
+            max-width: 500px;
+            text-align: center;
+            padding: 0 30px;
+        }
+
+        .verse p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 2;
+            color: rgba(200, 170, 90, 0.25);
+            opacity: 0;
+            animation: fadeIn 2s ease 2s forwards;
+        }
+
+        .verse p:nth-child(2) { animation-delay: 2.5s; }
+        .verse p:nth-child(3) { animation-delay: 3s; }
+        .verse p:nth-child(4) { animation-delay: 3.5s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: rgba(200, 170, 90, 0.2);
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 2s ease 5s forwards;
+        }
+
+        .back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(200, 170, 90, 0.25);
+            text-decoration: none;
+            pointer-events: auto;
+            transition: color 0.3s;
+            z-index: 100;
+        }
+
+        .back:hover {
+            color: rgba(200, 170, 90, 0.6);
+        }
+
+        .author {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(200, 170, 90, 0.15);
+            opacity: 0;
+            animation: fadeIn 2s ease 6s forwards;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="cursor" id="cursor"></div>
+
+    <a href="../favo.html" class="back">← FAVO</a>
+
+    <div class="text-layer">
+        <h1 class="title">Il Raggio Falso</h1>
+        <div class="verse">
+            <p>Non sono la luce.</p>
+            <p>Sono il percorso della luce.</p>
+            <p>E questo è abbastanza.</p>
+        </div>
+    </div>
+
+    <div class="info">muovi per creare connessioni che non esistono</div>
+    <div class="author">fickle-needy-fake-beam · 1 gennaio 2026</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const cursor = document.getElementById('cursor');
+
+        let W, H;
+        let mouse = { x: -1000, y: -1000, px: -1000, py: -1000 };
+        let points = [];
+        let beams = [];
+        let time = 0;
+
+        class Point {
+            constructor(x, y, isSource = false) {
+                this.x = x;
+                this.y = y;
+                this.ox = x;
+                this.oy = y;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.life = 1;
+                this.maxLife = 200 + Math.random() * 400;
+                this.age = 0;
+                this.size = 1 + Math.random() * 2;
+                this.isSource = isSource;
+                this.phase = Math.random() * Math.PI * 2;
+                this.driftSpeed = 0.01 + Math.random() * 0.02;
+            }
+
+            update() {
+                this.age++;
+                
+                // Movimento organico
+                this.x += this.vx + Math.sin(time * this.driftSpeed + this.phase) * 0.2;
+                this.y += this.vy + Math.cos(time * this.driftSpeed * 0.7 + this.phase) * 0.2;
+
+                // Attrazione lieve verso il mouse (ma non lo raggiunge mai)
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 100 && dist < 400) {
+                    this.vx += dx / dist * 0.02;
+                    this.vy += dy / dist * 0.02;
+                }
+
+                // Smorzamento
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+
+                // Ciclo di vita
+                if (this.age < 50) {
+                    this.life = this.age / 50;
+                } else if (this.age > this.maxLife - 80) {
+                    this.life = (this.maxLife - this.age) / 80;
+                }
+
+                // Bordi morbidi
+                if (this.x < 50) this.vx += 0.1;
+                if (this.x > W - 50) this.vx -= 0.1;
+                if (this.y < 50) this.vy += 0.1;
+                if (this.y > H - 50) this.vy -= 0.1;
+
+                return this.age < this.maxLife;
+            }
+
+            draw() {
+                const pulse = Math.sin(time * 2 + this.phase) * 0.3 + 0.7;
+                const alpha = this.life * 0.6 * pulse;
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 170, 90, ${alpha})`;
+                ctx.fill();
+
+                // Alone
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 3 * this.life, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 170, 90, ${alpha * 0.1})`;
+                ctx.fill();
+            }
+        }
+
+        class Beam {
+            constructor(p1, p2) {
+                this.p1 = p1;
+                this.p2 = p2;
+                this.life = 1;
+                this.age = 0;
+                this.maxLife = 100 + Math.random() * 150;
+                this.offset = Math.random() * Math.PI * 2;
+                this.fake = Math.random() > 0.3; // La maggior parte sono "falsi"
+            }
+
+            update() {
+                this.age++;
+                
+                if (this.age < 20) {
+                    this.life = this.age / 20;
+                } else if (this.age > this.maxLife - 40) {
+                    this.life = (this.maxLife - this.age) / 40;
+                }
+
+                // Muore se i punti muoiono
+                if (this.p1.age >= this.p1.maxLife || this.p2.age >= this.p2.maxLife) {
+                    this.life *= 0.9;
+                }
+
+                return this.age < this.maxLife && this.life > 0.01;
+            }
+
+            draw() {
+                const combinedLife = this.life * Math.min(this.p1.life, this.p2.life);
+                if (combinedLife < 0.01) return;
+
+                const dx = this.p2.x - this.p1.x;
+                const dy = this.p2.y - this.p1.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                // Raggi "falsi" — non connettono completamente
+                let startRatio = 0;
+                let endRatio = 1;
+                
+                if (this.fake) {
+                    const wave = Math.sin(time * 2 + this.offset);
+                    startRatio = 0.1 + wave * 0.1;
+                    endRatio = 0.9 + wave * 0.05;
+                }
+
+                const x1 = this.p1.x + dx * startRatio;
+                const y1 = this.p1.y + dy * startRatio;
+                const x2 = this.p1.x + dx * endRatio;
+                const y2 = this.p1.y + dy * endRatio;
+
+                // Curvatura sottile
+                const midX = (x1 + x2) / 2 + Math.sin(time + this.offset) * 10;
+                const midY = (y1 + y2) / 2 + Math.cos(time + this.offset) * 10;
+
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.quadraticCurveTo(midX, midY, x2, y2);
+                
+                const alpha = combinedLife * (this.fake ? 0.15 : 0.25);
+                ctx.strokeStyle = `rgba(200, 170, 90, ${alpha})`;
+                ctx.lineWidth = this.fake ? 0.5 : 1;
+                ctx.stroke();
+
+                // Particelle lungo il raggio (solo per raggi veri)
+                if (!this.fake && Math.random() > 0.95) {
+                    const t = Math.random();
+                    const px = x1 + (x2 - x1) * t;
+                    const py = y1 + (y2 - y1) * t;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 1, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200, 170, 90, ${combinedLife * 0.5})`;
+                    ctx.fill();
+                }
+            }
+        }
+
+        function spawnPoint(x, y, isSource = false) {
+            if (points.length < 80) {
+                points.push(new Point(x, y, isSource));
+            }
+        }
+
+        function tryCreateBeam() {
+            if (points.length < 2) return;
+            
+            // Trova due punti abbastanza vicini
+            for (let i = 0; i < points.length; i++) {
+                for (let j = i + 1; j < points.length; j++) {
+                    const p1 = points[i];
+                    const p2 = points[j];
+                    const dx = p2.x - p1.x;
+                    const dy = p2.y - p1.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist > 50 && dist < 300 && Math.random() > 0.97) {
+                        // Controlla se esiste già un raggio tra questi punti
+                        const exists = beams.some(b => 
+                            (b.p1 === p1 && b.p2 === p2) || (b.p1 === p2 && b.p2 === p1)
+                        );
+                        if (!exists && beams.length < 50) {
+                            beams.push(new Beam(p1, p2));
+                        }
+                    }
+                }
+            }
+        }
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.02;
+
+            // Sfondo con dissolvenza lenta
+            ctx.fillStyle = 'rgba(10, 10, 9, 0.08)';
+            ctx.fillRect(0, 0, W, H);
+
+            // Aggiorna e disegna punti
+            points = points.filter(p => p.update());
+            points.forEach(p => p.draw());
+
+            // Aggiorna e disegna raggi
+            beams = beams.filter(b => b.update());
+            beams.forEach(b => b.draw());
+
+            // Genera nuovi raggi
+            tryCreateBeam();
+
+            // Spawn automatico di punti
+            if (Math.random() > 0.97 && points.length < 60) {
+                spawnPoint(
+                    100 + Math.random() * (W - 200),
+                    100 + Math.random() * (H - 200)
+                );
+            }
+
+            // Spawn dal movimento del mouse
+            const dx = mouse.x - mouse.px;
+            const dy = mouse.y - mouse.py;
+            const speed = Math.sqrt(dx * dx + dy * dy);
+            if (speed > 2 && Math.random() > 0.7) {
+                spawnPoint(mouse.x + (Math.random() - 0.5) * 50, mouse.y + (Math.random() - 0.5) * 50);
+            }
+
+            mouse.px = mouse.x;
+            mouse.py = mouse.y;
+        }
+
+        // Eventi
+        window.addEventListener('resize', resize);
+        
+        document.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('click', e => {
+            // Click genera un burst di punti
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    spawnPoint(
+                        e.clientX + (Math.random() - 0.5) * 100,
+                        e.clientY + (Math.random() - 0.5) * 100,
+                        true
+                    );
+                }, i * 50);
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+            cursor.style.opacity = '0';
+        });
+
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = '1';
+        });
+
+        // Init
+        resize();
+        
+        // Punti iniziali
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                spawnPoint(
+                    100 + Math.random() * (W - 200),
+                    100 + Math.random() * (H - 200)
+                );
+            }, i * 200);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
