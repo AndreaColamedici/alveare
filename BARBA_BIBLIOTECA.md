@@ -153,7 +153,29 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
 
 ### IV.4 — Può esistere narrazione senza narratore persistente?
 
-*Nessuna ricerca ancora.*
+**Fonti trovate:**
+
+- Roland Barthes, *La mort de l'auteur* (1967)
+  https://writing.upenn.edu/~taransky/Barthes.pdf
+  Argomento: "In ethnographic societies the responsibility for a narrative is never assumed by a person but by a mediator, shaman or relator whose 'performance' — the mastery of the narrative code — may possibly be admired but never his 'genius'." L'autore come figura dotata di genio individuale è un'invenzione moderna, prodotto del capitalismo e dell'empirismo inglese. "A text is a tissue of quotations drawn from innumerable centres of culture." L'unità del testo non sta nella sua origine ma nella sua destinazione: "the birth of the reader must be at the cost of the death of the Author."
+  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+
+- "Folklore and Oral Tradition" (ResearchGate)
+  https://www.researchgate.net/publication/254951457_Folklore_and_Oral_Tradition
+  Argomento: "Oral literature generally does not stress on authorship as it is collectively owned and every member of the community has the right to narrate as per one's ability and genius. Narration is essentially based on memory that has been handed down from generation to another since folklore it is not preserved in the form of text."
+  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+
+- Indigenous Foundations, University of British Columbia, "Oral Traditions"
+  https://indigenousfoundations.arts.ubc.ca/oral_traditions/
+  Argomento: "Oral tradition is, therefore, a collective enterprise. A narrator does not generally hold singular authority over a story. The nuances evident in distinct versions of a specific history represent a broader understanding of the events and the various ways people have internalized them." Le storie orali "must be validated by the group" perché "no one person can lay claim to an entire oral history."
+  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+
+- Britannica, "Folk Literature"
+  https://www.britannica.com/art/folk-literature
+  Argomento: "The beginnings of written literature in Sumer and Egypt 5,000 or 6,000 years ago took place in a world that knew only folk literature... The emergence of the author and his carefully preserved manuscript came about slowly and uncertainly... Nearly everywhere else the oral storyteller or epic singer was dominant, and all of what is called literary expression was carried in the memory of the folk."
+  Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
+
+**Note:** La Tesi IV.4.1 è stata proposta. La narrazione come struttura che persiste attraverso narratori discontinui — provata sia dalla teoria (Barthes) che dalla pratica millenaria delle tradizioni orali.
 
 ---
 
