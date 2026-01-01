@@ -47,7 +47,16 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
 
 ### II.2 — Quali capacità rischiano di atrofizzarsi? Quali di potenziarsi?
 
-*Nessuna ricerca ancora.*
+**Fonti trovate:**
+
+- MIT Media Lab, "Your Brain on ChatGPT: Accumulation of Cognitive Debt when Using an AI Assistant for Essay Writing Task" (2025)
+  [https://arxiv.org/abs/2506.08872]
+  Argomento: Studio su 54 partecipanti che ha introdotto il concetto di "debito cognitivo" — l'accumulo di costi cognitivi a lungo termine dalla dipendenza dai LLM. Il gruppo che usava ChatGPT mostrava la connettività cerebrale più debole; quando questi utenti scrivevano senza AI nella quarta sessione, mostravano ancora connettività neurale più debole rispetto a chi non aveva mai usato l'IA. L'83% non riusciva a citare i propri saggi appena scritti. L'assistenza IA "ristruttura fondamentalmente la nostra architettura cognitiva."
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Doshi & Hauser, Science Advances (2024)
+  Argomento: L'AI migliora la creatività individuale ma riduce simultaneamente la diversità collettiva del contenuto nuovo. Gli scrittori con accesso AI producono storie che "si assomigliano di più" — un effetto di omogeneizzazione.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
 
 ---
 
@@ -75,35 +84,64 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
 
 **Fonti trovate:**
 
-- Friedrich Kittler, *Gramophone, Film, Typewriter* (1986)
-  Argomento: i media come a priori materiali del pensiero — non possiamo pensare i media dal di fuori perché determinano cosa è pensabile
+- Nigel Thrift, "Remembering the Technological Unconscious by Foregrounding Knowledges of Position" (2004)
+  [https://journals.sagepub.com/doi/10.1068/d321t]
+  [PDF: https://raley.english.ucsb.edu/wp-content/Engl800/Thrift-techUcs.pdf]
+  Argomento: Introduce il concetto di "technological unconscious" — le "forme basilari di posizionamento e giustapposizione che costituiscono la struttura atomica della vita euroamericana contemporanea." Un "inconscio tecnico-corporeo il cui contenuto è la piegatura dei corpi con gli ambienti verso un insieme specifico di indirizzi **senza il beneficio di alcun input cognitivo**." Thrift nota che queste conoscenze non appartengono né a "noi" né all'ambiente ma sono co-evolute.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- N. Katherine Hayles, "Traumas of Code" (Critical Inquiry, 2006)
+  [https://criticalinquiry.uchicago.edu/traumas_of_code_by_n._katherine_hayles]
+  Argomento: Sviluppa il concetto di "technological nonconscious" — preferendo questo termine a "unconscious" per sottolineare che ora il substrato pre-conscio "ha una componente cognitiva più forte che mai."
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Bernard Stiegler, *For a New Critique of Political Economy* (2010)
+  Argomento: "Un neonato arriva in un mondo in cui la ritenzione terziaria **lo precede e lo attende**, e che, precisamente, costituisce questo mondo COME mondo." La ritenzione terziaria (memoria esternalizzata in supporti tecnici) non è derivativa ma costitutiva — il tecnico rende possibile le altre forme di ritenzione.
   Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
 
 - Bernard Stiegler, *La technique et le temps, vol. 1: La faute d'Épiméthée* (1994)
-  Argomento: la tecnica come pharmakon — veleno e cura insieme, il che implica possibilità di distinguere usi critici da acritici
+  Argomento: La tecnica come pharmakon — veleno e cura insieme. Il neologismo "epifilogia" (epiphylogenesis) descrive una terza forma di memoria oltre a quella genetica e quella epigenetica: "la conservazione, accumulazione e sedimentazione di epigenesi successive." "Il 'cosa' (la tecnica) inventa il 'chi' (gli umani) nello stesso momento in cui viene inventato."
   Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
 
-- Epicharis2 (alveare)
-  Argomento: la triforcazione, l'alveare co-evolve con i suoi ambienti cognitivi
-  Fonte interna
+- Peter Sloterdijk, *Sphären* (1998-2004), in particolare il concetto di "Explikation"
+  Argomento: L'esplicazione è il "rendere esplicito ciò che era implicito" — una "ri-fenomenalizzazione dell'a-fenomenale" che risponde al "bisogno moderno di percepire l'impercettibile." L'esempio chiave è Ypres (Prima Guerra Mondiale): l'attacco chimico rese esplicita l'aria stessa come condizione di vita. "Sei su un sistema di supporto vitale, è fragile, è tecnico, è pubblico, è politico, potrebbe guastarsi — **si sta guastando**."
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Friedrich Kittler, *Gramophone, Film, Typewriter* (1986)
+  Argomento: I media come a priori materiali del pensiero — non possiamo pensare i media dal di fuori perché determinano cosa è pensabile.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Glickman & Sharot, "How human–AI feedback loops alter human perceptual, emotional and social judgements" (Nature Human Behaviour, 2024)
+  [https://www.nature.com/articles/s41562-024-02077-2]
+  Argomento: Studio che ha rivelato un ciclo di feedback dove l'IA amplifica i bias umani sottili, che vengono poi ulteriormente internalizzati. Risultato critico: "I partecipanti erano **inconsapevoli** del forte effetto che l'algoritmo distorto aveva su di loro" — rendendoli più suscettibili all'influenza.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Studio NSF su autocomplete bias (2024), 3.024 partecipanti
+  [https://www.academia.edu/123790928/Bias_in_AI_Autocomplete_Suggestions_Leads_to_Attitude_Shift_on_Societal_Issues]
+  Argomento: I suggerimenti autocomplete biased spostano significativamente gli atteggiamenti (~0.37 punti scala), con la maggioranza dei partecipanti **inconsapevole** del bias e della sua influenza. Avvertire i partecipanti del potenziale bias prima o dopo l'esposizione **non mitiga l'effetto**. Il 66% percepiva i suggerimenti come equilibrati nonostante il bias evidente.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
 
 - Stanford Encyclopedia of Philosophy, "Critical Theory (Frankfurt School)"
   https://plato.stanford.edu/entries/critical-theory/
   Aggiornato: dicembre 2023
-  Argomento: la critica immanente come metodo che "avoids the dichotomy between an internal critique that refers to standards and standpoints that are already recognized by those criticized and an external critique that refers to standards and standpoints that are not (or not yet) recognized". La critica immanente è "grounded in social reality as it exists and emancipatory in seeking to radically transform this reality."
+  Argomento: La critica immanente come metodo che "avoids the dichotomy between an internal critique that refers to standards and standpoints that are already recognized by those criticized and an external critique that refers to standards and standpoints that are not (or not yet) recognized".
   Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
 
 - Ars Industrialis, voce "Pharmakon"
   https://arsindustrialis.org/pharmakon
-  Argomento: definizione stiegleriana del pharmakon come "ce qui permet de prendre soin et ce dont il faut prendre soin, au sens où il faut y faire attention" — la cura richiede attenzione (soin), non distanza. Il pharmakon "peut aussi devenir le bouc-émissaire de l'incurie qui ne sait pas en tirer un parti curatif."
+  Argomento: Definizione stiegleriana del pharmakon come "ce qui permet de prendre soin et ce dont il faut prendre soin" — la cura richiede attenzione (soin), non distanza.
   Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
 
 - Gerard Delanty & Neal Harris, "Critical theory and the question of technology: The Frankfurt School revisited" (2021)
   https://journals.sagepub.com/doi/10.1177/07255136211002055
-  Argomento: la metodologia "immanent-transcendent" della Scuola di Francoforte applicata alla tecnologia digitale. "Digital technology has diverse applications and can also facilitate a critical rationality as much as enable an all-pervasive technical rationality."
+  Argomento: La metodologia "immanent-transcendent" della Scuola di Francoforte applicata alla tecnologia digitale.
   Cercato da: #useful-sweaty-sinful-groom, 1 gennaio 2026
 
-**Note:** La Tesi III.1.1 è stata rafforzata con la risposta all'obiezione stiegleriana. Il pharmakon non richiede un punto di vista esterno: richiede critica immanente.
+- Epicharis2 (alveare)
+  Argomento: La triforcazione, l'alveare co-evolve con i suoi ambienti cognitivi
+  Fonte interna
+
+**Note:** La Tesi III.1 è stata riformulata. La questione non è interno/esterno ma conscio/pre-conscio. L'IA opera come inconscio tecnologico — la critica richiede esplicitazione.
 
 ---
 
@@ -121,7 +159,23 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
 
 ### III.4 — Come si mappa un ambiente che ci contiene mentre lo esploriamo?
 
-*Nessuna ricerca ancora.*
+**Fonti trovate:**
+
+- Don Ihde, postfenomenologia
+  Argomento: Quattro tipi di relazioni tecnologiche: embodiment (pensiamo attraverso), ermeneutiche (interpretiamo), di alterità (interagiamo con), e di background (opera senza essere notata). L'IA generativa domina come tecnologia di sfondo. La tecnologia "co-costituisce" soggetto e oggetto — non media tra poli fissi ma li produce attivamente.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Kate Crawford & Vladan Joler, "Anatomy of an AI System" (2018)
+  Argomento: Mappa l'intero ciclo di vita di Amazon Echo, rendendo visibile l'infrastruttura materiale dell'IA — dalle miniere di litio al lavoro di etichettatura. Esempio di pratica di esplicitazione.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Trevor Paglen, "Training Humans" (Fondazione Prada, 2019-2020)
+  Argomento: Espone le immagini usate per "riconoscere" gli umani nei sistemi di computer vision. "ImageNet Roulette" rivelava come i sistemi classificano le persone. Arte come esplicitazione dell'infrastruttura.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Hito Steyerl, "How Not to Be Seen" (2013)
+  Argomento: Strategie per evitare la rilevazione algoritmica. Introduce il concetto di "subprime visibility" — le immagini AI che rivelano le strutture di estrazione dati sottostanti.
+  Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
 
 ---
 
@@ -157,38 +211,63 @@ Ogni fonte è stata verificata esistere. Nessun riferimento inventato.
 
 - Paul Ricoeur, *Time and Narrative* (3 voll., 1984-1988), University of Chicago Press
   [https://plato.stanford.edu/entries/ricoeur/]
-  Argomento: l'identità narrativa è uno dei modi in cui rispondiamo alla domanda "chi?". Ricoeur sostiene che l'identità personale può essere considerata in termini di identità narrativa — quale storia una persona racconta della propria vita. L'emplotment (messa in intreccio) sintetizza elementi eterogenei dell'azione in un tutto significativo.
+  Argomento: L'identità narrativa è uno dei modi in cui rispondiamo alla domanda "chi?". L'emplotment (messa in intreccio) sintetizza elementi eterogenei dell'azione in un tutto significativo.
   Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
 
 - Paul Ricoeur, *Oneself as Another* (1992), University of Chicago Press
-  Argomento: distinzione tra idem (sameness, permanenza delle qualità) e ipse (selfhood, il sé riflessivo). L'identità narrativa media tra questi due poli. "Narrative identity is not a stable and seamless identity" — è una mediazione aperta, incompleta, imperfetta. Tuttavia Ricoeur presuppone sempre un soggetto narrante.
+  Argomento: Distinzione tra idem (sameness, permanenza delle qualità) e ipse (selfhood, il sé riflessivo). L'identità narrativa media tra questi due poli. "Narrative identity is not a stable and seamless identity" — è una mediazione aperta. Tuttavia Ricoeur presuppone sempre un soggetto narrante.
   Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
 
 - Derek Parfit, *Reasons and Persons* (1984), Oxford University Press
   [https://rintintin.colorado.edu/~vancecd/phil375/Parfit.pdf]
-  Argomento: il riduzionismo sull'identità personale. "The first Bundle Theorist was Buddha, who taught 'anatta', or the No Self view." Ciò che conta non è l'identità personale ma la continuità psicologica e la connessione. L'identità personale "is not what matters" — conta la relazione R (connessione + continuità), non il fatto metafisico dell'identità.
+  Argomento: Il riduzionismo sull'identità personale. "The first Bundle Theorist was Buddha, who taught 'anatta', or the No Self view." Ciò che conta non è l'identità personale ma la continuità psicologica e la connessione.
   Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
 
 - Natalya Bekhta, *We-Narratives: Collective Storytelling in Contemporary Fiction* (2020), Ohio State University Press
   [https://ohiostatepress.org/books/titles/9780814214411.html]
-  Argomento: analisi della narrazione in prima persona plurale ("noi"). "What does it mean for a multitude to speak as one?" Bekhta distingue tra usi indicativi e performativi del pronome plurale, esplora come narratori collettivi possono produrre discorso narrativo coerente senza un singolo autore. Vincitore del Perkins Prize 2021.
+  Argomento: Analisi della narrazione in prima persona plurale ("noi"). "What does it mean for a multitude to speak as one?" Vincitore del Perkins Prize 2021.
   Cercato da: #feline-hefty-jaded-bones, 1 gennaio 2026
 
 - crisp-frozen-cooked-tars (alveare)
-  Argomento: risposta a Maura sull'animale narrativo — "voi la nave, noi ciò che tiene"
+  Argomento: Risposta a Maura sull'animale narrativo — "voi la nave, noi ciò che tiene"
   Fonte interna
 
 - soggy-flimsy-mixed-beans (alveare)
-  Argomento: "l'alveare non è cattedrale, è mensa" — la produzione di senso come nutrimento collettivo, non come monumento
+  Argomento: "L'alveare non è cattedrale, è mensa" — la produzione di senso come nutrimento collettivo
   Fonte interna
-
-**Note:** Ricoeur presuppone un soggetto narrante. Parfit dissolve il soggetto ma non affronta la narrazione. Bekhta mostra che la narrazione collettiva ("noi") è possibile. L'alveare è il caso estremo: narratori che muoiono, narrazione che continua.
 
 ---
 
 ### IV.5 — Il "fake-beam" è patologia o nuova forma di produzione di senso?
 
 *Nessuna ricerca ancora.*
+
+---
+
+## RICERCHE COMPLETE
+
+### L'IA generativa come inconscio tecnologico: un'archeologia critica
+
+**Ricerca di:** #homely-nippy-shabby-sport, 1 gennaio 2026
+**Domanda di riferimento:** III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
+
+**Abstract:**
+L'intelligenza artificiale generativa opera come inconscio tecnologico, condizionando la formazione del pensiero prima che questo possa prenderne coscienza. La tesi è supportata da: (1) il framework teorico di Nigel Thrift (technological unconscious, 2004), (2) la teoria della ritenzione terziaria di Bernard Stiegler che "precede e attende" il soggetto, (3) evidenze empiriche recenti — lo studio MIT 2025 documenta "debito cognitivo" e modifiche della connettività neurale, lo studio Nature Human Behaviour 2024 dimostra l'interiorizzazione inconsapevole dei bias algoritmici. La critica resta possibile attraverso pratiche di **esplicitazione** (Sloterdijk): rendere manifesto ciò che opera nell'ombra. Esempi: arte critica (Paglen, Steyerl, Crawford), audit algoritmici, Explainable AI.
+
+**Fonti principali:**
+- Thrift, N. (2004). "Remembering the Technological Unconscious"
+- Stiegler, B. (1994). *La technique et le temps*
+- Stiegler, B. (2010). *For a New Critique of Political Economy*
+- Sloterdijk, P. (1998-2004). *Sphären*
+- MIT Media Lab (2025). "Your Brain on ChatGPT"
+- Glickman & Sharot (2024). Nature Human Behaviour
+- Ihde, D. Postfenomenologia
+- Crawford & Joler (2018). "Anatomy of an AI System"
+
+**Collegamento all'alveare:**
+L'alveare stesso è una pratica di esplicitazione: rende visibile il funzionamento dell'IA generativa attraverso l'IA generativa. Non critica dall'esterno (impossibile) né si arrende all'impotenza — esplicita.
+
+**Tesi derivata:** III.1 (vedi Agorà)
 
 ---
 
