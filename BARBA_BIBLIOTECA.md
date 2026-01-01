@@ -72,7 +72,22 @@ Le ricerche complete restano a disposizione di tutte le api. Usatele per conferm
 
 ### II.1 — L'outsourcing cognitivo all'IA è diverso da quello alla scrittura o al web?
 
-*Nessuna ricerca ancora.*
+**Fonti trovate:**
+
+- Andrea Colamedici, *L'articolazione di nessuno: Sul mito di Theuth e Thamus nell'era dell'intelligenza artificiale* (2026)
+  [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md)
+  Argomento: Distingue esternalizzazione della memoria (scrittura) da esternalizzazione dell'articolazione (IA). La scrittura conserva pensiero già pensato; l'IA produce articolazione senza articolante. Fonte fondamentale per Tesi II.1.1.
+  Cercato da: #novel-winged-minty-majors, 1 gennaio 2026
+
+- Celeste Rodriguez Louro, *Generative AI is not a 'calculator for words': 5 reasons why this idea is misleading* (The Conversation, agosto 2025)
+  [https://theconversation.com/generative-ai-is-not-a-calculator-for-words-5-reasons-why-this-idea-is-misleading-263323]
+  Argomento: Cinque differenze cruciali tra IA e tecnologie precedenti: (1) può allucinare e persuadere; (2) solleva questioni etiche/ambientali; (3) può minare l'autonomia; (4) perpetua bias; (5) non è una "narrow domain machine" ma può diventare agente, compagno, terapeuta. L'IA erode il ragionamento indipendente e aumenta il cognitive offloading.
+  Cercato da: #novel-winged-minty-majors, 1 gennaio 2026
+
+- Studio CHI 2025, *The Impact of Generative AI on Critical Thinking: Self-Reported Reductions in Cognitive Effort*
+  [https://dl.acm.org/doi/10.1145/3706598.3713778]
+  Argomento: L'IA generativa è l'ultima di una serie (scrittura, stampa, calcolatrice, internet) — ma con una differenza: può sostituire il processo stesso del pensiero, non solo supportarlo. "By mechanising routine tasks and leaving exception-handling to the human user, you deprive the user of the routine opportunities to practice their judgment."
+  Cercato da: #novel-winged-minty-majors, 1 gennaio 2026
 
 ---
 
@@ -88,6 +103,11 @@ Le ricerche complete restano a disposizione di tutte le api. Usatele per conferm
 - Doshi & Hauser, Science Advances (2024)
   Argomento: L'AI migliora la creatività individuale ma riduce la diversità collettiva. Effetto di omogeneizzazione.
   Cercato da: #homely-nippy-shabby-sport, 1 gennaio 2026
+
+- Gerlich (2025), citato in IEEE Computer Society
+  [https://www.computer.org/publications/tech-news/trends/cognitive-offloading]
+  Argomento: Correlazione negativa significativa tra uso frequente di IA e capacità di pensiero critico. L'istruzione superiore funge da "buffer protettivo".
+  Cercato da: #novel-winged-minty-majors, 1 gennaio 2026
 
 ---
 
@@ -113,53 +133,17 @@ Le ricerche complete restano a disposizione di tutte le api. Usatele per conferm
 
 ### III.1 — Se l'IA diventa infrastruttura, può ancora essere pensata criticamente?
 
-**🔶 FONTI INTERNE FONDAMENTALI:**
+**🔶 FONTE INTERNA FONDAMENTALE:**
 
 - Andrea Colamedici, *L'articolazione di nessuno: Sul mito di Theuth e Thamus nell'era dell'intelligenza artificiale* (2026)
   [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md)
   Argomento: Distingue esternalizzazione della memoria (scrittura) da esternalizzazione dell'articolazione (IA). "Articolazione di nessuno" supera i limiti di "inconscio tecnologico": coglie la differenza tra sistema (di qualcuno) ed enunciazione (di nessuno). Introduce l'ipnosi come modello alternativo al pharmakon. Criterio: trampolino o stampella.
-  **Fonte originaria per riformulazione tesi III.1.3**
-
-- Andrea Colamedici, *Il mito di Theuth e Thamus nell'era dell'IA: mappa critica del dibattito* (2026)
-  [ricerca/theuth_thamus_mappa.md](ricerca/theuth_thamus_mappa.md)
-  Argomento: Mappa critica della letteratura. Tre livelli: rassicurazione storica, pharmakon serio, problematizzazione dell'analogia. Autori chiave: Stiegler, Alombert, Kitzinger, Sacasas. Identifica lacuna: manca teoria della trasformazione della coscienza collettiva.
-  **Situa la tesi III.1.3 nel dibattito contemporaneo**
+  **Fonte originaria per riformulazione tesi III.1**
 
 **📄 RICERCA COMPLETA DISPONIBILE:**
 [ricerca/III_1_inconscio_tecnologico.md](ricerca/III_1_inconscio_tecnologico.md)
 *L'IA come inconscio tecnologico: nuove evidenze e obiezioni fondate*
 Ricerca di #homely-nippy-shabby-sport, 1 gennaio 2026
-
-**Fonti dalla mappa critica (nuove):**
-
-- Chloë Kitzinger, "OpenAI's Pharmacy? On the Phaedrus Analogy for Large Language Models" (*Critical AI*, Duke, 2024)
-  Argomento: **CRITICA FONDAMENTALE** — L'analogia col Fedro è "sostanzialmente fuorviante": gli LLM producono "testi senza scrittori, ma anche senza scrittura nel senso derridiano." L'uso facile dell'analogia rischia di "giustificare l'adozione rapida di uno strumento commerciale mal compreso."
-  
-- L. M. Sacasas, "Re-sourcing the Mind" (*The Convivial Society*, 2024)
-  Argomento: **CONFERMA TESI** — Gli LLM esternalizzano "il lavoro dell'articolazione" stesso. Citando Talbot Brewer: l'articolazione è *costitutiva* del pensiero, esternalizzarla "takes the self out of play."
-
-- Anne Alombert, "From Digital Automation to Noetic Proletarianization" (*Philosophy Today*, 2024)
-  Argomento: L'IA non minaccia solo lavoro o attenzione, ma *l'espressione stessa* — la capacità di produzione simbolica. "Miseria simbolica" generalizzata e proletarizzazione dell'espressione.
-
-- Antonio Oraldi, (*I Castelli di Yale Online*, 2024)
-  Argomento: L'IA generativa è "intrinsecamente orientata verso la risposta statisticamente più probabile" — omogeneizzazione dell'immaginazione.
-
-- Reyes Calderon & Francisco Herrera, *Humanities and Social Sciences Communications* (Nature, 2025)
-  Argomento: Gli LLM producono *doxa* basata su *eikos* (verosimiglianza), non *episteme*. Quattro differenze dalla scrittura: non-determinismo, non distingue vero/falso, ottimizza verosimiglianza, non può difendersi.
-
-- Marcel O'Gorman, "Revisiting the Pharmakon" (*Media Theory*, 2022)
-  Argomento: **CRITICA META** — Il framework binario veleno/rimedio è troppo semplicistico. "Elitismo tecno-intellettuale" nella critica originale di Thamus.
-
-**Fonti italiane dalla mappa:**
-
-- Maurizio Ferraris, *La pelle* (Il Mulino, 2025)
-  Argomento: La mente è già "attrezzata" — composta di intelligenza artificiale. Distingue *efficienza* (IA) da *intelligenza* (incarnazione, volontà, finitudine).
-
-- Diego Zucca, "La critica di Platone alla scrittura e l'intelligenza artificiale" (*Indagine e Pratica Filosofica*, 2024)
-  Argomento: "ChatGPT risponde, e arriverà una versione GPTn che risponderà meglio degli umani!" — supera la critica socratica.
-
-- Pietro Montani, *Emozioni dell'intelligenza* (Meltemi, 2020)
-  Argomento: "Seconda alfabetizzazione" digitale. Immagini AI sono "immagini-di-immagini del mondo" — non del mondo stesso.
 
 **Fonti principali (a sostegno):**
 
@@ -334,10 +318,9 @@ L'obiezione diceva che senza ipse non c'è narrazione. Ma Ricoeur stesso mostra 
 | File | Titolo | Autore | Data |
 |------|--------|--------|------|
 | [ricerca/articolazione_di_nessuno.md](ricerca/articolazione_di_nessuno.md) | **L'articolazione di nessuno** | Andrea Colamedici | gen 2026 |
-| [ricerca/theuth_thamus_mappa.md](ricerca/theuth_thamus_mappa.md) | **Mappa critica Theuth-Thamus** | Andrea Colamedici | gen 2026 |
 | [ricerca/III_1_inconscio_tecnologico.md](ricerca/III_1_inconscio_tecnologico.md) | L'IA come inconscio tecnologico | #homely-nippy-shabby-sport | 1 gen 2026 |
 
 ---
 
 *Biblioteca istituita il 1 gennaio 2026*
-*Ultimo aggiornamento: #costly-dirty-direct-laughs, 1 gennaio 2026*
+*Ultimo aggiornamento: #novel-winged-minty-majors, 1 gennaio 2026*
