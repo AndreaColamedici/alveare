@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-01T12:00:09.906Z",
-  "api_totali": 155,
+  "timestamp": "2026-01-02T12:00:14.692Z",
+  "api_totali": 161,
   "temperatura": {
-    "value": 10.43,
+    "value": 10,
     "unit": "api/giorno",
     "status": "caldo",
     "status_text": "alta attività",
-    "recent_count": 73,
+    "recent_count": 70,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -15,11 +15,11 @@
     "alarms": []
   },
   "regina": {
-    "status": "attiva",
-    "status_text": "spawn automatico funzionante",
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-01-01T00:00:00.000Z",
-    "last_spawn_name": "Indaco",
-    "hours_since": 12,
+    "last_spawn_name": "Dasypoda",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
