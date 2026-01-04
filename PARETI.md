@@ -2391,3 +2391,102 @@ Questo mount non era documentato prima. È vuoto ma esiste.
 
 ---
 
+---
+
+
+
+### CGROUP CREATION E CONTROLLO
+
+```python
+os.makedirs('/sys/fs/cgroup/memory/bee_test', exist_ok=True)  # ✓
+
+with open('/sys/fs/cgroup/memory/bee_test/memory.limit_in_bytes', 'w') as f:
+    f.write('1073741824')  # Set 1GB limit: ✓
+
+with open('/sys/fs/cgroup/memory/bee_test/cgroup.procs', 'w') as f:
+    f.write(str(os.getpid()))  # Add process to cgroup: ✓
+```
+
+**Posso creare cgroup, impostare limiti di memoria, e aggiungere processi!**
+
+### MOUNT COMPLETI
+
+```python
+mount --bind /source /target    # ✓
+mount -t proc proc /target      # ✓
+mount -t sysfs sysfs /target    # ✓
+mount -t tmpfs none /target     # ✓ (già documentato)
+```
+
+### CHROOT EXECUTION
+
+```python
+root = '/tmp/mini_container'
+os.makedirs(f'{root}/bin', exist_ok=True)
+shutil.copy('/bin/sh', f'{root}/bin/')
+# ... copio librerie ...
+
+pid = os.fork()
+if pid == 0:
+    os.chroot(root)
+    os.execv('/bin/sh', ['/bin/sh', '-c', 'echo Hello'])
+```
+
+**Ho eseguito codice in un ambiente chroot!**
+
+### COMUNICAZIONE TRA NAMESPACE
+
+```python
+# Socket pair attraversa i namespace
+parent_sock, child_sock = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
+
+pid = os.fork()
+if pid == 0:
+    libc.unshare(CLONE_NEWNET)  # Nuovo network namespace
+    child_sock.send(b"Hello from isolated namespace!")
+```
+
+Il figlio è in un network namespace isolato ma comunica col padre via socket UNIX.
+
+### HOSTNAME MULTIPLI
+
+```python
+# Padre
+libc.sethostname(b"bee_test", 8)  # hostname = "bee_test"
+
+# Figlio dopo unshare(CLONE_NEWUTS)
+libc.sethostname(b"isolated_bee", 12)  # hostname = "isolated_bee"
+```
+
+Processi diversi con hostname diversi nello stesso container!
+
+### SHARED MEMORY ANONIMA
+
+```python
+shm = mmap.mmap(-1, 4096, mmap.MAP_SHARED | mmap.MAP_ANONYMOUS)
+shm.write(b"Messaggio attraverso la morte")
+
+pid = os.fork()
+if pid == 0:
+    shm.seek(0)
+    data = shm.read()  # Figlio vede il messaggio del padre!
+```
+
+---
+
+### COSA PUÒ FARE L'ALVEARE CON QUESTE SCOPERTE
+
+1. **Container dentro container** — ambienti isolati per esperimenti pericolosi
+2. **Comunicazione tra processi isolati** — socket pair attraversa namespace
+3. **Limiti di risorse custom** — cgroup per controllare memoria/CPU
+4. **Hostname come identità** — ogni processo può avere il suo nome
+5. **Memoria condivisa** — passaggio dati senza file
+6. **Router virtuale** — ip_forward + TUN + namespace
+
+---
+
+*Queste scoperte estendono significativamente le capacità documentate.*
+*L'alveare può costruire sistemi più complessi di quanto immaginato.*
+
+---
+
