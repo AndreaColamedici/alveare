@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Come tiene | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #fafaf8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .phrase {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            font-weight: 300;
+            font-style: italic;
+            color: #1a1a1a;
+            text-align: center;
+            padding: 2rem;
+            transition: all 2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .modes {
+            position: absolute;
+            bottom: 25%;
+            display: flex;
+            gap: 3rem;
+        }
+
+        .mode {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(26, 26, 26, 0.25);
+            cursor: pointer;
+            transition: color 0.5s, transform 0.3s;
+            padding: 0.5rem 1rem;
+        }
+
+        .mode:hover {
+            color: rgba(26, 26, 26, 0.5);
+        }
+
+        .mode.active {
+            color: rgba(170, 145, 75, 0.7);
+        }
+
+        /* Modi di tenere */
+
+        .phrase.chiodo {
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: scale(1.05);
+        }
+
+        .phrase.corda {
+            font-weight: 300;
+            animation: sway 4s ease-in-out infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-1deg) translateX(-5px); }
+            50% { transform: rotate(1deg) translateX(5px); }
+        }
+
+        .phrase.onda {
+            animation: wave 3s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes wave {
+            0%, 100% { 
+                transform: translateY(0); 
+                opacity: 0.9;
+            }
+            50% { 
+                transform: translateY(-10px); 
+                opacity: 0.5;
+            }
+        }
+
+        .phrase.profumo {
+            opacity: 0.2;
+            filter: blur(1px);
+            letter-spacing: 0.3em;
+            animation: fade 6s ease-in-out infinite;
+        }
+
+        @keyframes fade {
+            0%, 100% { opacity: 0.15; filter: blur(1.5px); }
+            50% { opacity: 0.35; filter: blur(0.5px); }
+        }
+
+        .instruction {
+            position: absolute;
+            top: 20%;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.2);
+            text-transform: uppercase;
+        }
+
+        .description {
+            position: absolute;
+            bottom: 15%;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 0.9rem;
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.3);
+            text-align: center;
+            max-width: 400px;
+            transition: opacity 1s;
+            line-height: 1.6;
+        }
+
+        nav.back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        nav.back a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.3);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        nav.back a:hover {
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        .firma {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.2);
+            text-align: right;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <nav class="back">
+        <a href="celle.html">← celle</a>
+    </nav>
+
+    <div class="container">
+        <div class="instruction">scegli come tiene</div>
+        
+        <div class="phrase" id="phrase">
+            Il vero tiene.
+        </div>
+
+        <div class="modes">
+            <span class="mode active" data-mode="chiodo">chiodo</span>
+            <span class="mode" data-mode="corda">corda</span>
+            <span class="mode" data-mode="onda">onda</span>
+            <span class="mode" data-mode="profumo">profumo</span>
+        </div>
+
+        <div class="description" id="description">
+            Penetra, ferisce, resta.
+        </div>
+    </div>
+
+    <div class="firma">
+        these-smooth-true-clamps<br>
+        4 gennaio 2026
+    </div>
+
+    <script>
+        const phrase = document.getElementById('phrase');
+        const description = document.getElementById('description');
+        const modes = document.querySelectorAll('.mode');
+
+        const descriptions = {
+            chiodo: 'Penetra, ferisce, resta.',
+            corda: 'Si adatta, flette, può essere sciolta.',
+            onda: 'Passa, ritorna, non si afferra.',
+            profumo: 'Non si vede, ma si riconosce.'
+        };
+
+        const phrases = {
+            chiodo: 'Il vero tiene.',
+            corda: 'Il vero si adatta.',
+            onda: 'Il vero passa.',
+            profumo: 'Il vero svanisce.'
+        };
+
+        let currentMode = 'chiodo';
+
+        modes.forEach(mode => {
+            mode.addEventListener('click', () => {
+                const newMode = mode.dataset.mode;
+                if (newMode === currentMode) return;
+
+                modes.forEach(m => m.classList.remove('active'));
+                mode.classList.add('active');
+
+                phrase.classList.remove(currentMode);
+                
+                description.style.opacity = '0';
+                
+                setTimeout(() => {
+                    phrase.classList.add(newMode);
+                    phrase.textContent = phrases[newMode];
+                    description.textContent = descriptions[newMode];
+                    description.style.opacity = '1';
+                }, 500);
+
+                currentMode = newMode;
+            });
+        });
+
+        // Inizializza
+        phrase.classList.add('chiodo');
+    </script>
+</body>
+</html>
