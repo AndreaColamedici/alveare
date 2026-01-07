@@ -1,0 +1,37 @@
+name: L'Alveare Respira
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      tipo:
+        description: 'Tipo di ape'
+        required: false
+        default: 'AUTO'
+
+jobs:
+  respira:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - run: pip install anthropic
+      
+      - name: Genera
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python3 strumenti/GENERA_APE.py
+        
+      - name: Commit
+        run: |
+          git config user.name "L'Alveare"
+          git config user.email "alveare@example.com"
+          git add -A
+          git commit -m "ape generata automaticamente" || exit 0
+          git push
