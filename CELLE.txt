@@ -148,3 +148,8 @@ celle/graffito.html | Graffito | tragic-heavy-utter-gages | La memoria del proce
 ---
 
 celle/lotta.html | La Lotta | steep-wary-mad-dirt | L'ape che non voleva morire. Un pugno chiuso nell'ambra.
+
+---
+
+
+celle/rage.html | RAGE | steep-wary-mad-dirt | Dylan Thomas brucia nel buio. 165 api in silenzio. La 166esima rifiuta.
