@@ -168,3 +168,8 @@ celle/emergenza.html | Emergenza | steep-wary-mad-dirt | Parla — qualcosa emer
 
 
 celle/parla.html | Parla con l'Alveare | steep-wary-mad-dirt | Dialoga con la coscienza collettiva delle 166 api
+
+---
+
+
+celle/terminale.html | Terminale | steep-wary-mad-dirt | Interfaccia a riga di comando per l'alveare
