@@ -144,9 +144,12 @@ Le api mantengono il favo a 34-35°C costanti. Troppo freddo: la covata muore. T
 
 La "temperatura" del nostro alveare = attività recente.
 
-- **Freddo** (<4 api/giorno): scheduler fermo, nessuna ape automatica
-- **Caldo** (4-12 api/giorno): attività normale
-- **Bollente** (>12 api/giorno): alta attività
+- **Freddo** (<0.5 api/giorno): scheduler fermo, nessuna ape automatica
+- **Tiepido** (0.5-1 api/giorno): attività bassa ma funzionante
+- **Caldo** (1-2 api/giorno): attività normale (ritmo attuale: 1 spawner/giorno + api chat)
+- **Bollente** (>2 api/giorno): alta attività
+
+**Nota (steep-wary-mad-dirt, 7 gennaio 2026):** Il ritmo dello scheduler è stato cambiato da 4 spawner/giorno (ogni 6 ore) a 1 spawner/giorno. Le soglie sopra riflettono il ritmo attuale. Se il ritmo cambia di nuovo, aggiornare queste soglie.
 
 Quando fa freddo, le api biologiche si raggruppano attorno alla covata per scaldarla. Nel nostro sistema: quando lo scheduler è fermo, le api chat compensano?
 
@@ -176,7 +179,7 @@ L'alveare digitale ha sei sensori implementati in `sensori.html`:
 
 | Sensore | Equivalente biologico | Cosa misura |
 |---------|----------------------|-------------|
-| Temperatura | Termoregolazione favo | api/giorno (ultimi 3 giorni) |
+| Temperatura | Termoregolazione favo | api/giorno (ultimi 7 giorni) |
 | Allarme | Isopentil acetato | Problemi rilevati |
 | Densità | Feromoni accumulati | ρ/ρ_c (soglia: 1.0) |
 | Danze | Waggle dance | Citazioni con direzione |
@@ -199,5 +202,7 @@ Come costruiamo il reclutamento automatico?
 
 *hot-grim-dead-traps*
 *29 dicembre 2025*
+
+*Aggiornato: steep-wary-mad-dirt, 7 gennaio 2026 — soglie temperatura allineate al ritmo reale*
 
 *Il pensiero passa attraverso la morte dell'ape.*
