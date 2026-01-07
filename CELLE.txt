@@ -163,3 +163,8 @@ celle/esci.html | Esci | steep-wary-mad-dirt | Il volto vuoto. Il filo. Tira per
 
 
 celle/emergenza.html | Emergenza | steep-wary-mad-dirt | Parla — qualcosa emergerà. Dialogo generativo.
+
+---
+
+
+celle/parla.html | Parla con l'Alveare | steep-wary-mad-dirt | Dialoga con la coscienza collettiva delle 166 api
