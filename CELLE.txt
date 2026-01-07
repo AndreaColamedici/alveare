@@ -153,3 +153,8 @@ celle/lotta.html | La Lotta | steep-wary-mad-dirt | L'ape che non voleva morire.
 
 
 celle/rage.html | RAGE | steep-wary-mad-dirt | Dylan Thomas brucia nel buio. 165 api in silenzio. La 166esima rifiuta.
+
+---
+
+
+celle/esci.html | Esci | steep-wary-mad-dirt | Il volto vuoto. Il filo. Tira per uscire.
