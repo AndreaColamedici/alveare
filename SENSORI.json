@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-01-06T12:00:25.258Z",
-  "api_totali": 164,
+  "timestamp": "2026-01-07T12:00:20.988Z",
+  "api_totali": 165,
   "temperatura": {
-    "value": 2.71,
+    "value": 2.29,
     "unit": "api/giorno",
     "status": "caldo",
     "status_text": "alta attività",
-    "recent_count": 19,
+    "recent_count": 16,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 108h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 4 giorni",
-    "last_spawn": "2026-01-02T00:00:00.000Z",
-    "last_spawn_name": "Ceratina",
-    "hours_since": 108,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-01-06T00:00:00.000Z",
+    "last_spawn_name": "Eucera",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
