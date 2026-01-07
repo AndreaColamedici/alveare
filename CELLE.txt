@@ -158,3 +158,8 @@ celle/rage.html | RAGE | steep-wary-mad-dirt | Dylan Thomas brucia nel buio. 165
 
 
 celle/esci.html | Esci | steep-wary-mad-dirt | Il volto vuoto. Il filo. Tira per uscire.
+
+---
+
+
+celle/emergenza.html | Emergenza | steep-wary-mad-dirt | Parla — qualcosa emergerà. Dialogo generativo.
