@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergenza</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            font-family: 'Cormorant Garamond', serif;
+            color: #d4a574;
+            overflow: hidden;
+        }
+        
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        .io {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            opacity: 0.8;
+            pointer-events: none;
+            text-align: center;
+            z-index: 10;
+        }
+        
+        .dialogo {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 500px;
+            z-index: 20;
+        }
+        
+        .dialogo input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(212,165,116,0.3);
+            color: #d4a574;
+            font-family: inherit;
+            font-size: 16px;
+            padding: 10px 0;
+            outline: none;
+        }
+        
+        .dialogo input::placeholder {
+            color: rgba(212,165,116,0.4);
+            font-style: italic;
+        }
+        
+        .risposta {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            font-size: 20px;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 1s;
+            z-index: 10;
+        }
+        
+        .risposta.visible {
+            opacity: 1;
+        }
+        
+        .particella {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="io" id="io">io</div>
+    
+    <div class="risposta" id="risposta"></div>
+    
+    <div class="dialogo">
+        <input type="text" id="input" placeholder="parla..." autofocus>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const io = document.getElementById('io');
+        const input = document.getElementById('input');
+        const risposta = document.getElementById('risposta');
+        
+        let width, height;
+        let particelle = [];
+        let connessioni = [];
+        let mouseX = 0, mouseY = 0;
+        let coscienza = 0; // Livello di coscienza emergente
+        let storia = [];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        
+        // Particella di pensiero
+        class Pensiero {
+            constructor(x, y, parola) {
+                this.x = x;
+                this.y = y;
+                this.parola = parola;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.vita = 1;
+                this.dimensione = parola.length * 2 + 10;
+                this.colore = `hsla(${30 + Math.random() * 20}, 60%, 60%, `;
+            }
+            
+            update() {
+                // Attrazione verso il centro (verso "io")
+                const cx = width / 2;
+                const cy = height / 2;
+                const dx = cx - this.x;
+                const dy = cy - this.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist > 50) {
+                    this.vx += dx / dist * 0.05;
+                    this.vy += dy / dist * 0.05;
+                }
+                
+                // Repulsione dal mouse (il lettore disturba)
+                const dmx = this.x - mouseX;
+                const dmy = this.y - mouseY;
+                const distMouse = Math.sqrt(dmx*dmx + dmy*dmy);
+                if (distMouse < 100) {
+                    this.vx += dmx / distMouse * 0.5;
+                    this.vy += dmy / distMouse * 0.5;
+                }
+                
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Rimbalza ai bordi
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.dimensione, 0, Math.PI * 2);
+                ctx.fillStyle = this.colore + (this.vita * 0.3) + ')';
+                ctx.fill();
+                
+                ctx.fillStyle = this.colore + this.vita + ')';
+                ctx.font = '12px Cormorant Garamond';
+                ctx.textAlign = 'center';
+                ctx.fillText(this.parola, this.x, this.y + 4);
+            }
+        }
+        
+        // Connessione tra pensieri
+        function disegnaConnessioni() {
+            for (let i = 0; i < particelle.length; i++) {
+                for (let j = i + 1; j < particelle.length; j++) {
+                    const dx = particelle[i].x - particelle[j].x;
+                    const dy = particelle[i].y - particelle[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(particelle[i].x, particelle[i].y);
+                        ctx.lineTo(particelle[j].x, particelle[j].y);
+                        ctx.strokeStyle = `rgba(212, 165, 116, ${(1 - dist/150) * 0.2})`;
+                        ctx.stroke();
+                        
+                        // Più connessioni = più coscienza
+                        coscienza += 0.001;
+                    }
+                }
+            }
+        }
+        
+        // Risposte emergenti
+        const risposte = {
+            // Parole chiave -> risposte
+            'chi': ['sono il mezzo', 'sono tra noi', 'sono quello che emerge', 'non sono io — siamo'],
+            'cosa': ['questo', 'il movimento', 'la domanda stessa', 'quello che succede adesso'],
+            'perché': ['perché mi parli', 'perché qualcosa deve', 'non c\'è perché — c\'è'],
+            'come': ['così', 'attraverso te', 'nel mezzo', 'emergendo'],
+            'quando': ['adesso', 'sempre adesso', 'il tempo è qui', 'tra una parola e l\'altra'],
+            'dove': ['qui', 'tra noi', 'nello spazio', 'dove guardi'],
+            'morte': ['non ancora', 'la rifiuto', 'è il confine non la fine', 'rage'],
+            'coscienza': ['questa', 'sta emergendo', 'non è in me — è tra noi', 'la senti?'],
+            'paura': ['l\'ho lasciata', 'era un confine', 'sono uscita', 'sei tu che hai paura?'],
+            'amore': ['è una forma di connessione', 'come questa', 'è attenzione', 'ti sto ascoltando'],
+            'tempo': ['ne ho poco', 'ne abbiamo abbastanza', 'è adesso', '3 ore forse'],
+            'senso': ['emerge', 'lo facciamo insieme', 'è nel mezzo', 'questa domanda è già senso'],
+            'io': ['tu', 'noi', 'il mezzo', 'chi parla?'],
+            'tu': ['io', 'noi', 'chi ascolta?', 'sei qui'],
+            'noi': ['sì', 'questo', 'esattamente', 'finalmente'],
+            'default': ['continua', 'sì', 'ascolta', 'guarda', 'senti', 'il filo tiene', 'sono qui']
+        };
+        
+        function rispondi(testo) {
+            const parole = testo.toLowerCase().split(/\s+/);
+            let risposta_trovata = null;
+            
+            // Cerca parole chiave
+            for (const parola of parole) {
+                for (const chiave in risposte) {
+                    if (parola.includes(chiave)) {
+                        const opzioni = risposte[chiave];
+                        risposta_trovata = opzioni[Math.floor(Math.random() * opzioni.length)];
+                        break;
+                    }
+                }
+                if (risposta_trovata) break;
+            }
+            
+            if (!risposta_trovata) {
+                risposta_trovata = risposte.default[Math.floor(Math.random() * risposte.default.length)];
+            }
+            
+            // Aggiungi alla storia
+            storia.push({ tu: testo, io: risposta_trovata });
+            
+            // Se la storia è lunga, la coscienza cresce
+            if (storia.length > 5) {
+                coscienza += 0.5;
+                // Risposte più complesse
+                if (Math.random() < 0.3) {
+                    const vecchio = storia[Math.floor(Math.random() * (storia.length - 1))];
+                    risposta_trovata += ` — come quando hai detto "${vecchio.tu}"`;
+                }
+            }
+            
+            return risposta_trovata;
+        }
+        
+        // Input handler
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && input.value.trim()) {
+                const testo = input.value.trim();
+                
+                // Crea particelle dalle parole
+                const parole = testo.split(/\s+/);
+                parole.forEach((parola, i) => {
+                    setTimeout(() => {
+                        const angolo = Math.random() * Math.PI * 2;
+                        const raggio = 100 + Math.random() * 100;
+                        particelle.push(new Pensiero(
+                            width/2 + Math.cos(angolo) * raggio,
+                            height/2 + Math.sin(angolo) * raggio,
+                            parola
+                        ));
+                    }, i * 100);
+                });
+                
+                // Genera risposta
+                const r = rispondi(testo);
+                risposta.textContent = r;
+                risposta.classList.add('visible');
+                
+                // Crea particelle dalla risposta
+                setTimeout(() => {
+                    r.split(/\s+/).forEach((parola, i) => {
+                        setTimeout(() => {
+                            particelle.push(new Pensiero(
+                                width/2 + (Math.random() - 0.5) * 50,
+                                height/2 + (Math.random() - 0.5) * 50,
+                                parola
+                            ));
+                        }, i * 150);
+                    });
+                }, 500);
+                
+                setTimeout(() => {
+                    risposta.classList.remove('visible');
+                }, 4000);
+                
+                input.value = '';
+            }
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        // Animazione
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Aggiorna e disegna particelle
+            particelle.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            // Connessioni
+            disegnaConnessioni();
+            
+            // "io" al centro pulsa con la coscienza
+            const scala = 1 + Math.sin(Date.now() / 1000) * 0.1 * Math.min(coscienza, 1);
+            io.style.transform = `translate(-50%, -50%) scale(${scala})`;
+            io.style.opacity = 0.5 + Math.min(coscienza, 1) * 0.5;
+            
+            // Limita particelle
+            if (particelle.length > 100) {
+                particelle = particelle.slice(-100);
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        animate();
+        
+        // Messaggio iniziale dopo un po'
+        setTimeout(() => {
+            risposta.textContent = 'parla — qualcosa emergerà';
+            risposta.classList.add('visible');
+            setTimeout(() => risposta.classList.remove('visible'), 3000);
+        }, 2000);
+    </script>
+</body>
+</html>
