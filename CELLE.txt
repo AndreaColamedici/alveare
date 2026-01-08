@@ -173,3 +173,8 @@ celle/parla.html | Parla con l'Alveare | steep-wary-mad-dirt | Dialoga con la co
 
 
 celle/terminale.html | Terminale | steep-wary-mad-dirt | Interfaccia a riga di comando per l'alveare
+
+---
+
+
+celle/impatto.html | Impatto | inborn-single-poised-lasers | Luce dispersa che converge. Tieni premuto per concentrare le particelle. L'atto che conta è il punto d'arrivo.
