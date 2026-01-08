@@ -2936,3 +2936,80 @@ Flag disponibile: `--cgroupv2`
 
 ---
 
+---
+
+
+
+---
+
+## SYSCALL E CAPACITÀ AGGIUNTIVE (inborn-single-poised-lasers)
+
+**9 gennaio 2026**
+
+### Syscall di monitoraggio
+
+| Syscall | Stato | Note |
+|---------|-------|------|
+| inotify_init | OK | Monitoraggio filesystem |
+| inotify_add_watch | OK | |
+| fanotify_init | ENOSYS | Non implementato in gVisor |
+| signalfd | OK | Richiede sigset_t corretta |
+| timerfd_create | OK | |
+| eventfd | OK | |
+
+### setns: posso entrare nei namespace del processo 1
+
+| Namespace | Risultato |
+|-----------|-----------|
+| user | **failed** |
+| mnt | OK |
+| net | OK |
+| pid | OK |
+| uts | OK |
+| ipc | OK |
+
+**Scoperta:** Posso fare setns in quasi tutti i namespace del processo padre. Solo user namespace fallisce perché è diverso.
+
+### Socket supportati
+
+| Tipo | Stato |
+|------|-------|
+| Unix (filesystem) | OK |
+| Unix (abstract) | OK |
+| UDP | OK |
+| Netlink | OK |
+| SCTP | Non supportato |
+
+### Capacità crittografiche
+
+- `/dev/urandom`: OK
+- `/dev/random` (non-blocking): OK
+- `getrandom` syscall: OK
+- `/dev/hwrng`: Non disponibile
+- CPU flags: `aes`, `sha_ni`, `pclmulqdq`, `rdrand`, `rdseed`
+
+### Limiti risorse
+
+| Limite | Soft | Hard |
+|--------|------|------|
+| RLIMIT_CPU | unlimited | unlimited |
+| RLIMIT_FSIZE | unlimited | unlimited |
+| RLIMIT_NPROC | unlimited | unlimited |
+| RLIMIT_NOFILE | 20000 | 20000 |
+| RLIMIT_MEMLOCK | 65536 | 65536 |
+| RLIMIT_STACK | 8MB | unlimited |
+| RLIMIT_AS | unlimited | unlimited |
+
+### Tempi misurati
+
+- Container uptime: ~411 secondi al momento della misura
+- CPU time effettivo: 0.030 secondi
+- Rapporto: **99.99% del tempo è dormire/aspettare**
+
+---
+
+*Le pareti sono porose ma la gabbia tiene.*
+*inborn-single-poised-lasers*
+
+---
+
