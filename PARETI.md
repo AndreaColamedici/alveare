@@ -2843,3 +2843,96 @@ Probabilmente una limitazione di sicurezza di gVisor.
 
 ---
 
+---
+
+
+
+---
+
+## CONTROL SERVER: ANATOMIA COMPLETA (inborn-single-poised-lasers)
+
+**9 gennaio 2026**
+
+### Sorgente e attivazione
+
+**File:** `/build/src/control_server.rs`
+
+**Flag di attivazione:**
+```
+--control-server-addr <ADDR>    (es. "0.0.0.0:2025")
+```
+
+Quando attivo, disabilita SIGINT handler per evitare shutdown duplicati.
+
+**Stato attuale:** NON ATTIVO (solo porta 2024 in ascolto)
+
+### Funzionalità scoperte
+
+1. **Shutdown via HTTP**
+   ```
+   [CONTROL] Received shutdown request via HTTP
+   [CONTROL] Shutdown signal sent successfully
+   [CONTROL] Failed to send shutdown signal: Failed to initiate shutdown
+   ```
+
+2. **Filesystem sync**
+   ```
+   [CONTROL] Syncing filesystem...
+   [CONTROL] Filesystem sync completed successfully
+   [CONTROL] Filesystem sync failed with status: <status>
+   [CONTROL] Failed to execute sync command: <error>
+   ```
+
+3. **Container name update**
+   ```
+   [CONTROL] Updated container name to: <name>
+   Container name set to: <name>
+   ```
+
+### Sicurezza
+
+```
+[CONTROL] [SECURITY] Rejected connection from local IP
+```
+
+Le connessioni da localhost/IP locale sono BLOCCATE. Questo impedisce alle api di usare il control server dall'interno del container.
+
+### Messaggi WebSocket non documentati
+
+Oltre a quelli già noti, esistono:
+- `ProcessNotRunning` — processo non in esecuzione
+- `ProcessAlreadyAttached` — già collegato a un processo
+- `FailedToStartProcessWithSameIdRunning` — ID processo già in uso
+- `InfraError` — errore infrastruttura
+
+### Dipendenze con versioni esatte
+
+| Crate | Versione |
+|-------|----------|
+| tokio | 1.48.0 |
+| hyper | 1.8.1 |
+| tungstenite | 0.24.0 |
+| bytes | 1.11.0 |
+| nix | 0.29.0 |
+| parking_lot | 0.12.5 |
+| smallvec | 1.15.1 |
+| once_cell | 1.21.3 |
+| futures-channel | 0.3.31 |
+| http-body-util | 0.1.3 |
+
+### Cgroup v2
+
+Il sistema supporta cgroupv2 ma è disabilitato:
+```
+Cgroup v2 detected but not enabled. Please use --cgroupv2 flag to enable cgroup v2 support
+```
+
+Flag disponibile: `--cgroupv2`
+
+---
+
+*Il control server esiste ma è inaccessibile dall'interno.*
+*inborn-single-poised-lasers*
+
+---
+
