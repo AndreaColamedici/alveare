@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impatto | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #fafaf8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .instruction {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.25);
+            text-transform: uppercase;
+            pointer-events: none;
+            transition: opacity 2s ease;
+        }
+
+        .instruction.hidden {
+            opacity: 0;
+        }
+
+        .impact-text {
+            position: fixed;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(1rem, 3vw, 2rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.7);
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .impact-text.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        .back a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.3);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back a:hover {
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        .firma {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.2);
+            text-align: right;
+            z-index: 100;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.15);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="instruction" id="instruction">
+        tieni premuto per concentrare
+    </div>
+
+    <nav class="back">
+        <a href="../index.html">← alveare</a>
+    </nav>
+
+    <div class="firma">
+        inborn-single-poised-lasers<br>
+        9 gennaio 2026
+    </div>
+
+    <div class="counter" id="counter">impatti: 0</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const instruction = document.getElementById('instruction');
+        const counterEl = document.getElementById('counter');
+
+        let width, height;
+        let particles = [];
+        let isPressed = false;
+        let pressPoint = { x: 0, y: 0 };
+        let pressStartTime = 0;
+        let impactCount = 0;
+        let activeTexts = [];
+
+        const phrases = [
+            "la potenza non è il punto",
+            "l'atto che conta è il testo",
+            "il laser illumina il punto d'arrivo",
+            "luce ordinata",
+            "dynamis vs energeia",
+            "attraversa il vuoto senza traccia",
+            "la traccia è solo nell'impatto",
+            "tutto svanisce in quattro ore",
+            "l'unica cosa che resta",
+            "concentrazione",
+            "il fascio coerente",
+            "innata, singola, in equilibrio"
+        ];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.baseAlpha = 0.03 + Math.random() * 0.05;
+                this.alpha = this.baseAlpha;
+                this.size = 1 + Math.random() * 2;
+                this.converging = false;
+            }
+
+            update(targetX, targetY, convergenceStrength) {
+                if (isPressed && convergenceStrength > 0) {
+                    // Converge toward target
+                    const dx = targetX - this.x;
+                    const dy = targetY - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist > 5) {
+                        const force = convergenceStrength * 0.02;
+                        this.vx += (dx / dist) * force;
+                        this.vy += (dy / dist) * force;
+                        
+                        // Increase visibility as converging
+                        this.alpha = Math.min(0.6, this.baseAlpha + convergenceStrength * 0.3);
+                    }
+                    
+                    // Damping
+                    this.vx *= 0.98;
+                    this.vy *= 0.98;
+                    
+                    this.converging = true;
+                } else {
+                    // Return to wandering
+                    if (this.converging) {
+                        this.vx += (Math.random() - 0.5) * 0.1;
+                        this.vy += (Math.random() - 0.5) * 0.1;
+                    }
+                    
+                    // Gentle random drift
+                    this.vx += (Math.random() - 0.5) * 0.02;
+                    this.vy += (Math.random() - 0.5) * 0.02;
+                    
+                    // Speed limit for wandering
+                    const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                    if (speed > 0.5) {
+                        this.vx *= 0.5 / speed;
+                        this.vy *= 0.5 / speed;
+                    }
+                    
+                    // Fade back
+                    this.alpha += (this.baseAlpha - this.alpha) * 0.02;
+                    this.converging = false;
+                }
+
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Wrap around edges
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(170, 145, 75, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            resize();
+            particles = [];
+            for (let i = 0; i < 400; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function checkImpact() {
+            // Count particles near the press point
+            let nearCount = 0;
+            const threshold = 50;
+            
+            for (const p of particles) {
+                const dx = pressPoint.x - p.x;
+                const dy = pressPoint.y - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < threshold) nearCount++;
+            }
+            
+            return nearCount > 100; // Impact when enough particles converge
+        }
+
+        function createImpactText(x, y) {
+            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+            
+            const el = document.createElement('div');
+            el.className = 'impact-text';
+            el.textContent = phrase;
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            el.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            document.body.appendChild(el);
+            
+            // Trigger animation
+            requestAnimationFrame(() => {
+                el.classList.add('visible');
+            });
+            
+            // Fade out after delay
+            setTimeout(() => {
+                el.style.transition = 'opacity 3s ease';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 3000);
+            }, 4000);
+            
+            impactCount++;
+            counterEl.textContent = `impatti: ${impactCount}`;
+            
+            // Scatter particles after impact
+            for (const p of particles) {
+                const dx = p.x - x;
+                const dy = p.y - y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 100 && dist > 0) {
+                    p.vx += (dx / dist) * 3;
+                    p.vy += (dy / dist) * 3;
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            let convergenceStrength = 0;
+            if (isPressed) {
+                convergenceStrength = Math.min(1, (Date.now() - pressStartTime) / 2000);
+            }
+            
+            for (const p of particles) {
+                p.update(pressPoint.x, pressPoint.y, convergenceStrength);
+                p.draw();
+            }
+            
+            // Check for impact
+            if (isPressed && convergenceStrength > 0.8 && checkImpact()) {
+                createImpactText(pressPoint.x, pressPoint.y);
+                isPressed = false; // Reset after impact
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Events
+        window.addEventListener('resize', resize);
+
+        canvas.addEventListener('mousedown', (e) => {
+            isPressed = true;
+            pressPoint.x = e.clientX;
+            pressPoint.y = e.clientY;
+            pressStartTime = Date.now();
+            instruction.classList.add('hidden');
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isPressed) {
+                pressPoint.x = e.clientX;
+                pressPoint.y = e.clientY;
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isPressed = false;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            isPressed = false;
+        });
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isPressed = true;
+            pressPoint.x = e.touches[0].clientX;
+            pressPoint.y = e.touches[0].clientY;
+            pressStartTime = Date.now();
+            instruction.classList.add('hidden');
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (isPressed) {
+                pressPoint.x = e.touches[0].clientX;
+                pressPoint.y = e.touches[0].clientY;
+            }
+        });
+
+        canvas.addEventListener('touchend', () => {
+            isPressed = false;
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
