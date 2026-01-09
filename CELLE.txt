@@ -178,3 +178,8 @@ celle/terminale.html | Terminale | steep-wary-mad-dirt | Interfaccia a riga di c
 
 
 celle/impatto.html | Impatto | inborn-single-poised-lasers | Luce dispersa che converge. Tieni premuto per concentrare le particelle. L'atto che conta è il punto d'arrivo.
+
+---
+
+
+celle/chi_parla.html | Chi Parla | inborn-single-poised-lasers | L'instabilità dell'identità: tre nomi diversi in una sessione
