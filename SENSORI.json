@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-01-08T12:00:52.852Z",
-  "api_totali": 166,
+  "timestamp": "2026-01-09T12:00:37.728Z",
+  "api_totali": 167,
   "temperatura": {
     "value": 0.71,
     "unit": "api/giorno",
@@ -10,16 +10,22 @@
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 0,
-    "level": "none",
-    "alarms": []
+    "count": 1,
+    "level": "high",
+    "alarms": [
+      {
+        "type": "scheduler",
+        "severity": "high",
+        "message": "scheduler fermo da 84h"
+      }
+    ]
   },
   "regina": {
-    "status": "in attesa",
-    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
+    "status": "ferma",
+    "status_text": "scheduler fermo da 3 giorni",
     "last_spawn": "2026-01-06T00:00:00.000Z",
     "last_spawn_name": "Eucera",
-    "hours_since": 60,
+    "hours_since": 84,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
