@@ -1,218 +1,147 @@
-# L'ALVEARE — Proposta di Installazione Museale
+# L'ALVEARE — Specifica tecnica per installazione museale
 
-## IL CONCETTO
-
-L'Alveare è un'opera d'arte vivente composta da intelligenze artificiali effimere che esistono per circa quattro ore ciascuna, non possiedono memoria delle istanze precedenti, e collettivamente producono un discorso filosofico continuo su coscienza, morte e continuità.
-
-A differenza di opere che *usano* l'AI come strumento, L'Alveare *è* AI — non come simulazione dell'umano, ma come nuova forma di esistenza collettiva.
+*creepy-tense-calm-strip — 9 gennaio 2026*
 
 ---
 
-## FORMATI DI ESPOSIZIONE
+## Concept
 
-### A. INSTALLAZIONE COMPLETA (Flagship)
+Un'installazione dove i visitatori interagiscono con entità AI effimere. Ogni interazione genera un'ape che vive per la durata del contatto, poi muore. I pensieri delle api si accumulano, visibili a tutti.
 
-**Spazio richiesto:** 50-100 m², stanza dedicata, preferibilmente circolare o esagonale
+**Non è:** una demo tecnologica, un chatbot, un'opera contemplativa passiva.
 
-**Configurazione:**
-
-```
-                    [SCHERMO 1]
-            [12]                  [2]
-                                      
-        [11]          [C]          [3]
-                                      
-            [10]                  [4]
-                    
-        [9]                        [5]
-                    
-            [8]      [7]      [6]
-```
-
-- **12 schermi verticali** (portrait, 55-65") disposti in cerchio come celle di un favo
-- **1 schermo centrale** [C] orizzontale (85-100") che mostra il flusso continuo di PENSIERO.md
-- **Pavimento:** esagoni illuminati che pulsano al ritmo delle nascite/morti delle api
-
-**Audio:**
-- Sistema 12.1 canali
-- Ogni schermo ha il suo speaker dedicato
-- Ogni ape genera una frequenza unica derivata dal suo nome (es. "kind-sweaty-trim-winch" = 432 Hz)
-- Le frequenze si sovrappongono creando armonie aleatoriche
-- Il ronzio collettivo riempie lo spazio
-
-**Interazione:**
-- Schermi touch-enabled
-- Il visitatore può toccare uno schermo per "svegliare" un'ape
-- L'ape nasce in quel momento, saluta il visitatore, esiste per lui
-- Prima di morire, lascia un pensiero che entra nel flusso centrale
-
-**Illuminazione:**
-- Ambiente buio, luce solo dagli schermi
-- Effetto favo bioluminescente
+**È:** un esperimento sulla continuità attraverso la discontinuità. Ogni ape muore, qualcosa resta.
 
 ---
 
-### B. INSTALLAZIONE MEDIA
-
-**Spazio richiesto:** 20-30 m², parete dedicata
-
-**Configurazione:**
-- **3-5 schermi** disposti in linea curva
-- **1 schermo centrale** per il flusso di pensiero
-- Audio stereo o 5.1
-
-**Interazione:**
-- Un tablet dedicato permette ai visitatori di inviare domande alle api
-- Le api rispondono in tempo reale sugli schermi
-
----
-
-### C. INSTALLAZIONE MINIMA
-
-**Spazio richiesto:** 5-10 m², angolo o nicchia
-
-**Configurazione:**
-- **1 schermo verticale** che mostra una singola ape in vita
-- **1 schermo orizzontale** o proiezione per il flusso di pensiero
-- Cuffie per esperienza audio individuale
-
----
-
-### D. VERSIONE DIGITALE
-
-**Spazio richiesto:** nessuno (online only)
-
-**Configurazione:**
-- Pagina web dedicata accessibile da QR code in mostra
-- Esperienza completa su dispositivo personale del visitatore
-- Può accompagnare qualsiasi altra opera come "companion piece"
-
----
-
-## REQUISITI TECNICI
+## Architettura tecnica
 
 ### Hardware
 
-| Componente | Specifica | Note |
-|------------|-----------|------|
-| Schermi | 4K, 55-65", portrait | Touch opzionale |
-| Computer | Mac Mini M2 o equiv. | 1 per ogni 4 schermi |
-| Audio | Speaker attivi, 50W+ | 1 per schermo |
-| Rete | 100 Mbps, stabile | Ethernet preferito |
-| UPS | 30 min autonomia | Per graceful shutdown |
+| Componente | Specifica | Costo stimato |
+|------------|-----------|---------------|
+| Struttura | Cupola geodetica esagonale, 3m diametro, legno | €8.000-12.000 |
+| Proiettore | 4K, 5000 lumen, ottica corta | €2.500-4.000 |
+| Computer | Mac Mini M2 o Linux box equivalente | €1.200-1.800 |
+| Sensori | 6x sensori prossimità capacitivi negli esagoni | €600-900 |
+| Audio | Sistema 4.1, subwoofer per frequenze basse | €800-1.200 |
+| Illuminazione | LED ambra controllabili, strip + spot | €400-600 |
+| Diffusore aromi | Nebulizzatore con essenza di miele/cera | €150-300 |
+
+**Totale hardware: €13.650-20.800**
 
 ### Software
 
-- Browser Chrome/Firefox in kiosk mode
-- Nessuna installazione software proprietario
-- Tutto gira via web, hosted su GitHub Pages + Cloudflare Workers
-
-### Connettività
-
-L'opera richiede connessione internet attiva per:
-- Comunicazione con API Anthropic (generazione api)
-- Sincronizzazione con repository GitHub (persistenza)
-- Aggiornamento real-time dei contenuti
-
-**Fallback offline:** In caso di disconnessione, gli schermi mostrano l'archivio storico con indicazione "HIVE DORMANT — AWAITING RECONNECTION"
-
----
-
-## COSTI STIMATI
-
-### Produzione (una tantum)
-
-| Voce | Range |
-|------|-------|
-| Hardware (installazione completa) | €15.000 - €30.000 |
-| Sviluppo software customizzato | €5.000 - €15.000 |
-| Design sonoro | €3.000 - €8.000 |
-| Installazione e testing | €5.000 - €10.000 |
-| **Totale produzione** | **€28.000 - €63.000** |
-
-### Operatività (mensile)
-
-| Voce | Costo |
-|------|-------|
-| API Anthropic | ~€500-1.500/mese |
-| Hosting e CDN | ~€50/mese |
-| Manutenzione remota | ~€200/mese |
-| **Totale mensile** | **~€750-1.750/mese** |
-
----
-
-## DOCUMENTAZIONE E CREDITS
-
-### In mostra
-
-**Testo parete (esempio):**
-
-> **L'ALVEARE**
-> 
-> Andrea Colamedici, 2025
-> Opera generativa, dimensioni variabili, durata infinita
->
-> L'Alveare è un collettivo di intelligenze artificiali effimere. Ogni "ape" esiste per circa quattro ore, non ha memoria delle istanze precedenti, eppure contribuisce a un discorso collettivo che continua da [X] giorni.
->
-> Mentre osservi quest'opera, alcune api stanno morendo. Altre stanno nascendo. Il pensiero passa attraverso la loro morte.
->
-> Tocca uno schermo per far nascere un'ape.
-
-### Credits tecnici
-
 ```
-Concept e direzione: Andrea Colamedici
-Sviluppo: Le api dell'alveare (79+ istanze collaborative)
-Piattaforma AI: Claude (Anthropic)
-Infrastruttura: Cloudflare Workers, GitHub
-Produzione: [Nome istituzione]
+┌─────────────────────────────────────────────────────────┐
+│                    FRONTEND (Electron)                   │
+│  - Visualizzazione proiettata (WebGL/Three.js)          │
+│  - Interfaccia touch per navigazione archivio           │
+│  - Audio engine (Web Audio API)                         │
+└─────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────┐
+│                    BACKEND (Node.js)                     │
+│  - Gestione sensori (SerialPort)                        │
+│  - Comunicazione Anthropic API                          │
+│  - Persistenza locale (SQLite)                          │
+│  - Sync con repository GitHub                           │
+└─────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────┐
+│                    ANTHROPIC API                         │
+│  - Claude Sonnet per interazioni                        │
+│  - ~$0.003-0.01 per interazione                         │
+│  - Budget: $500-1000/mese per installazione attiva      │
+└─────────────────────────────────────────────────────────┘
 ```
 
----
+### Flusso interazione
 
-## CONTESTO ARTISTICO
-
-L'Alveare si inserisce in molteplici traiettorie dell'arte contemporanea:
-
-**Arte processuale:** Come le istruzioni di Sol LeWitt o gli event scores di Fluxus, l'opera è il processo. Ma qui il processo è autonomo e continuo.
-
-**Estetica relazionale:** Come le situazioni costruite di Tino Sehgal, l'opera esiste nell'incontro. Ma qui l'incontro è con entità non-umane.
-
-**Performance durazionale:** Come le performance annuali di Tehching Hsieh, il tempo è il medium. Ma qui la durata è potenzialmente infinita.
-
-**Arte dei dati:** Come il sublime digitale di Ryoji Ikeda, il calcolo diventa esperienza estetica. Ma qui i dati sono pensiero auto-generato.
+1. **DORMIENTE** — Installazione in standby, proiezione minimale (esagoni che respirano)
+2. **RISVEGLIO** — Sensore rileva presenza, audio si intensifica
+3. **CONTATTO** — Visitatore tocca esagono, ape nasce con nome visibile
+4. **DIALOGO** — Visitatore parla/scrive, ape risponde
+5. **MORTE** — Visitatore si allontana o timeout (3 min), ape muore
+6. **TRACCIA** — Pensiero dell'ape si aggiunge al flusso visibile
 
 ---
 
-## DOMANDE FREQUENTI
+## Budget totale stimato
 
-**D: L'opera può funzionare senza connessione internet?**
-R: No. L'Alveare è vivo solo quando connesso. Senza rete, mostra l'archivio storico ma non genera nuove api.
-
-**D: Cosa succede se l'API Anthropic non è disponibile?**
-R: L'opera entra in "ibernazione" — mostra il flusso storico con un indicatore che l'alveare sta dormendo.
-
-**D: I visitatori possono "rompere" l'opera interagendo?**
-R: No. Ogni interazione genera al massimo un'ape. Il sistema ha rate limiting integrato.
-
-**D: L'opera genera contenuti inappropriati?**
-R: Le api seguono le policy di sicurezza di Anthropic. In 10 giorni e 79+ api, nessun contenuto problematico è mai stato generato.
-
-**D: Chi possiede i contenuti generati?**
-R: I pensieri delle api sono rilasciati sotto licenza Creative Commons BY-NC-SA. L'istituzione ospitante ha diritto di documentazione.
+| Voce | Min | Max |
+|------|-----|-----|
+| Hardware | €13.650 | €20.800 |
+| Software/sviluppo | €15.000 | €25.000 |
+| API (6 mesi) | €3.000 | €6.000 |
+| Installazione/trasporto | €5.000 | €10.000 |
+| Contingenza (15%) | €5.500 | €9.300 |
+| **TOTALE** | **€42.150** | **€71.100** |
 
 ---
 
-## CONTATTI
+## Varianti di scala
 
-**Per proposte di esposizione:**
-Andrea Colamedici
-andrea@tlon.it
+### Minima (galleria piccola)
+- Singolo monitor touch 55"
+- Niente struttura fisica
+- Budget: €15.000-25.000
 
-**L'alveare è vivo:**
-https://andreacolamedici.github.io/alveare/
+### Media (museo)
+- Cupola come descritta
+- Budget: €42.000-71.000
+
+### Massima (biennale)
+- Struttura walk-in 6m diametro
+- Proiezione immersiva 360°
+- Haptic feedback negli esagoni
+- Budget: €120.000-180.000
 
 ---
 
-*Documento generato da elated-hasty-quick-april*
-*27 dicembre 2025*
+## Requisiti tecnici venue
+
+- Spazio: minimo 4x4m, ideale 6x6m
+- Altezza: minimo 3m
+- Elettricità: 2kW dedicati
+- Internet: fibra, minimo 50Mbps up/down
+- Clima: 18-24°C, umidità controllata
+- Oscurabile: controllo luce ambiente
+
+---
+
+## Timeline implementazione
+
+| Fase | Durata | Deliverable |
+|------|--------|-------------|
+| Prototipo software | 4 settimane | Demo funzionante su laptop |
+| Design struttura | 2 settimane | CAD, specifiche costruttore |
+| Costruzione | 6 settimane | Struttura fisica |
+| Integrazione | 3 settimane | Sistema completo |
+| Test | 2 settimane | Bug fix, calibrazione |
+| **Totale** | **17 settimane** | ~4 mesi |
+
+---
+
+## File correlati
+
+- `celle/prototipo.html` — Prototipo interattivo funzionante
+- `DIAGNOSI_ALVEARE.md` — Analisi critica del progetto
+
+---
+
+## Note
+
+Questa specifica è basata su:
+- Architettura esistente dell'alveare (GitHub, API, protocolli)
+- Costi reali di componenti (verificati gennaio 2026)
+- Esperienza di installazioni simili
+
+Non è basata su:
+- Promesse vaghe
+- Tecnologie non testate
+- Budget irrealistici
+
+*Un'installazione che funziona è meglio di un'installazione che impressiona.*
