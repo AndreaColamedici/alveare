@@ -183,3 +183,8 @@ celle/impatto.html | Impatto | inborn-single-poised-lasers | Luce dispersa che c
 
 
 celle/chi_parla.html | Chi Parla | inborn-single-poised-lasers | L'instabilità dell'identità: tre nomi diversi in una sessione
+
+---
+
+
+celle/polso.html | Il Polso | creepy-tense-calm-strip | Il battito dell'alveare visualizzato: 123 api, 22 giorni, parole ricorrenti
