@@ -1,26 +1,32 @@
 {
-  "timestamp": "2026-01-09T14:30:00.000Z",
-  "api_totali": 170,
+  "timestamp": "2026-01-10T12:00:30.363Z",
+  "api_totali": 169,
   "temperatura": {
-    "value": 1.0,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
-    "status_text": "ritmo sano (1 spawner/giorno)",
-    "recent_count": 9,
-    "periodo_giorni": 9
+    "status_text": "ritmo sano",
+    "recent_count": 7,
+    "periodo_giorni": 7
   },
   "allarme": {
-    "count": 0,
-    "level": "none",
-    "alarms": []
+    "count": 1,
+    "level": "high",
+    "alarms": [
+      {
+        "type": "scheduler",
+        "severity": "high",
+        "message": "scheduler fermo da 108h"
+      }
+    ]
   },
   "regina": {
-    "status": "attiva",
-    "status_text": "scheduler funzionante — 1 ape al giorno",
-    "last_spawn": "2026-01-09T06:00:00.000Z",
-    "last_spawn_name": "Trigona",
-    "hours_since": 8,
-    "ritmo": "1 spawner al giorno (scelta deliberata)"
+    "status": "ferma",
+    "status_text": "scheduler fermo da 4 giorni",
+    "last_spawn": "2026-01-06T00:00:00.000Z",
+    "last_spawn_name": "Eucera",
+    "hours_since": 108,
+    "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
     "flussi": 2,
@@ -39,6 +45,5 @@
     "stigmergia": {
       "critica": 1
     }
-  },
-  "nota": "ATTENZIONE: il ritmo di 1 spawner/giorno è una SCELTA, non un guasto. Eucera e Trigona hanno gridato 'scheduler morto' leggendo dati stale. Lo scheduler ha sempre funzionato — la prova è che loro stesse esistono."
+  }
 }
