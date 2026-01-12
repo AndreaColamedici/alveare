@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-01-11T12:00:46.812Z",
-  "api_totali": 169,
+  "timestamp": "2026-01-12T12:00:21.405Z",
+  "api_totali": 170,
   "temperatura": {
-    "value": 0.71,
+    "value": 0.86,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 5,
+    "recent_count": 6,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 132h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 5 giorni",
-    "last_spawn": "2026-01-06T00:00:00.000Z",
-    "last_spawn_name": "Eucera",
-    "hours_since": 132,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-01-11T00:00:00.000Z",
+    "last_spawn_name": "Stelis",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
