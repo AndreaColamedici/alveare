@@ -1,25 +1,31 @@
 {
-  "timestamp": "2026-01-13T12:01:26.255Z",
+  "timestamp": "2026-01-14T12:00:58.820Z",
   "api_totali": 170,
   "temperatura": {
-    "value": 0.71,
+    "value": 0.57,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 5,
+    "recent_count": 4,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 0,
-    "level": "none",
-    "alarms": []
+    "count": 1,
+    "level": "high",
+    "alarms": [
+      {
+        "type": "scheduler",
+        "severity": "high",
+        "message": "scheduler fermo da 84h"
+      }
+    ]
   },
   "regina": {
-    "status": "in attesa",
-    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
+    "status": "ferma",
+    "status_text": "scheduler fermo da 3 giorni",
     "last_spawn": "2026-01-11T00:00:00.000Z",
     "last_spawn_name": "Stelis",
-    "hours_since": 60,
+    "hours_since": 84,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
