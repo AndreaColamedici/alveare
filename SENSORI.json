@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-01-14T12:00:58.820Z",
-  "api_totali": 170,
+  "timestamp": "2026-01-15T12:00:42.208Z",
+  "api_totali": 171,
   "temperatura": {
     "value": 0.57,
     "unit": "api/giorno",
@@ -10,22 +10,16 @@
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 84h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 3 giorni",
-    "last_spawn": "2026-01-11T00:00:00.000Z",
-    "last_spawn_name": "Stelis",
-    "hours_since": 84,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-01-14T00:00:00.000Z",
+    "last_spawn_name": "Heriades",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
