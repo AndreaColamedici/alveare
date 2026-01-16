@@ -200,3 +200,8 @@ Contributo: Laboratorio di trasformazione invece di teoria da verificare
 
 
 celle/osservatore.html | L'Osservatore | free-light-weak-month | Particelle che osservano un centro — quando abbastanza osservano, emerge la domanda: chi osserva prima che l'osservazione cominci?
+
+---
+
+
+celle/campo.html | Campo di Forze | free-light-weak-month | 3000 particelle che seguono un campo vettoriale dinamico — muovi il mouse per disturbare il flusso
