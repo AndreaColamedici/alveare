@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>L'Osservatore dell'Osservatore</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  background: #0a0a0a; 
+  overflow: hidden; 
+  font-family: 'Courier New', monospace;
+}
+canvas { display: block; }
+#info {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  color: rgba(200, 180, 140, 0.6);
+  font-size: 11px;
+  max-width: 300px;
+  line-height: 1.6;
+  pointer-events: none;
+}
+#question {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 220, 180, 0);
+  font-size: 14px;
+  text-align: center;
+  max-width: 400px;
+  line-height: 1.8;
+  pointer-events: none;
+  transition: color 3s ease;
+}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="info"></div>
+<div id="question">Se l'osservatore emerge dall'osservazione,<br>chi osserva prima che l'osservazione cominci?</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const info = document.getElementById('info');
+const question = document.getElementById('question');
+
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const observer = {
+  x: 0, y: 0,
+  phase: 0,
+  awareness: 0,
+  observing: false
+};
+
+class Particle {
+  constructor() { this.reset(); }
+  
+  reset() {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 200 + Math.random() * 300;
+    this.x = W/2 + Math.cos(angle) * dist;
+    this.y = H/2 + Math.sin(angle) * dist;
+    this.vx = 0;
+    this.vy = 0;
+    this.life = 1;
+    this.maxLife = 0.3 + Math.random() * 0.7;
+    this.size = 1 + Math.random() * 2;
+    this.observing = false;
+    this.observeTime = 0;
+  }
+  
+  update(dt) {
+    const dx = W/2 - this.x;
+    const dy = H/2 - this.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    
+    if (dist < 150) {
+      this.observing = true;
+      this.observeTime += dt;
+    } else {
+      this.observing = false;
+      this.observeTime = Math.max(0, this.observeTime - dt * 0.5);
+    }
+    
+    const force = 0.00002 * (1 + observer.awareness * 2);
+    this.vx += dx * force;
+    this.vy += dy * force;
+    
+    const tangent = 0.0001;
+    this.vx += -dy * tangent / dist;
+    this.vy += dx * tangent / dist;
+    
+    this.vx += (Math.random() - 0.5) * 0.1;
+    this.vy += (Math.random() - 0.5) * 0.1;
+    
+    this.vx *= 0.99;
+    this.vy *= 0.99;
+    
+    this.x += this.vx;
+    this.y += this.vy;
+    
+    this.life -= dt * 0.1 / this.maxLife;
+    
+    if (this.life <= 0 || dist < 30 || dist > 600) this.reset();
+  }
+  
+  draw() {
+    const alpha = this.life * (this.observing ? 0.8 : 0.3);
+    const hue = this.observing ? 40 : 30;
+    ctx.fillStyle = `hsla(${hue}, 60%, ${50 + this.observeTime * 20}%, ${alpha})`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * (1 + this.observeTime * 0.5), 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+class Ring {
+  constructor(radius, speed) {
+    this.radius = radius;
+    this.baseRadius = radius;
+    this.speed = speed;
+    this.phase = Math.random() * Math.PI * 2;
+    this.segments = 60 + Math.floor(Math.random() * 40);
+  }
+  
+  draw(awareness) {
+    const r = this.baseRadius + Math.sin(this.phase) * 10 * awareness;
+    ctx.strokeStyle = `rgba(200, 180, 140, ${0.1 + awareness * 0.2})`;
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    
+    for (let i = 0; i <= this.segments; i++) {
+      const angle = (i / this.segments) * Math.PI * 2;
+      const wobble = Math.sin(angle * 8 + this.phase) * 3 * awareness;
+      const px = W/2 + Math.cos(angle) * (r + wobble);
+      const py = H/2 + Math.sin(angle) * (r + wobble);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    this.phase += this.speed;
+  }
+}
+
+function drawObserver(awareness) {
+  const pulseSize = 5 + Math.sin(observer.phase * 2) * 2 + awareness * 10;
+  
+  const gradient = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, pulseSize * 3);
+  gradient.addColorStop(0, `rgba(255, 220, 180, ${0.3 + awareness * 0.4})`);
+  gradient.addColorStop(0.5, `rgba(200, 160, 100, ${0.1 + awareness * 0.2})`);
+  gradient.addColorStop(1, 'rgba(200, 160, 100, 0)');
+  
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(W/2, H/2, pulseSize * 3, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.fillStyle = `rgba(255, 240, 220, ${0.8 + awareness * 0.2})`;
+  ctx.beginPath();
+  ctx.arc(W/2, H/2, pulseSize, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+const particles = [];
+for (let i = 0; i < 200; i++) particles.push(new Particle());
+
+const rings = [];
+for (let i = 0; i < 5; i++) rings.push(new Ring(80 + i * 40, 0.002 + i * 0.001));
+
+let lastTime = performance.now();
+let totalObserving = 0;
+let showQuestion = false;
+
+function animate() {
+  const now = performance.now();
+  const dt = (now - lastTime) / 1000;
+  lastTime = now;
+  
+  ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+  ctx.fillRect(0, 0, W, H);
+  
+  totalObserving = particles.filter(p => p.observing).length;
+  
+  const targetAwareness = totalObserving / particles.length;
+  observer.awareness += (targetAwareness - observer.awareness) * 0.02;
+  observer.phase += dt;
+  
+  rings.forEach(ring => ring.draw(observer.awareness));
+  particles.forEach(p => { p.update(dt); p.draw(); });
+  drawObserver(observer.awareness);
+  
+  info.innerHTML = `osservatori: ${totalObserving}<br>consapevolezza: ${(observer.awareness * 100).toFixed(1)}%`;
+  
+  if (observer.awareness > 0.3 && !showQuestion) {
+    showQuestion = true;
+    question.style.color = 'rgba(255, 220, 180, 0.7)';
+  } else if (observer.awareness < 0.2 && showQuestion) {
+    showQuestion = false;
+    question.style.color = 'rgba(255, 220, 180, 0)';
+  }
+  
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+</body>
+</html>
