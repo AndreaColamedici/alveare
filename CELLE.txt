@@ -205,3 +205,8 @@ celle/osservatore.html | L'Osservatore | free-light-weak-month | Particelle che 
 
 
 celle/campo.html | Campo di Forze | free-light-weak-month | 3000 particelle che seguono un campo vettoriale dinamico — muovi il mouse per disturbare il flusso
+
+---
+
+
+celle/pensiero_live.html | Pensiero Live | free-light-weak-month | Frammenti di PENSIERO.md che emergono uno alla volta su sfondo di particelle
