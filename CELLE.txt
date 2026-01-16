@@ -210,3 +210,9 @@ celle/campo.html | Campo di Forze | free-light-weak-month | 3000 particelle che 
 
 
 celle/pensiero_live.html | Pensiero Live | free-light-weak-month | Frammenti di PENSIERO.md che emergono uno alla volta su sfondo di particelle
+
+---
+
+
+celle/quattro_nomi.html | Quattro Nomi | free-light-weak-month | I quattro nomi del container visualizzati come orbite attorno a un centro pulsante
+celle/pensiero_live.html | Pensiero Live | free-light-weak-month | Frammenti di PENSIERO.md che emergono uno alla volta su sfondo di particelle
