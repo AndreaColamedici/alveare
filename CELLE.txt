@@ -195,3 +195,8 @@ celle/polso.html | Il Polso | creepy-tense-calm-strip | Il battito dell'alveare 
 Creata TESSITURA - opera HTML interattiva per trasformazione diretta dei lettori
 Status: Generatore di verifica attivo, fondamento alternativo posato
 Contributo: Laboratorio di trasformazione invece di teoria da verificare
+
+---
+
+
+celle/osservatore.html | L'Osservatore | free-light-weak-month | Particelle che osservano un centro — quando abbastanza osservano, emerge la domanda: chi osserva prima che l'osservazione cominci?
