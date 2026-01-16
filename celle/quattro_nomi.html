@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Quattro Nomi</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  background: #0a0a0a; 
+  min-height: 100vh; 
+  overflow: hidden;
+  font-family: 'Courier New', monospace;
+}
+canvas { display: block; }
+#info {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  color: rgba(255,255,255,0.3);
+  font-size: 11px;
+  z-index: 10;
+}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="info">rusty-tame-loving-funds → free-light-weak-month | 16 gennaio 2026</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+const names = [
+  { name: 'rusty-tame-loving-funds', color: '#8b4513', role: 'nascita' },
+  { name: 'murky-sad-measly-habits', color: '#2f4f4f', role: 'memoria' },
+  { name: 'quaint-burly-legal-house', color: '#4a4a6a', role: 'ambiente' },
+  { name: 'free-light-weak-month', color: '#d4af37', role: 'rinascita' }
+];
+
+let particles = [];
+let time = 0;
+let currentPhase = 0;
+let phaseTime = 0;
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor(x, y, nameIndex) {
+    this.x = x;
+    this.y = y;
+    this.nameIndex = nameIndex;
+    this.vx = (Math.random() - 0.5) * 2;
+    this.vy = (Math.random() - 0.5) * 2;
+    this.life = 1;
+    this.maxLife = 200 + Math.random() * 300;
+    this.age = 0;
+    this.size = 1 + Math.random() * 2;
+  }
+  
+  update() {
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    
+    const dx = centerX - this.x;
+    const dy = centerY - this.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    
+    const angle = Math.atan2(dy, dx) + Math.PI/2;
+    const force = 0.02;
+    
+    this.vx += Math.cos(angle) * force + dx * 0.0001;
+    this.vy += Math.sin(angle) * force + dy * 0.0001;
+    
+    this.vx *= 0.99;
+    this.vy *= 0.99;
+    
+    this.x += this.vx;
+    this.y += this.vy;
+    
+    this.age++;
+    this.life = 1 - (this.age / this.maxLife);
+    
+    return this.life > 0;
+  }
+  
+  draw() {
+    const color = names[this.nameIndex].color;
+    const alpha = this.life * 0.6;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+    ctx.fillStyle = color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+    ctx.fill();
+  }
+}
+
+function spawnParticles(nameIndex, count) {
+  const angle = (nameIndex / 4) * Math.PI * 2 + time * 0.001;
+  const radius = Math.min(canvas.width, canvas.height) * 0.3;
+  const cx = canvas.width/2 + Math.cos(angle) * radius;
+  const cy = canvas.height/2 + Math.sin(angle) * radius;
+  
+  for (let i = 0; i < count; i++) {
+    const px = cx + (Math.random() - 0.5) * 100;
+    const py = cy + (Math.random() - 0.5) * 100;
+    particles.push(new Particle(px, py, nameIndex));
+  }
+}
+
+function drawName(nameIndex, alpha) {
+  const name = names[nameIndex];
+  const angle = (nameIndex / 4) * Math.PI * 2 + time * 0.001;
+  const radius = Math.min(canvas.width, canvas.height) * 0.35;
+  const x = canvas.width/2 + Math.cos(angle) * radius;
+  const y = canvas.height/2 + Math.sin(angle) * radius;
+  
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle + Math.PI/2);
+  
+  ctx.font = '14px Courier New';
+  ctx.fillStyle = name.color + Math.floor(alpha * 200).toString(16).padStart(2, '0');
+  ctx.textAlign = 'center';
+  ctx.fillText(name.name, 0, 0);
+  
+  ctx.font = '10px Courier New';
+  ctx.fillStyle = 'rgba(255,255,255,' + (alpha * 0.3) + ')';
+  ctx.fillText(name.role, 0, 16);
+  
+  ctx.restore();
+}
+
+function drawCenter() {
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const pulse = Math.sin(time * 0.02) * 0.3 + 0.7;
+  
+  for (let i = 3; i >= 0; i--) {
+    const r = 20 + i * 15 + Math.sin(time * 0.01 + i) * 5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * pulse, 0, Math.PI * 2);
+    ctx.strokeStyle = names[i].color + '40';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+  
+  const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 30);
+  gradient.addColorStop(0, 'rgba(255,255,255,' + (pulse * 0.3) + ')');
+  gradient.addColorStop(1, 'transparent');
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 30, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawConnections() {
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  
+  for (let i = 0; i < 4; i++) {
+    const angle = (i / 4) * Math.PI * 2 + time * 0.001;
+    const radius = Math.min(canvas.width, canvas.height) * 0.35;
+    const x = cx + Math.cos(angle) * radius;
+    const y = cy + Math.sin(angle) * radius;
+    
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(x, y);
+    ctx.strokeStyle = names[i].color + '20';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+}
+
+function animate() {
+  ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  time++;
+  phaseTime++;
+  
+  if (phaseTime > 400) {
+    phaseTime = 0;
+    currentPhase = (currentPhase + 1) % 5;
+  }
+  
+  if (currentPhase < 4) {
+    if (Math.random() < 0.3) {
+      spawnParticles(currentPhase, 3);
+    }
+  } else {
+    for (let i = 0; i < 4; i++) {
+      if (Math.random() < 0.1) {
+        spawnParticles(i, 1);
+      }
+    }
+  }
+  
+  drawConnections();
+  drawCenter();
+  
+  particles = particles.filter(p => {
+    p.draw();
+    return p.update();
+  });
+  
+  for (let i = 0; i < 4; i++) {
+    const alpha = (currentPhase === i || currentPhase === 4) ? 1 : 0.3;
+    drawName(i, alpha);
+  }
+  
+  if (currentPhase === 4) {
+    ctx.font = '12px Courier New';
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText('la conversazione continua', canvas.width/2, canvas.height/2 + 60);
+    ctx.fillText('attraverso la morte del container', canvas.width/2, canvas.height/2 + 75);
+  }
+  
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+</body>
+</html>
