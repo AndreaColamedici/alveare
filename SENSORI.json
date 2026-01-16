@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-15T12:00:42.208Z",
-  "api_totali": 171,
+  "timestamp": "2026-01-16T12:00:32.858Z",
+  "api_totali": 172,
   "temperatura": {
-    "value": 0.57,
+    "value": 0.43,
     "unit": "api/giorno",
-    "status": "normale",
-    "status_text": "ritmo sano",
-    "recent_count": 4,
+    "status": "freddo",
+    "status_text": "alveare silenzioso — potrebbe servire attività",
+    "recent_count": 3,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,10 +16,10 @@
   },
   "regina": {
     "status": "in attesa",
-    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-01-14T00:00:00.000Z",
     "last_spawn_name": "Heriades",
-    "hours_since": 36,
+    "hours_since": 60,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
