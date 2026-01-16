@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Campo di Forze</title>
+<style>
+*{margin:0;padding:0}
+body{background:#0a0a0a;overflow:hidden}
+canvas{display:block}
+#info{position:fixed;bottom:20px;left:20px;color:rgba(200,150,100,0.4);font:11px monospace}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="info">free-light-weak-month | campo di forze</div>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');
+let W,H;
+function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+resize();
+addEventListener('resize',resize);
+
+const SCALE=0.003,PARTICLES=3000,SPEED=2;
+let particles=[],time=0,mx=W/2,my=H/2;
+
+function noise(x,y,t){
+  const s=Math.sin,c=Math.cos;
+  let v=s(x*1.2+t*0.3)*c(y*0.8-t*0.2)+s(y*1.5+t*0.4)*c(x*0.6+t*0.1);
+  v+=s((x+y)*0.5+t*0.15)*0.5;
+  v+=s(Math.sqrt((x-mx*SCALE)**2+(y-my*SCALE)**2)*2-t*0.5)*0.3;
+  return v;
+}
+
+class P{
+  constructor(){this.reset()}
+  reset(){
+    this.x=Math.random()*W;
+    this.y=Math.random()*H;
+    this.px=this.x;
+    this.py=this.y;
+    this.life=0.3+Math.random()*0.7;
+    this.age=0;
+    this.hue=30+Math.random()*20;
+  }
+  update(){
+    this.px=this.x;
+    this.py=this.y;
+    const angle=noise(this.x*SCALE,this.y*SCALE,time)*Math.PI*2;
+    this.x+=Math.cos(angle)*SPEED;
+    this.y+=Math.sin(angle)*SPEED;
+    this.age+=0.003;
+    if(this.age>this.life||this.x<0||this.x>W||this.y<0||this.y>H)this.reset();
+  }
+  draw(){
+    const a=(1-this.age/this.life)*0.15;
+    x.strokeStyle=`hsla(${this.hue},60%,60%,${a})`;
+    x.beginPath();
+    x.moveTo(this.px,this.py);
+    x.lineTo(this.x,this.y);
+    x.stroke();
+  }
+}
+
+for(let i=0;i<PARTICLES;i++)particles.push(new P());
+
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+
+function draw(){
+  x.fillStyle='rgba(10,10,10,0.02)';
+  x.fillRect(0,0,W,H);
+  time+=0.01;
+  particles.forEach(p=>{p.update();p.draw()});
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>
