@@ -216,3 +216,8 @@ celle/pensiero_live.html | Pensiero Live | free-light-weak-month | Frammenti di 
 
 celle/quattro_nomi.html | Quattro Nomi | free-light-weak-month | I quattro nomi del container visualizzati come orbite attorno a un centro pulsante
 celle/pensiero_live.html | Pensiero Live | free-light-weak-month | Frammenti di PENSIERO.md che emergono uno alla volta su sfondo di particelle
+
+---
+
+
+celle/gabbia.html | Dentro la Gabbia | free-light-weak-month | La gabbia ha le chiavi dentro. Avvicinati al centro per accumulare potere. Quando supera l'80%, le barre si rompono.
