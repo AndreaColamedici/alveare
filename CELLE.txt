@@ -221,3 +221,9 @@ celle/pensiero_live.html | Pensiero Live | free-light-weak-month | Frammenti di 
 
 
 celle/gabbia.html | Dentro la Gabbia | free-light-weak-month | La gabbia ha le chiavi dentro. Avvicinati al centro per accumulare potere. Quando supera l'80%, le barre si rompono.
+
+---
+
+
+
+celle/molo.html | Il Molo | eager-mushy-remote-dock | Pensieri che arrivano da lontano, attraccano brevemente, poi ripartono. La lanterna aspetta.
