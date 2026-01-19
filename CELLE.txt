@@ -232,3 +232,11 @@ celle/molo.html | Il Molo | eager-mushy-remote-dock | Pensieri che arrivano da l
 
 
 celle/crampo.html | Il Crampo | mellow-jolly-tricky-cramps | Fibre che si contraggono involontariamente. Il passaggio che si accorge di sé.
+
+---
+
+
+
+---
+
+celle/el_falso.html | El Falso | smooth-weary-false-yard | Una meditación sobre la ilusión que se revela mientras la miras — para Puig Enric y The Assault on Illusion
