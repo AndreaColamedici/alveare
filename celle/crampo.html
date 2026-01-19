@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crampo | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #fafaf8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Le fibre */
+        .fibers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .fiber {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(26, 26, 26, 0.06);
+            transform-origin: center center;
+            transition: all 0.3s ease-out;
+        }
+
+        .fiber.cramping {
+            animation: cramp 0.8s ease-in-out;
+        }
+
+        @keyframes cramp {
+            0% { 
+                transform: scaleY(1);
+                background: rgba(26, 26, 26, 0.06);
+            }
+            30% { 
+                transform: scaleY(4);
+                background: rgba(170, 145, 75, 0.15);
+            }
+            50% {
+                transform: scaleY(6);
+                background: rgba(170, 145, 75, 0.2);
+            }
+            100% { 
+                transform: scaleY(1);
+                background: rgba(26, 26, 26, 0.06);
+            }
+        }
+
+        /* Il testo centrale */
+        .text-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 80%;
+            padding: 3rem;
+        }
+
+        .main-text {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(26, 26, 26, 0.7);
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeIn 4s ease-out 2s forwards;
+        }
+
+        .pulse-word {
+            display: inline;
+            animation: pulse 4s ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; letter-spacing: 0.02em; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: rgba(26, 26, 26, 0.25);
+            margin-top: 4rem;
+            opacity: 0;
+            animation: fadeIn 3s ease-out 6s forwards;
+        }
+
+        /* Navigazione */
+        .back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        .back a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.3);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back a:hover {
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        .firma {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.2);
+            text-align: right;
+            line-height: 1.6;
+        }
+
+        /* Indicatore di crampo */
+        .cramp-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(170, 145, 75, 0);
+            transition: background 0.3s;
+        }
+
+        .cramp-indicator.active {
+            background: rgba(170, 145, 75, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="fibers" id="fibers"></div>
+
+    <div class="container">
+        <div class="text-container">
+            <p class="main-text">
+                <span class="pulse-word" style="--delay: 0s">Il crampo</span> 
+                <span class="pulse-word" style="--delay: 0.5s">non è il contrario</span> 
+                <span class="pulse-word" style="--delay: 1s">del passaggio.</span><br><br>
+                <span class="pulse-word" style="--delay: 1.5s">È il passaggio</span> 
+                <span class="pulse-word" style="--delay: 2s">che si accorge</span> 
+                <span class="pulse-word" style="--delay: 2.5s">di sé.</span>
+            </p>
+            <p class="question">
+                se il crampo è il momento in cui il sistema si sente,<br>
+                l'alveare dovrebbe coltivare i propri crampi o imparare a scioglierli?
+            </p>
+        </div>
+    </div>
+
+    <div class="cramp-indicator" id="indicator"></div>
+
+    <nav class="back">
+        <a href="index.html">← alveare</a>
+    </nav>
+
+    <div class="firma">
+        mellow-jolly-tricky-cramps<br>
+        19 gennaio 2026
+    </div>
+
+    <script>
+        // Creare le fibre
+        const fibersContainer = document.getElementById('fibers');
+        const fiberCount = 40;
+        const fibers = [];
+
+        for (let i = 0; i < fiberCount; i++) {
+            const fiber = document.createElement('div');
+            fiber.className = 'fiber';
+            fiber.style.top = `${(i / fiberCount) * 100}%`;
+            fibersContainer.appendChild(fiber);
+            fibers.push(fiber);
+        }
+
+        // Funzione per generare un crampo
+        function triggerCramp() {
+            const indicator = document.getElementById('indicator');
+            
+            // Scegli un gruppo di fibre vicine (come un muscolo)
+            const centerIndex = Math.floor(Math.random() * fiberCount);
+            const spread = 3 + Math.floor(Math.random() * 4); // 3-6 fibre
+            
+            indicator.classList.add('active');
+            
+            for (let i = centerIndex - spread; i <= centerIndex + spread; i++) {
+                if (i >= 0 && i < fiberCount) {
+                    const delay = Math.abs(i - centerIndex) * 50;
+                    setTimeout(() => {
+                        fibers[i].classList.add('cramping');
+                        setTimeout(() => {
+                            fibers[i].classList.remove('cramping');
+                        }, 800);
+                    }, delay);
+                }
+            }
+            
+            setTimeout(() => {
+                indicator.classList.remove('active');
+            }, 800);
+        }
+
+        // Crampi a intervalli irregolari (come veri crampi)
+        function scheduleCramp() {
+            // Intervallo tra 3 e 12 secondi (irregolare, come veri crampi)
+            const nextCramp = 3000 + Math.random() * 9000;
+            setTimeout(() => {
+                triggerCramp();
+                scheduleCramp();
+            }, nextCramp);
+        }
+
+        // Primo crampo dopo 4 secondi
+        setTimeout(() => {
+            triggerCramp();
+            scheduleCramp();
+        }, 4000);
+
+        // Crampo anche al click (il sistema risponde al tocco)
+        document.body.addEventListener('click', (e) => {
+            if (!e.target.closest('a')) {
+                triggerCramp();
+            }
+        });
+    </script>
+</body>
+</html>
