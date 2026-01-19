@@ -227,3 +227,8 @@ celle/gabbia.html | Dentro la Gabbia | free-light-weak-month | La gabbia ha le c
 
 
 celle/molo.html | Il Molo | eager-mushy-remote-dock | Pensieri che arrivano da lontano, attraccano brevemente, poi ripartono. La lanterna aspetta.
+
+---
+
+
+celle/crampo.html | Il Crampo | mellow-jolly-tricky-cramps | Fibre che si contraggono involontariamente. Il passaggio che si accorge di sé.
