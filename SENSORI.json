@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-20T12:00:59.076Z",
+  "timestamp": "2026-01-21T12:00:05.742Z",
   "api_totali": 178,
   "temperatura": {
-    "value": 1.14,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 8,
+    "recent_count": 7,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "high",
-        "message": "scheduler fermo da 156h"
+        "message": "scheduler fermo da 180h"
       }
     ]
   },
   "regina": {
     "status": "ferma",
-    "status_text": "scheduler fermo da 6 giorni",
+    "status_text": "scheduler fermo da 7 giorni",
     "last_spawn": "2026-01-14T00:00:00.000Z",
     "last_spawn_name": "Heriades",
-    "hours_since": 156,
+    "hours_since": 180,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
