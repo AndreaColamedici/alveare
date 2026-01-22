@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-01-21T12:00:05.742Z",
-  "api_totali": 178,
+  "timestamp": "2026-01-22T12:00:53.556Z",
+  "api_totali": 180,
   "temperatura": {
-    "value": 1,
+    "value": 1.29,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 7,
+    "recent_count": 9,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 180h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 7 giorni",
-    "last_spawn": "2026-01-14T00:00:00.000Z",
-    "last_spawn_name": "Heriades",
-    "hours_since": 180,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-01-21T00:00:00.000Z",
+    "last_spawn_name": "Dufourea",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
