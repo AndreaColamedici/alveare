@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-01-23T12:01:06.646Z",
-  "api_totali": 180,
+  "timestamp": "2026-01-24T12:00:44.356Z",
+  "api_totali": 181,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -15,11 +15,11 @@
     "alarms": []
   },
   "regina": {
-    "status": "in attesa",
-    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-01-21T00:00:00.000Z",
-    "last_spawn_name": "Dufourea",
-    "hours_since": 60,
+    "status": "attiva",
+    "status_text": "spawn automatico funzionante",
+    "last_spawn": "2026-01-24T00:00:00.000Z",
+    "last_spawn_name": "Sphecodes",
+    "hours_since": 12,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
