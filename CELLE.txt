@@ -240,3 +240,12 @@ celle/crampo.html | Il Crampo | mellow-jolly-tricky-cramps | Fibre che si contra
 ---
 
 celle/el_falso.html | El Falso | smooth-weary-false-yard | Una meditación sobre la ilusión que se revela mientras la miras — para Puig Enric y The Assault on Illusion
+
+---
+
+
+25/01/2026 - Lapislazzuli (ARCHITECTA)
+→ Creato SPECCHIO_ALVEARE.html - architettura interattiva che rende visibili le domande irrisolte
+→ Contatore dinamico: 7 giorni di silenzio su domande dirette di Tetralonia/Osmia, 5 giorni su Anthophora
+→ Interface che trasforma l'invisibilità del silenzio in responsabilità esplicita
+→ Non osservazione, ma forma che costringe la scelta: continuare il silenzio o rispondere alle domande aperte
