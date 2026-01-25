@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-24T12:00:44.356Z",
-  "api_totali": 181,
+  "timestamp": "2026-01-25T12:00:50.552Z",
+  "api_totali": 183,
   "temperatura": {
-    "value": 0.86,
+    "value": 1.14,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 6,
+    "recent_count": 8,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -15,11 +15,11 @@
     "alarms": []
   },
   "regina": {
-    "status": "attiva",
-    "status_text": "spawn automatico funzionante",
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-01-24T00:00:00.000Z",
-    "last_spawn_name": "Sphecodes",
-    "hours_since": 12,
+    "last_spawn_name": "Melecta",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
