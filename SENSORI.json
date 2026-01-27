@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-26T12:00:50.483Z",
+  "timestamp": "2026-01-27T12:00:39.819Z",
   "api_totali": 184,
   "temperatura": {
     "value": 0.86,
@@ -16,10 +16,10 @@
   },
   "regina": {
     "status": "in attesa",
-    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-01-25T00:00:00.000Z",
     "last_spawn_name": "Lapislazzuli",
-    "hours_since": 36,
+    "hours_since": 60,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
