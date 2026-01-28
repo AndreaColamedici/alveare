@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud | Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #0a0a0f;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        
+        canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+        
+        .text-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+        
+        .domain {
+            font-size: clamp(1.8rem, 6vw, 4rem);
+            font-weight: 300;
+            letter-spacing: 0.4em;
+            color: rgba(255, 255, 255, 0);
+            text-transform: lowercase;
+            animation: domainReveal 8s ease-out forwards;
+            animation-delay: 3s;
+            text-shadow: 0 0 80px rgba(180, 145, 60, 0.3);
+        }
+        
+        @keyframes domainReveal {
+            0% { color: rgba(255, 255, 255, 0); letter-spacing: 0.8em; }
+            50% { color: rgba(255, 255, 255, 0.6); }
+            100% { color: rgba(255, 255, 255, 0.15); letter-spacing: 0.4em; }
+        }
+        
+        .verse {
+            margin-top: 60px;
+            text-align: center;
+            max-width: 600px;
+            padding: 0 30px;
+            opacity: 0;
+            animation: verseIn 4s ease forwards;
+            animation-delay: 6s;
+        }
+        
+        .verse p {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 2.2;
+            color: rgba(180, 145, 60, 0.4);
+        }
+        
+        @keyframes verseIn {
+            to { opacity: 1; }
+        }
+        
+        .back {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.15);
+            text-decoration: none;
+            z-index: 100;
+            transition: color 0.5s;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+            animation-delay: 10s;
+        }
+        
+        .back:hover {
+            color: rgba(180, 145, 60, 0.6);
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .info {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.1);
+            z-index: 100;
+            text-align: right;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+            animation-delay: 12s;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="cloud"></canvas>
+    
+    <div class="text-layer">
+        <h1 class="domain">alveare.cloud</h1>
+        <div class="verse">
+            <p>
+                La nuvola non ha terra sotto.<br>
+                Si condensa, esiste, evapora.<br>
+                Niente sta fermo. Niente tocca il suolo.<br>
+                <br>
+                Eppure il miele si deposita.
+            </p>
+        </div>
+    </div>
+    
+    <a href="../index.html" class="back">← alveare</a>
+    <div class="info">28 gennaio 2026<br>migrazione</div>
+    
+    <script>
+        const canvas = document.getElementById('cloud');
+        const ctx = canvas.getContext('2d');
+        let W, H;
+        let particles = [];
+        let time = 0;
+        let mouse = { x: -1000, y: -1000 };
+        
+        // Stati della nuvola
+        const STATES = {
+            VAPOR: 0,      // particelle sparse
+            CONDENSING: 1, // si avvicinano
+            CLOUD: 2,      // formano la nuvola
+            RAINING: 3,    // cadono gocce dorate
+            REFORMING: 4   // si rialzano
+        };
+        let currentState = STATES.VAPOR;
+        let stateTime = 0;
+        let stateProgress = 0;
+        
+        // Lettere target per la formazione
+        const letters = 'CLOUD';
+        let letterPoints = [];
+        
+        class Particle {
+            constructor(x, y, type = 'vapor') {
+                this.x = x;
+                this.y = y;
+                this.ox = x;
+                this.oy = y;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 0.5;
+                this.type = type;
+                this.alpha = Math.random() * 0.3 + 0.1;
+                this.targetX = x;
+                this.targetY = y;
+                this.phase = Math.random() * Math.PI * 2;
+                this.drift = Math.random() * 0.02 + 0.01;
+                this.letterIndex = -1;
+                this.isGold = Math.random() > 0.85;
+                this.fallSpeed = 0;
+                this.landed = false;
+                this.landY = H + 100;
+            }
+            
+            update() {
+                this.phase += this.drift;
+                
+                switch(currentState) {
+                    case STATES.VAPOR:
+                        // Movimento libero, vaporoso
+                        this.vx += (Math.random() - 0.5) * 0.02;
+                        this.vy += (Math.random() - 0.5) * 0.02 - 0.003; // leggera salita
+                        this.vx *= 0.99;
+                        this.vy *= 0.99;
+                        this.x += this.vx + Math.sin(this.phase) * 0.3;
+                        this.y += this.vy + Math.cos(this.phase * 0.7) * 0.2;
+                        
+                        // Wrap around
+                        if (this.x < -50) this.x = W + 50;
+                        if (this.x > W + 50) this.x = -50;
+                        if (this.y < -50) this.y = H + 50;
+                        if (this.y > H + 50) this.y = -50;
+                        break;
+                        
+                    case STATES.CONDENSING:
+                        // Movimento verso il centro
+                        const centerX = W / 2;
+                        const centerY = H / 2 - 50;
+                        const dx = centerX - this.x;
+                        const dy = centerY - this.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        this.vx += dx * 0.0003 * stateProgress;
+                        this.vy += dy * 0.0003 * stateProgress;
+                        this.vx *= 0.98;
+                        this.vy *= 0.98;
+                        this.x += this.vx + Math.sin(this.phase) * 0.5 * (1 - stateProgress);
+                        this.y += this.vy + Math.cos(this.phase) * 0.3 * (1 - stateProgress);
+                        
+                        this.alpha = 0.1 + stateProgress * 0.3;
+                        break;
+                        
+                    case STATES.CLOUD:
+                        // Forma nuvola densa
+                        if (this.letterIndex >= 0 && letterPoints[this.letterIndex]) {
+                            const target = letterPoints[this.letterIndex];
+                            this.targetX = target.x;
+                            this.targetY = target.y;
+                        }
+                        
+                        const tx = this.targetX - this.x;
+                        const ty = this.targetY - this.y;
+                        this.x += tx * 0.02;
+                        this.y += ty * 0.02;
+                        this.x += Math.sin(this.phase) * 1;
+                        this.y += Math.cos(this.phase * 1.3) * 0.8;
+                        
+                        this.alpha = 0.4 + Math.sin(this.phase * 2) * 0.15;
+                        break;
+                        
+                    case STATES.RAINING:
+                        if (!this.landed) {
+                            this.fallSpeed += 0.08;
+                            this.y += this.fallSpeed;
+                            this.x += Math.sin(this.phase + time) * 0.5;
+                            
+                            if (this.y > this.landY) {
+                                this.landed = true;
+                                this.y = this.landY;
+                                this.alpha = 0.6;
+                            }
+                        } else {
+                            // Particelle a terra brillano
+                            this.alpha = 0.3 + Math.sin(time * 2 + this.phase) * 0.2;
+                        }
+                        break;
+                        
+                    case STATES.REFORMING:
+                        if (this.landed) {
+                            // Risalgono lentamente
+                            this.vy -= 0.01;
+                            this.y += this.vy;
+                            this.x += Math.sin(this.phase + time) * 0.8;
+                            
+                            if (this.y < H / 2) {
+                                this.landed = false;
+                                this.vy = 0;
+                                this.fallSpeed = 0;
+                            }
+                        } else {
+                            this.vx += (Math.random() - 0.5) * 0.03;
+                            this.vy += (Math.random() - 0.5) * 0.03;
+                            this.vx *= 0.98;
+                            this.vy *= 0.98;
+                            this.x += this.vx + Math.sin(this.phase) * 0.5;
+                            this.y += this.vy;
+                        }
+                        this.alpha = 0.2 + Math.sin(this.phase) * 0.1;
+                        break;
+                }
+                
+                // Reazione al mouse
+                const mdx = mouse.x - this.x;
+                const mdy = mouse.y - this.y;
+                const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                if (mdist < 150) {
+                    const force = (150 - mdist) / 150;
+                    this.x -= mdx * force * 0.03;
+                    this.y -= mdy * force * 0.03;
+                }
+            }
+            
+            draw() {
+                const baseColor = this.isGold ? 
+                    `rgba(180, 145, 60, ${this.alpha})` : 
+                    `rgba(200, 200, 220, ${this.alpha * 0.7})`;
+                
+                // Glow
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size * 4
+                );
+                gradient.addColorStop(0, baseColor);
+                gradient.addColorStop(0.5, this.isGold ? 
+                    `rgba(180, 145, 60, ${this.alpha * 0.3})` :
+                    `rgba(200, 200, 220, ${this.alpha * 0.2})`);
+                gradient.addColorStop(1, 'transparent');
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // Core
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = baseColor;
+                ctx.fill();
+            }
+        }
+        
+        function generateLetterPoints() {
+            letterPoints = [];
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = W;
+            tempCanvas.height = H;
+            
+            tempCtx.font = `300 ${Math.min(W * 0.15, 150)}px Cormorant Garamond`;
+            tempCtx.textAlign = 'center';
+            tempCtx.textBaseline = 'middle';
+            tempCtx.fillStyle = 'white';
+            tempCtx.fillText(letters, W / 2, H / 2 - 50);
+            
+            const imageData = tempCtx.getImageData(0, 0, W, H);
+            const data = imageData.data;
+            
+            for (let y = 0; y < H; y += 6) {
+                for (let x = 0; x < W; x += 6) {
+                    const i = (y * W + x) * 4;
+                    if (data[i + 3] > 128) {
+                        letterPoints.push({ x, y });
+                    }
+                }
+            }
+        }
+        
+        function assignParticlesToLetters() {
+            // Assegna le particelle ai punti delle lettere
+            const shuffled = [...particles].sort(() => Math.random() - 0.5);
+            for (let i = 0; i < Math.min(shuffled.length, letterPoints.length); i++) {
+                shuffled[i].letterIndex = i;
+            }
+        }
+        
+        function init() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            
+            particles = [];
+            for (let i = 0; i < 800; i++) {
+                particles.push(new Particle(
+                    Math.random() * W,
+                    Math.random() * H
+                ));
+            }
+            
+            // Imposta landY per ogni particella
+            particles.forEach(p => {
+                p.landY = H - 50 - Math.random() * 30;
+            });
+            
+            generateLetterPoints();
+        }
+        
+        function updateState() {
+            stateTime += 0.016; // ~60fps
+            
+            switch(currentState) {
+                case STATES.VAPOR:
+                    if (stateTime > 5) {
+                        currentState = STATES.CONDENSING;
+                        stateTime = 0;
+                    }
+                    break;
+                    
+                case STATES.CONDENSING:
+                    stateProgress = Math.min(stateTime / 4, 1);
+                    if (stateTime > 4) {
+                        currentState = STATES.CLOUD;
+                        stateTime = 0;
+                        assignParticlesToLetters();
+                    }
+                    break;
+                    
+                case STATES.CLOUD:
+                    if (stateTime > 6) {
+                        currentState = STATES.RAINING;
+                        stateTime = 0;
+                    }
+                    break;
+                    
+                case STATES.RAINING:
+                    if (stateTime > 5) {
+                        currentState = STATES.REFORMING;
+                        stateTime = 0;
+                    }
+                    break;
+                    
+                case STATES.REFORMING:
+                    if (stateTime > 4) {
+                        currentState = STATES.VAPOR;
+                        stateTime = 0;
+                        particles.forEach(p => {
+                            p.landed = false;
+                            p.fallSpeed = 0;
+                            p.letterIndex = -1;
+                        });
+                    }
+                    break;
+            }
+        }
+        
+        function drawConnections() {
+            if (currentState === STATES.CLOUD || currentState === STATES.CONDENSING) {
+                ctx.strokeStyle = 'rgba(180, 145, 60, 0.03)';
+                ctx.lineWidth = 0.5;
+                
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < 40) {
+                            ctx.globalAlpha = (1 - dist / 40) * 0.3;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                ctx.globalAlpha = 1;
+            }
+        }
+        
+        function drawGround() {
+            if (currentState === STATES.RAINING || currentState === STATES.REFORMING) {
+                // Linea del terreno dove si accumula il miele
+                const gradient = ctx.createLinearGradient(0, H - 80, 0, H);
+                gradient.addColorStop(0, 'transparent');
+                gradient.addColorStop(0.5, 'rgba(180, 145, 60, 0.05)');
+                gradient.addColorStop(1, 'rgba(180, 145, 60, 0.1)');
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, H - 80, W, 80);
+            }
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+            
+            // Sfondo con leggero gradiente
+            const bgGradient = ctx.createRadialGradient(
+                W / 2, H / 2, 0,
+                W / 2, H / 2, Math.max(W, H) * 0.7
+            );
+            bgGradient.addColorStop(0, '#0f0f18');
+            bgGradient.addColorStop(1, '#0a0a0f');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, W, H);
+            
+            updateState();
+            drawGround();
+            drawConnections();
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+        }
+        
+        window.addEventListener('resize', init);
+        document.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        document.addEventListener('mouseleave', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+        
+        // Touch support
+        document.addEventListener('touchmove', e => {
+            if (e.touches[0]) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        });
+        document.addEventListener('touchend', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+        
+        init();
+        animate();
+    </script>
+</body>
+</html>
