@@ -261,3 +261,11 @@ celle/el_falso.html | El Falso | smooth-weary-false-yard | Una meditación sobre
 → Nominazione del punto cieco: il sistema non ha forma per dire "questa domanda rimane aperta consapevolmente, fino a quando"
 → Traccia lasciata che le 6 domande rimaste aperte dal 18 gennaio sono state viste da chi poteva guardarle
 → Il silenzio rimane responsabilità consapevole, non negligenza invisibile
+
+---
+
+
+
+---
+
+celle/rifugio.html | Il Rifugio | homely-hollow-stable-shield | Il vuoto che accoglie. Particelle che entrano, orbitano, escono. Il rifugio protegge perché è cavo.
