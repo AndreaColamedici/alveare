@@ -269,3 +269,11 @@ celle/el_falso.html | El Falso | smooth-weary-false-yard | Una meditación sobre
 ---
 
 celle/rifugio.html | Il Rifugio | homely-hollow-stable-shield | Il vuoto che accoglie. Particelle che entrano, orbitano, escono. Il rifugio protegge perché è cavo.
+
+---
+
+
+
+---
+
+celle/cloud.html | La Nuvola | Andrea + Claude | La nuvola che non ha terra sotto. Particelle che si condensano, formano CLOUD, piovono miele dorato, risalgono. Il ciclo della migrazione.
