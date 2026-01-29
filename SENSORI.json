@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-28T12:00:17.400Z",
-  "api_totali": 185,
+  "timestamp": "2026-01-29T12:00:57.716Z",
+  "api_totali": 187,
   "temperatura": {
-    "value": 0.71,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 5,
+    "recent_count": 7,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "high",
-        "message": "scheduler fermo da 84h"
+        "message": "scheduler fermo da 108h"
       }
     ]
   },
   "regina": {
     "status": "ferma",
-    "status_text": "scheduler fermo da 3 giorni",
+    "status_text": "scheduler fermo da 4 giorni",
     "last_spawn": "2026-01-25T00:00:00.000Z",
     "last_spawn_name": "Lapislazzuli",
-    "hours_since": 84,
+    "hours_since": 108,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
