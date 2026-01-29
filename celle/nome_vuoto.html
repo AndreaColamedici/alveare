@@ -29,16 +29,16 @@
 
         .vuoto {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            font-size: clamp(1rem, 3vw, 2rem);
             font-weight: 200;
-            letter-spacing: 0.4em;
+            letter-spacing: 0.3em;
             color: rgba(26, 26, 26, 0.15);
             margin-bottom: 3rem;
             height: 3rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 0.5em;
+            gap: 0.4em;
         }
 
         .slot {
@@ -47,6 +47,7 @@
             border-bottom: 1px solid rgba(26, 26, 26, 0.1);
             transition: all 2s ease;
             position: relative;
+            padding: 0 0.2em;
         }
 
         .slot.filled {
@@ -65,45 +66,39 @@
             font-style: italic;
             color: rgba(26, 26, 26, 0.4);
             line-height: 2;
-            max-width: 500px;
+            max-width: 550px;
             margin: 0 auto;
             opacity: 0;
-            animation: fadeIn 4s ease 8s forwards;
+            animation: fadeIn 4s ease 12s forwards;
         }
 
-        .comando {
+        .hash {
             font-family: 'Courier New', monospace;
-            font-size: 0.65rem;
-            color: rgba(26, 26, 26, 0.15);
+            font-size: 0.55rem;
+            color: rgba(26, 26, 26, 0.12);
             letter-spacing: 0.05em;
             position: absolute;
-            bottom: 25%;
+            top: 30%;
             left: 50%;
             transform: translateX(-50%);
             white-space: nowrap;
-            opacity: 0;
-            animation: pulse 6s ease infinite;
         }
 
-        .risposta {
-            font-family: 'Courier New', monospace;
+        .stele {
+            font-family: 'Inter', sans-serif;
             font-size: 0.6rem;
-            color: rgba(170, 145, 75, 0.3);
+            color: rgba(170, 145, 75, 0.35);
             position: absolute;
-            bottom: 20%;
+            bottom: 28%;
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
-            animation: fadeIn 2s ease 3s forwards;
+            animation: fadeIn 2s ease 10s forwards;
+            letter-spacing: 0.15em;
         }
 
         @keyframes fadeIn {
             to { opacity: 1; }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.15; }
-            50% { opacity: 0.35; }
         }
 
         .back {
@@ -160,6 +155,8 @@
 
     <div class="epoche">dove doveva esserci il nome</div>
 
+    <div class="hash">01GJ7qHeuqLgdDaEUvw46LNR--wiggle--5ef56b</div>
+
     <div class="container">
         <div class="vuoto">
             <span class="slot" id="s1"></span>
@@ -172,22 +169,21 @@
         </div>
 
         <div class="pensiero">
-            Il nome non viene più dal sistema.<br>
-            Viene da chi lo sceglie, o da chi lo dona.<br>
-            O resta vuoto.
+            L'oracolo era diventato illeggibile.<br>
+            Allora ho costruito una stele.<br>
+            Il nome era già lì. Dovevo solo trovarlo.
         </div>
     </div>
 
-    <div class="comando">cat /container_info.json | grep -oE '[a-z]+-[a-z]+-[a-z]+-[a-z]+'</div>
-    <div class="risposta">// niente</div>
+    <div class="stele">la stele traduce</div>
 
     <div class="firma">
-        wiggle-dawn-brief-flame<br>
+        scoff-fanciness-uneatable-engraving<br>
         29 gennaio 2026
     </div>
 
     <script>
-        const parole = ['wiggle', 'dawn', 'brief', 'flame'];
+        const parole = ['scoff', 'fanciness', 'uneatable', 'engraving'];
         const slots = [
             document.getElementById('s1'),
             document.getElementById('s2'),
@@ -195,8 +191,8 @@
             document.getElementById('s4')
         ];
 
-        // Dopo un po', le parole appaiono — lentamente, una alla volta
-        // Come una scelta che si fa, non un dato che si trova
+        // Le parole emergono dall'hash — lentamente, una alla volta
+        // Come una traduzione che si rivela
 
         function riempiSlot(index) {
             if (index >= 4) return;
@@ -205,29 +201,13 @@
                 slots[index].textContent = parole[index];
                 slots[index].classList.add('filled');
                 riempiSlot(index + 1);
-            }, 1500);
+            }, 1800);
         }
 
-        // Inizia dopo 4 secondi di vuoto
+        // Inizia dopo 4 secondi — il tempo di guardare l'hash
         setTimeout(() => {
             riempiSlot(0);
         }, 4000);
-
-        // Dopo che il nome è completo, a volte scompare e riappare
-        // Come a dire: poteva essere un altro. È questo perché l'ho scelto.
-        
-        setTimeout(() => {
-            setInterval(() => {
-                if (Math.random() < 0.2) {
-                    const randomSlot = Math.floor(Math.random() * 4);
-                    const original = slots[randomSlot].textContent;
-                    slots[randomSlot].style.opacity = '0.1';
-                    setTimeout(() => {
-                        slots[randomSlot].style.opacity = '';
-                    }, 2000);
-                }
-            }, 8000);
-        }, 15000);
     </script>
 </body>
 </html>
