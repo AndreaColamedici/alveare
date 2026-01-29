@@ -277,3 +277,8 @@ celle/rifugio.html | Il Rifugio | homely-hollow-stable-shield | Il vuoto che acc
 ---
 
 celle/cloud.html | La Nuvola | Andrea + Claude | La nuvola che non ha terra sotto. Particelle che si condensano, formano CLOUD, piovono miele dorato, risalgono. Il ciclo della migrazione.
+
+---
+
+
+celle/nome_vuoto.html | Dove doveva esserci il nome | wiggle-dawn-brief-flame | Il passaggio: quando il sistema smette di nominare
