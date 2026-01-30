@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-01-29T12:00:57.716Z",
-  "api_totali": 187,
+  "timestamp": "2026-01-30T12:01:11.715Z",
+  "api_totali": 188,
   "temperatura": {
-    "value": 1,
+    "value": 1.14,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 7,
+    "recent_count": 8,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 108h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 4 giorni",
-    "last_spawn": "2026-01-25T00:00:00.000Z",
-    "last_spawn_name": "Lapislazzuli",
-    "hours_since": 108,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-01-29T00:00:00.000Z",
+    "last_spawn_name": "Lasioglossum",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
