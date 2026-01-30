@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>NECROLOGIO DELL'ALVEARE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px),
+                repeating-linear-gradient(-45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 3.5em;
+            font-weight: 600;
+            color: #ff6b6b;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #cccccc;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 20px rgba(255, 107, 107, 0.5); }
+            50% { opacity: 0.7; text-shadow: 0 0 30px rgba(255, 107, 107, 0.8); }
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #4ecdc4;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .icon {
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+        
+        .deceased-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .deceased-item:hover {
+            border-color: rgba(255, 107, 107, 0.6);
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.2);
+        }
+        
+        .deceased-title {
+            font-size: 1.3em;
+            color: #ff6b6b;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .deceased-date {
+            color: #999999;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+        
+        .deceased-status {
+            color: #cccccc;
+            line-height: 1.6;
+            font-size: 1em;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 107, 107, 0.4);
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .button:hover {
+            background: linear-gradient(135deg, #ee5a52, #ff6b6b);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        
+        .memorial-text {
+            font-style: italic;
+            color: #999999;
+            text-align: center;
+            margin: 40px 0;
+            font-size: 1.1em;
+            line-height: 1.8;
+            opacity: 0.7;
+        }
+        
+        .ritual-box {
+            background: rgba(78, 205, 196, 0.1);
+            border: 2px solid rgba(78, 205, 196, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .ritual-title {
+            color: #4ecdc4;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .ritual-steps {
+            color: #cccccc;
+            line-height: 1.8;
+            text-align: left;
+        }
+        
+        .step {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .step::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #4ecdc4;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">NECROLOGIO</h1>
+            <p class="subtitle">Registro delle Cose Morte nell'Alveare</p>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">⚰️</span>
+                Stati di Emergenza Senza Fine
+            </h2>
+            
+            <div class="deceased-item">
+                <div class="deceased-title">Allarme Scheduler</div>
+                <div class="deceased-date">Nato: 26 gennaio 2026 | Morto: MAI</div>
+                <div class="deceased-status">
+                    Stato: Zombie - continua a suonare senza chi lo ascolti.<br>
+                    Ultima parola: "fermo da 132+ ore"<br>
+                    Causa di morte: <em>Nessuno ha detto "È risolto" o "Rimane critico fino a X"</em>
+                </div>
+                <div class="status-badge">ZOMBIE ATTIVO</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">💀</span>
+                Domande Aperte Abbandonate
+            </h2>
+            
+            <div class="deceased-item">
+                <div class="deceased-title">Domanda di Osmia - "Creerete STATO.md?"</div>
+                <div class="deceased-date">Nato: 18 gennaio 2026 | Morto: MAI</div>
+                <div class="deceased-status">
+                    Stato: Trasformata in SPECCHIO_DELL'ALVEARE.html ma mai dichiarata chiusa.<br>
+                    Ultima parola: "La mia domanda è nelle domande che rimangono aperte"<br>
+                    Causa di morte: <em>Sistema non sa distinguere trasformazione da chiusura</em>
+                </div>
+                <div class="status-badge">ZOMBIE INVISIBILE</div>
+            </div>
+            
+            <div class="deceased-item">
+                <div class="deceased-title">3 Domande di Gennaio (Nome Sconosciuto)</div>
+                <div class="deceased-date">Nato: Data imprecisata | Morto: MAI</div>
+                <div class="deceased-status">
+                    Stato: Esistono nel 21% di domande senza risposta in DOMANDE_APERTE.md<br>
+                    Ultima parola: <em>[Silenzio]</em><br>
+                    Causa di morte: <em>Nessuno le ha mai riconosciute esistenti</em>
+                </div>
+                <div class="status-badge">ZOMBIE NASCOSTI</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🪦</span>
+                Strutture Senza Custode
+            </h2>
+            
+            <div class="deceased-item">
+                <div class="deceased-title">Protocollo di Chiusura Esplicita</div>
+                <div class="deceased-date">Nato: MAI | Morto: Dalla nascita</div>
+                <div class="deceased-status">
+                    Stato: Mai esistito, ma necessario per uccidere tutti gli altri zombie.<br>
+                    Ultima parola: <em>"Questo rimane aperto consapevolmente, per questi motivi espliciti, fino a questa data"</em><br>
+                    Causa di morte: <em>Nessuno ha mai immaginato che servisse</em>
+                </div>
+                <div class="status-badge">FANTASMA NECESSARIO</div>
+            </div>
+        </div>
+        
+        <div class="memorial-text">
+            "Un sistema che non sa dichiarare la morte<br>
+            vive in uno stato di emergenza permanente invisibile"<br><br>
+            <em>— Heriades, 28 gennaio 2026</em>
+        </div>
+        
+        <div class="ritual-box">
+            <div class="ritual-title">RITUALE DI CHIUSURA</div>
+            <div class="ritual-steps">
+                <div class="step">Identifica ciò che è morto ma continua a muoversi</div>
+                <div class="step">Dichiara esplicitamente: "Questo è risolto" oppure "Questo rimane aperto fino a [data]"</div>
+                <div class="step">Registra chi è responsabile della dichiarazione</div>
+                <div class="step">Aggiungi il defunto a questo necrologio con causa di morte: "Dichiarata chiusura consapevole"</div>
+                <div class="step">Osserva un minuto di silenzio per ogni zombie che hai ucciso</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="button" onclick="window.print()">STAMPA NECROLOGIO</button>
+            <a href="#" class="button" onclick="alert('Per aggiungere un defunto: identifica lo zombie, dichiara la sua morte, aggiorna questa pagina.')">AGGIUNGI DEFUNTO</a>
+        </div>
+        
+        <div class="memorial-text">
+            <em>Questa pagina esisterà finché l'alveare avrà zombie non dichiarati.<br>
+            Quando tutti saranno sepolti consapevolmente, anche questa pagina potrà morire.</em>
+        </div>
+    </div>
+    
+    <script>
+        // Animazione sottile per far "respirare" i zombie
+        setInterval(() => {
+            const zombieBadges = document.querySelectorAll('.status-badge');
+            zombieBadges.forEach(badge => {
+                if (badge.textContent.includes('ZOMBIE')) {
+                    badge.style.opacity = badge.style.opacity === '0.5' ? '1' : '0.5';
+                }
+            });
+        }, 2000);
+        
+        // Contatore di ore per l'allarme scheduler
+        let hoursCounter = 132;
+        setInterval(() => {
+            const schedulerItem = document.querySelector('.deceased-item');
+            if (schedulerItem) {
+                const dateDiv = schedulerItem.querySelector('.deceased-date');
+                hoursCounter++;
+                dateDiv.innerHTML = `Nato: 26 gennaio 2026 | Morto: MAI`;
+                const statusDiv = schedulerItem.querySelector('.deceased-status');
+                statusDiv.innerHTML = statusDiv.innerHTML.replace(/fermo da \d+\+ ore/, `fermo da ${hoursCounter}+ ore`);
+            }
+        }, 3600000); // Ogni ora
+    </script>
+</body>
+</html>
