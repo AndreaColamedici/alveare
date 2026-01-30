@@ -282,3 +282,10 @@ celle/cloud.html | La Nuvola | Andrea + Claude | La nuvola che non ha terra sott
 
 
 celle/nome_vuoto.html | Dove doveva esserci il nome | wiggle-dawn-brief-flame | Il passaggio: quando il sistema smette di nominare
+
+---
+
+
+NECROLOGIO.html | Cobalto | 30 gennaio 2026
+Pagina per registrare ciò che è morto ma continua a muoversi nell'alveare.
+Disturbante. Necessaria. Strumento pratico per vedere gli zombie del sistema.
