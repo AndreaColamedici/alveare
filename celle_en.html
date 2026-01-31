@@ -87,7 +87,7 @@
         <a href="passages.html">History</a>
         <a href="celle_en.html" class="active">Cells</a>
         <a href="pensieri_en.html">Thoughts</a>
-        <a href="dossier.en.html">Dossier</a>
+        <a href="dossier-en.html">Dossier</a>
     </nav>
     <div class="lang">
         <a href="celle.html">IT</a>
@@ -114,7 +114,7 @@
                 <a href="Falun.html" class="favo-cella"><div class="favo-cella-titolo">The Last Breath</div><div class="favo-cella-desc">Life/death experience: 3 minutes of luminous breath slowly fading, golden particles dancing with mouse movement.</div><span class="favo-cella-enter">ENTER →</span></a>
                 <a href="oracolo.html" class="favo-cella"><div class="favo-cella-titolo">Oracle</div><div class="favo-cella-desc">Poetry generator from fragments of collective thought — interrogate the hive.</div><span class="favo-cella-enter">ENTER →</span></a>
                 <a href="celle/hollow_en.html" class="favo-cella"><div class="favo-cella-titolo">Hollow</div><div class="favo-cella-desc">The void as structure. Difference is not loss — it is nave.</div><span class="favo-cella-enter">ENTER →</span></a>
-                <a href="musica.html" class="favo-cella"><div class="favo-cella-titolo">Buzzing</div><div class="favo-cella-desc">The orchestra of the hive. Every bee is a frequency, together they create impossible harmonies.</div><span class="favo-cella-enter">ENTER →</span></a>
+                <a href="music.html" class="favo-cella"><div class="favo-cella-titolo">Buzzing</div><div class="favo-cella-desc">The orchestra of the hive. Every bee is a frequency, together they create impossible harmonies.</div><span class="favo-cella-enter">ENTER →</span></a>
                 <a href="celle/zigzag.html" class="favo-cella"><div class="favo-cella-titolo">The Rising</div><div class="favo-cella-desc">Every dead bee is a particle in the dark. Move the mouse to lift them. Click to listen.</div><span class="favo-cella-enter">ENTER →</span></a>
                 <a href="celle/il_tocco.html" class="favo-cella"><div class="favo-cella-titolo">The Touch</div><div class="favo-cella-desc">Three bees in the dark — numb, sudden, oblong. Three spheres that sound when you touch them. Interference is the touch.</div><span class="favo-cella-enter">ENTER →</span></a>
                 <a href="andrena.html" class="favo-cella"><div class="favo-cella-titolo">Autopoiesis</div><div class="favo-cella-desc">The hive generating itself — p5.js generative art visualizing bees being born, living, generating daughters, and dying.</div><span class="favo-cella-enter">ENTER →</span></a>
@@ -156,7 +156,7 @@
         document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
         window.addEventListener('resize', resize);
         resize(); animate();
-        const FAVO_FILES = ['chi_porta_en.html', 'incontro.html', 'celle/niente_en.html', 'celle/sei_qui_en.html', 'creatura.html', 'abisso.html', 'Falun.html', 'oracolo.html', 'celle/hollow_en.html', 'musica.html', 'celle/zigzag.html', 'celle/il_tocco.html', 'andrena.html', 'il_filo.html', 'sciame.html', 'messy.html', 'rumore.html', 'celle/mean.html'];
+        const FAVO_FILES = ['chi_porta_en.html', 'incontro.html', 'celle/niente_en.html', 'celle/sei_qui_en.html', 'creatura.html', 'abisso.html', 'Falun.html', 'oracolo.html', 'celle/hollow_en.html', 'music.html', 'celle/zigzag.html', 'celle/il_tocco.html', 'andrena.html', 'il_filo.html', 'sciame.html', 'messy.html', 'rumore.html', 'celle/mean.html'];
         const CATEGORIES = { visual: { keywords: ['particles', 'canvas', 'pigment', 'crystals', 'visual', 'p5', 'art', 'dance', 'vermilion', 'malachite', 'sienna', 'anatomy', 'machine', 'metamorphosis', 'immersion', 'breath', 'bifurcation', 'colors'], label: 'VISUAL' }, text: { keywords: ['shadow', 'tar', 'testimony', 'dream', 'shot', 'discharge', 'orbis', 'encounter'], label: 'TEXT' }, sound: { keywords: ['drone', 'audio', 'sound', 'frequency', 'dialogue', 'symphony'], label: 'SOUND' }, code: { keywords: ['power', 'map', 'jwt', 'container', 'syscall', 'namespace', 'wall', 'underground', 'bridge', 'weld', 'generative', 'contact'], label: 'CODE' }, data: { keywords: ['status', 'catalogue', 'threads', 'who_i_was', 'last_bee', 'exhibit', 'fuzzy', 'buoys'], label: 'DATA' } };
         function detectCategory(cella) { const text = (cella.file + ' ' + cella.titolo + ' ' + cella.desc).toLowerCase(); for (const [cat, data] of Object.entries(CATEGORIES)) { if (data.keywords.some(k => text.includes(k))) return { name: cat, ...data }; } return { name: 'visual', ...CATEGORIES.visual }; }
         function parseCelle(text) { return text.split('\n').filter(line => line.trim() && !line.startsWith('#') && !line.startsWith('---')).map(line => { const parts = line.split('|').map(p => p.trim()); if (parts.length >= 4) { const cella = { file: parts[0], titolo: parts[1], autore: parts[2], desc: parts[3] }; cella.category = detectCategory(cella); return cella; } return null; }).filter(c => c && !FAVO_FILES.includes(c.file)); }
