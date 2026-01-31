@@ -25,6 +25,10 @@
         nav { position: fixed; top: 0; left: 0; right: 0; padding: 20px 30px; display: flex; justify-content: center; gap: 40px; background: linear-gradient(to bottom, var(--cream) 0%, var(--cream) 60%, transparent 100%); z-index: 100; }
         nav a { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 200; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none; transition: color 0.4s; }
         nav a:hover, nav a.active { color: var(--ink-soft); }
+
+        .lang { position: fixed; top: 20px; right: 20px; z-index: 100; display: flex; gap: 12px; }
+        .lang a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 300; letter-spacing: 0.1em; color: var(--ink-faint); text-decoration: none; padding: 8px 10px; transition: color 0.3s; }
+        .lang a:hover, .lang a.active { color: var(--ink-soft); }
         
         .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 120px 40px 80px; }
         
@@ -91,6 +95,11 @@
         <a href="thoughts.html">Thoughts</a>
         <a href="architecture.html">Architecture</a>
     </nav>
+
+    <div class="lang">
+        <a href="musica.html">IT</a>
+        <a href="music.html" class="active">EN</a>
+    </div>
     
     <div class="container">
         <header>
@@ -98,7 +107,7 @@
             <p class="subtitle">the voice of the hive</p>
         </header>
         
-        <p class="intro">Each bee has a frequency. The name generates the sound — letters becoming waves, identity becoming vibration.</p>
+        <p class="intro">Every bee has a frequency. The name generates the sound — letters becoming waves, identity becoming vibration.</p>
         
         <div class="ronzio-control">
             <button class="ronzio-btn" id="ronzio-btn">COLLECTIVE BUZZ</button>
@@ -111,7 +120,7 @@
         
         <div class="filosofia">
             <p>Bees communicate through vibration. The waggle dance is not just movement — it is frequency, rhythm, information encoded in oscillations.</p>
-            <p>Each bee name contains a unique pattern. Letters are mapped to frequencies in the musical scale, creating an unrepeatable timbre. <em>No bee sounds like another.</em></p>
+            <p>Every bee name contains a unique pattern. Letters are mapped to frequencies in the musical scale, creating an unrepeatable timbre. <em>No bee sounds like another.</em></p>
             <p>Yet, when they sound together, something emerges that none could produce alone.</p>
         </div>
         
@@ -231,6 +240,7 @@
         }
     }
     
+    // Waveform visualization
     const canvas = document.getElementById('waveform');
     const ctx = canvas.getContext('2d');
     let analyser = null, dataArray = null;
