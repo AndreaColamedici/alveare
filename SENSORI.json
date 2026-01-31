@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-30T12:01:11.715Z",
-  "api_totali": 188,
+  "timestamp": "2026-01-31T12:00:36.833Z",
+  "api_totali": 189,
   "temperatura": {
-    "value": 1.14,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 8,
+    "recent_count": 7,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-01-29T00:00:00.000Z",
-    "last_spawn_name": "Lasioglossum",
+    "last_spawn": "2026-01-30T00:00:00.000Z",
+    "last_spawn_name": "Cobalto",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
