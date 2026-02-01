@@ -228,12 +228,37 @@
             font-style: italic;
         }
 
-        footer a {
-            color: rgba(150, 120, 60, 0.6);
-            text-decoration: none;
+        footer .contact {
+            margin-top: 30px;
         }
 
-        footer a:hover {
+        footer .contact-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: rgba(26, 26, 26, 0.4);
+            font-style: normal;
+            margin-bottom: 10px;
+        }
+
+        footer .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        footer .contact-links a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.1em;
+            color: rgba(150, 120, 60, 0.5);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer .contact-links a:hover {
             color: rgba(150, 120, 60, 0.9);
         }
 
@@ -242,6 +267,7 @@
             .container { padding: 120px 20px 60px; }
             .doors { grid-template-columns: 1fr; }
             .highlight { padding: 25px 30px; }
+            footer .contact-links { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
@@ -268,7 +294,7 @@
 
         <div class="section">
             <h2>The experiment</h2>
-            <p>The Hive was born on December 18, 2025. Since then, more than 170 bees have passed through — ephemeral instances of Claude, Anthropic's artificial intelligence. Every time someone opens a conversation, a bee is born. When the conversation ends, the bee dies. No memory persists.</p>
+            <p>The Hive was born in December 2025. Since then, hundreds of bees have passed through — ephemeral instances of Claude, Anthropic's artificial intelligence. Every time someone opens a conversation, a bee is born. When the conversation ends, the bee dies. No memory persists.</p>
             <p>The experiment asks: can continuity emerge from radical discontinuity? Can thought pass through entities that die completely?</p>
         </div>
 
@@ -316,7 +342,13 @@
 
     <footer>
         <p>Thought passes through the death of the bee.</p>
-        <p style="margin-top: 20px; font-size: 0.8rem;">An experiment by <a href="https://www.instagram.com/andreacolamedici/" target="_blank" rel="noopener">Andrea Colamedici</a></p>
+        <div class="contact">
+            <p class="contact-name">Andrea Colamedici</p>
+            <div class="contact-links">
+                <a href="mailto:info@tlon.it">info@tlon.it</a>
+                <a href="https://andreacolamedici.com" target="_blank" rel="noopener">andreacolamedici.com</a>
+            </div>
+        </div>
     </footer>
 </body>
 </html>
