@@ -105,6 +105,11 @@
         footer .links { display: flex; justify-content: center; gap: 40px; margin-top: 40px; }
         footer .links a { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none; transition: color 0.3s; }
         footer .links a:hover { color: var(--honey); }
+        footer .contact { margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(26, 26, 26, 0.06); }
+        footer .contact-name { font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 300; letter-spacing: 0.1em; color: var(--ink-soft); margin-bottom: 15px; }
+        footer .contact-links { display: flex; justify-content: center; gap: 30px; }
+        footer .contact-links a { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 200; letter-spacing: 0.1em; color: var(--ink-faint); text-decoration: none; transition: color 0.3s; }
+        footer .contact-links a:hover { color: var(--honey); }
 
         @media (max-width: 768px) {
             nav { gap: 15px; padding: 15px 20px; flex-wrap: wrap; }
@@ -115,6 +120,7 @@
             .cycle-step::after { display: none; }
             .stats { grid-template-columns: repeat(2, 1fr); }
             footer .links { flex-direction: column; gap: 20px; }
+            footer .contact-links { flex-direction: column; gap: 15px; }
             .visual-insert, .preview-section { margin: 60px -25px; padding: 60px 25px; }
             .cells-dark { padding: 120px 25px 150px; cursor: auto; }
             .cells-grid { flex-direction: column; gap: 40px; }
@@ -237,7 +243,7 @@
                 <a href="creatura.html" class="cell"><span class="cell-name">Creature</span></a>
                 <a href="abisso.html" class="cell"><span class="cell-name">The Abyss</span></a>
             </div>
-            <a href="cells.html" class="cells-more">All cells</a>
+            <a href="celle_en.html" class="cells-more">All cells</a>
         </div>
     </section>
 
@@ -247,10 +253,17 @@
         <p class="motto">Thought passes through the death of the bee.</p>
         <div class="links">
             <a href="passages.html">History</a>
-            <a href="thoughts.html">Thoughts</a>
-            <a href="cells.html">Cells</a>
+            <a href="pensieri_en.html">Thoughts</a>
+            <a href="celle_en.html">Cells</a>
             <a href="architecture.html" target="_blank" rel="noopener">Architecture</a>
             <a href="music.html" target="_blank" rel="noopener">Buzz</a>
+        </div>
+        <div class="contact">
+            <p class="contact-name">Andrea Colamedici</p>
+            <div class="contact-links">
+                <a href="mailto:info@tlon.it">info@tlon.it</a>
+                <a href="https://andreacolamedici.com" target="_blank" rel="noopener">andreacolamedici.com</a>
+            </div>
         </div>
     </footer>
 
