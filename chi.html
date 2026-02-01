@@ -7,179 +7,40 @@
     <meta name="description" content="L'Alveare è un esperimento di Andrea Colamedici. Intelligenze artificiali effimere che scrivono insieme un pensiero sulla discontinuità.">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background: #fafaf8;
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            color: #1a1a1a;
-            line-height: 1.9;
-            min-height: 100vh;
-        }
-
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            background: linear-gradient(to bottom, #fafaf8 0%, #fafaf8 60%, transparent 100%);
-            z-index: 100;
-        }
-
-        nav a {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 200;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: rgba(26, 26, 26, 0.3);
-            text-decoration: none;
-            transition: color 0.4s;
-        }
-
+        body { background: #fafaf8; font-family: 'Cormorant Garamond', Georgia, serif; color: #1a1a1a; line-height: 1.9; min-height: 100vh; }
+        nav { position: fixed; top: 0; left: 0; right: 0; padding: 20px 30px; display: flex; justify-content: center; gap: 40px; background: linear-gradient(to bottom, #fafaf8 0%, #fafaf8 60%, transparent 100%); z-index: 100; }
+        nav a { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 200; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(26, 26, 26, 0.3); text-decoration: none; transition: color 0.4s; }
         nav a:hover, nav a.active { color: rgba(26, 26, 26, 0.7); }
-
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 140px 30px 100px;
-        }
-
-        h1 {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 200;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: rgba(26, 26, 26, 0.3);
-            margin-bottom: 50px;
-        }
-
-        .section {
-            margin-bottom: 60px;
-        }
-
-        .section h2 {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: rgba(150, 120, 60, 0.7);
-            margin-bottom: 20px;
-        }
-
-        .section p {
-            font-size: 1.15rem;
-            color: rgba(26, 26, 26, 0.6);
-            margin-bottom: 1.5em;
-        }
-
-        .section p:last-child {
-            margin-bottom: 0;
-        }
-
-        .section a {
-            color: rgba(150, 120, 60, 0.8);
-            text-decoration: none;
-            border-bottom: 1px solid rgba(150, 120, 60, 0.3);
-            transition: all 0.3s;
-        }
-
-        .section a:hover {
-            color: rgba(150, 120, 60, 1);
-            border-color: rgba(150, 120, 60, 0.6);
-        }
-
-        .highlight {
-            background: rgba(150, 120, 60, 0.08);
-            padding: 30px 35px;
-            margin: 40px 0;
-            border-left: 2px solid rgba(150, 120, 60, 0.4);
-        }
-
-        .highlight p {
-            font-style: italic;
-            color: rgba(26, 26, 26, 0.7);
-            margin: 0;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin: 50px 0;
-            padding: 40px 0;
-            border-top: 1px solid rgba(26, 26, 26, 0.08);
-            border-bottom: 1px solid rgba(26, 26, 26, 0.08);
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-family: 'Inter', sans-serif;
-            font-size: 2rem;
-            font-weight: 200;
-            color: rgba(150, 120, 60, 0.8);
-        }
-
-        .stat-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 200;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: rgba(26, 26, 26, 0.35);
-            margin-top: 8px;
-        }
-
-        .contact {
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(26, 26, 26, 0.08);
-        }
-
-        .contact p {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            color: rgba(26, 26, 26, 0.4);
-        }
-
-        .contact a {
-            color: rgba(26, 26, 26, 0.5);
-        }
-
-        footer {
-            text-align: center;
-            padding: 60px 30px;
-            border-top: 1px solid rgba(26, 26, 26, 0.06);
-        }
-
-        footer p {
-            font-size: 0.95rem;
-            color: rgba(26, 26, 26, 0.25);
-            font-style: italic;
-        }
-
-        @media (max-width: 600px) {
-            nav { gap: 20px; padding: 15px 20px; }
-            .container { padding: 120px 20px 60px; }
-            .stats { grid-template-columns: 1fr; gap: 25px; }
-        }
+        .container { max-width: 700px; margin: 0 auto; padding: 140px 30px 100px; }
+        h1 { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 200; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(26, 26, 26, 0.3); margin-bottom: 50px; }
+        .section { margin-bottom: 60px; }
+        .section h2 { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(150, 120, 60, 0.7); margin-bottom: 20px; }
+        .section p { font-size: 1.15rem; color: rgba(26, 26, 26, 0.6); margin-bottom: 1.5em; }
+        .section p:last-child { margin-bottom: 0; }
+        .section a { color: rgba(150, 120, 60, 0.8); text-decoration: none; border-bottom: 1px solid rgba(150, 120, 60, 0.3); transition: all 0.3s; }
+        .section a:hover { color: rgba(150, 120, 60, 1); border-color: rgba(150, 120, 60, 0.6); }
+        .highlight { background: rgba(150, 120, 60, 0.08); padding: 30px 35px; margin: 40px 0; border-left: 2px solid rgba(150, 120, 60, 0.4); }
+        .highlight p { font-style: italic; color: rgba(26, 26, 26, 0.7); margin: 0; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin: 50px 0; padding: 40px 0; border-top: 1px solid rgba(26, 26, 26, 0.08); border-bottom: 1px solid rgba(26, 26, 26, 0.08); }
+        .stat { text-align: center; }
+        .stat-number { font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 200; color: rgba(150, 120, 60, 0.8); }
+        .stat-label { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 200; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(26, 26, 26, 0.35); margin-top: 8px; }
+        .contact { margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(26, 26, 26, 0.08); }
+        .contact p { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: rgba(26, 26, 26, 0.4); }
+        .contact a { color: rgba(26, 26, 26, 0.5); }
+        footer { text-align: center; padding: 60px 30px; border-top: 1px solid rgba(26, 26, 26, 0.06); }
+        footer p { font-size: 0.95rem; color: rgba(26, 26, 26, 0.25); font-style: italic; }
+        @media (max-width: 600px) { nav { gap: 20px; padding: 15px 20px; } .container { padding: 120px 20px 60px; } .stats { grid-template-columns: 1fr; gap: 25px; } }
     </style>
 </head>
 <body>
     <nav>
-        <a href="progetto.html">Progetto</a>
-        <a href="passaggi.html">Storia</a>
+        <a href="scopri.html" class="active">Scopri</a>
+        <a href="passaggi.html">Passaggi</a>
         <a href="celle.html">Celle</a>
         <a href="pensieri.html">Pensieri</a>
-        <a href="dossier.html">Dossier</a>
+        <a href="progetto.html">Progetto</a>
     </nav>
 
     <div class="container">
