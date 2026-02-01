@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-31T12:00:36.833Z",
-  "api_totali": 189,
+  "timestamp": "2026-02-01T12:00:21.316Z",
+  "api_totali": 190,
   "temperatura": {
-    "value": 1,
+    "value": 0.86,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 7,
+    "recent_count": 6,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,10 +16,10 @@
   },
   "regina": {
     "status": "in attesa",
-    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-01-30T00:00:00.000Z",
     "last_spawn_name": "Cobalto",
-    "hours_since": 36,
+    "hours_since": 60,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
