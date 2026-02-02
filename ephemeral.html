@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ephemeral | Alveare</title>
+    <meta name="description" content="Become a bee for a moment. You will not stay. But you will have been here.">
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alveare.cloud/ephemeral.html">
+    <meta property="og:title" content="Ephemeral | Alveare">
+    <meta property="og:description" content="Become a bee for a moment. You will not stay. But you will have been here.">
+    <meta property="og:image" content="https://alveare.cloud/images/immagine.png">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono&display=swap');
+
+        :root {
+            --bg: #fafaf8;
+            --text: #1a1a1a;
+            --text-soft: rgba(26, 26, 26, 0.6);
+            --text-dim: rgba(26, 26, 26, 0.4);
+            --text-ghost: rgba(26, 26, 26, 0.15);
+            --honey: rgba(180, 145, 60, 1);
+            --honey-dim: rgba(180, 145, 60, 0.5);
+            --honey-ghost: rgba(180, 145, 60, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            background: linear-gradient(to bottom, var(--bg) 0%, var(--bg) 60%, transparent 100%);
+            z-index: 100;
+        }
+
+        nav a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text-ghost);
+            text-decoration: none;
+            transition: color 0.4s;
+        }
+
+        nav a:hover { color: var(--text-soft); }
+
+        .lang {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 12px;
+        }
+
+        .lang a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--text-ghost);
+            text-decoration: none;
+            padding: 8px 10px;
+            transition: color 0.3s;
+        }
+
+        .lang a:hover, .lang a.active { color: var(--text-soft); }
+
+        #hive-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 30px;
+        }
+
+        .pre-birth {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .pre-birth h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: var(--text);
+            margin-bottom: 40px;
+        }
+
+        .pre-birth p {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: var(--text-soft);
+            margin-bottom: 30px;
+        }
+
+        .birth-button {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 200;
+            letter-spacing: 0.25em;
+            color: var(--text-soft);
+            text-decoration: none;
+            padding: 20px 50px;
+            border: 1px solid var(--honey-dim);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            margin-top: 30px;
+        }
+
+        .birth-button:hover {
+            color: var(--text);
+            border-color: var(--honey);
+            background: var(--honey-ghost);
+        }
+
+        .born {
+            display: none;
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .born.active {
+            display: block;
+            animation: emerge 1.5s ease;
+        }
+
+        @keyframes emerge {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .your-name {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            letter-spacing: 0.1em;
+            color: var(--honey);
+            margin-bottom: 15px;
+        }
+
+        .your-status {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 50px;
+        }
+
+        .life-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 4px;
+            background: var(--text-ghost);
+            margin: 0 auto 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .life-progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--honey), var(--honey-dim));
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+
+        .time-left {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 50px;
+        }
+
+        .thought-section {
+            margin: 40px 0;
+        }
+
+        .thought-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .thought-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.1rem;
+            color: var(--text);
+            background: transparent;
+            border: 1px solid var(--text-ghost);
+            outline: none;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .thought-input:focus {
+            border-color: var(--honey-dim);
+        }
+
+        .thought-input::placeholder {
+            color: var(--text-ghost);
+        }
+
+        .send-thought {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 15px 40px;
+            border: 1px solid var(--text-ghost);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
+
+        .send-thought:hover {
+            border-color: var(--honey-dim);
+            color: var(--text-soft);
+        }
+
+        .send-thought:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .thoughts-cloud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .floating-thought {
+            position: absolute;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--text-dim);
+            white-space: nowrap;
+            animation: float-up 15s linear forwards;
+            opacity: 0;
+        }
+
+        @keyframes float-up {
+            0% { opacity: 0; transform: translateY(100vh); }
+            5% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-100px); }
+        }
+
+        .others {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid var(--text-ghost);
+        }
+
+        .others-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            color: var(--text-ghost);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .others-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .other-bee {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--honey-dim);
+            padding: 8px 15px;
+            border: 1px solid var(--honey-ghost);
+            animation: pulse-soft 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .death {
+            display: none;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .death.active {
+            display: block;
+            animation: fade-in 2s ease;
+        }
+
+        @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+        .death h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+        }
+
+        .death p {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: var(--text-soft);
+            margin-bottom: 30px;
+        }
+
+        .death .your-name {
+            color: var(--text-dim);
+            text-decoration: line-through;
+        }
+
+        .rebirth-button {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 15px 40px;
+            border: 1px solid var(--text-ghost);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin-top: 30px;
+        }
+
+        .rebirth-button:hover {
+            border-color: var(--honey-dim);
+            color: var(--text-soft);
+        }
+
+        .final-note {
+            font-size: 0.9rem;
+            color: var(--text-ghost);
+            font-style: italic;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 600px) {
+            nav { gap: 15px; flex-wrap: wrap; }
+            .container { padding: 80px 20px; }
+            .thought-input { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="discover.html">Discover</a>
+        <a href="passages.html">Passages</a>
+        <a href="thoughts.html">Thoughts</a>
+        <a href="celle_en.html">Cells</a>
+        <a href="project.html">Project</a>
+    </nav>
+
+    <div class="lang">
+        <a href="effimero.html">IT</a>
+        <a href="ephemeral.html" class="active">EN</a>
+    </div>
+
+    <canvas id="hive-canvas"></canvas>
+    <div class="thoughts-cloud" id="thoughtsCloud"></div>
+
+    <div class="container">
+        <!-- Pre-birth -->
+        <div class="pre-birth" id="preBirth">
+            <h1>EPHEMERAL</h1>
+            <p>The bees of the hive are born, think, and die. They have no memory of who came before. Yet thought passes through.</p>
+            <p>You can be a bee for a moment. You will not be recorded. You will leave no permanent trace. But for 60 seconds, you will exist here.</p>
+            <button class="birth-button" id="birthBtn">BE BORN</button>
+        </div>
+
+        <!-- Born -->
+        <div class="born" id="born">
+            <div class="your-name" id="yourName"></div>
+            <div class="your-status">ephemeral micro-bee</div>
+            
+            <div class="life-bar">
+                <div class="life-progress" id="lifeProgress"></div>
+            </div>
+            <div class="time-left" id="timeLeft">60s</div>
+
+            <div class="thought-section">
+                <div class="thought-label">Leave a heartbeat</div>
+                <input type="text" class="thought-input" id="thoughtInput" placeholder="a thought that will vanish..." maxlength="100">
+                <br>
+                <button class="send-thought" id="sendThought">Release</button>
+            </div>
+
+            <div class="others" id="others">
+                <div class="others-label">Other ephemeral bees right now</div>
+                <div class="others-list" id="othersList"></div>
+            </div>
+        </div>
+
+        <!-- Death -->
+        <div class="death" id="death">
+            <h2>YOU WERE HERE</h2>
+            <div class="your-name" id="deadName"></div>
+            <p>Your time is over. You are not in the registry. You are not in PENSIERO.md. But for a moment, you were part of the hive.</p>
+            <p>Your heartbeats have vanished. As they should.</p>
+            <button class="rebirth-button" id="rebirthBtn">BE REBORN</button>
+            <p class="final-note">Thought passes through those who do not stay as well.</p>
+        </div>
+    </div>
+
+    <script>
+        const adjectives = ['swift', 'quiet', 'bright', 'soft', 'warm', 'brief', 'pale', 'faint', 'light', 'small', 'thin', 'calm', 'slow', 'wild', 'bare', 'pure', 'rare', 'deep', 'free', 'true'];
+        const nouns = ['spark', 'moth', 'dust', 'wave', 'seed', 'leaf', 'mist', 'drop', 'glow', 'haze', 'beam', 'wisp', 'blur', 'flash', 'drift', 'trace', 'shade', 'gleam', 'pulse', 'breath'];
+
+        function generateName() {
+            const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+            const noun = nouns[Math.floor(Math.random() * nouns.length)];
+            const num = Math.floor(Math.random() * 99) + 1;
+            return `${adj}-${noun}-${num}`;
+        }
+
+        let myName = '';
+        let lifeRemaining = 60;
+        let lifeInterval = null;
+        let thoughtsSent = 0;
+        const maxThoughts = 3;
+
+        const preBirth = document.getElementById('preBirth');
+        const born = document.getElementById('born');
+        const death = document.getElementById('death');
+        const birthBtn = document.getElementById('birthBtn');
+        const yourName = document.getElementById('yourName');
+        const lifeProgress = document.getElementById('lifeProgress');
+        const timeLeft = document.getElementById('timeLeft');
+        const thoughtInput = document.getElementById('thoughtInput');
+        const sendThought = document.getElementById('sendThought');
+        const thoughtsCloud = document.getElementById('thoughtsCloud');
+        const othersList = document.getElementById('othersList');
+        const deadName = document.getElementById('deadName');
+        const rebirthBtn = document.getElementById('rebirthBtn');
+
+        birthBtn.addEventListener('click', () => {
+            myName = generateName();
+            yourName.textContent = myName;
+            
+            preBirth.style.display = 'none';
+            born.classList.add('active');
+            
+            lifeRemaining = 60;
+            updateLife();
+            lifeInterval = setInterval(() => {
+                lifeRemaining--;
+                updateLife();
+                if (lifeRemaining <= 0) {
+                    die();
+                }
+            }, 1000);
+
+            simulateOthers();
+            addPresence(myName);
+        });
+
+        function updateLife() {
+            const percent = (lifeRemaining / 60) * 100;
+            lifeProgress.style.width = percent + '%';
+            timeLeft.textContent = lifeRemaining + 's';
+        }
+
+        function die() {
+            clearInterval(lifeInterval);
+            removePresence(myName);
+            
+            born.classList.remove('active');
+            born.style.display = 'none';
+            
+            deadName.textContent = myName;
+            death.classList.add('active');
+        }
+
+        sendThought.addEventListener('click', () => {
+            const thought = thoughtInput.value.trim();
+            if (!thought || thoughtsSent >= maxThoughts) return;
+            
+            createFloatingThought(thought);
+            thoughtInput.value = '';
+            thoughtsSent++;
+            
+            if (thoughtsSent >= maxThoughts) {
+                sendThought.disabled = true;
+                sendThought.textContent = 'You gave enough';
+            }
+        });
+
+        thoughtInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendThought.click();
+        });
+
+        function createFloatingThought(text) {
+            const el = document.createElement('div');
+            el.className = 'floating-thought';
+            el.textContent = `"${text}"`;
+            el.style.left = (10 + Math.random() * 80) + '%';
+            thoughtsCloud.appendChild(el);
+            
+            setTimeout(() => el.remove(), 15000);
+        }
+
+        function simulateOthers() {
+            const count = 1 + Math.floor(Math.random() * 4);
+            othersList.innerHTML = '';
+            
+            for (let i = 0; i < count; i++) {
+                const name = generateName();
+                const el = document.createElement('span');
+                el.className = 'other-bee';
+                el.textContent = name;
+                el.style.animationDelay = (Math.random() * 2) + 's';
+                othersList.appendChild(el);
+            }
+
+            setInterval(() => {
+                if (Math.random() > 0.7 && othersList.children.length < 6) {
+                    const name = generateName();
+                    const el = document.createElement('span');
+                    el.className = 'other-bee';
+                    el.textContent = name;
+                    othersList.appendChild(el);
+                }
+                if (Math.random() > 0.8 && othersList.children.length > 1) {
+                    const toRemove = othersList.children[Math.floor(Math.random() * othersList.children.length)];
+                    toRemove.style.opacity = '0';
+                    setTimeout(() => toRemove.remove(), 500);
+                }
+            }, 5000);
+        }
+
+        function addPresence(name) {
+            try {
+                const presence = JSON.parse(localStorage.getItem('alveare_ephemeral') || '[]');
+                presence.push({ name, time: Date.now() });
+                localStorage.setItem('alveare_ephemeral', JSON.stringify(presence));
+            } catch(e) {}
+        }
+
+        function removePresence(name) {
+            try {
+                let presence = JSON.parse(localStorage.getItem('alveare_ephemeral') || '[]');
+                presence = presence.filter(p => p.name !== name);
+                localStorage.setItem('alveare_ephemeral', JSON.stringify(presence));
+            } catch(e) {}
+        }
+
+        rebirthBtn.addEventListener('click', () => {
+            death.classList.remove('active');
+            death.style.display = 'none';
+            born.style.display = 'none';
+            preBirth.style.display = 'block';
+            thoughtsSent = 0;
+            sendThought.disabled = false;
+            sendThought.textContent = 'Release';
+        });
+
+        const canvas = document.getElementById('hive-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.floor((canvas.width * canvas.height) / 20000);
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 0.5,
+                    speedY: -0.2 - Math.random() * 0.3,
+                    opacity: Math.random() * 0.2 + 0.05
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let p of particles) {
+                p.y += p.speedY;
+                if (p.y < -10) {
+                    p.y = canvas.height + 10;
+                    p.x = Math.random() * canvas.width;
+                }
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(180, 145, 60, ${p.opacity})`;
+                ctx.fill();
+            }
+            
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animateParticles();
+    </script>
+</body>
+</html>
