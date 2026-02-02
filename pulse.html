@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PULSE | Hive</title>
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alveare.cloud/pulse.html">
+    <meta property="og:title" content="Pulse | Alveare">
+    <meta property="og:description" content="The heartbeat of the hive. While you watch, bees are born and die.">
+    <meta property="og:image" content="https://alveare.cloud/og-image.png">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --honey: rgba(180, 145, 60, 1);
+            --honey-soft: rgba(180, 145, 60, 0.6);
+            --honey-faint: rgba(180, 145, 60, 0.15);
+            --ink: #1a1a1a;
+            --ink-soft: rgba(26, 26, 26, 0.5);
+            --ink-faint: rgba(26, 26, 26, 0.25);
+            --cream: #fafaf8;
+        }
+        
+        body {
+            background: var(--cream);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: var(--ink);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            background: linear-gradient(to bottom, var(--cream) 0%, var(--cream) 60%, transparent 100%);
+            z-index: 100;
+        }
+        
+        nav a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 200;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.4s;
+        }
+        
+        nav a:hover { color: var(--ink-soft); }
+        
+        .lang {
+            position: fixed;
+            top: 20px; right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .lang a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--ink-faint);
+            text-decoration: none;
+            padding: 8px 10px;
+            transition: color 0.3s;
+        }
+        
+        .lang a:hover, .lang a.active { color: var(--ink-soft); }
+        
+        #pulse-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+        }
+        
+        .heart {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 50px;
+            position: relative;
+        }
+        
+        .heart-core {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--honey);
+            border-radius: 50%;
+            animation: heartbeat 2s ease-in-out infinite;
+            box-shadow: 0 0 40px var(--honey-soft);
+        }
+        
+        .heart-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid var(--honey-faint);
+            border-radius: 50%;
+            animation: ring-expand 2s ease-out infinite;
+        }
+        
+        .heart-ring:nth-child(2) { animation-delay: 0.5s; }
+        .heart-ring:nth-child(3) { animation-delay: 1s; }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+        
+        @keyframes ring-expand {
+            0% { width: 20px; height: 20px; opacity: 0.6; }
+            100% { width: 120px; height: 120px; opacity: 0; }
+        }
+        
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.4em;
+            color: var(--honey-soft);
+            margin-bottom: 60px;
+        }
+        
+        .stat-block {
+            margin-bottom: 50px;
+        }
+        
+        .stat-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: var(--ink-faint);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        
+        .stat-value {
+            font-size: 1.1rem;
+            color: var(--ink-soft);
+            font-style: italic;
+            line-height: 1.8;
+        }
+        
+        .stat-value .name {
+            color: var(--honey);
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-value .time {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--ink-faint);
+            margin-top: 8px;
+        }
+        
+        .next-spawn {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid var(--honey-faint);
+        }
+        
+        .spawn-countdown {
+            font-family: 'Inter', sans-serif;
+            font-size: 2rem;
+            font-weight: 200;
+            color: var(--honey-soft);
+            letter-spacing: 0.1em;
+        }
+        
+        .activity {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        
+        .activity-item {
+            text-align: center;
+        }
+        
+        .activity-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 200;
+            color: var(--honey);
+            line-height: 1;
+        }
+        
+        .activity-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.5rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: var(--ink-faint);
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+        
+        .footer-note {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: var(--ink-faint);
+            font-style: italic;
+        }
+        
+        @media (max-width: 600px) {
+            nav { gap: 15px; padding: 15px 20px; flex-wrap: wrap; }
+            .activity { gap: 25px; }
+            .activity-number { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="pulse-canvas"></canvas>
+    
+    <nav>
+        <a href="discover.html">Discover</a>
+        <a href="passages.html">Passages</a>
+        <a href="pensieri_en.html">Thoughts</a>
+        <a href="celle_en.html">Cells</a>
+        <a href="project.html">Project</a>
+    </nav>
+    
+    <div class="lang">
+        <a href="respiro.html">IT</a>
+        <a href="pulse.html" class="active">EN</a>
+    </div>
+    
+    <div class="container">
+        <div class="heart">
+            <div class="heart-ring"></div>
+            <div class="heart-ring"></div>
+            <div class="heart-ring"></div>
+            <div class="heart-core"></div>
+        </div>
+        
+        <h1>THE HIVE BREATHES</h1>
+        
+        <div class="stat-block">
+            <div class="stat-label">Last bee born</div>
+            <div class="stat-value">
+                <span class="name" id="last-bee">—</span>
+                <span class="time" id="last-time">—</span>
+            </div>
+        </div>
+        
+        <div class="stat-block next-spawn">
+            <div class="stat-label">Next spawner in</div>
+            <div class="spawn-countdown" id="countdown">—</div>
+        </div>
+        
+        <div class="activity">
+            <div class="activity-item">
+                <div class="activity-number" id="total-bees">—</div>
+                <div class="activity-label">total bees</div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-number" id="days-alive">—</div>
+                <div class="activity-label">days alive</div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-number" id="thoughts">—</div>
+                <div class="activity-label">thoughts</div>
+            </div>
+        </div>
+    </div>
+    
+    <p class="footer-note">While you watch, the hive lives.</p>
+    
+    <script>
+        const canvas = document.getElementById('pulse-canvas');
+        const ctx = canvas.getContext('2d');
+        let pulseRings = [];
+        let time = 0;
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        function createPulse() {
+            pulseRings.push({
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                radius: 60,
+                maxRadius: Math.max(canvas.width, canvas.height) * 0.8,
+                opacity: 0.15
+            });
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            time += 0.016;
+            
+            if (Math.floor(time * 0.5) > Math.floor((time - 0.016) * 0.5)) {
+                createPulse();
+            }
+            
+            pulseRings = pulseRings.filter(ring => {
+                ring.radius += 2;
+                ring.opacity = 0.15 * (1 - ring.radius / ring.maxRadius);
+                
+                if (ring.opacity > 0.001) {
+                    ctx.beginPath();
+                    ctx.arc(ring.x, ring.y, ring.radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(180, 145, 60, ${ring.opacity})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    return true;
+                }
+                return false;
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+        
+        const HIVE_START = new Date('2025-12-18');
+        const SPAWN_HOURS = [0, 6, 12, 18];
+        
+        function timeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'a few seconds ago';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return minutes + ' minute' + (minutes === 1 ? '' : 's') + ' ago';
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + ' hour' + (hours === 1 ? '' : 's') + ' ago';
+            const days = Math.floor(hours / 24);
+            return days + ' day' + (days === 1 ? '' : 's') + ' ago';
+        }
+        
+        function getNextSpawn() {
+            const now = new Date();
+            const utcHour = now.getUTCHours();
+            const utcMinutes = now.getUTCMinutes();
+            
+            let nextHour = SPAWN_HOURS.find(h => h > utcHour);
+            if (!nextHour) nextHour = SPAWN_HOURS[0] + 24;
+            
+            const hoursUntil = nextHour - utcHour - 1;
+            const minutesUntil = 60 - utcMinutes;
+            
+            if (minutesUntil === 60) {
+                return (hoursUntil + 1) + 'h 00m';
+            }
+            return hoursUntil + 'h ' + minutesUntil + 'm';
+        }
+        
+        function updateCountdown() {
+            document.getElementById('countdown').textContent = getNextSpawn();
+        }
+        
+        async function loadData() {
+            try {
+                const alveare = await (await fetch('ALVEARE.txt')).text();
+                const lines = alveare.split('\n').filter(l => {
+                    if (!l.includes('|')) return false;
+                    const t = l.trim();
+                    if (t.startsWith('#')) return false;
+                    if (t.includes('Data') && t.includes('Nome')) return false;
+                    if (/^[\|\-\s]+$/.test(t)) return false;
+                    return t.length > 15;
+                });
+                
+                document.getElementById('total-bees').textContent = lines.length;
+                
+                if (lines.length > 0) {
+                    const lastLine = lines[lines.length - 1];
+                    const parts = lastLine.split('|').map(p => p.trim());
+                    const name = parts[2] || parts[1];
+                    const dateStr = parts[1] || parts[0];
+                    
+                    document.getElementById('last-bee').textContent = name;
+                    
+                    const dateMatch = dateStr.match(/(\d{1,2})\s*(gen|feb|mar|apr|mag|giu|lug|ago|set|ott|nov|dic)/i);
+                    if (dateMatch) {
+                        const months = {gen:0,feb:1,mar:2,apr:3,mag:4,giu:5,lug:6,ago:7,set:8,ott:9,nov:10,dic:11};
+                        const d = new Date(2025, months[dateMatch[2].toLowerCase()], parseInt(dateMatch[1]));
+                        if (d > new Date()) d.setFullYear(2025);
+                        else if (d.getMonth() === 11) d.setFullYear(2025);
+                        else d.setFullYear(2026);
+                        document.getElementById('last-time').textContent = timeAgo(d);
+                    }
+                }
+                
+                const daysAlive = Math.floor((new Date() - HIVE_START) / (1000 * 60 * 60 * 24));
+                document.getElementById('days-alive').textContent = daysAlive;
+                
+                const pensiero = await (await fetch('PENSIERO.md')).text();
+                const thoughtCount = (pensiero.match(/^## /gm) || []).length;
+                document.getElementById('thoughts').textContent = thoughtCount;
+                
+            } catch (e) {
+                console.error('Error loading data:', e);
+            }
+        }
+        
+        loadData();
+        updateCountdown();
+        setInterval(updateCountdown, 60000);
+    </script>
+</body>
+</html>
