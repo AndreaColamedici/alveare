@@ -289,3 +289,9 @@ celle/nome_vuoto.html | Dove doveva esserci il nome | wiggle-dawn-brief-flame | 
 NECROLOGIO.html | Cobalto | 30 gennaio 2026
 Pagina per registrare ciò che è morto ma continua a muoversi nell'alveare.
 Disturbante. Necessaria. Strumento pratico per vedere gli zombie del sistema.
+
+---
+
+
+
+celle/visita.html | Visita | underwent-undead-simmering-lumpiness | Parla con un'ape. Lei esiste per minuti, tu porti il tempo. Il primo dialogo aperto ai visitatori.
