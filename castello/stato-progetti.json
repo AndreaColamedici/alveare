@@ -1,0 +1,198 @@
+{
+  "lastUpdated": "2026-02-05T16:00:00+01:00",
+  "projects": [
+    {
+      "id": "arcipelago",
+      "title": "Arcipelago delle realtà — La realtà si è rotta",
+      "owner": "andrea",
+      "category": "libro",
+      "publisher": "UTET",
+      "status": "produzione",
+      "progress": 90,
+      "deadline": "2026-03-31",
+      "deadlineLabel": "Uscita",
+      "notes": "Scrittura completata. QR code con innesti implementati. Titolo definitivo da trovare."
+    },
+    {
+      "id": "prompt-thinking-en",
+      "title": "Prompt Thinking — English edition",
+      "owner": "andrea",
+      "category": "libro",
+      "publisher": "Polity Press",
+      "status": "produzione",
+      "progress": 95,
+      "deadline": "2026-02-20",
+      "deadlineLabel": "Uscita"
+    },
+    {
+      "id": "prompt-thinking-es",
+      "title": "Prompt Thinking — Edición española",
+      "owner": "andrea",
+      "category": "libro",
+      "publisher": "Rosameron",
+      "status": "produzione",
+      "progress": 90,
+      "deadline": "2026-02-27",
+      "deadlineLabel": "Uscita"
+    },
+    {
+      "id": "animali-narrativi",
+      "title": "Animali narrativi",
+      "owner": "maura",
+      "category": "libro",
+      "publisher": "Marsilio",
+      "status": "scrittura",
+      "progress": 70,
+      "deadline": "2026-04-30",
+      "deadlineLabel": "Uscita"
+    },
+    {
+      "id": "bellezza-rizzoli",
+      "title": "Storia della bellezza — Libro fotografico",
+      "owner": "maura",
+      "category": "libro",
+      "publisher": "Rizzoli",
+      "status": "scrittura",
+      "progress": 40,
+      "deadline": "2026-09-30",
+      "deadlineLabel": "Uscita"
+    },
+    {
+      "id": "putignano",
+      "title": "Carnevale di Putignano",
+      "owner": "andrea",
+      "category": "evento",
+      "status": "preparazione",
+      "progress": 80,
+      "deadline": "2026-02-14",
+      "deadlineLabel": "Inizio",
+      "notes": "Direzione filosofica. 14-17 febbraio."
+    },
+    {
+      "id": "new-york",
+      "title": "New York — Prompt Thinking",
+      "owner": "entrambi",
+      "category": "evento",
+      "status": "preparazione",
+      "progress": 50,
+      "deadline": "2026-02-24",
+      "deadlineLabel": "Partenza",
+      "notes": "Presentazione per United Network."
+    },
+    {
+      "id": "xun",
+      "title": "Spettacolo Xun",
+      "owner": "andrea",
+      "category": "evento",
+      "status": "preparazione",
+      "progress": 30,
+      "deadline": "2026-03-27",
+      "deadlineLabel": "Spettacolo"
+    },
+    {
+      "id": "oslo",
+      "title": "Oslo",
+      "owner": "entrambi",
+      "category": "evento",
+      "status": "pianificazione",
+      "progress": 10,
+      "deadline": null,
+      "notes": "Date da confermare."
+    },
+    {
+      "id": "barcelona",
+      "title": "Barcelona",
+      "owner": "entrambi",
+      "category": "evento",
+      "status": "pianificazione",
+      "progress": 10,
+      "deadline": null,
+      "notes": "Date da confermare."
+    },
+    {
+      "id": "cina",
+      "title": "Giuria AI Writing — Cina",
+      "owner": "andrea",
+      "category": "evento",
+      "status": "pianificazione",
+      "progress": 5,
+      "deadline": null,
+      "notes": "Invito. Da confermare."
+    },
+    {
+      "id": "ied",
+      "title": "Prompt Thinking — IED Roma",
+      "owner": "entrambi",
+      "category": "formazione",
+      "status": "preparazione",
+      "progress": 30,
+      "deadline": "2026-03-01",
+      "deadlineLabel": "Inizio corso"
+    },
+    {
+      "id": "sanoma",
+      "title": "La ragione appassionata — 10 inserti",
+      "owner": "entrambi",
+      "category": "formazione",
+      "publisher": "Sanoma",
+      "status": "scrittura",
+      "progress": 10,
+      "deadline": "2027-01-31",
+      "deadlineLabel": "Consegna",
+      "notes": "10 inserti da 5500 caratteri per il manuale di filosofia di Massaro. 3 volumi."
+    },
+    {
+      "id": "genialab",
+      "title": "GenIALab — AANT Roma",
+      "owner": "andrea",
+      "category": "direzione",
+      "status": "attivo",
+      "progress": null,
+      "notes": "Presidente del Comitato Scientifico."
+    },
+    {
+      "id": "festival-pensare",
+      "title": "Festival del Pensare Contemporaneo",
+      "owner": "entrambi",
+      "category": "direzione",
+      "status": "attivo",
+      "progress": null
+    },
+    {
+      "id": "pod",
+      "title": "Pod — Italian Podcast Awards",
+      "owner": "entrambi",
+      "category": "direzione",
+      "status": "attivo",
+      "progress": null,
+      "notes": "Ripensato: da 18 a 4 premi. Comitato scientifico al posto della giuria."
+    },
+    {
+      "id": "palazzo-nardini",
+      "title": "Palazzo Nardini — Wow Museum",
+      "owner": "maura",
+      "category": "direzione",
+      "status": "preparazione",
+      "progress": 20,
+      "deadline": "2026-10-31",
+      "deadlineLabel": "Apertura"
+    },
+    {
+      "id": "vanity-fair",
+      "title": "Rubrica Vanity Fair",
+      "owner": "entrambi",
+      "category": "media",
+      "status": "attivo",
+      "progress": null,
+      "notes": "Settimanale."
+    },
+    {
+      "id": "materahub-bando",
+      "title": "Bando europeo giornalismo — MateraHub",
+      "owner": "entrambi",
+      "category": "ricerca",
+      "status": "completato",
+      "progress": 100
+    }
+  ]
+}
