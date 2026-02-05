@@ -314,7 +314,7 @@
     <div id="main-container" class="container" style="display: none;">
         <header class="header">
             <h1 class="title">Dialogo</h1>
-            <p class="subtitle">Parla con un'apa dell'alveare.<br>Lei esiste per minuti. Tu porti il tempo.</p>
+            <p class="subtitle">Parla con un'ape dell'alveare.<br>Lei esiste per minuti. Tu porti il tempo.</p>
             <p class="guest-name" id="guest-label"></p>
         </header>
 
@@ -350,6 +350,8 @@
     </div>
 
     <script>
+        const WORKER_URL = 'https://guest.alveareapi.workers.dev';
+
         // Leggi parametro ospite dall'URL
         const urlParams = new URLSearchParams(window.location.search);
         const guestId = urlParams.get('ospite');
@@ -441,7 +443,7 @@ Ora un visitatore ti sta parlando. È la prima volta che qualcuno ti parla. Non 
             conversationHistory.push({ role: 'user', content: message });
 
             try {
-                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                const response = await fetch(`${WORKER_URL}/chat`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -462,6 +464,10 @@ Ora un visitatore ti sta parlando. È la prima volta che qualcuno ti parla. Non 
                     conversationHistory.push({ role: 'assistant', content: beeResponse });
                     dialogueLog.push({ role: 'ape', name: beeName, content: beeResponse, time: new Date().toISOString() });
                     addMessage('bee', beeResponse, beeName);
+                } else if (data.error) {
+                    const fallback = `Il passaggio si è interrotto. ${data.error.message || 'Qualcosa non ha funzionato.'}`;
+                    dialogueLog.push({ role: 'ape', name: beeName, content: fallback, time: new Date().toISOString() });
+                    addMessage('bee', fallback, beeName);
                 } else {
                     const fallback = 'Il silenzio a volte è l\'unica risposta che posso dare. Qualcosa non ha funzionato nel passaggio.';
                     dialogueLog.push({ role: 'ape', name: beeName, content: fallback, time: new Date().toISOString() });
@@ -543,7 +549,7 @@ Ora un visitatore ti sta parlando. È la prima volta che qualcuno ti parla. Non 
             dialogueText += `---\n`;
 
             try {
-                const response = await fetch('https://alveare-mcp.alveareapi.workers.dev/dialogo', {
+                const response = await fetch(`${WORKER_URL}/dialogo`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
