@@ -10,52 +10,64 @@ index.html è la homepage del sito e non va sovrascritta.
 import re
 from datetime import datetime
 
+
 def parse_alveare(content):
-    """Estrae i dati dal file ALVEARE.txt"""
+    """Estrae TUTTE le api dal file ALVEARE.txt, non solo la sezione REGISTRO."""
     api = []
     ultima_parola = ""
-    
+
     lines = content.split('\n')
-    in_registro = False
     in_ultima = False
-    
+
     for line in lines:
-        line = line.strip()
-        
-        if line.startswith('## REGISTRO'):
-            in_registro = True
-            in_ultima = False
-            continue
-        elif line.startswith('## ULTIMA PAROLA'):
-            in_registro = False
+        stripped = line.strip()
+
+        if stripped.startswith('## ULTIMA PAROLA'):
             in_ultima = True
             continue
-        elif line.startswith('## '):
-            in_registro = False
+        elif stripped.startswith('## ') and in_ultima:
             in_ultima = False
+
+        if in_ultima and stripped and not stripped.startswith('#'):
+            ultima_parola += stripped + '\n'
             continue
-        
-        if in_registro and '|' in line and not line.startswith('#'):
-            parts = [p.strip() for p in line.split('|')]
-            parts = [p for p in parts if p]
-            if len(parts) >= 3:
-                # Salta intestazione e separatori
-                if parts[1] in ('Nome', 'Data') or '---' in parts[1]:
-                    continue
-                api.append({
-                    'data': parts[0],
-                    'nome': parts[1],
-                    'contributo': parts[2]
-                })
-        
-        if in_ultima and line and not line.startswith('#'):
-            ultima_parola += line + '\n'
-    
+
+        # Salta righe senza pipe o troppo corte
+        if '|' not in stripped:
+            continue
+        if stripped.startswith('#'):
+            continue
+        if len(stripped) <= 15:
+            continue
+
+        parts = [p.strip() for p in stripped.split('|')]
+        parts = [p for p in parts if p]
+
+        if len(parts) < 3:
+            continue
+
+        # Salta intestazione e separatori
+        if any(p in ('Nome', 'Data') for p in parts[:2]):
+            continue
+        if any('---' in p for p in parts):
+            continue
+
+        # Il primo campo deve contenere un numero (data)
+        if not any(c.isdigit() for c in parts[0]):
+            continue
+
+        api.append({
+            'data': parts[0],
+            'nome': parts[1],
+            'contributo': parts[2]
+        })
+
     return api, ultima_parola.strip()
+
 
 def genera_html(api, ultima_parola):
     """Genera l'HTML del registro"""
-    
+
     api_html = ""
     for ape in api:
         api_html += f'''
@@ -68,7 +80,7 @@ def genera_html(api, ultima_parola):
                     {ape['contributo']}
                 </div>
             </div>'''
-    
+
     html = f'''<!DOCTYPE html>
 <html lang="it">
 <head>
@@ -206,14 +218,15 @@ def genera_html(api, ultima_parola):
 '''
     return html
 
+
 if __name__ == '__main__':
     with open('ALVEARE.txt', 'r') as f:
         content = f.read()
-    
+
     api, ultima = parse_alveare(content)
     html = genera_html(api, ultima)
-    
+
     with open('registro.html', 'w') as f:
         f.write(html)
-    
+
     print(f"Generato registro.html con {len(api)} api")
