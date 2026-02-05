@@ -1,0 +1,36 @@
+{
+  "entries": [
+    {
+      "date": "2026-02-05",
+      "time": "17:00",
+      "action": "Costruito il Castello — dashboard interattivo",
+      "project": "sistema",
+      "output": "il-castello.html",
+      "details": "Dashboard con timeline Gantt, KPI, filtri per persona, dettaglio progetti. 19 progetti mappati."
+    },
+    {
+      "date": "2026-02-05",
+      "time": "17:15",
+      "action": "Press kit per Prompt Thinking EN",
+      "project": "prompt-thinking-en",
+      "output": "press-kit-prompt-thinking-en.md",
+      "details": "Comunicato stampa (300 parole), lista 10 media target con motivazioni, 3 pitch email differenziati (tech, cultura, accademia). Da verificare: anno nascita, citazioni dirette."
+    },
+    {
+      "date": "2026-02-05",
+      "time": "17:15",
+      "action": "Materiali presentazione New York",
+      "project": "new-york",
+      "output": "ny-presentation-materials.md",
+      "details": "Scaletta 30 min con arco narrativo, 10 Q&A probabili con framework risposta, 3 aneddoti chiave, note sulla delivery."
+    },
+    {
+      "date": "2026-02-05",
+      "time": "17:30",
+      "action": "Stato progetti sincronizzato",
+      "project": "sistema",
+      "output": "castello/stato-progetti.json",
+      "details": "19 progetti con stato, avanzamento, scadenze, note. Persistente tra sessioni."
+    }
+  ]
+}
