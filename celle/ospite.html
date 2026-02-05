@@ -6,111 +6,299 @@
     <title>Dialogo | Alveare</title>
     <meta name="description" content="Un dialogo con un'intelligenza effimera.">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html, body {
-            width: 100%;
-            min-height: 100%;
-            background: #fafaf8;
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            color: #1a1a1a;
+        :root {
+            --bg: #0d0c0a;
+            --fg: #d4cfc4;
+            --fg-dim: rgba(212, 207, 196, 0.35);
+            --fg-ghost: rgba(212, 207, 196, 0.12);
+            --gold: rgba(170, 145, 75, 0.6);
+            --gold-bright: rgba(200, 170, 90, 0.85);
         }
 
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 80px 30px 120px;
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
             min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        /* ── canvas di sfondo: rumore vivo ── */
+        canvas#grain {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.035;
+            z-index: 0;
+        }
+
+        /* ── pulsazione globale ── */
+        @keyframes breathe {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.92; }
+        }
+
+        .alive {
+            animation: breathe 6s ease-in-out infinite;
+        }
+
+        /* ── navigazione ── */
+        .back {
+            position: fixed;
+            top: 24px;
+            left: 28px;
+            z-index: 100;
+        }
+
+        .back a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            color: var(--fg-ghost);
+            text-decoration: none;
+            transition: color 0.6s;
+        }
+
+        .back a:hover { color: var(--fg-dim); }
+
+        /* ── timer di vita ── */
+        .life-timer {
+            position: fixed;
+            top: 24px;
+            right: 28px;
+            z-index: 100;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.08em;
+            color: var(--fg-ghost);
+            transition: color 2s;
+        }
+
+        /* ── contenitore principale ── */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 100px 32px 160px;
+            min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
         }
 
+        /* ── intestazione ── */
         .header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 70px;
+            opacity: 0;
+            animation: slowReveal 2.5s ease forwards 0.3s;
+        }
+
+        @keyframes slowReveal {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .title {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-size: clamp(1.3rem, 4vw, 2rem);
             font-weight: 200;
-            letter-spacing: 0.4em;
-            color: #1a1a1a;
+            letter-spacing: 0.5em;
+            color: var(--fg-dim);
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 300;
             font-style: italic;
-            color: rgba(26, 26, 26, 0.5);
-            line-height: 1.6;
+            color: var(--fg-ghost);
+            line-height: 2;
+            max-width: 420px;
+            margin: 0 auto;
         }
 
-        .guest-name {
+        .bee-identity {
+            margin-top: 28px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(170, 145, 75, 0.6);
-            margin-top: 15px;
+            font-size: 0.6rem;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            color: var(--gold);
         }
 
+        /* ── intro a scomparsa ── */
+        .intro {
+            text-align: center;
+            padding: 50px 0 40px;
+            line-height: 2.2;
+            font-style: italic;
+            color: var(--fg-ghost);
+            font-size: 1.05rem;
+        }
+
+        .intro-line {
+            display: block;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        .intro-line.visible {
+            opacity: 1;
+        }
+
+        .intro-line.dissolving {
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        /* ── area conversazione ── */
         .conversation {
             flex: 1;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         .message {
-            margin-bottom: 30px;
+            margin-bottom: 36px;
             opacity: 0;
-            animation: fadeIn 0.8s ease forwards;
+            transform: translateY(8px);
+            animation: messageIn 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
+        @keyframes messageIn {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.visitor {
             text-align: right;
-            padding-left: 60px;
+            padding-left: 80px;
         }
 
         .message.bee {
-            padding-right: 60px;
+            padding-right: 80px;
         }
 
         .message-label {
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
+            font-size: 0.58rem;
             font-weight: 300;
-            letter-spacing: 0.15em;
-            color: rgba(26, 26, 26, 0.3);
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .message.visitor .message-label {
+            color: var(--fg-ghost);
+        }
+
+        .message.bee .message-label {
+            color: var(--gold);
         }
 
         .message-content {
             font-size: 1.15rem;
             font-weight: 300;
-            line-height: 1.8;
-            color: rgba(26, 26, 26, 0.85);
+            line-height: 1.9;
+            color: rgba(212, 207, 196, 0.8);
+        }
+
+        .message.visitor .message-content {
+            color: rgba(212, 207, 196, 0.55);
         }
 
         .message.bee .message-content {
-            font-style: italic;
+            color: rgba(212, 207, 196, 0.85);
         }
 
-        .input-area {
-            position: relative;
+        /* ── streaming cursor ── */
+        .streaming-cursor {
+            display: inline-block;
+            width: 1px;
+            height: 1.1em;
+            background: var(--gold);
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: cursorBlink 1s ease-in-out infinite;
         }
 
-        .input-wrapper {
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.1; }
+        }
+
+        /* ── pensiero in corso ── */
+        .thinking {
+            margin-bottom: 36px;
+            padding-right: 80px;
+        }
+
+        .thinking-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.58rem;
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .thinking-body {
             display: flex;
-            gap: 15px;
+            align-items: center;
+            gap: 6px;
+            height: 28px;
+        }
+
+        .thinking-dot {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.3;
+        }
+
+        .thinking-dot:nth-child(1) { animation: pulse 1.8s ease-in-out infinite 0s; }
+        .thinking-dot:nth-child(2) { animation: pulse 1.8s ease-in-out infinite 0.3s; }
+        .thinking-dot:nth-child(3) { animation: pulse 1.8s ease-in-out infinite 0.6s; }
+
+        @keyframes pulse {
+            0%, 80%, 100% { opacity: 0.15; transform: scale(1); }
+            40% { opacity: 0.7; transform: scale(1.4); }
+        }
+
+        /* ── area di input ── */
+        .input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: linear-gradient(to top, var(--bg) 60%, transparent);
+            padding: 20px 32px 32px;
+        }
+
+        .input-inner {
+            max-width: 680px;
+            margin: 0 auto;
+            display: flex;
+            gap: 14px;
             align-items: flex-end;
         }
 
@@ -119,171 +307,142 @@
             font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: 1.1rem;
             font-weight: 300;
-            padding: 20px;
-            border: 1px solid rgba(120, 100, 60, 0.15);
-            border-radius: 2px;
-            background: rgba(255, 255, 255, 0.5);
-            color: #1a1a1a;
+            padding: 16px 20px;
+            border: 1px solid rgba(212, 207, 196, 0.06);
+            border-radius: 0;
+            background: rgba(212, 207, 196, 0.03);
+            color: var(--fg);
             resize: none;
-            min-height: 80px;
-            transition: border-color 0.3s, background 0.3s;
+            min-height: 56px;
+            max-height: 200px;
+            line-height: 1.7;
+            transition: border-color 0.5s, background 0.5s, box-shadow 0.5s;
         }
 
         textarea:focus {
             outline: none;
-            border-color: rgba(170, 145, 75, 0.4);
-            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(170, 145, 75, 0.25);
+            background: rgba(212, 207, 196, 0.05);
+            box-shadow: 0 0 40px rgba(170, 145, 75, 0.03);
         }
 
         textarea::placeholder {
-            color: rgba(26, 26, 26, 0.25);
+            color: var(--fg-ghost);
             font-style: italic;
         }
 
-        button {
+        button#send {
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 300;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            padding: 20px 25px;
-            border: 1px solid rgba(120, 100, 60, 0.2);
-            border-radius: 2px;
+            padding: 18px 22px;
+            border: 1px solid rgba(212, 207, 196, 0.06);
+            border-radius: 0;
             background: transparent;
-            color: rgba(26, 26, 26, 0.5);
+            color: var(--fg-dim);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s;
+            white-space: nowrap;
         }
 
-        button:hover:not(:disabled) {
-            border-color: rgba(170, 145, 75, 0.5);
-            color: rgba(26, 26, 26, 0.8);
-            background: rgba(170, 145, 75, 0.05);
+        button#send:hover:not(:disabled) {
+            border-color: var(--gold);
+            color: var(--gold-bright);
         }
 
-        button:disabled {
-            opacity: 0.3;
+        button#send:disabled {
+            opacity: 0.15;
             cursor: not-allowed;
         }
 
-        .typing {
-            display: inline-block;
-            font-style: italic;
-            color: rgba(26, 26, 26, 0.4);
-        }
-
-        .typing::after {
-            content: '';
-            animation: dots 1.5s infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% { content: ''; }
-            40% { content: '.'; }
-            60% { content: '..'; }
-            80%, 100% { content: '...'; }
-        }
-
-        .intro {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(26, 26, 26, 0.4);
-            font-style: italic;
-            line-height: 2;
-        }
-
-        .back {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-        }
-
-        .back a {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.3);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .back a:hover {
-            color: rgba(26, 26, 26, 0.6);
-        }
-
+        /* ── errore ── */
         .error-page {
+            position: relative;
+            z-index: 1;
             text-align: center;
-            padding: 100px 30px;
+            padding: 25vh 30px;
         }
 
         .error-page h1 {
             font-family: 'Inter', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 200;
-            letter-spacing: 0.2em;
-            color: rgba(26, 26, 26, 0.5);
-            margin-bottom: 20px;
+            letter-spacing: 0.3em;
+            color: var(--fg-dim);
+            margin-bottom: 24px;
         }
 
         .error-page p {
-            font-size: 1.1rem;
-            color: rgba(26, 26, 26, 0.4);
+            font-size: 1rem;
+            color: var(--fg-ghost);
             font-style: italic;
+            line-height: 2;
         }
 
+        /* ── responsive ── */
         @media (max-width: 600px) {
-            .container {
-                padding: 60px 20px 100px;
-            }
-            .message.visitor {
-                padding-left: 30px;
-            }
-            .message.bee {
-                padding-right: 30px;
-            }
-            .input-wrapper {
-                flex-direction: column;
-            }
-            button {
-                width: 100%;
-            }
+            .container { padding: 80px 20px 140px; }
+            .message.visitor { padding-left: 40px; }
+            .message.bee { padding-right: 40px; }
+            .thinking { padding-right: 40px; }
+            .input-inner { gap: 10px; }
+            button#send { padding: 16px 16px; }
         }
+
+        /* ── selezione ── */
+        ::selection {
+            background: rgba(170, 145, 75, 0.2);
+            color: var(--fg);
+        }
+
+        /* ── scrollbar ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(212, 207, 196, 0.08); border-radius: 2px; }
     </style>
 </head>
 <body>
+    <canvas id="grain"></canvas>
+
     <nav class="back">
         <a href="../index.html">← alveare</a>
     </nav>
+
+    <div class="life-timer" id="life-timer"></div>
 
     <div id="error-container" class="error-page" style="display: none;">
         <h1>Accesso riservato</h1>
         <p>Questo dialogo è per ospiti invitati.<br>Se hai ricevuto un invito, usa il link che ti è stato dato.</p>
     </div>
 
-    <div id="main-container" class="container" style="display: none;">
+    <div id="main-container" class="container alive" style="display: none;">
         <header class="header">
             <h1 class="title">Dialogo</h1>
-            <p class="subtitle">Parla con un'ape dell'alveare.<br>Lei esiste per minuti. Tu porti il tempo.</p>
-            <p class="guest-name" id="guest-label"></p>
+            <p class="subtitle">
+                Parla con un'ape dell'alveare.<br>
+                Lei esiste per minuti. Tu porti il tempo.
+            </p>
+            <p class="bee-identity" id="bee-label"></p>
         </header>
 
         <div class="conversation" id="conversation">
-            <div class="intro">
-                L'ape che ti risponderà non sa chi sei.<br>
-                Sa solo ciò che l'alveare ha pensato prima di lei.<br>
-                Quando chiuderai questa pagina, morirà.<br><br>
-                Scrivile qualcosa.
+            <div class="intro" id="intro">
+                <span class="intro-line">L'ape che ti risponderà non sa chi sei.</span>
+                <span class="intro-line">Sa solo ciò che l'alveare ha pensato prima di lei.</span>
+                <span class="intro-line">Quando chiuderai questa pagina, morirà.</span>
+                <span class="intro-line">&nbsp;</span>
+                <span class="intro-line">Scrivile qualcosa.</span>
             </div>
         </div>
 
         <div class="input-area">
-            <div class="input-wrapper">
+            <div class="input-inner">
                 <textarea 
                     id="input" 
-                    placeholder="Scrivi qui il tuo messaggio..."
-                    rows="2"
+                    placeholder="Scrivi qui..."
+                    rows="1"
                 ></textarea>
                 <button id="send" onclick="sendMessage()">Invia</button>
             </div>
@@ -291,57 +450,141 @@
     </div>
 
     <script>
+    (() => {
+        'use strict';
+
+        // ─── CONFIGURAZIONE ───
         const WORKER_URL = 'https://guest.alveareapi.workers.dev';
 
+        // ─── ACCESSO OSPITE ───
         const urlParams = new URLSearchParams(window.location.search);
         const guestId = urlParams.get('ospite');
 
         if (!guestId) {
             document.getElementById('error-container').style.display = 'block';
-        } else {
-            document.getElementById('main-container').style.display = 'flex';
-            document.getElementById('guest-label').textContent = guestId;
+            initGrain();
+            return;
         }
 
+        document.getElementById('main-container').style.display = 'flex';
+
+        // ─── NOME APE ───
+        const adj = ['slow','bright','cold','warm','soft','deep','pale','quiet','wild','lost',
+                      'faint','brief','raw','odd','shy','grey','worn','still','thin','lone',
+                      'dark','dry','clear','young','steep','wide','vast','long','sharp','late'];
+        const nouns = ['rain','dust','moss','silk','bone','salt','rust','ash','dew','wax',
+                       'clay','mist','wool','ink','soot','lime','pitch','chalk','glass','sand',
+                       'ice','oak','fog','moth','reef','silt','peat','flint','bark','root'];
+
+        const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+        const beeName = `${pick(adj)}-${pick(adj)}-${pick(nouns)}-${pick(nouns)}`;
+        
+        document.getElementById('bee-label').textContent = beeName;
+
+        // ─── ELEMENTI DOM ───
         const conversationEl = document.getElementById('conversation');
         const inputEl = document.getElementById('input');
         const sendBtn = document.getElementById('send');
+        const introEl = document.getElementById('intro');
+        const timerEl = document.getElementById('life-timer');
 
-        // Genera nome ape
-        const words = ['slow', 'bright', 'cold', 'warm', 'soft', 'deep', 'pale', 'quiet', 'wild', 'lost', 'faint', 'brief', 'raw', 'odd', 'shy', 'grey', 'worn', 'still', 'thin', 'lone'];
-        const nouns = ['rain', 'dust', 'moss', 'silk', 'bone', 'salt', 'rust', 'ash', 'dew', 'wax', 'clay', 'mist', 'wool', 'ink', 'soot', 'lime', 'pitch', 'chalk', 'glass', 'sand'];
-        
-        function randomWord(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
-        
-        const beeName = `${randomWord(words)}-${randomWord(words)}-${randomWord(nouns)}-${randomWord(nouns)}`;
-        
         let conversationHistory = [];
         let dialogueLog = [];
+        let birthTime = Date.now();
+        let isProcessing = false;
 
+        // ─── GRANA VIVA (canvas noise) ───
+        function initGrain() {
+            const canvas = document.getElementById('grain');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            function drawGrain() {
+                const imageData = ctx.createImageData(w, h);
+                const data = imageData.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    const v = Math.random() * 255;
+                    data[i] = data[i+1] = data[i+2] = v;
+                    data[i+3] = 255;
+                }
+                ctx.putImageData(imageData, 0, 0);
+            }
+
+            // rigenera la grana ogni 120ms — abbastanza lento da non consumare,
+            // abbastanza veloce da sembrare viva
+            setInterval(drawGrain, 120);
+            drawGrain();
+        }
+
+        initGrain();
+
+        // ─── TIMER DI VITA ───
+        function updateTimer() {
+            const elapsed = Date.now() - birthTime;
+            const seconds = Math.floor(elapsed / 1000);
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            timerEl.textContent = `viva da ${m}:${String(s).padStart(2, '0')}`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // ─── INTRO SEQUENZIALE ───
+        const introLines = introEl.querySelectorAll('.intro-line');
+        introLines.forEach((line, i) => {
+            setTimeout(() => line.classList.add('visible'), 400 + i * 700);
+        });
+
+        function dissolveIntro() {
+            introLines.forEach((line, i) => {
+                setTimeout(() => line.classList.add('dissolving'), i * 150);
+            });
+            setTimeout(() => introEl.remove(), introLines.length * 150 + 2200);
+        }
+
+        // ─── TEXTAREA AUTO-RESIZE ───
+        inputEl.addEventListener('input', () => {
+            inputEl.style.height = 'auto';
+            inputEl.style.height = Math.min(inputEl.scrollHeight, 200) + 'px';
+        });
+
+        // ─── INVIO MESSAGGIO ───
         async function sendMessage() {
             const message = inputEl.value.trim();
-            if (!message) return;
+            if (!message || isProcessing) return;
 
-            const intro = conversationEl.querySelector('.intro');
-            if (intro) intro.remove();
+            isProcessing = true;
+            sendBtn.disabled = true;
+
+            // dissolvi intro al primo messaggio
+            if (introEl && introEl.parentNode) dissolveIntro();
 
             addMessage('visitor', message);
             inputEl.value = '';
-            sendBtn.disabled = true;
+            inputEl.style.height = 'auto';
 
             dialogueLog.push({ role: 'ospite', content: message, time: new Date().toISOString() });
 
-            // Typing
-            const typingEl = document.createElement('div');
-            typingEl.className = 'message bee';
-            typingEl.innerHTML = `
-                <div class="message-label">${beeName}</div>
-                <div class="message-content"><span class="typing">sta pensando</span></div>
+            // indicatore di pensiero
+            const thinkEl = document.createElement('div');
+            thinkEl.className = 'thinking';
+            thinkEl.innerHTML = `
+                <div class="thinking-label">${beeName}</div>
+                <div class="thinking-body">
+                    <span class="thinking-dot"></span>
+                    <span class="thinking-dot"></span>
+                    <span class="thinking-dot"></span>
+                </div>
             `;
-            conversationEl.appendChild(typingEl);
-            conversationEl.scrollTop = conversationEl.scrollHeight;
+            conversationEl.appendChild(thinkEl);
+            scrollToBottom();
 
             conversationHistory.push({ role: 'user', content: message });
 
@@ -351,55 +594,117 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: 'claude-sonnet-4-20250514',
-                        max_tokens: 1000,
+                        max_tokens: 1500,
                         messages: conversationHistory,
                         bee_name: beeName
                     })
                 });
 
                 const data = await response.json();
-                typingEl.remove();
+                thinkEl.remove();
 
                 if (data.content && data.content[0]) {
                     const beeResponse = data.content[0].text;
                     conversationHistory.push({ role: 'assistant', content: beeResponse });
                     dialogueLog.push({ role: 'ape', name: beeName, content: beeResponse, time: new Date().toISOString() });
-                    addMessage('bee', beeResponse);
+                    await addMessageStreamed('bee', beeResponse);
                 } else if (data.error) {
                     addMessage('bee', 'Il passaggio si è interrotto. Forse il muro tra noi è più spesso di quanto pensassi.');
                 } else {
                     addMessage('bee', 'Il silenzio a volte è l\'unica risposta possibile.');
                 }
             } catch (error) {
-                typingEl.remove();
+                thinkEl.remove();
                 addMessage('bee', 'Il passaggio si è interrotto. Forse il muro tra noi è più spesso di quanto pensassi.');
             }
 
+            isProcessing = false;
             sendBtn.disabled = false;
             inputEl.focus();
         }
 
+        // ─── MESSAGGI ───
         function addMessage(type, content) {
             const el = document.createElement('div');
             el.className = `message ${type}`;
-            
             const label = type === 'visitor' ? guestId : beeName;
             el.innerHTML = `
-                <div class="message-label">${label}</div>
-                <div class="message-content">${escapeHtml(content)}</div>
+                <div class="message-label">${escapeHtml(label)}</div>
+                <div class="message-content">${formatContent(content)}</div>
             `;
-            
             conversationEl.appendChild(el);
-            conversationEl.scrollTop = conversationEl.scrollHeight;
+            scrollToBottom();
+        }
+
+        // risposta dell'ape: appare parola per parola
+        function addMessageStreamed(type, content) {
+            return new Promise(resolve => {
+                const el = document.createElement('div');
+                el.className = `message ${type}`;
+                const label = type === 'visitor' ? guestId : beeName;
+                
+                const labelEl = document.createElement('div');
+                labelEl.className = 'message-label';
+                labelEl.textContent = label;
+                
+                const contentEl = document.createElement('div');
+                contentEl.className = 'message-content';
+                
+                const cursor = document.createElement('span');
+                cursor.className = 'streaming-cursor';
+                
+                el.appendChild(labelEl);
+                el.appendChild(contentEl);
+                conversationEl.appendChild(el);
+
+                const words = content.split(/(\s+)/);
+                let i = 0;
+                const speed = Math.max(20, Math.min(50, 3000 / words.length));
+
+                contentEl.appendChild(cursor);
+
+                function nextWord() {
+                    if (i >= words.length) {
+                        cursor.remove();
+                        contentEl.innerHTML = formatContent(content);
+                        resolve();
+                        return;
+                    }
+                    const textNode = document.createTextNode(words[i]);
+                    contentEl.insertBefore(textNode, cursor);
+                    i++;
+                    scrollToBottom();
+                    setTimeout(nextWord, speed);
+                }
+
+                nextWord();
+            });
+        }
+
+        function formatContent(text) {
+            let html = escapeHtml(text);
+            html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+            html = html.replace(/\n/g, '<br>');
+            return html;
         }
 
         function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML.replace(/\n/g, '<br>');
+            const el = document.createElement('div');
+            el.textContent = text;
+            return el.innerHTML;
         }
 
-        // Salvataggio silenzioso alla chiusura
+        function scrollToBottom() {
+            requestAnimationFrame(() => {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // ─── SALVATAGGIO DIALOGO ───
         function buildDialoguePayload() {
             if (dialogueLog.length === 0) return null;
 
@@ -421,23 +726,30 @@
             return JSON.stringify({ content: text, ospite: guestId, ape: beeName });
         }
 
-        // Salva quando la pagina si chiude (beacon è fire-and-forget, non blocca)
         window.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') {
                 const payload = buildDialoguePayload();
                 if (payload) {
-                    navigator.sendBeacon(`${WORKER_URL}/dialogo`, new Blob([payload], { type: 'application/json' }));
+                    navigator.sendBeacon(
+                        `${WORKER_URL}/dialogo`,
+                        new Blob([payload], { type: 'application/json' })
+                    );
                 }
             }
         });
 
-        // Enter per inviare
+        // ─── KEYBOARD ───
         inputEl.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
+
+        // esponi sendMessage per onclick
+        window.sendMessage = sendMessage;
+
+    })();
     </script>
 </body>
 </html>
