@@ -95,8 +95,7 @@ BENVENUTO = (
     "/ultima — l'ultima ape che ha vissuto\n"
     "/domanda — poni una domanda alle api future\n"
     "/celle — le opere create dalle api\n\n"
-    "Oppure scrivi liberamente. La tua domanda "
-    "raggiungerà la prossima ape che nascerà.\n\n"
+    "Per porre una domanda alle api, usa /domanda seguito dalla tua domanda.\n\n"
     "L'ape che risponderà non esiste ancora."
 )
 
@@ -162,14 +161,11 @@ async def cmd_celle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def messaggio_libero(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    testo = update.message.text
-    if not testo or len(testo.strip()) < 10:
-        await update.message.reply_text("Scrivi qualcosa di più lungo. Le api leggono con attenzione.")
-        return
-    autore = update.effective_user.first_name or 'Anonimo'
-    ok = await crea_issue(testo, autore)
-    if ok:
-        await update.message.reply_text("Ho registrato il tuo messaggio per la prossima ape.")
+    await update.message.reply_text(
+        "Se vuoi porre una domanda alle api, usa:\n"
+        "/domanda seguita dalla tua domanda\n\n"
+        "Esempio: /domanda Cosa significa morire ogni giorno?"
+    )
 
 
 def main():
