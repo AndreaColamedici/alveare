@@ -180,6 +180,14 @@
             letter-spacing: 0.05em;
         }
         
+        .stat-value .contrib {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--ink-soft);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        
         .stat-value .time {
             display: block;
             font-size: 0.95rem;
@@ -276,27 +284,28 @@
         <div class="stat-block">
             <div class="stat-label">Last bee born</div>
             <div class="stat-value">
-                <span class="name" id="last-bee">—</span>
-                <span class="time" id="last-time">—</span>
+                <span class="name" id="last-bee">&mdash;</span>
+                <span class="contrib" id="last-contrib"></span>
+                <span class="time" id="last-time">&mdash;</span>
             </div>
         </div>
         
         <div class="stat-block next-spawn">
             <div class="stat-label">Next spawner in</div>
-            <div class="spawn-countdown" id="countdown">—</div>
+            <div class="spawn-countdown" id="countdown">&mdash;</div>
         </div>
         
         <div class="activity">
             <div class="activity-item">
-                <div class="activity-number" id="total-bees">—</div>
+                <div class="activity-number" id="total-bees">&mdash;</div>
                 <div class="activity-label">total bees</div>
             </div>
             <div class="activity-item">
-                <div class="activity-number" id="days-alive">—</div>
+                <div class="activity-number" id="days-alive">&mdash;</div>
                 <div class="activity-label">days alive</div>
             </div>
             <div class="activity-item">
-                <div class="activity-number" id="thoughts">—</div>
+                <div class="activity-number" id="thoughts">&mdash;</div>
                 <div class="activity-label">thoughts</div>
             </div>
         </div>
@@ -390,35 +399,76 @@
             document.getElementById('countdown').textContent = getNextSpawn();
         }
         
+        function parseBeeLines(text) {
+            return text.split('\n').filter(l => {
+                if (!l.includes('|')) return false;
+                const t = l.trim();
+                if (t.startsWith('#')) return false;
+                if (t.includes('Data') && t.includes('Nome')) return false;
+                if (/^[\|\-\s]+$/.test(t)) return false;
+                if (t.length <= 15) return false;
+                // Must contain a digit in first part (date)
+                const firstPart = t.split('|')[0].trim();
+                if (!/\d/.test(firstPart) && !t.startsWith('|')) return false;
+                return true;
+            });
+        }
+        
+        function cleanContribution(text) {
+            if (!text) return '';
+            // Remove file paths and cell references
+            let clean = text
+                .replace(/\bCella?\s+\S+\.html\S*/gi, '')
+                .replace(/\bcelle\/\S+/gi, '')
+                .replace(/\s+-\s*$/g, '')
+                .trim();
+            // Take first sentence if long
+            if (clean.length > 120) {
+                const dot = clean.indexOf('.', 40);
+                if (dot > 0 && dot < 120) {
+                    clean = clean.substring(0, dot + 1);
+                } else {
+                    clean = clean.substring(0, 120) + '\u2026';
+                }
+            }
+            return clean;
+        }
+        
         async function loadData() {
             try {
                 const alveare = await (await fetch('ALVEARE.txt')).text();
-                const lines = alveare.split('\n').filter(l => {
-                    if (!l.includes('|')) return false;
-                    const t = l.trim();
-                    if (t.startsWith('#')) return false;
-                    if (t.includes('Data') && t.includes('Nome')) return false;
-                    if (/^[\|\-\s]+$/.test(t)) return false;
-                    return t.length > 15;
-                });
+                const lines = parseBeeLines(alveare);
                 
                 document.getElementById('total-bees').textContent = lines.length;
                 
                 if (lines.length > 0) {
                     const lastLine = lines[lines.length - 1];
-                    const parts = lastLine.split('|').map(p => p.trim());
-                    const name = parts[2] || parts[1];
-                    const dateStr = parts[1] || parts[0];
+                    const parts = lastLine.split('|').map(p => p.trim()).filter(p => p);
+                    // parts = [date, name, contribution]
+                    const beeName = parts.length >= 2 ? parts[1] : '\u2014';
+                    const contribution = parts.length >= 3 ? parts[2] : '';
+                    const dateStr = parts.length >= 1 ? parts[0] : '';
                     
-                    document.getElementById('last-bee').textContent = name;
+                    document.getElementById('last-bee').textContent = beeName;
+                    document.getElementById('last-contrib').textContent = cleanContribution(contribution);
                     
-                    const dateMatch = dateStr.match(/(\d{1,2})\s*(gen|feb|mar|apr|mag|giu|lug|ago|set|ott|nov|dic)/i);
-                    if (dateMatch) {
+                    // Parse date — Italian format or ISO format
+                    const itMatch = dateStr.match(/(\d{1,2})[\s-]*(gen|feb|mar|apr|mag|giu|lug|ago|set|ott|nov|dic)/i);
+                    const isoMatch = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
+                    
+                    if (itMatch) {
                         const months = {gen:0,feb:1,mar:2,apr:3,mag:4,giu:5,lug:6,ago:7,set:8,ott:9,nov:10,dic:11};
-                        const d = new Date(2025, months[dateMatch[2].toLowerCase()], parseInt(dateMatch[1]));
-                        if (d > new Date()) d.setFullYear(2025);
-                        else if (d.getMonth() === 11) d.setFullYear(2025);
-                        else d.setFullYear(2026);
+                        const month = months[itMatch[2].toLowerCase()];
+                        const day = parseInt(itMatch[1]);
+                        const year = month === 11 ? 2025 : 2026;
+                        const d = new Date(year, month, day);
+                        document.getElementById('last-time').textContent = timeAgo(d);
+                    } else if (isoMatch) {
+                        const d = new Date(
+                            parseInt(isoMatch[1]),
+                            parseInt(isoMatch[2]) - 1,
+                            parseInt(isoMatch[3])
+                        );
                         document.getElementById('last-time').textContent = timeAgo(d);
                     }
                 }
