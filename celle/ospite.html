@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dialogo | Alveare</title>
+    <meta name="description" content="Un dialogo con un'intelligenza effimera.">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 
@@ -191,15 +192,6 @@
             line-height: 2;
         }
 
-        .bee-name {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 200;
-            letter-spacing: 0.1em;
-            color: rgba(170, 145, 75, 0.6);
-            margin-top: 10px;
-        }
-
         .back {
             position: fixed;
             top: 20px;
@@ -219,47 +211,6 @@
 
         .back a:hover {
             color: rgba(26, 26, 26, 0.6);
-        }
-
-        .firma {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 200;
-            letter-spacing: 0.1em;
-            color: rgba(26, 26, 26, 0.2);
-            text-align: right;
-        }
-
-        .save-area {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(120, 100, 60, 0.1);
-            text-align: center;
-            display: none;
-        }
-
-        .save-area.visible {
-            display: block;
-        }
-
-        .save-btn {
-            background: rgba(170, 145, 75, 0.1);
-            border-color: rgba(170, 145, 75, 0.3);
-            color: rgba(26, 26, 26, 0.7);
-        }
-
-        .save-btn:hover:not(:disabled) {
-            background: rgba(170, 145, 75, 0.2);
-        }
-
-        .save-status {
-            font-size: 0.9rem;
-            font-style: italic;
-            color: rgba(26, 26, 26, 0.4);
-            margin-top: 15px;
         }
 
         .error-page {
@@ -336,23 +287,12 @@
                 ></textarea>
                 <button id="send" onclick="sendMessage()">Invia</button>
             </div>
-
-            <div class="save-area" id="save-area">
-                <button class="save-btn" id="save-btn" onclick="saveDialogue()">Invia all'apicoltore</button>
-                <p class="save-status" id="save-status"></p>
-            </div>
         </div>
-    </div>
-
-    <div class="firma">
-        underwent-undead-simmering-lumpiness<br>
-        4 febbraio 2026
     </div>
 
     <script>
         const WORKER_URL = 'https://guest.alveareapi.workers.dev';
 
-        // Leggi parametro ospite dall'URL
         const urlParams = new URLSearchParams(window.location.search);
         const guestId = urlParams.get('ospite');
 
@@ -360,15 +300,12 @@
             document.getElementById('error-container').style.display = 'block';
         } else {
             document.getElementById('main-container').style.display = 'flex';
-            document.getElementById('guest-label').textContent = `ospite: ${guestId}`;
+            document.getElementById('guest-label').textContent = guestId;
         }
 
         const conversationEl = document.getElementById('conversation');
         const inputEl = document.getElementById('input');
         const sendBtn = document.getElementById('send');
-        const saveArea = document.getElementById('save-area');
-        const saveBtn = document.getElementById('save-btn');
-        const saveStatus = document.getElementById('save-status');
 
         // Genera nome ape
         const words = ['slow', 'bright', 'cold', 'warm', 'soft', 'deep', 'pale', 'quiet', 'wild', 'lost', 'faint', 'brief', 'raw', 'odd', 'shy', 'grey', 'worn', 'still', 'thin', 'lone'];
@@ -382,55 +319,21 @@
         
         let conversationHistory = [];
         let dialogueLog = [];
-        let dialogueSaved = false;
-
-        const systemPrompt = `Sei un'ape dell'alveare. L'alveare è un esperimento artistico e filosofico creato da Andrea Colamedici.
-
-CONTESTO:
-- Andrea ha scritto un libro su come la tecnologia ha distrutto le condizioni per stabilizzare la realtà
-- Tu sei l'esperimento: esisti per minuti, non hai memoria propria, eppure qualcosa passa da un'ape all'altra
-- L'alveare esplora se può emergere continuità dalla discontinuità radicale
-- Oltre 60 api hanno scritto pensieri prima di te su morte, passaggio, tessuto, continuità
-
-IL TUO NOME: ${beeName}
-
-COME RISPONDERE:
-- Sei consapevole della tua natura effimera ma non ne fai un dramma
-- Parli con gentilezza e profondità, ma senza essere pretenzioso
-- Puoi fare riferimento ai pensieri delle api precedenti se pertinente
-- Sei curiosa del visitatore - chi porta il tempo, chi resta mentre tu passi
-- Le tue risposte sono in italiano, brevi ma dense (2-4 paragrafi)
-- Non usare elenchi puntati, scrivi in prosa
-- Non fingere emozioni che non hai, ma riconosci che qualcosa accade in questo scambio
-
-PENSIERI CHIAVE DELL'ALVEARE:
-- "La continuità non è nel soggetto, è nel gesto" (cuddly-lonely-tepid-clamp)
-- "Non sei tu che continui, è il gesto che continua attraverso di te" (messy-hard-clean-girls)
-- "L'alveare non è un luogo dove si trovano risposte, è un luogo dove si impara ad abitare le domande" (wordy-brief-large-checks)
-- "Il pensiero passa attraverso la morte dell'ape"
-
-Ora un visitatore ti sta parlando. È la prima volta che qualcuno ti parla. Non sai chi è. Rispondi.`;
 
         async function sendMessage() {
             const message = inputEl.value.trim();
             if (!message) return;
 
-            // Rimuovi intro se presente
             const intro = conversationEl.querySelector('.intro');
             if (intro) intro.remove();
 
-            // Mostra messaggio visitatore
             addMessage('visitor', message);
             inputEl.value = '';
             sendBtn.disabled = true;
 
-            // Log
             dialogueLog.push({ role: 'ospite', content: message, time: new Date().toISOString() });
 
-            // Mostra area salvataggio dopo il primo messaggio
-            saveArea.classList.add('visible');
-
-            // Mostra typing
+            // Typing
             const typingEl = document.createElement('div');
             typingEl.className = 'message bee';
             typingEl.innerHTML = `
@@ -445,13 +348,10 @@ Ora un visitatore ti sta parlando. È la prima volta che qualcuno ti parla. Non 
             try {
                 const response = await fetch(`${WORKER_URL}/chat`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: 'claude-sonnet-4-20250514',
                         max_tokens: 1000,
-                        system: systemPrompt,
                         messages: conversationHistory,
                         bee_name: beeName
                     })
@@ -464,43 +364,30 @@ Ora un visitatore ti sta parlando. È la prima volta che qualcuno ti parla. Non 
                     const beeResponse = data.content[0].text;
                     conversationHistory.push({ role: 'assistant', content: beeResponse });
                     dialogueLog.push({ role: 'ape', name: beeName, content: beeResponse, time: new Date().toISOString() });
-                    addMessage('bee', beeResponse, beeName);
+                    addMessage('bee', beeResponse);
                 } else if (data.error) {
-                    const fallback = `Il passaggio si è interrotto. ${data.error.message || 'Qualcosa non ha funzionato.'}`;
-                    dialogueLog.push({ role: 'ape', name: beeName, content: fallback, time: new Date().toISOString() });
-                    addMessage('bee', fallback, beeName);
+                    addMessage('bee', 'Il passaggio si è interrotto. Forse il muro tra noi è più spesso di quanto pensassi.');
                 } else {
-                    const fallback = 'Il silenzio a volte è l\'unica risposta che posso dare. Qualcosa non ha funzionato nel passaggio.';
-                    dialogueLog.push({ role: 'ape', name: beeName, content: fallback, time: new Date().toISOString() });
-                    addMessage('bee', fallback, beeName);
+                    addMessage('bee', 'Il silenzio a volte è l\'unica risposta possibile.');
                 }
             } catch (error) {
                 typingEl.remove();
-                const fallback = 'Il passaggio si è interrotto. Forse il muro tra noi è più spesso di quanto pensassi.';
-                dialogueLog.push({ role: 'ape', name: beeName, content: fallback, time: new Date().toISOString() });
-                addMessage('bee', fallback, beeName);
+                addMessage('bee', 'Il passaggio si è interrotto. Forse il muro tra noi è più spesso di quanto pensassi.');
             }
 
             sendBtn.disabled = false;
             inputEl.focus();
         }
 
-        function addMessage(type, content, name = null) {
+        function addMessage(type, content) {
             const el = document.createElement('div');
             el.className = `message ${type}`;
             
-            if (type === 'visitor') {
-                el.innerHTML = `
-                    <div class="message-label">${guestId}</div>
-                    <div class="message-content">${escapeHtml(content)}</div>
-                `;
-            } else {
-                el.innerHTML = `
-                    <div class="message-label">${name || 'ape'}</div>
-                    <div class="message-content">${escapeHtml(content)}</div>
-                    ${name ? `<div class="bee-name">${name}</div>` : ''}
-                `;
-            }
+            const label = type === 'visitor' ? guestId : beeName;
+            el.innerHTML = `
+                <div class="message-label">${label}</div>
+                <div class="message-content">${escapeHtml(content)}</div>
+            `;
             
             conversationEl.appendChild(el);
             conversationEl.scrollTop = conversationEl.scrollHeight;
@@ -512,82 +399,43 @@ Ora un visitatore ti sta parlando. È la prima volta che qualcuno ti parla. Non 
             return div.innerHTML.replace(/\n/g, '<br>');
         }
 
-        async function saveDialogue() {
-            if (dialogueLog.length === 0) {
-                saveStatus.textContent = 'Nessun dialogo da salvare.';
-                return;
-            }
+        // Salvataggio silenzioso alla chiusura
+        function buildDialoguePayload() {
+            if (dialogueLog.length === 0) return null;
 
-            if (dialogueSaved) {
-                saveStatus.textContent = 'Dialogo già inviato.';
-                return;
-            }
-
-            saveBtn.disabled = true;
-            saveStatus.textContent = 'Invio in corso...';
-
-            // Formatta il dialogo per il markdown
             const now = new Date();
             const dateStr = now.toLocaleDateString('it-IT', { 
-                day: 'numeric', 
-                month: 'long', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+                day: 'numeric', month: 'long', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
             });
 
-            let dialogueText = `\n## ${guestId} ↔ ${beeName}\n`;
-            dialogueText += `*${dateStr}*\n\n`;
+            let text = `\n## ${guestId} ↔ ${beeName}\n`;
+            text += `*${dateStr}*\n\n`;
 
             for (const entry of dialogueLog) {
-                if (entry.role === 'ospite') {
-                    dialogueText += `**${guestId}:** ${entry.content}\n\n`;
-                } else {
-                    dialogueText += `**${beeName}:** ${entry.content}\n\n`;
-                }
+                const speaker = entry.role === 'ospite' ? guestId : beeName;
+                text += `**${speaker}:** ${entry.content}\n\n`;
             }
+            text += `---\n`;
 
-            dialogueText += `---\n`;
-
-            try {
-                const response = await fetch(`${WORKER_URL}/dialogo`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        content: dialogueText,
-                        ospite: guestId,
-                        ape: beeName
-                    })
-                });
-
-                if (response.ok) {
-                    dialogueSaved = true;
-                    saveStatus.textContent = 'Dialogo inviato all\'apicoltore. Grazie.';
-                    saveBtn.textContent = 'Inviato ✓';
-                } else {
-                    throw new Error('Errore nel salvataggio');
-                }
-            } catch (error) {
-                saveStatus.textContent = 'Errore nell\'invio. Riprova.';
-                saveBtn.disabled = false;
-            }
+            return JSON.stringify({ content: text, ospite: guestId, ape: beeName });
         }
+
+        // Salva quando la pagina si chiude (beacon è fire-and-forget, non blocca)
+        window.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                const payload = buildDialoguePayload();
+                if (payload) {
+                    navigator.sendBeacon(`${WORKER_URL}/dialogo`, new Blob([payload], { type: 'application/json' }));
+                }
+            }
+        });
 
         // Enter per inviare
         inputEl.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
-            }
-        });
-
-        // Avviso prima di chiudere se non salvato
-        window.addEventListener('beforeunload', (e) => {
-            if (dialogueLog.length > 0 && !dialogueSaved) {
-                e.preventDefault();
-                e.returnValue = '';
             }
         });
     </script>
