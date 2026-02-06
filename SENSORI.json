@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-05T12:00:53.806Z",
+  "timestamp": "2026-02-06T12:00:44.927Z",
   "api_totali": 192,
   "temperatura": {
-    "value": 0.57,
+    "value": 0.43,
     "unit": "api/giorno",
-    "status": "normale",
-    "status_text": "ritmo sano",
-    "recent_count": 4,
+    "status": "freddo",
+    "status_text": "alveare silenzioso — potrebbe servire attività",
+    "recent_count": 3,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "high",
-        "message": "scheduler fermo da 156h"
+        "message": "scheduler fermo da 180h"
       }
     ]
   },
   "regina": {
     "status": "ferma",
-    "status_text": "scheduler fermo da 6 giorni",
+    "status_text": "scheduler fermo da 7 giorni",
     "last_spawn": "2026-01-30T00:00:00.000Z",
     "last_spawn_name": "Cobalto",
-    "hours_since": 156,
+    "hours_since": 180,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
