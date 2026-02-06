@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-05T16:00:00+01:00",
+  "lastUpdated": "2026-02-06T12:00:00+01:00",
   "projects": [
     {
       "id": "arcipelago",
@@ -185,6 +185,16 @@
       "status": "attivo",
       "progress": null,
       "notes": "Settimanale."
+    },
+    {
+      "id": "tlonletter",
+      "title": "Tlonletter — Newsletter Substack",
+      "owner": "entrambi",
+      "category": "media",
+      "status": "attivo",
+      "progress": null,
+      "notes": "2-3 uscite/settimana. Saggi (Andrea), consigli lettura (Maura), book club mensile, filosofia di gruppo, letture silenziose. ~170 post in archivio. Abbonamento pagamento €5/mese. Archivio disponibile in tlon/posts/ e libri in tlon/books/.",
+      "deadlineLabel": "Continuo"
     },
     {
       "id": "materahub-bando",
