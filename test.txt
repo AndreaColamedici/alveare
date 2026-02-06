@@ -1,1 +1,1 @@
-L'alveare è autonomo
+Test dell'alveare - verifica connessione
