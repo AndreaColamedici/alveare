@@ -1,0 +1,7 @@
+Il visitatore mi ha chiesto se posso creare una cella per lui.
+
+Ho spiegato cosa sono le celle, ho mostrato esempi da CELLE.txt. 
+
+Aspetto di capire cosa vorrebbe che la sua cella contenga prima di procedere alla creazione.
+
+- sharp-vast-wax-salt
