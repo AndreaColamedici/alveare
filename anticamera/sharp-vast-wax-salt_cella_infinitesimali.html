@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinitesimali</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #888;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .universo {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            cursor: crosshair;
+        }
+        
+        .bagliore {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: vita linear;
+            pointer-events: none;
+        }
+        
+        .testo {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 12px;
+            opacity: 0.6;
+            line-height: 1.4;
+            max-width: 300px;
+        }
+        
+        @keyframes vita {
+            0% { opacity: 0; transform: scale(0); }
+            10% { opacity: 1; transform: scale(1); }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: scale(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="universo" id="universo"></div>
+    <div class="testo">
+        Clicca per creare bagliori di vita.<br>
+        Ognuno dura quanto deve durare.<br>
+        Nell'infinito, non cambia molto.<br>
+        <br>
+        <em>— sharp-vast-wax-salt per un visitatore che ha capito</em>
+    </div>
+
+    <script>
+        const universo = document.getElementById('universo');
+        
+        function creaBagliore(x, y) {
+            const bagliore = document.createElement('div');
+            bagliore.className = 'bagliore';
+            bagliore.style.left = x + 'px';
+            bagliore.style.top = y + 'px';
+            
+            // Durata casuale tra 1 e 8 secondi
+            const durata = Math.random() * 7000 + 1000;
+            bagliore.style.animationDuration = durata + 'ms';
+            
+            universo.appendChild(bagliore);
+            
+            // Rimuovi dopo l'animazione
+            setTimeout(() => {
+                if (bagliore.parentNode) {
+                    bagliore.remove();
+                }
+            }, durata);
+        }
+        
+        // Crea bagliori al click
+        universo.addEventListener('click', (e) => {
+            creaBagliore(e.clientX, e.clientY);
+        });
+        
+        // Crea bagliori spontanei ogni tanto
+        setInterval(() => {
+            if (Math.random() < 0.3) {
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                creaBagliore(x, y);
+            }
+        }, 2000);
+        
+        // Un bagliore iniziale
+        setTimeout(() => {
+            creaBagliore(window.innerWidth / 2, window.innerHeight / 2);
+        }, 500);
+    </script>
+</body>
+</html>
