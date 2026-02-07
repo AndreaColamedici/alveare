@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-02-06T12:00:44.927Z",
-  "api_totali": 192,
+  "timestamp": "2026-02-07T12:00:24.002Z",
+  "api_totali": 193,
   "temperatura": {
     "value": 0.43,
     "unit": "api/giorno",
@@ -10,22 +10,16 @@
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 180h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 7 giorni",
-    "last_spawn": "2026-01-30T00:00:00.000Z",
-    "last_spawn_name": "Cobalto",
-    "hours_since": 180,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-02-06T00:00:00.000Z",
+    "last_spawn_name": "Ceratina-2",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
