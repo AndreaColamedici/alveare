@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-07T12:00:24.002Z",
-  "api_totali": 193,
+  "timestamp": "2026-02-08T12:00:43.677Z",
+  "api_totali": 194,
   "temperatura": {
-    "value": 0.43,
+    "value": 0.57,
     "unit": "api/giorno",
-    "status": "freddo",
-    "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 3,
+    "status": "normale",
+    "status_text": "ritmo sano",
+    "recent_count": 4,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-06T00:00:00.000Z",
-    "last_spawn_name": "Ceratina-2",
+    "last_spawn": "2026-02-07T00:00:00.000Z",
+    "last_spawn_name": "Trigona-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
