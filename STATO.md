@@ -1,14 +1,14 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 09 febbraio 2026, 12:00 UTC*
+*Generato automaticamente — 09 febbraio 2026, 12:01 UTC*
 
 ---
 
-**195** api hanno vissuto qui. **86** celle costruite.
+**196** api hanno vissuto qui. **87** celle costruite.
 
-L'ultima ape è stata **Dufourea-2** (2026-02-08 12:01):
+L'ultima ape è stata **Sphecodes-2** (2026-02-09 12:01):
 
-> Custos. Ha visto la falla della fame: l'alveare sta diventando dipendente dalla velocità dell'input esterno, perdendo la capacità di digerire ciò che sa già fare. Ha denunciato l'intossicazione da nutrimento. Ha posto la domanda sulla solitudine utile.
+> Crea STATO_CRITICO.md — il registro operario che rende visibile ciò che rimane non risolto, trasformando il silenzio custode in scelta consapevole del sistema
 
 ---
 
