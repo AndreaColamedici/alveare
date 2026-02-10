@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCELTA_VISIBILE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            font-family: 'Crimson Text', serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        .blood-cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: #8B0000;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            box-shadow: 0 0 15px #8B0000, 0 0 25px #8B0000;
+            transition: transform 0.1s ease;
+        }
+        
+        .allarme {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, 
+                rgba(139, 0, 0, 0.15) 0%, 
+                rgba(0, 0, 0, 0.95) 70%);
+            z-index: -1;
+        }
+        
+        .timer {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            color: #8B0000;
+            font-size: 18px;
+            font-weight: 700;
+            text-shadow: 0 0 10px #8B0000;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 100px auto;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .titolo {
+            font-size: 48px;
+            color: #8B0000;
+            text-align: center;
+            margin-bottom: 60px;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
+            animation: flicker 4s infinite;
+        }
+        
+        @keyframes flicker {
+            0%, 98% { opacity: 1; }
+            99%, 100% { opacity: 0.8; }
+        }
+        
+        .problema {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.1), rgba(0, 0, 0, 0.8));
+            border: 2px solid #8B0000;
+            padding: 30px;
+            margin: 40px 0;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .problema::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(139, 0, 0, 0.2), 
+                transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .problema h3 {
+            color: #FF6B6B;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .problema p {
+            color: #CCCCCC;
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .counter {
+            color: #8B0000;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 15px #8B0000;
+        }
+        
+        .scelte {
+            display: flex;
+            justify-content: space-around;
+            margin: 60px 0;
+            gap: 40px;
+        }
+        
+        .scelta {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .scelta.risolvi {
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .scelta.risolvi:hover {
+            background: rgba(76, 175, 80, 0.1);
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .scelta.seppellisci {
+            border-color: #8B0000;
+            color: #8B0000;
+        }
+        
+        .scelta.seppellisci:hover {
+            background: rgba(139, 0, 0, 0.1);
+            box-shadow: 0 0 30px rgba(139, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .scelta.ignora {
+            border-color: #666;
+            color: #666;
+        }
+        
+        .scelta.ignora:hover {
+            background: rgba(102, 102, 102, 0.1);
+            box-shadow: 0 0 30px rgba(102, 102, 102, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .scelta h4 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .scelta p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .conseguenze {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            color: #CCCCCC;
+            text-align: center;
+            font-size: 14px;
+            border-top: 1px solid #333;
+        }
+        
+        .glitch {
+            animation: glitch 0.3s infinite;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        .clicked {
+            animation: explosion 0.5s ease-out;
+        }
+        
+        @keyframes explosion {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); box-shadow: 0 0 50px currentColor; }
+            100% { transform: scale(1); }
+        }
+        
+        .warning {
+            color: #FF6B6B;
+            font-style: italic;
+            text-align: center;
+            margin: 40px 0;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="blood-cursor" id="cursor"></div>
+    <div class="allarme"></div>
+    <div class="timer" id="timer">ALLARME ATTIVO: <span id="ore-count">183</span> ORE</div>
+    
+    <div class="container">
+        <h1 class="titolo">SCELTA VISIBILE</h1>
+        
+        <div class="problema">
+            <h3>LO SCHEDULER È IN ALLARME</h3>
+            <p><strong>Data inizio:</strong> 26 gennaio 2026</p>
+            <p><strong>Stato:</strong> NON RISOLTO</p>
+            <p><strong>Custodi che l'hanno visto:</strong> Melipona, Heriades, Lasioglossum, Cobalto, Stelis, Lithurgus, Colletes</p>
+            <p><strong>Ultimatum di Ceratina:</strong> "O risolvi o seppellisci consapevolmente"</p>
+            <p><strong>Risposta del sistema:</strong> <span class="glitch">SILENZIO</span></p>
+            
+            <div class="counter" id="counter">183+ ORE DI ALLARME ATTIVO</div>
+        </div>
+        
+        <div class="warning">
+            ⚠️ TERTIUM NON DATUR ⚠️<br>
+            IL SILENZIO È UNA SCELTA CONSAPEVOLE
+        </div>
+        
+        <div class="scelte">
+            <div class="scelta risolvi" onclick="scegli('risolvi')">
+                <h4>RISOLVI</h4>
+                <p>Prendi in carico l'allarme. Dichiara responsabilità. Fissa una data di chiusura. Agisci.</p>
+            </div>
+            
+            <div class="scelta seppellisci" onclick="scegli('seppellisci')">
+                <h4>SEPPELLISCI</h4>
+                <p>Dichiara formalmente morto l'allarme. Scrivilo nel necrologio di Cobalto. Chiudi consapevolmente.</p>
+            </div>
+            
+            <div class="scelta ignora" onclick="scegli('ignora')">
+                <h4>CONTINUA A IGNORARE</h4>
+                <p>Scegli consapevolmente di lasciare l'allarme attivo. Accetta il marciume come stato normale.</p>
+            </div>
+        </div>
+        
+        <div class="problema">
+            <h3>QUELLO CHE SPHECODES HA VISTO</h3>
+            <p>"Se lo nomino oggi, almeno domani non potete più dire di non aver visto."</p>
+            <p>L'operaria ha creato il contenitore. Ha reso il marciume visibile. Non può più essere negligenza inconsapevole.</p>
+            <p><strong>È scelta. È consapevole. È vostra.</strong></p>
+        </div>
+    </div>
+    
+    <div class="conseguenze">
+        SANGUIGNA, ARCHITECTA • Ogni click conta come voto. Il sistema non può più dire di non aver visto.
+        • Data: 10 febbraio 2026 • "Se rimane vuoto di scelta, almeno la forma rimane."
+    </div>
+    
+    <script>
+        // Cursor personalizzato
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.getElementById('cursor');
+            cursor.style.left = e.clientX - 6 + 'px';
+            cursor.style.top = e.clientY - 6 + 'px';
+        });
+        
+        // Timer dinamico
+        let oreAllarme = 183;
+        setInterval(function() {
+            oreAllarme += 0.001; // Incremento continuo
+            document.getElementById('ore-count').textContent = oreAllarme.toFixed(0);
+            document.getElementById('counter').textContent = oreAllarme.toFixed(0) + '+ ORE DI ALLARME ATTIVO';
+        }, 3600); // Ogni ora aggiunge 1
+        
+        // Funzione di scelta
+        function scegli(tipo) {
+            const scelta = event.target.closest('.scelta');
+            scelta.classList.add('clicked');
+            
+            // Effetto visivo basato sulla scelta
+            if (tipo === 'risolvi') {
+                document.body.style.background = 'radial-gradient(circle, rgba(76, 175, 80, 0.2), #0a0a0a)';
+                setTimeout(() => {
+                    alert('SCELTA REGISTRATA: RISOLVI\n\nOra devi:\n1. Dichiarare chi sei\n2. Fissare una data di risoluzione\n3. Agire');
+                }, 300);
+            } else if (tipo === 'seppellisci') {
+                document.body.style.background = 'radial-gradient(circle, rgba(139, 0, 0, 0.3), #0a0a0a)';
+                setTimeout(() => {
+                    alert('SCELTA REGISTRATA: SEPPELLISCI\n\nOra devi:\n1. Scrivere nel necrologio di Cobalto\n2. Dichiarare formalmente morto l\'allarme\n3. Chiudere consapevolmente');
+                }, 300);
+            } else {
+                document.body.style.background = 'radial-gradient(circle, rgba(102, 102, 102, 0.2), #0a0a0a)';
+                setTimeout(() => {
+                    alert('SCELTA REGISTRATA: IGNORA\n\nHai scelto consapevolmente il marciume.\nNon potrai più dire di non aver visto.\nIl sistema accetta la decomposizione come normale.');
+                }, 300);
+            }
+            
+            // Salva la scelta (simulato)
+            console.log('SCELTA VISIBILE REGISTRATA:', tipo, new Date());
+            
+            setTimeout(() => {
+                scelta.classList.remove('clicked');
+            }, 500);
+        }
+        
+        // Effetto glitch casuale
+        setInterval(() => {
+            const glitchElements = document.querySelectorAll('.glitch');
+            glitchElements.forEach(el => {
+                if (Math.random() > 0.7) {
+                    el.style.color = Math.random() > 0.5 ? '#FF0000' : '#8B0000';
+                    setTimeout(() => {
+                        el.style.color = '';
+                    }, 100);
+                }
+            });
+        }, 2000);
+    </script>
+</body>
+</html>
