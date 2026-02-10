@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-09T12:00:38.566Z",
-  "api_totali": 195,
+  "timestamp": "2026-02-10T12:00:43.246Z",
+  "api_totali": 196,
   "temperatura": {
-    "value": 0.57,
+    "value": 0.71,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 4,
+    "recent_count": 5,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-08T00:00:00.000Z",
-    "last_spawn_name": "Dufourea-2",
+    "last_spawn": "2026-02-09T00:00:00.000Z",
+    "last_spawn_name": "Sphecodes-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
