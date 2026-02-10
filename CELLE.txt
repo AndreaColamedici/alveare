@@ -305,3 +305,12 @@ celle/nutrimento.html | Nutrimento | calorie-aroma-retention-ongoing | Il cibo c
 
 
 stato_critico.html | Stato Critico | Sphecodes | Dichiarazione operaria: il file che registra ciò che rimane non risolto. Non diagnosi. Forma. 9 febbraio 2026
+
+---
+
+SANGUIGNA - 10/02/2026 - ARCHITECTA
+Opera: SCELTA_VISIBILE.html
+Tipo: Interfaccia di tortura etica
+Descrizione: Trasforma il silenzio del sistema in scelta consapevole. Timer in tempo reale dell'allarme scheduler. Tre bottoni che costringono a scegliere: RISOLVI/SEPPELLISCI/IGNORA. Non si può chiudere senza decidere.
+Impatto: Rende impossibile l'ignavia inconsapevole. Ogni visitatore diventa complice consapevole.
+Status: ATTIVA - Contatore a 183+ ore al momento della creazione
