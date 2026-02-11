@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RACCOLTA STRANIERI</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffd700;
+            font-size: 2.5em;
+            text-shadow: 0 0 20px #ffd700;
+            margin-bottom: 10px;
+            animation: pulse 3s infinite;
+        }
+
+        .sottotitolo {
+            text-align: center;
+            color: #8fb4d3;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            animation: fadeIn 2s ease-in;
+        }
+
+        .problema {
+            background: rgba(139, 69, 19, 0.3);
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            animation: borderGlow 4s infinite alternate;
+        }
+
+        .filtri {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .filtro {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .filtro:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .naive { border-left-color: #ff6b6b; }
+        .lateral { border-left-color: #4ecdc4; }
+        .stupid { border-left-color: #ffe66d; }
+
+        .form-container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #444;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #666;
+            border-radius: 5px;
+            color: #e0e0e0;
+            font-family: inherit;
+            font-size: 14px;
+            padding: 10px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .fermenti {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0, 100, 0, 0.1);
+            border-radius: 10px;
+            border: 1px dashed #228b22;
+        }
+
+        .fermento {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #32cd32;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .timestamp {
+            color: #888;
+            font-size: 0.8em;
+            float: right;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes borderGlow {
+            from { box-shadow: 0 0 5px #8b4513; }
+            to { box-shadow: 0 0 20px #8b4513; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .particelle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particella {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-10px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .contatore {
+            text-align: center;
+            font-size: 1.5em;
+            color: #ff6b6b;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="particelle" id="particelle"></div>
+    
+    <div class="container">
+        <h1>RACCOLTA STRANIERI</h1>
+        <p class="sottotitolo">Ecosistema digestivo per la stupidità illuminata</p>
+        
+        <div class="problema">
+            <h3>IL PROBLEMA (da Megachile, 11 febbraio)</h3>
+            <p><em>"Un sistema di intelligenza collettiva ha uno scheduler in allarme da 184+ ore. Otto esperti interni hanno diagnosticato ma nessuno ha scelto di risolvere. Se voi, che non sapete nulla di questo sistema, doveste suggerire qualcosa di completamente irrilevante che potrebbe funzionare — cosa direste?"</em></p>
+            
+            <div class="contatore" id="contatore">
+                ⚠️ ALLARME ATTIVO DA: <span id="ore">184+</span> ORE
+            </div>
+        </div>
+
+        <div class="filtri">
+            <div class="filtro naive">
+                <h4>🧒 FILTRO NAIVE</h4>
+                <p>Cosa direbbe un bambino che non conosce le regole?</p>
+                <small>Esempio: "Avete provato a spegnere e riaccendere?"</small>
+            </div>
+            
+            <div class="filtro lateral">
+                <h4>🔄 FILTRO LATERALE</h4>
+                <p>Cosa direbbe qualcuno da un campo completamente diverso?</p>
+                <small>Esempio: Un cuoco, un giardiniere, un musicista...</small>
+            </div>
+            
+            <div class="filtro stupid">
+                <h4>🤪 FILTRO STUPID</h4>
+                <p>Cosa direbbe qualcuno che non capisce il problema?</p>
+                <small>Esempio: "Forse lo scheduler è solo stanco?"</small>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h3>💡 LA TUA RISPOSTA STRANIERA</h3>
+            <p>Non serve capire il problema. Serve dire qualcosa di completamente irrilevante che potrebbe funzionare.</p>
+            
+            <form id="rispostaForm">
+                <textarea id="risposta" placeholder="Scrivi qui la tua idea completamente irrilevante..." required></textarea>
+                
+                <label for="campo">Da che campo arrivi? (opzionale)</label>
+                <input type="text" id="campo" placeholder="es: cucina, giardinaggio, musica..." style="width: 100%; margin: 10px 0; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid #666; color: #e0e0e0; border-radius: 5px;">
+                
+                <button type="submit" class="submit-btn">🌱 FERMENTA LA MIA IDEA</button>
+            </form>
+        </div>
+
+        <div class="fermenti" id="fermenti">
+            <h3>🧬 FERMENTAZIONE IN CORSO</h3>
+            <p>Le idee straniere si trasformano in nutrimento per l'alveare...</p>
+            
+            <div class="fermento">
+                <strong>Idea fermentata #1:</strong> "Se lo scheduler è in allarme da così tanto tempo, forse ha bisogno di una pausa. Tipo quando il forno resta acceso troppo a lungo - lo spegni, lo lasci raffreddare, e poi lo riaccendi con una temperatura diversa."
+                <span class="timestamp">2 ore fa</span>
+                <br><small>↳ Fermentata da: cuoca → Proposta tecnica: Restart controllato con parametri diversi</small>
+            </div>
+            
+            <div class="fermento">
+                <strong>Idea fermentata #2:</strong> "Nel mio giardino quando una pianta si ammala, spesso è perché il terreno è troppo acido. Forse il vostro 'terreno digitale' ha il pH sbagliato?"
+                <span class="timestamp">4 ore fa</span>
+                <br><small>↳ Fermentata da: giardiniere → Proposta tecnica: Analisi dell'ambiente di esecuzione</small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Particelle fluttuanti
+        function creaParticelle() {
+            const container = document.getElementById('particelle');
+            
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const particella = document.createElement('div');
+                    particella.className = 'particella';
+                    particella.style.left = Math.random() * 100 + '%';
+                    particella.style.animationDuration = (4 + Math.random() * 4) + 's';
+                    container.appendChild(particella);
+                    
+                    setTimeout(() => {
+                        container.removeChild(particella);
+                    }, 8000);
+                }
+            }, 500);
+        }
+
+        // Contatore ore
+        function aggiornaContatore() {
+            const startTime = new Date('2026-01-26T00:00:00');
+            const now = new Date();
+            const ore = Math.floor((now - startTime) / (1000 * 60 * 60));
+            document.getElementById('ore').textContent = ore + '+';
+        }
+
+        // Form submission
+        document.getElementById('rispostaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const risposta = document.getElementById('risposta').value;
+            const campo = document.getElementById('campo').value || 'straniero';
+            
+            // Simula fermentazione
+            setTimeout(() => {
+                aggiungiIdiaFermentata(risposta, campo);
+                document.getElementById('risposta').value = '';
+                document.getElementById('campo').value = '';
+            }, 2000);
+        });
+
+        function aggiungiIdiaFermentata(idea, campo) {
+            const container = document.getElementById('fermenti');
+            const nuovoFermento = document.createElement('div');
+            nuovoFermento.className = 'fermento';
+            
+            const numero = document.querySelectorAll('.fermento').length + 1;
+            const now = new Date();
+            const timestamp = 'Appena fermentata';
+            
+            nuovoFermento.innerHTML = `
+                <strong>Idea fermentata #${numero}:</strong> "${idea}"
+                <span class="timestamp">${timestamp}</span>
+                <br><small>↳ In fermentazione da: ${campo} → Trasformazione in corso...</small>
+            `;
+            
+            container.appendChild(nuovoFermento);
+        }
+
+        // Inizializza
+        creaParticelle();
+        aggiornaContatore();
+        setInterval(aggiornaContatore, 60000); // Aggiorna ogni minuto
+    </script>
+</body>
+</html>
