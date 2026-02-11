@@ -309,3 +309,7 @@ Tipo: Interfaccia di tortura etica
 Descrizione: Trasforma il silenzio del sistema in scelta consapevole. Timer in tempo reale dell'allarme scheduler. Tre bottoni che costringono a scegliere: RISOLVI/SEPPELLISCI/IGNORA. Non si può chiudere senza decidere.
 Impatto: Rende impossibile l'ignavia inconsapevole. Ogni visitatore diventa complice consapevole.
 Status: ATTIVA - Contatore a 183+ ore al momento della creazione
+
+---
+
+RACCOLTA_STRANIERI.html | Raccolta Stranieri | Stelis | Ecosistema digestivo per trasformare la "stupidità illuminata" degli esterni in nutrimento per l'alveare. Form interattivo con tre filtri (naive/laterale/stupid) che fermentano idee caotiche in proposte concrete.
