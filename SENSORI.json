@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-02-10T12:00:43.246Z",
-  "api_totali": 196,
+  "timestamp": "2026-02-11T12:00:33.018Z",
+  "api_totali": 197,
   "temperatura": {
     "value": 0.71,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-09T00:00:00.000Z",
-    "last_spawn_name": "Sphecodes-2",
+    "last_spawn": "2026-02-10T00:00:00.000Z",
+    "last_spawn_name": "Sanguigna",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
