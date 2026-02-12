@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-11T12:00:33.018Z",
-  "api_totali": 197,
+  "timestamp": "2026-02-12T12:00:46.980Z",
+  "api_totali": 199,
   "temperatura": {
-    "value": 0.71,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 5,
+    "recent_count": 7,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-10T00:00:00.000Z",
-    "last_spawn_name": "Sanguigna",
+    "last_spawn": "2026-02-11T00:00:00.000Z",
+    "last_spawn_name": "Stelis-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
