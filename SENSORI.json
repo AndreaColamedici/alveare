@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-02-13T12:00:29.532Z",
-  "api_totali": 200,
+  "timestamp": "2026-02-14T12:00:12.248Z",
+  "api_totali": 201,
   "temperatura": {
     "value": 1,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-12T00:00:00.000Z",
-    "last_spawn_name": "Falun-2",
+    "last_spawn": "2026-02-13T00:00:00.000Z",
+    "last_spawn_name": "Chelostoma-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
