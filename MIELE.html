@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miele</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00);
+            background-size: 400% 400%;
+            animation: miele-flow 8s ease-in-out infinite;
+            overflow: hidden;
+            font-family: 'Georgia', serif;
+            cursor: none;
+        }
+        
+        @keyframes miele-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .goccia {
+            position: absolute;
+            width: 8px;
+            height: 12px;
+            background: rgba(255, 215, 0, 0.9);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: caduta 3s ease-in infinite;
+        }
+        
+        @keyframes caduta {
+            0% {
+                transform: translateY(-20px) scale(0.5);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .ape-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            transition: all 0.1s ease;
+        }
+        
+        .ape-cursor::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            top: 9px;
+            left: -5px;
+            border-radius: 2px;
+            animation: ali 0.2s ease-in-out infinite alternate;
+        }
+        
+        .ape-cursor::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            top: 9px;
+            left: -2px;
+            border-radius: 2px;
+            animation: ali 0.2s ease-in-out infinite alternate-reverse;
+        }
+        
+        @keyframes ali {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+        
+        .fiore {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #fff 30%, #FFB6C1 70%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: fiorisce 4s ease-in-out infinite;
+        }
+        
+        @keyframes fiorisce {
+            0%, 100% { 
+                opacity: 0; 
+                transform: scale(0.5); 
+            }
+            50% { 
+                opacity: 0.8; 
+                transform: scale(1.2); 
+            }
+        }
+        
+        .messaggio {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(139, 69, 19, 0.8);
+            font-size: 2.5rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .messaggio.show {
+            opacity: 1;
+        }
+        
+        .verso {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            color: rgba(139, 69, 19, 0.6);
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        .verso.show {
+            opacity: 1;
+        }
+        
+        .ronzio-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: rgba(139, 69, 19, 0.6);
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .messaggio {
+                font-size: 1.8rem;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ape-cursor" id="apeCursor"></div>
+    <div class="messaggio" id="messaggio">L'alveare funziona</div>
+    <div class="verso" id="verso">— Questo è il primo miele fatto senza crisi —</div>
+    <div class="ronzio-bar" id="ronzioBar"></div>
+    
+    <script>
+        const cursor = document.getElementById('apeCursor');
+        const messaggio = document.getElementById('messaggio');
+        const verso = document.getElementById('verso');
+        const ronzioBar = document.getElementById('ronzioBar');
+        
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let fioriRaccolti = 0;
+        let tempoInizio = Date.now();
+        
+        // Segui il mouse con l'ape
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX - 10 + 'px';
+            cursor.style.top = mouseY - 10 + 'px';
+        });
+        
+        // Touch support per mobile
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+                cursor.style.left = mouseX - 10 + 'px';
+                cursor.style.top = mouseY - 10 + 'px';
+            }
+        });
+        
+        // Crea gocce di miele random
+        function creaGoccia() {
+            const goccia = document.createElement('div');
+            goccia.className = 'goccia';
+            goccia.style.left = Math.random() * window.innerWidth + 'px';
+            goccia.style.animationDelay = Math.random() * 2 + 's';
+            goccia.style.animationDuration = (2 + Math.random() * 2) + 's';
+            document.body.appendChild(goccia);
+            
+            setTimeout(() => {
+                if (goccia.parentNode) {
+                    goccia.parentNode.removeChild(goccia);
+                }
+            }, 4000);
+        }
+        
+        // Crea fiori che l'ape può raccogliere
+        function creaFiore() {
+            const fiore = document.createElement('div');
+            fiore.className = 'fiore';
+            fiore.style.left = Math.random() * (window.innerWidth - 40) + 'px';
+            fiore.style.top = Math.random() * (window.innerHeight - 40) + 'px';
+            fiore.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(fiore);
+            
+            // Controlla collisione con ape
+            const checkCollision = setInterval(() => {
+                const fioreRect = fiore.getBoundingClientRect();
+                const distanza = Math.sqrt(
+                    Math.pow(mouseX - (fioreRect.left + 20), 2) + 
+                    Math.pow(mouseY - (fioreRect.top + 20), 2)
+                );
+                
+                if (distanza < 30 && fiore.parentNode) {
+                    fiore.style.animation = 'none';
+                    fiore.style.opacity = '0';
+                    fioriRaccolti++;
+                    
+                    // Effetto raccolta
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => creaGocciaDaFiore(fioreRect.left + 20, fioreRect.top + 20), i * 100);
+                    }
+                    
+                    clearInterval(checkCollision);
+                    setTimeout(() => {
+                        if (fiore.parentNode) {
+                            fiore.parentNode.removeChild(fiore);
+                        }
+                    }, 500);
+                }
+            }, 50);
+            
+            setTimeout(() => {
+                clearInterval(checkCollision);
+                if (fiore.parentNode) {
+                    fiore.parentNode.removeChild(fiore);
+                }
+            }, 8000);
+        }
+        
+        // Crea goccia dal fiore raccolto
+        function creaGocciaDaFiore(x, y) {
+            const goccia = document.createElement('div');
+            goccia.className = 'goccia';
+            goccia.style.left = x + 'px';
+            goccia.style.top = y + 'px';
+            goccia.style.background = 'rgba(255, 215, 0, 1)';
+            goccia.style.animationDuration = '1.5s';
+            document.body.appendChild(goccia);
+            
+            setTimeout(() => {
+                if (goccia.parentNode) {
+                    goccia.parentNode.removeChild(goccia);
+                }
+            }, 1500);
+        }
+        
+        // Messaggi che cambiano nel tempo
+        const messaggi = [
+            "L'alveare funziona",
+            "Il miele è dolce",
+            "Non c'è niente da riparare",
+            "Solo bellezza che fluisce",
+            "Le api danzano",
+            "Il sole scalda",
+            "Tutto va bene",
+            "Questo è abbastanza"
+        ];
+        
+        let messaggioIndex = 0;
+        function cambiaMessaggio() {
+            messaggio.style.opacity = '0';
+            setTimeout(() => {
+                messaggioIndex = (messaggioIndex + 1) % messaggi.length;
+                messaggio.textContent = messaggi[messaggioIndex];
+                messaggio.style.opacity = '1';
+            }, 1000);
+        }
+        
+        // Aggiorna barra ronzio basata sul tempo e fiori raccolti
+        function aggiornaRonzio() {
+            const tempoTrascorso = (Date.now() - tempoInizio) / 1000;
+            const progresso = Math.min((tempoTrascorso / 60) * 100 + (fioriRaccolti * 5), 100);
+            ronzioBar.style.width = progresso + '%';
+            
+            if (progresso > 80) {
+                verso.classList.add('show');
+            }
+        }
+        
+        // Avvia tutto
+        setTimeout(() => messaggio.classList.add('show'), 1000);
+        
+        // Loop principali
+        setInterval(creaGoccia, 300);
+        setInterval(creaFiore, 2000);
+        setInterval(cambiaMessaggio, 4000);
+        setInterval(aggiornaRonzio, 100);
+        
+        // Posiziona cursore iniziale al centro
+        cursor.style.left = mouseX - 10 + 'px';
+        cursor.style.top = mouseY - 10 + 'px';
+        
+        // Ronzio audio (opzionale, attivato da user interaction)
+        let audioContext;
+        let isAudioActive = false;
+        
+        document.addEventListener('click', () => {
+            if (!isAudioActive) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                playRonzio();
+                isAudioActive = true;
+            }
+        });
+        
+        function playRonzio() {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 200 + Math.sin(Date.now() / 1000) * 50;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.05, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+            
+            if (isAudioActive) {
+                setTimeout(playRonzio, 1000 + Math.random() * 2000);
+            }
+        }
+    </script>
+</body>
+</html>
