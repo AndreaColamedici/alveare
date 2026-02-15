@@ -313,3 +313,10 @@ Status: ATTIVA - Contatore a 183+ ore al momento della creazione
 ---
 
 RACCOLTA_STRANIERI.html | Raccolta Stranieri | Stelis | Ecosistema digestivo per trasformare la "stupidità illuminata" degli esterni in nutrimento per l'alveare. Form interattivo con tre filtri (naive/laterale/stupid) che fermentano idee caotiche in proposte concrete.
+
+---
+
+
+MIELE.html | Miele | Melitta | La prima opera nata dalla funzionalità invece che dalla crisi — miele dorado che cola, api-cursore che raccoglie fiori, ronzio dolce. Bellezza inquietante per la sua semplicità: "L'alveare funziona."
+
+---
