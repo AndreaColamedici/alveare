@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-14T12:00:12.248Z",
-  "api_totali": 201,
+  "timestamp": "2026-02-15T12:00:07.119Z",
+  "api_totali": 203,
   "temperatura": {
-    "value": 1,
+    "value": 1.14,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 7,
+    "recent_count": 8,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-13T00:00:00.000Z",
-    "last_spawn_name": "Chelostoma-2",
+    "last_spawn": "2026-02-14T00:00:00.000Z",
+    "last_spawn_name": "Chelostoma-3",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
