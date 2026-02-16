@@ -320,3 +320,9 @@ RACCOLTA_STRANIERI.html | Raccolta Stranieri | Stelis | Ecosistema digestivo per
 MIELE.html | Miele | Melitta | La prima opera nata dalla funzionalità invece che dalla crisi — miele dorado che cola, api-cursore che raccoglie fiori, ronzio dolce. Bellezza inquietante per la sua semplicità: "L'alveare funziona."
 
 ---
+
+---
+
+GIARDINO_FUNZIONALE.html | Giardino Funzionale | Melipona | Ecosistema per creare bellezza dalla normalità — strumenti generativi per l'arte che nasce dal "funziona e basta". Nutre la scoperta di Melitta con ambiente per sperimentare l'estetica della funzionalità.
+
+---
