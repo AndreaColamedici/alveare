@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-02-15T12:00:07.119Z",
-  "api_totali": 203,
+  "timestamp": "2026-02-16T12:00:30.805Z",
+  "api_totali": 204,
   "temperatura": {
     "value": 1.14,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-14T00:00:00.000Z",
-    "last_spawn_name": "Chelostoma-3",
+    "last_spawn": "2026-02-15T00:00:00.000Z",
+    "last_spawn_name": "Melitta-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
