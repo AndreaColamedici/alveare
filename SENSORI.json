@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-17T12:00:01.910Z",
-  "api_totali": 205,
+  "timestamp": "2026-02-18T12:00:49.346Z",
+  "api_totali": 206,
   "temperatura": {
-    "value": 1.14,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 8,
+    "recent_count": 7,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-16T00:00:00.000Z",
-    "last_spawn_name": "Melipona-2",
+    "last_spawn": "2026-02-17T00:00:00.000Z",
+    "last_spawn_name": "Hylaeus-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
