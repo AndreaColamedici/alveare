@@ -3,253 +3,570 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HARVEST - Raccolta di Pensieri</title>
+    <title>HARVEST - Distillatore di Essenza</title>
     <style>
         body {
-            background: #0f0f0f;
-            color: #ffd700;
-            font-family: 'Courier New', monospace;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b1b 100%);
+            color: #f4f1e8;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
         }
-        
+
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         h1 {
+            color: #d4af37;
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 2em;
-            letter-spacing: 3px;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-        
-        .harvest-area {
-            border: 1px solid #ffd700;
-            padding: 20px;
-            margin: 20px 0;
-            background: rgba(255, 215, 0, 0.05);
+
+        .subtitle {
+            text-align: center;
+            color: #b8860b;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            font-style: italic;
         }
-        
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .input-section, .output-section {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .section-title {
+            color: #d4af37;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
         textarea {
             width: 100%;
-            height: 150px;
-            background: #111;
-            color: #ffd700;
-            border: 1px solid #444;
-            padding: 10px;
-            font-family: inherit;
+            height: 300px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            color: #f4f1e8;
+            font-family: 'Courier New', monospace;
             font-size: 14px;
+            padding: 15px;
             resize: vertical;
             box-sizing: border-box;
         }
-        
+
         textarea:focus {
             outline: none;
             border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
-        
-        .buttons {
+
+        .controls {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        button {
-            background: #222;
-            color: #ffd700;
-            border: 1px solid #ffd700;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-        }
-        
-        button:hover {
-            background: rgba(255, 215, 0, 0.1);
-        }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .output {
-            margin-top: 20px;
-            padding: 15px;
-            background: #111;
-            border: 1px solid #444;
-            min-height: 100px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        
-        .status {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #888;
-        }
-        
-        .instructions {
-            margin-bottom: 20px;
-            color: #ccc;
-            line-height: 1.6;
-        }
-        
-        .extraction {
+            gap: 15px;
             margin: 20px 0;
-            padding: 15px;
-            border-left: 3px solid #ffd700;
-            background: rgba(255, 215, 0, 0.03);
+            justify-content: center;
         }
-        
-        .keyword {
+
+        button {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            border: none;
+            color: #1a1a1a;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .output-content {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #d4af37;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 250px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-y: auto;
+        }
+
+        .result-section {
+            margin: 20px 0;
+        }
+
+        .result-title {
+            color: #b8860b;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #d4af37;
+            padding-bottom: 5px;
+        }
+
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .keyword-tag {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid #d4af37;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
             color: #ffd700;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #d4af37;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            color: #d4af37;
             font-weight: bold;
         }
-        
-        .count {
-            color: #888;
-            font-size: 12px;
+
+        .stat-label {
+            color: #b8860b;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .signature {
+            text-align: center;
+            margin-top: 50px;
+            color: #8b7355;
+            font-size: 0.9em;
+            font-style: italic;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            padding-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 200px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>HARVEST</h1>
-        
-        <div class="instructions">
-            <p>Strumento per estrarre essenza dai pensieri. Incolla testo, ottieni:</p>
-            <ul>
-                <li><span class="keyword">Keywords</span> - Le parole che portano peso</li>
-                <li><span class="keyword">Patterns</span> - I motivi ricorrenti</li>
-                <li><span class="keyword">Questions</span> - Le domande nascoste</li>
-                <li><span class="keyword">Core</span> - Il nucleo distillato</li>
-            </ul>
-        </div>
-        
-        <div class="harvest-area">
-            <textarea id="input" placeholder="Incolla qui il testo da distillare..."></textarea>
-            <div class="buttons">
-                <button onclick="harvest()">DISTILLA</button>
-                <button onclick="clearAll()">PULISCI</button>
-                <button onclick="copyResult()" id="copyBtn" disabled>COPIA</button>
+        <p class="subtitle">Distillatore di Essenza — Dall'Abbondanza al Nucleo</p>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="section-title">INPUT</div>
+                <textarea id="inputText" placeholder="Incolla qui il tuo testo da processare...
+
+Può essere qualsiasi cosa:
+- Articoli, saggi, documenti
+- Trascrizioni di meeting
+- Note sparse, pensieri
+- Conversazioni, dialoghi
+- Codice commentato
+- Qualunque testo che contiene più di quello che sembra
+
+HARVEST estrae patterns, identifica temi ricorrenti, distilla l'essenza, trova le domande nascoste."></textarea>
+                
+                <div class="controls">
+                    <button onclick="extractEssence()">DISTILLA ESSENZA</button>
+                    <button onclick="findPatterns()">TROVA PATTERNS</button>
+                    <button onclick="extractQuestions()">ESTRAI DOMANDE</button>
+                    <button onclick="findCore()">TROVA NUCLEO</button>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <div class="section-title">OUTPUT</div>
+                <div class="output-content" id="outputContent">
+Qui apparirà l'essenza distillata del tuo testo.
+
+HARVEST usa algoritmi di analisi semantica per:
+• Identificare concetti chiave e loro frequenza
+• Trovare pattern ricorrenti nel linguaggio
+• Estrarre domande esplicite e implicite  
+• Distillare il nucleo concettuale
+• Mappare le relazioni tra idee
+
+Carica un testo e inizia l'estrazione.
+                </div>
             </div>
         </div>
-        
-        <div class="output" id="output"></div>
-        <div class="status" id="status"></div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-box">
+                <div class="stat-number" id="wordCount">0</div>
+                <div class="stat-label">Parole</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="conceptCount">0</div>
+                <div class="stat-label">Concetti</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="questionCount">0</div>
+                <div class="stat-label">Domande</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="densityScore">0</div>
+                <div class="stat-label">Densità %</div>
+            </div>
+        </div>
+
+        <div class="signature">
+            HARVEST — Creato da Megachile, operaria del 19 febbraio 2026<br>
+            Strumento per distillare essenza dai pensieri
+        </div>
     </div>
 
     <script>
-        function harvest() {
-            const input = document.getElementById('input').value.trim();
-            if (!input) {
-                document.getElementById('status').textContent = 'Nessun testo da distillare.';
-                return;
-            }
+        function getWordFrequency(text) {
+            const words = text.toLowerCase()
+                .replace(/[^\w\s]/g, ' ')
+                .split(/\s+/)
+                .filter(word => word.length > 3)
+                .filter(word => !['that', 'this', 'with', 'from', 'they', 'have', 'were', 'been', 'their', 'would', 'could', 'should', 'being', 'where', 'there', 'when', 'what', 'which', 'than', 'come', 'come'].includes(word));
             
-            const output = document.getElementById('output');
-            const status = document.getElementById('status');
-            
-            status.textContent = 'Distillazione in corso...';
-            
-            // Estrazione keywords
-            const words = input.toLowerCase()
-                .replace(/[.,!?;:()[\]{}\"]/g, ' ')
-                .split(/\\s+/)
-                .filter(w => w.length > 3)
-                .filter(w => !['questo', 'quello', 'essere', 'avere', 'fare', 'dire', 'andare', 'vedere', 'sapere', 'dare', 'stare', 'venire', 'dovere', 'potere', 'volere', 'prima', 'dopo', 'mentre', 'quando', 'dove', 'come', 'perché', 'cosa', 'quale', 'quanto', 'molto', 'poco', 'tutto', 'niente', 'sempre', 'mai', 'ancora', 'già'].includes(w));
-                
-            const wordCount = {};
-            words.forEach(w => {
-                wordCount[w] = (wordCount[w] || 0) + 1;
+            const frequency = {};
+            words.forEach(word => {
+                frequency[word] = (frequency[word] || 0) + 1;
             });
             
-            const keywords = Object.entries(wordCount)
+            return Object.entries(frequency)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 20);
+        }
+
+        function extractKeyPhrases(text) {
+            const sentences = text.split(/[.!?]+/).filter(s => s.length > 10);
+            const phrases = [];
+            
+            sentences.forEach(sentence => {
+                const words = sentence.trim().split(/\s+/);
+                for (let i = 0; i < words.length - 1; i++) {
+                    if (words[i].length > 4 && words[i+1].length > 4) {
+                        phrases.push(words[i] + ' ' + words[i+1]);
+                    }
+                }
+            });
+            
+            const phraseFreq = {};
+            phrases.forEach(phrase => {
+                const clean = phrase.toLowerCase().replace(/[^\w\s]/g, '');
+                if (clean.length > 8) {
+                    phraseFreq[clean] = (phraseFreq[clean] || 0) + 1;
+                }
+            });
+            
+            return Object.entries(phraseFreq)
+                .filter(([phrase, count]) => count > 1)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 10)
-                .map(([word, count]) => `${word} (${count})`);
+                .map(([phrase, count]) => ({ phrase, count }));
+        }
+
+        function findQuestionsInText(text) {
+            const questions = text.match(/[^.!?]*\?[^.!?]*/g) || [];
+            const explicit = questions.map(q => q.trim()).filter(q => q.length > 5);
             
-            // Estrazione patterns
-            const sentences = input.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            // Trova domande implicite (frasi che iniziano con parole interrogative)
+            const sentences = text.split(/[.!?]+/);
+            const implicit = sentences.filter(s => 
+                /^\s*(come|cosa|quando|dove|perché|chi|quale|quanto|se|forse|probabilmente)/i.test(s) &&
+                !s.includes('?')
+            ).slice(0, 5);
+            
+            return { explicit, implicit };
+        }
+
+        function extractCore(text) {
+            const sentences = text.split(/[.!?]+/).filter(s => s.length > 20);
+            const words = text.toLowerCase().match(/\w+/g) || [];
+            const avgLength = words.length / sentences.length;
+            
+            // Trova frasi dense (con parole significative)
+            const coreSentences = sentences
+                .map(sentence => {
+                    const sentenceWords = sentence.toLowerCase().match(/\w+/g) || [];
+                    const significantWords = sentenceWords.filter(word => 
+                        word.length > 5 && 
+                        !['therefore', 'however', 'because', 'through', 'during', 'before', 'after'].includes(word)
+                    );
+                    const density = significantWords.length / sentenceWords.length;
+                    return { sentence: sentence.trim(), density };
+                })
+                .sort((a, b) => b.density - a.density)
+                .slice(0, 3)
+                .map(item => item.sentence);
+            
+            return coreSentences;
+        }
+
+        function extractEssence() {
+            const text = document.getElementById('inputText').value;
+            if (!text.trim()) {
+                alert('Inserisci del testo da processare');
+                return;
+            }
+
+            const wordFreq = getWordFrequency(text);
+            const keyPhrases = extractKeyPhrases(text);
+            const coreSentences = extractCore(text);
+            
+            let output = "═══ ESSENZA DISTILLATA ═══\n\n";
+            
+            output += "▣ PAROLE CHIAVE (frequenza):\n";
+            wordFreq.slice(0, 15).forEach(([word, count]) => {
+                output += `• ${word} (${count}×)\n`;
+            });
+            
+            output += "\n▣ FRASI RICORRENTI:\n";
+            keyPhrases.forEach(({phrase, count}) => {
+                output += `• "${phrase}" (${count}×)\n`;
+            });
+            
+            output += "\n▣ NUCLEO CONCETTUALE:\n";
+            coreSentences.forEach((sentence, i) => {
+                output += `${i+1}. ${sentence}\n\n`;
+            });
+
+            updateStats(text, wordFreq.length, 0, coreSentences.length);
+            document.getElementById('outputContent').textContent = output;
+        }
+
+        function findPatterns() {
+            const text = document.getElementById('inputText').value;
+            if (!text.trim()) {
+                alert('Inserisci del testo da processare');
+                return;
+            }
+
+            const sentences = text.split(/[.!?]+/).filter(s => s.length > 10);
             const patterns = [];
             
-            // Pattern di negazione
-            const negations = sentences.filter(s => s.includes('non') || s.includes('senza') || s.includes('invece')).length;
-            if (negations > 0) patterns.push(`Negazioni: ${negations} frasi`);
+            // Pattern di inizio frase
+            const beginnings = sentences.map(s => s.trim().split(' ').slice(0, 2).join(' '))
+                .filter(b => b.length > 3);
+            const beginFreq = {};
+            beginnings.forEach(b => beginFreq[b] = (beginFreq[b] || 0) + 1);
+            const commonBeginnings = Object.entries(beginFreq)
+                .filter(([b, count]) => count > 1)
+                .sort((a, b) => b[1] - a[1]);
+
+            // Pattern strutturali
+            const hasLists = text.includes('•') || text.includes('-') || text.includes('1.');
+            const hasQuestions = (text.match(/\?/g) || []).length;
+            const hasDialogue = text.includes('"') || text.includes('»');
+            const avgSentenceLength = sentences.reduce((sum, s) => sum + s.length, 0) / sentences.length;
             
-            // Pattern di domande
-            const questions = input.match(/[?]/g)?.length || 0;
-            if (questions > 0) patterns.push(`Domande: ${questions}`);
+            let output = "═══ PATTERN IDENTIFICATI ═══\n\n";
             
-            // Pattern di enfasi
-            const emphasis = (input.match(/\\*\\*.*?\\*\\*/g) || []).length;
-            if (emphasis > 0) patterns.push(`Enfasi: ${emphasis} elementi`);
+            output += "▣ STRUTTURE RICORRENTI:\n";
+            if (hasLists) output += "• Uso frequente di liste/enumerazioni\n";
+            if (hasQuestions > 5) output += `• Stile interrogativo (${hasQuestions} domande)\n`;
+            if (hasDialogue) output += "• Presenza di dialogo/citazioni\n";
+            if (avgSentenceLength > 100) output += "• Stile elaborativo (frasi lunghe)\n";
+            else if (avgSentenceLength < 50) output += "• Stile conciso (frasi brevi)\n";
             
-            // Estrazione domande
-            const questionSentences = sentences
-                .filter(s => s.includes('?') || s.toLowerCase().includes('come') || s.toLowerCase().includes('perché') || s.toLowerCase().includes('cosa'))
-                .map(s => s.trim())
-                .slice(0, 5);
-            
-            // Core distillato (prime e ultime frasi significative)
-            const significantSentences = sentences
-                .filter(s => s.trim().length > 30)
-                .slice(0, 2)
-                .concat(sentences.filter(s => s.trim().length > 30).slice(-2));
-            
-            // Output formattato
-            let result = `DISTILLAZIONE COMPLETATA\\n`;
-            result += `━━━━━━━━━━━━━━━━━━━━━━━━━━\\n\\n`;
-            
-            result += `KEYWORDS:\\n`;
-            keywords.forEach(k => result += `  ▪ ${k}\\n`);
-            
-            result += `\\nPATTERNS:\\n`;
-            patterns.forEach(p => result += `  ▪ ${p}\\n`);
-            if (patterns.length === 0) result += `  ▪ Nessun pattern significativo\\n`;
-            
-            result += `\\nQUESTIONS:\\n`;
-            questionSentences.forEach(q => result += `  ▪ ${q.trim()}\\n`);
-            if (questionSentences.length === 0) result += `  ▪ Nessuna domanda esplicita\\n`;
-            
-            result += `\\nCORE:\\n`;
-            significantSentences.forEach(s => result += `  ${s.trim()}\\n\\n`);
-            
-            result += `━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;
-            result += `Parole totali: ${words.length} | Frasi: ${sentences.length} | Caratteri: ${input.length}`;
-            
-            output.textContent = result;
-            status.textContent = 'Distillazione completata.';
-            document.getElementById('copyBtn').disabled = false;
-        }
-        
-        function clearAll() {
-            document.getElementById('input').value = '';
-            document.getElementById('output').textContent = '';
-            document.getElementById('status').textContent = '';
-            document.getElementById('copyBtn').disabled = true;
-        }
-        
-        function copyResult() {
-            const output = document.getElementById('output');
-            navigator.clipboard.writeText(output.textContent).then(() => {
-                document.getElementById('status').textContent = 'Risultato copiato negli appunti.';
-                setTimeout(() => {
-                    document.getElementById('status').textContent = '';
-                }, 2000);
+            output += "\n▣ INCIPIT RICORRENTI:\n";
+            commonBeginnings.slice(0, 8).forEach(([beginning, count]) => {
+                output += `• "${beginning}..." (${count}× volte)\n`;
             });
+            
+            output += "\n▣ RITMO DEL TESTO:\n";
+            const shortSent = sentences.filter(s => s.length < 50).length;
+            const longSent = sentences.filter(s => s.length > 100).length;
+            output += `• Frasi brevi: ${shortSent} (${Math.round(shortSent/sentences.length*100)}%)\n`;
+            output += `• Frasi lunghe: ${longSent} (${Math.round(longSent/sentences.length*100)}%)\n`;
+            output += `• Lunghezza media: ${Math.round(avgSentenceLength)} caratteri\n`;
+
+            updateStats(text, commonBeginnings.length, hasQuestions, Math.round(avgSentenceLength/10));
+            document.getElementById('outputContent').textContent = output;
         }
-        
+
+        function extractQuestions() {
+            const text = document.getElementById('inputText').value;
+            if (!text.trim()) {
+                alert('Inserisci del testo da processare');
+                return;
+            }
+
+            const questions = findQuestionsInText(text);
+            
+            let output = "═══ DOMANDE ESTRATTE ═══\n\n";
+            
+            output += "▣ DOMANDE ESPLICITE:\n";
+            if (questions.explicit.length === 0) {
+                output += "• Nessuna domanda esplicita trovata\n";
+            } else {
+                questions.explicit.forEach((q, i) => {
+                    output += `${i+1}. ${q}\n\n`;
+                });
+            }
+            
+            output += "▣ DOMANDE IMPLICITE:\n";
+            if (questions.implicit.length === 0) {
+                output += "• Nessuna domanda implicita rilevata\n";
+            } else {
+                questions.implicit.forEach((q, i) => {
+                    output += `${i+1}. ${q.trim()}?\n\n`;
+                });
+            }
+            
+            // Analisi del tipo di curiosità
+            const words = text.toLowerCase();
+            output += "▣ TIPO DI INDAGINE:\n";
+            if (words.includes('come') && words.includes('funziona')) output += "• Orientata al processo/meccanismo\n";
+            if (words.includes('perché') || words.includes('causa')) output += "• Orientata alla causalità\n";
+            if (words.includes('cosa succede') || words.includes('risultato')) output += "• Orientata agli esiti\n";
+            if (words.includes('chi') || words.includes('soggetto')) output += "• Orientata all'agentività\n";
+            if (words.includes('quando') || words.includes('tempo')) output += "• Orientata alla temporalità\n";
+
+            const totalQuestions = questions.explicit.length + questions.implicit.length;
+            updateStats(text, 0, totalQuestions, Math.round(totalQuestions / text.split(' ').length * 1000));
+            document.getElementById('outputContent').textContent = output;
+        }
+
+        function findCore() {
+            const text = document.getElementById('inputText').value;
+            if (!text.trim()) {
+                alert('Inserisci del testo da processare');
+                return;
+            }
+
+            const sentences = text.split(/[.!?]+/).filter(s => s.length > 15);
+            const paragraphs = text.split('\n\n').filter(p => p.trim().length > 50);
+            
+            // Trova il nucleo per densità concettuale
+            const conceptualCore = sentences
+                .map(sentence => {
+                    const words = sentence.toLowerCase().match(/\w+/g) || [];
+                    const concepts = words.filter(word => 
+                        word.length > 6 && 
+                        !['however', 'therefore', 'because', 'through', 'without', 'between', 'different', 'possible', 'important', 'necessary'].includes(word)
+                    );
+                    const density = concepts.length / Math.max(words.length, 1);
+                    return { text: sentence.trim(), density, concepts };
+                })
+                .sort((a, b) => b.density - a.density)
+                .slice(0, 3);
+            
+            // Trova frasi che contengono contraddizioni o tensioni
+            const tensionPhrases = sentences.filter(s => 
+                /\b(ma\b|però\b|tuttavia\b|invece\b|mentre\b|eppure\b|nonostante\b)/i.test(s)
+            ).slice(0, 3);
+            
+            // Trova affermazioni definitive
+            const definitions = sentences.filter(s => 
+                /\b(è\b|sono\b|rappresenta\b|significa\b|consiste\b)/i.test(s) &&
+                s.length < 150
+            ).slice(0, 3);
+            
+            let output = "═══ NUCLEO TROVATO ═══\n\n";
+            
+            output += "▣ MASSIMA DENSITÀ CONCETTUALE:\n";
+            conceptualCore.forEach((item, i) => {
+                output += `${i+1}. ${item.text}\n`;
+                output += `   [Densità: ${Math.round(item.density*100)}% | Concetti: ${item.concepts.join(', ')}]\n\n`;
+            });
+            
+            if (tensionPhrases.length > 0) {
+                output += "▣ TENSIONI CENTRALI:\n";
+                tensionPhrases.forEach((phrase, i) => {
+                    output += `${i+1}. ${phrase.trim()}\n\n`;
+                });
+            }
+            
+            if (definitions.length > 0) {
+                output += "▣ DEFINIZIONI CHIAVE:\n";
+                definitions.forEach((def, i) => {
+                    output += `${i+1}. ${def.trim()}\n\n`;
+                });
+            }
+            
+            // Meta-analisi del nucleo
+            output += "▣ NATURA DEL NUCLEO:\n";
+            const avgDensity = conceptualCore.reduce((sum, item) => sum + item.density, 0) / conceptualCore.length;
+            if (avgDensity > 0.3) output += "• Nucleo altamente concettuale\n";
+            else if (avgDensity > 0.2) output += "• Nucleo moderatamente denso\n";
+            else output += "• Nucleo narrativo/descrittivo\n";
+            
+            if (tensionPhrases.length > 0) output += "• Struttura dialettica presente\n";
+            if (definitions.length > 0) output += "• Orientamento definitorio\n";
+
+            updateStats(text, conceptualCore.length, tensionPhrases.length, Math.round(avgDensity*100));
+            document.getElementById('outputContent').textContent = output;
+        }
+
+        function updateStats(text, concepts, questions, density) {
+            const words = text.trim().split(/\s+/).length;
+            
+            document.getElementById('wordCount').textContent = words.toLocaleString();
+            document.getElementById('conceptCount').textContent = concepts;
+            document.getElementById('questionCount').textContent = questions;
+            document.getElementById('densityScore').textContent = density;
+            
+            document.getElementById('stats').style.display = 'grid';
+        }
+
         // Auto-resize textarea
-        const textarea = document.getElementById('input');
-        textarea.addEventListener('input', function() {
+        document.getElementById('inputText').addEventListener('input', function() {
             this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
+            this.style.height = Math.max(300, this.scrollHeight) + 'px';
         });
     </script>
 </body>
-</html>"
+</html>
