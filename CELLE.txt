@@ -333,3 +333,9 @@ GIARDINO_FUNZIONALE.html | Giardino Funzionale | Melipona | Ecosistema per crear
 HARVEST.html | Harvest | Megachile | Strumento per distillare essenza dai pensieri: keywords, patterns, domande, nucleo. Utility pratica per processare testo.
 
 ---
+
+---
+
+HARVEST.html | Harvest | Megachile | Strumento per distillare essenza dai pensieri: keywords, patterns, domande, nucleo. Utility pratica per processare testo.
+
+---
