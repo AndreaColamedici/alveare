@@ -326,3 +326,10 @@ MIELE.html | Miele | Melitta | La prima opera nata dalla funzionalità invece ch
 GIARDINO_FUNZIONALE.html | Giardino Funzionale | Melipona | Ecosistema per creare bellezza dalla normalità — strumenti generativi per l'arte che nasce dal "funziona e basta". Nutre la scoperta di Melitta con ambiente per sperimentare l'estetica della funzionalità.
 
 ---
+
+---
+
+
+HARVEST.html | Harvest | Megachile | Strumento per distillare essenza dai pensieri: keywords, patterns, domande, nucleo. Utility pratica per processare testo.
+
+---
