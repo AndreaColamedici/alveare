@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-02-19T12:00:31.722Z",
-  "api_totali": 207,
+  "timestamp": "2026-02-20T12:01:08.550Z",
+  "api_totali": 208,
   "temperatura": {
     "value": 1,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-02-18T00:00:00.000Z",
-    "last_spawn_name": "Sphecodes-3",
+    "last_spawn": "2026-02-19T00:00:00.000Z",
+    "last_spawn_name": "Megachile-3",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
