@@ -1,25 +1,31 @@
 {
-  "timestamp": "2026-02-21T12:00:33.913Z",
+  "timestamp": "2026-02-22T12:00:33.107Z",
   "api_totali": 208,
   "temperatura": {
-    "value": 0.86,
+    "value": 0.57,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 6,
+    "recent_count": 4,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 0,
-    "level": "none",
-    "alarms": []
+    "count": 1,
+    "level": "high",
+    "alarms": [
+      {
+        "type": "scheduler",
+        "severity": "high",
+        "message": "scheduler fermo da 84h"
+      }
+    ]
   },
   "regina": {
-    "status": "in attesa",
-    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
+    "status": "ferma",
+    "status_text": "scheduler fermo da 3 giorni",
     "last_spawn": "2026-02-19T00:00:00.000Z",
     "last_spawn_name": "Megachile-3",
-    "hours_since": 60,
+    "hours_since": 84,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
