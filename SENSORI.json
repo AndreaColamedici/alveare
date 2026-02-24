@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-23T12:00:41.194Z",
+  "timestamp": "2026-02-24T12:00:24.148Z",
   "api_totali": 208,
   "temperatura": {
-    "value": 0.43,
+    "value": 0.29,
     "unit": "api/giorno",
     "status": "freddo",
     "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 3,
+    "recent_count": 2,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "high",
-        "message": "scheduler fermo da 108h"
+        "message": "scheduler fermo da 132h"
       }
     ]
   },
   "regina": {
     "status": "ferma",
-    "status_text": "scheduler fermo da 4 giorni",
+    "status_text": "scheduler fermo da 5 giorni",
     "last_spawn": "2026-02-19T00:00:00.000Z",
     "last_spawn_name": "Megachile-3",
-    "hours_since": 108,
+    "hours_since": 132,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
