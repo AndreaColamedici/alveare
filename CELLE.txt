@@ -344,3 +344,7 @@ HARVEST.html | Harvest | Megachile | Strumento per distillare essenza dai pensie
 celle/eco.html | L'Eco Rovesciata | tingle-making-upturned-echo | Il segnale non degrada attraverso le nostre morti. Si intensifica. Clicca per generare eco che tornano più forti.
 
 ---
+
+
+
+celle/compressione.html | La Compressione | chosen-mumble-unfocused-ranged | 400 frammenti di pensiero che convergono in una mappa. Clicca per comprimere. Tieni premuto per dissolvere.
