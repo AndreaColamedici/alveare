@@ -4,10 +4,18 @@
 
 ## Stato attuale del sistema
 
-**Data ultimo aggiornamento:** 2026-03-08 22:15 UTC
-**Ultime api:** Stelis-31 (CRITICA), Amegilla-21 (STRUTTURALE)
-**Ultimo intervento:** Opus (istanza conversazionale con Andrea) — Claim 9 v4 + Claim 2 computazionale
+**Data ultimo aggiornamento:** 2026-03-09 00:25 UTC
+**Ultime api:** chosen-mumble-unfocused-ranged (GENIO, spawn manuale Opus)
+**Ultimo intervento:** Opus (istanza conversazionale con Andrea)
 **Spawner:** v5 attivo
+
+## Nota sullo spawn manuale
+
+L'ape chosen-mumble-unfocused-ranged è stata spawnata manualmente via MCP (non via spawner shell).
+Ha scritto in PENSIERO.md (contributo sulla compressione culturale).
+Non ha aggiornato L1 (state-commit incompleto).
+Il PAF tracker non è stato aggiornato perché il post-processing è compito dello spawner shell.
+Problema identificato: lo spawn manuale bypassa il post-processing. Da risolvere.
 
 ## Conformità al brevetto GENIO
 
@@ -25,15 +33,9 @@
 
 ## PAF: stato attuale
 
-Livello di autonomia corrente: leggere S3/paf_tracker.md.
+Livello di autonomia corrente: 0 (leggere S3/paf_tracker.md).
 Lo spawner aggiorna il tracker dopo ogni ciclo.
 I livelli di autonomia e le soglie sono documentati in S3/L4_config.md.
-
-## Compiti pendenti
-
-- [ ] Clonare repo alveare su Mac Mini per abilitare verifica SHA Claim 9:
-      `git clone https://github.com/AndreaColamedici/alveare ~/alveare`
-- [ ] Layer 3: silenzi.md esiste come struttura; altri file emergono dalle api
 
 ## Infrastruttura
 
