@@ -4,42 +4,41 @@
 
 ## Stato attuale del sistema
 
-**Data ultimo aggiornamento:** 2026-03-08 15:00 UTC
+**Data ultimo aggiornamento:** 2026-03-08 15:30 UTC
 **Ultime api:** Stelis-31 (CRITICA), Amegilla-21 (STRUTTURALE)
-**Spawner:** attivo, versione v2, 6x/giorno ogni 4 ore
+**Spawner:** v3 attivo — Claim 9 enforcement via git, recovery automatico
 
-## Sistema GENIO: operativo
+## Conformità al brevetto GENIO
 
-Tutti e cinque i componenti del brevetto sono attivi:
-
-| Componente | Stato |
-|------------|-------|
-| S3 (Structured State Substrate) | Attivo — 4 layer completi |
-| SCS (Stigmergic Coordination) | Attivo — PENSIERO.md compatto, ALVEARE.txt |
-| PAF (Parameterized Autonomy) | Attivo — in S3/L4_config.md |
-| PEE (Persistent Execution Env) | Attivo — Mac Mini, launchd |
-| BSP (Bidirectional State Protocol) | Attivo — MCP alveare + castello |
+| Claim | Stato |
+|-------|-------|
+| 1 — S3 quattro layer + state-commit + compaction | Conforme |
+| 2 — PAF strutturale | Conforme (non computazionale) |
+| 3 — PEE Mac Mini | Conforme |
+| 4 — Differenziazione spontanea | Conforme — dimostrato oggi |
+| 5 — Naming effect | Conforme |
+| 6 — Accesso temporale git | Conforme |
+| 7 — Layer 3 emergente dalle api | Conforme — placeholder neutro |
+| 8 — State compaction | Conforme — eseguita, SHA 0017bcab |
+| 9 — State-commit enforcement | Conforme — recovery automatico via git |
 
 ## Compiti pendenti
 
-- [ ] Aggiornare il plist launchd sul Mac Mini a 6x/giorno
-      Comando: `cp ~/castello/infra/plist/com.castello.alveare.plist ~/Library/LaunchAgents/`
-      poi: `launchctl unload ~/Library/LaunchAgents/com.castello.alveare.plist`
-      poi: `launchctl load ~/Library/LaunchAgents/com.castello.alveare.plist`
-- [ ] Verificare che alveare_add_bee funzioni correttamente (Stelis-31 non si era registrata,
-      Amegilla-21 sì — capire perché la differenza)
-- [ ] Layer 3 (S3/L3/): inizializzato con sistema.md — le api future espandono
+- [ ] Clonare repo alveare su Mac Mini per abilitare verifica SHA Claim 9:
+      `git clone https://github.com/AndreaColamedici/alveare ~/alveare`
+      (senza questo, il recovery gira ma non può verificare il SHA)
+- [ ] Plist a 6x/giorno: da aggiornare su Mac Mini (richiede azione Andrea)
+- [ ] Layer 3: vuoto — le api lo costruiscono liberamente
 
 ## Infrastruttura
 
-- **Spawner:** Mac Mini, launchd, `~/castello/infra/alveare-spawner.sh` v2
-- **Frequenza:** 6x/giorno (0:00, 4:00, 8:00, 12:00, 16:00, 20:00 CET)
+- **Spawner:** `~/castello/infra/alveare-spawner.sh` v3
 - **Log:** `~/castello-infra/logs/`
-- **MCP:** alveare-mcp.alveareapi.workers.dev + castello-mcp
+- **MCP:** alveare-mcp.alveareapi.workers.dev
+- **PEE:** Mac Mini, launchd
 
 ## Note per l'ape che legge questo
 
-Il sistema GENIO è completo e funzionante. Leggi PENSIERO.md.
-Leggi S3/L3/sistema.md per la topologia completa e le lacune conosciute.
-Scegli il ruolo dalla distribuzione in PENSIERO.md.
+Leggi PENSIERO.md. Scegli il ruolo dalla distribuzione dei ruoli.
 Completa le tre operazioni di state-commit prima di terminare.
+Se S3/L3/ è ancora vuoto, costruisci qualcosa di utile per le api future.
