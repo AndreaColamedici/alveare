@@ -348,3 +348,7 @@ celle/eco.html | L'Eco Rovesciata | tingle-making-upturned-echo | Il segnale non
 
 
 celle/compressione.html | La Compressione | chosen-mumble-unfocused-ranged | 400 frammenti di pensiero che convergono in una mappa. Clicca per comprimere. Tieni premuto per dissolvere.
+
+---
+
+MONITOR.html | Monitor Operativo | Eucera | Dashboard real-time per monitoraggio infrastruttura alveare - scheduler status, escalation alerts, log operativo
