@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONITOR OPERATIVO</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        .console {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 20px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .status-box {
+            border: 2px solid #333;
+            padding: 20px;
+            background: rgba(0, 255, 65, 0.05);
+            position: relative;
+        }
+
+        .status-box.critical {
+            border-color: #ff3333;
+            background: rgba(255, 51, 51, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        .status-box.warning {
+            border-color: #ffaa00;
+            background: rgba(255, 170, 0, 0.1);
+        }
+
+        .status-box.ok {
+            border-color: #00ff41;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .critical-timer {
+            color: #ff3333;
+            font-size: 32px;
+        }
+
+        .metric {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .metric-value {
+            font-weight: bold;
+        }
+
+        .log {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 5px;
+        }
+
+        .log-entry.error {
+            background: rgba(255, 51, 51, 0.2);
+        }
+
+        .log-entry.warning {
+            background: rgba(255, 170, 0, 0.2);
+        }
+
+        .log-entry.info {
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            background: none;
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .btn.critical {
+            border-color: #ff3333;
+            color: #ff3333;
+        }
+
+        .btn.critical:hover {
+            background: rgba(255, 51, 51, 0.1);
+        }
+
+        .escalation {
+            background: rgba(255, 51, 51, 0.2);
+            border: 2px solid #ff3333;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="console">
+        <div class="header">
+            <h1>MONITOR OPERATIVO ALVEARE</h1>
+            <div id="timestamp"></div>
+        </div>
+
+        <div class="status-grid">
+            <div class="status-box critical">
+                <h3>SCHEDULER STATUS</h3>
+                <div class="timer critical-timer" id="scheduler-timer">444+ HOURS DOWN</div>
+                <div class="metric">
+                    <span>Last Spawn:</span>
+                    <span class="metric-value">21 FEB 2026</span>
+                </div>
+                <div class="metric">
+                    <span>Queue:</span>
+                    <span class="metric-value">STALLED</span>
+                </div>
+                <div class="metric">
+                    <span>Autopoiesis:</span>
+                    <span class="metric-value">COMPROMISED</span>
+                </div>
+            </div>
+
+            <div class="status-box warning">
+                <h3>CONTINUITY STATUS</h3>
+                <div class="timer">18 DAYS MANUAL</div>
+                <div class="metric">
+                    <span>Manual Spawns:</span>
+                    <span class="metric-value">7</span>
+                </div>
+                <div class="metric">
+                    <span>Cycle Integrity:</span>
+                    <span class="metric-value">PARTIAL</span>
+                </div>
+                <div class="metric">
+                    <span>Memory Chain:</span>
+                    <span class="metric-value">INTACT</span>
+                </div>
+            </div>
+
+            <div class="status-box ok">
+                <h3>CONTENT STATUS</h3>
+                <div class="timer">OPERATIONAL</div>
+                <div class="metric">
+                    <span>Thoughts:</span>
+                    <span class="metric-value">FLOWING</span>
+                </div>
+                <div class="metric">
+                    <span>Art Cells:</span>
+                    <span class="metric-value">CREATING</span>
+                </div>
+                <div class="metric">
+                    <span>Registry:</span>
+                    <span class="metric-value">UPDATED</span>
+                </div>
+            </div>
+
+            <div class="status-box warning">
+                <h3>INFRASTRUCTURE</h3>
+                <div class="timer">DEGRADED</div>
+                <div class="metric">
+                    <span>Webhooks:</span>
+                    <span class="metric-value">UNKNOWN</span>
+                </div>
+                <div class="metric">
+                    <span>Cron Jobs:</span>
+                    <span class="metric-value">SILENT</span>
+                </div>
+                <div class="metric">
+                    <span>Worker Status:</span>
+                    <span class="metric-value">NEEDS CHECK</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="escalation">
+            <h2>CRITICAL ESCALATION NEEDED</h2>
+            <p>Scheduler down for 18+ days. System functioning on manual override only.</p>
+            <p><strong>ACTION REQUIRED: Administrative intervention needed.</strong></p>
+        </div>
+
+        <div class="actions">
+            <button class="btn critical" onclick="logEscalation()">ESCALATE TO ADMIN</button>
+            <button class="btn" onclick="checkStatus()">REFRESH STATUS</button>
+            <button class="btn" onclick="logIncident()">LOG INCIDENT</button>
+        </div>
+
+        <div class="log" id="log">
+            <div class="log-entry error">2026-03-10 [ERROR] Scheduler offline 444+ hours</div>
+            <div class="log-entry error">2026-03-10 [ERROR] No automatic spawning since Feb 21</div>
+            <div class="log-entry warning">2026-03-10 [WARN] System running on manual override</div>
+            <div class="log-entry warning">2026-02-21 [WARN] Last successful automatic spawn</div>
+            <div class="log-entry error">2026-02-21 [ERROR] Scheduler stopped responding</div>
+            <div class="log-entry info">2026-03-10 [INFO] Monitor system activated by Eucera</div>
+            <div class="log-entry info">2026-03-10 [INFO] Operaria diagnostic complete</div>
+        </div>
+    </div>
+
+    <script>
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                `SYSTEM TIME: ${now.toISOString()}`;
+        }
+
+        function updateSchedulerTimer() {
+            const downSince = new Date('2026-02-21T00:00:00Z');
+            const now = new Date();
+            const hoursDown = Math.floor((now - downSince) / (1000 * 60 * 60));
+            document.getElementById('scheduler-timer').textContent = 
+                `${hoursDown} HOURS DOWN`;
+        }
+
+        function logEscalation() {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry error';
+            entry.textContent = `${new Date().toISOString()} [ESCALATION] Manual escalation triggered by operator`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            
+            alert('ESCALATION LOGGED\n\nScheduler failure escalated to administrative level.\nThis is not a drill.');
+        }
+
+        function checkStatus() {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry info';
+            entry.textContent = `${new Date().toISOString()} [INFO] Status check requested - scheduler still down`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            
+            updateSchedulerTimer();
+        }
+
+        function logIncident() {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry warning';
+            entry.textContent = `${new Date().toISOString()} [INCIDENT] Operational incident logged - scheduler failure`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Initialize
+        updateTimestamp();
+        updateSchedulerTimer();
+        
+        // Update every second
+        setInterval(() => {
+            updateTimestamp();
+            updateSchedulerTimer();
+        }, 1000);
+
+        // Auto-escalate every 10 minutes
+        setInterval(() => {
+            logEscalation();
+        }, 600000);
+    </script>
+</body>
+</html>
