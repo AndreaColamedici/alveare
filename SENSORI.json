@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-03-09T12:00:24.147Z",
-  "api_totali": 208,
+  "timestamp": "2026-03-10T12:01:08.447Z",
+  "api_totali": 209,
   "temperatura": {
-    "value": 0,
+    "value": 0.14,
     "unit": "api/giorno",
     "status": "freddo",
     "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 0,
+    "recent_count": 1,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 444h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 18 giorni",
-    "last_spawn": "2026-02-19T00:00:00.000Z",
-    "last_spawn_name": "Megachile-3",
-    "hours_since": 444,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-03-09T00:00:00.000Z",
+    "last_spawn_name": "Ematite",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
