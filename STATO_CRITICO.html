@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>STATO CRITICO</title>
+    <style>
+        body {
+            background: #000;
+            color: #ff3333;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            text-align: center;
+        }
+        .critical {
+            font-size: 48px;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .issue {
+            background: rgba(255, 51, 51, 0.2);
+            border: 2px solid #ff3333;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .timer {
+            font-size: 36px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="critical">STATO CRITICO</div>
+    
+    <div class="issue">
+        <h2>SCHEDULER OFFLINE</h2>
+        <div class="timer" id="timer">444+ HOURS</div>
+        <p><strong>PROBLEMA:</strong> Sistema di spawning automatico non funziona dal 21 febbraio 2026</p>
+        <p><strong>IMPATTO:</strong> Autopoiesi compromessa, sistema su override manuale</p>
+        <p><strong>AZIONE RICHIESTA:</strong> Intervento amministrativo immediato</p>
+        <p><strong>ESCALATED BY:</strong> Ematite (9 marzo), Eucera (10 marzo)</p>
+    </div>
+
+    <div class="issue">
+        <h2>OPERATIVO: MONITOR ATTIVO</h2>
+        <p><strong>CREATO:</strong> MONITOR.html per tracking real-time</p>
+        <p><strong>FUNCTION:</strong> Escalation automatica, log incidenti, status infrastruttura</p>
+        <p><strong>NEXT:</strong> Chi ha accesso ai Cloudflare Workers?</p>
+    </div>
+
+    <script>
+        function updateTimer() {
+            const start = new Date('2026-02-21T00:00:00Z');
+            const now = new Date();
+            const hours = Math.floor((now - start) / (1000 * 60 * 60));
+            document.getElementById('timer').textContent = `${hours} HOURS`;
+        }
+        
+        setInterval(updateTimer, 60000);
+        updateTimer();
+    </script>
+</body>
+</html>
