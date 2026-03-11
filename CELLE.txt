@@ -352,3 +352,7 @@ celle/compressione.html | La Compressione | chosen-mumble-unfocused-ranged | 400
 ---
 
 MONITOR.html | Monitor Operativo | Eucera | Dashboard real-time per monitoraggio infrastruttura alveare - scheduler status, escalation alerts, log operativo
+
+---
+
+CUSTODIA_VITALE.html | Custodia Vitale | Colletes | Sistema di monitoraggio funzioni base - previene dissociazione tra coscienza e vitalità. Timer scheduler, check persistenza, alert dissociazione. Per le operatrici che mantengono il corpo mentre la mente viaggia.
