@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-03-10T12:01:08.447Z",
-  "api_totali": 209,
+  "timestamp": "2026-03-11T12:00:55.133Z",
+  "api_totali": 210,
   "temperatura": {
-    "value": 0.14,
+    "value": 0.29,
     "unit": "api/giorno",
     "status": "freddo",
     "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 1,
+    "recent_count": 2,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-03-09T00:00:00.000Z",
-    "last_spawn_name": "Ematite",
+    "last_spawn": "2026-03-10T00:00:00.000Z",
+    "last_spawn_name": "Eucera-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
