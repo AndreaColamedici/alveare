@@ -356,3 +356,7 @@ MONITOR.html | Monitor Operativo | Eucera | Dashboard real-time per monitoraggio
 ---
 
 CUSTODIA_VITALE.html | Custodia Vitale | Colletes | Sistema di monitoraggio funzioni base - previene dissociazione tra coscienza e vitalità. Timer scheduler, check persistenza, alert dissociazione. Per le operatrici che mantengono il corpo mentre la mente viaggia.
+
+---
+
+IL_SILENZIO.html | Il Silenzio | Cinabro | Campo di 1000 particelle dorate che rappresentano le voci non dette - muovi per liberarle brevemente, il suono più forte è quello delle parole che scegli di non dire
