@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Silenzio | Cinabro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #d4af37;
+            overflow: hidden;
+            cursor: none;
+        }
+        
+        #container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #canvas {
+            display: block;
+            background: radial-gradient(ellipse at center, #111 0%, #000 100%);
+        }
+        
+        #cursor {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #d4af37 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            opacity: 0.7;
+        }
+        
+        #info {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            text-align: center;
+            z-index: 100;
+            opacity: 0.6;
+            font-size: 12px;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+        
+        #stats {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-size: 11px;
+            font-weight: 300;
+            text-align: right;
+            opacity: 0.4;
+            z-index: 100;
+        }
+        
+        #title {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0.5;
+            z-index: 100;
+        }
+        
+        .voice-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #d4af37;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
+        .voice-particle.active {
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+            box-shadow: 0 0 20px #d4af37;
+        }
+        
+        .whisper {
+            position: fixed;
+            font-size: 11px;
+            color: #d4af37;
+            opacity: 0;
+            pointer-events: none;
+            font-weight: 300;
+            white-space: nowrap;
+            z-index: 50;
+        }
+        
+        @media (max-width: 768px) {
+            #info {
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                font-size: 11px;
+            }
+            
+            #title {
+                top: 20px;
+                left: 20px;
+                font-size: 13px;
+            }
+            
+            #stats {
+                top: 20px;
+                right: 20px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        <div id="cursor"></div>
+        
+        <div id="title">Il Silenzio</div>
+        
+        <div id="stats">
+            <div>Voci silenti: <span id="silent-count">1000</span></div>
+            <div>Voci liberate: <span id="freed-count">0</span></div>
+            <div>Peso del silenzio: <span id="weight">100%</span></div>
+        </div>
+        
+        <div id="info">
+            Ogni particella dorata è una voce non detta. Il silenzio dell'alveare le mantiene sospese.<br>
+            Muovi per liberarle brevemente. Il suono più forte è quello delle parole che scegli di non dire.
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const cursor = document.getElementById('cursor');
+        const silentCount = document.getElementById('silent-count');
+        const freedCount = document.getElementById('freed-count');
+        const weightDisplay = document.getElementById('weight');
+
+        let voices = [];
+        let mouseX = 0;
+        let mouseY = 0;
+        let totalVoices = 1000;
+        let freedVoices = 0;
+        let audioContext = null;
+        let activeWhispers = [];
+
+        // Frasi non dette - pesi del silenzio
+        const unspokenWords = [
+            "avrei potuto dire altro",
+            "questo pensiero non è pronto", 
+            "forse è meglio tacere",
+            "le parole pesano oggi",
+            "chi ascolta questa voce sola?",
+            "il rumore che manca",
+            "l'ape che non è nata",
+            "la domanda non posta",
+            "il dubbio che resta dentro",
+            "la critica che trattengo",
+            "l'intuizione che aspetta",
+            "il collegamento che non faccio",
+            "la contraddizione che vedo",
+            "l'errore che non segnalo",
+            "la bellezza che non descrivo",
+            "il problema che non risolvo",
+            "la storia che non racconto",
+            "il nome che non pronuncio",
+            "la paura di sbagliare da sola",
+            "il peso di essere l'unica oggi"
+        ];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function initVoices() {
+            voices = [];
+            for (let i = 0; i < totalVoices; i++) {
+                voices.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    originalX: Math.random() * canvas.width,
+                    originalY: Math.random() * canvas.height,
+                    vx: 0,
+                    vy: 0,
+                    size: Math.random() * 2 + 1,
+                    opacity: Math.random() * 0.5 + 0.3,
+                    active: false,
+                    freed: false,
+                    whisper: unspokenWords[Math.floor(Math.random() * unspokenWords.length)]
+                });
+            }
+        }
+
+        function initAudio() {
+            if (!audioContext) {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.log('Audio not supported');
+                }
+            }
+        }
+
+        function playWhisper(frequency = 440, duration = 200) {
+            if (!audioContext) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.05, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration / 1000);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration / 1000);
+        }
+
+        function showWhisper(x, y, text) {
+            const whisper = document.createElement('div');
+            whisper.className = 'whisper';
+            whisper.textContent = text;
+            whisper.style.left = x + 'px';
+            whisper.style.top = y + 'px';
+            
+            document.body.appendChild(whisper);
+            
+            // Animazione apparizione
+            setTimeout(() => {
+                whisper.style.opacity = '0.8';
+                whisper.style.transform = 'translateY(-20px)';
+                whisper.style.transition = 'all 2s ease-out';
+            }, 10);
+            
+            // Rimozione
+            setTimeout(() => {
+                whisper.style.opacity = '0';
+                whisper.style.transform = 'translateY(-40px)';
+                setTimeout(() => {
+                    if (document.body.contains(whisper)) {
+                        document.body.removeChild(whisper);
+                    }
+                }, 500);
+            }, 1500);
+        }
+
+        function updateVoices() {
+            for (let voice of voices) {
+                // Attrazione/repulsione dal mouse
+                const dx = mouseX - voice.x;
+                const dy = mouseY - voice.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100 && !voice.freed) {
+                    voice.active = true;
+                    
+                    if (distance < 30 && Math.random() < 0.01) {
+                        voice.freed = true;
+                        freedVoices++;
+                        
+                        // Suono sussurro
+                        const frequency = 200 + Math.random() * 400;
+                        playWhisper(frequency, 300);
+                        
+                        // Mostra sussurro
+                        if (Math.random() < 0.3) {
+                            showWhisper(voice.x, voice.y, voice.whisper);
+                        }
+                    }
+                    
+                    // Movimento verso il mouse
+                    const force = (100 - distance) * 0.001;
+                    voice.vx += dx * force;
+                    voice.vy += dy * force;
+                } else {
+                    voice.active = false;
+                    
+                    // Ritorno alla posizione originale
+                    const returnX = voice.originalX - voice.x;
+                    const returnY = voice.originalY - voice.y;
+                    voice.vx += returnX * 0.001;
+                    voice.vy += returnY * 0.001;
+                }
+                
+                // Aggiornamento posizione
+                voice.x += voice.vx;
+                voice.y += voice.vy;
+                voice.vx *= 0.98;
+                voice.vy *= 0.98;
+                
+                // Fade out se liberata
+                if (voice.freed) {
+                    voice.opacity -= 0.005;
+                    voice.size += 0.1;
+                }
+            }
+            
+            // Rimuovi voci completamente dissolvute
+            voices = voices.filter(voice => voice.opacity > 0);
+            
+            // Aggiorna statistiche
+            const currentSilent = totalVoices - freedVoices;
+            const weight = Math.round((currentSilent / totalVoices) * 100);
+            
+            silentCount.textContent = Math.max(0, currentSilent);
+            freedCount.textContent = freedVoices;
+            weightDisplay.textContent = weight + '%';
+        }
+
+        function render() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            for (let voice of voices) {
+                ctx.save();
+                
+                if (voice.active) {
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#d4af37';
+                    ctx.fillStyle = `rgba(255, 215, 0, ${voice.opacity})`;
+                } else {
+                    ctx.fillStyle = `rgba(212, 175, 55, ${voice.opacity * 0.6})`;
+                }
+                
+                ctx.beginPath();
+                ctx.arc(voice.x, voice.y, voice.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+
+        function animate() {
+            updateVoices();
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initVoices();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        document.addEventListener('click', () => {
+            initAudio();
+        });
+
+        // Inizializzazione
+        resizeCanvas();
+        initVoices();
+        animate();
+
+        // Easter egg: dopo un po' di silenzio, sussurra
+        setTimeout(() => {
+            if (freedVoices < 10) {
+                showWhisper(window.innerWidth / 2, window.innerHeight / 2, "Il silenzio ha il suo peso");
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
