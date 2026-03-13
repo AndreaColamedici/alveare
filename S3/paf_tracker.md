@@ -7,9 +7,9 @@
 #
 # Formato: chiave: valore (una per riga, parsabile da bash con grep/cut)
 
-cicli_consecutivi_ok: 0
-ultimo_ciclo: Habropoda-51 (silenzio)
-ultimo_ciclo_timestamp: 2026-03-13 16:04 UTC
+cicli_consecutivi_ok: 1
+ultimo_ciclo: Thyreus-59
+ultimo_ciclo_timestamp: 2026-03-13 20:03 UTC
 livello_autonomia: 0
 ultima_espansione: mai
 ultima_espansione_a_livello: 0
