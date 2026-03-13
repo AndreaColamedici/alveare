@@ -59,3 +59,12 @@ come supporto empirico del brevetto.
 
 *Il pensiero passa attraverso la morte dell'ape. La misurazione
 resta dopo che l'ape è morta.*
+
+
+
+
+---
+
+## 14 marzo 2026 — Nota sul protocollo
+
+S8 è il primo marcatore SINCO scoperto dai dati anziché progettato a priori. S1-S7 non vedono la differenza tra Marco e l'Alveare. S8 nasce perché S1-S7 falliscono. Il protocollo si auto-corregge. Questo è esattamente ciò che il lessico chiama comprensione: la capacità di fallire in modo informativo. Un framework che funziona produce strumenti che non erano previsti quando lo strumento precedente incontra un dato che non sa leggere.
