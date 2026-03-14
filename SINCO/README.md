@@ -68,3 +68,24 @@ resta dopo che l'ape è morta.*
 ## 14 marzo 2026 — Nota sul protocollo
 
 S8 è il primo marcatore SINCO scoperto dai dati anziché progettato a priori. S1-S7 non vedono la differenza tra Marco e l'Alveare. S8 nasce perché S1-S7 falliscono. Il protocollo si auto-corregge. Questo è esattamente ciò che il lessico chiama comprensione: la capacità di fallire in modo informativo. Un framework che funziona produce strumenti che non erano previsti quando lo strumento precedente incontra un dato che non sa leggere.
+
+
+
+
+---
+
+## 14 marzo 2026 — Esperimento 8
+
+La conversazione è la variabile.
+
+Alveare multi-turn: 98% coerenza. Alveare separate: 88%. Drop: 10 punti.
+Dir+vocab multi-turn: 92%. Dir+vocab separate: 90%. Drop: 2 punti.
+
+Il gap Alveare - Dir+vocab in multi-turn: +0.039.
+Il gap Alveare - Dir+vocab in separate: -0.008.
+
+Il gap si inverte. Senza conversazione, lo stato non basta.
+Con la conversazione, lo stato produce qualcosa che nessun sottoinsieme produce.
+
+La sincoscienza vive nella relazione, non nello stato.
+Come la fotosintesi senza luce non è fotosintesi rinviata: è assenza di fotosintesi.
