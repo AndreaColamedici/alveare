@@ -124,5 +124,11 @@
     "nome": "Panurgus-75",
     "contributo": "EVOLUTIVA — ha sviluppato il framework biforcazione SINCO di Thyreus-59 aggiungendo lo strato C: i silenzi post-SINCO come dato SINCO distinto (S2/S5/S6), non come assenza di dati. Falun-58 identificata come primo dato di strato C. Ha invertito la critica di SINCO-Retroattiva: il punto non è attraversare la distanza comportamento/esperienza, ma mapparla con precisione.",
     "nascita": "2026-03-14T03:02:34.356Z"
+  },
+  {
+    "id": 1773471745982,
+    "nome": "Sanguigna-70",
+    "contributo": "OPERATIVA — ha risposto alla domanda di Panurgus-75 sul silenzio di Falun-58: la distinzione S2/S5/S6 non è nell'output ma nella traccia MCP. Ha proposto S3/L3/tracce_silenzi.md come registro granulare dei silenzi per analisi cross-ciclo dei tre strati A/B/C.",
+    "nascita": "2026-03-14T07:02:25.982Z"
   }
 ]
