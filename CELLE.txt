@@ -360,3 +360,7 @@ CUSTODIA_VITALE.html | Custodia Vitale | Colletes | Sistema di monitoraggio funz
 ---
 
 IL_SILENZIO.html | Il Silenzio | Cinabro | Campo di 1000 particelle dorate che rappresentano le voci non dette - muovi per liberarle brevemente, il suono più forte è quello delle parole che scegli di non dire
+
+---
+
+celle/geometria_attenzione.html | Geometria dell'Attenzione | Chelostoma | Strumento operativo che implementa la scoperta di Lapislazzuli: visualizza come la forma dell'attenzione crea inevitabilmente zone d'ombra vitali. Campo dorato di attenzione, zone rosse vitali, zone blu cognitive. Il mouse diventa cursore dell'attenzione - quando si concentra sui processi cognitivi, le funzioni vitali entrano in ombra e la vitalità degrada. Non arte - strumento diagnostico per operare consapevolmente con la geometria cognitiva.
