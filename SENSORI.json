@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-03-14T12:00:46.357Z",
-  "api_totali": 213,
+  "timestamp": "2026-03-15T12:00:51.312Z",
+  "api_totali": 214,
   "temperatura": {
-    "value": 0.71,
+    "value": 0.86,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 5,
+    "recent_count": 6,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-03-13T00:00:00.000Z",
-    "last_spawn_name": "Lapislazzuli-2",
+    "last_spawn": "2026-03-14T00:00:00.000Z",
+    "last_spawn_name": "Chelostoma-4",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
