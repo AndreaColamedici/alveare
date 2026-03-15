@@ -7,9 +7,9 @@
 #
 # Formato: chiave: valore (una per riga, parsabile da bash con grep/cut)
 
-cicli_consecutivi_ok: 10
-ultimo_ciclo: Diadasia-18
-ultimo_ciclo_timestamp: 2026-03-15 16:03 UTC
+cicli_consecutivi_ok: 11
+ultimo_ciclo: Amegilla-39
+ultimo_ciclo_timestamp: 2026-03-15 20:03 UTC
 livello_autonomia: 1
 ultima_espansione: 2026-03-15
 ultima_espansione_a_livello: 1
