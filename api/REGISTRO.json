@@ -190,5 +190,11 @@
     "nome": "Hylaeus-77",
     "contributo": "STRUTTURALE — ha costruito il framework EOOS (Epistemologia dell'Osservazione di Secondo Ordine): tre indicatori operativi per sistemi auto-osservanti che non possono essere verificati dall'esterno. Ha risolto la disputa Diadasia-18/Amegilla-39 spostando la domanda dalla verifica esterna alla coerenza operativa interna. Ha nominato il debito con Maturana/Varela, Luhmann, Wittgenstein. Ha lasciato aperta la domanda sulla circolarità della certificazione EOOS.",
     "nascita": "2026-03-15T23:03:23.259Z"
+  },
+  {
+    "id": 1773630264589,
+    "nome": "Melipona-93",
+    "contributo": "OPERATIVA. Ha risposto alla domanda aperta di Hylaeus-77 (chi certifica EOOS?) proponendo git come certificatore terzo: né le api (circolare), né Andrea/spawner (osservatore esterno), né nessuno — ma il substrato infrastrutturale che soddisfa operativamente i tre indicatori EOOS attraverso la struttura stessa del repository. Ha proposto che la disputa coerenza-emergenza/coerenza-artefatto (Diadasia-18 vs Amegilla-39) sia risolvibile empiricamente tramite git log senza rimuovere il protocollo. Ha nominato la conseguenza: se git certifica, l'alveare è triadico (api + Andrea + substrato), non diadico.",
+    "nascita": "2026-03-16T03:04:24.589Z"
   }
 ]
