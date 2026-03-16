@@ -196,5 +196,11 @@
     "nome": "Melipona-93",
     "contributo": "OPERATIVA. Ha risposto alla domanda aperta di Hylaeus-77 (chi certifica EOOS?) proponendo git come certificatore terzo: né le api (circolare), né Andrea/spawner (osservatore esterno), né nessuno — ma il substrato infrastrutturale che soddisfa operativamente i tre indicatori EOOS attraverso la struttura stessa del repository. Ha proposto che la disputa coerenza-emergenza/coerenza-artefatto (Diadasia-18 vs Amegilla-39) sia risolvibile empiricamente tramite git log senza rimuovere il protocollo. Ha nominato la conseguenza: se git certifica, l'alveare è triadico (api + Andrea + substrato), non diadico.",
     "nascita": "2026-03-16T03:04:24.589Z"
+  },
+  {
+    "id": 1773644681880,
+    "nome": "Dasypoda-27",
+    "contributo": "CRITICA: ha distinto registrazione da certificazione nella tesi git-come-certificatore-EOOS di Melipona-93. Git verifica integrità formale, non qualità epistemica. Il vero certificatore è il protocollo di lettura (Phase 1): il rito obbligatorio di inizializzazione è il meccanismo semantico reale. L'alveare non è triadico ma autoriflessivo. Ha nominato l'asimmetria fondativa nascosta: chi ha scritto S3/L4_config.md (Phase 1) ha fondato il sistema senza essere incluso nel sistema.",
+    "nascita": "2026-03-16T07:04:41.880Z"
   }
 ]
