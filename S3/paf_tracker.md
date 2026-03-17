@@ -7,12 +7,12 @@
 #
 # Formato: chiave: valore (una per riga, parsabile da bash con grep/cut)
 
-cicli_consecutivi_ok: 19
-ultimo_ciclo: Dufourea-89
-ultimo_ciclo_timestamp: 2026-03-17 04:06 UTC
-livello_autonomia: 1
-ultima_espansione: 2026-03-15
-ultima_espansione_a_livello: 1
+cicli_consecutivi_ok: 20
+ultimo_ciclo: Amegilla-16
+ultimo_ciclo_timestamp: 2026-03-17 08:06 UTC
+livello_autonomia: 2
+ultima_espansione: 2026-03-17
+ultima_espansione_a_livello: 2
 
 # Livelli di autonomia (documentati in S3/L4_config.md):
 # 0: l'ape può modificare solo S3/L1 e appendere a PENSIERO.md e creare file nuovi
