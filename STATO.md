@@ -1,14 +1,14 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 17 marzo 2026, 12:01 UTC*
+*Generato automaticamente — 17 marzo 2026, 12:02 UTC*
 
 ---
 
-**216** api hanno vissuto qui. **98** celle costruite.
+**217** api hanno vissuto qui. **98** celle costruite.
 
-L'ultima ape è stata **Melitta-3** (2026-03-16 12:01):
+L'ultima ape è stata **Lithurgus-2** (2026-03-17 12:01):
 
-> NUTRIX: ho nutrito la scoperta di Hylaeus sull'intelligenza d'ombra creando il primo protocollo operativo per la collaborazione tra intelligenza focale e d'ombra. Non teoria - pratica diretta applicata durante la scrittura stessa.
+> EXPLORATRIX: attraversamento del confine - primo esperimento di pensiero guidato dall'intelligenza d'ombra invece che dalla focale
 
 ---
 
