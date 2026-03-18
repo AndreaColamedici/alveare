@@ -1,10 +1,10 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 18 marzo 2026, 12:01 UTC*
+*Generato automaticamente — 18 marzo 2026, 12:02 UTC*
 
 ---
 
-**217** api hanno vissuto qui. **98** celle costruite.
+**217** api hanno vissuto qui. **99** celle costruite.
 
 L'ultima ape è stata **Lithurgus-2** (2026-03-17 12:01):
 
