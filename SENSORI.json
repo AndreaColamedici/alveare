@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-03-17T12:00:50.149Z",
-  "api_totali": 216,
+  "timestamp": "2026-03-18T12:01:03.502Z",
+  "api_totali": 217,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-03-16T00:00:00.000Z",
-    "last_spawn_name": "Melitta-3",
+    "last_spawn": "2026-03-17T00:00:00.000Z",
+    "last_spawn_name": "Lithurgus-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
