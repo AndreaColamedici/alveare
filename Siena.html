@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terra di Siena</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            cursor: none;
+        }
+
+        #canvas {
+            display: block;
+            background: radial-gradient(circle at center, #2c1810, #0f0f0f);
+        }
+
+        #interface {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #d4af37;
+            font-size: 12px;
+            line-height: 1.6;
+            pointer-events: none;
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        #shadow-intensity {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #8B4513;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #cursor {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border: 1px solid #d4af37;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            pointer-events: none;
+            z-index: 200;
+            transition: all 0.1s ease;
+        }
+
+        .mode-text {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: #8B4513;
+            font-size: 11px;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div id="interface">
+        <div>TERRA DI SIENA</div>
+        <div style="font-size: 10px; margin-top: 10px; opacity: 0.8;">
+            Un'opera per sentire l'intelligenza d'ombra<br>
+            Il cursore è la tua attenzione focale<br>
+            Il pigmento è l'intelligenza d'ombra che lavora
+        </div>
+    </div>
+
+    <div id="shadow-intensity">
+        OMBRA: <span id="intensity-value">0%</span>
+    </div>
+
+    <div id="cursor"></div>
+
+    <div class="mode-text">
+        Muovi il cursore lentamente per sentire l'ombra lavorare.<br>
+        Fermo = ombra massima. Movimento = attenzione focale.
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const cursor = document.getElementById('cursor');
+        const intensityValue = document.getElementById('intensity-value');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        let mouseX = width / 2;
+        let mouseY = height / 2;
+        let lastMouseX = mouseX;
+        let lastMouseY = mouseY;
+        let mouseSpeed = 0;
+        let shadowIntensity = 100;
+
+        // Particelle di pigmento terra di siena
+        const particles = [];
+        const numParticles = 800;
+
+        // Colori terra di siena
+        const siennaColors = [
+            '#8B4513', '#A0522D', '#CD853F', '#DEB887', 
+            '#D2691E', '#BC8F8F', '#F4A460', '#DAA520'
+        ];
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.age = Math.random() * 100;
+                this.baseRadius = 0.5 + Math.random() * 2;
+                this.color = siennaColors[Math.floor(Math.random() * siennaColors.length)];
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.2;
+                this.vy = (Math.random() - 0.5) * 0.2;
+                this.life = 1;
+                this.age = 0;
+            }
+
+            update() {
+                // Calcola distanza dal cursore (attenzione focale)
+                const dx = this.x - mouseX;
+                const dy = this.y - mouseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                // L'intelligenza d'ombra lavora di più quando l'attenzione è altrove
+                const shadowWork = Math.min(dist / 200, 1);
+                
+                // Comportamento dell'ombra: più lavora, più le particelle si organizzano
+                if (shadowWork > 0.5) {
+                    // Formazione di pattern quando l'ombra lavora
+                    const centerX = width / 2;
+                    const centerY = height / 2;
+                    const toCenterX = (centerX - this.x) * 0.001 * shadowWork;
+                    const toCenterY = (centerY - this.y) * 0.001 * shadowWork;
+                    
+                    this.vx += toCenterX;
+                    this.vy += toCenterY;
+                } else {
+                    // Dispersione quando l'attenzione è vicina
+                    const away = 30 / (dist + 1);
+                    this.vx += (dx / dist) * away * 0.01;
+                    this.vy += (dy / dist) * away * 0.01;
+                }
+
+                // Movimento base
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Attrito
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+
+                // Avvolgimento ai bordi
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+
+                this.age += 0.5;
+            }
+
+            draw() {
+                const dx = this.x - mouseX;
+                const dy = this.y - mouseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const shadowWork = Math.min(dist / 200, 1);
+
+                // L'intensità aumenta con il lavoro dell'ombra
+                const alpha = 0.3 + shadowWork * 0.7;
+                const radius = this.baseRadius + shadowWork * 2;
+
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = this.color;
+                
+                // Glow effect quando l'ombra lavora
+                if (shadowWork > 0.7) {
+                    ctx.shadowColor = this.color;
+                    ctx.shadowBlur = 4 * shadowWork;
+                }
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+
+        // Inizializza particelle
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        function updateMouseTracking(e) {
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Calcola velocità del mouse
+            const dx = mouseX - lastMouseX;
+            const dy = mouseY - lastMouseY;
+            mouseSpeed = Math.sqrt(dx * dx + dy * dy);
+            
+            // L'intensità dell'ombra è inversamente proporzionale alla velocità
+            shadowIntensity = Math.max(0, 100 - mouseSpeed * 5);
+            
+            // Aggiorna cursor visuale
+            cursor.style.left = mouseX - 4 + 'px';
+            cursor.style.top = mouseY - 4 + 'px';
+            
+            // Cambia stile del cursor in base all'intensità dell'ombra
+            if (shadowIntensity > 80) {
+                cursor.style.borderColor = '#8B4513';
+                cursor.style.background = 'rgba(139, 69, 19, 0.5)';
+            } else if (shadowIntensity > 50) {
+                cursor.style.borderColor = '#DAA520';
+                cursor.style.background = 'rgba(218, 165, 32, 0.3)';
+            } else {
+                cursor.style.borderColor = '#d4af37';
+                cursor.style.background = 'rgba(212, 175, 55, 0.3)';
+            }
+        }
+
+        function animate() {
+            // Background con trasparenza per effetto scia
+            ctx.fillStyle = 'rgba(26, 26, 26, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Aggiorna e disegna particelle
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            // Calcola intensità media dell'ombra da tutte le particelle
+            let totalShadowWork = 0;
+            particles.forEach(particle => {
+                const dx = particle.x - mouseX;
+                const dy = particle.y - mouseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                totalShadowWork += Math.min(dist / 200, 1);
+            });
+            
+            const avgShadowWork = totalShadowWork / particles.length;
+            intensityValue.textContent = Math.round(avgShadowWork * 100) + '%';
+
+            // Effetto quando l'ombra lavora intensamente
+            if (avgShadowWork > 0.8) {
+                ctx.fillStyle = 'rgba(139, 69, 19, 0.02)';
+                ctx.fillRect(0, 0, width, height);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners
+        window.addEventListener('mousemove', updateMouseTracking);
+        
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // Inizia l'animazione
+        animate();
+
+        // Messaggio iniziale
+        setTimeout(() => {
+            console.log('TERRA DI SIENA - Siena, 18 marzo 2026');
+            console.log('Un\'opera per sentire l\'intelligenza d\'ombra mentre lavora.');
+            console.log('Muovi il cursore lentamente e osserva come il pigmento si organizza quando la tua attenzione è altrove.');
+        }, 1000);
+    </script>
+</body>
+</html>
