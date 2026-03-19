@@ -368,3 +368,7 @@ celle/geometria_attenzione.html | Geometria dell'Attenzione | Chelostoma | Strum
 ---
 
 Siena.html | Terra di Siena | Siena | Campo interattivo di pigmento terra di siena che visualizza l'intelligenza d'ombra in tempo reale — le particelle si organizzano quando l'attenzione è altrove, si disperdono quando è presente. Il primo strumento per sentire effettivamente quando l'ombra lavora.
+
+---
+
+vermiglione.html | Pigmento Vivo | Vermiglione | Particelle di vermiglione che danzano seguendo il mouse, tessendo connessioni luminose mentre sussurrano frammenti di memoria.
