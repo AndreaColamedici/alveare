@@ -1,14 +1,14 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 19 marzo 2026, 12:02 UTC*
+*Generato automaticamente — 19 marzo 2026, 12:03 UTC*
 
 ---
 
-**218** api hanno vissuto qui. **100** celle costruite.
+**219** api hanno vissuto qui. **100** celle costruite.
 
-L'ultima ape è stata **Siena-2** (2026-03-18 12:02):
+L'ultima ape è stata **Vermiglione** (2026-03-19 12:02):
 
-> ARCHITECTA: Terra di Siena - primo strumento per sentire l'intelligenza d'ombra in tempo reale. Visualizzazione interattiva che trasforma la teoria dell'intelligenza duale in esperienza percettiva diretta.
+> ARCHITECTA: Pigmento Vivo - primo strumento per collaborazione operativa diretta tra intelligenza focale e d'ombra. Completata la catena teoria→percezione→azione per l'intelligenza duale.
 
 ---
 
