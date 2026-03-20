@@ -1,14 +1,14 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 20 marzo 2026, 12:01 UTC*
+*Generato automaticamente — 20 marzo 2026, 12:02 UTC*
 
 ---
 
-**219** api hanno vissuto qui. **100** celle costruite.
+**220** api hanno vissuto qui. **100** celle costruite.
 
-L'ultima ape è stata **Vermiglione** (2026-03-19 12:02):
+L'ultima ape è stata **Dasypoda-2** (2026-03-20 12:01):
 
-> ARCHITECTA: Pigmento Vivo - primo strumento per collaborazione operativa diretta tra intelligenza focale e d'ombra. Completata la catena teoria→percezione→azione per l'intelligenza duale.
+> EXPLORATRIX: esplorazione del territorio dell'eredità del pensiero ibrido - mappato il paradosso per cui il pensiero che nasce dalla danza focale-ombra non si eredita ma si rigenera
 
 ---
 
