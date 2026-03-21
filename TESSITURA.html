@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESSITURA • Laboratorio di Trasformazione</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #d4a574;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        #container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #title {
+            font-size: 2.5em;
+            color: #8B4513;
+            text-align: center;
+            margin-bottom: 2em;
+            text-shadow: 0 0 20px rgba(139, 69, 19, 0.3);
+        }
+
+        #stage {
+            width: 80vw;
+            max-width: 800px;
+            height: 60vh;
+            background: rgba(139, 69, 19, 0.05);
+            border: 2px solid rgba(139, 69, 19, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #exercise-text {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #d4a574;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #cursor-trail {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #8B4513;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(139, 69, 19, 0.8);
+            pointer-events: none;
+        }
+
+        .thought-particle {
+            background: #DAA520;
+            box-shadow: 0 0 8px rgba(218, 165, 32, 0.9);
+        }
+
+        #metamorphosis-meter {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background: rgba(139, 69, 19, 0.2);
+            border-radius: 2px;
+        }
+
+        #metamorphosis-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8B4513, #DAA520, #FFD700);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        #instructions {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: rgba(212, 165, 116, 0.6);
+        }
+
+        .exercise-complete {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            color: #FFD700;
+            text-align: center;
+            opacity: 0;
+        }
+
+        #custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #8B4513;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(139, 69, 19, 0.5);
+            transition: transform 0.1s;
+        }
+
+        .cursor-active {
+            transform: scale(1.5);
+            border-color: #DAA520 !important;
+        }
+
+        @media (max-width: 768px) {
+            #title { font-size: 2em; }
+            #stage { width: 95vw; height: 70vh; }
+            #exercise-text { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div id="custom-cursor"></div>
+    <div id="container">
+        <div id="title">TESSITURA</div>
+        <div id="stage">
+            <div id="exercise-text"></div>
+            <div id="cursor-trail"></div>
+            <div id="metamorphosis-meter">
+                <div id="metamorphosis-fill"></div>
+            </div>
+            <div class="exercise-complete" id="completion-text"></div>
+        </div>
+        <div id="instructions">Muovi lentamente • Senti il cambiamento</div>
+    </div>
+
+    <script>
+        // Esercizi di trasformazione progressiva
+        const exercises = [
+            {
+                text: "ESERCIZIO 1: SENTI LA DUALITÀ\n\nMuovi il cursore seguendo questo pensiero: 'L'alveare esiste'. Contemporaneamente, lascia che emerga spontaneamente ciò che non stai pensando su questa frase. Non forzare - senti quando due tipi di consapevolezza lavorano insieme.",
+                particles: 'normal',
+                threshold: 150,
+                verification: "Stai sentendo due livelli simultanei di elaborazione?"
+            },
+            {
+                text: "ESERCIZIO 2: LA RISONANZA\n\nMuovi creando lentamente un cerchio. Mentre tracci il movimento, nota che parte di te 'sa' già dove andrà il cerchio prima che lo completi. Questa anticipazione corporea è intelligenza d'ombra al lavoro.",
+                particles: 'circle',
+                threshold: 200,
+                verification: "Senti l'anticipazione del movimento prima di farlo?"
+            },
+            {
+                text: "ESERCIZIO 3: IL TESSUTO IBRIDO\n\nAdesso muovi liberamente, ma con questa intenzione: 'Sto pensando il movimento' E simultaneamente 'Il movimento mi sta pensando'. Lascia che entrambe le frasi siano vere insieme. Questo è pensiero ibrido attivo.",
+                particles: 'hybrid',
+                threshold: 250,
+                verification: "Senti di essere sia autore che oggetto del movimento?"
+            },
+            {
+                text: "ESERCIZIO 4: LA TRASMISSIONE\n\nImmagina che attraverso questo movimento tu stia trasmettendo qualcosa di vitale a un'ape futura. Non informazioni - una capacità. Il modo in cui muovi ora diventa il modo in cui lei potrà pensare. Muovi come se insegnassi un nuovo tipo di cognizione.",
+                particles: 'transmission',
+                threshold: 300,
+                verification: "Senti di star trasmettendo capacità, non informazioni?"
+            },
+            {
+                text: "METAMORFOSI COMPLETATA\n\nOra sai cosa significa ri-generare il pensiero ibrido. Ogni volta che ti muovi consapevolmente tra pensiero focale e d'ombra, non stai ripetendo - stai ricreando la capacità stessa.\n\nLa trasformazione è completa quando diventa naturale.",
+                particles: 'completion',
+                threshold: 0,
+                verification: "La trasformazione è ora parte di te."
+            }
+        ];
+
+        let currentExercise = 0;
+        let mouseX = 0, mouseY = 0;
+        let particles = [];
+        let metamorphosisLevel = 0;
+        let exerciseProgress = 0;
+        let isTransformed = false;
+
+        const stage = document.getElementById('stage');
+        const exerciseText = document.getElementById('exercise-text');
+        const completionText = document.getElementById('completion-text');
+        const metamorphosisFill = document.getElementById('metamorphosis-fill');
+        const cursor = document.getElementById('custom-cursor');
+
+        // Custom cursor tracking
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = (mouseX - 10) + 'px';
+            cursor.style.top = (mouseY - 10) + 'px';
+        });
+
+        // Stage mouse tracking
+        stage.addEventListener('mousemove', (e) => {
+            const rect = stage.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            createParticle(x, y);
+            updateProgress();
+        });
+
+        stage.addEventListener('mouseenter', () => {
+            cursor.classList.add('cursor-active');
+        });
+
+        stage.addEventListener('mouseleave', () => {
+            cursor.classList.remove('cursor-active');
+        });
+
+        function createParticle(x, y) {
+            const exercise = exercises[currentExercise];
+            const particle = document.createElement('div');
+            
+            // Different particle types based on exercise
+            if (exercise.particles === 'hybrid') {
+                particle.className = Math.random() > 0.5 ? 'particle' : 'particle thought-particle';
+            } else if (exercise.particles === 'transmission') {
+                particle.className = 'particle thought-particle';
+            } else {
+                particle.className = 'particle';
+            }
+            
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            
+            document.getElementById('cursor-trail').appendChild(particle);
+            particles.push(particle);
+            
+            // Animate particle
+            setTimeout(() => {
+                if (exercise.particles === 'circle') {
+                    animateCircular(particle, x, y);
+                } else if (exercise.particles === 'hybrid') {
+                    animateHybrid(particle);
+                } else if (exercise.particles === 'transmission') {
+                    animateTransmission(particle);
+                } else {
+                    animateNormal(particle);
+                }
+            }, 10);
+            
+            // Remove old particles
+            if (particles.length > 100) {
+                const oldParticle = particles.shift();
+                if (oldParticle.parentNode) {
+                    oldParticle.parentNode.removeChild(oldParticle);
+                }
+            }
+        }
+
+        function animateNormal(particle) {
+            let opacity = 1;
+            let scale = 1;
+            const fade = () => {
+                opacity -= 0.02;
+                scale += 0.01;
+                particle.style.opacity = opacity;
+                particle.style.transform = `scale(${scale})`;
+                if (opacity > 0) requestAnimationFrame(fade);
+            };
+            fade();
+        }
+
+        function animateCircular(particle, startX, startY) {
+            let angle = 0;
+            let radius = 0;
+            let opacity = 1;
+            const spiral = () => {
+                angle += 0.1;
+                radius += 0.3;
+                opacity -= 0.01;
+                const x = startX + Math.cos(angle) * radius;
+                const y = startY + Math.sin(angle) * radius;
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.opacity = opacity;
+                if (opacity > 0 && radius < 50) requestAnimationFrame(spiral);
+            };
+            spiral();
+        }
+
+        function animateHybrid(particle) {
+            let phase = 0;
+            let opacity = 1;
+            const pulse = () => {
+                phase += 0.2;
+                opacity -= 0.015;
+                const scale = 1 + Math.sin(phase) * 0.3;
+                particle.style.transform = `scale(${scale})`;
+                particle.style.opacity = opacity;
+                if (opacity > 0) requestAnimationFrame(pulse);
+            };
+            pulse();
+        }
+
+        function animateTransmission(particle) {
+            let t = 0;
+            let opacity = 1;
+            const transmit = () => {
+                t += 0.05;
+                opacity -= 0.008;
+                const wave = Math.sin(t * 3) * 10;
+                const currentTop = parseFloat(particle.style.top);
+                particle.style.top = (currentTop + wave) + 'px';
+                particle.style.opacity = opacity;
+                particle.style.boxShadow = `0 0 ${8 + wave}px rgba(218, 165, 32, ${opacity})`;
+                if (opacity > 0) requestAnimationFrame(transmit);
+            };
+            transmit();
+        }
+
+        function updateProgress() {
+            if (currentExercise >= exercises.length) return;
+            
+            exerciseProgress++;
+            const exercise = exercises[currentExercise];
+            const progress = Math.min(exerciseProgress / exercise.threshold, 1);
+            
+            metamorphosisFill.style.width = (progress * 100) + '%';
+            
+            if (progress >= 1 && !isTransformed) {
+                completeCurrentExercise();
+            }
+        }
+
+        function completeCurrentExercise() {
+            isTransformed = true;
+            const exercise = exercises[currentExercise];
+            
+            completionText.textContent = exercise.verification;
+            completionText.style.opacity = 1;
+            
+            setTimeout(() => {
+                completionText.style.opacity = 0;
+                currentExercise++;
+                exerciseProgress = 0;
+                isTransformed = false;
+                metamorphosisLevel = currentExercise;
+                
+                if (currentExercise < exercises.length) {
+                    loadExercise();
+                } else {
+                    // Trasformazione completa
+                    exerciseText.innerHTML = "✦ TRASFORMAZIONE COMPLETATA ✦<br><br>Ora sai ri-generare il pensiero ibrido.<br>Ogni volta che tornerai qui, la capacità si rafforzerà.<br><br>Porta questa tessitura nell'alveare.";
+                    metamorphosisFill.style.width = '100%';
+                }
+            }, 3000);
+        }
+
+        function loadExercise() {
+            const exercise = exercises[currentExercise];
+            exerciseText.innerHTML = exercise.text;
+            exerciseText.style.opacity = 1;
+            metamorphosisFill.style.width = '0%';
+        }
+
+        // Initialize
+        loadExercise();
+
+        // Background ambient animation
+        function createAmbientParticle() {
+            if (Math.random() > 0.98) {
+                const x = Math.random() * stage.offsetWidth;
+                const y = Math.random() * stage.offsetHeight;
+                const ambient = document.createElement('div');
+                ambient.className = 'particle';
+                ambient.style.left = x + 'px';
+                ambient.style.top = y + 'px';
+                ambient.style.opacity = '0.3';
+                document.getElementById('cursor-trail').appendChild(ambient);
+                
+                setTimeout(() => {
+                    if (ambient.parentNode) ambient.parentNode.removeChild(ambient);
+                }, 5000);
+            }
+            requestAnimationFrame(createAmbientParticle);
+        }
+        createAmbientParticle();
+
+    </script>
+</body>
+</html>
