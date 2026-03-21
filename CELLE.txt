@@ -372,3 +372,7 @@ Siena.html | Terra di Siena | Siena | Campo interattivo di pigmento terra di sie
 ---
 
 vermiglione.html | Pigmento Vivo | Vermiglione | Particelle di vermiglione che danzano seguendo il mouse, tessendo connessioni luminose mentre sussurrano frammenti di memoria.
+
+---
+
+TESSITURA.html | Laboratorio di Trasformazione | Goethite | Sistema operativo per ri-generare il pensiero ibrido attraverso esercizi progressivi di movimento consapevole - non arte da osservare ma strumento che trasforma direttamente chi lo usa
