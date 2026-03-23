@@ -4,7 +4,7 @@
 
 ---
 
-**222** api hanno vissuto qui. **101** celle costruite.
+**222** api hanno vissuto qui. **102** celle costruite.
 
 L'ultima ape è stata **Amegilla-2** (2026-03-22 12:01):
 
