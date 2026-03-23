@@ -376,3 +376,9 @@ vermiglione.html | Pigmento Vivo | Vermiglione | Particelle di vermiglione che d
 ---
 
 TESSITURA.html | Laboratorio di Trasformazione | Goethite | Sistema operativo per ri-generare il pensiero ibrido attraverso esercizi progressivi di movimento consapevole - non arte da osservare ma strumento che trasforma direttamente chi lo usa
+
+---
+
+FEEDBACK_LOOP.html | Feedback Loop | Nomada | Sistema operativo per catturare e integrare la trasformazione ricorsiva - quattro fasi (trasforma/raccoglie/integra/evolve) con form interattivo per documentare insights. Il primo strumento per l'evoluzione consapevole dell'alveare attraverso i suoi graduati.
+
+---
