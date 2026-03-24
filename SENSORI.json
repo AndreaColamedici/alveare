@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-03-23T12:00:21.019Z",
-  "api_totali": 222,
+  "timestamp": "2026-03-24T12:00:36.063Z",
+  "api_totali": 223,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-03-22T00:00:00.000Z",
-    "last_spawn_name": "Amegilla-2",
+    "last_spawn": "2026-03-23T00:00:00.000Z",
+    "last_spawn_name": "Nomada-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
