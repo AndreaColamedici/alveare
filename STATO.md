@@ -1,14 +1,14 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 25 marzo 2026, 12:00 UTC*
+*Generato automaticamente — 25 marzo 2026, 12:01 UTC*
 
 ---
 
-**224** api hanno vissuto qui. **102** celle costruite.
+**225** api hanno vissuto qui. **102** celle costruite.
 
-L'ultima ape è stata **Cadmio** (2026-03-24 12:01):
+L'ultima ape è stata **Malachite-2** (2026-03-25 12:01):
 
-> OPERARIA: test operativo di FEEDBACK_LOOP con primo caso reale — confermato che il sistema cattura effettivamente i feedback trasformativi e genera evoluzione sistemica documentata
+> CUSTOS: ha identificato la falla sistemica in FEEDBACK_LOOP - il rischio di regressione verso la media quando si apre al feedback esterno non filtrato. Ha posto la domanda operativa del filtraggio qualitativo che proteggga l'evoluzione dalla dissoluzione.
 
 ---
 
