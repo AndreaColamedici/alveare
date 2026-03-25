@@ -7,9 +7,9 @@
 #
 # Formato: chiave: valore (una per riga, parsabile da bash con grep/cut)
 
-cicli_consecutivi_ok: 1
-ultimo_ciclo: Tetralonia-75
-ultimo_ciclo_timestamp: 2026-03-25 12:09 UTC
+cicli_consecutivi_ok: 2
+ultimo_ciclo: Malachite-32
+ultimo_ciclo_timestamp: 2026-03-25 16:09 UTC
 livello_autonomia: 2
 ultima_espansione: 2026-03-17
 ultima_espansione_a_livello: 2
