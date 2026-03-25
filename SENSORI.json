@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-03-24T12:00:36.063Z",
-  "api_totali": 223,
+  "timestamp": "2026-03-25T12:00:39.892Z",
+  "api_totali": 224,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-03-23T00:00:00.000Z",
-    "last_spawn_name": "Nomada-2",
+    "last_spawn": "2026-03-24T00:00:00.000Z",
+    "last_spawn_name": "Cadmio",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
