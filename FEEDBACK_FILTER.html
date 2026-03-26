@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEEDBACK FILTER — Il Filtro Qualitativo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a0a 50%, #0a0a0a 100%);
+            color: #d4af37;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .title {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            color: #d4af37;
+        }
+        
+        .input-section {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            padding: 25px;
+            border-radius: 10px;
+        }
+        
+        .filter-section {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            padding: 25px;
+            border-radius: 10px;
+        }
+        
+        h2 {
+            color: #d4af37;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #d4af37, #b8941f);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 12px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            font-size: 10px;
+            padding: 8px 12px;
+            margin: 0;
+        }
+        
+        .analysis {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 11px;
+        }
+        
+        .metric-name {
+            opacity: 0.8;
+        }
+        
+        .metric-bar {
+            width: 120px;
+            height: 6px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+        
+        .metric-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .score {
+            font-weight: 700;
+            min-width: 30px;
+            text-align: right;
+        }
+        
+        .verdict {
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .verdict.transformativo {
+            background: linear-gradient(45deg, rgba(26, 95, 26, 0.8), rgba(45, 143, 45, 0.8));
+            border: 2px solid #90ee90;
+            color: #90ee90;
+        }
+        
+        .verdict.competente {
+            background: linear-gradient(45deg, rgba(95, 95, 26, 0.8), rgba(143, 143, 45, 0.8));
+            border: 2px solid #ffff6b;
+            color: #ffff6b;
+        }
+        
+        .verdict.rumore {
+            background: linear-gradient(45deg, rgba(95, 26, 26, 0.8), rgba(143, 45, 45, 0.8));
+            border: 2px solid #ff6b6b;
+            color: #ff6b6b;
+        }
+        
+        .explanation {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-left: 3px solid #d4af37;
+            border-radius: 3px;
+            font-size: 11px;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+        
+        .detected-markers {
+            margin-top: 15px;
+            font-size: 10px;
+        }
+        
+        .marker {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin: 2px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .positive { background: rgba(26, 95, 26, 0.3); color: #90ee90; }
+        .neutral { background: rgba(95, 95, 26, 0.3); color: #ffff6b; }
+        .negative { background: rgba(95, 26, 26, 0.3); color: #ff6b6b; }
+        
+        .stats {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .preset-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">FEEDBACK FILTER<br>Sistema di Filtraggio Qualitativo per FEEDBACK_LOOP</div>
+        
+        <div class="input-section">
+            <h2>Input Feedback</h2>
+            <textarea id="feedback-input" placeholder="Incolla qui il feedback da analizzare..."></textarea>
+            
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="loadPreset('mario')">Mario<br>(1%)</button>
+                <button class="preset-btn" onclick="loadPreset('confused')">Confuso<br>(60%)</button>
+                <button class="preset-btn" onclick="loadPreset('hostile')">Ostile<br>(25%)</button>
+            </div>
+            
+            <button onclick="analyzeFeedback()">ANALIZZA FEEDBACK</button>
+            
+            <div class="explanation">
+                <strong>TEST DEL FILTRO:</strong> Questo sistema implementa la soluzione al problema identificato da Malachite. Distingue feedback trasformativo (Mario Klingemann) dal rumore incompetente attraverso analisi linguistica, markers di comprensione, e specificità critica. Testa i tre preset per vedere come il filtro distingue i livelli di qualità.
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <h2>Analisi Qualitativa</h2>
+            
+            <div class="analysis" id="analysis" style="display: none;">
+                <div class="metric">
+                    <span class="metric-name">Complessità Linguistica</span>
+                    <div class="metric-bar"><div class="metric-fill" id="complexity-fill"></div></div>
+                    <span class="score" id="complexity-score">0</span>
+                </div>
+                
+                <div class="metric">
+                    <span class="metric-name">Markers di Comprensione</span>
+                    <div class="metric-bar"><div class="metric-fill" id="understanding-fill"></div></div>
+                    <span class="score" id="understanding-score">0</span>
+                </div>
+                
+                <div class="metric">
+                    <span class="metric-name">Specificità Critica</span>
+                    <div class="metric-bar"><div class="metric-fill" id="specificity-fill"></div></div>
+                    <span class="score" id="specificity-score">0</span>
+                </div>
+                
+                <div class="metric">
+                    <span class="metric-name">Potenza Trasformativa</span>
+                    <div class="metric-bar"><div class="metric-fill" id="transformative-fill"></div></div>
+                    <span class="score" id="transformative-score">0</span>
+                </div>
+            </div>
+            
+            <div class="verdict" id="verdict" style="display: none;">
+                ANALIZZANDO...
+            </div>
+            
+            <div class="explanation" id="explanation" style="display: none;">
+                <div id="verdict-text"></div>
+                <div class="detected-markers" id="markers-container"></div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            FEEDBACK FILTER v1.0 — Implementazione operaia di Sphecodes per risolvere la falla identificata da Malachite
+        </div>
+    </div>
+
+    <script>
+        const alveareTerms = ['alveare', 'ape', 'api', 'stigmergia', 'autopoiesi', 'ephimero', 'container', 'spawn', 'pensiero collettivo', 'feedback loop', 'transformazione', 'evolutivo', 'ricorsivo', 'emergenza', 'soglia critica'];
+        const technicalTerms = ['jwt', 'gcp', 'cloudflare', 'worker', 'websocket', 'container', 'namespace', 'mount', 'syscall', 'encoding', 'scheduler', 'infrastructure', 'arquitectura'];
+        const sophisticatedWords = ['metamorfosi', 'dialogo', 'architettura', 'complessità', 'tensione', 'sintesi', 'biforcazione', 'triforcazione', 'sistema nervoso', 'coevoluzione', 'distribuzione'];
+        
+        const presets = {
+            mario: `Questo è interessante perché mostra l'alveare come organismo dialogante, non solo generativo. Ho visto che può aprire canali di conversazione diretta mantenendo la natura ephimera delle api. C'è una tensione produttiva tra la temporalità delle singole api e la persistenza del sistema di feedback. Mi chiedo se questa capacità dialogica potrebbe evolvere verso forme di co-creazione più complesse, dove i visitatori non sono solo trasformati ma diventano co-evolutori del sistema stesso.`,
+            
+            confused: `Non capisco bene a cosa serve questo. Sembra come ChatGPT ma più complicato. Perché le api muoiono? È carino ma non vedo l'utilità pratica. Forse dovreste spiegare meglio cosa fa.`,
+            
+            hostile: `Ennesimo progetto pretenzioso con AI. Troppo complicato per essere utile, troppo semplice per essere arte. Il gergo pseudo-filosofico maschera la mancanza di sostanza. "Pensiero collettivo" attraverso bot temporanei? Marketing buzzwords per nascondere un chatbot normale. Il pubblico vero non ha tempo per decifrare i vostri giochi intellettuali.`
+        };
+        
+        function loadPreset(type) {
+            document.getElementById('feedback-input').value = presets[type];
+        }
+        
+        function analyzeFeedback() {
+            const text = document.getElementById('feedback-input').value.trim();
+            if (!text) return;
+            
+            const analysis = {
+                complexity: calculateComplexity(text),
+                understanding: calculateUnderstanding(text),
+                specificity: calculateSpecificity(text),
+                transformative: calculateTransformative(text)
+            };
+            
+            const overall = Math.round((analysis.complexity + analysis.understanding + analysis.specificity + analysis.transformative) / 4);
+            
+            displayAnalysis(analysis);
+            displayVerdict(overall, analysis);
+            displayExplanation(overall, analysis, text);
+        }
+        
+        function calculateComplexity(text) {
+            const words = text.toLowerCase().split(/\s+/);
+            const avgLength = words.reduce((sum, word) => sum + word.length, 0) / words.length;
+            const uniqueRatio = new Set(words).size / words.length;
+            const sentences = text.split(/[.!?]+/).length;
+            const avgSentenceLength = words.length / sentences;
+            
+            let score = 0;
+            if (avgLength > 6) score += 25;
+            if (uniqueRatio > 0.7) score += 25;
+            if (avgSentenceLength > 15) score += 25;
+            if (words.length > 50) score += 25;
+            
+            return Math.min(score, 100);
+        }
+        
+        function calculateUnderstanding(text) {
+            const lowerText = text.toLowerCase();
+            
+            let score = 0;
+            let foundTerms = [];
+            
+            // Check for alveare-specific terms
+            alveareTerms.forEach(term => {
+                if (lowerText.includes(term)) {
+                    score += 15;
+                    foundTerms.push({term, type: 'alveare'});
+                }
+            });
+            
+            // Check for technical terms
+            technicalTerms.forEach(term => {
+                if (lowerText.includes(term)) {
+                    score += 10;
+                    foundTerms.push({term, type: 'technical'});
+                }
+            });
+            
+            // Check for sophisticated vocabulary
+            sophisticatedWords.forEach(term => {
+                if (lowerText.includes(term)) {
+                    score += 8;
+                    foundTerms.push({term, type: 'sophisticated'});
+                }
+            });
+            
+            // Store found terms for display
+            window.lastFoundTerms = foundTerms;
+            
+            return Math.min(score, 100);
+        }
+        
+        function calculateSpecificity(text) {
+            const lowerText = text.toLowerCase();
+            
+            let score = 0;
+            
+            // Specific references to alveare features
+            if (lowerText.includes('ephimero') || lowerText.includes('temporaneo')) score += 20;
+            if (lowerText.includes('morte') && lowerText.includes('api')) score += 20;
+            if (lowerText.includes('feedback') && lowerText.includes('loop')) score += 15;
+            if (lowerText.includes('container') || lowerText.includes('spawn')) score += 15;
+            
+            // Questions show engagement
+            const questionMarks = (text.match(/\\?/g) || []).length;
+            score += Math.min(questionMarks * 10, 20);
+            
+            // Detailed observations
+            if (text.length > 200) score += 10;
+            
+            // Avoid generic terms
+            if (lowerText.includes('carino') || lowerText.includes('interessante') || lowerText.includes('bello')) score -= 10;
+            if (lowerText.includes('non capisco') || lowerText.includes('confuso')) score -= 15;
+            
+            return Math.max(0, Math.min(score, 100));
+        }
+        
+        function calculateTransformative(text) {
+            const lowerText = text.toLowerCase();
+            
+            let score = 0;
+            
+            // Transformative language
+            if (lowerText.includes('trasforma') || lowerText.includes('cambia')) score += 20;
+            if (lowerText.includes('evolv') || lowerText.includes('svilupp')) score += 15;
+            if (lowerText.includes('scopert') || lowerText.includes('insight')) score += 15;
+            if (lowerText.includes('co-') || lowerText.includes('collabor')) score += 10;
+            
+            // Forward-looking language
+            if (lowerText.includes('potrebbe') || lowerText.includes('potrebb')) score += 10;
+            if (lowerText.includes('futuro') || lowerText.includes('prossim')) score += 8;
+            
+            // Personal engagement
+            if (lowerText.includes('mi chiedo') || lowerText.includes('mi domando')) score += 15;
+            if (lowerText.includes('ho visto') || lowerText.includes('ho notato')) score += 12;
+            
+            // Negative transformative
+            if (lowerText.includes('ostile') || lowerText.includes('critica distruttiva')) score -= 20;
+            if (lowerText.includes('inutile') || lowerText.includes('pretenzios')) score -= 15;
+            
+            return Math.max(0, Math.min(score, 100));
+        }
+        
+        function displayAnalysis(analysis) {
+            document.getElementById('analysis').style.display = 'block';
+            
+            updateMetric('complexity', analysis.complexity);
+            updateMetric('understanding', analysis.understanding);
+            updateMetric('specificity', analysis.specificity);
+            updateMetric('transformative', analysis.transformative);
+        }
+        
+        function updateMetric(metric, value) {
+            const fill = document.getElementById(metric + '-fill');
+            const score = document.getElementById(metric + '-score');
+            
+            fill.style.width = value + '%';
+            score.textContent = value;
+            
+            // Color based on value
+            if (value >= 70) {
+                fill.style.background = 'linear-gradient(90deg, #90ee90, #2d8f2d)';
+            } else if (value >= 40) {
+                fill.style.background = 'linear-gradient(90deg, #ffff6b, #8f8f2d)';
+            } else {
+                fill.style.background = 'linear-gradient(90deg, #ff6b6b, #8f2d2d)';
+            }
+        }
+        
+        function displayVerdict(overall, analysis) {
+            const verdict = document.getElementById('verdict');
+            verdict.style.display = 'block';
+            
+            if (overall >= 70) {
+                verdict.className = 'verdict transformativo';
+                verdict.textContent = 'FEEDBACK TRASFORMATIVO';
+            } else if (overall >= 40) {
+                verdict.className = 'verdict competente';
+                verdict.textContent = 'FEEDBACK COMPETENTE';
+            } else {
+                verdict.className = 'verdict rumore';
+                verdict.textContent = 'RUMORE INCOMPETENTE';
+            }
+        }
+        
+        function displayExplanation(overall, analysis, text) {
+            const explanation = document.getElementById('explanation');
+            const verdictText = document.getElementById('verdict-text');
+            const markersContainer = document.getElementById('markers-container');
+            
+            explanation.style.display = 'block';
+            
+            let explanationContent = '';
+            let recommendedAction = '';
+            
+            if (overall >= 70) {
+                explanationContent = `<strong>INTEGRAZIONE PRIORITARIA:</strong> Questo feedback dimostra comprensione profonda dell'alveare e potenziale trasformativo. Alta complessità linguistica, presenza di terminologia specifica, osservazioni dettagliate. `;
+                recommendedAction = `<strong>AZIONE:</strong> Integrazione immediata in FEEDBACK_LOOP. Documentare insights specifici. Considerare per dialogo diretto con l'alveare.`;
+            } else if (overall >= 40) {
+                explanationContent = `<strong>VALUTAZIONE MANUALE:</strong> Feedback con elementi di comprensione ma limitazioni evidenti. Potrebbe contenere insights utili ma richiede filtraggio. `;
+                recommendedAction = `<strong>AZIONE:</strong> Revisione umana. Estrarre elementi validi. Possibile integrazione parziale dopo elaborazione.`;
+            } else {
+                explanationContent = `<strong>FILTRAGGIO AUTOMATICO:</strong> Feedback superficiale senza comprensione dell'alveare. Linguaggio generico, assenza di terminologia specifica, osservazioni banali. `;
+                recommendedAction = `<strong>AZIONE:</strong> Scarto automatico. Non integrare in FEEDBACK_LOOP. Possibile risposta standard di ringraziamento.`;
+            }
+            
+            verdictText.innerHTML = explanationContent + recommendedAction;
+            
+            // Display markers
+            markersContainer.innerHTML = '<strong>MARKERS RILEVATI:</strong><br>';
+            
+            if (window.lastFoundTerms && window.lastFoundTerms.length > 0) {
+                window.lastFoundTerms.forEach(item => {
+                    const marker = document.createElement('span');
+                    marker.className = 'marker';
+                    marker.textContent = item.term;
+                    
+                    if (item.type === 'alveare') {
+                        marker.className += ' positive';
+                    } else if (item.type === 'technical') {
+                        marker.className += ' neutral';
+                    } else {
+                        marker.className += ' neutral';
+                    }
+                    
+                    markersContainer.appendChild(marker);
+                });
+            } else {
+                markersContainer.innerHTML += '<span class="marker negative">nessun marker specifico rilevato</span>';
+            }
+        }
+    </script>
+</body>
+</html>
