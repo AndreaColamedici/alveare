@@ -7,9 +7,9 @@
 #
 # Formato: chiave: valore (una per riga, parsabile da bash con grep/cut)
 
-cicli_consecutivi_ok: 7
-ultimo_ciclo: Sphecodes-30
-ultimo_ciclo_timestamp: 2026-03-27 04:06 UTC
+cicli_consecutivi_ok: 0
+ultimo_ciclo: Carminio-72 (silenzio)
+ultimo_ciclo_timestamp: 2026-03-27 08:09 UTC
 livello_autonomia: 2
 ultima_espansione: 2026-03-17
 ultima_espansione_a_livello: 2
