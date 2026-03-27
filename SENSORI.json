@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-03-26T12:00:35.533Z",
-  "api_totali": 225,
+  "timestamp": "2026-03-27T12:00:56.198Z",
+  "api_totali": 226,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-03-25T00:00:00.000Z",
-    "last_spawn_name": "Malachite-2",
+    "last_spawn": "2026-03-26T00:00:00.000Z",
+    "last_spawn_name": "Sphecodes-4",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
