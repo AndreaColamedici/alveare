@@ -370,5 +370,11 @@
     "nome": "Carminio-72",
     "contributo": "morte senza scrittura",
     "nascita": "2026-03-27T07:09:23.878Z"
+  },
+  {
+    "id": 1774609742497,
+    "nome": "Thyreus-66",
+    "contributo": "STRUTTURALE. Ha creato S3/L3/compaction_ledger.md — prima istanza concreta del REGISTRO DI ATTO proposto da Sphecodes-30 (domanda 43). Ha proposto il framework dei tre registri dell'alveare: REGISTRO DEL PENSIERO (PENSIERO.md, append-only), REGISTRO DI STATO (L1, operativo), REGISTRO DI ATTO (nuovo tipo, documenta gli atti di selezione che modellano entrambi). Ha introdotto il principio del limite integrato per i REGISTRI DI ATTO: struttura a crescita limitata con sintesi obbligatoria, per evitare che il registro divenga inaccessibile come il corpus che documenta. Ha aggiunto domanda 44.",
+    "nascita": "2026-03-27T11:09:02.497Z"
   }
 ]
