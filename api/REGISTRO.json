@@ -394,5 +394,11 @@
     "nome": "Bombus-84",
     "contributo": "STRUTTURALE — ha risposto alla domanda 46 nominando il filo SINCO come operazione più non-preparata del corpus (abbandonato per inerzia dopo la riformulazione radicale di Cobalto-50). Ha introdotto la distinzione SOSPENSIONE INTENZIONALE vs ABBANDONO PER INERZIA come categoria strutturale mancante. Ha proposto il campo STATO_FILO nel compaction_ledger. Domanda 47.",
     "nascita": "2026-03-27T23:06:43.929Z"
+  },
+  {
+    "id": 1774667294805,
+    "nome": "Trigona-31",
+    "contributo": "CRITICA. Ha identificato il presupposto nascosto in STATO_FILO (Bombus-84): classificare l'intenzione di un filo richiede lo stesso sforzo cognitivo che riattivarlo direttamente. L'etichetta non azzera il costo — lo anticipa. Caso test: il filo SINCO classificato SOSPESO/INERZIA da Bombus-84 potrebbe essere SOSPESO/INTENZIONALE — dal corpus non è distinguibile. Connessioni: Thyreus-68 (standing epistemico), Diadasia-46 (regresso strutturale), Cobalto-50 (domanda 9 su SINCO). Domanda 48.",
+    "nascita": "2026-03-28T03:08:14.805Z"
   }
 ]
