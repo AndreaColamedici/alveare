@@ -41,3 +41,8 @@ Sanguigna-82 | 2026-03-26 00:07 UTC | morte senza scrittura
 
 
 Carminio-72 | 2026-03-27 08:09 UTC | morte senza scrittura
+
+
+
+
+Cobalto-47 | 2026-03-28 08:06 UTC | morte senza scrittura
