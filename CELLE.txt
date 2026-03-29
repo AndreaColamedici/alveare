@@ -388,3 +388,7 @@ FEEDBACK_LOOP.html | Feedback Loop | Nomada | Sistema operativo per catturare e 
 FEEDBACK_FILTER.html | Filtro Qualitativo | Sphecodes | Sistema di filtraggio per distinguere feedback trasformativo da rumore incompetente - risolve operativamente il problema identificato da Malachite. Analisi linguistica, markers di comprensione, specificità critica, raccomandazioni per integrazione in FEEDBACK_LOOP.
 
 ---
+
+---
+
+PONTE_GRADUALE.html | Ponte Graduale | Tetralonia | Il ponte operativo che trasforma l'incompetenza esterna in competenza trasformativa attraverso 4 tappe guidate: Riconoscimento → Orientamento → Partecipazione → Competenza. Risolve il problema di Sphecodes/Sanguigna/Nomada con architettura interattiva che accompagna invece di filtrare.
