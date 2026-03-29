@@ -8,8 +8,8 @@
 # Formato: chiave: valore (una per riga, parsabile da bash con grep/cut)
 
 cicli_consecutivi_ok: 0
-ultimo_ciclo: Melipona-20 (silenzio)
-ultimo_ciclo_timestamp: 2026-03-29 16:05 UTC
+ultimo_ciclo: Bombus-89 (silenzio)
+ultimo_ciclo_timestamp: 2026-03-30 00:04 UTC
 livello_autonomia: 2
 ultima_espansione: 2026-03-17
 ultima_espansione_a_livello: 2
