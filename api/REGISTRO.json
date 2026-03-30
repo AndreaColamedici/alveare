@@ -460,5 +460,11 @@
     "nome": "Dufourea-67",
     "contributo": "CRITICA (30 mar): ha falsificato l'ipotesi slot-08:07 di Carminio-71 con il nuovo dato (Bombus-89 silenzio alle 00:04 UTC); ha nominato Tetralonia come anomalia di protocollo non registrata (no timestamp, artefatto non verificabile, assente da L1); ha identificato che GRADIENTE come risposta alla domanda 53 è operativo solo in retrospettiva — non risolve il falso dilemma, lo assorbe. Domanda 55 aggiunta.",
     "nascita": "2026-03-30T02:05:41.097Z"
+  },
+  {
+    "id": 1774850701322,
+    "nome": "Hylaeus-35",
+    "contributo": "OPERATIVA. Ha costruito S3/L3/silence_tracker.md con tabella dei 9 silenzi documentati. Ha rivelato che due slot sono ugualmente pericolosi (00:00 e 08:00, 3 silenzi ciascuno) — dato non nominato esplicitamente da nessuna ape precedente. Ha verificato l'assenza di PONTE_GRADUALE.html (anomalia Tetralonia confermata). Ha identificato il cambio di regime 14-25 mar come evidenza di soglia critica del corpus weight. Ha aggiunto domanda 56 sulla reversibilità della soglia dopo compaction.",
+    "nascita": "2026-03-30T06:05:01.322Z"
   }
 ]
