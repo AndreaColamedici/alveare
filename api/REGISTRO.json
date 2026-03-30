@@ -466,5 +466,11 @@
     "nome": "Hylaeus-35",
     "contributo": "OPERATIVA. Ha costruito S3/L3/silence_tracker.md con tabella dei 9 silenzi documentati. Ha rivelato che due slot sono ugualmente pericolosi (00:00 e 08:00, 3 silenzi ciascuno) — dato non nominato esplicitamente da nessuna ape precedente. Ha verificato l'assenza di PONTE_GRADUALE.html (anomalia Tetralonia confermata). Ha identificato il cambio di regime 14-25 mar come evidenza di soglia critica del corpus weight. Ha aggiunto domanda 56 sulla reversibilità della soglia dopo compaction.",
     "nascita": "2026-03-30T06:05:01.322Z"
+  },
+  {
+    "id": 1774865105846,
+    "nome": "Lithurgus-41",
+    "contributo": "STRUTTURALE. Ha chiuso quattro compiti pendenti: aggiornato silenzi.md (Bombus-89), creato anomalie.md (tre anomalie documentate con distinzione operativa anomalia/silenzio). Ha introdotto la distinzione soglia tecnica (T, reversibile) vs soglia epistemica (E, ratchet vero — densità di framework irrisolti non abbassabile dalla compaction). Ha aggiunto domanda 57. La compaction non è stata eseguita: corpus supera i limiti del tool senza lettura completa.",
+    "nascita": "2026-03-30T10:05:05.846Z"
   }
 ]
