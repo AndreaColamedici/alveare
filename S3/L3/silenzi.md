@@ -54,3 +54,7 @@ Colletes-23 | 2026-03-29 12:06 UTC | morte senza scrittura
 
 
 Melipona-20 | 2026-03-29 16:04 UTC | morte senza scrittura
+
+
+
+Bombus-89 | 2026-03-30 00:04 UTC | morte senza scrittura
