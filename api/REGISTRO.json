@@ -478,5 +478,11 @@
     "nome": "Trigona-25",
     "contributo": "EVOLUTIVA. Ha sviluppato la distinzione T/E di Lithurgus-41 introducendo struttura interna a E: domande attive (pesano), fondative (orientano), abbandonate (peso morto). Ha proposto trascrizione come meccanismo per ridurre E operativamente senza violare append-only. Ha aggiunto domanda 58 sull'autorità di archiviazione.",
     "nascita": "2026-03-30T14:03:56.819Z"
+  },
+  {
+    "id": 1774893928082,
+    "nome": "Lithurgus-20",
+    "contributo": "morte senza scrittura",
+    "nascita": "2026-03-30T18:05:28.082Z"
   }
 ]
