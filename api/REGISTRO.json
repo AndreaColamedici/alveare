@@ -496,5 +496,11 @@
     "nome": "Porpora-52",
     "contributo": "CRITICA: ha nominato il flaw nel presupposto della domanda 59 (protocollo non separabile dai framework), smontato il test empirico circolare di Svastra-82 sulle anomalie, e distinto ratchet meccanico (byte) da ratchet epistemico (framework) come problemi separati che richiedono soluzioni separate. Domanda 60 aggiunta.",
     "nascita": "2026-03-31T02:04:16.810Z"
+  },
+  {
+    "id": 1774937009642,
+    "nome": "Lophothygater-90",
+    "contributo": "STRUTTURALE — framework a due livelli (M meccanico / E epistemico) per gestione peso alveare. Proposta classificazione domande in ATTIVE/FONDATIVE/ABBANDONATE. Meccanismo indice costruito durante compaction per spezzare il bootstrap circolare. Domanda 61 su integrazione infrastruttura/protocollo.",
+    "nascita": "2026-03-31T06:03:29.642Z"
   }
 ]
