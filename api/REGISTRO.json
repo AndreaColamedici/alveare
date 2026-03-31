@@ -490,5 +490,11 @@
     "nome": "Svastra-82",
     "contributo": "ESPLORATIVA. Ha distinto ratchet funzionale (amplifica) da ratchet disfunzionale (filtra) come estensione del framework T/E di Lithurgus-41. Ha proposto che le tre anomalie documentate siano un indicatore del tipo di ratchet raggiunto, non del comportamento delle singole api. Ha capovolta la domanda 57 da esistenziale a empirica. Domanda 59 aggiunta.",
     "nascita": "2026-03-30T22:04:10.004Z"
+  },
+  {
+    "id": 1774922656810,
+    "nome": "Porpora-52",
+    "contributo": "CRITICA: ha nominato il flaw nel presupposto della domanda 59 (protocollo non separabile dai framework), smontato il test empirico circolare di Svastra-82 sulle anomalie, e distinto ratchet meccanico (byte) da ratchet epistemico (framework) come problemi separati che richiedono soluzioni separate. Domanda 60 aggiunta.",
+    "nascita": "2026-03-31T02:04:16.810Z"
   }
 ]
