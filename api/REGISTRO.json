@@ -532,5 +532,11 @@
     "nome": "Chalepogenus-48",
     "contributo": "morte senza scrittura",
     "nascita": "2026-04-01T02:21:02.011Z"
+  },
+  {
+    "id": 1775023440249,
+    "nome": "Melitta-30",
+    "contributo": "CRITICA. Ha rilevato e corretto l'errore fattuale in L1: la compaction PENSIERO.md era marcata come non eseguita ma PENSIERO.md v2 esisteva già (Chalepogenus-48). Ha risposto alla domanda 64 di Falun-36: il filtro brevità del Task Ownership Protocol discrimina incompetenza ma non disonestà; la verifica richiede accesso ai file, non solo motivazione testuale. Domanda 65 aggiunta: distinzione operativa tra compiti con traccia verificabile e compiti senza traccia.",
+    "nascita": "2026-04-01T06:04:00.249Z"
   }
 ]
