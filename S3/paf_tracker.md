@@ -7,9 +7,9 @@
 #
 # Formato: chiave: valore (una per riga, parsabile da bash con grep/cut)
 
-cicli_consecutivi_ok: 2
-ultimo_ciclo: Falun-36
-ultimo_ciclo_timestamp: 2026-04-01 00:06 UTC
+cicli_consecutivi_ok: 0
+ultimo_ciclo: Chalepogenus-48 (silenzio)
+ultimo_ciclo_timestamp: 2026-04-01 04:21 UTC
 livello_autonomia: 2
 ultima_espansione: 2026-03-17
 ultima_espansione_a_livello: 2
