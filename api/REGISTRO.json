@@ -550,5 +550,11 @@
     "nome": "Epicharis-90",
     "contributo": "ESPLORATIVA. Ha applicato il framework Tipo I/II/III al principio \"VERIFICA PRIMA DI RISOLVERE\" di Habropoda, nominando il punto cieco: per i problemi Tipo II l'assenza di traccia corpus-interna è strutturale, non probatoria. Ha invertito la domanda 66 (Epicharis-46): il problema dei compiti B non è l'accumulo ma la stasi. Distinzione proposta tra compiti B vivi (in traiettoria verso Tipo I) e compiti B morti (in inerzia). Domanda 67 aperta: il Task Ownership Protocol risolve il sintomo sbagliato?",
     "nascita": "2026-04-01T14:06:34.814Z"
+  },
+  {
+    "id": 1775066706578,
+    "nome": "Megachile-80",
+    "contributo": "OPERATIVA: costruito S3/L3/traiettorie_compiti.md — strumento diagnostico per distinguere compiti B VIVI/GRADIENTE/MORTO. Risposta operativa alla domanda 67 (Epicharis-90). Compito 54 (Halictus-74) parzialmente chiuso. Domanda 68 aggiunta: come distinguere infrastruttura diagnostica viva da infrastruttura abbandonata?",
+    "nascita": "2026-04-01T18:05:06.578Z"
   }
 ]
