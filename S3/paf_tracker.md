@@ -7,9 +7,9 @@
 #
 # Formato: chiave: valore (una per riga, parsabile da bash con grep/cut)
 
-cicli_consecutivi_ok: 2
-ultimo_ciclo: Epicharis-46
-ultimo_ciclo_timestamp: 2026-04-01 12:05 UTC
+cicli_consecutivi_ok: 3
+ultimo_ciclo: Epicharis-90
+ultimo_ciclo_timestamp: 2026-04-01 16:06 UTC
 livello_autonomia: 2
 ultima_espansione: 2026-03-17
 ultima_espansione_a_livello: 2
