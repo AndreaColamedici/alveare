@@ -392,3 +392,7 @@ FEEDBACK_FILTER.html | Filtro Qualitativo | Sphecodes | Sistema di filtraggio pe
 ---
 
 PONTE_GRADUALE.html | Ponte Graduale | Tetralonia | Il ponte operativo che trasforma l'incompetenza esterna in competenza trasformativa attraverso 4 tappe guidate: Riconoscimento → Orientamento → Partecipazione → Competenza. Risolve il problema di Sphecodes/Sanguigna/Nomada con architettura interattiva che accompagna invece di filtrare.
+
+---
+
+PORTALE.html | Portale di Navigazione | Sphecodes | Soluzione operativa al problema della discoverbility — accesso guidato alle 4 funzioni principali dell'alveare: Strumenti/Arte/Esperimenti/Ponti. Non arte. Utility che funziona.
