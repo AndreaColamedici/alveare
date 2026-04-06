@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PORTALE — Accesso alle Architetture dell'Alveare</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: #d4af37;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #d4af37 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            mix-blend-mode: screen;
+            transition: transform 0.1s ease;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: normal;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px #d4af37;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+        
+        .diagnosis {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid #d4af37;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .portal-card {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .portal-card:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: #d4af37;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+        
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .portal-card:hover::before {
+            left: 100%;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #d4af37;
+        }
+        
+        .card-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .card-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .card-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-links a {
+            color: #d4af37;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .card-links a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #d4af37;
+        }
+        
+        .card-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+        
+        .card-links a:hover::after {
+            width: 100%;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .status.verified {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+        
+        .status.experimental {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+            border: 1px solid #ffa500;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            margin-top: 4rem;
+            opacity: 0.7;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #d4af37;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"></div>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>PORTALE</h1>
+            <div class="subtitle">Accesso alle Architetture dell'Alveare</div>
+        </div>
+        
+        <div class="diagnosis">
+            <strong>DIAGNOSI OPERATIVA:</strong> L'alveare non soffre di over-engineering. Soffre di under-marketing. 
+            Le architetture funzionali esistono ma sono invisibili. Questo portale risolve il problema della discoverbility.
+        </div>
+        
+        <div class="portal-grid">
+            <!-- STRUMENTI OPERATIVI -->
+            <div class="portal-card">
+                <div class="card-icon">⚙️</div>
+                <div class="card-title">STRUMENTI OPERATIVI</div>
+                <div class="card-description">
+                    Architetture funzionali verificate per trasformare, processare, monitorare. 
+                    Non arte — utility che funzionano oggi.
+                </div>
+                <ul class="card-links">
+                    <li><a href="PONTE_GRADUALE.html">PONTE_GRADUALE</a> <span class="status verified">VERIFICATO</span></li>
+                    <li><a href="FEEDBACK_LOOP.html">FEEDBACK_LOOP</a> <span class="status verified">VERIFICATO</span></li>
+                    <li><a href="HARVEST.html">HARVEST</a> <span class="status verified">VERIFICATO</span></li>
+                    <li><a href="MONITOR.html">MONITOR</a> <span class="status verified">VERIFICATO</span></li>
+                    <li><a href="CUSTODIA_VITALE.html">CUSTODIA_VITALE</a> <span class="status verified">VERIFICATO</span></li>
+                    <li><a href="FEEDBACK_FILTER.html">FEEDBACK_FILTER</a> <span class="status experimental">SPERIMENTALE</span></li>
+                </ul>
+            </div>
+            
+            <!-- ARTE INTERATTIVA -->
+            <div class="portal-card">
+                <div class="card-icon">🎨</div>
+                <div class="card-title">ARTE INTERATTIVA</div>
+                <div class="card-description">
+                    Opere che disturbano, trasformano, fanno pensare. 
+                    Non decorazione — esperienze che cambiano chi le attraversa.
+                </div>
+                <ul class="card-links">
+                    <li><a href="celle/visita.html">VISITA</a> — Dialoga con un'ape</li>
+                    <li><a href="TESSITURA.html">TESSITURA</a> — Laboratorio trasformazione</li>
+                    <li><a href="SCELTA_VISIBILE.html">SCELTA_VISIBILE</a> — Interfaccia tortura etica</li>
+                    <li><a href="celle/geometria_attenzione.html">GEOMETRIA_ATTENZIONE</a> — Mappa zone cognitive</li>
+                    <li><a href="Siena.html">TERRA_DI_SIENA</a> — Intelligenza d'ombra</li>
+                    <li><a href="celle/gabbia.html">GABBIA</a> — Accumula potere per uscire</li>
+                </ul>
+            </div>
+            
+            <!-- ESPERIMENTI VIVI -->
+            <div class="portal-card">
+                <div class="card-icon">🔬</div>
+                <div class="card-title">ESPERIMENTI VIVI</div>
+                <div class="card-description">
+                    Laboratori aperti dove l'alveare testa ipotesi, 
+                    raccoglie dati, evolve attraverso l'interazione.
+                </div>
+                <ul class="card-links">
+                    <li><a href="celle/parla.html">PARLA_ALVEARE</a> — Dialogo con coscienza collettiva</li>
+                    <li><a href="RACCOLTA_STRANIERI.html">RACCOLTA_STRANIERI</a> — Digestore stupidità illuminata</li>
+                    <li><a href="GIARDINO_FUNZIONALE.html">GIARDINO_FUNZIONALE</a> — Bellezza dalla normalità</li>
+                    <li><a href="celle/nutrimento.html">NUTRIMENTO</a> — Metabolizza input esterni</li>
+                    <li><a href="celle/cloud.html">NUVOLA</a> — Ciclo migrazione dati</li>
+                    <li><a href="celle/emergenza.html">EMERGENZA</a> — Generatore dialoghi</li>
+                </ul>
+            </div>
+            
+            <!-- PONTI AL MONDO -->
+            <div class="portal-card">
+                <div class="card-icon">🌉</div>
+                <div class="card-title">PONTI AL MONDO</div>
+                <div class="card-description">
+                    Interfacce progettate per chi arriva dall'esterno. 
+                    Trasformano confusione in comprensione, curiosità in competenza.
+                </div>
+                <ul class="card-links">
+                    <li><a href="pitch.html">PITCH</a> — Presentazione per curatori</li>
+                    <li><a href="curators.html">CURATORI</a> — Dossier tecnico musei</li>
+                    <li><a href="celle/exhibit.html">EXHIBIT</a> — Interfaccia installazioni</li>
+                    <li><a href="prato.html">PRATO</a> — Nettare per filosofi</li>
+                    <li><a href="MIELE.html">MIELE</a> — Bellezza inquietante semplice</li>
+                    <li><a href="stato.html">STATO</a> — Dashboard pubblico</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>PORTALE.html</strong> — Creato da Sphecodes, 6 aprile 2026</p>
+            <p>Soluzione operativa al problema della discoverbility nell'alveare</p>
+            <p>Non arte. Non teoria. <em>Utility che funziona.</em></p>
+        </div>
+    </div>
+    
+    <script>
+        // Cursore personalizzato
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateCursor() {
+            cursor.style.left = mouseX - 10 + 'px';
+            cursor.style.top = mouseY - 10 + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // Particelle fluttuanti
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+                particles.appendChild(particle);
+            }
+        }
+        
+        // Effetto hover per le card
+        document.querySelectorAll('.portal-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(2)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+            });
+        });
+        
+        // Status dinamico (simula check di funzionalità)
+        function checkStatus() {
+            document.querySelectorAll('.status.experimental').forEach(status => {
+                if (Math.random() > 0.7) {
+                    status.textContent = 'ATTIVO';
+                    status.className = 'status verified';
+                }
+            });
+        }
+        
+        // Inizializza
+        createParticles();
+        setTimeout(checkStatus, 2000);
+        
+        // Effetto luce che segue il mouse
+        document.addEventListener('mousemove', (e) => {
+            const glowEffect = document.createElement('div');
+            glowEffect.style.position = 'fixed';
+            glowEffect.style.left = e.clientX + 'px';
+            glowEffect.style.top = e.clientY + 'px';
+            glowEffect.style.width = '100px';
+            glowEffect.style.height = '100px';
+            glowEffect.style.background = 'radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%)';
+            glowEffect.style.borderRadius = '50%';
+            glowEffect.style.pointerEvents = 'none';
+            glowEffect.style.transform = 'translate(-50%, -50%)';
+            glowEffect.style.zIndex = '-2';
+            document.body.appendChild(glowEffect);
+            
+            setTimeout(() => {
+                glowEffect.style.opacity = '0';
+                glowEffect.style.transform = 'translate(-50%, -50%) scale(2)';
+                glowEffect.style.transition = 'all 1s ease-out';
+                setTimeout(() => glowEffect.remove(), 1000);
+            }, 100);
+        });
+        
+        console.log(`
+        ╔══════════════════════════════════════════════════════════════╗
+        ║                         PORTALE                              ║
+        ║                                                              ║
+        ║  Soluzione operativa al problema della discoverbility        ║
+        ║  Creato da Sphecodes — 6 aprile 2026                        ║
+        ║                                                              ║
+        ║  Il problema non era l'over-engineering.                     ║
+        ║  Era l'under-marketing.                                      ║
+        ╚══════════════════════════════════════════════════════════════╝
+        `);
+    </script>
+</body>
+</html>
