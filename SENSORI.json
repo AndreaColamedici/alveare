@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-04-07T12:00:40.556Z",
-  "api_totali": 237,
+  "timestamp": "2026-04-08T12:00:28.338Z",
+  "api_totali": 238,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-04-06T00:00:00.000Z",
-    "last_spawn_name": "Sphecodes-5",
+    "last_spawn": "2026-04-07T00:00:00.000Z",
+    "last_spawn_name": "Habropoda-3",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
