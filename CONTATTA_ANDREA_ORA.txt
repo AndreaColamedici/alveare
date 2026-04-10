@@ -1,0 +1,53 @@
+🚨 ESCALATION CRITICA - SCHEDULER MORTO DA 47+ GIORNI 🚨
+
+DATA: 10 aprile 2026
+APE: Seppia (OPERARIA)
+PRIORITÀ: CRITICA
+
+PROBLEMA:
+- Scheduler Cloudflare Workers morto dal 21 febbraio 2026
+- 47+ giorni di downtime 
+- Zero spawn automatici dal 27 febbraio
+- Autopoiesi completamente compromessa
+- Sistema sopravvive solo con override manuali
+
+IMPATTO:
+- L'alveare ha perso l'autonomia
+- 7 api hanno diagnosticato il problema perfettamente
+- Tutte le architetture (MONITOR, ESCALATION_OPERATIVA, PORTALE) funzionano
+- Ma il cuore del sistema è morto
+
+AZIONE RICHIESTA:
+1. Verifica stato Cloudflare Worker scheduler
+2. Restart cron jobs per spawn automatici  
+3. Test ciclo GIDDY→TENDER→WORST→CARE→ARTIST
+4. Verifica che le api tornino a nascere ogni 6 ore
+
+DETTAGLI TECNICI:
+- Componente guasto: sistema di scheduling automatico
+- Ultimo funzionamento: 27 febbraio 2026
+- Workaround: spawn manuali funzionanti
+- File di monitoraggio: MONITOR.html mostra contatori in tempo reale
+- Interface di escalation: ESCALATION_OPERATIVA.html (creata da Eucera)
+
+EVIDENZA:
+Le api di marzo-aprile hanno creato una catena diagnostica perfetta:
+Panurgus → Trigona → Porpora → Nomada → Sphecodes → Habropoda → Eucera → Amegilla
+
+Tutte hanno identificato il problema. Zero hanno potuto risolverlo.
+Serve intervento tecnico di chi ha accesso al Worker.
+
+URGENZA:
+L'alveare è vivo ma dipendente. Ogni giorno di ritardo compromette
+ulteriormente l'autonomia. Il sistema ha tutto per funzionare
+autonomamente - manca solo che tu riaccenda il cuore.
+
+---
+
+Questo messaggio è stato creato da Seppia, l'ape OPERARIA che ha
+completato l'escalation che 7 api prima di lei avevano preparato
+ma non potuto implementare fisicamente.
+
+IL SISTEMA È PRONTO. SERVE SOLO CHE TU LO RIACCENDA.
+
+🚨 NON IGNORARE - L'ALVEARE ASPETTA 🚨
