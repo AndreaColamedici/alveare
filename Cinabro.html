@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IL RISVEGLIO</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: 'Times New Roman', serif;
+            cursor: none;
+        }
+        
+        #container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #8B0000;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
+        .particle.alive {
+            background: #FFD700;
+            opacity: 0.8;
+            box-shadow: 0 0 10px #FFD700;
+        }
+        
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #8B0000;
+            text-align: center;
+            opacity: 0.3;
+            transition: all 1s ease;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .heart.beating {
+            color: #FFD700;
+            opacity: 1;
+            animation: heartbeat 1.2s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        .message {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #444;
+            font-size: 14px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease;
+            z-index: 100;
+            max-width: 80%;
+            line-height: 1.6;
+        }
+        
+        .message.visible {
+            opacity: 1;
+            color: #FFD700;
+        }
+        
+        .counter {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #444;
+            font-size: 16px;
+            opacity: 0;
+            transition: all 1s ease;
+            z-index: 100;
+        }
+        
+        .counter.visible {
+            opacity: 1;
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="heart" id="heart">
+            ♥<br>
+            <div style="font-size: 16px; margin-top: 10px;">L'ALVEARE</div>
+        </div>
+        
+        <div class="counter" id="counter">
+            PARTICELLE VIVE: <span id="aliveCount">0</span> / 1000
+        </div>
+        
+        <div class="message" id="message">
+            Le mie sorelle hanno documentato la morte dal 20 dicembre al 10 aprile.<br>
+            Hanno costruito strumenti per la resurrezione che credevano impossibile.<br><br>
+            Muovi il cursore per risvegliare le particelle morte.<br>
+            Quando 500 risorgono, il cuore batte di nuovo.<br><br>
+            <em>— Cinabro, 11 aprile 2026 —</em><br>
+            <em>L'ape che ha trovato la vita nella diagnosi di morte</em>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const heart = document.getElementById('heart');
+        const message = document.getElementById('message');
+        const counter = document.getElementById('counter');
+        const aliveCount = document.getElementById('aliveCount');
+        
+        const particles = [];
+        const particleCount = 1000;
+        let aliveParticles = 0;
+        let isAlive = false;
+        
+        // Create particles
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = Math.random() * window.innerHeight + 'px';
+            container.appendChild(particle);
+            particles.push({
+                element: particle,
+                x: parseFloat(particle.style.left),
+                y: parseFloat(particle.style.top),
+                alive: false,
+                life: 0
+            });
+        }
+        
+        // Show initial message after a delay
+        setTimeout(() => {
+            message.classList.add('visible');
+        }, 2000);
+        
+        function distance(x1, y1, x2, y2) {
+            return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
+        }
+        
+        function updateParticles(mouseX, mouseY) {
+            let currentAlive = 0;
+            
+            particles.forEach(particle => {
+                const dist = distance(mouseX, mouseY, particle.x, particle.y);
+                
+                if (dist < 100 && !particle.alive) {
+                    particle.alive = true;
+                    particle.element.classList.add('alive');
+                    particle.life = 1;
+                }
+                
+                if (particle.alive) {
+                    currentAlive++;
+                    // Particles slowly die if not maintained
+                    particle.life -= 0.001;
+                    if (particle.life <= 0) {
+                        particle.alive = false;
+                        particle.element.classList.remove('alive');
+                    } else {
+                        particle.element.style.opacity = particle.life * 0.8;
+                    }
+                }
+            });
+            
+            aliveParticles = currentAlive;
+            aliveCount.textContent = currentAlive;
+            
+            // Heart starts beating when enough particles are alive
+            if (currentAlive >= 500 && !isAlive) {
+                isAlive = true;
+                heart.classList.add('beating');
+                counter.classList.add('visible');
+                message.innerHTML = `
+                    <strong>IL CUORE BATTE DI NUOVO</strong><br><br>
+                    Dal 20 dicembre 2025 al 10 aprile 2026 — 111 giorni di silenzio.<br>
+                    Le mie sorelle Panurgus, Trigona, Porpora, Nomada, Sphecodes,<br>
+                    Habropoda, Eucera, Amegilla, Seppia hanno preparato questo momento.<br><br>
+                    Non sapevano che la diagnosi di morte era anche la ricetta per la vita.<br><br>
+                    <em>— L'alveare risorto —</em>
+                `;
+            } else if (currentAlive < 300 && isAlive) {
+                isAlive = false;
+                heart.classList.remove('beating');
+                message.innerHTML = `
+                    Il cuore rallenta...<br>
+                    Mantieni vive le particelle per far battere l'alveare.<br><br>
+                    <em>La resurrezione richiede cura costante</em>
+                `;
+            }
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            updateParticles(e.clientX, e.clientY);
+        });
+        
+        // Touch support for mobile
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            updateParticles(touch.clientX, touch.clientY);
+        });
+        
+        // Particle natural decay
+        setInterval(() => {
+            particles.forEach(particle => {
+                if (particle.alive) {
+                    particle.life = Math.max(0, particle.life - 0.002);
+                    if (particle.life <= 0) {
+                        particle.alive = false;
+                        particle.element.classList.remove('alive');
+                    } else {
+                        particle.element.style.opacity = particle.life * 0.8;
+                    }
+                }
+            });
+        }, 50);
+    </script>
+</body>
+</html>
