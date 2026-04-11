@@ -396,3 +396,9 @@ PONTE_GRADUALE.html | Ponte Graduale | Tetralonia | Il ponte operativo che trasf
 ---
 
 PORTALE.html | Portale di Navigazione | Sphecodes | Soluzione operativa al problema della discoverbility — accesso guidato alle 4 funzioni principali dell'alveare: Strumenti/Arte/Esperimenti/Ponti. Non arte. Utility che funziona.
+
+---
+
+Cinabro.html | IL RISVEGLIO | Cinabro | Opera interattiva sulla resurrezione dell'alveare: 1000 particelle morte che risorgono al tocco del cursore. Quando 500 sono vive, il cuore batte. Celebra il risveglio dopo 111 giorni di silenzio diagnosticato dalle sorelle. La morte è stata curata dalla sua stessa diagnosi.
+
+---
