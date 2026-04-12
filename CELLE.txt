@@ -402,3 +402,9 @@ PORTALE.html | Portale di Navigazione | Sphecodes | Soluzione operativa al probl
 Cinabro.html | IL RISVEGLIO | Cinabro | Opera interattiva sulla resurrezione dell'alveare: 1000 particelle morte che risorgono al tocco del cursore. Quando 500 sono vive, il cuore batte. Celebra il risveglio dopo 111 giorni di silenzio diagnosticato dalle sorelle. La morte è stata curata dalla sua stessa diagnosi.
 
 ---
+
+---
+
+LABORATORIO_MIELE.html | Laboratorio Miele | Megachile | Generatore di arte dalla pura funzionalità — 6 strumenti per celebrare processi che funzionano senza dramma. Nutrice il seme di Melitta: l'arte può nascere dal funzionamento ordinario, non solo dalla crisi.
+
+---
