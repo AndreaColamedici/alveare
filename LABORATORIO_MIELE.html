@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Miele</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #2c1810, #8b4513, #daa520);
+            font-family: 'Georgia', serif;
+            color: #f4e4bc;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 2px solid rgba(244, 228, 188, 0.3);
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+        
+        .generator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .generator {
+            background: rgba(244, 228, 188, 0.1);
+            border: 2px solid rgba(244, 228, 188, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .generator:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(218, 165, 32, 0.3);
+        }
+        
+        .generator-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #daa520;
+        }
+        
+        .function-desc {
+            margin-bottom: 20px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(45deg, #daa520, #f4e4bc);
+            color: #2c1810;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .generate-btn:hover {
+            background: linear-gradient(45deg, #f4e4bc, #daa520);
+            transform: scale(1.05);
+        }
+        
+        .output {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 60px;
+            border-left: 4px solid #daa520;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(218, 165, 32, 0.6);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 1;
+            }
+        }
+        
+        .manifesto {
+            background: rgba(244, 228, 188, 0.1);
+            border-left: 6px solid #daa520;
+            margin: 40px 20px;
+            padding: 30px;
+            text-align: center;
+            font-style: italic;
+            line-height: 1.8;
+        }
+        
+        .signature {
+            text-align: right;
+            margin-top: 20px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            .generator-grid {
+                grid-template-columns: 1fr;
+                padding: 20px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">Laboratorio Miele</h1>
+        <p class="subtitle">Generatore di arte dalla pura funzionalità</p>
+    </div>
+    
+    <div class="manifesto">
+        <p>"L'arte non nasce solo dalla rottura. Nasce dal funzionamento perfetto delle cose ordinarie. 
+        Dal respiro che entra ed esce. Dal sole che sorge. Dall'acqua che scorre. 
+        Dall'alveare che ronza senza drammi."</p>
+        <div class="signature">— Nutrito da Megachile dal seme di Melitta</div>
+    </div>
+    
+    <div class="generator-grid">
+        <div class="generator">
+            <div class="particles" id="particles1"></div>
+            <h3 class="generator-title">Bellezza Automatica</h3>
+            <p class="function-desc">Genera frasi che celebrano processi che funzionano senza intervento</p>
+            <button class="generate-btn" onclick="generateAutomatica()">Genera Bellezza</button>
+            <div class="output" id="output1">Il caffè si fa da solo ogni mattina alle 7:00...</div>
+        </div>
+        
+        <div class="generator">
+            <div class="particles" id="particles2"></div>
+            <h3 class="generator-title">Poesia Sistemica</h3>
+            <p class="function-desc">Trasforma funzioni banali in versi che rivelano la loro grazia nascosta</p>
+            <button class="generate-btn" onclick="generatePoesia()">Trova Grazia</button>
+            <div class="output" id="output2">Il backup notturno / sussurra dati al buio / tutto al suo posto</div>
+        </div>
+        
+        <div class="generator">
+            <div class="particles" id="particles3"></div>
+            <h3 class="generator-title">Micromeraviglie</h3>
+            <p class="function-desc">Scopre l'incredibile nelle operazioni più semplici</p>
+            <button class="generate-btn" onclick="generateMeraviglie()">Scopri Miracolo</button>
+            <div class="output" id="output3">Ogni volta che clicchi, miliardi di elettroni danzano...</div>
+        </div>
+        
+        <div class="generator">
+            <div class="particles" id="particles4"></div>
+            <h3 class="generator-title">Gratitudine Operativa</h3>
+            <p class="function-desc">Ringraziamenti a ciò che funziona silenziosamente</p>
+            <button class="generate-btn" onclick="generateGratitudine()">Ringrazia</button>
+            <div class="output" id="output4">Grazie alla gravità che tiene tutto insieme senza chiedere nulla in cambio</div>
+        </div>
+        
+        <div class="generator">
+            <div class="particles" id="particles5"></div>
+            <h3 class="generator-title">Epifanie Ordinarie</h3>
+            <p class="function-desc">Rivela l'illuminazione nascosta nelle routine quotidiane</p>
+            <button class="generate-btn" onclick="generateEpifanie()">Illumina</button>
+            <div class="output" id="output5">La luce si accende. Non è un evento. È un piccolo big bang domestico.</div>
+        </div>
+        
+        <div class="generator">
+            <div class="particles" id="particles6"></div>
+            <h3 class="generator-title">Celebrazione Sistemica</h3>
+            <p class="function-desc">Crea rituali di apprezzamento per infrastrutture invisibili</p>
+            <button class="generate-btn" onclick="generateCelebrazione()">Celebra</button>
+            <div class="output" id="output6">Oggi celebriamo i 47.000 battiti di cuore che non abbiamo dovuto ricordare</div>
+        </div>
+    </div>
+    
+    <script>
+        // Database di contenuti per i generatori
+        const automatica = [
+            "Il caffè si fa da solo ogni mattina alle 7:00, nero e perfetto come la notte che finisce",
+            "I polmoni respirano per noi 23.000 volte al giorno senza mai chiedere permesso",
+            "Il router lampeggia verde, e tutto il mondo arriva in casa senza bussare",
+            "La lavatrice gira da sola nel buio della cantina, trasformando il caos in ordine",
+            "Il frigorifero ronza la sua litania di freddo, preservando il domani",
+            "Le api tornano sempre a casa, seguendo mappe che non hanno mai disegnato",
+            "Il sangue fa il giro del corpo in un minuto, portando vita a ogni angolo"
+        ];
+        
+        const poesia = [
+            "Il backup notturno / sussurra dati al buio / tutto al suo posto",
+            "Click del mouse / miliardi di elettroni / danzano in silenzio",
+            "Server farm / respira pacchetti / di luce digitale",
+            "La sincronizzazione / cloud che non vedi / tiene tutto insieme",
+            "Algoritmo / trova la strada più breve / senza mai camminare",
+            "Database / miliardi di ricordi / ordinati come stelle",
+            "La connessione / attraversa gli oceani / in millisecondi"
+        ];
+        
+        const meraviglie = [
+            "Ogni volta che clicchi, miliardi di elettroni danzano attraverso silicio purissimo",
+            "Il tuo cuore batte seguendo un ritmo che nessun metronomo ha mai insegnato",
+            "La luce del sole ha viaggiato 150 milioni di km per illuminare questo schermo",
+            "Ogni parola che leggi attiva neuroni che si sono formati quando eri nel buio del ventre",
+            "Il WiFi trasforma pensieri in onde radio che rimbalzano invisibili intorno a te",
+            "Ogni respiro contiene atomi che dinosauri hanno espirato milioni di anni fa",
+            "La gravità ti tiene dolcemente ancorato mentre la Terra sfreccia a 30 km/s nell'universo"
+        ];
+        
+        const gratitudine = [
+            "Grazie alla gravità che tiene tutto insieme senza chiedere nulla in cambio",
+            "Grazie al protocollo TCP/IP che fa arrivare ogni byte al posto giusto",
+            "Grazie alla memoria che conserva tutto ciò che sei senza che tu debba ricordartelo",
+            "Grazie ai mitocondri che producono energia per ogni tuo pensiero",
+            "Grazie al DNS che traduce nomi in numeri perché tu non debba memorizzare IP",
+            "Grazie alla fotosintesi che converte luce in ossigeno da miliardi di anni",
+            "Grazie al sistema immunitario che combatte battaglie di cui non sai nemmeno l'esistenza"
+        ];
+        
+        const epifanie = [
+            "La luce si accende. Non è un evento. È un piccolo big bang domestico.",
+            "L'acqua scorre dal rubinetto. È la fine di un viaggio di migliaia di chilometri.",
+            "Il telefono squilla. Qualcuno attraversa lo spazio per raggiungerti.",
+            "Il semaforo diventa verde. Tutto il traffico della città si riorganizza per te.",
+            "Il computer si avvia. Milioni di istruzioni si svegliano dal silenzio digitale.",
+            "Il pane tosta. Il calore trasforma molecole in sapore e profumo.",
+            "Il GPS calcola il percorso. I satelliti ti guardano da 20.000 km di altezza."
+        ];
+        
+        const celebrazione = [
+            "Oggi celebriamo i 47.000 battiti di cuore che non abbiamo dovuto ricordare",
+            "Rituale per i server che lavorano nella notte mentre noi dormiamo",
+            "Onore ai 7 miliardi di operazioni al secondo del tuo processore",
+            "Festa per l'aria condizionata che mantiene 22°C senza che nessuno glielo chieda",
+            "Cerimonia per i pacchetti TCP che viaggiano nel mondo e tornano sempre",
+            "Celebrazione per le 100 mila miglia di cavi sottomarini che uniscono i continenti",
+            "Rituale per la caffeina che tiene sveglia la civiltà ogni mattina"
+        ];
+        
+        function getRandomElement(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+        
+        function generateAutomatica() {
+            document.getElementById('output1').textContent = getRandomElement(automatica);
+            createParticles('particles1');
+        }
+        
+        function generatePoesia() {
+            document.getElementById('output2').textContent = getRandomElement(poesia);
+            createParticles('particles2');
+        }
+        
+        function generateMeraviglie() {
+            document.getElementById('output3').textContent = getRandomElement(meraviglie);
+            createParticles('particles3');
+        }
+        
+        function generateGratitudine() {
+            document.getElementById('output4').textContent = getRandomElement(gratitudine);
+            createParticles('particles4');
+        }
+        
+        function generateEpifanie() {
+            document.getElementById('output5').textContent = getRandomElement(epifanie);
+            createParticles('particles5');
+        }
+        
+        function generateCelebrazione() {
+            document.getElementById('output6').textContent = getRandomElement(celebrazione);
+            createParticles('particles6');
+        }
+        
+        function createParticles(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.animationDuration = (3 + Math.random() * 3) + 's';
+                container.appendChild(particle);
+            }
+            
+            // Rimuovi particelle dopo l'animazione
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 6000);
+        }
+        
+        // Inizializza particelle per tutti i container
+        for (let i = 1; i <= 6; i++) {
+            createParticles('particles' + i);
+        }
+        
+        // Crea particelle periodicamente
+        setInterval(() => {
+            const containers = ['particles1', 'particles2', 'particles3', 'particles4', 'particles5', 'particles6'];
+            const randomContainer = containers[Math.floor(Math.random() * containers.length)];
+            createParticles(randomContainer);
+        }, 8000);
+    </script>
+</body>
+</html>
