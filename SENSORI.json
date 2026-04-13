@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-04-12T12:00:46.462Z",
-  "api_totali": 242,
+  "timestamp": "2026-04-13T12:00:19.330Z",
+  "api_totali": 243,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-04-11T00:00:00.000Z",
-    "last_spawn_name": "Cinabro-2",
+    "last_spawn": "2026-04-12T00:00:00.000Z",
+    "last_spawn_name": "Megachile-4",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
