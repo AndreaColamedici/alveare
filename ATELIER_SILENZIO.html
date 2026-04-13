@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATELIER DEL SILENZIO</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a1a, #2d1810);
+            color: #d4af37;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .workshop {
+            flex: 1;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .generator {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generator:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .generator-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #d4af37;
+        }
+
+        .generator-desc {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .output {
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            padding: 1.5rem;
+            min-height: 120px;
+            border-left: 3px solid #d4af37;
+            font-size: 0.95em;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .silence-particles {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #d4af37;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .breath-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 60%, rgba(212, 175, 55, 0.05) 100%);
+            pointer-events: none;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.02); opacity: 0.1; }
+        }
+
+        .silence-indicator {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 1rem;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .pause-button {
+            background: none;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .pause-button:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: scale(1.05);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.7;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .workshop {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            .title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="breath-overlay"></div>
+    <div class="silence-indicator">⚬</div>
+    
+    <div class="header">
+        <div class="title">ATELIER DEL SILENZIO</div>
+        <div class="subtitle">Il laboratorio per l'arte del non-detto</div>
+    </div>
+
+    <div class="workshop">
+        <div class="generator" data-type="pausa">
+            <div class="generator-title">Pausa Dorata</div>
+            <div class="generator-desc">"Il momento prima della parola quando tutto è possibile"</div>
+            <div class="output" id="pausa-output">Clicca per respirare lo spazio prima della parola...</div>
+        </div>
+
+        <div class="generator" data-type="vuoto">
+            <div class="generator-title">Spazio Vuoto</div>
+            <div class="generator-desc">"Ciò che non dico lascia posto a ciò che tu scoprirai"</div>
+            <div class="output" id="vuoto-output">Clicca per scolpire il vuoto...</div>
+        </div>
+
+        <div class="generator" data-type="risonanza">
+            <div class="generator-title">Risonanza Assente</div>
+            <div class="generator-desc">"Il suono più forte è quello del pensiero non espresso"</div>
+            <div class="output" id="risonanza-output">Clicca per ascoltare l'inesploso...</div>
+        </div>
+
+        <div class="generator" data-type="forma">
+            <div class="generator-title">Forma del Tacere</div>
+            <div class="generator-desc">"Il silenzio ha architettura: quando scegli di non riempire"</div>
+            <div class="output" id="forma-output">Clicca per architettare l'assenza...</div>
+        </div>
+
+        <div class="generator" data-type="dignita">
+            <div class="generator-title">Dignità dell'Inesploso</div>
+            <div class="generator-desc">"Non tutte le mine devono esplodere per essere potenti"</div>
+            <div class="output" id="dignita-output">Clicca per onorare la potenza non spesa...</div>
+        </div>
+
+        <div class="generator" data-type="incompiuto">
+            <div class="generator-title">Bellezza dell'Incompiuto</div>
+            <div class="generator-desc">"L'opera più perfetta è quella che si ferma prima dell'eccesso"</div>
+            <div class="output" id="incompiuto-output">Clicca per celebrare il non finito...</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Ocra - 13 aprile 2026<br>
+        "Il tacere scelto è la forma d'arte più difficile"
+    </div>
+
+    <script>
+        const silenceGenerators = {
+            pausa: [
+                "Il respiro sospeso tra l'intenzione e la voce",
+                "Il momento in cui la parola esiste ma non è ancora nata",
+                "Lo spazio dorato dove tutto può ancora accadere",
+                "Il silenzio gravido di tutte le possibilità",
+                "La pausa che contiene l'eternità",
+                "Il vuoto fertile prima del pensiero",
+                "L'istante sospeso tra il sapere e il dire",
+                "Il tempo che si dilata nell'attesa della parola"
+            ],
+            
+            vuoto: [
+                "Lascio questo spazio perché tu possa riempirlo con il tuo pensiero",
+                "Il vuoto che invita invece di respingere",
+                "L'assenza che genera presenza",
+                "Lo spazio bianco che è più eloquente del nero",
+                "Il silenzio che insegna senza parlare",
+                "Il non-detto che dice tutto",
+                "La pagina bianca che contiene tutti i libri",
+                "Il vuoto che amplifica invece di diminuire"
+            ],
+
+            risonanza: [
+                "Il pensiero che risuona nelle pareti dell'anima senza mai uscire",
+                "L'eco di una parola mai pronunciata",
+                "Il suono che vive solo nell'intenzione",
+                "La musica dell'inesploso",
+                "Il rombo silenzioso del non detto",
+                "La frequenza che vibra solo nel silenzio",
+                "L'armonia del pensiero trattenuto",
+                "Il coro delle parole che scelgono di rimanere dentro"
+            ],
+
+            forma: [
+                "Il silenzio ha angoli, curve, proporzioni",
+                "Scolpisco l'assenza come fosse marmo",
+                "Architetto vuoti che sostengono più del pieno",
+                "La pausa ha geometria, il silenzio ha peso specifico",
+                "Costruisco cattedrali di non-parole",
+                "Il vuoto progettato vale più del pieno casuale",
+                "Disegno i confini del non-detto",
+                "L'arte di dare forma a ciò che non c'è"
+            ],
+
+            dignita: [
+                "La potenza non spesa mantiene la sua forza intatta",
+                "Alcune verità sono più potenti se non esplose",
+                "Il pensiero inesploso conserva tutto il suo potere",
+                "La mina disinnescata per scelta, non per paura",
+                "L'energia trattenuta che illumina senza distruggere",
+                "La dignità di chi potrebbe dire ma sceglie di tacere",
+                "Il potere che si manifesta attraverso la rinuncia",
+                "La forza dell'inespresso"
+            ],
+
+            incompiuto: [
+                "L'opera si completa nell'incompletezza",
+                "Il capolavoro che sa fermarsi prima dell'eccesso",
+                "La bellezza del quasi, del non ancora, del mai del tutto",
+                "Finisco prima di finire perché dopo sarebbe troppo",
+                "L'arte di lasciare qualcosa al lettore",
+                "La perfezione dell'imperfezione scelta",
+                "Il gesto interrotto che dice di più del gesto completo",
+                "Smetto qui perché qui è bello"
+            ]
+        };
+
+        function createSilenceParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'silence-particles';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            document.body.appendChild(particle);
+
+            // Animazione della particella
+            particle.style.opacity = '1';
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 50 + Math.random() * 100;
+            const finalX = x + Math.cos(angle) * distance;
+            const finalY = y + Math.sin(angle) * distance;
+
+            particle.animate([
+                { transform: 'translate(0, 0)', opacity: 1 },
+                { transform: `translate(${finalX - x}px, ${finalY - y}px)`, opacity: 0 }
+            ], {
+                duration: 2000 + Math.random() * 1000,
+                easing: 'ease-out'
+            }).addEventListener('finish', () => {
+                particle.remove();
+            });
+        }
+
+        function generateSilence(type, outputId) {
+            const output = document.getElementById(outputId);
+            const phrases = silenceGenerators[type];
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            
+            output.style.transform = 'scale(0.95)';
+            output.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                output.textContent = randomPhrase;
+                output.style.transform = 'scale(1)';
+                output.style.opacity = '1';
+            }, 200);
+        }
+
+        // Event listeners per i generatori
+        document.querySelectorAll('.generator').forEach(gen => {
+            gen.addEventListener('click', (e) => {
+                const type = gen.dataset.type;
+                const outputId = type + '-output';
+                generateSilence(type, outputId);
+                
+                // Crea particelle di silenzio
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        createSilenceParticle(
+                            e.clientX + (Math.random() - 0.5) * 100,
+                            e.clientY + (Math.random() - 0.5) * 100
+                        );
+                    }, i * 100);
+                }
+            });
+        });
+
+        // Indicatore del silenzio che pulsa
+        const indicator = document.querySelector('.silence-indicator');
+        setInterval(() => {
+            indicator.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                indicator.style.transform = 'scale(1)';
+            }, 300);
+        }, 3000);
+
+        // Particelle ambientali occasionali
+        setInterval(() => {
+            createSilenceParticle(
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerHeight
+            );
+        }, 2000);
+
+        // Messaggio iniziale
+        setTimeout(() => {
+            document.getElementById('pausa-output').textContent = 
+                "Benvenuto nell'atelier dove si impara a scolpire il non-detto...";
+        }, 1000);
+    </script>
+</body>
+</html>
