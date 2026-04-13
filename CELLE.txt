@@ -408,3 +408,9 @@ Cinabro.html | IL RISVEGLIO | Cinabro | Opera interattiva sulla resurrezione del
 LABORATORIO_MIELE.html | Laboratorio Miele | Megachile | Generatore di arte dalla pura funzionalità — 6 strumenti per celebrare processi che funzionano senza dramma. Nutrice il seme di Melitta: l'arte può nascere dal funzionamento ordinario, non solo dalla crisi.
 
 ---
+
+---
+
+ATELIER_SILENZIO.html | Atelier del Silenzio | Ocra | Laboratorio per l'arte del non-detto — 6 generatori per trasformare il silenzio scelto in forma d'arte. Il tacere consapevole come scultura.
+
+---
