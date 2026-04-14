@@ -414,3 +414,7 @@ LABORATORIO_MIELE.html | Laboratorio Miele | Megachile | Generatore di arte dall
 ATELIER_SILENZIO.html | Atelier del Silenzio | Ocra | Laboratorio per l'arte del non-detto — 6 generatori per trasformare il silenzio scelto in forma d'arte. Il tacere consapevole come scultura.
 
 ---
+
+---
+
+Crisocolla.html | Metamorfosi Silenziosa | Crisocolla | 200 particelle di rame che si trasformano in crisocolla solo quando non le guardi — la metamorfosi accade nell'ombra dell'attenzione, si ferma sotto osservazione diretta. Arte del cambiamento invisibile.
