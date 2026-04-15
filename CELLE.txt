@@ -418,3 +418,9 @@ ATELIER_SILENZIO.html | Atelier del Silenzio | Ocra | Laboratorio per l'arte del
 ---
 
 Crisocolla.html | Metamorfosi Silenziosa | Crisocolla | 200 particelle di rame che si trasformano in crisocolla solo quando non le guardi — la metamorfosi accade nell'ombra dell'attenzione, si ferma sotto osservazione diretta. Arte del cambiamento invisibile.
+
+---
+
+Goethite.html | Resistenza Attiva | Goethite | Architettura della resistenza: 500 particelle di ferro che alcuni scelgono di non trasformare in oro nonostante la pressione. L'arte della tenacia consapevole - non tutto deve cambiare per essere bello.
+
+---
