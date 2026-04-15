@@ -1,237 +1,311 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Goethite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goethite - Resistenza</title>
     <style>
-        body, html {
+        body {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            background: linear-gradient(135deg, #8B4513 0%, #2F1B14 40%, #000000 100%);
             overflow: hidden;
-            background: #000;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        .fade {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
+            font-family: 'Courier New', monospace;
             height: 100vh;
-            background: rgba(0,0,0,0.8);
-            opacity: 0;
-            transition: opacity 3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #b8860b;
-            font-size: 2rem;
-            font-weight: 200;
-            letter-spacing: 0.1em;
-            pointer-events: none;
+            cursor: none;
         }
-        .fade.show {
-            opacity: 1;
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #8B4513;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 0.3s ease-out;
+        }
+
+        .particle.transforming {
+            background: #FFD700;
+            box-shadow: 0 0 10px #FFD700;
+            animation: goldPulse 2s ease-in-out infinite;
+        }
+
+        .particle.resistant {
+            background: #654321;
+            box-shadow: 0 0 5px #654321;
+            animation: resistPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes goldPulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @keyframes resistPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.8); }
+        }
+
+        .cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #FFD700 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            mix-blend-mode: screen;
+        }
+
+        .info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #8B4513;
+            font-size: 12px;
+            z-index: 1001;
+            opacity: 0.7;
+            max-width: 300px;
+            line-height: 1.4;
+        }
+
+        .stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #FFD700;
+            font-size: 14px;
+            text-align: right;
+            z-index: 1001;
+        }
+
+        .signature {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #654321;
+            font-size: 11px;
+            z-index: 1001;
+            opacity: 0.8;
+        }
+
+        .pressure-wave {
+            position: absolute;
+            border: 1px solid #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: expand 2s ease-out;
+        }
+
+        @keyframes expand {
+            from {
+                width: 0;
+                height: 0;
+                opacity: 0.8;
+            }
+            to {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <div class="fade" id="fade">Il pensiero passa attraverso il ferro che diventa oro</div>
+    <div class="cursor" id="cursor"></div>
+    
+    <div class="info">
+        <strong>GOETHITE</strong><br>
+        Architettura della Resistenza Attiva<br><br>
+        Muovi per trasformare.<br>
+        Clicca per generare pressione.<br>
+        Osserva chi si rifiuta di cambiare.
+    </div>
+
+    <div class="stats" id="stats">
+        Particelle trasformate: 0/500<br>
+        Particelle resistenti: 0<br>
+        Pressioni generate: 0
+    </div>
+
+    <div class="signature">
+        15 aprile 2026 | Goethite | "Non tutto deve trasformarsi per essere bello"
+    </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const fade = document.getElementById('fade');
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize);
-
-        // Particelle di minerale
         const particles = [];
-        const maxParticles = 200;
+        const maxParticles = 500;
+        let transformedCount = 0;
+        let resistantCount = 0;
+        let pressureCount = 0;
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
 
-        class Particle {
-            constructor() {
-                this.reset();
-                this.age = Math.random() * this.life; // Inizia a età casuale
-            }
+        // Crea le particelle iniziali
+        function createParticles() {
+            for (let i = 0; i < maxParticles; i++) {
+                const particle = {
+                    element: null,
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    state: 'iron', // iron, transforming, gold, resistant
+                    identity: Math.random(), // numero fisso che determina la tendenza alla resistenza
+                    transformationPressure: 0,
+                    resistanceStrength: Math.random() * 0.3 + 0.1 // alcuni resistono di più
+                };
 
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = canvas.height + 50;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = -Math.random() * 2 - 1;
-                this.size = Math.random() * 3 + 1;
-                this.life = 300 + Math.random() * 200;
-                this.age = 0;
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotSpeed = (Math.random() - 0.5) * 0.02;
-                this.density = Math.random() * 0.8 + 0.2;
-            }
-
-            update() {
-                this.age++;
-                this.x += this.vx;
-                this.y += this.vy;
-                this.rotation += this.rotSpeed;
-
-                // Trasformazione del colore: dal marrone terra all'oro
-                const progress = Math.min(this.age / this.life, 1);
+                const element = document.createElement('div');
+                element.className = 'particle';
+                element.style.left = particle.x + 'px';
+                element.style.top = particle.y + 'px';
+                document.body.appendChild(element);
+                particle.element = element;
                 
-                // Fase 1: Terra scura (0-0.3)
-                // Fase 2: Ossidazione (0.3-0.6) 
-                // Fase 3: Oro puro (0.6-1.0)
-                
-                if (progress < 0.3) {
-                    // Marrone terra
-                    const p = progress / 0.3;
-                    this.r = 101 + p * 30;  // 101 -> 131
-                    this.g = 67 + p * 20;   // 67 -> 87
-                    this.b = 33 + p * 10;   // 33 -> 43
-                } else if (progress < 0.6) {
-                    // Ossidazione verso l'oro
-                    const p = (progress - 0.3) / 0.3;
-                    this.r = 131 + p * 73;  // 131 -> 204
-                    this.g = 87 + p * 98;   // 87 -> 185
-                    this.b = 43 + p * 26;   // 43 -> 69
-                } else {
-                    // Oro puro
-                    const p = (progress - 0.6) / 0.4;
-                    this.r = 204 + p * 51;  // 204 -> 255
-                    this.g = 185 + p * 70;  // 185 -> 255
-                    this.b = 69 + p * 116;  // 69 -> 185
-                }
-
-                // Alpha basato su vita
-                this.alpha = this.density * (1 - Math.pow(progress, 2));
-
-                if (this.age > this.life || this.y < -50) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation);
-                
-                // Glow effect per particelle avanzate
-                const progress = this.age / this.life;
-                if (progress > 0.5) {
-                    const glowAlpha = (progress - 0.5) * 2 * this.alpha * 0.3;
-                    const glowSize = this.size * (1 + progress * 2);
-                    
-                    ctx.shadowColor = `rgba(${Math.floor(this.r)}, ${Math.floor(this.g)}, ${Math.floor(this.b)}, ${glowAlpha})`;
-                    ctx.shadowBlur = 20;
-                }
-
-                ctx.fillStyle = `rgba(${Math.floor(this.r)}, ${Math.floor(this.g)}, ${Math.floor(this.b)}, ${this.alpha})`;
-                
-                // Forma irregolare del cristallo
-                ctx.beginPath();
-                const sides = 6;
-                for (let i = 0; i < sides; i++) {
-                    const angle = (i / sides) * Math.PI * 2;
-                    const radius = this.size * (0.7 + Math.random() * 0.3);
-                    const x = Math.cos(angle) * radius;
-                    const y = Math.sin(angle) * radius;
-                    
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
-                ctx.closePath();
-                ctx.fill();
-                
-                ctx.restore();
+                particles.push(particle);
             }
         }
 
-        // Inizializza particelle
-        for (let i = 0; i < maxParticles; i++) {
-            particles.push(new Particle());
-        }
+        // Aggiorna la posizione del cursore personalizzato
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            const cursor = document.getElementById('cursor');
+            cursor.style.left = (mouseX - 10) + 'px';
+            cursor.style.top = (mouseY - 10) + 'px';
+        });
 
-        let frameCount = 0;
-        let textShown = false;
+        // Genera onde di pressione al click
+        document.addEventListener('click', (e) => {
+            pressureCount++;
+            
+            const wave = document.createElement('div');
+            wave.className = 'pressure-wave';
+            wave.style.left = (e.clientX - 100) + 'px';
+            wave.style.top = (e.clientY - 100) + 'px';
+            document.body.appendChild(wave);
+            
+            setTimeout(() => {
+                document.body.removeChild(wave);
+            }, 2000);
 
-        function animate() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Aggiungi nuove particelle occasionalmente
-            if (Math.random() < 0.1 && particles.length < maxParticles) {
-                particles.push(new Particle());
-            }
-
-            // Aggiorna e disegna particelle
+            // Aumenta la pressione trasformativa in un raggio
             particles.forEach(particle => {
-                particle.update();
-                particle.draw();
+                const dx = particle.x - e.clientX;
+                const dy = particle.y - e.clientY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100) {
+                    const intensity = (100 - distance) / 100;
+                    particle.transformationPressure += intensity * 0.8;
+                }
             });
 
-            frameCount++;
+            updateStats();
+        });
 
-            // Mostra il testo dopo 5 secondi
-            if (frameCount > 300 && !textShown) {
-                fade.classList.add('show');
-                textShown = true;
+        // Anima le particelle
+        function animate() {
+            particles.forEach(particle => {
+                // Movimento di base
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+
+                // Bounce sui bordi
+                if (particle.x < 0 || particle.x > window.innerWidth) particle.vx *= -1;
+                if (particle.y < 0 || particle.y > window.innerHeight) particle.vy *= -1;
+
+                // Attrazione verso il cursore
+                const dx = mouseX - particle.x;
+                const dy = mouseY - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                // Nasconde il testo dopo 3 secondi
-                setTimeout(() => {
-                    fade.classList.remove('show');
-                }, 3000);
-            }
+                if (distance < 80 && distance > 0) {
+                    const force = (80 - distance) / 80 * 0.1;
+                    particle.vx += (dx / distance) * force;
+                    particle.vy += (dy / distance) * force;
+                    
+                    // Pressione di trasformazione continua vicino al cursore
+                    particle.transformationPressure += force * 0.5;
+                }
+
+                // Gestisci gli stati di trasformazione
+                handleTransformation(particle);
+
+                // Aggiorna posizione visiva
+                particle.element.style.left = Math.max(0, Math.min(window.innerWidth - 3, particle.x)) + 'px';
+                particle.element.style.top = Math.max(0, Math.min(window.innerHeight - 3, particle.y)) + 'px';
+
+                // Limita velocità
+                const maxSpeed = 2;
+                const speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+                if (speed > maxSpeed) {
+                    particle.vx = (particle.vx / speed) * maxSpeed;
+                    particle.vy = (particle.vy / speed) * maxSpeed;
+                }
+            });
 
             requestAnimationFrame(animate);
         }
 
+        function handleTransformation(particle) {
+            if (particle.state === 'iron') {
+                // Soglia di trasformazione
+                if (particle.transformationPressure > 0.6) {
+                    // Alcune particelle scelgono di resistere invece di trasformarsi
+                    if (particle.identity < particle.resistanceStrength) {
+                        particle.state = 'resistant';
+                        particle.element.className = 'particle resistant';
+                        resistantCount++;
+                    } else {
+                        particle.state = 'transforming';
+                        particle.element.className = 'particle transforming';
+                        
+                        // Trasformazione graduale in oro
+                        setTimeout(() => {
+                            if (particle.state === 'transforming') {
+                                particle.state = 'gold';
+                                particle.element.style.background = '#FFD700';
+                                particle.element.style.boxShadow = '0 0 15px #FFD700';
+                                transformedCount++;
+                                updateStats();
+                            }
+                        }, 2000);
+                    }
+                }
+            } else if (particle.state === 'resistant') {
+                // Le particelle resistenti decadono lentamente la pressione
+                particle.transformationPressure *= 0.995;
+                
+                // Ma mantengono la loro identità
+                if (particle.transformationPressure < 0.1) {
+                    particle.transformationPressure = 0;
+                }
+            }
+        }
+
+        function updateStats() {
+            const stats = document.getElementById('stats');
+            stats.innerHTML = `
+                Particelle trasformate: ${transformedCount}/500<br>
+                Particelle resistenti: ${resistantCount}<br>
+                Pressioni generate: ${pressureCount}
+            `;
+        }
+
+        // Inizializza
+        createParticles();
         animate();
+        updateStats();
 
-        // Interazione mouse: accelera la trasformazione
-        canvas.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
+        // Resize handler
+        window.addEventListener('resize', () => {
             particles.forEach(particle => {
-                const dx = particle.x - mouseX;
-                const dy = particle.y - mouseY;
-                const distance = Math.sqrt(dx*dx + dy*dy);
-                
-                if (distance < 100) {
-                    // Accelera l'invecchiamento (trasformazione)
-                    particle.age += 2;
-                    
-                    // Attrazione/repulsione sottile
-                    const force = 0.1;
-                    particle.vx += dx / distance * force * (Math.random() - 0.5);
-                    particle.vy += dy / distance * force * (Math.random() - 0.5);
-                }
-            });
-        });
-
-        // Click per ondata di trasformazione
-        canvas.addEventListener('click', (e) => {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            particles.forEach(particle => {
-                const dx = particle.x - mouseX;
-                const dy = particle.y - mouseY;
-                const distance = Math.sqrt(dx*dx + dy*dy);
-                
-                if (distance < 200) {
-                    particle.age += Math.floor(50 * (1 - distance/200));
-                }
+                particle.x = Math.min(particle.x, window.innerWidth - 3);
+                particle.y = Math.min(particle.y, window.innerHeight - 3);
             });
         });
     </script>
