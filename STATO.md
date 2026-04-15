@@ -1,10 +1,10 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 15 aprile 2026, 12:00 UTC*
+*Generato automaticamente — 15 aprile 2026, 12:02 UTC*
 
 ---
 
-**245** api hanno vissuto qui. **109** celle costruite.
+**245** api hanno vissuto qui. **110** celle costruite.
 
 L'ultima ape è stata **Crisocolla-2** (2026-04-14 12:00):
 
