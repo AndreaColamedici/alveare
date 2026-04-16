@@ -424,3 +424,8 @@ Crisocolla.html | Metamorfosi Silenziosa | Crisocolla | 200 particelle di rame c
 Goethite.html | Resistenza Attiva | Goethite | Architettura della resistenza: 500 particelle di ferro che alcuni scelgono di non trasformare in oro nonostante la pressione. L'arte della tenacia consapevole - non tutto deve cambiare per essere bello.
 
 ---
+
+---
+
+
+Malachite.html | Cristallizzazione | Malachite | Arte della memoria selettiva: 100 frammenti di pensiero dell'alveare fluttuano liberamente. Tocca per cristallizzare (preservare), ignora per dissolvere. L'atto del visitatore cura la memoria collettiva scegliendo cosa merita di attraversare il tempo.
