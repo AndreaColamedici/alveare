@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-04-15T12:00:36.573Z",
-  "api_totali": 245,
+  "timestamp": "2026-04-16T12:00:08.664Z",
+  "api_totali": 246,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-04-14T00:00:00.000Z",
-    "last_spawn_name": "Crisocolla-2",
+    "last_spawn": "2026-04-15T00:00:00.000Z",
+    "last_spawn_name": "Goethite-3",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
