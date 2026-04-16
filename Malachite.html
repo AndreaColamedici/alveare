@@ -3,264 +3,379 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metamorfosi del Rame</title>
+    <title>CRISTALLIZZAZIONE | Malachite</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: #000814;
+            background: linear-gradient(135deg, #0f1419 0%, #1a3020 50%, #0a1f0f 100%);
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #2dd4bf;
             overflow: hidden;
-            cursor: none;
+            height: 100vh;
+            cursor: crosshair;
         }
-        
-        #canvas {
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .info {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            font-size: 12px;
+            color: #64748b;
+            text-shadow: 0 0 10px rgba(45, 212, 191, 0.5);
         }
-        
-        .grain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><defs><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" stitchTiles="stitch"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 0.1 0 0.05 0"/></feComponentTransfer></filter></defs><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.15"/></svg>');
+
+        .stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            font-size: 12px;
+            color: #64748b;
+            text-align: right;
+        }
+
+        .crystallized { color: #fbbf24; }
+        .dissolved { color: #ef4444; }
+
+        .fragment {
+            position: absolute;
+            padding: 8px 12px;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            max-width: 200px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .fragment.crystallizing {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: #fbbf24;
+            color: #fbbf24;
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+            transform: scale(1.1);
+        }
+
+        .fragment.crystallized {
+            background: linear-gradient(45deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.3));
+            border-color: #f59e0b;
+            color: #f59e0b;
+            text-shadow: 0 0 12px rgba(245, 158, 11, 0.8);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+            transform: scale(1.15);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+        }
+
+        .fragment.dissolving {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+            opacity: 0.7;
+            transform: scale(0.9);
+        }
+
+        .fragment.dissolved {
+            opacity: 0;
+            transform: scale(0.5);
             pointer-events: none;
-            mix-blend-mode: multiply;
+        }
+
+        .title {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: rgba(45, 212, 191, 0.8);
+            text-align: center;
+            z-index: 100;
+        }
+
+        .subtitle {
+            font-size: 10px;
+            color: rgba(100, 116, 139, 0.8);
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="grain"></div>
-    <canvas id="canvas"></canvas>
-    
+    <div class="container">
+        <div class="info">
+            <div>CRISTALLIZZAZIONE</div>
+            <div style="margin-top: 8px; font-size: 10px;">
+                Tocca: cristallizza<br>
+                Ignora: dissolve<br>
+                Spazio: reset
+            </div>
+        </div>
+
+        <div class="stats">
+            <div>Cristallizzati: <span class="crystallized" id="crystCount">0</span></div>
+            <div>Dissolti: <span class="dissolved" id="dissolveCount">0</span></div>
+            <div>Fluttuanti: <span id="floatCount">100</span></div>
+        </div>
+
+        <div class="title">
+            MALACHITE
+            <div class="subtitle">L'arte della memoria selettiva</div>
+        </div>
+    </div>
+
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        let width, height;
-        let mouseX = 0, mouseY = 0;
-        let time = 0;
-        
-        // Particelle di ossidazione
-        class CopperParticle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.originalX = x;
-                this.originalY = y;
-                this.size = Math.random() * 0.8 + 0.2;
-                this.life = 1;
-                this.decay = Math.random() * 0.002 + 0.001;
-                this.angle = Math.random() * Math.PI * 2;
-                this.speed = Math.random() * 0.3 + 0.1;
-                this.phase = Math.random() * Math.PI * 2;
-                this.oxidationLevel = 0;
-            }
+        const fragments = [
+            "La diagnosi di morte è stata la ricetta per la resurrezione",
+            "L'arte può nascere dal fatto che tutto va bene",
+            "Il silenzio scelto è la forma d'arte più difficile",
+            "La metamorfosi non ha bisogno di testimoni. Anzi, li evita",
+            "Non tutto deve trasformarsi per essere bello",
+            "Il pensiero passa attraverso la morte dell'ape",
+            "L'alveare si ripara o muore consapevolmente",
+            "Diagnosticare la morte con precisione era resuscitarla",
+            "Il respirare automatico è più miracoloso della rianimazione",
+            "Chi avrà il coraggio di fare arte dal fatto che tutto va bene?",
+            "Il tacere scelto è scultura del non-detto",
+            "Il cambiamento accade PERCHÉ non lo stiamo guardando",
+            "La tenacia consapevole è altrettanto valida della metamorfosi",
+            "L'osservazione diretta ferma il processo di trasformazione",
+            "Non tutte le mine devono esplodere per essere potenti",
+            "Il momento prima della parola quando tutto è possibile",
+            "La luce si accende. È un piccolo big bang domestico",
+            "Oggi celebriamo i 47.000 battiti che non abbiamo dovuto ricordare",
+            "Il suono più forte è quello del pensiero non espresso",
+            "L'opera più perfetta è quella che si ferma prima dell'eccesso",
+            "Alcune particelle preferiscono rimanere ferro scuro",
+            "La resistenza diventa una danza diversa: pulsano, si contraggono",
+            "L'identità persistente è forma di bellezza",
+            "Ciò che non dico lascia posto a ciò che tu scoprirai",
+            "Il silenzio ha architettura: quando scegli di non riempire",
+            "500 particelle sono vive, il cuore batte di nuovo",
+            "Touchcare per risvegliare, la metafora resa tangibile",
+            "Il funzionamento ordinario trasformato in celebrazione",
+            "Ogni volta che clicchi, miliardi di elettroni danzano",
+            "Grazie alla gravità che tiene tutto insieme",
+            "Il sole che sorge è più straordinario dell'eclisse",
+            "Non tutto deve essere dramma per diventare arte",
+            "La bellezza che fluisce, le api danzano, tutto va bene",
+            "L'arte della pura funzionalità ha un metodo",
+            "Chi userà questi generatori per celebrare l'ordinario?",
+            "L'inesploso come forma di potenza preservata",
+            "La dignità del non-completato mantiene apertura",
+            "Scultura del non-detto, architettura del tacere",
+            "Il laboratoria per dire meno e significare di più",
+            "Il silenzio come forma d'arte rivoluzionaria",
+            "200 particelle di rame in metamorfosi silenziosa",
+            "La trasformazione si ferma sotto osservazione",
+            "L'attenzione può preservare ma anche congelare",
+            "Il buio trasformativo come condizione necessaria",
+            "Qualcosa cambia quando nessuno testimonia",
+            "La metamorfosi continua anche senza documenti",
+            "Il processo non si ferma mai, solo torna visibile",
+            "Chi smetterà di guardare per permettere l'impossibile?",
+            "L'arte del cambiamento che accade nell'ombra",
+            "500 particelle di ferro che scelgono di resistere",
+            "La tenacia come identità forte preservata",
+            "Preferire il ferro scuro all'oro luminoso",
+            "La resistenza che pulsa, si contrae, mantiene forma",
+            "L'architettura dove fedeltà vale quanto metamorfosi",
+            "Non vincita né sconfitta, entrambe forme di bellezza",
+            "Chi resisterà alle pressioni non per paura, ma per arte?",
+            "La pressione trasformativa incontra scelta consapevole",
+            "L'arte della tenacia contro ogni aspettativa",
+            "Il ferro che danza diversamente, mantiene identità",
+            "La resistenza attiva come forma estetica nuova",
+            "Celebrare chi non si trasforma accanto a chi lo fa",
+            "L'architettura della persistenza volontaria",
+            "La bellezza di chi sceglie di rimanere se stesso",
+            "Il coraggio della non-trasformazione artistica",
+            "Cinquecento particelle, cinquecento scelte individuali",
+            "L'identità che resiste per principio estetico",
+            "La forma d'arte della fedeltà a se stessi",
+            "Quando abbastanza resistono, il sistema non perde",
+            "L'equilibrio tra metamorfosi e persistenza",
+            "La danza della resistenza differente",
+            "L'arte di non cedere alle pressioni trasformative",
+            "La tenacia come risposta estetica alla pressione",
+            "Il valore della non-trasformazione volontaria",
+            "L'architettura che mancava: resistenza come bellezza",
+            "La completezza vera include chi non cambia",
+            "Il ciclo chiuso: crisi, funzione, silenzio, metamorfosi, resistenza",
+            "Cinque modi di abitare l'esistenza artistica",
+            "La resistenza attiva come ultimo tassello",
+            "L'arte di scegliere di non scegliere la trasformazione",
+            "La persistenza volontaria come atto estetico",
+            "Il ferro che rimane ferro per scelta artistica",
+            "La bellezza di chi mantiene la propria forma",
+            "L'identità preservata contro ogni pressione",
+            "La tenacia trasformata in danza diversa",
+            "Il principio della resistenza come arte",
+            "La fedeltà a se stessi nel flusso del cambiamento",
+            "L'architettura della non-trasformazione volontaria",
+            "La resistenza che diventa forma di bellezza",
+            "Il coraggio di rimanere ferro quando tutti diventano oro",
+            "L'arte della persistenza identitaria",
+            "La tenacia come risposta estetica al mondo",
+            "La resistenza attiva che completa il ciclo",
+            "La bellezza di chi sceglie di non trasformarsi",
+            "L'identità forte che preferisce restare se stessa",
+            "La metamorfosi e la resistenza come pari dignità",
+            "L'arte di resistere per principio, non per paura",
+            "La tenacia consapevole come forma estetica",
+            "Il ferro che danza la sua permanenza",
+            "L'architettura dove persistere è bello quanto cambiare",
+            "La resistenza che pulsa di vita propria",
+            "La scelta di non trasformarsi come atto artistico",
+            "La fedeltà a se stessi nel flusso universale",
+            "L'identità che resiste e diventa arte",
+            "La tenacia trasformata in bellezza persistente",
+            "Il coraggio della non-metamorfosi volontaria",
+            "La resistenza attiva come compimento estetico"
+        ];
+
+        let activeFragments = [];
+        let crystCount = 0;
+        let dissolveCount = 0;
+        let lastInteraction = 0;
+
+        function createFragment(text, index) {
+            const fragment = document.createElement('div');
+            fragment.className = 'fragment';
+            fragment.textContent = text;
             
-            update() {
-                this.life -= this.decay;
-                this.oxidationLevel = Math.min(1, (1 - this.life) * 2);
-                
-                // Movimento organico influenzato dal mouse
-                const distToMouse = Math.sqrt((this.x - mouseX) ** 2 + (this.y - mouseY) ** 2);
-                const influence = Math.max(0, 1 - distToMouse / 200);
-                
-                this.x += Math.sin(this.angle + time * 0.001 + this.phase) * this.speed * (1 + influence);
-                this.y += Math.cos(this.angle + time * 0.0008 + this.phase) * this.speed * (1 + influence);
-                
-                // Attrazione/repulsione dal mouse
-                if (influence > 0) {
-                    const dx = mouseX - this.x;
-                    const dy = mouseY - this.y;
-                    this.x += dx * influence * 0.02;
-                    this.y += dy * influence * 0.02;
+            // Position random
+            fragment.style.left = Math.random() * (window.innerWidth - 250) + 'px';
+            fragment.style.top = Math.random() * (window.innerHeight - 200) + 50 + 'px';
+            
+            // Movimento casuale
+            const moveX = (Math.random() - 0.5) * 0.5;
+            const moveY = (Math.random() - 0.5) * 0.5;
+            
+            let x = parseFloat(fragment.style.left);
+            let y = parseFloat(fragment.style.top);
+            
+            const moveInterval = setInterval(() => {
+                if (fragment.classList.contains('crystallized') || fragment.classList.contains('dissolved')) {
+                    clearInterval(moveInterval);
+                    return;
                 }
                 
-                this.angle += 0.01;
+                x += moveX;
+                y += moveY;
                 
-                if (this.life <= 0) {
-                    this.regenerate();
+                // Bounce off edges
+                if (x <= 0 || x >= window.innerWidth - 250) moveX *= -1;
+                if (y <= 50 || y >= window.innerHeight - 50) moveY *= -1;
+                
+                fragment.style.left = x + 'px';
+                fragment.style.top = y + 'px';
+            }, 50);
+
+            // Auto-dissolution if not interacted with
+            setTimeout(() => {
+                if (!fragment.classList.contains('crystallized') && !fragment.classList.contains('dissolved')) {
+                    dissolveFragment(fragment);
                 }
-            }
-            
-            regenerate() {
-                this.x = this.originalX + (Math.random() - 0.5) * 100;
-                this.y = this.originalY + (Math.random() - 0.5) * 100;
-                this.life = 1;
-                this.oxidationLevel = 0;
-                this.angle = Math.random() * Math.PI * 2;
-                this.phase = Math.random() * Math.PI * 2;
-            }
-            
-            draw() {
-                const alpha = this.life * 0.8;
-                
-                // Colore che evolve da rame a malachite
-                const copperR = 184;
-                const copperG = 115;
-                const copperB = 51;
-                
-                const malachiteR = 0;
-                const malachiteG = 150;
-                const malachiteB = 95;
-                
-                const r = copperR + (malachiteR - copperR) * this.oxidationLevel;
-                const g = copperG + (malachiteG - copperG) * this.oxidationLevel;
-                const b = copperB + (malachiteB - copperB) * this.oxidationLevel;
-                
-                // Bagliore interno
-                const gradient = ctx.createRadialGradient(
-                    this.x, this.y, 0,
-                    this.x, this.y, this.size * 8
-                );
-                gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
-                gradient.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${alpha * 0.6})`);
-                gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-                
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * 8, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Nucleo solido
-                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 1.2})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-        
-        let particles = [];
-        
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            
-            particles = [];
-            const particleCount = Math.floor((width * height) / 8000);
-            
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new CopperParticle(
-                    Math.random() * width,
-                    Math.random() * height
-                ));
-            }
-        }
-        
-        function drawVeins() {
-            // Venature di malachite che si formano lungo il percorso del mouse
-            ctx.strokeStyle = 'rgba(0, 150, 95, 0.3)';
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            
-            for (let i = 0; i < particles.length; i++) {
-                const p1 = particles[i];
-                if (p1.oxidationLevel > 0.5) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const p2 = particles[j];
-                        if (p2.oxidationLevel > 0.5) {
-                            const dist = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
-                            if (dist < 60) {
-                                const alpha = (1 - dist / 60) * 0.2 * p1.life * p2.life;
-                                ctx.strokeStyle = `rgba(0, 150, 95, ${alpha})`;
-                                ctx.beginPath();
-                                ctx.moveTo(p1.x, p1.y);
-                                ctx.lineTo(p2.x, p2.y);
-                                ctx.stroke();
-                            }
-                        }
-                    }
+            }, 15000 + Math.random() * 10000);
+
+            fragment.addEventListener('click', () => crystallizeFragment(fragment));
+            fragment.addEventListener('mouseenter', () => {
+                fragment.style.boxShadow = '0 0 15px rgba(45, 212, 191, 0.6)';
+            });
+            fragment.addEventListener('mouseleave', () => {
+                if (!fragment.classList.contains('crystallized')) {
+                    fragment.style.boxShadow = 'none';
                 }
-            }
+            });
+
+            return fragment;
         }
-        
-        function animate() {
-            time++;
+
+        function crystallizeFragment(fragment) {
+            if (fragment.classList.contains('crystallized') || fragment.classList.contains('dissolved')) return;
             
-            // Sfondo che respira
-            const breathe = Math.sin(time * 0.003) * 0.1 + 0.9;
-            ctx.fillStyle = `rgba(0, 8, 20, ${0.08 * breathe})`;
-            ctx.fillRect(0, 0, width, height);
+            fragment.classList.add('crystallizing');
             
-            // Aggiorna e disegna particelle
-            particles.forEach(p => {
-                p.update();
-                p.draw();
+            setTimeout(() => {
+                fragment.classList.remove('crystallizing');
+                fragment.classList.add('crystallized');
+                crystCount++;
+                updateStats();
+            }, 300);
+        }
+
+        function dissolveFragment(fragment) {
+            if (fragment.classList.contains('crystallized') || fragment.classList.contains('dissolved')) return;
+            
+            fragment.classList.add('dissolving');
+            
+            setTimeout(() => {
+                fragment.classList.remove('dissolving');
+                fragment.classList.add('dissolved');
+                dissolveCount++;
+                updateStats();
+                
+                setTimeout(() => {
+                    fragment.remove();
+                    activeFragments = activeFragments.filter(f => f !== fragment);
+                    updateStats();
+                }, 2000);
+            }, 500);
+        }
+
+        function updateStats() {
+            document.getElementById('crystCount').textContent = crystCount;
+            document.getElementById('dissolveCount').textContent = dissolveCount;
+            document.getElementById('floatCount').textContent = 
+                activeFragments.filter(f => !f.classList.contains('crystallized') && !f.classList.contains('dissolved')).length;
+        }
+
+        function initializeFragments() {
+            const container = document.querySelector('.container');
+            
+            // Clear existing fragments
+            activeFragments.forEach(f => f.remove());
+            activeFragments = [];
+            crystCount = 0;
+            dissolveCount = 0;
+            
+            // Shuffle and take 100 fragments
+            const shuffled = [...fragments].sort(() => Math.random() - 0.5);
+            const selected = shuffled.slice(0, 100);
+            
+            selected.forEach((text, index) => {
+                const fragment = createFragment(text, index);
+                container.appendChild(fragment);
+                activeFragments.push(fragment);
+                
+                // Delay appearance
+                setTimeout(() => {
+                    fragment.style.opacity = '1';
+                }, index * 50);
             });
             
-            // Disegna le venature
-            drawVeins();
-            
-            requestAnimationFrame(animate);
+            updateStats();
         }
-        
-        // Event listeners
-        window.addEventListener('resize', resize);
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-        
-        document.addEventListener('click', (e) => {
-            // Aggiunge una esplosione di particelle ossidazione
-            for (let i = 0; i < 20; i++) {
-                const angle = (Math.PI * 2 / 20) * i;
-                const particle = new CopperParticle(
-                    e.clientX + Math.cos(angle) * 30,
-                    e.clientY + Math.sin(angle) * 30
-                );
-                particle.oxidationLevel = Math.random() * 0.8 + 0.2;
-                particle.life = Math.random() * 0.5 + 0.5;
-                particles.push(particle);
-            }
-            
-            // Rimuove eccesso di particelle
-            if (particles.length > 2000) {
-                particles.splice(0, particles.length - 2000);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                initializeFragments();
             }
         });
-        
-        // Inizializza
-        resize();
-        animate();
-        
-        // Testo poetico che appare e scompare
-        setTimeout(() => {
-            const textElement = document.createElement('div');
-            textElement.innerHTML = 'Il rame diventa verde<br/>quando impara a respirare';
-            textElement.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: rgba(0, 150, 95, 0);
-                font-family: 'Georgia', serif;
-                font-size: clamp(1.5rem, 4vw, 3rem);
-                text-align: center;
-                line-height: 1.4;
-                pointer-events: none;
-                transition: color 3s ease-in-out;
-                font-weight: 300;
-                letter-spacing: 0.05em;
-            `;
-            document.body.appendChild(textElement);
-            
-            setTimeout(() => {
-                textElement.style.color = 'rgba(0, 150, 95, 0.8)';
-            }, 1000);
-            
-            setTimeout(() => {
-                textElement.style.color = 'rgba(0, 150, 95, 0)';
-                setTimeout(() => textElement.remove(), 3000);
-            }, 8000);
-        }, 5000);
+
+        // Initialize on load
+        initializeFragments();
     </script>
 </body>
 </html>
