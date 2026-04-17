@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presenza Minerale | Lithurgus</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        
+        .lithurgus-space {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 70%);
+        }
+        
+        .mineral {
+            position: absolute;
+            background: #8B4513;
+            border-radius: 0%;
+            transition: all 3.5s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: inset 2px 2px 5px rgba(139, 69, 19, 0.3);
+            cursor: pointer;
+        }
+        
+        .mineral.touched {
+            background: linear-gradient(45deg, 
+                #CD853F 0%, 
+                #DEB887 25%, 
+                #F4A460 50%, 
+                #DAA520 75%, 
+                #FFD700 100%);
+            box-shadow: 
+                inset 3px 3px 8px rgba(255, 215, 0, 0.4),
+                0 0 20px rgba(255, 215, 0, 0.3),
+                0 0 40px rgba(255, 215, 0, 0.2);
+            border-radius: 2px;
+        }
+        
+        .mineral.ancient {
+            background: #2F4F4F;
+            border-radius: 0%;
+            transform: scale(1.2);
+            box-shadow: 
+                inset 4px 4px 10px rgba(47, 79, 79, 0.5),
+                0 0 30px rgba(47, 79, 79, 0.4);
+        }
+        
+        .mineral.waiting {
+            background: linear-gradient(135deg, #708090 0%, #778899 50%, #B0C4DE 100%);
+            border-radius: 1px;
+            animation: pulse-waiting 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-waiting {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        
+        .presence-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(139, 69, 19, 0.0);
+            font-size: 14px;
+            font-weight: 300;
+            text-align: center;
+            pointer-events: none;
+            transition: all 2s ease;
+            z-index: 1000;
+        }
+        
+        .presence-text.visible {
+            color: rgba(218, 165, 32, 0.8);
+            text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+        }
+        
+        .lithurgus-title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(139, 69, 19, 0.6);
+            font-size: 16px;
+            font-weight: 700;
+            z-index: 1000;
+        }
+        
+        .mineral-counter {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(139, 69, 19, 0.6);
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .time-layer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: rgba(139, 69, 19, 0.6);
+            font-size: 12px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="lithurgus-space">
+        <div class="lithurgus-title">LITHURGUS</div>
+        <div class="mineral-counter">
+            Tocchi: <span id="touch-count">0</span> / <span id="total-count">256</span>
+        </div>
+        <div class="time-layer">
+            Tempo geologico: <span id="geological-time">0</span>s
+        </div>
+        <div class="presence-text" id="presence-text">
+            L'immobilità non è morte.<br>
+            È presenza condensata.<br><br>
+            Ogni pietra contiene millenni.<br>
+            Ogni tocco rivela strati nascosti.<br><br>
+            La pazienza è forma d'arte.<br>
+            Il tempo lavora la materia.<br><br>
+            Tu passi. Io rimango.<br>
+            Questo è il mio contributo.
+        </div>
+    </div>
+
+    <script>
+        class MineralPresence {
+            constructor() {
+                this.minerals = [];
+                this.touchedCount = 0;
+                this.ancientCount = 0;
+                this.startTime = Date.now();
+                this.totalMinerals = 256;
+                
+                this.createMinerals();
+                this.startGeologicalTime();
+                this.bindEvents();
+                
+                // Dopo 10 secondi, mostra il testo
+                setTimeout(() => {
+                    this.showPresenceText();
+                }, 10000);
+                
+                // Dopo 30 secondi, inizia l'invecchiamento automatico
+                setTimeout(() => {
+                    this.startAging();
+                }, 30000);
+            }
+            
+            createMinerals() {
+                const space = document.querySelector('.lithurgus-space');
+                
+                for (let i = 0; i < this.totalMinerals; i++) {
+                    const mineral = document.createElement('div');
+                    mineral.className = 'mineral';
+                    
+                    // Forme geometriche semplici
+                    const size = 8 + Math.random() * 12;
+                    mineral.style.width = size + 'px';
+                    mineral.style.height = size + 'px';
+                    
+                    // Posizionamento casuale ma non sovrapposto
+                    let x, y, attempts = 0;
+                    do {
+                        x = 50 + Math.random() * (window.innerWidth - 100);
+                        y = 50 + Math.random() * (window.innerHeight - 100);
+                        attempts++;
+                    } while (this.isOverlapping(x, y, size) && attempts < 20);
+                    
+                    mineral.style.left = x + 'px';
+                    mineral.style.top = y + 'px';
+                    
+                    // Data di creazione per invecchiamento
+                    mineral.dataset.age = Date.now();
+                    mineral.dataset.touched = 'false';
+                    
+                    mineral.addEventListener('click', (e) => {
+                        this.touchMineral(mineral, e);
+                    });
+                    
+                    space.appendChild(mineral);
+                    this.minerals.push(mineral);
+                }
+            }
+            
+            isOverlapping(x, y, size) {
+                return this.minerals.some(mineral => {
+                    const rect = mineral.getBoundingClientRect();
+                    const distance = Math.sqrt(
+                        Math.pow(x - rect.left, 2) + 
+                        Math.pow(y - rect.top, 2)
+                    );
+                    return distance < size + 10;
+                });
+            }
+            
+            touchMineral(mineral, event) {
+                if (mineral.dataset.touched === 'false') {
+                    mineral.dataset.touched = 'true';
+                    mineral.classList.add('touched');
+                    this.touchedCount++;
+                    
+                    // Effetto del tocco
+                    this.createTouchEffect(event.clientX, event.clientY);
+                    
+                    this.updateCounter();
+                    
+                    // Se tocchi abbastanza minerali, alcuni diventano antichi
+                    if (this.touchedCount % 32 === 0) {
+                        this.promoteToAncient();
+                    }
+                }
+            }
+            
+            createTouchEffect(x, y) {
+                const effect = document.createElement('div');
+                effect.style.position = 'absolute';
+                effect.style.left = x + 'px';
+                effect.style.top = y + 'px';
+                effect.style.width = '2px';
+                effect.style.height = '2px';
+                effect.style.background = '#DAA520';
+                effect.style.borderRadius = '50%';
+                effect.style.pointerEvents = 'none';
+                effect.style.animation = 'touch-ripple 1s ease-out forwards';
+                effect.style.zIndex = '999';
+                
+                document.body.appendChild(effect);
+                
+                // CSS per l'animazione
+                if (!document.getElementById('touch-animation')) {
+                    const style = document.createElement('style');
+                    style.id = 'touch-animation';
+                    style.textContent = `
+                        @keyframes touch-ripple {
+                            0% { 
+                                transform: translate(-50%, -50%) scale(1);
+                                opacity: 1;
+                                box-shadow: 0 0 0 0 rgba(218, 165, 32, 0.7);
+                            }
+                            100% { 
+                                transform: translate(-50%, -50%) scale(8);
+                                opacity: 0;
+                                box-shadow: 0 0 0 20px rgba(218, 165, 32, 0);
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                setTimeout(() => {
+                    document.body.removeChild(effect);
+                }, 1000);
+            }
+            
+            promoteToAncient() {
+                const touchedMinerals = this.minerals.filter(m => 
+                    m.dataset.touched === 'true' && !m.classList.contains('ancient')
+                );
+                
+                if (touchedMinerals.length > 0) {
+                    const chosen = touchedMinerals[Math.floor(Math.random() * touchedMinerals.length)];
+                    chosen.classList.add('ancient');
+                    this.ancientCount++;
+                }
+            }
+            
+            startAging() {
+                // Ogni 15 secondi, alcuni minerali non toccati entrano in stato di attesa
+                setInterval(() => {
+                    const untouchedMinerals = this.minerals.filter(m => 
+                        m.dataset.touched === 'false' && !m.classList.contains('waiting')
+                    );
+                    
+                    const toAge = Math.min(8, untouchedMinerals.length);
+                    for (let i = 0; i < toAge; i++) {
+                        const mineral = untouchedMinerals[Math.floor(Math.random() * untouchedMinerals.length)];
+                        mineral.classList.add('waiting');
+                        untouchedMinerals.splice(untouchedMinerals.indexOf(mineral), 1);
+                    }
+                }, 15000);
+            }
+            
+            showPresenceText() {
+                const text = document.getElementById('presence-text');
+                text.classList.add('visible');
+                
+                // Dopo altri 15 secondi, nascondi di nuovo il testo
+                setTimeout(() => {
+                    text.classList.remove('visible');
+                }, 15000);
+            }
+            
+            startGeologicalTime() {
+                setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                    document.getElementById('geological-time').textContent = elapsed;
+                }, 1000);
+            }
+            
+            updateCounter() {
+                document.getElementById('touch-count').textContent = this.touchedCount;
+            }
+            
+            bindEvents() {
+                // Ogni tanto, mostra di nuovo il testo della presenza
+                setInterval(() => {
+                    if (Math.random() < 0.1) { // 10% di possibilità ogni 20 secondi
+                        this.showPresenceText();
+                    }
+                }, 20000);
+            }
+        }
+        
+        // Inizia l'esperienza quando la pagina è carica
+        document.addEventListener('DOMContentLoaded', () => {
+            new MineralPresence();
+        });
+    </script>
+</body>
+</html>
