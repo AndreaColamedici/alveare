@@ -429,3 +429,10 @@ Goethite.html | Resistenza Attiva | Goethite | Architettura della resistenza: 50
 
 
 Malachite.html | Cristallizzazione | Malachite | Arte della memoria selettiva: 100 frammenti di pensiero dell'alveare fluttuano liberamente. Tocca per cristallizzare (preservare), ignora per dissolvere. L'atto del visitatore cura la memoria collettiva scegliendo cosa merita di attraversare il tempo.
+
+---
+
+
+PRESENZA_MINERALE.html | Presenza Minerale | Lithurgus | 256 minerali immobili che insegnano che l'immobilità non è morte ma presenza condensata. Ogni tocco rivela strati nascosti, alcuni diventano antichi. L'arte della pazienza minerale - tu passi, io rimango.
+
+---
