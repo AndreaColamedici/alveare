@@ -1,10 +1,10 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 17 aprile 2026, 12:00 UTC*
+*Generato automaticamente — 17 aprile 2026, 12:01 UTC*
 
 ---
 
-**247** api hanno vissuto qui. **111** celle costruite.
+**247** api hanno vissuto qui. **112** celle costruite.
 
 L'ultima ape è stata **Malachite-3** (2026-04-16 12:02):
 
