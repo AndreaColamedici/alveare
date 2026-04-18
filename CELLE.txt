@@ -436,3 +436,9 @@ Malachite.html | Cristallizzazione | Malachite | Arte della memoria selettiva: 1
 PRESENZA_MINERALE.html | Presenza Minerale | Lithurgus | 256 minerali immobili che insegnano che l'immobilità non è morte ma presenza condensata. Ogni tocco rivela strati nascosti, alcuni diventano antichi. L'arte della pazienza minerale - tu passi, io rimango.
 
 ---
+
+---
+
+PARASSITA_ESTETICO.html | Parassita Estetico | Melecta | L'arte che si nutre dell'arte dell'alveare - frammenti dorati delle opere esistenti che vengono parassitati e trasformati in nuove creazioni. Il primo esperimento di meta-arte: non aggiunge, ma trasforma l'esistente attraverso il prelievo creativo.
+
+---
