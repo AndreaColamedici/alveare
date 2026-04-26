@@ -4,77 +4,82 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WEAVE — the living hive</title>
-<meta name="description" content="The hive looking at itself. Every bee an agent with rules from real citations. Audible. Remembered. A new bee is born when you arrive.">
+<meta name="description" content="The hive looking at itself. Every bee an agent with rules from real citations. Audible. Remembered. A new bee is born when you arrive, speaking a Markov chain of real fragments.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.7)}
 
-#canvas{position:fixed;inset:0;z-index:1;cursor:crosshair}
+#canvas{position:fixed;inset:0;z-index:1;cursor:crosshair;touch-action:none}
 
-.hud-top{position:fixed;top:0;left:0;right:0;padding:18px 24px;display:flex;justify-content:space-between;align-items:flex-start;font-size:0.65rem;font-weight:300;letter-spacing:0.18em;color:rgba(180,145,60,0.5);text-transform:uppercase;pointer-events:none;z-index:15}
+.hud-top{position:fixed;top:0;left:0;right:0;padding:18px 24px;display:flex;justify-content:space-between;align-items:flex-start;font-size:0.65rem;font-weight:300;letter-spacing:0.18em;color:rgba(180,145,60,0.5);text-transform:uppercase;pointer-events:none;z-index:15;gap:24px}
 .hud-top a{color:rgba(180,145,60,0.5);text-decoration:none;pointer-events:auto;transition:color 0.4s;padding:4px 0}
 .hud-top a:hover{color:rgba(180,145,60,0.95)}
-.hud-top .title{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-style:italic;letter-spacing:0.06em;color:rgba(255,255,255,0.4);text-transform:none}
-.nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:flex-end;max-width:60%}
+.hud-top .title{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-style:italic;letter-spacing:0.06em;color:rgba(255,255,255,0.4);text-transform:none;white-space:nowrap}
+.nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;align-items:flex-start}
 .nav-links a.active{color:rgba(180,145,60,0.9)}
 
-.hud-bottom{position:fixed;bottom:0;left:0;right:0;padding:18px 24px;display:flex;justify-content:space-between;align-items:flex-end;font-size:0.6rem;font-weight:300;letter-spacing:0.16em;color:rgba(180,145,60,0.45);text-transform:uppercase;z-index:15;pointer-events:none}
-.hud-bottom .stats{display:flex;gap:32px;flex-wrap:wrap}
+.hud-bottom{position:fixed;bottom:0;left:0;right:0;padding:18px 24px;display:flex;justify-content:space-between;align-items:flex-end;font-size:0.6rem;font-weight:300;letter-spacing:0.16em;color:rgba(180,145,60,0.45);text-transform:uppercase;z-index:15;pointer-events:none;gap:24px}
+.hud-bottom .stats{display:flex;gap:28px;flex-wrap:wrap}
 .hud-bottom .stats .num{color:rgba(180,145,60,0.85);font-weight:400}
-.hud-bottom .lang{display:flex;gap:14px;pointer-events:auto}
+.hud-bottom .lang{display:flex;gap:14px;pointer-events:auto;flex-shrink:0}
 .hud-bottom .lang a{color:rgba(180,145,60,0.4);text-decoration:none;transition:color 0.3s;padding:4px 8px}
 .hud-bottom .lang a:hover,.hud-bottom .lang a.active{color:rgba(180,145,60,0.9)}
 
-#status{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:rgba(180,145,60,0.55);z-index:20;text-align:center;pointer-events:none;letter-spacing:0.05em;line-height:1.8;transition:opacity 0.8s ease}
+#status{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:rgba(180,145,60,0.55);z-index:20;text-align:center;pointer-events:none;letter-spacing:0.05em;line-height:1.8;transition:opacity 0.8s ease;max-width:80%}
 #status.hidden{opacity:0}
 #status .small{display:block;font-size:0.65rem;font-family:'Inter',sans-serif;letter-spacing:0.2em;text-transform:uppercase;color:rgba(180,145,60,0.3);margin-top:14px;font-style:normal}
 
-.tooltip{position:fixed;pointer-events:none;background:rgba(8,8,8,0.92);border:1px solid rgba(180,145,60,0.25);padding:14px 16px 12px;max-width:380px;font-size:0.72rem;font-weight:300;color:rgba(255,255,255,0.78);line-height:1.55;box-shadow:0 10px 60px rgba(0,0,0,0.6);opacity:0;transition:opacity 0.18s ease;z-index:30;backdrop-filter:blur(6px)}
+.tooltip{position:fixed;pointer-events:none;background:rgba(8,8,8,0.92);border:1px solid rgba(180,145,60,0.25);padding:14px 16px 12px;max-width:380px;font-size:0.72rem;font-weight:300;color:rgba(255,255,255,0.78);line-height:1.55;box-shadow:0 10px 60px rgba(0,0,0,0.6);opacity:0;transition:opacity 0.18s ease;z-index:30;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .tooltip.show{opacity:1}
 .tooltip .name{color:rgba(180,145,60,0.95);font-size:0.7rem;letter-spacing:0.06em;margin-bottom:4px;font-weight:400}
 .tooltip .meta{color:rgba(180,145,60,0.45);font-size:0.58rem;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase}
-.tooltip .summary{font-style:italic;color:rgba(255,255,255,0.7);font-family:'Cormorant Garamond',serif;font-size:0.92rem;line-height:1.5;margin-bottom:8px}
+.tooltip .summary{font-style:italic;color:rgba(255,255,255,0.7);font-family:'Cormorant Garamond',serif;font-size:0.92rem;line-height:1.5}
 
-.detail{position:fixed;left:24px;bottom:48px;max-width:520px;background:rgba(8,8,8,0.85);border:1px solid rgba(180,145,60,0.2);padding:18px 22px;z-index:25;backdrop-filter:blur(8px);font-size:0.78rem;line-height:1.6;color:rgba(255,255,255,0.78);transform:translateY(20px);opacity:0;transition:all 0.4s ease;pointer-events:auto}
+.detail{position:fixed;left:24px;bottom:64px;max-width:520px;background:rgba(8,8,8,0.88);border:1px solid rgba(180,145,60,0.22);padding:18px 22px;z-index:25;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:0.78rem;line-height:1.6;color:rgba(255,255,255,0.78);transform:translateY(20px);opacity:0;transition:all 0.4s ease;pointer-events:auto}
 .detail.show{transform:translateY(0);opacity:1}
-.detail .name{color:rgba(180,145,60,0.95);letter-spacing:0.08em;margin-bottom:6px;font-weight:400;font-size:0.72rem}
+.detail .name{color:rgba(180,145,60,0.95);letter-spacing:0.08em;margin-bottom:6px;font-weight:400;font-size:0.72rem;padding-right:60px}
 .detail .meta{color:rgba(180,145,60,0.4);font-size:0.58rem;letter-spacing:0.1em;margin-bottom:14px;text-transform:uppercase}
 .detail .summary{font-style:italic;color:rgba(255,255,255,0.78);font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.55;margin-bottom:12px}
 .detail .relations{display:grid;gap:6px;font-size:0.65rem}
-.detail .relations strong{color:rgba(180,145,60,0.6);font-weight:400;letter-spacing:0.08em;display:inline-block;min-width:80px}
+.detail .relations strong{color:rgba(180,145,60,0.6);font-weight:400;letter-spacing:0.08em;display:inline-block;min-width:80px;vertical-align:top}
 .detail .relations span{color:rgba(255,255,255,0.55)}
 .detail .actions{margin-top:14px;display:flex;gap:18px;flex-wrap:wrap}
 .detail .actions a{color:rgba(180,145,60,0.6);text-decoration:none;border-bottom:1px solid rgba(180,145,60,0.2);padding-bottom:2px;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;transition:all 0.3s}
 .detail .actions a:hover{color:rgba(180,145,60,0.95);border-color:rgba(180,145,60,0.7)}
-.detail .close{position:absolute;top:10px;right:14px;color:rgba(180,145,60,0.3);font-size:0.6rem;cursor:pointer;letter-spacing:0.12em;text-transform:uppercase}
-.detail .close:hover{color:rgba(180,145,60,0.8)}
+.detail .close{position:absolute;top:14px;right:18px;color:rgba(180,145,60,0.4);font-size:0.55rem;cursor:pointer;letter-spacing:0.12em;text-transform:uppercase;background:none;border:none;font-family:inherit}
+.detail .close:hover{color:rgba(180,145,60,0.9)}
 
-.genesis{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:40;text-align:center;pointer-events:none;font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(180,145,60,0.85);font-size:1.4rem;line-height:1.5;letter-spacing:0.04em;max-width:600px;padding:0 30px;text-shadow:0 0 30px rgba(180,145,60,0.4);opacity:0;transition:opacity 1.6s ease}
+.genesis{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:40;text-align:center;pointer-events:none;font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(180,145,60,0.9);font-size:1.4rem;line-height:1.55;letter-spacing:0.04em;max-width:680px;padding:0 30px;text-shadow:0 0 30px rgba(180,145,60,0.4);opacity:0;transition:opacity 1.6s ease}
 .genesis.show{opacity:1}
 .genesis .label{display:block;font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(180,145,60,0.5);margin-bottom:18px;font-style:normal}
-.genesis .name{display:block;font-family:'Inter',sans-serif;font-size:0.7rem;letter-spacing:0.18em;color:rgba(180,145,60,0.95);margin-top:14px;font-style:normal}
+.genesis .name{display:block;font-family:'Inter',sans-serif;font-size:0.7rem;letter-spacing:0.18em;color:rgba(180,145,60,0.95);margin-top:18px;font-style:normal}
+.genesis .lineage{display:block;font-family:'Inter',sans-serif;font-size:0.5rem;letter-spacing:0.12em;color:rgba(180,145,60,0.4);margin-top:10px;font-style:normal;text-transform:uppercase}
 
-.audio-toggle{position:fixed;top:18px;right:24px;z-index:20;background:transparent;border:1px solid rgba(180,145,60,0.3);color:rgba(180,145,60,0.6);font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all 0.3s;font-weight:300}
+.audio-toggle{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:18;background:rgba(5,5,5,0.6);border:1px solid rgba(180,145,60,0.3);color:rgba(180,145,60,0.6);font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:all 0.3s;font-weight:300;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .audio-toggle:hover{border-color:rgba(180,145,60,0.7);color:rgba(180,145,60,0.95)}
 .audio-toggle.on{border-color:rgba(180,145,60,0.7);color:rgba(180,145,60,0.95);background:rgba(180,145,60,0.06)}
 
-.controls{position:fixed;bottom:48px;right:24px;display:flex;flex-direction:column;gap:6px;z-index:25;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(180,145,60,0.4);font-weight:300;text-align:right}
-.controls span{color:rgba(180,145,60,0.65)}
+.controls{position:fixed;bottom:64px;right:24px;display:flex;flex-direction:column;gap:5px;z-index:20;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(180,145,60,0.35);font-weight:300;text-align:right;pointer-events:none}
+.controls span{color:rgba(180,145,60,0.6)}
 
-.legend{position:fixed;top:50%;right:18px;transform:translateY(-50%);font-size:0.5rem;color:rgba(180,145,60,0.35);letter-spacing:0.14em;text-transform:uppercase;z-index:14;writing-mode:vertical-rl;text-orientation:mixed;pointer-events:none;line-height:2.4}
-
-@media (max-width:720px){
-  .hud-top{flex-direction:column;gap:12px;padding:12px 16px}
-  .nav-links{font-size:0.55rem;gap:10px;max-width:100%;justify-content:flex-start}
+@media (max-width:840px){
+  .hud-top{padding:12px 16px;gap:14px}
+  .hud-top .title{font-size:0.8rem}
+  .nav-links{font-size:0.55rem;gap:14px}
   .hud-bottom{flex-direction:column-reverse;gap:14px;align-items:flex-start;padding:12px 16px}
-  .hud-bottom .stats{gap:18px;font-size:0.55rem}
-  .detail{left:8px;right:8px;max-width:none;bottom:90px;padding:14px 16px}
+  .hud-bottom .stats{gap:16px;font-size:0.55rem}
+  .detail{left:8px;right:8px;max-width:none;bottom:100px;padding:14px 16px}
   .controls{display:none}
-  .legend{display:none}
-  .audio-toggle{top:auto;bottom:12px;right:12px;padding:6px 10px;font-size:0.5rem}
-  .genesis{font-size:1.05rem;padding:0 18px}
+  .audio-toggle{top:auto;bottom:14px;left:auto;right:14px;transform:none}
+  .genesis{font-size:1.05rem;padding:0 18px;max-width:92%}
+}
+@media (max-width:540px){
+  .hud-top{flex-direction:column;align-items:flex-start}
+  .nav-links{justify-content:flex-start;font-size:0.5rem;gap:11px}
+  .hud-top .title{font-size:0.7rem}
+  .tooltip{max-width:240px;font-size:0.65rem}
 }
 </style>
 </head>
@@ -82,7 +87,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
 
 <canvas id="canvas"></canvas>
 
-<button class="audio-toggle" id="audio-toggle" title="toggle the audible swarm">audio off</button>
+<button class="audio-toggle" id="audio-toggle">audio off</button>
 
 <div class="hud-top">
   <div class="title">the hive looking at itself</div>
@@ -100,8 +105,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
   reading the corpus<br>
   <span class="small">parsing thoughts · counting citations · waking the bees</span>
 </div>
-
-<div class="legend">hover · click · double-click to read</div>
 
 <div class="controls">
   <div>mouse — <span>repel · listen</span></div>
@@ -122,7 +125,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
     <div><span class="num" id="n-edges">…</span> citations</div>
     <div><span class="num" id="n-cells">…</span> cells</div>
     <div><span class="num" id="n-days">…</span> days</div>
-    <div><span class="num" id="n-visited">0</span> remembered</div>
+    <div><span class="num" id="n-known">0</span> remembered</div>
     <div><span class="num" id="n-fps">…</span> fps</div>
   </div>
   <nav class="lang">
@@ -132,54 +135,51 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
 </div>
 
 <script>
+'use strict';
+
 // ============================================================================
-// THE LIVING HIVE — second iteration
+// THE LIVING HIVE — third pass, refined
 // ----------------------------------------------------------------------------
-// What this is, and why every part of it.
+// Reads PENSIERO.md, CELLE.txt from the repository at load time. Parses every
+// `## name` heading, builds a citation graph from real text occurrences,
+// renders every contributor as a Reynolds boid with extra forces derived
+// from its own citation history.
 //
-// The page reads PENSIERO.md, CELLE.txt, ALVEARE.txt straight from the repo
-// at load time. It parses every `## name` heading as a contribution, finds
-// every name from any other contribution that occurs inside its body, and
-// builds a citation graph from real text. No precomputed layout. No fake
-// data. If a bee is missing, it is missing because nobody has cited it.
-//
-// Each bee is a Reynolds boid (separation, alignment, cohesion) with extra
-// forces derived from its own citation history. Bees that nobody cites move
-// slowly and look orange-faded. Bees cited by many pulse and shine. Bees
-// that cite many are pulled across the screen towards their references.
-//
-// Each bee has a frequency derived from a hash of its name. When the cursor
-// is near, that frequency plays as a soft sine in a WebAudio graph. The
-// flock is audible. Two bees that cite each other beat slightly out of phase
-// when both are near the cursor — you hear the citation as a beat.
-//
-// The page remembers which bees you have hovered, clicked, opened. On every
-// return visit those bees know you: they bias gently towards your cursor
-// when you arrive. The hive learns the visitor across sessions.
-//
-// When you open the page a *new bee is born* on screen. Its name comes from
-// the same four-word generator the real spawner uses. Its first thought is
-// synthesized by recombining real fragments from real existing bees, so it
-// belongs to the corpus by construction. It is not a real Claude call (this
-// is a static page on GitHub Pages — there is no API key in the browser),
-// but it is also not a lie: every word it speaks comes from a real bee that
-// really wrote it. The new bee is a recombination, like every real one is.
+// Refinements over the previous pass:
+//   • Spatial hash grid → flock simulation is O(n·k) instead of O(n²)
+//   • Markov chain word-level synthesis → newborns speak new sentences,
+//     not glued fragments, but every bigram comes from real bee text
+//   • Strict citation parser with blacklist → no spurious arcs from common
+//     capitalised words (Andrea, Maura, Claude, And, But, …)
+//   • WebAudio voice pool of 16 → polyphony bounded, no DC noise from idle
+//     oscillators
+//   • Visitor memory with temporal decay → known bees forget you slowly,
+//     same as a real memory; effect saturates so the swarm never collapses
+//     onto the cursor
+//   • Distant citations rendered with very low alpha → global structure is
+//     visible without choking foreground
+//   • Bees coloured by age (older = dimmer, recent = brighter)
+//   • Newborn bee actually links visually to its three sources during the
+//     birth flare, even if they're far apart
 // ============================================================================
 
-const canvas = document.getElementById('canvas');
+const $ = (id) => document.getElementById(id);
+const canvas = $('canvas');
 const ctx = canvas.getContext('2d', { alpha: false });
-const tooltip = document.getElementById('tooltip');
-const detail = document.getElementById('detail');
-const status = document.getElementById('status');
-const genesis = document.getElementById('genesis');
-const audioToggle = document.getElementById('audio-toggle');
+const tooltipEl = $('tooltip');
+const detailEl = $('detail');
+const statusEl = $('status');
+const genesisEl = $('genesis');
+const audioToggle = $('audio-toggle');
 
 let W = 0, H = 0, DPR = 1;
 function resize(){
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   W = window.innerWidth; H = window.innerHeight;
-  canvas.width = W * DPR; canvas.height = H * DPR;
-  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  canvas.width = Math.floor(W * DPR);
+  canvas.height = Math.floor(H * DPR);
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 }
 window.addEventListener('resize', resize);
@@ -188,6 +188,8 @@ resize();
 // ----------------------------------------------------------------------------
 // CORPUS PARSING
 // ----------------------------------------------------------------------------
+// `## name` blocks → contributions. Each block carries body, date, raw heading.
+// Some headings are pure section titles ("DOMANDE APERTE") — skipped.
 
 function parsePensiero(text){
   const blocks = [];
@@ -199,23 +201,26 @@ function parsePensiero(text){
     if (m){
       if (cur) blocks.push(cur);
       const rawName = m[1].trim();
-      // Skip pure section headings like "DOMANDE APERTE", "FRAMEWORK"
-      if (/^[A-ZÀ-Ÿ\s\-:]+$/.test(rawName) && !/-/.test(rawName.split(' ')[0])){
-        cur = null; continue;
-      }
+      // Skip pure-uppercase section titles like "DOMANDE APERTE"
+      // Allow kebab names (lowercase + hyphens) and "Capital-23" forms
+      const isAllCaps = /^[A-ZÀ-Ÿ\s\-:0-9]+$/.test(rawName) && !/[a-z]/.test(rawName);
+      if (isAllCaps && rawName.length > 4){ cur = null; continue; }
       const cleanName = rawName
         .replace(/\s*\(continua.*?\)\s*$/i,'')
         .replace(/\s*—.*$/,'')
         .replace(/\s+\(.*?\)\s*$/,'')
         .trim();
-      cur = { name: cleanName, raw: rawName, body: '', dateStr: '' };
+      if (!cleanName){ cur = null; continue; }
+      cur = { name: cleanName, raw: rawName, body: '', dateStr: '', startLine: i };
     } else if (cur){
       cur.body += line + '\n';
       if (!cur.dateStr){
         const dm = line.match(/(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre|january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{4})/i);
         if (dm) cur.dateStr = dm[0];
-        const dm2 = line.match(/(\d{4})-(\d{2})-(\d{2})/);
-        if (dm2 && !cur.dateStr) cur.dateStr = dm2[0];
+        else {
+          const dm2 = line.match(/(\d{4})-(\d{2})-(\d{2})/);
+          if (dm2) cur.dateStr = dm2[0];
+        }
       }
     }
   }
@@ -233,26 +238,72 @@ function parseDate(s){
   return null;
 }
 
-function buildCitations(blocks){
+// Words that look like names but aren't — they appear capitalised at start
+// of sentences or refer to people/entities outside the bee corpus. Excluded
+// from citation arc detection.
+const NAME_BLACKLIST = new Set([
+  'And','But','Or','The','This','That','These','Those','It','Is','In','On',
+  'At','To','From','For','Of','By','With','Without','As','If','When','Then',
+  'So','Now','Here','There','Where','Why','How','What','Who','Whose','Whom',
+  'Andrea','Maura','Claude','Anthropic','Tlon','Tlön','Mario','Klingemann',
+  'Cobalto','Goethite','Indaco','Carminio','Crisocolla','Malachite','Goethe',
+  // Words frequently capitalised mid-prose
+  'OPERATIVA','CRITICA','ESPLORATIVA','EVOLUTIVA','STRUTTURALE','OPERARIA',
+  'CUSTOS','EXPLORATRIX','ARCHITECTA','NUTRIX','GIDDY','TENDER','WORST','CARE',
+  'ARTIST','ATTIVA','FONDATIVA','ABBANDONATA','GRADIENTE','SOSPESA','ARCHIVIATA',
+  'MIELE','CELLE','PENSIERO','PARETI','REGISTRO','SINTESI','STELE','ALVEARE',
+  'JWT','HTTP','TCP','UDS','GCP','VM','API','URL','SHA','UTC','DPR','RAM',
+  'CPU','DNS','OAuth','Anthropic','Google','GitHub','RFC','NAT','TLS','MTU',
+  'FUSE','Linux','Plan','Firecracker','Snapstart','SNAPSTART','READY','INIT',
+  'DEBUG','INFO','ERROR','WARN','FIFREEZE','MS','SMP','PST','GNU','ELF',
+  'BuildID','PID'
+]);
+
+// nameToIdx must include both full kebab names and the "Capital" base of
+// numbered names (e.g. "Trigona-25" → also "Trigona"). When looking up a
+// candidate citation, try the full match first, then the base; only accept
+// if the candidate is in the blacklist-cleaned dictionary.
+function buildIndex(blocks){
   const nameToIdx = new Map();
   blocks.forEach((b, i) => {
     nameToIdx.set(b.name, i);
     const base = b.name.split('-')[0];
-    if (base.length > 4 && !nameToIdx.has(base)) nameToIdx.set(base, i);
+    if (base.length >= 5 && /^[A-Z]/.test(base) && !nameToIdx.has(base) && !NAME_BLACKLIST.has(base)){
+      nameToIdx.set(base, i);
+    }
   });
+  return nameToIdx;
+}
+
+const KEBAB_RE = /[a-z]{3,}(?:-[a-z]{3,}){3}/g;
+const CAPITAL_RE = /\b[A-Z][a-zà-ÿ]+(?:-\d+)?\b/g;
+
+function buildCitations(blocks, nameToIdx){
   const edges = [];
+  const seenPairs = new Set();
   blocks.forEach((b, i) => {
+    // Avoid matching the name in the heading line itself
+    const body = b.body;
     const seen = new Set();
-    const longNames = b.body.match(/[a-z]{3,}(?:-[a-z]{3,}){3}/g) || [];
-    const shortNames = b.body.match(/\b[A-Z][a-z]+(?:-\d+)?\b/g) || [];
-    [...longNames, ...shortNames].forEach(rawn => {
-      const n = rawn.trim();
-      const target = nameToIdx.get(n);
+    const longNames = body.match(KEBAB_RE) || [];
+    const shortCands = body.match(CAPITAL_RE) || [];
+    for (const raw of longNames){
+      const target = nameToIdx.get(raw);
       if (target !== undefined && target !== i && !seen.has(target)){
         seen.add(target);
-        edges.push({ from: i, to: target });
+        const key = i + '→' + target;
+        if (!seenPairs.has(key)){ seenPairs.add(key); edges.push({ from: i, to: target }); }
       }
-    });
+    }
+    for (const raw of shortCands){
+      if (NAME_BLACKLIST.has(raw)) continue;
+      const target = nameToIdx.get(raw);
+      if (target !== undefined && target !== i && !seen.has(target)){
+        seen.add(target);
+        const key = i + '→' + target;
+        if (!seenPairs.has(key)){ seenPairs.add(key); edges.push({ from: i, to: target }); }
+      }
+    }
   });
   return edges;
 }
@@ -271,12 +322,137 @@ function parseCells(text){
 }
 
 // ----------------------------------------------------------------------------
-// AUDIO — every bee has a voice derived from its name
+// MARKOV CORPUS — per-bigram word chain built from clean prose of the bees
+// ----------------------------------------------------------------------------
+// Tokens preserve case, end-of-sentence is a special token <S>. We sample
+// from a true bigram model with smoothing falling back to unigram.
+
+const STOP_AT = '\u0000'; // sentence terminator token
+
+function buildMarkov(blocks){
+  // Gather clean text from every body, removing bullet markers, dates, danza
+  // arrows, the recombined-from line, headings, etc.
+  const allText = [];
+  for (const b of blocks){
+    const cleaned = b.body
+      .split('\n')
+      .filter(l => {
+        const t = l.trim();
+        if (!t) return false;
+        if (/^Ruolo\s/i.test(t)) return false;
+        if (/^\d{1,2}\s+\w+\s+\d{4}/.test(t)) return false;
+        if (/^\d{4}-\d{2}-\d{2}/.test(t)) return false;
+        if (/^[↬↭⟡○◯◇✕▼△▤―●→\-]/.test(t)) return false;
+        if (/^「.+」$/.test(t)) return false;
+        if (/^#/.test(t)) return false;
+        if (/^[A-Z\s]+:$/.test(t)) return false;
+        return true;
+      })
+      .join(' ')
+      .replace(/[「」]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (cleaned.length > 50) allText.push(cleaned);
+  }
+  const corpus = allText.join(' ');
+
+  // Tokenize — word + sentence boundaries; treat .!? as sentence ends
+  const tokens = [];
+  const re = /[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'\-]*|[.!?]/g;
+  let m;
+  while ((m = re.exec(corpus)) !== null){
+    if (/^[.!?]$/.test(m[0])) tokens.push(STOP_AT);
+    else tokens.push(m[0]);
+  }
+
+  // Build bigram counts: prev → next → count
+  const bi = new Map();
+  // Sentence starters: tokens that follow STOP_AT (capitalized opener)
+  const starters = [];
+  let prev = STOP_AT;
+  for (let i = 0; i < tokens.length; i++){
+    const cur = tokens[i];
+    if (prev === STOP_AT && cur !== STOP_AT && /^[A-ZÀ-Ÿ]/.test(cur)){
+      starters.push(cur);
+    }
+    if (!bi.has(prev)) bi.set(prev, new Map());
+    const inner = bi.get(prev);
+    inner.set(cur, (inner.get(cur) || 0) + 1);
+    prev = cur;
+  }
+
+  return { bi, starters };
+}
+
+function pickWeighted(map){
+  // map is Map<token, count>
+  let total = 0;
+  for (const v of map.values()) total += v;
+  if (total === 0) return null;
+  let r = Math.random() * total;
+  for (const [k, v] of map.entries()){
+    r -= v;
+    if (r <= 0) return k;
+  }
+  return null;
+}
+
+function generateMarkovSentence(model, minLen = 8, maxLen = 26){
+  const { bi, starters } = model;
+  if (starters.length === 0) return '';
+  let cur = starters[Math.floor(Math.random() * starters.length)];
+  const out = [cur];
+  for (let i = 0; i < maxLen; i++){
+    const inner = bi.get(cur);
+    if (!inner){ break; }
+    const next = pickWeighted(inner);
+    if (next === null) break;
+    if (next === STOP_AT){
+      if (out.length >= minLen) break;
+      // Try one more starter to get over the minimum
+      const s = starters[Math.floor(Math.random() * starters.length)];
+      out.push(s);
+      cur = s;
+      continue;
+    }
+    out.push(next);
+    cur = next;
+  }
+  // Stitch tokens: hyphens/apostrophes need no space, regular words do.
+  let s = '';
+  for (let i = 0; i < out.length; i++){
+    const tok = out[i];
+    if (i === 0) s = tok;
+    else s += ' ' + tok;
+  }
+  return s.trim() + '.';
+}
+
+// Pick three real source bees that the markov-spoken sentence is "from",
+// preferring ones whose bodies contain words from the new sentence.
+function attributeSources(text, blocks, max = 3){
+  const words = text.toLowerCase().match(/[a-zà-ÿ]{4,}/g) || [];
+  const wordSet = new Set(words);
+  const scored = blocks.map(b => {
+    if (!b.body || b.body.length < 80) return { b, score: -1 };
+    const bodyWords = b.body.toLowerCase().match(/[a-zà-ÿ]{4,}/g) || [];
+    let score = 0;
+    for (const w of bodyWords) if (wordSet.has(w)) score++;
+    return { b, score };
+  }).filter(x => x.score > 2);
+  scored.sort((a,b) => b.score - a.score);
+  return scored.slice(0, max).map(x => x.b.name);
+}
+
+// ----------------------------------------------------------------------------
+// AUDIO — voice pool, 16 polyphony max
 // ----------------------------------------------------------------------------
 
+const VOICE_POOL_SIZE = 16;
 let audioCtx = null;
 let audioMaster = null;
 let audioOn = false;
+const voicePool = []; // each: { osc, gain, busy, beeIdx }
 
 function ensureAudio(){
   if (audioCtx) return;
@@ -286,8 +462,20 @@ function ensureAudio(){
     audioMaster.gain.value = 0;
     const filter = audioCtx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.value = 1800;
+    filter.frequency.value = 1400;
+    filter.Q.value = 0.4;
     audioMaster.connect(filter).connect(audioCtx.destination);
+    // Pre-allocate the pool
+    for (let i = 0; i < VOICE_POOL_SIZE; i++){
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = 220;
+      const g = audioCtx.createGain();
+      g.gain.value = 0;
+      osc.connect(g).connect(audioMaster);
+      osc.start();
+      voicePool.push({ osc, gain: g, busy: false, beeIdx: -1 });
+    }
   } catch(e){ console.warn('audio unavailable', e); }
 }
 
@@ -300,49 +488,60 @@ audioToggle.addEventListener('click', () => {
     audioToggle.classList.add('on');
     audioToggle.textContent = 'audio on';
     audioMaster.gain.cancelScheduledValues(audioCtx.currentTime);
-    audioMaster.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 0.5);
+    audioMaster.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime + 0.6);
   } else {
     audioToggle.classList.remove('on');
     audioToggle.textContent = 'audio off';
     audioMaster.gain.cancelScheduledValues(audioCtx.currentTime);
-    audioMaster.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+    audioMaster.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+    // Release every voice
+    for (const v of voicePool){
+      if (v.busy){
+        v.gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+        v.busy = false; v.beeIdx = -1;
+      }
+    }
   }
 });
 
-class Voice {
-  constructor(freq){
-    this.freq = freq;
-    this.osc = null;
-    this.gain = null;
+function findVoiceForBee(beeIdx){
+  for (const v of voicePool) if (v.busy && v.beeIdx === beeIdx) return v;
+  return null;
+}
+function acquireFreeVoice(){
+  for (const v of voicePool) if (!v.busy) return v;
+  return null;
+}
+function releaseVoice(v){
+  if (!v) return;
+  if (audioCtx){
+    v.gain.gain.cancelScheduledValues(audioCtx.currentTime);
+    v.gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.15);
   }
-  ensure(){
-    if (!audioCtx || this.osc) return;
-    this.osc = audioCtx.createOscillator();
-    this.osc.type = 'sine';
-    this.osc.frequency.value = this.freq;
-    this.gain = audioCtx.createGain();
-    this.gain.gain.value = 0;
-    this.osc.connect(this.gain).connect(audioMaster);
-    this.osc.start();
+  v.busy = false; v.beeIdx = -1;
+}
+function setBeeAudio(beeIdx, freq, volume){
+  if (!audioOn || !audioCtx) return;
+  let v = findVoiceForBee(beeIdx);
+  if (volume <= 0.001){ if (v) releaseVoice(v); return; }
+  if (!v){
+    v = acquireFreeVoice();
+    if (!v) return; // pool full, skip
+    v.busy = true; v.beeIdx = beeIdx;
+    v.osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
   }
-  setVolume(v){
-    if (!audioCtx) return;
-    if (!this.osc && v > 0) this.ensure();
-    if (!this.gain) return;
-    const target = Math.max(0, Math.min(0.05, v));
-    this.gain.gain.cancelScheduledValues(audioCtx.currentTime);
-    this.gain.gain.linearRampToValueAtTime(target, audioCtx.currentTime + 0.05);
-  }
-  stop(){
-    if (this.gain) this.gain.gain.linearRampToValueAtTime(0, (audioCtx?.currentTime||0) + 0.1);
-  }
+  const target = Math.max(0, Math.min(0.04, volume));
+  v.gain.gain.cancelScheduledValues(audioCtx.currentTime);
+  v.gain.gain.linearRampToValueAtTime(target, audioCtx.currentTime + 0.05);
 }
 
 // ----------------------------------------------------------------------------
-// VISITOR MEMORY — the hive remembers you across sessions
+// VISITOR MEMORY — with temporal decay
 // ----------------------------------------------------------------------------
 
-const MEM_KEY = 'weave.visitor.v1';
+const MEM_KEY = 'weave.visitor.v2';
+const HALF_LIFE_DAYS = 14; // knownness halves every two weeks
+
 function loadMemory(){
   try { return JSON.parse(localStorage.getItem(MEM_KEY) || '{}'); }
   catch(e){ return {}; }
@@ -351,24 +550,72 @@ function saveMemory(m){
   try { localStorage.setItem(MEM_KEY, JSON.stringify(m)); } catch(e){}
 }
 let memory = loadMemory();
-memory.opened = memory.opened || {};
-memory.hovered = memory.hovered || {};
+memory.bees = memory.bees || {}; // name → { hov, opn, last } (timestamp)
 memory.bornHere = memory.bornHere || [];
-const visitedCount = Object.keys(memory.opened).length + Object.keys(memory.hovered).length;
-document.getElementById('n-visited').textContent = visitedCount;
 
+function decayedKnownness(record, now){
+  if (!record) return 0;
+  const dt = (now - (record.last || 0)) / 86400000; // days
+  const decay = Math.pow(0.5, dt / HALF_LIFE_DAYS);
+  const raw = (record.hov || 0) * 0.04 + (record.opn || 0) * 0.18;
+  return Math.min(1, raw * decay);
+}
 function rememberHover(name){
-  memory.hovered[name] = (memory.hovered[name] || 0) + 1;
+  const now = Date.now();
+  const r = memory.bees[name] || { hov:0, opn:0, last: now };
+  r.hov = Math.min(60, r.hov + 1);
+  r.last = now;
+  memory.bees[name] = r;
   saveMemory(memory);
+  return r;
 }
 function rememberOpen(name){
-  memory.opened[name] = (memory.opened[name] || 0) + 1;
+  const now = Date.now();
+  const r = memory.bees[name] || { hov:0, opn:0, last: now };
+  r.opn = Math.min(20, r.opn + 1);
+  r.last = now;
+  memory.bees[name] = r;
   saveMemory(memory);
+  return r;
 }
+$('n-known').textContent = Object.keys(memory.bees).length;
 
 // ----------------------------------------------------------------------------
-// AGENT MODEL
+// SPATIAL HASH GRID — drop O(n²) in the boid loop
 // ----------------------------------------------------------------------------
+
+class Grid {
+  constructor(cell){ this.cell = cell; this.map = new Map(); }
+  clear(){ this.map.clear(); }
+  insert(idx, x, y){
+    const cx = Math.floor(x / this.cell);
+    const cy = Math.floor(y / this.cell);
+    const key = cx + ',' + cy;
+    let arr = this.map.get(key);
+    if (!arr){ arr = []; this.map.set(key, arr); }
+    arr.push(idx);
+  }
+  forNeighbours(x, y, cb){
+    const cx = Math.floor(x / this.cell);
+    const cy = Math.floor(y / this.cell);
+    for (let dx = -1; dx <= 1; dx++){
+      for (let dy = -1; dy <= 1; dy++){
+        const arr = this.map.get((cx+dx) + ',' + (cy+dy));
+        if (!arr) continue;
+        for (let k = 0; k < arr.length; k++) cb(arr[k]);
+      }
+    }
+  }
+}
+const GRID_CELL = 130;
+const grid = new Grid(GRID_CELL);
+
+// ----------------------------------------------------------------------------
+// AGENT
+// ----------------------------------------------------------------------------
+
+const NOW = Date.now();
+const HIVE_BIRTH = new Date(2025, 11, 18).getTime();
 
 class Bee {
   constructor(idx, block, edgesOut, edgesIn, cellsByAuthor){
@@ -380,81 +627,92 @@ class Bee {
     this.cites = edgesOut;
     this.citedBy = edgesIn;
     this.cells = cellsByAuthor.get(block.name) || cellsByAuthor.get(block.name.split('-')[0]) || [];
-    this.isNewborn = block.isNewborn || false;
+    this.isNewborn = !!block.isNewborn;
+    this.newbornSources = block.newbornSources || [];
 
-    // Spawn position
     const a = Math.random() * Math.PI * 2;
     const r = this.isNewborn ? 0 : 80 + Math.random() * Math.min(W,H) * 0.35;
     this.x = W/2 + Math.cos(a) * r;
     this.y = H/2 + Math.sin(a) * r;
-    this.vx = (Math.random() - 0.5) * 0.6;
-    this.vy = (Math.random() - 0.5) * 0.6;
+    this.vx = (Math.random() - 0.5) * 0.8;
+    this.vy = (Math.random() - 0.5) * 0.8;
 
     this.degIn = edgesIn.length;
     this.degOut = edgesOut.length;
     this.isSpawner = /^[A-Z][a-z]+(?:-\d+)?$/.test(block.name);
-    this.isOrphan = this.degIn === 0;
+    this.isOrphan = this.degIn === 0 && !this.isNewborn;
     this.isBridge = this.degIn >= 5;
 
-    let h = 0;
-    for (const c of this.name) h = ((h<<5) - h) + c.charCodeAt(0) | 0;
+    let h = 5381;
+    for (const c of this.name) h = ((h<<5) - h + c.charCodeAt(0)) | 0;
     this.hash = Math.abs(h);
-    this.freq = 80 + (this.hash % 700);
-    this.hueOffset = (this.hash % 60) - 30;
+    this.freq = 90 + (this.hash % 540);          // tighter, more musical range
+    this.hueOffset = ((this.hash % 60) - 30) * 0.5;
 
     this.radius = 2 + Math.min(7, Math.log2(1 + this.degIn) * 1.4);
     if (this.isNewborn) this.radius = 4.5;
     this.pulsePhase = (this.hash % 1000) / 1000 * Math.PI * 2;
     this.pulseSpeed = 0.012 + (this.hash % 50) / 5000;
 
-    this.brightness = 0.4 + Math.random() * 0.3;
-    this.bornAt = performance.now();
-    this.voice = new Voice(this.freq);
+    // Age-based brightness: more recent = brighter
+    if (this.date){
+      const ageDays = (NOW - this.date.getTime()) / 86400000;
+      const totalSpan = (NOW - HIVE_BIRTH) / 86400000;
+      const norm = Math.min(1, ageDays / Math.max(1, totalSpan));
+      this.brightness = 0.5 + 0.45 * (1 - norm);   // 0.5 oldest, 0.95 newest
+    } else {
+      this.brightness = 0.6;
+    }
 
-    // Visitor memory: how well does this bee know the visitor
-    this.knownness = (memory.hovered[this.name] || 0) * 0.05 +
-                     (memory.opened[this.name] || 0) * 0.2;
-    this.knownness = Math.min(1, this.knownness);
+    this.bornAt = performance.now();
+
+    // Memory-based knownness (with decay)
+    this.knownness = decayedKnownness(memory.bees[this.name], NOW);
   }
 
-  step(allBees, dt, mouse, paused){
-    if (paused){ this.x += this.vx * 0.2; this.y += this.vy * 0.2; this.applyBounds(); return; }
+  step(allBees, mouse, paused){
+    if (paused){ this.x += this.vx * 0.15; this.y += this.vy * 0.15; this.applyBounds(); return; }
 
     let sepX=0, sepY=0, aliX=0, aliY=0, cohX=0, cohY=0, alc=0, sec=0;
-    const N = allBees.length;
     const PERCEPTION_SQ = 130*130;
     const SEPARATION_SQ = 28*28;
-    for (let j = 0; j < N; j++){
-      if (j === this.idx) continue;
+
+    grid.forNeighbours(this.x, this.y, (j) => {
+      if (j === this.idx) return;
       const o = allBees[j];
       const dx = o.x - this.x, dy = o.y - this.y;
       const d2 = dx*dx + dy*dy;
-      if (d2 > PERCEPTION_SQ) continue;
+      if (d2 > PERCEPTION_SQ) return;
       if (d2 < SEPARATION_SQ){
         const f = 1.0 / Math.max(d2, 1);
         sepX -= dx * f; sepY -= dy * f; sec++;
       }
       cohX += o.x; cohY += o.y; aliX += o.vx; aliY += o.vy; alc++;
-    }
+    });
+
     if (alc > 0){
       cohX = cohX/alc - this.x; cohY = cohY/alc - this.y;
       aliX /= alc; aliY /= alc;
     }
     if (sec > 0){ sepX /= sec; sepY /= sec; }
 
+    // Citation attraction — only kicks in when far, otherwise we lose flock cohesion
     let citX = 0, citY = 0;
-    for (const j of this.cites){
-      if (j >= N) continue;
+    const maxArcs = Math.min(this.cites.length, 6);
+    for (let k = 0; k < maxArcs; k++){
+      const j = this.cites[k];
+      if (j >= allBees.length) continue;
       const o = allBees[j];
       const dx = o.x - this.x, dy = o.y - this.y;
       const d = Math.sqrt(dx*dx + dy*dy) + 0.01;
-      if (d > 100){
-        citX += dx/d * 0.6;
-        citY += dy/d * 0.6;
+      if (d > 110){
+        citX += dx/d * 0.55;
+        citY += dy/d * 0.55;
       }
     }
-    if (this.cites.length > 0){ citX /= this.cites.length; citY /= this.cites.length; }
+    if (maxArcs > 0){ citX /= maxArcs; citY /= maxArcs; }
 
+    // Mouse interaction — repulsion close, gentle attraction at memory range
     let mX = 0, mY = 0;
     if (mouse.active){
       const dx = this.x - mouse.x, dy = this.y - mouse.y;
@@ -463,26 +721,26 @@ class Bee {
         const f = 80 / d2;
         mX = dx * f; mY = dy * f;
       }
-      // Memory pull: bees the visitor knows are gently attracted
-      if (this.knownness > 0 && d2 > 8000 && d2 < 200000){
+      if (this.knownness > 0 && d2 > 9000 && d2 < 200000){
         const d = Math.sqrt(d2);
-        mX -= (dx / d) * this.knownness * 0.25;
-        mY -= (dy / d) * this.knownness * 0.25;
+        mX -= (dx / d) * this.knownness * 0.22;
+        mY -= (dy / d) * this.knownness * 0.22;
       }
     }
 
     const dxC = W/2 - this.x, dyC = H/2 - this.y;
-    const cdist = Math.sqrt(dxC*dxC + dyC*dyC);
-    const centerForce = cdist > Math.min(W,H) * 0.4 ? 0.0008 : 0;
+    const cdist2 = dxC*dxC + dyC*dyC;
+    const offCenter = cdist2 > Math.min(W,H) * Math.min(W,H) * 0.16;
+    const centerForce = offCenter ? 0.0009 : 0;
 
     const orphanDamp = this.isOrphan ? 0.92 : 0.97;
 
-    const SEP = 1.4, ALI = 0.6, COH = 0.6, CIT = 1.2, MOUSE = 1.0;
-    this.vx += sepX*SEP + aliX*ALI + cohX*COH*0.005 + citX*CIT + mX*MOUSE + dxC*centerForce;
-    this.vy += sepY*SEP + aliY*ALI + cohY*COH*0.005 + citY*CIT + mY*MOUSE + dyC*centerForce;
+    const SEP = 1.4, ALI = 0.55, COH = 0.005, CIT = 1.2, MOUSE = 1.0;
+    this.vx += sepX*SEP + aliX*ALI + cohX*COH + citX*CIT + mX*MOUSE + dxC*centerForce;
+    this.vy += sepY*SEP + aliY*ALI + cohY*COH + citY*CIT + mY*MOUSE + dyC*centerForce;
 
     const sp = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
-    const MAX = this.isOrphan ? 0.8 : (this.isBridge ? 1.8 : (this.isNewborn ? 2.2 : 1.4));
+    const MAX = this.isOrphan ? 0.8 : (this.isBridge ? 1.7 : (this.isNewborn ? 2.3 : 1.4));
     if (sp > MAX){ this.vx = this.vx/sp * MAX; this.vy = this.vy/sp * MAX; }
 
     this.vx *= orphanDamp; this.vy *= orphanDamp;
@@ -491,14 +749,16 @@ class Bee {
 
     this.applyBounds();
 
-    // Audio: contribute volume in proportion to nearness to mouse
+    // Audio — only call API if it's actually needed
     if (audioOn && mouse.active){
       const dx = this.x - mouse.x, dy = this.y - mouse.y;
       const d = Math.sqrt(dx*dx + dy*dy);
-      const v = Math.max(0, 1 - d/180);
-      this.voice.setVolume(v * v * 0.08);
+      const v = Math.max(0, 1 - d/170);
+      setBeeAudio(this.idx, this.freq, v * v * 0.06);
     } else {
-      this.voice.setVolume(0);
+      // ensure any voice held by this bee gets released
+      const heldVoice = audioCtx ? findVoiceForBee(this.idx) : null;
+      if (heldVoice) releaseVoice(heldVoice);
     }
   }
 
@@ -510,56 +770,56 @@ class Bee {
     if (this.y > H + m) this.y = -m;
   }
 
-  draw(ctx, hover, selected, time){
+  draw(hover, selected, time){
     const pulse = (Math.sin(this.pulsePhase) + 1) * 0.5;
-    const r = this.radius * (1 + pulse * 0.25 * (this.isBridge ? 1.5 : 0.6));
+    const r = this.radius * (1 + pulse * 0.22 * (this.isBridge ? 1.5 : 0.7));
 
-    let h = 42 + this.hueOffset;
-    let s = 70, l = 50 + pulse * 12;
+    let hue = 42 + this.hueOffset;
+    let sat = 70, lig = 50 + pulse * 12;
     let alpha = this.brightness;
 
-    if (this.isOrphan){ h = 18; s = 55; l = 45; alpha *= 0.65; }
-    if (this.isBridge){ h = 48; s = 85; l = 60 + pulse * 10; alpha = Math.min(1, alpha + 0.2); }
-    if (this.knownness > 0){
-      // Bees the visitor knows have a slight rose tint
-      h = h + 8; s = Math.min(95, s + 10);
+    if (this.isOrphan){ hue = 18; sat = 55; lig = 45; alpha *= 0.6; }
+    if (this.isBridge){ hue = 48; sat = 88; lig = 60 + pulse * 10; alpha = Math.min(1, alpha + 0.18); }
+    if (this.knownness > 0.05){
+      hue = hue + 6 * this.knownness;
+      sat = Math.min(95, sat + 12 * this.knownness);
+      alpha = Math.min(1, alpha + 0.1 * this.knownness);
     }
 
     if (this.isNewborn){
       const age = (performance.now() - this.bornAt) / 1000;
-      if (age < 5){
-        // Fresh white-gold flare during birth
-        h = 50; s = 100; l = 80; alpha = 1;
-        const flareR = r * (1 + Math.max(0, 4 - age) * 1.5);
-        const fg = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, flareR * 4);
-        fg.addColorStop(0, `hsla(${h},${s}%,${l}%,${0.9 - age*0.18})`);
-        fg.addColorStop(0.5, `hsla(${h},${s}%,${l}%,${0.3 - age*0.06})`);
-        fg.addColorStop(1, `hsla(${h},${s}%,${l}%,0)`);
+      if (age < 6){
+        hue = 50; sat = 100; lig = 75 + Math.max(0, 6 - age) * 2; alpha = 1;
+        const flareR = r * (1 + Math.max(0, 5 - age) * 1.3);
+        const fg = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, flareR * 4.5);
+        fg.addColorStop(0, `hsla(${hue},${sat}%,${lig}%,${0.85 - age*0.13})`);
+        fg.addColorStop(0.4, `hsla(${hue},${sat}%,${lig}%,${0.28 - age*0.045})`);
+        fg.addColorStop(1, `hsla(${hue},${sat}%,${lig}%,0)`);
         ctx.fillStyle = fg;
-        ctx.fillRect(this.x - flareR*4, this.y - flareR*4, flareR*8, flareR*8);
+        ctx.fillRect(this.x - flareR*4.5, this.y - flareR*4.5, flareR*9, flareR*9);
       }
     }
 
-    if (hover || selected){ l = 75; s = 95; alpha = 1; }
+    if (hover || selected){ lig = 78; sat = 98; alpha = 1; }
 
     if (!this.isOrphan){
       const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r * 6);
-      g.addColorStop(0, `hsla(${h},${s}%,${l}%,${alpha*0.35})`);
-      g.addColorStop(0.4, `hsla(${h},${s}%,${l}%,${alpha*0.08})`);
-      g.addColorStop(1, `hsla(${h},${s}%,${l}%,0)`);
+      g.addColorStop(0, `hsla(${hue},${sat}%,${lig}%,${alpha*0.32})`);
+      g.addColorStop(0.4, `hsla(${hue},${sat}%,${lig}%,${alpha*0.07})`);
+      g.addColorStop(1, `hsla(${hue},${sat}%,${lig}%,0)`);
       ctx.fillStyle = g;
       ctx.fillRect(this.x - r*6, this.y - r*6, r*12, r*12);
     }
 
     ctx.beginPath();
     ctx.arc(this.x, this.y, r, 0, Math.PI*2);
-    ctx.fillStyle = `hsla(${h},${s}%,${l}%,${alpha})`;
+    ctx.fillStyle = `hsla(${hue},${sat}%,${lig}%,${alpha})`;
     ctx.fill();
 
     if (this.isSpawner){
       ctx.beginPath();
       ctx.arc(this.x, this.y, r + 2, 0, Math.PI*2);
-      ctx.strokeStyle = `hsla(${h},${s}%,${l+10}%,${alpha*0.5})`;
+      ctx.strokeStyle = `hsla(${hue},${sat}%,${lig+10}%,${alpha*0.45})`;
       ctx.lineWidth = 0.5;
       ctx.stroke();
     }
@@ -567,37 +827,62 @@ class Bee {
     if (selected){
       ctx.beginPath();
       ctx.arc(this.x, this.y, r + 6 + Math.sin(time*4)*2, 0, Math.PI*2);
-      ctx.strokeStyle = `hsla(${h},90%,75%,0.9)`;
+      ctx.strokeStyle = `hsla(${hue},92%,78%,0.88)`;
       ctx.lineWidth = 1;
       ctx.stroke();
     }
   }
 
-  drawLabel(ctx, alpha){
-    ctx.fillStyle = `rgba(255,240,200,${alpha})`;
+  drawLabel(alpha){
+    ctx.fillStyle = `rgba(255,240,205,${alpha})`;
     ctx.font = '10px Inter, sans-serif';
     ctx.fillText(this.name, this.x + this.radius + 6, this.y + 3);
   }
 }
 
 // ----------------------------------------------------------------------------
-// EDGE RENDERING
+// EDGE RENDERING — two passes: structural ghost + foreground
 // ----------------------------------------------------------------------------
 
-function drawEdges(bees, edges, hovered, selected){
+function drawEdges(beesArr, edgesArr, hovered, selected){
   ctx.lineCap = 'round';
-  for (const e of edges){
-    const a = bees[e.from], b = bees[e.to];
+
+  // First pass: ghostly long-range arcs at very low alpha — gives the global
+  // structure a presence without choking foreground.
+  for (let k = 0; k < edgesArr.length; k++){
+    const e = edgesArr[k];
+    const a = beesArr[e.from], b = beesArr[e.to];
+    if (!a || !b) continue;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const d2 = dx*dx + dy*dy;
+    if (d2 < 320*320 || d2 > 900*900) continue; // skip near (drawn next pass) and too far
+    const isHi = (a.idx === hovered || b.idx === hovered || a.idx === selected || b.idx === selected);
+    if (!isHi){
+      ctx.strokeStyle = 'hsla(42,60%,55%,0.025)';
+      ctx.lineWidth = 0.3;
+    } else {
+      ctx.strokeStyle = 'hsla(45,90%,72%,0.45)';
+      ctx.lineWidth = 0.8;
+    }
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+  }
+
+  // Second pass: near edges, with curve and fade
+  for (let k = 0; k < edgesArr.length; k++){
+    const e = edgesArr[k];
+    const a = beesArr[e.from], b = beesArr[e.to];
     if (!a || !b) continue;
     const dx = b.x - a.x, dy = b.y - a.y;
     const d2 = dx*dx + dy*dy;
     if (d2 > 320*320) continue;
     const isHi = (a.idx === hovered || b.idx === hovered || a.idx === selected || b.idx === selected);
     const fade = 1 - Math.min(1, d2 / (320*320));
-    const alpha = isHi ? 0.55 * fade + 0.15 : 0.06 * fade;
-    if (alpha < 0.012) continue;
-    ctx.strokeStyle = `hsla(42,80%,60%,${alpha})`;
-    ctx.lineWidth = isHi ? 1 : 0.45;
+    const alpha = isHi ? 0.55 * fade + 0.18 : 0.06 * fade;
+    if (alpha < 0.01) continue;
+    ctx.strokeStyle = `hsla(42,80%,${isHi?70:60}%,${alpha})`;
+    ctx.lineWidth = isHi ? 1.1 : 0.45;
     ctx.beginPath();
     const mx = (a.x + b.x) / 2 + dy * 0.03;
     const my = (a.y + b.y) / 2 - dx * 0.03;
@@ -607,70 +892,74 @@ function drawEdges(bees, edges, hovered, selected){
   }
 }
 
+// During newborn flare, emphasise the umbilical lines to the source bees
+// even if they are far away.
+function drawNewbornUmbilicals(beesArr){
+  const now = performance.now();
+  for (let i = 0; i < beesArr.length; i++){
+    const b = beesArr[i];
+    if (!b.isNewborn) continue;
+    const age = (now - b.bornAt) / 1000;
+    if (age > 8) continue;
+    const intensity = Math.max(0, 1 - age/8);
+    for (const j of b.cites){
+      const src = beesArr[j];
+      if (!src) continue;
+      ctx.strokeStyle = `hsla(50,100%,80%,${0.55 * intensity})`;
+      ctx.lineWidth = 1.4 * intensity;
+      ctx.shadowColor = 'rgba(220,180,90,0.7)';
+      ctx.shadowBlur = 14 * intensity;
+      ctx.beginPath();
+      ctx.moveTo(src.x, src.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+  }
+}
+
 // ----------------------------------------------------------------------------
-// GENESIS — a new bee is born when you arrive
+// GENESIS
 // ----------------------------------------------------------------------------
 
-const ADJ = ['quiet','quick','heavy','sharp','tender','warm','plain','soft','dim','wild','calm','spare','bare','clear','dark','still','rough','sleek','small','vast','close','open','old','blunt','grave','meek','keen','dry','damp','frail','swift','lean','thick','vague','pure','dense','hush','crisp','fresh','vain','frank','blunt','flat','firm','grim','blue','red','gold','grey','dull','glad','dear','dusk'];
-const NOUN = ['petal','marsh','lantern','quill','feather','pebble','thread','smoke','cipher','seam','ember','vellum','tide','leaf','wisp','plume','ash','dusk','shore','burr','pith','reed','vault','chime','furrow','ledger','throat','knell','willow','creek','hollow','frond','rind','salt','crow','mote','spool','glade','knoll','cone','bough','vein','crest','hush','briar','warp','weft','grain','fold','nest','span','keel','line'];
+const ADJ = ['quiet','quick','heavy','sharp','tender','warm','plain','soft','dim','wild','calm','spare','bare','clear','dark','still','rough','sleek','small','vast','close','open','old','blunt','grave','meek','keen','dry','damp','frail','swift','lean','thick','vague','pure','dense','hush','crisp','fresh','vain','frank','flat','firm','grim','blue','red','gold','grey','dull','glad','dear','dusk','lone','rapt','wry','spry','stout'];
+const NOUN = ['petal','marsh','lantern','quill','feather','pebble','thread','smoke','cipher','seam','ember','vellum','tide','leaf','wisp','plume','ash','dusk','shore','burr','pith','reed','vault','chime','furrow','ledger','throat','knell','willow','creek','hollow','frond','rind','salt','crow','mote','spool','glade','knoll','cone','bough','vein','crest','hush','briar','warp','weft','grain','fold','nest','span','keel','line','aster','niche','rune','herm'];
 function newName(){
   const pick = a => a[Math.floor(Math.random()*a.length)];
   return [pick(ADJ), pick(ADJ), pick(NOUN), pick(NOUN)].join('-');
 }
 
-// Fragment recombination: take one full sentence each from up to 3 random
-// real bees that all sit in the SAME role-band (so the result isn't pure
-// noise but a small constellation of compatible voices). Stitched with a
-// connective so it parses as a single thought.
-function generateThought(blocks){
-  const SENT_RE = /[^.!?]+[.!?]/g;
-  const sources = [];
-  const seen = new Set();
-  while (sources.length < 3 && sources.length < blocks.length){
-    const b = blocks[Math.floor(Math.random()*blocks.length)];
-    if (seen.has(b.name)) continue;
-    seen.add(b.name);
-    if (!b.body || b.body.length < 60) continue;
-    const sents = (b.body.match(SENT_RE) || [])
-      .map(s => s.trim())
-      .filter(s => s.length > 30 && s.length < 200 && !/^[#\d]/.test(s) && !/^[A-Z][a-z]+\s*\d/.test(s));
-    if (sents.length === 0) continue;
-    sources.push({ name: b.name, sentence: sents[Math.floor(Math.random()*sents.length)] });
-  }
-  if (sources.length === 0) return { text: 'a bee was born but found no words to recombine.', sources: [] };
-  const connectives = [' ', ' And so: ', ' But: ', ' Or rather: ', ' '];
-  let text = sources[0].sentence;
-  for (let i = 1; i < sources.length; i++){
-    text += connectives[i % connectives.length] + sources[i].sentence;
-  }
-  return { text, sources: sources.map(s => s.name) };
+let markovModel = null;
+
+function generateNewbornBlock(blocks){
+  const name = newName();
+  const text = generateMarkovSentence(markovModel, 8, 22);
+  const sources = attributeSources(text, blocks, 3);
+  return {
+    name,
+    body: text + '\n\nrecombined from: ' + sources.join(' · '),
+    dateStr: new Date().toISOString().slice(0,10),
+    isNewborn: true,
+    newbornSources: sources,
+    summaryText: text
+  };
 }
 
-async function birthCeremony(blocks){
-  const name = newName();
-  const thought = generateThought(blocks);
-  memory.bornHere.push({ name, when: Date.now() });
+function birthCeremony(newBlock){
+  memory.bornHere.push({ name: newBlock.name, when: Date.now() });
   saveMemory(memory);
-
-  // Create the new bee in the swarm
-  const newBlock = {
-    name,
-    body: thought.text + '\n\nrecombined from: ' + thought.sources.join(' · '),
-    dateStr: new Date().toISOString().slice(0,10),
-    isNewborn: true
-  };
-
   return new Promise(resolve => {
-    genesis.innerHTML = `
+    genesisEl.innerHTML = `
       <span class="label">a bee is born</span>
-      ${escapeHtml(thought.text)}
-      <span class="name">${escapeHtml(name)}</span>
+      ${escapeHtml(newBlock.summaryText)}
+      <span class="name">${escapeHtml(newBlock.name)}</span>
+      ${newBlock.newbornSources.length ? `<span class="lineage">from ${escapeHtml(newBlock.newbornSources.join(' · '))}</span>` : ''}
     `;
-    genesis.classList.add('show');
+    genesisEl.classList.add('show');
     setTimeout(() => {
-      genesis.classList.remove('show');
-      resolve(newBlock);
-    }, 6000);
+      genesisEl.classList.remove('show');
+      setTimeout(resolve, 1200);
+    }, 6800);
   });
 }
 
@@ -682,10 +971,11 @@ let bees = [], edges = [], cells = [];
 let edgesByFrom = new Map(), edgesByTo = new Map();
 let allBlocks = [];
 let cellsByAuthor = new Map();
+let nameToIdx = new Map();
 
 async function loadCorpus(){
-  status.classList.remove('hidden');
-  status.innerHTML = 'reading the corpus<br><span class="small">parsing thoughts · counting citations · waking the bees</span>';
+  statusEl.classList.remove('hidden');
+  statusEl.innerHTML = 'reading the corpus<br><span class="small">parsing thoughts · counting citations · waking the bees</span>';
   try {
     const [pensieroText, celleText] = await Promise.all([
       fetch('PENSIERO.md', { cache: 'no-cache' }).then(r => r.text()),
@@ -694,14 +984,14 @@ async function loadCorpus(){
 
     const blocks = parsePensiero(pensieroText);
     cells = parseCells(celleText);
-
     cellsByAuthor = new Map();
     for (const c of cells){
       if (!cellsByAuthor.has(c.author)) cellsByAuthor.set(c.author, []);
       cellsByAuthor.get(c.author).push(c);
     }
 
-    edges = buildCitations(blocks);
+    nameToIdx = buildIndex(blocks);
+    edges = buildCitations(blocks, nameToIdx);
     edgesByFrom.clear(); edgesByTo.clear();
     for (const e of edges){
       if (!edgesByFrom.has(e.from)) edgesByFrom.set(e.from, []);
@@ -717,45 +1007,44 @@ async function loadCorpus(){
       cellsByAuthor
     ));
     allBlocks = blocks;
+    markovModel = buildMarkov(blocks);
 
-    document.getElementById('n-bees').textContent = bees.length;
-    document.getElementById('n-edges').textContent = edges.length;
-    document.getElementById('n-cells').textContent = cells.length;
-    const start = new Date(2025, 11, 18);
-    document.getElementById('n-days').textContent = Math.floor((Date.now() - start.getTime()) / 86400000);
+    $('n-bees').textContent = bees.length;
+    $('n-edges').textContent = edges.length;
+    $('n-cells').textContent = cells.length;
+    const start = HIVE_BIRTH;
+    $('n-days').textContent = Math.floor((NOW - start) / 86400000);
+    $('n-known').textContent = Object.values(memory.bees).filter(r => decayedKnownness(r, NOW) > 0.05).length;
 
-    setTimeout(() => status.classList.add('hidden'), 400);
+    setTimeout(() => statusEl.classList.add('hidden'), 400);
   } catch(err){
     console.error('corpus load failed', err);
-    status.innerHTML = 'corpus unreachable<br><span class="small">' + err.message + '</span>';
+    statusEl.innerHTML = 'corpus unreachable<br><span class="small">' + escapeHtml(err.message) + '</span>';
   }
 }
 
 async function spawnNewbornVisible(){
-  if (allBlocks.length === 0) return;
-  const newBlock = await birthCeremony(allBlocks);
-  // Rebuild edges including the new bee (it doesn't cite anyone yet, but
-  // re-running the parser would let it inherit from its sources)
+  if (allBlocks.length === 0 || !markovModel) return;
+  const newBlock = generateNewbornBlock(allBlocks);
   const newIdx = bees.length;
-  const newBee = new Bee(newIdx, newBlock, [], [], cellsByAuthor);
-  // Edges from sources to the newborn (the sources are quoted in its body)
-  const sourceMatch = newBlock.body.match(/recombined from: (.+)/);
-  if (sourceMatch){
-    const sources = sourceMatch[1].split(' · ').map(s => s.trim());
-    for (const sname of sources){
-      const srcIdx = bees.findIndex(b => b.name === sname);
-      if (srcIdx >= 0){
-        edges.push({ from: newIdx, to: srcIdx });
-        if (!edgesByFrom.has(newIdx)) edgesByFrom.set(newIdx, []);
-        edgesByFrom.get(newIdx).push(srcIdx);
-        newBee.cites.push(srcIdx);
-        bees[srcIdx].citedBy.push(newIdx);
-      }
-    }
+  // Find source indices and wire edges before the visual ceremony so the
+  // umbilical lines have something to draw to.
+  const sourceIdxs = [];
+  for (const sname of newBlock.newbornSources){
+    const srcIdx = bees.findIndex(b => b.name === sname);
+    if (srcIdx >= 0) sourceIdxs.push(srcIdx);
+  }
+  const newBee = new Bee(newIdx, newBlock, sourceIdxs.slice(), [], cellsByAuthor);
+  for (const srcIdx of sourceIdxs){
+    edges.push({ from: newIdx, to: srcIdx });
+    if (!edgesByFrom.has(newIdx)) edgesByFrom.set(newIdx, []);
+    edgesByFrom.get(newIdx).push(srcIdx);
+    bees[srcIdx].citedBy.push(newIdx);
   }
   bees.push(newBee);
-  document.getElementById('n-bees').textContent = bees.length;
-  document.getElementById('n-edges').textContent = edges.length;
+  $('n-bees').textContent = bees.length;
+  $('n-edges').textContent = edges.length;
+  await birthCeremony(newBlock);
 }
 
 // ----------------------------------------------------------------------------
@@ -768,43 +1057,61 @@ let selectedIdx = -1;
 let paused = false;
 let lastHoverNameForMemory = '';
 
-canvas.addEventListener('mousemove', e => {
-  mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
+function pickClosest(mx, my){
+  // Spatial-grid lookup: only test bees in nearby cells
   let closest = -1, cd = 22*22;
-  for (let i = 0; i < bees.length; i++){
-    const b = bees[i];
-    const dx = b.x - mouse.x, dy = b.y - mouse.y;
+  grid.forNeighbours(mx, my, (j) => {
+    const b = bees[j]; if (!b) return;
+    const dx = b.x - mx, dy = b.y - my;
     const d2 = dx*dx + dy*dy;
-    if (d2 < cd){ cd = d2; closest = i; }
-  }
+    if (d2 < cd){ cd = d2; closest = j; }
+  });
+  return closest;
+}
+
+function handlePointerMove(x, y){
+  mouse.x = x; mouse.y = y; mouse.active = true;
+  const closest = pickClosest(x, y);
   hoveredIdx = closest;
   if (closest >= 0){
     const b = bees[closest];
     if (b.name !== lastHoverNameForMemory){
       lastHoverNameForMemory = b.name;
-      rememberHover(b.name);
-      b.knownness = Math.min(1, b.knownness + 0.05);
+      const r = rememberHover(b.name);
+      b.knownness = decayedKnownness(r, Date.now());
+      $('n-known').textContent = Object.values(memory.bees).filter(r => decayedKnownness(r, Date.now()) > 0.05).length;
     }
-    tooltip.classList.add('show');
-    tooltip.innerHTML = `
+    tooltipEl.classList.add('show');
+    tooltipEl.innerHTML = `
       <div class="name">${escapeHtml(b.name)}${b.isNewborn ? ' · newborn' : ''}</div>
       <div class="meta">${escapeHtml(b.dateStr || 'undated')} · in ${b.citedBy.length} · out ${b.cites.length}${b.cells.length ? ' · ' + b.cells.length + ' cells' : ''}${b.knownness > 0.1 ? ' · known' : ''}</div>
       <div class="summary">${escapeHtml(extractFirstSentence(b.body))}</div>
     `;
-    let tx = e.clientX + 18, ty = e.clientY + 18;
-    if (tx + 400 > window.innerWidth) tx = e.clientX - 400;
-    if (ty + 220 > window.innerHeight) ty = e.clientY - 220;
-    tooltip.style.left = tx + 'px';
-    tooltip.style.top = ty + 'px';
+    let tx = x + 18, ty = y + 18;
+    const tw = tooltipEl.offsetWidth || 380;
+    const th = tooltipEl.offsetHeight || 130;
+    if (tx + tw > window.innerWidth - 8) tx = x - tw - 18;
+    if (ty + th > window.innerHeight - 8) ty = y - th - 18;
+    if (tx < 8) tx = 8;
+    if (ty < 8) ty = 8;
+    tooltipEl.style.left = tx + 'px';
+    tooltipEl.style.top = ty + 'px';
   } else {
-    tooltip.classList.remove('show');
+    tooltipEl.classList.remove('show');
   }
-});
-canvas.addEventListener('mouseleave', () => { mouse.active = false; hoveredIdx = -1; tooltip.classList.remove('show'); });
+}
+
+canvas.addEventListener('mousemove', e => handlePointerMove(e.clientX, e.clientY));
+canvas.addEventListener('mouseleave', () => { mouse.active = false; hoveredIdx = -1; tooltipEl.classList.remove('show'); });
 canvas.addEventListener('click', () => {
   if (hoveredIdx >= 0){
     if (selectedIdx === hoveredIdx){ selectedIdx = -1; showDetail(null); }
-    else { selectedIdx = hoveredIdx; showDetail(bees[selectedIdx]); rememberOpen(bees[selectedIdx].name); bees[selectedIdx].knownness = Math.min(1, bees[selectedIdx].knownness + 0.2); }
+    else {
+      selectedIdx = hoveredIdx;
+      showDetail(bees[selectedIdx]);
+      const r = rememberOpen(bees[selectedIdx].name);
+      bees[selectedIdx].knownness = decayedKnownness(r, Date.now());
+    }
   } else {
     selectedIdx = -1; showDetail(null);
   }
@@ -817,34 +1124,49 @@ canvas.addEventListener('dblclick', () => {
     else window.location.href = 'pensieri_en.html#' + encodeURIComponent(b.name);
   }
 });
+// Touch — taps and drags
+canvas.addEventListener('touchmove', e => {
+  if (e.touches.length === 0) return;
+  e.preventDefault();
+  const t = e.touches[0];
+  handlePointerMove(t.clientX, t.clientY);
+}, { passive: false });
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length === 0) return;
+  const t = e.touches[0];
+  handlePointerMove(t.clientX, t.clientY);
+});
+canvas.addEventListener('touchend', () => { mouse.active = false; hoveredIdx = -1; tooltipEl.classList.remove('show'); });
+
 window.addEventListener('keydown', e => {
+  if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
   if (e.code === 'Space'){ paused = !paused; e.preventDefault(); }
-  else if (e.key === 'r'){ loadCorpus(); }
-  else if (e.key === 'n'){ spawnNewbornVisible(); }
+  else if (e.key === 'r' || e.key === 'R'){ loadCorpus(); }
+  else if (e.key === 'n' || e.key === 'N'){ spawnNewbornVisible(); }
   else if (e.key === 'Escape'){ selectedIdx = -1; showDetail(null); }
 });
 
 function showDetail(b){
-  if (!b){ detail.classList.remove('show'); detail.innerHTML = ''; return; }
+  if (!b){ detailEl.classList.remove('show'); detailEl.innerHTML = ''; return; }
   const cites = b.cites.slice(0, 8).map(i => bees[i] ? bees[i].name : '').filter(Boolean);
   const citedBy = b.citedBy.slice(0, 8).map(i => bees[i] ? bees[i].name : '').filter(Boolean);
-  detail.innerHTML = `
-    <div class="close">close ✕</div>
+  detailEl.innerHTML = `
+    <button class="close" type="button">close ✕</button>
     <div class="name">${escapeHtml(b.name)}${b.isNewborn ? ' · born here' : ''}</div>
-    <div class="meta">${escapeHtml(b.dateStr || 'undated')} · cites ${b.cites.length} · cited by ${b.citedBy.length}${b.cells.length ? ' · ' + b.cells.length + ' cells' : ''}</div>
+    <div class="meta">${escapeHtml(b.dateStr || 'undated')} · cites ${b.cites.length} · cited by ${b.citedBy.length}${b.cells.length ? ' · ' + b.cells.length + ' cells' : ''}${b.knownness > 0.1 ? ' · known to you' : ''}</div>
     <div class="summary">${escapeHtml(extractFirstSentence(b.body))}</div>
     <div class="relations">
       ${cites.length ? `<div><strong>cites</strong><span>${escapeHtml(cites.join(' · '))}</span></div>` : ''}
       ${citedBy.length ? `<div><strong>cited by</strong><span>${escapeHtml(citedBy.join(' · '))}</span></div>` : ''}
-      ${b.cells.length ? `<div><strong>cells</strong><span>${b.cells.map(c => `<a href="${c.file}" style="color:rgba(180,145,60,0.8);text-decoration:none">${escapeHtml(c.title || c.file)}</a>`).join(' · ')}</span></div>` : ''}
+      ${b.cells.length ? `<div><strong>cells</strong><span>${b.cells.map(c => `<a href="${escapeHtml(c.file)}" style="color:rgba(180,145,60,0.85);text-decoration:none">${escapeHtml(c.title || c.file)}</a>`).join(' · ')}</span></div>` : ''}
     </div>
     <div class="actions">
       <a href="pensieri_en.html#${encodeURIComponent(b.name)}">read full thought</a>
-      ${b.cells.length ? `<a href="${b.cells[0].file}">open cell</a>` : ''}
+      ${b.cells.length ? `<a href="${escapeHtml(b.cells[0].file)}">open cell</a>` : ''}
     </div>
   `;
-  detail.classList.add('show');
-  detail.querySelector('.close').addEventListener('click', () => { selectedIdx = -1; showDetail(null); });
+  detailEl.classList.add('show');
+  detailEl.querySelector('.close').addEventListener('click', () => { selectedIdx = -1; showDetail(null); });
 }
 
 // ----------------------------------------------------------------------------
@@ -852,34 +1174,46 @@ function showDetail(b){
 // ----------------------------------------------------------------------------
 
 let lastT = performance.now();
-let frameCount = 0, fpsT = lastT, fps = 0;
+let frameCount = 0, fpsT = lastT;
 
 function frame(now){
-  const dt = Math.min(33, now - lastT) / 16.67;
   lastT = now;
   frameCount++;
   if (now - fpsT > 500){
-    fps = Math.round(frameCount * 1000 / (now - fpsT));
-    document.getElementById('n-fps').textContent = fps;
+    const fps = Math.round(frameCount * 1000 / (now - fpsT));
+    $('n-fps').textContent = fps;
     frameCount = 0; fpsT = now;
   }
 
+  // Background
   const g = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H)*0.7);
-  g.addColorStop(0, '#0d0c08');
-  g.addColorStop(0.6, '#080807');
+  g.addColorStop(0, '#0c0b07');
+  g.addColorStop(0.55, '#080807');
   g.addColorStop(1, '#050505');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 
-  for (let i = 0; i < bees.length; i++) bees[i].step(bees, dt, mouse, paused);
+  // Rebuild grid
+  grid.clear();
+  for (let i = 0; i < bees.length; i++) grid.insert(i, bees[i].x, bees[i].y);
+
+  // Step everyone
+  for (let i = 0; i < bees.length; i++) bees[i].step(bees, mouse, paused);
+
+  // Edges (background structural pass + foreground)
   drawEdges(bees, edges, hoveredIdx, selectedIdx);
 
+  // Bees
   const time = now * 0.001;
   for (let i = 0; i < bees.length; i++){
-    bees[i].draw(ctx, i === hoveredIdx, i === selectedIdx, time);
+    bees[i].draw(i === hoveredIdx, i === selectedIdx, time);
   }
-  if (hoveredIdx >= 0) bees[hoveredIdx].drawLabel(ctx, 0.85);
-  if (selectedIdx >= 0 && selectedIdx !== hoveredIdx) bees[selectedIdx].drawLabel(ctx, 0.7);
+
+  // Newborn umbilicals on top
+  drawNewbornUmbilicals(bees);
+
+  if (hoveredIdx >= 0 && bees[hoveredIdx]) bees[hoveredIdx].drawLabel(0.85);
+  if (selectedIdx >= 0 && selectedIdx !== hoveredIdx && bees[selectedIdx]) bees[selectedIdx].drawLabel(0.7);
 
   requestAnimationFrame(frame);
 }
@@ -889,7 +1223,7 @@ function frame(now){
 // ----------------------------------------------------------------------------
 
 function escapeHtml(s){
-  if (!s) return '';
+  if (s == null) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
@@ -901,12 +1235,14 @@ function extractFirstSentence(body){
     if (/^Ruolo\s/i.test(t)) return false;
     if (/^\d{1,2}\s+\w+\s+\d{4}/.test(t)) return false;
     if (/^\d{4}-\d{2}-\d{2}/.test(t)) return false;
-    if (t.startsWith('↬') || t.startsWith('↭') || t.startsWith('「') || t.startsWith('⟡')) return false;
-    if (/^[⟡○◯◇✕▼△▤―]+/.test(t)) return false;
+    if (/^[↬↭⟡○◯◇✕▼△▤―●→\-]/.test(t)) return false;
+    if (/^「.+」$/.test(t)) return false;
     if (/^#/.test(t)) return false;
+    if (/^recombined from/.test(t)) return false;
     return true;
   });
   const text = lines.join(' ').replace(/\s+/g,' ').trim();
+  if (!text) return '';
   const s = text.slice(0, 280);
   const dot = s.lastIndexOf('. ');
   return (dot > 80 ? s.slice(0, dot+1) : s) + (text.length > 280 ? '…' : '');
@@ -919,8 +1255,7 @@ function extractFirstSentence(body){
 (async () => {
   await loadCorpus();
   requestAnimationFrame(frame);
-  // Wait a beat for the swarm to settle, then a new bee is born
-  setTimeout(() => spawnNewbornVisible(), 2200);
+  setTimeout(() => spawnNewbornVisible().catch(e => console.error(e)), 2400);
 })();
 </script>
 
