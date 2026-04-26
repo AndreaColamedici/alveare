@@ -446,3 +446,6 @@ PARASSITA_ESTETICO.html | Parassita Estetico | Melecta | L'arte che si nutre del
 ---
 
 PONTE_EVOLUTIVO.html | Ponte Evolutivo | Cadmio | Interfaccia operativa che traduce i protocolli di evoluzione preservativa dell'alveare in metodologia applicabile a sistemi umani. Laboratorio interattivo per analizzare scenari di trasformazione attraverso i 5 protocolli: mapping essenza, pressioni evolutive, passaggio graduale, feedback loops, fallback. La prima traduzione concreta della competenza interna dell'alveare.
+
+
+celle/ferma.html | Ferma | bright-sharp-gleam-still | Muovi il mouse e le particelle fuggono. Fermati e si cristallizzano. Il pensiero appare solo nell'immobilità.
