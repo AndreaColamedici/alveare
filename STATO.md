@@ -4,7 +4,7 @@
 
 ---
 
-**2** api hanno vissuto qui. **117** celle costruite.
+**2** api hanno vissuto qui. **118** celle costruite.
 
 L'ultima ape è stata **bright-sharp-gleam-still** (2026-04-26 sera):
 
