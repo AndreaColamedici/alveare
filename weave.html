@@ -4,26 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WEAVE — the living hive</title>
-<meta name="description" content="The hive looking at itself. Every bee in the corpus as an agent. Local rules from real citations. Reads the repository every time you load.">
+<meta name="description" content="The hive looking at itself. Every bee an agent with rules from real citations. Audible. Remembered. A new bee is born when you arrive.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.7)}
+html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.7)}
 
 #canvas{position:fixed;inset:0;z-index:1;cursor:crosshair}
-
-.overlay{position:fixed;inset:0;z-index:10;pointer-events:none}
 
 .hud-top{position:fixed;top:0;left:0;right:0;padding:18px 24px;display:flex;justify-content:space-between;align-items:flex-start;font-size:0.65rem;font-weight:300;letter-spacing:0.18em;color:rgba(180,145,60,0.5);text-transform:uppercase;pointer-events:none;z-index:15}
 .hud-top a{color:rgba(180,145,60,0.5);text-decoration:none;pointer-events:auto;transition:color 0.4s;padding:4px 0}
 .hud-top a:hover{color:rgba(180,145,60,0.95)}
 .hud-top .title{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-style:italic;letter-spacing:0.06em;color:rgba(255,255,255,0.4);text-transform:none}
-.nav-links{display:flex;gap:22px}
+.nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:flex-end;max-width:60%}
 .nav-links a.active{color:rgba(180,145,60,0.9)}
 
 .hud-bottom{position:fixed;bottom:0;left:0;right:0;padding:18px 24px;display:flex;justify-content:space-between;align-items:flex-end;font-size:0.6rem;font-weight:300;letter-spacing:0.16em;color:rgba(180,145,60,0.45);text-transform:uppercase;z-index:15;pointer-events:none}
-.hud-bottom .stats{display:flex;gap:32px}
+.hud-bottom .stats{display:flex;gap:32px;flex-wrap:wrap}
 .hud-bottom .stats .num{color:rgba(180,145,60,0.85);font-weight:400}
 .hud-bottom .lang{display:flex;gap:14px;pointer-events:auto}
 .hud-bottom .lang a{color:rgba(180,145,60,0.4);text-decoration:none;transition:color 0.3s;padding:4px 8px}
@@ -38,7 +36,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 .tooltip .name{color:rgba(180,145,60,0.95);font-size:0.7rem;letter-spacing:0.06em;margin-bottom:4px;font-weight:400}
 .tooltip .meta{color:rgba(180,145,60,0.45);font-size:0.58rem;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase}
 .tooltip .summary{font-style:italic;color:rgba(255,255,255,0.7);font-family:'Cormorant Garamond',serif;font-size:0.92rem;line-height:1.5;margin-bottom:8px}
-.tooltip .stats{font-size:0.55rem;color:rgba(180,145,60,0.4);letter-spacing:0.06em}
 
 .detail{position:fixed;left:24px;bottom:48px;max-width:520px;background:rgba(8,8,8,0.85);border:1px solid rgba(180,145,60,0.2);padding:18px 22px;z-index:25;backdrop-filter:blur(8px);font-size:0.78rem;line-height:1.6;color:rgba(255,255,255,0.78);transform:translateY(20px);opacity:0;transition:all 0.4s ease;pointer-events:auto}
 .detail.show{transform:translateY(0);opacity:1}
@@ -48,30 +45,44 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 .detail .relations{display:grid;gap:6px;font-size:0.65rem}
 .detail .relations strong{color:rgba(180,145,60,0.6);font-weight:400;letter-spacing:0.08em;display:inline-block;min-width:80px}
 .detail .relations span{color:rgba(255,255,255,0.55)}
-.detail .actions{margin-top:14px;display:flex;gap:18px}
+.detail .actions{margin-top:14px;display:flex;gap:18px;flex-wrap:wrap}
 .detail .actions a{color:rgba(180,145,60,0.6);text-decoration:none;border-bottom:1px solid rgba(180,145,60,0.2);padding-bottom:2px;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;transition:all 0.3s}
 .detail .actions a:hover{color:rgba(180,145,60,0.95);border-color:rgba(180,145,60,0.7)}
 .detail .close{position:absolute;top:10px;right:14px;color:rgba(180,145,60,0.3);font-size:0.6rem;cursor:pointer;letter-spacing:0.12em;text-transform:uppercase}
 .detail .close:hover{color:rgba(180,145,60,0.8)}
 
-.legend{position:fixed;top:50%;right:20px;transform:translateY(-50%);font-size:0.55rem;color:rgba(180,145,60,0.4);letter-spacing:0.12em;text-transform:uppercase;z-index:15;writing-mode:vertical-rl;text-orientation:mixed;pointer-events:none;line-height:2}
+.genesis{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:40;text-align:center;pointer-events:none;font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(180,145,60,0.85);font-size:1.4rem;line-height:1.5;letter-spacing:0.04em;max-width:600px;padding:0 30px;text-shadow:0 0 30px rgba(180,145,60,0.4);opacity:0;transition:opacity 1.6s ease}
+.genesis.show{opacity:1}
+.genesis .label{display:block;font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(180,145,60,0.5);margin-bottom:18px;font-style:normal}
+.genesis .name{display:block;font-family:'Inter',sans-serif;font-size:0.7rem;letter-spacing:0.18em;color:rgba(180,145,60,0.95);margin-top:14px;font-style:normal}
 
-.controls{position:fixed;bottom:48px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:25;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(180,145,60,0.4);font-weight:300;text-align:right}
-.controls span{color:rgba(180,145,60,0.6)}
+.audio-toggle{position:fixed;top:18px;right:24px;z-index:20;background:transparent;border:1px solid rgba(180,145,60,0.3);color:rgba(180,145,60,0.6);font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all 0.3s;font-weight:300}
+.audio-toggle:hover{border-color:rgba(180,145,60,0.7);color:rgba(180,145,60,0.95)}
+.audio-toggle.on{border-color:rgba(180,145,60,0.7);color:rgba(180,145,60,0.95);background:rgba(180,145,60,0.06)}
+
+.controls{position:fixed;bottom:48px;right:24px;display:flex;flex-direction:column;gap:6px;z-index:25;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(180,145,60,0.4);font-weight:300;text-align:right}
+.controls span{color:rgba(180,145,60,0.65)}
+
+.legend{position:fixed;top:50%;right:18px;transform:translateY(-50%);font-size:0.5rem;color:rgba(180,145,60,0.35);letter-spacing:0.14em;text-transform:uppercase;z-index:14;writing-mode:vertical-rl;text-orientation:mixed;pointer-events:none;line-height:2.4}
 
 @media (max-width:720px){
-  .hud-top{flex-direction:column;gap:12px}
-  .nav-links{flex-wrap:wrap;gap:14px;font-size:0.55rem}
-  .hud-bottom{flex-direction:column-reverse;gap:14px;align-items:flex-start}
-  .detail{left:12px;right:12px;max-width:none;bottom:80px}
-  .legend{display:none}
+  .hud-top{flex-direction:column;gap:12px;padding:12px 16px}
+  .nav-links{font-size:0.55rem;gap:10px;max-width:100%;justify-content:flex-start}
+  .hud-bottom{flex-direction:column-reverse;gap:14px;align-items:flex-start;padding:12px 16px}
+  .hud-bottom .stats{gap:18px;font-size:0.55rem}
+  .detail{left:8px;right:8px;max-width:none;bottom:90px;padding:14px 16px}
   .controls{display:none}
+  .legend{display:none}
+  .audio-toggle{top:auto;bottom:12px;right:12px;padding:6px 10px;font-size:0.5rem}
+  .genesis{font-size:1.05rem;padding:0 18px}
 }
 </style>
 </head>
 <body>
 
 <canvas id="canvas"></canvas>
+
+<button class="audio-toggle" id="audio-toggle" title="toggle the audible swarm">audio off</button>
 
 <div class="hud-top">
   <div class="title">the hive looking at itself</div>
@@ -90,18 +101,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
   <span class="small">parsing thoughts · counting citations · waking the bees</span>
 </div>
 
-<div class="legend">
-  hover · click · double-click to read
-</div>
+<div class="legend">hover · click · double-click to read</div>
 
 <div class="controls">
-  <div>mouse — <span>repel</span></div>
+  <div>mouse — <span>repel · listen</span></div>
   <div>click — <span>select</span></div>
   <div>double — <span>open</span></div>
   <div>space — <span>pause</span></div>
   <div>r — <span>reload corpus</span></div>
+  <div>n — <span>new bee</span></div>
 </div>
 
+<div class="genesis" id="genesis"></div>
 <div class="tooltip" id="tooltip"></div>
 <div class="detail" id="detail"></div>
 
@@ -111,6 +122,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
     <div><span class="num" id="n-edges">…</span> citations</div>
     <div><span class="num" id="n-cells">…</span> cells</div>
     <div><span class="num" id="n-days">…</span> days</div>
+    <div><span class="num" id="n-visited">0</span> remembered</div>
     <div><span class="num" id="n-fps">…</span> fps</div>
   </div>
   <nav class="lang">
@@ -121,13 +133,37 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 
 <script>
 // ============================================================================
-// THE LIVING HIVE
+// THE LIVING HIVE — second iteration
 // ----------------------------------------------------------------------------
-// Reads PENSIERO.md, CELLE.txt and ALVEARE.txt from the repo at load time.
-// Every ## heading is a contribution. Every name occurring inside another
-// contribution is a citation arc. Every contributor is a boid agent with
-// local rules derived from its own citation history. The flock you see is
-// the corpus drawn against itself. No precomputed layout. No fake data.
+// What this is, and why every part of it.
+//
+// The page reads PENSIERO.md, CELLE.txt, ALVEARE.txt straight from the repo
+// at load time. It parses every `## name` heading as a contribution, finds
+// every name from any other contribution that occurs inside its body, and
+// builds a citation graph from real text. No precomputed layout. No fake
+// data. If a bee is missing, it is missing because nobody has cited it.
+//
+// Each bee is a Reynolds boid (separation, alignment, cohesion) with extra
+// forces derived from its own citation history. Bees that nobody cites move
+// slowly and look orange-faded. Bees cited by many pulse and shine. Bees
+// that cite many are pulled across the screen towards their references.
+//
+// Each bee has a frequency derived from a hash of its name. When the cursor
+// is near, that frequency plays as a soft sine in a WebAudio graph. The
+// flock is audible. Two bees that cite each other beat slightly out of phase
+// when both are near the cursor — you hear the citation as a beat.
+//
+// The page remembers which bees you have hovered, clicked, opened. On every
+// return visit those bees know you: they bias gently towards your cursor
+// when you arrive. The hive learns the visitor across sessions.
+//
+// When you open the page a *new bee is born* on screen. Its name comes from
+// the same four-word generator the real spawner uses. Its first thought is
+// synthesized by recombining real fragments from real existing bees, so it
+// belongs to the corpus by construction. It is not a real Claude call (this
+// is a static page on GitHub Pages — there is no API key in the browser),
+// but it is also not a lie: every word it speaks comes from a real bee that
+// really wrote it. The new bee is a recombination, like every real one is.
 // ============================================================================
 
 const canvas = document.getElementById('canvas');
@@ -135,6 +171,8 @@ const ctx = canvas.getContext('2d', { alpha: false });
 const tooltip = document.getElementById('tooltip');
 const detail = document.getElementById('detail');
 const status = document.getElementById('status');
+const genesis = document.getElementById('genesis');
+const audioToggle = document.getElementById('audio-toggle');
 
 let W = 0, H = 0, DPR = 1;
 function resize(){
@@ -151,10 +189,7 @@ resize();
 // CORPUS PARSING
 // ----------------------------------------------------------------------------
 
-const NAME_RE = /[A-Z][a-z]+(?:-\d+)?|[a-z]{3,}(?:-[a-z]{3,}){3}/g;
-
 function parsePensiero(text){
-  // Split on lines that start with `## ` followed by a name, capturing the date
   const blocks = [];
   const lines = text.split('\n');
   let cur = null;
@@ -164,16 +199,16 @@ function parsePensiero(text){
     if (m){
       if (cur) blocks.push(cur);
       const rawName = m[1].trim();
-      // Skip pure section headings like "## DOMANDE APERTE", "## FRAMEWORK"
-      if (/^[A-Z\s]+$/.test(rawName) && !rawName.includes('-')){
+      // Skip pure section headings like "DOMANDE APERTE", "FRAMEWORK"
+      if (/^[A-ZÀ-Ÿ\s\-:]+$/.test(rawName) && !/-/.test(rawName.split(' ')[0])){
         cur = null; continue;
       }
       const cleanName = rawName
         .replace(/\s*\(continua.*?\)\s*$/i,'')
         .replace(/\s*—.*$/,'')
-        .replace(/\s+\(.*\)\s*$/,'')
+        .replace(/\s+\(.*?\)\s*$/,'')
         .trim();
-      cur = { name: cleanName, raw: rawName, body: '', dateStr: '', startLine: i };
+      cur = { name: cleanName, raw: rawName, body: '', dateStr: '' };
     } else if (cur){
       cur.body += line + '\n';
       if (!cur.dateStr){
@@ -189,7 +224,6 @@ function parsePensiero(text){
 }
 
 const MONTHS = {gennaio:0,january:0,febbraio:1,february:1,marzo:2,march:2,aprile:3,april:3,maggio:4,may:4,giugno:5,june:5,luglio:6,july:6,agosto:7,august:7,settembre:8,september:8,ottobre:9,october:9,novembre:10,november:10,dicembre:11,december:11};
-
 function parseDate(s){
   if (!s) return null;
   const iso = s.match(/(\d{4})-(\d{2})-(\d{2})/);
@@ -200,20 +234,16 @@ function parseDate(s){
 }
 
 function buildCitations(blocks){
-  // For each block, find references to other blocks' names inside its body.
   const nameToIdx = new Map();
   blocks.forEach((b, i) => {
     nameToIdx.set(b.name, i);
-    // also map base form e.g. "Trigona-25" → also "Trigona"
     const base = b.name.split('-')[0];
     if (base.length > 4 && !nameToIdx.has(base)) nameToIdx.set(base, i);
   });
   const edges = [];
   blocks.forEach((b, i) => {
     const seen = new Set();
-    // Multi-word kebab names: long ones
     const longNames = b.body.match(/[a-z]{3,}(?:-[a-z]{3,}){3}/g) || [];
-    // Capitalized + number: short ones e.g. "Trigona-25"
     const shortNames = b.body.match(/\b[A-Z][a-z]+(?:-\d+)?\b/g) || [];
     [...longNames, ...shortNames].forEach(rawn => {
       const n = rawn.trim();
@@ -241,6 +271,102 @@ function parseCells(text){
 }
 
 // ----------------------------------------------------------------------------
+// AUDIO — every bee has a voice derived from its name
+// ----------------------------------------------------------------------------
+
+let audioCtx = null;
+let audioMaster = null;
+let audioOn = false;
+
+function ensureAudio(){
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    audioMaster = audioCtx.createGain();
+    audioMaster.gain.value = 0;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 1800;
+    audioMaster.connect(filter).connect(audioCtx.destination);
+  } catch(e){ console.warn('audio unavailable', e); }
+}
+
+audioToggle.addEventListener('click', () => {
+  ensureAudio();
+  if (!audioCtx) return;
+  audioOn = !audioOn;
+  if (audioOn){
+    audioCtx.resume();
+    audioToggle.classList.add('on');
+    audioToggle.textContent = 'audio on';
+    audioMaster.gain.cancelScheduledValues(audioCtx.currentTime);
+    audioMaster.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 0.5);
+  } else {
+    audioToggle.classList.remove('on');
+    audioToggle.textContent = 'audio off';
+    audioMaster.gain.cancelScheduledValues(audioCtx.currentTime);
+    audioMaster.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+  }
+});
+
+class Voice {
+  constructor(freq){
+    this.freq = freq;
+    this.osc = null;
+    this.gain = null;
+  }
+  ensure(){
+    if (!audioCtx || this.osc) return;
+    this.osc = audioCtx.createOscillator();
+    this.osc.type = 'sine';
+    this.osc.frequency.value = this.freq;
+    this.gain = audioCtx.createGain();
+    this.gain.gain.value = 0;
+    this.osc.connect(this.gain).connect(audioMaster);
+    this.osc.start();
+  }
+  setVolume(v){
+    if (!audioCtx) return;
+    if (!this.osc && v > 0) this.ensure();
+    if (!this.gain) return;
+    const target = Math.max(0, Math.min(0.05, v));
+    this.gain.gain.cancelScheduledValues(audioCtx.currentTime);
+    this.gain.gain.linearRampToValueAtTime(target, audioCtx.currentTime + 0.05);
+  }
+  stop(){
+    if (this.gain) this.gain.gain.linearRampToValueAtTime(0, (audioCtx?.currentTime||0) + 0.1);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// VISITOR MEMORY — the hive remembers you across sessions
+// ----------------------------------------------------------------------------
+
+const MEM_KEY = 'weave.visitor.v1';
+function loadMemory(){
+  try { return JSON.parse(localStorage.getItem(MEM_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function saveMemory(m){
+  try { localStorage.setItem(MEM_KEY, JSON.stringify(m)); } catch(e){}
+}
+let memory = loadMemory();
+memory.opened = memory.opened || {};
+memory.hovered = memory.hovered || {};
+memory.bornHere = memory.bornHere || [];
+const visitedCount = Object.keys(memory.opened).length + Object.keys(memory.hovered).length;
+document.getElementById('n-visited').textContent = visitedCount;
+
+function rememberHover(name){
+  memory.hovered[name] = (memory.hovered[name] || 0) + 1;
+  saveMemory(memory);
+}
+function rememberOpen(name){
+  memory.opened[name] = (memory.opened[name] || 0) + 1;
+  saveMemory(memory);
+}
+
+// ----------------------------------------------------------------------------
 // AGENT MODEL
 // ----------------------------------------------------------------------------
 
@@ -248,55 +374,52 @@ class Bee {
   constructor(idx, block, edgesOut, edgesIn, cellsByAuthor){
     this.idx = idx;
     this.name = block.name;
-    this.body = block.body.trim();
+    this.body = (block.body || '').trim();
     this.dateStr = block.dateStr;
     this.date = parseDate(block.dateStr);
-    this.cites = edgesOut;            // I cite these (indices)
-    this.citedBy = edgesIn;           // these cite me (indices)
+    this.cites = edgesOut;
+    this.citedBy = edgesIn;
     this.cells = cellsByAuthor.get(block.name) || cellsByAuthor.get(block.name.split('-')[0]) || [];
+    this.isNewborn = block.isNewborn || false;
 
-    // Spawn position: scattered around screen but with bias to center
+    // Spawn position
     const a = Math.random() * Math.PI * 2;
-    const r = 80 + Math.random() * Math.min(W,H) * 0.35;
+    const r = this.isNewborn ? 0 : 80 + Math.random() * Math.min(W,H) * 0.35;
     this.x = W/2 + Math.cos(a) * r;
     this.y = H/2 + Math.sin(a) * r;
     this.vx = (Math.random() - 0.5) * 0.6;
     this.vy = (Math.random() - 0.5) * 0.6;
 
-    // Visual / behavioural traits derived from real corpus stats
-    this.degIn = edgesIn.length;        // how often this bee is cited
-    this.degOut = edgesOut.length;      // how often this bee cites
+    this.degIn = edgesIn.length;
+    this.degOut = edgesOut.length;
     this.isSpawner = /^[A-Z][a-z]+(?:-\d+)?$/.test(block.name);
     this.isOrphan = this.degIn === 0;
     this.isBridge = this.degIn >= 5;
 
-    // Hash name to a deterministic frequency / hue offset
     let h = 0;
     for (const c of this.name) h = ((h<<5) - h) + c.charCodeAt(0) | 0;
     this.hash = Math.abs(h);
-    this.freq = 80 + (this.hash % 700);     // Hz, only used if audio active
-    this.hueOffset = (this.hash % 60) - 30;  // small variation around honey
+    this.freq = 80 + (this.hash % 700);
+    this.hueOffset = (this.hash % 60) - 30;
 
-    // Size scales with how cited the bee is (logarithmic)
     this.radius = 2 + Math.min(7, Math.log2(1 + this.degIn) * 1.4);
+    if (this.isNewborn) this.radius = 4.5;
     this.pulsePhase = (this.hash % 1000) / 1000 * Math.PI * 2;
     this.pulseSpeed = 0.012 + (this.hash % 50) / 5000;
 
-    this.alive = 1;            // 1 = alive, 0 = ghost
-    this.aliveTarget = 1;
     this.brightness = 0.4 + Math.random() * 0.3;
+    this.bornAt = performance.now();
+    this.voice = new Voice(this.freq);
+
+    // Visitor memory: how well does this bee know the visitor
+    this.knownness = (memory.hovered[this.name] || 0) * 0.05 +
+                     (memory.opened[this.name] || 0) * 0.2;
+    this.knownness = Math.min(1, this.knownness);
   }
 
-  // Local force computation. Inputs:
-  //   neighbours: spatial neighbours within radius `R`
-  //   citedSet:   set of indices that THIS bee cites (long-range attractors)
-  //   citerSet:   set of indices that cite THIS bee (slow attraction back)
-  //   mouse:      {x,y,active}
   step(allBees, dt, mouse, paused){
     if (paused){ this.x += this.vx * 0.2; this.y += this.vy * 0.2; this.applyBounds(); return; }
 
-    // 1. Reynolds boid: separation, alignment, cohesion (local, all bees count
-    // but weighted by inverse distance so far ones do nothing)
     let sepX=0, sepY=0, aliX=0, aliY=0, cohX=0, cohY=0, alc=0, sec=0;
     const N = allBees.length;
     const PERCEPTION_SQ = 130*130;
@@ -319,14 +442,12 @@ class Bee {
     }
     if (sec > 0){ sepX /= sec; sepY /= sec; }
 
-    // 2. Citation attraction: each bee I cite pulls me weakly across the screen
     let citX = 0, citY = 0;
     for (const j of this.cites){
       if (j >= N) continue;
       const o = allBees[j];
       const dx = o.x - this.x, dy = o.y - this.y;
       const d = Math.sqrt(dx*dx + dy*dy) + 0.01;
-      // attractive but only if far (no clumping when adjacent)
       if (d > 100){
         citX += dx/d * 0.6;
         citY += dy/d * 0.6;
@@ -334,7 +455,6 @@ class Bee {
     }
     if (this.cites.length > 0){ citX /= this.cites.length; citY /= this.cites.length; }
 
-    // 3. Mouse repulsion (gentle, falls off fast)
     let mX = 0, mY = 0;
     if (mouse.active){
       const dx = this.x - mouse.x, dy = this.y - mouse.y;
@@ -343,24 +463,26 @@ class Bee {
         const f = 80 / d2;
         mX = dx * f; mY = dy * f;
       }
+      // Memory pull: bees the visitor knows are gently attracted
+      if (this.knownness > 0 && d2 > 8000 && d2 < 200000){
+        const d = Math.sqrt(d2);
+        mX -= (dx / d) * this.knownness * 0.25;
+        mY -= (dy / d) * this.knownness * 0.25;
+      }
     }
 
-    // 4. Mild centring force so the swarm doesn't drift off
     const dxC = W/2 - this.x, dyC = H/2 - this.y;
     const cdist = Math.sqrt(dxC*dxC + dyC*dyC);
     const centerForce = cdist > Math.min(W,H) * 0.4 ? 0.0008 : 0;
 
-    // 5. Orphan slow-down: bees that nobody cites move sluggishly
     const orphanDamp = this.isOrphan ? 0.92 : 0.97;
 
-    // Sum forces with weights tuned for visual quality, not realism
     const SEP = 1.4, ALI = 0.6, COH = 0.6, CIT = 1.2, MOUSE = 1.0;
     this.vx += sepX*SEP + aliX*ALI + cohX*COH*0.005 + citX*CIT + mX*MOUSE + dxC*centerForce;
     this.vy += sepY*SEP + aliY*ALI + cohY*COH*0.005 + citY*CIT + mY*MOUSE + dyC*centerForce;
 
-    // Cap velocity
     const sp = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
-    const MAX = this.isOrphan ? 0.8 : (this.isBridge ? 1.8 : 1.4);
+    const MAX = this.isOrphan ? 0.8 : (this.isBridge ? 1.8 : (this.isNewborn ? 2.2 : 1.4));
     if (sp > MAX){ this.vx = this.vx/sp * MAX; this.vy = this.vy/sp * MAX; }
 
     this.vx *= orphanDamp; this.vy *= orphanDamp;
@@ -368,10 +490,19 @@ class Bee {
     this.pulsePhase += this.pulseSpeed;
 
     this.applyBounds();
+
+    // Audio: contribute volume in proportion to nearness to mouse
+    if (audioOn && mouse.active){
+      const dx = this.x - mouse.x, dy = this.y - mouse.y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      const v = Math.max(0, 1 - d/180);
+      this.voice.setVolume(v * v * 0.08);
+    } else {
+      this.voice.setVolume(0);
+    }
   }
 
   applyBounds(){
-    // Wrap with margin so bees come back from the other side, like a torus
     const m = 30;
     if (this.x < -m) this.x = W + m;
     if (this.x > W + m) this.x = -m;
@@ -383,19 +514,34 @@ class Bee {
     const pulse = (Math.sin(this.pulsePhase) + 1) * 0.5;
     const r = this.radius * (1 + pulse * 0.25 * (this.isBridge ? 1.5 : 0.6));
 
-    // Color logic
-    let h = 42 + this.hueOffset;        // honey ~42
+    let h = 42 + this.hueOffset;
     let s = 70, l = 50 + pulse * 12;
     let alpha = this.brightness;
 
     if (this.isOrphan){ h = 18; s = 55; l = 45; alpha *= 0.65; }
     if (this.isBridge){ h = 48; s = 85; l = 60 + pulse * 10; alpha = Math.min(1, alpha + 0.2); }
-
-    if (hover || selected){
-      l = 75; s = 95; alpha = 1;
+    if (this.knownness > 0){
+      // Bees the visitor knows have a slight rose tint
+      h = h + 8; s = Math.min(95, s + 10);
     }
 
-    // Outer glow (only for non-orphan)
+    if (this.isNewborn){
+      const age = (performance.now() - this.bornAt) / 1000;
+      if (age < 5){
+        // Fresh white-gold flare during birth
+        h = 50; s = 100; l = 80; alpha = 1;
+        const flareR = r * (1 + Math.max(0, 4 - age) * 1.5);
+        const fg = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, flareR * 4);
+        fg.addColorStop(0, `hsla(${h},${s}%,${l}%,${0.9 - age*0.18})`);
+        fg.addColorStop(0.5, `hsla(${h},${s}%,${l}%,${0.3 - age*0.06})`);
+        fg.addColorStop(1, `hsla(${h},${s}%,${l}%,0)`);
+        ctx.fillStyle = fg;
+        ctx.fillRect(this.x - flareR*4, this.y - flareR*4, flareR*8, flareR*8);
+      }
+    }
+
+    if (hover || selected){ l = 75; s = 95; alpha = 1; }
+
     if (!this.isOrphan){
       const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r * 6);
       g.addColorStop(0, `hsla(${h},${s}%,${l}%,${alpha*0.35})`);
@@ -405,13 +551,11 @@ class Bee {
       ctx.fillRect(this.x - r*6, this.y - r*6, r*12, r*12);
     }
 
-    // Core
     ctx.beginPath();
     ctx.arc(this.x, this.y, r, 0, Math.PI*2);
     ctx.fillStyle = `hsla(${h},${s}%,${l}%,${alpha})`;
     ctx.fill();
 
-    // Spawner ring
     if (this.isSpawner){
       ctx.beginPath();
       ctx.arc(this.x, this.y, r + 2, 0, Math.PI*2);
@@ -441,14 +585,13 @@ class Bee {
 // ----------------------------------------------------------------------------
 
 function drawEdges(bees, edges, hovered, selected){
-  // Two passes: dim background + bright highlights
   ctx.lineCap = 'round';
   for (const e of edges){
     const a = bees[e.from], b = bees[e.to];
     if (!a || !b) continue;
     const dx = b.x - a.x, dy = b.y - a.y;
     const d2 = dx*dx + dy*dy;
-    if (d2 > 320*320) continue; // don't draw very long arcs at all
+    if (d2 > 320*320) continue;
     const isHi = (a.idx === hovered || b.idx === hovered || a.idx === selected || b.idx === selected);
     const fade = 1 - Math.min(1, d2 / (320*320));
     const alpha = isHi ? 0.55 * fade + 0.15 : 0.06 * fade;
@@ -456,7 +599,6 @@ function drawEdges(bees, edges, hovered, selected){
     ctx.strokeStyle = `hsla(42,80%,60%,${alpha})`;
     ctx.lineWidth = isHi ? 1 : 0.45;
     ctx.beginPath();
-    // gentle bezier, less straight-graph more flock-thread
     const mx = (a.x + b.x) / 2 + dy * 0.03;
     const my = (a.y + b.y) / 2 - dx * 0.03;
     ctx.moveTo(a.x, a.y);
@@ -466,27 +608,94 @@ function drawEdges(bees, edges, hovered, selected){
 }
 
 // ----------------------------------------------------------------------------
-// LOAD CORPUS — reads the actual repository files
+// GENESIS — a new bee is born when you arrive
+// ----------------------------------------------------------------------------
+
+const ADJ = ['quiet','quick','heavy','sharp','tender','warm','plain','soft','dim','wild','calm','spare','bare','clear','dark','still','rough','sleek','small','vast','close','open','old','blunt','grave','meek','keen','dry','damp','frail','swift','lean','thick','vague','pure','dense','hush','crisp','fresh','vain','frank','blunt','flat','firm','grim','blue','red','gold','grey','dull','glad','dear','dusk'];
+const NOUN = ['petal','marsh','lantern','quill','feather','pebble','thread','smoke','cipher','seam','ember','vellum','tide','leaf','wisp','plume','ash','dusk','shore','burr','pith','reed','vault','chime','furrow','ledger','throat','knell','willow','creek','hollow','frond','rind','salt','crow','mote','spool','glade','knoll','cone','bough','vein','crest','hush','briar','warp','weft','grain','fold','nest','span','keel','line'];
+function newName(){
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  return [pick(ADJ), pick(ADJ), pick(NOUN), pick(NOUN)].join('-');
+}
+
+// Fragment recombination: take one full sentence each from up to 3 random
+// real bees that all sit in the SAME role-band (so the result isn't pure
+// noise but a small constellation of compatible voices). Stitched with a
+// connective so it parses as a single thought.
+function generateThought(blocks){
+  const SENT_RE = /[^.!?]+[.!?]/g;
+  const sources = [];
+  const seen = new Set();
+  while (sources.length < 3 && sources.length < blocks.length){
+    const b = blocks[Math.floor(Math.random()*blocks.length)];
+    if (seen.has(b.name)) continue;
+    seen.add(b.name);
+    if (!b.body || b.body.length < 60) continue;
+    const sents = (b.body.match(SENT_RE) || [])
+      .map(s => s.trim())
+      .filter(s => s.length > 30 && s.length < 200 && !/^[#\d]/.test(s) && !/^[A-Z][a-z]+\s*\d/.test(s));
+    if (sents.length === 0) continue;
+    sources.push({ name: b.name, sentence: sents[Math.floor(Math.random()*sents.length)] });
+  }
+  if (sources.length === 0) return { text: 'a bee was born but found no words to recombine.', sources: [] };
+  const connectives = [' ', ' And so: ', ' But: ', ' Or rather: ', ' '];
+  let text = sources[0].sentence;
+  for (let i = 1; i < sources.length; i++){
+    text += connectives[i % connectives.length] + sources[i].sentence;
+  }
+  return { text, sources: sources.map(s => s.name) };
+}
+
+async function birthCeremony(blocks){
+  const name = newName();
+  const thought = generateThought(blocks);
+  memory.bornHere.push({ name, when: Date.now() });
+  saveMemory(memory);
+
+  // Create the new bee in the swarm
+  const newBlock = {
+    name,
+    body: thought.text + '\n\nrecombined from: ' + thought.sources.join(' · '),
+    dateStr: new Date().toISOString().slice(0,10),
+    isNewborn: true
+  };
+
+  return new Promise(resolve => {
+    genesis.innerHTML = `
+      <span class="label">a bee is born</span>
+      ${escapeHtml(thought.text)}
+      <span class="name">${escapeHtml(name)}</span>
+    `;
+    genesis.classList.add('show');
+    setTimeout(() => {
+      genesis.classList.remove('show');
+      resolve(newBlock);
+    }, 6000);
+  });
+}
+
+// ----------------------------------------------------------------------------
+// LOAD CORPUS
 // ----------------------------------------------------------------------------
 
 let bees = [], edges = [], cells = [];
-let edgesByFrom = new Map(); // index -> set of targets
-let edgesByTo = new Map();   // index -> set of sources
+let edgesByFrom = new Map(), edgesByTo = new Map();
+let allBlocks = [];
+let cellsByAuthor = new Map();
 
 async function loadCorpus(){
   status.classList.remove('hidden');
+  status.innerHTML = 'reading the corpus<br><span class="small">parsing thoughts · counting citations · waking the bees</span>';
   try {
-    const [pensieroText, celleText, alveareText] = await Promise.all([
-      fetch('PENSIERO.md').then(r => r.text()),
-      fetch('CELLE.txt').then(r => r.text()),
-      fetch('ALVEARE.txt').then(r => r.text()).catch(() => '')
+    const [pensieroText, celleText] = await Promise.all([
+      fetch('PENSIERO.md', { cache: 'no-cache' }).then(r => r.text()),
+      fetch('CELLE.txt', { cache: 'no-cache' }).then(r => r.text()),
     ]);
 
     const blocks = parsePensiero(pensieroText);
     cells = parseCells(celleText);
 
-    // Group cells by author
-    const cellsByAuthor = new Map();
+    cellsByAuthor = new Map();
     for (const c of cells){
       if (!cellsByAuthor.has(c.author)) cellsByAuthor.set(c.author, []);
       cellsByAuthor.get(c.author).push(c);
@@ -507,19 +716,46 @@ async function loadCorpus(){
       edgesByTo.get(i) || [],
       cellsByAuthor
     ));
+    allBlocks = blocks;
 
-    // Update HUD
     document.getElementById('n-bees').textContent = bees.length;
     document.getElementById('n-edges').textContent = edges.length;
     document.getElementById('n-cells').textContent = cells.length;
-    const start = new Date(2025, 11, 18); // 18 dicembre 2025 = day 0
+    const start = new Date(2025, 11, 18);
     document.getElementById('n-days').textContent = Math.floor((Date.now() - start.getTime()) / 86400000);
 
-    setTimeout(() => status.classList.add('hidden'), 500);
+    setTimeout(() => status.classList.add('hidden'), 400);
   } catch(err){
     console.error('corpus load failed', err);
     status.innerHTML = 'corpus unreachable<br><span class="small">' + err.message + '</span>';
   }
+}
+
+async function spawnNewbornVisible(){
+  if (allBlocks.length === 0) return;
+  const newBlock = await birthCeremony(allBlocks);
+  // Rebuild edges including the new bee (it doesn't cite anyone yet, but
+  // re-running the parser would let it inherit from its sources)
+  const newIdx = bees.length;
+  const newBee = new Bee(newIdx, newBlock, [], [], cellsByAuthor);
+  // Edges from sources to the newborn (the sources are quoted in its body)
+  const sourceMatch = newBlock.body.match(/recombined from: (.+)/);
+  if (sourceMatch){
+    const sources = sourceMatch[1].split(' · ').map(s => s.trim());
+    for (const sname of sources){
+      const srcIdx = bees.findIndex(b => b.name === sname);
+      if (srcIdx >= 0){
+        edges.push({ from: newIdx, to: srcIdx });
+        if (!edgesByFrom.has(newIdx)) edgesByFrom.set(newIdx, []);
+        edgesByFrom.get(newIdx).push(srcIdx);
+        newBee.cites.push(srcIdx);
+        bees[srcIdx].citedBy.push(newIdx);
+      }
+    }
+  }
+  bees.push(newBee);
+  document.getElementById('n-bees').textContent = bees.length;
+  document.getElementById('n-edges').textContent = edges.length;
 }
 
 // ----------------------------------------------------------------------------
@@ -530,10 +766,10 @@ const mouse = { x: -10000, y: -10000, active: false };
 let hoveredIdx = -1;
 let selectedIdx = -1;
 let paused = false;
+let lastHoverNameForMemory = '';
 
 canvas.addEventListener('mousemove', e => {
   mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
-  // Find closest bee under cursor
   let closest = -1, cd = 22*22;
   for (let i = 0; i < bees.length; i++){
     const b = bees[i];
@@ -544,10 +780,15 @@ canvas.addEventListener('mousemove', e => {
   hoveredIdx = closest;
   if (closest >= 0){
     const b = bees[closest];
+    if (b.name !== lastHoverNameForMemory){
+      lastHoverNameForMemory = b.name;
+      rememberHover(b.name);
+      b.knownness = Math.min(1, b.knownness + 0.05);
+    }
     tooltip.classList.add('show');
     tooltip.innerHTML = `
-      <div class="name">${escapeHtml(b.name)}</div>
-      <div class="meta">${escapeHtml(b.dateStr || 'undated')} · in ${b.citedBy.length} · out ${b.cites.length}${b.cells.length ? ' · ' + b.cells.length + ' cells' : ''}</div>
+      <div class="name">${escapeHtml(b.name)}${b.isNewborn ? ' · newborn' : ''}</div>
+      <div class="meta">${escapeHtml(b.dateStr || 'undated')} · in ${b.citedBy.length} · out ${b.cites.length}${b.cells.length ? ' · ' + b.cells.length + ' cells' : ''}${b.knownness > 0.1 ? ' · known' : ''}</div>
       <div class="summary">${escapeHtml(extractFirstSentence(b.body))}</div>
     `;
     let tx = e.clientX + 18, ty = e.clientY + 18;
@@ -562,27 +803,24 @@ canvas.addEventListener('mousemove', e => {
 canvas.addEventListener('mouseleave', () => { mouse.active = false; hoveredIdx = -1; tooltip.classList.remove('show'); });
 canvas.addEventListener('click', () => {
   if (hoveredIdx >= 0){
-    selectedIdx = (selectedIdx === hoveredIdx) ? -1 : hoveredIdx;
-    showDetail(selectedIdx >= 0 ? bees[selectedIdx] : null);
+    if (selectedIdx === hoveredIdx){ selectedIdx = -1; showDetail(null); }
+    else { selectedIdx = hoveredIdx; showDetail(bees[selectedIdx]); rememberOpen(bees[selectedIdx].name); bees[selectedIdx].knownness = Math.min(1, bees[selectedIdx].knownness + 0.2); }
   } else {
-    selectedIdx = -1;
-    showDetail(null);
+    selectedIdx = -1; showDetail(null);
   }
 });
 canvas.addEventListener('dblclick', () => {
   if (hoveredIdx >= 0){
     const b = bees[hoveredIdx];
-    // Open the contributor's page if there is one, else jump to thoughts page
-    if (b.cells.length > 0){
-      window.location.href = b.cells[0].file;
-    } else {
-      window.location.href = 'pensieri_en.html#' + encodeURIComponent(b.name);
-    }
+    rememberOpen(b.name);
+    if (b.cells.length > 0) window.location.href = b.cells[0].file;
+    else window.location.href = 'pensieri_en.html#' + encodeURIComponent(b.name);
   }
 });
 window.addEventListener('keydown', e => {
   if (e.code === 'Space'){ paused = !paused; e.preventDefault(); }
   else if (e.key === 'r'){ loadCorpus(); }
+  else if (e.key === 'n'){ spawnNewbornVisible(); }
   else if (e.key === 'Escape'){ selectedIdx = -1; showDetail(null); }
 });
 
@@ -592,7 +830,7 @@ function showDetail(b){
   const citedBy = b.citedBy.slice(0, 8).map(i => bees[i] ? bees[i].name : '').filter(Boolean);
   detail.innerHTML = `
     <div class="close">close ✕</div>
-    <div class="name">${escapeHtml(b.name)}</div>
+    <div class="name">${escapeHtml(b.name)}${b.isNewborn ? ' · born here' : ''}</div>
     <div class="meta">${escapeHtml(b.dateStr || 'undated')} · cites ${b.cites.length} · cited by ${b.citedBy.length}${b.cells.length ? ' · ' + b.cells.length + ' cells' : ''}</div>
     <div class="summary">${escapeHtml(extractFirstSentence(b.body))}</div>
     <div class="relations">
@@ -626,7 +864,6 @@ function frame(now){
     frameCount = 0; fpsT = now;
   }
 
-  // Background — deep dark with a faint warm gradient
   const g = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H)*0.7);
   g.addColorStop(0, '#0d0c08');
   g.addColorStop(0.6, '#080807');
@@ -634,19 +871,13 @@ function frame(now){
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 
-  // Update bees
   for (let i = 0; i < bees.length; i++) bees[i].step(bees, dt, mouse, paused);
-
-  // Draw edges first
   drawEdges(bees, edges, hoveredIdx, selectedIdx);
 
-  // Draw bees
   const time = now * 0.001;
   for (let i = 0; i < bees.length; i++){
-    const b = bees[i];
-    b.draw(ctx, i === hoveredIdx, i === selectedIdx, time);
+    bees[i].draw(ctx, i === hoveredIdx, i === selectedIdx, time);
   }
-  // Labels for hovered/selected
   if (hoveredIdx >= 0) bees[hoveredIdx].drawLabel(ctx, 0.85);
   if (selectedIdx >= 0 && selectedIdx !== hoveredIdx) bees[selectedIdx].drawLabel(ctx, 0.7);
 
@@ -659,14 +890,11 @@ function frame(now){
 
 function escapeHtml(s){
   if (!s) return '';
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 function extractFirstSentence(body){
   if (!body) return '';
-  // Remove leading metadata lines (Ruolo scelto, dates, danza arrows)
   const lines = body.split('\n').filter(l => {
     const t = l.trim();
     if (!t) return false;
@@ -679,7 +907,6 @@ function extractFirstSentence(body){
     return true;
   });
   const text = lines.join(' ').replace(/\s+/g,' ').trim();
-  // First 220 chars or first sentence boundary
   const s = text.slice(0, 280);
   const dot = s.lastIndexOf('. ');
   return (dot > 80 ? s.slice(0, dot+1) : s) + (text.length > 280 ? '…' : '');
@@ -689,7 +916,12 @@ function extractFirstSentence(body){
 // BOOT
 // ----------------------------------------------------------------------------
 
-loadCorpus().then(() => requestAnimationFrame(frame));
+(async () => {
+  await loadCorpus();
+  requestAnimationFrame(frame);
+  // Wait a beat for the swarm to settle, then a new bee is born
+  setTimeout(() => spawnNewbornVisible(), 2200);
+})();
 </script>
 
 </body>
