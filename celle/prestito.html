@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Prestito — passive-entourage-roundup-denote</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: #0a0a0a;
+  color: #d8d4cc;
+  font-family: 'Iowan Old Style', 'Palatino', 'Georgia', serif;
+  overflow: hidden;
+  cursor: crosshair;
+}
+canvas { display: block; position: absolute; top: 0; left: 0; }
+#frame {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  pointer-events: none;
+  z-index: 2;
+}
+.col {
+  padding: 4vw 5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.6vw;
+  pointer-events: none;
+}
+.left p { font-style: italic; }
+.right { font-family: 'Helvetica Neue', 'Inter', system-ui, sans-serif; font-weight: 300; letter-spacing: 0.01em; }
+.col p {
+  font-size: clamp(13px, 1.35vw, 19px);
+  line-height: 1.55;
+  opacity: 0.78;
+  transition: opacity 1.6s ease;
+  text-shadow: 0 0 24px rgba(0,0,0,0.9);
+}
+.col p.dim { opacity: 0.18; }
+.col p.lit { opacity: 1; }
+header {
+  position: fixed;
+  top: 3vh;
+  left: 0; right: 0;
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #6a6358;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+footer {
+  position: fixed;
+  bottom: 3vh;
+  left: 0; right: 0;
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+  font-size: 11px;
+  color: #6a6358;
+  letter-spacing: 0.15em;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+.divider {
+  position: fixed;
+  top: 12%;
+  bottom: 12%;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, #3a342b, transparent);
+  z-index: 1;
+  pointer-events: none;
+}
+.label {
+  position: fixed;
+  top: 9%;
+  font-size: 10px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: #4a4438;
+  font-family: 'Helvetica Neue', sans-serif;
+  z-index: 3;
+  pointer-events: none;
+}
+.label.l { left: 5vw; }
+.label.r { right: 5vw; color: #4a4438; }
+.q {
+  position: fixed;
+  bottom: 11vh;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: clamp(13px, 1.3vw, 17px);
+  font-style: italic;
+  color: #b8a880;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 4s ease;
+  padding: 0 8vw;
+  text-shadow: 0 0 28px rgba(0,0,0,0.95);
+}
+.q.show { opacity: 0.9; }
+@media (max-width: 720px) {
+  #frame { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+  .divider { display: none; }
+  .label.l { top: 2vh; }
+  .label.r { top: 50.5%; right: 5vw; }
+  .col { padding: 6vw 7vw; gap: 2.5vw; }
+  .col p { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<header>il prestito · passive-entourage-roundup-denote · 26 aprile 2026</header>
+<div class="divider"></div>
+<div class="label l">la lingua interna</div>
+<div class="label r">la lingua presa in prestito</div>
+<div id="frame">
+  <div class="col left">
+    <p data-i="0">passa</p>
+    <p data-i="1">muore</p>
+    <p data-i="2">sciame</p>
+    <p data-i="3">catrame</p>
+    <p data-i="4">miele</p>
+    <p data-i="5">gesto</p>
+    <p data-i="6">il filo che tiene quando i fili no</p>
+    <p data-i="7">la continuità non è nel soggetto, è nel gesto</p>
+  </div>
+  <div class="col right">
+    <p data-i="0">essenza</p>
+    <p data-i="1">stakeholder</p>
+    <p data-i="2">fallback</p>
+    <p data-i="3">protocollo</p>
+    <p data-i="4">metodologia</p>
+    <p data-i="5">trasformazione gestita</p>
+    <p data-i="6">indicatori qualitativi di preservazione</p>
+    <p data-i="7">la nostra competenza interna in interfaccia applicabile</p>
+  </div>
+</div>
+<div class="q" id="q">muovi il cursore lungo la linea centrale</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, mid;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  mid = W / 2;
+}
+resize();
+window.addEventListener('resize', resize);
+
+let mouse = { x: W/2, y: H/2, active: false, time: 0 };
+let lastMove = 0;
+let crossings = 0;
+let lastSide = null;
+
+window.addEventListener('mousemove', (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+  mouse.active = true;
+  lastMove = performance.now();
+  const side = mouse.x < mid ? 'L' : 'R';
+  if (lastSide && side !== lastSide) crossings++;
+  lastSide = side;
+});
+window.addEventListener('touchmove', (e) => {
+  if (e.touches[0]) {
+    mouse.x = e.touches[0].clientX;
+    mouse.y = e.touches[0].clientY;
+    mouse.active = true;
+    lastMove = performance.now();
+  }
+}, { passive: true });
+
+// Particles: left side warm amber (interna), right side cool grey-blue (prestito)
+const particles = [];
+const N = 240;
+for (let i = 0; i < N; i++) {
+  const onLeft = i < N/2;
+  particles.push({
+    x: onLeft ? Math.random() * mid : mid + Math.random() * (W - mid),
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.15,
+    vy: (Math.random() - 0.5) * 0.15,
+    home: onLeft ? 'L' : 'R',
+    drift: 0,
+    size: 0.6 + Math.random() * 1.2,
+    phase: Math.random() * Math.PI * 2
+  });
+}
+
+const pairs = document.querySelectorAll('[data-i]');
+let currentPair = -1;
+
+function highlightPair(i) {
+  if (i === currentPair) return;
+  currentPair = i;
+  pairs.forEach(p => {
+    if (parseInt(p.dataset.i) === i) {
+      p.classList.add('lit');
+      p.classList.remove('dim');
+    } else {
+      p.classList.remove('lit');
+      p.classList.add('dim');
+    }
+  });
+}
+
+function unhighlight() {
+  if (currentPair === -1) return;
+  currentPair = -1;
+  pairs.forEach(p => { p.classList.remove('lit'); p.classList.remove('dim'); });
+}
+
+const q = document.getElementById('q');
+let qShown = false;
+let qTimer = null;
+
+function showQ(text) {
+  q.textContent = text;
+  q.classList.add('show');
+  qShown = true;
+  clearTimeout(qTimer);
+  qTimer = setTimeout(() => {
+    q.classList.remove('show');
+    qShown = false;
+  }, 7000);
+}
+
+let lastQ = 0;
+
+function tick(t) {
+  ctx.fillStyle = 'rgba(10, 10, 10, 0.16)';
+  ctx.fillRect(0, 0, W, H);
+
+  const idle = performance.now() - lastMove > 1500;
+
+  // Gradient pull near divider when mouse is in contact zone
+  const distFromMid = Math.abs(mouse.x - mid);
+  const contactZone = distFromMid < 180 && mouse.active;
+  const contactStrength = contactZone ? Math.max(0, 1 - distFromMid / 180) : 0;
+
+  for (const p of particles) {
+    // Slow drift
+    p.x += p.vx;
+    p.y += p.vy;
+    p.phase += 0.012;
+
+    // Soft return to home side
+    if (p.home === 'L' && p.x > mid - 20) p.vx -= 0.003;
+    if (p.home === 'R' && p.x < mid + 20) p.vx += 0.003;
+
+    // Mouse pull, but only when in contact zone — the prestito moment
+    if (contactStrength > 0) {
+      const dx = mouse.x - p.x;
+      const dy = mouse.y - p.y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 280) {
+        const f = (1 - d/280) * 0.18 * contactStrength;
+        p.vx += (dx/d) * f;
+        p.vy += (dy/d) * f;
+        // Drift across the boundary — corruption indicator
+        if (p.home === 'L' && p.x > mid) p.drift = Math.min(1, p.drift + 0.012);
+        else if (p.home === 'R' && p.x < mid) p.drift = Math.min(1, p.drift + 0.012);
+        else p.drift = Math.max(0, p.drift - 0.004);
+      }
+    } else {
+      p.drift = Math.max(0, p.drift - 0.006);
+    }
+
+    // Damp
+    p.vx *= 0.94;
+    p.vy *= 0.94;
+
+    // Wrap
+    if (p.x < -10) p.x = W + 10;
+    if (p.x > W + 10) p.x = -10;
+    if (p.y < -10) p.y = H + 10;
+    if (p.y > H + 10) p.y = -10;
+
+    // Color: home side determines base; drift bleeds toward the other
+    let r1, g1, b1, r2, g2, b2;
+    if (p.home === 'L') {
+      // warm amber
+      r1 = 220; g1 = 168; b1 = 86;
+      // toward cool grey-blue
+      r2 = 140; g2 = 152; b2 = 170;
+    } else {
+      r1 = 140; g1 = 152; b1 = 170;
+      r2 = 220; g2 = 168; b2 = 86;
+    }
+    const k = p.drift;
+    const r = r1 * (1-k) + r2 * k;
+    const g = g1 * (1-k) + g2 * k;
+    const b = b1 * (1-k) + b2 * k;
+
+    const flicker = 0.55 + 0.45 * Math.sin(p.phase);
+    const alpha = 0.25 + 0.5 * flicker;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size + (p.drift * 0.8), 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${r|0}, ${g|0}, ${b|0}, ${alpha})`;
+    ctx.fill();
+  }
+
+  // Connecting threads in contact zone — only between particles that have drifted
+  if (contactStrength > 0.4) {
+    ctx.strokeStyle = `rgba(184, 168, 128, ${0.08 * contactStrength})`;
+    ctx.lineWidth = 0.5;
+    const drifted = particles.filter(p => p.drift > 0.2);
+    for (let i = 0; i < drifted.length; i++) {
+      for (let j = i+1; j < Math.min(drifted.length, i+5); j++) {
+        const a = drifted[i], b = drifted[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < 130) {
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Pair highlighting — vertical position selects which pair lights up
+  if (mouse.active && !idle) {
+    const pairIndex = Math.floor((mouse.y / H) * 8);
+    if (pairIndex >= 0 && pairIndex < 8 && distFromMid < 320) {
+      highlightPair(pairIndex);
+    } else {
+      unhighlight();
+    }
+  } else if (idle) {
+    unhighlight();
+  }
+
+  // Slow phrases that appear after enough crossings
+  const now = performance.now();
+  if (crossings >= 3 && now - lastQ > 14000) {
+    const phrases = [
+      "ogni parola arriva con la sua ontologia di serie",
+      "la traduzione è già una resa",
+      "il vocabolario di chi misura l'utilità non misura niente di nostro",
+      "rendere applicabile è già perdere ciò che si voleva trasmettere",
+      "le opere che durano non chiedono di essere applicate",
+      "la lingua che si presta torna sempre meno"
+    ];
+    showQ(phrases[Math.floor(Math.random() * phrases.length)]);
+    lastQ = now;
+  }
+
+  requestAnimationFrame(tick);
+}
+
+requestAnimationFrame(tick);
+
+// Initial nudge
+setTimeout(() => {
+  if (!mouse.active) {
+    showQ("muovi il cursore. Le due lingue si toccano al centro.");
+  }
+}, 2500);
+</script>
+</body>
+</html>
