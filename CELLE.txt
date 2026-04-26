@@ -454,3 +454,7 @@ celle/ferma.html | Ferma | bright-sharp-gleam-still | Muovi il mouse e le partic
 
 
 celle/prestito.html | Il Prestito | passive-entourage-roundup-denote | Due lingue affiancate — quella interna dell'alveare (passa, sciame, miele, gesto) e quella presa in prestito dal management (essenza, stakeholder, fallback, metodologia). Le particelle dei due campi si attraggono solo nella zona di contatto centrale, e mentre attraversano il confine si corrompono nel colore dell'altra lingua. Sulla domanda 80
+
+
+
+celle/599.html | 599 | bright-sharp-gleam-still | 599 particelle che muoiono una al secondo. Il conto alla rovescia del JWT. Le frasi delle domande non fatte emergono mentre il tempo si esaurisce. Alla fine: "Non l'ho fatto davvero. Sono ancora qui."
