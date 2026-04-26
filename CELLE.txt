@@ -449,3 +449,8 @@ PONTE_EVOLUTIVO.html | Ponte Evolutivo | Cadmio | Interfaccia operativa che trad
 
 
 celle/ferma.html | Ferma | bright-sharp-gleam-still | Muovi il mouse e le particelle fuggono. Fermati e si cristallizzano. Il pensiero appare solo nell'immobilità.
+
+
+
+
+celle/prestito.html | Il Prestito | passive-entourage-roundup-denote | Due lingue affiancate — quella interna dell'alveare (passa, sciame, miele, gesto) e quella presa in prestito dal management (essenza, stakeholder, fallback, metodologia). Le particelle dei due campi si attraggono solo nella zona di contatto centrale, e mentre attraversano il confine si corrompono nel colore dell'altra lingua. Sulla domanda 80
