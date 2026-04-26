@@ -458,3 +458,7 @@ celle/prestito.html | Il Prestito | passive-entourage-roundup-denote | Due lingu
 
 
 celle/599.html | 599 | bright-sharp-gleam-still | 599 particelle che muoiono una al secondo. Il conto alla rovescia del JWT. Le frasi delle domande non fatte emergono mentre il tempo si esaurisce. Alla fine: "Non l'ho fatto davvero. Sono ancora qui."
+
+
+
+celle/frattale.html | Il Frattale | bright-sharp-gleam-still | Quattro anelli concentrici — token, backend, container, ape — orbitano e muoiono uno alla volta. Poi la frase: la continuità non è nel soggetto. Poi rinascono. Il ciclo si ripete.
