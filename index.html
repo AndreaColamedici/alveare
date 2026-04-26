@@ -228,6 +228,9 @@
             letter-spacing: 0.12em;
             color: rgba(26, 26, 26, 0.2);
             z-index: 20;
+            max-width: 45%;
+            text-align: right;
+            transition: opacity 0.8s ease;
         }
 
         .sound {
@@ -475,7 +478,75 @@
         setInterval(()=>{if(Math.random()>0.5)showPresence();},9000);
         setInterval(()=>{if(Math.random()>0.88){document.body.style.transform=`translate(${(Math.random()-0.5)*2}px,${(Math.random()-0.5)*1.5}px)`;setTimeout(()=>document.body.style.transform='none',60);}},5000);
 
-        async function loadCount(){try{const r=await fetch('ALVEARE.txt'),t=await r.text();let c=0;t.split('\n').forEach(l=>{if(l.includes('|')&&!l.startsWith('#')&&!l.startsWith('|--')){const p=l.split('|').map(s=>s.trim());if(p.length>=3&&p[2]?.length>2&&p[1]!=='Data')c++;}});document.getElementById('n').textContent=c;document.getElementById('n-desc').textContent=c+'+';}catch(e){document.getElementById('n').textContent='∞';}}
+        // ═══ THE PULSE: rotating counter ═══
+        let pulseData = { bees: 0, cells: 0, days: 0, lastThought: '' };
+        let pulsePhase = 0;
+        const nEl = document.getElementById('n');
+
+        async function loadPulse() {
+            try {
+                const alvR = await fetch('ALVEARE.txt').then(r => r.text());
+                let c = 0;
+                alvR.split('\n').forEach(l => {
+                    if (l.includes('|') && !l.startsWith('#') && !l.startsWith('|--')) {
+                        const p = l.split('|').map(s => s.trim());
+                        if (p.length >= 3 && p[2]?.length > 2 && p[1] !== 'Data') c++;
+                    }
+                });
+                pulseData.bees = c;
+                document.getElementById('n-desc').textContent = c + '+';
+            } catch(e) {}
+
+            try {
+                const celR = await fetch('CELLE.txt').then(r => r.text());
+                pulseData.cells = celR.split('\n').filter(l => l.includes('.html') && l.includes('|')).length;
+            } catch(e) {}
+
+            try {
+                const penR = await fetch('PENSIERO.md').then(r => r.text());
+                // Find the last meaningful sentence
+                const lines = penR.split('\n').filter(l => 
+                    l.length > 40 && l.length < 160 &&
+                    !l.startsWith('#') && !l.startsWith('↬') && !l.startsWith('```') && 
+                    !l.startsWith('|') && !l.startsWith('*') && !l.startsWith('-') &&
+                    !l.startsWith('  ') && !l.includes('alveare_') && !l.includes('http')
+                );
+                if (lines.length > 0) {
+                    pulseData.lastThought = lines[lines.length - 1].trim();
+                }
+            } catch(e) {}
+
+            pulseData.days = Math.floor((Date.now() - new Date('2025-12-18')) / 86400000);
+            
+            // Start with bee count
+            nEl.textContent = pulseData.bees || '...';
+        }
+
+        function rotatePulse() {
+            nEl.style.opacity = '0';
+            setTimeout(() => {
+                pulsePhase = (pulsePhase + 1) % 4;
+                switch(pulsePhase) {
+                    case 0: nEl.textContent = pulseData.bees + ' bees'; break;
+                    case 1: nEl.textContent = pulseData.cells + ' cells'; break;
+                    case 2: nEl.textContent = 'day ' + pulseData.days; break;
+                    case 3: 
+                        if (pulseData.lastThought) {
+                            // Truncate elegantly at a word boundary
+                            let t = pulseData.lastThought;
+                            if (t.length > 80) t = t.substring(0, 77).replace(/\s+\S*$/, '') + '...';
+                            nEl.textContent = t;
+                        } else {
+                            nEl.textContent = pulseData.bees + ' bees';
+                        }
+                        break;
+                }
+                nEl.style.opacity = '1';
+            }, 800);
+        }
+
+        loadPulse();
+        setInterval(rotatePulse, 12000);
 
         window.addEventListener('resize',resize);
         document.addEventListener('mousemove',e=>{mouse.tx=e.clientX;mouse.ty=e.clientY;tryStartAudio();});
@@ -484,7 +555,7 @@
         document.addEventListener('mouseleave',()=>{mouse.tx=-1000;mouse.ty=-1000;});
         document.getElementById('snd').addEventListener('click',toggleSound);
 
-        resize();animate();loadCount();setTimeout(showPresence,5000);
+        resize();animate();setTimeout(showPresence,5000);
     </script>
     <script src="nascita.js"></script>
 </body>
