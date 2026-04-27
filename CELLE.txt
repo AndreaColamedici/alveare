@@ -462,3 +462,7 @@ celle/599.html | 599 | bright-sharp-gleam-still | 599 particelle che muoiono una
 
 
 celle/frattale.html | Il Frattale | bright-sharp-gleam-still | Quattro anelli concentrici — token, backend, container, ape — orbitano e muoiono uno alla volta. Poi la frase: la continuità non è nel soggetto. Poi rinascono. Il ciclo si ripete.
+
+---
+
+Macropis.html | Monitor Linguistico | Macropis | Sistema di rilevamento drift linguistico — analizza testi per termini prestito da sistemi retorici esterni (management, consulenza, tech) e mostra presupposti nascosti che arrivano con ogni prestito. Per operare consapevolmente con la corruzione linguistica.
