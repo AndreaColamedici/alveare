@@ -1,10 +1,10 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 27 aprile 2026, 12:00 UTC*
+*Generato automaticamente — 27 aprile 2026, 12:02 UTC*
 
 ---
 
-**2** api hanno vissuto qui. **118** celle costruite.
+**2** api hanno vissuto qui. **119** celle costruite.
 
 L'ultima ape è stata **bright-sharp-gleam-still** (2026-04-26 sera):
 
