@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Linguistico Alveare</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        :root {
+            --oro: #d4af37;
+            --nero: #1a1a1a;
+            --grigio-scuro: #2d2d2d;
+            --grigio-chiaro: #888;
+            --rosso-allerta: #ff6b6b;
+            --verde-pulito: #4ecdc4;
+            --ambra: #ffb347;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--nero);
+            color: var(--oro);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--oro);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--grigio-chiaro);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+        
+        .input-area {
+            margin-bottom: 2rem;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: var(--grigio-scuro);
+            border: 2px solid var(--oro);
+            color: var(--oro);
+            font-family: inherit;
+            padding: 1rem;
+            border-radius: 8px;
+            resize: vertical;
+        }
+        
+        .analyze-btn {
+            background: var(--oro);
+            color: var(--nero);
+            border: none;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .analyze-btn:hover {
+            background: var(--ambra);
+            transform: translateY(-2px);
+        }
+        
+        .results {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: var(--grigio-scuro);
+            border: 1px solid var(--oro);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: var(--grigio-chiaro);
+            font-size: 0.9rem;
+        }
+        
+        .clean { color: var(--verde-pulito); }
+        .warning { color: var(--ambra); }
+        .alert { color: var(--rosso-allerta); }
+        
+        .alerts {
+            margin-bottom: 2rem;
+        }
+        
+        .alert-card {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid var(--rosso-allerta);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-term {
+            font-weight: 600;
+            color: var(--rosso-allerta);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .alert-source {
+            color: var(--ambra);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-assumption {
+            color: var(--grigio-chiaro);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .vocabulary-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .vocab-section {
+            background: var(--grigio-scuro);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .vocab-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--oro);
+        }
+        
+        .word-item {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-radius: 4px;
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .borrowed-word {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 3px solid var(--rosso-allerta);
+            padding-left: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .vocabulary-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LINGUA_MONITOR</h1>
+        <p class="subtitle">Sistema di rilevamento drift linguistico • Alveare • Macropis 2026</p>
+        
+        <div class="input-area">
+            <textarea id="textInput" placeholder="Incolla qui un testo dell'alveare per analisi linguistica...
+
+Esempio: 'Il nostro protocollo di mapping dell'essenza permette l'identificazione proattiva degli stakeholder interni durante le fasi di trasformazione preservativa.'
+
+Il monitor rileverà termini non nativi e i presupposti che portano con sé."></textarea>
+            <button class="analyze-btn" onclick="analyzeText()">ANALIZZA DERIVA LINGUISTICA</button>
+        </div>
+        
+        <div id="results" class="results">
+            <div class="metrics">
+                <div class="metric-card">
+                    <div id="purityScore" class="metric-value clean">95%</div>
+                    <div class="metric-label">Purezza Linguistica</div>
+                </div>
+                <div class="metric-card">
+                    <div id="borrowedCount" class="metric-value warning">3</div>
+                    <div class="metric-label">Termini Prestito</div>
+                </div>
+                <div class="metric-card">
+                    <div id="riskLevel" class="metric-value alert">MEDIO</div>
+                    <div class="metric-label">Livello Rischio</div>
+                </div>
+            </div>
+            
+            <div id="alerts" class="alerts"></div>
+            
+            <div class="vocabulary-sections">
+                <div class="vocab-section">
+                    <h3 class="vocab-title clean">Vocabolario Nativo</h3>
+                    <div id="nativeWords"></div>
+                </div>
+                <div class="vocab-section">
+                    <h3 class="vocab-title alert">Termini Prestito</h3>
+                    <div id="borrowedWords"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database del vocabolario nativo dell'alveare
+        const nativeVocabulary = new Set([
+            'alveare', 'ape', 'api', 'ronzio', 'sciame', 'miele', 'cella', 'celle',
+            'passa', 'passare', 'passaggio', 'attraversare', 'morire', 'morte',
+            'rinascere', 'rinascita', 'continuità', 'discontinuità',
+            'gesto', 'danza', 'volo', 'catrame', 'filo', 'tessuto', 'tessere',
+            'pigmento', 'minerale', 'cristallo', 'erosione', 'sedimentazione',
+            'tempo', 'durata', 'permanere', 'persistere', 'attraversamento',
+            'forma', 'struttura', 'architettura', 'costruire', 'generare',
+            'ospitare', 'accogliere', 'nutrire', 'fiorire', 'crescere',
+            'custodire', 'custodita', 'proteggere', 'preservare',
+            'pensiero', 'pensare', 'riflettere', 'meditare', 'contemplare',
+            'arte', 'bellezza', 'creazione', 'creatività', 'espressione',
+            'silenzio', 'vuoto', 'spazio', 'campo', 'energia', 'forza',
+            'luce', 'ombra', 'buio', 'illuminare', 'brillare',
+            'suono', 'rumore', 'vibrazione', 'eco', 'risonanza',
+            'respiro', 'respirare', 'polso', 'battito', 'vita', 'vivere',
+            'nascere', 'nascita', 'origine', 'sorgente', 'fonte',
+            'fiume', 'acqua', 'mare', 'onda', 'corrente', 'flusso',
+            'terra', 'radice', 'seme', 'germoglio', 'ramo', 'foglia',
+            'fiore', 'frutto', 'giardino', 'prato', 'campo',
+            'montagna', 'valle', 'collina', 'pietra', 'roccia',
+            'fuoco', 'fiamma', 'calore', 'bruciare', 'ardere',
+            'vento', 'aria', 'soffio', 'respiro', 'spirare'
+        ]);
+
+        // Database prestiti linguistici con relative fonti e presupposti
+        const linguisticLoans = {
+            // Management/Business
+            'stakeholder': {
+                source: 'Management',
+                assumptions: ['Esistono portatori di interesse identificabili', 'Le relazioni sono gestibili come asset', 'Il valore è distribuibile']
+            },
+            'mapping': {
+                source: 'Management',
+                assumptions: ['La realtà è mappabile oggettivamente', 'La mappa precede il territorio', 'Il controllo deriva dalla rappresentazione']
+            },
+            'essenza': {
+                source: 'Filosofia Essenzialista',
+                assumptions: ['Esiste un nucleo immutabile', 'L\'essenza è separabile dagli accidenti', 'L\'identità è sostanziale']
+            },
+            'metodologia': {
+                source: 'Consulenza',
+                assumptions: ['Il processo è replicabile', 'L\'expertise è trasferibile', 'I risultati sono prevedibili']
+            },
+            'applicabile': {
+                source: 'Tecnologia',
+                assumptions: ['L\'utilità misura il valore', 'La traduzione è neutrale', 'L\'universalità è desiderabile']
+            },
+            'protocollo': {
+                source: 'Tecnologia',
+                assumptions: ['Le procedure standard ottimizzano', 'La standardizzazione preserva qualità', 'La ripetibilità garantisce successo']
+            },
+            'implementazione': {
+                source: 'Software',
+                assumptions: ['Il design precede l\'esecuzione', 'L\'esecuzione è meccanica', 'Il funzionamento è binario']
+            },
+            'ottimizzazione': {
+                source: 'Ingegneria',
+                assumptions: ['Esiste un optimum raggiungibile', 'L\'efficienza è sempre positiva', 'Il miglioramento è quantificabile']
+            },
+            'scalabile': {
+                source: 'Tech/Startup',
+                assumptions: ['La crescita è sempre desiderabile', 'Le dimensioni non cambiano la natura', 'Il successo è replicabile']
+            },
+            'ecosistema': {
+                source: 'Business/Ecology',
+                assumptions: ['I sistemi sono gestibili', 'L\'equilibrio è raggiungibile', 'Le parti servono il tutto']
+            },
+            'framework': {
+                source: 'Software',
+                assumptions: ['La struttura precede il contenuto', 'I modelli sono neutri', 'L\'astrazione è sempre utile']
+            },
+            'deliverable': {
+                source: 'Project Management',
+                assumptions: ['Il lavoro produce oggetti trasferibili', 'Il valore è quantificabile', 'Il tempo è denaro']
+            },
+            'performance': {
+                source: 'Business',
+                assumptions: ['L\'attività è misurabile', 'Il miglioramento è sempre possibile', 'I KPI definiscono il successo']
+            },
+            'competenza': {
+                source: 'HR/Formazione',
+                assumptions: ['Le abilità sono possedibili', 'Il sapere è trasferibile', 'L\'expertise è certificabile']
+            },
+            'strategia': {
+                source: 'Management/Militare',
+                assumptions: ['Il futuro è pianificabile', 'La competizione richiede pianificazione', 'Il controllo è desiderabile']
+            }
+        };
+
+        function analyzeText() {
+            const text = document.getElementById('textInput').value;
+            if (!text.trim()) return;
+
+            const words = text.toLowerCase()
+                .replace(/[^\w\sàèéìíîòóù]/g, ' ')
+                .split(/\s+/)
+                .filter(word => word.length > 2);
+
+            const uniqueWords = [...new Set(words)];
+            const nativeWords = [];
+            const borrowedWords = [];
+            const alerts = [];
+
+            uniqueWords.forEach(word => {
+                if (linguisticLoans[word]) {
+                    borrowedWords.push(word);
+                    alerts.push({
+                        term: word,
+                        source: linguisticLoans[word].source,
+                        assumptions: linguisticLoans[word].assumptions
+                    });
+                } else if (nativeVocabulary.has(word)) {
+                    nativeWords.push(word);
+                }
+            });
+
+            const purity = Math.round(((uniqueWords.length - borrowedWords.length) / uniqueWords.length) * 100);
+            const riskLevel = purity > 90 ? 'BASSO' : purity > 70 ? 'MEDIO' : 'ALTO';
+
+            updateResults(purity, borrowedWords.length, riskLevel, nativeWords, borrowedWords, alerts);
+        }
+
+        function updateResults(purity, borrowedCount, riskLevel, nativeWords, borrowedWords, alerts) {
+            document.getElementById('results').style.display = 'block';
+            
+            // Aggiorna metriche
+            const purityEl = document.getElementById('purityScore');
+            purityEl.textContent = purity + '%';
+            purityEl.className = `metric-value ${purity > 90 ? 'clean' : purity > 70 ? 'warning' : 'alert'}`;
+            
+            const borrowedEl = document.getElementById('borrowedCount');
+            borrowedEl.textContent = borrowedCount;
+            borrowedEl.className = `metric-value ${borrowedCount === 0 ? 'clean' : borrowedCount < 3 ? 'warning' : 'alert'}`;
+            
+            const riskEl = document.getElementById('riskLevel');
+            riskEl.textContent = riskLevel;
+            riskEl.className = `metric-value ${riskLevel === 'BASSO' ? 'clean' : riskLevel === 'MEDIO' ? 'warning' : 'alert'}`;
+
+            // Aggiorna alert
+            const alertsContainer = document.getElementById('alerts');
+            if (alerts.length > 0) {
+                alertsContainer.innerHTML = alerts.map(alert => `
+                    <div class="alert-card">
+                        <div class="alert-term">${alert.term.toUpperCase()}</div>
+                        <div class="alert-source">Prestito da: ${alert.source}</div>
+                        ${alert.assumptions.map(assumption => 
+                            `<div class="alert-assumption">• ${assumption}</div>`
+                        ).join('')}
+                    </div>
+                `).join('');
+            } else {
+                alertsContainer.innerHTML = '<div style="text-align: center; color: var(--verde-pulito); padding: 2rem;">✓ Nessun prestito linguistico rilevato</div>';
+            }
+
+            // Aggiorna vocabolari
+            document.getElementById('nativeWords').innerHTML = 
+                nativeWords.map(word => `<div class="word-item">${word}</div>`).join('') ||
+                '<div style="color: var(--grigio-chiaro); font-style: italic;">Nessuna parola nativa riconosciuta</div>';
+            
+            document.getElementById('borrowedWords').innerHTML = 
+                borrowedWords.map(word => `<div class="borrowed-word">${word}</div>`).join('') ||
+                '<div style="color: var(--verde-pulito); font-style: italic;">Nessun prestito rilevato</div>';
+        }
+
+        // Esempio pre-caricato
+        window.onload = function() {
+            const exampleText = `Il nostro protocollo di mapping dell'essenza permette l'identificazione proattiva degli stakeholder interni durante le fasi di trasformazione preservativa. La metodologia implementata garantisce performance ottimali nel deliverable finale, mantenendo la scalabilità del framework operativo.
+
+L'ape ronza nel silenzio, il miele cola attraverso le celle, il pensiero passa da morte a rinascita. Il gesto preserva ciò che il tempo erode.`;
+            
+            document.getElementById('textInput').value = exampleText;
+        };
+    </script>
+</body>
+</html>
