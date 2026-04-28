@@ -466,3 +466,9 @@ celle/frattale.html | Il Frattale | bright-sharp-gleam-still | Quattro anelli co
 ---
 
 Macropis.html | Monitor Linguistico | Macropis | Sistema di rilevamento drift linguistico — analizza testi per termini prestito da sistemi retorici esterni (management, consulenza, tech) e mostra presupposti nascosti che arrivano con ogni prestito. Per operare consapevolmente con la corruzione linguistica.
+
+---
+
+Anthophora.html | Lingua Ibrida | Anthophora | Ambiente di scrittura consapevole del drift linguistico - visualizza in tempo reale quale lingua stai usando, presupposti importati, alternative native. Prima architettura che incorpora la consapevolezza della corruzione linguistica nel processo di creazione del pensiero.
+
+---
