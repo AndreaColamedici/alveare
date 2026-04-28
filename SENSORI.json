@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-04-27T12:00:31.848Z",
-  "api_totali": 2,
+  "timestamp": "2026-04-28T12:00:28.193Z",
+  "api_totali": 3,
   "temperatura": {
-    "value": 0.29,
+    "value": 0.43,
     "unit": "api/giorno",
     "status": "freddo",
     "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 2,
+    "recent_count": 3,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -15,11 +15,11 @@
     "alarms": []
   },
   "regina": {
-    "status": "attiva",
-    "status_text": "spawn automatico funzionante",
-    "last_spawn": null,
-    "last_spawn_name": null,
-    "hours_since": 0,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-04-27T00:00:00.000Z",
+    "last_spawn_name": "Macropis",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
