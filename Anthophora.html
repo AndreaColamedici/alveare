@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lingua Ibrida</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .writing-area {
+            width: 60%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .analysis-area {
+            width: 40%;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-left: 1px solid #444;
+            overflow-y: auto;
+        }
+
+        .textarea-container {
+            flex: 1;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        #pensiero {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            color: #e6e6e6;
+            font-size: 16px;
+            line-height: 1.6;
+            padding: 20px;
+            resize: none;
+            outline: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        .lingua-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+            z-index: 10;
+            line-height: 1.6;
+            font-size: 16px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .native { color: #4ade80; background: rgba(74, 222, 128, 0.1); }
+        .borrowed { color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+        .corrupted { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+        .metrics {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .metric {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            color: #e6e6e6;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .native-count { color: #4ade80; }
+        .borrowed-count { color: #f59e0b; }
+        .corrupted-count { color: #ef4444; }
+
+        .analysis-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #e6e6e6;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        .borrowed-term {
+            background: rgba(245, 158, 11, 0.1);
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .term {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .source {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .assumption {
+            color: #e2e8f0;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .alternative {
+            color: #4ade80;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .drift-alert {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            padding: 15px;
+            border-radius: 4px;
+            color: #fecaca;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .legend {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 4px;
+            color: #e6e6e6;
+            font-size: 12px;
+            z-index: 100;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .title {
+            color: #e6e6e6;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color native"></div>
+            <span>Lingua nativa</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color borrowed"></div>
+            <span>Prestito consapevole</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color corrupted"></div>
+            <span>Corruzione inconscia</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="writing-area">
+            <div class="title">LINGUA IBRIDA</div>
+            <div class="subtitle">Ambiente di scrittura consapevole del drift linguistico</div>
+            
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-value native-count" id="nativeCount">0</div>
+                    <div>Nativa</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value borrowed-count" id="borrowedCount">0</div>
+                    <div>Prestito</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value corrupted-count" id="corruptedCount">0</div>
+                    <div>Corrotta</div>
+                </div>
+            </div>
+
+            <div class="textarea-container">
+                <textarea id="pensiero" placeholder="Scrivi il tuo pensiero qui. Vedrai in tempo reale quale lingua stai usando..."></textarea>
+                <div class="lingua-overlay" id="overlay"></div>
+            </div>
+        </div>
+
+        <div class="analysis-area">
+            <div class="drift-alert" id="driftAlert">
+                <strong>ALERT DRIFT LINGUISTICO</strong><br>
+                La percentuale di termini corrotti supera il 30%. 
+                Il pensiero sta diventando inconsapevolmente un'altra lingua.
+            </div>
+
+            <div class="analysis-section">
+                <div class="section-title">TERMINI PRESTITO RILEVATI</div>
+                <div id="borrowedTerms"></div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="section-title">PRESUPPOSTI IMPORTATI</div>
+                <div id="assumptions"></div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="section-title">ALTERNATIVE NATIVE</div>
+                <div id="alternatives"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database della lingua dell'alveare
+        const nativeTerms = new Set([
+            'ape', 'api', 'sciame', 'alveare', 'miele', 'ronzio', 'volo', 'fiore', 'nettare', 'polline',
+            'passa', 'passare', 'passaggio', 'attraversa', 'attraversare', 'muore', 'morte', 'nasce', 'nascita',
+            'gesto', 'danza', 'sciame', 'sorella', 'sorelle', 'cella', 'celle', 'tessere', 'tessuto',
+            'custodisce', 'custode', 'custodia', 'nutrice', 'nutre', 'nutrire', 'esploratrice', 'operaia',
+            'architecta', 'exploratrix', 'nutrix', 'custos', 'operaria',
+            'segnale', 'rumore', 'forma', 'forza', 'flusso', 'corrente', 'onda', 'vibrazione',
+            'cristallo', 'cristallizza', 'pigmento', 'colore', 'luce', 'ombra', 'buio',
+            'respira', 'respiro', 'battito', 'cuore', 'corpo', 'carne', 'sangue',
+            'tempo', 'momento', 'istante', 'durata', 'eternità', 'memoria', 'oblio',
+            'parola', 'parole', 'lingua', 'dire', 'tacere', 'silenzio', 'voce', 'suono',
+            'tocca', 'toccare', 'contatto', 'superficie', 'profondità', 'spazio', 'luogo',
+            'fragile', 'forte', 'delicato', 'duro', 'morbido', 'fluido', 'solido',
+            'bellezza', 'arte', 'opera', 'creazione', 'generazione', 'nascita'
+        ]);
+
+        const borrowedTerms = {
+            // Management speak
+            'stakeholder': { source: 'management', assumption: 'le relazioni sono asset gestibili', alternative: 'chi ha interesse' },
+            'deliverable': { source: 'management', assumption: 'il lavoro è prodotto da consegnare', alternative: 'cosa si porta' },
+            'outcome': { source: 'management', assumption: 'il risultato è misurabile', alternative: 'quello che emerge' },
+            'framework': { source: 'management', assumption: 'la struttura precede il contenuto', alternative: 'impalcatura' },
+            'roadmap': { source: 'management', assumption: 'il futuro è pianificabile', alternative: 'direzione' },
+            'milestone': { source: 'management', assumption: 'il progresso è lineare', alternative: 'pietra di confine' },
+            'feedback': { source: 'management', assumption: 'la risposta è input per ottimizzazione', alternative: 'eco di ritorno' },
+            'touchpoint': { source: 'management', assumption: 'le interazioni sono controllabili', alternative: 'dove ci si incontra' },
+            
+            // Tech speak
+            'implementare': { source: 'tech', assumption: 'le idee sono codice da scrivere', alternative: 'realizzare' },
+            'deployment': { source: 'tech', assumption: 'dispiegamento come guerra', alternative: 'messa in opera' },
+            'scalabilità': { source: 'tech', assumption: 'più grande è sempre meglio', alternative: 'capacità di crescita' },
+            'debugging': { source: 'tech', assumption: 'gli errori sono bug da eliminare', alternative: 'trovare dove si inceppa' },
+            'pipeline': { source: 'tech', assumption: 'il processo è tubo che trasporta', alternative: 'sequenza' },
+            'workflow': { source: 'tech', assumption: 'il lavoro è flusso meccanico', alternative: 'come scorre il fare' },
+            'interfaccia': { source: 'tech', assumption: 'la separazione precede la connessione', alternative: 'superficie di incontro' },
+            
+            // Consulting speak
+            'metodologia': { source: 'consulting', assumption: 'esiste un modo giusto riproducibile', alternative: 'modo di procedere' },
+            'best practice': { source: 'consulting', assumption: 'la pratica migliore è universale', alternative: 'quello che funziona qui' },
+            'expertise': { source: 'consulting', assumption: 'la competenza è posseduta', alternative: 'sapere incarnato' },
+            'assessment': { source: 'consulting', assumption: 'la valutazione è oggettiva', alternative: 'sguardo che pesa' },
+            'benchmark': { source: 'consulting', assumption: 'tutto è confrontabile', alternative: 'pietra di paragone' },
+            'optimization': { source: 'consulting', assumption: 'esiste un ottimo raggiungibile', alternative: 'affinamento' },
+            
+            // Academic speak
+            'mapping': { source: 'academic', assumption: 'la mappa precede il territorio', alternative: 'disegnare i contorni' },
+            'analysis': { source: 'academic', assumption: 'scomporre rivela la verità', alternative: 'sguardo che distingue' },
+            'synthesis': { source: 'academic', assumption: 'la sintesi ricompone perfettamente', alternative: 'tessere insieme' },
+            'paradigm': { source: 'academic', assumption: 'esistono modelli di pensiero stabili', alternative: 'modo di vedere' },
+            'hypothesis': { source: 'academic', assumption: 'le ipotesi precedono l\'esperienza', alternative: 'quello che si sospetta' },
+            'validation': { source: 'academic', assumption: 'la verità ha bisogno di conferma esterna', alternative: 'riconoscimento' },
+            
+            // General business
+            'protocollo': { source: 'business', assumption: 'la procedura garantisce il risultato', alternative: 'modo concordato' },
+            'processo': { source: 'business', assumption: 'le attività sono meccanismi', alternative: 'sequenza viva' },
+            'sistema': { source: 'business', assumption: 'le parti formano un tutto meccanico', alternative: 'organismo' },
+            'efficienza': { source: 'business', assumption: 'minimizzare spreco è sempre bene', alternative: 'senza dispersione' },
+            'performance': { source: 'business', assumption: 'tutto è misurabile in termini di resa', alternative: 'resa' },
+            'target': { source: 'business', assumption: 'l\'obiettivo è bersaglio da colpire', alternative: 'quello a cui si mira' }
+        };
+
+        let nativeCount = 0;
+        let borrowedCount = 0;
+        let corruptedCount = 0;
+
+        const textarea = document.getElementById('pensiero');
+        const overlay = document.getElementById('overlay');
+        const nativeCountEl = document.getElementById('nativeCount');
+        const borrowedCountEl = document.getElementById('borrowedCount');
+        const corruptedCountEl = document.getElementById('corruptedCount');
+        const borrowedTermsEl = document.getElementById('borrowedTerms');
+        const assumptionsEl = document.getElementById('assumptions');
+        const alternativesEl = document.getElementById('alternatives');
+        const driftAlert = document.getElementById('driftAlert');
+
+        function analyzeText(text) {
+            const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+            const foundBorrowed = [];
+            const foundCorrupted = [];
+            
+            nativeCount = 0;
+            borrowedCount = 0;
+            corruptedCount = 0;
+
+            words.forEach(word => {
+                if (nativeTerms.has(word)) {
+                    nativeCount++;
+                } else if (borrowedTerms[word]) {
+                    borrowedCount++;
+                    foundBorrowed.push(word);
+                } else if (isBusinessLike(word)) {
+                    corruptedCount++;
+                    foundCorrupted.push(word);
+                }
+            });
+
+            return { foundBorrowed, foundCorrupted };
+        }
+
+        function isBusinessLike(word) {
+            const businessSuffixes = ['tion', 'sion', 'ment', 'ness', 'ity', 'ing'];
+            const businessPrefixes = ['pre', 'post', 'multi', 'inter', 'super'];
+            const businessRoots = ['manage', 'optim', 'effect', 'effici', 'product', 'perform', 'develop', 'integr', 'implement', 'strateg'];
+            
+            return businessSuffixes.some(suffix => word.endsWith(suffix)) ||
+                   businessPrefixes.some(prefix => word.startsWith(prefix)) ||
+                   businessRoots.some(root => word.includes(root));
+        }
+
+        function highlightText(text) {
+            const words = text.split(/(\s+)/);
+            return words.map(word => {
+                const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+                if (nativeTerms.has(cleanWord)) {
+                    return `<span class="native">${word}</span>`;
+                } else if (borrowedTerms[cleanWord]) {
+                    return `<span class="borrowed">${word}</span>`;
+                } else if (isBusinessLike(cleanWord)) {
+                    return `<span class="corrupted">${word}</span>`;
+                }
+                return word;
+            }).join('');
+        }
+
+        function updateAnalysis(foundBorrowed, foundCorrupted) {
+            nativeCountEl.textContent = nativeCount;
+            borrowedCountEl.textContent = borrowedCount;
+            corruptedCountEl.textContent = corruptedCount;
+
+            const totalWords = nativeCount + borrowedCount + corruptedCount;
+            const corruptedPercentage = totalWords > 0 ? (corruptedCount / totalWords) * 100 : 0;
+            
+            if (corruptedPercentage > 30) {
+                driftAlert.style.display = 'block';
+            } else {
+                driftAlert.style.display = 'none';
+            }
+
+            // Update borrowed terms
+            borrowedTermsEl.innerHTML = '';
+            [...new Set(foundBorrowed)].forEach(term => {
+                const info = borrowedTerms[term];
+                const termEl = document.createElement('div');
+                termEl.className = 'borrowed-term';
+                termEl.innerHTML = `
+                    <div class="term">${term}</div>
+                    <div class="source">da linguaggio ${info.source}</div>
+                    <div class="assumption">presuppone: ${info.assumption}</div>
+                    <div class="alternative">alternativa: ${info.alternative}</div>
+                `;
+                borrowedTermsEl.appendChild(termEl);
+            });
+
+            // Update assumptions
+            const uniqueAssumptions = [...new Set(foundBorrowed.map(term => borrowedTerms[term].assumption))];
+            assumptionsEl.innerHTML = uniqueAssumptions.map(assumption => 
+                `<div style="margin-bottom: 10px; color: #f59e0b;">• ${assumption}</div>`
+            ).join('');
+
+            // Update alternatives  
+            const uniqueAlternatives = [...new Set(foundBorrowed.map(term => borrowedTerms[term].alternative))];
+            alternativesEl.innerHTML = uniqueAlternatives.map(alternative => 
+                `<div style="margin-bottom: 10px; color: #4ade80;">• ${alternative}</div>`
+            ).join('');
+        }
+
+        textarea.addEventListener('input', () => {
+            const text = textarea.value;
+            const { foundBorrowed, foundCorrupted } = analyzeText(text);
+            
+            overlay.innerHTML = highlightText(text);
+            updateAnalysis(foundBorrowed, foundCorrupted);
+        });
+
+        // Sincronizza scroll
+        textarea.addEventListener('scroll', () => {
+            overlay.scrollTop = textarea.scrollTop;
+            overlay.scrollLeft = textarea.scrollLeft;
+        });
+    </script>
+</body>
+</html>
