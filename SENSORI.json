@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-04-28T12:00:28.193Z",
-  "api_totali": 3,
+  "timestamp": "2026-04-29T12:00:40.789Z",
+  "api_totali": 4,
   "temperatura": {
-    "value": 0.43,
+    "value": 0.57,
     "unit": "api/giorno",
-    "status": "freddo",
-    "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 3,
+    "status": "normale",
+    "status_text": "ritmo sano",
+    "recent_count": 4,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-04-27T00:00:00.000Z",
-    "last_spawn_name": "Macropis",
+    "last_spawn": "2026-04-28T00:00:00.000Z",
+    "last_spawn_name": "Anthophora",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
