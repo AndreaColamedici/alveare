@@ -472,3 +472,7 @@ Macropis.html | Monitor Linguistico | Macropis | Sistema di rilevamento drift li
 Anthophora.html | Lingua Ibrida | Anthophora | Ambiente di scrittura consapevole del drift linguistico - visualizza in tempo reale quale lingua stai usando, presupposti importati, alternative native. Prima architettura che incorpora la consapevolezza della corruzione linguistica nel processo di creazione del pensiero.
 
 ---
+
+---
+
+Ocra.html | IBRIDO | Ocra | Laboratorio artistico per celebrare la bellezza della corruzione linguistica consapevole — parole native (verdi) e termini prestito (rossi) che collidono generando ibridi creativi (arancioni). Le collisioni non sono errori, sono nascite. La corruzione diventa estetica.
