@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBRIDO - Ocra</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: #d4af37;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .text-field {
+            position: absolute;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #d4af37;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 200px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .native {
+            color: #4a9;
+            background: rgba(68, 170, 153, 0.1);
+        }
+
+        .imported {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .hybrid {
+            color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #d4af37;
+        }
+
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #d4af37;
+            max-width: 300px;
+            font-size: 11px;
+        }
+
+        .button {
+            background: #d4af37;
+            color: #0a0a0a;
+            border: none;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11px;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #f1c40f;
+        }
+
+        .word-count {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #d4af37;
+            font-size: 11px;
+        }
+
+        #title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            font-size: 48px;
+            font-weight: bold;
+            opacity: 0.1;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        
+        <div id="title">IBRIDO</div>
+        
+        <div id="controls">
+            <div style="margin-bottom: 10px; font-weight: bold;">LABORATORIO DELLA CORRUZIONE ESTETICA</div>
+            <div>
+                <div class="button" onclick="spawnWords('native')">GENERA NATIVI</div>
+                <div class="button" onclick="spawnWords('imported')">GENERA PRESTITI</div>
+                <div class="button" onclick="spawnWords('hybrid')">GENERA IBRIDI</div>
+            </div>
+            <div style="margin-top: 10px;">
+                <div class="button" onclick="clearAll()">AZZERA</div>
+                <div class="button" onclick="saveHybrid()">SALVA IBRIDO</div>
+            </div>
+        </div>
+
+        <div class="word-count">
+            <div>NATIVI: <span id="native-count">0</span></div>
+            <div>PRESTITI: <span id="imported-count">0</span></div>
+            <div>IBRIDI: <span id="hybrid-count">0</span></div>
+            <div>BELLEZZA: <span id="beauty-score">0</span></div>
+        </div>
+
+        <div id="instructions">
+            <div style="margin-bottom: 10px; font-weight: bold; color: #d4af37;">ISTRUZIONI</div>
+            <div style="margin-bottom: 8px;">• <span style="color: #4a9;">VERDI</span>: parole native dell'alveare</div>
+            <div style="margin-bottom: 8px;">• <span style="color: #e74c3c;">ROSSE</span>: termini prestito dall'esterno</div>
+            <div style="margin-bottom: 8px;">• <span style="color: #f39c12;">ARANCIONI</span>: ibridi creativi generati</div>
+            <div style="margin-bottom: 8px;">• Muovi il cursore per attrarre le parole</div>
+            <div style="margin-bottom: 8px;">• Click per creare connessioni</div>
+            <div style="margin-bottom: 8px;">• Le collisioni generano nuovi ibridi</div>
+            <div>• La bellezza emerge dalla corruzione consapevole</div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('container');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Dizionari di parole
+        const nativeWords = [
+            'sciame', 'miele', 'passaggio', 'gesto', 'ronzio', 'volo', 'fiore', 'nettare',
+            'alveare', 'danza', 'cella', 'morte', 'nascita', 'ape', 'sorella', 'ombra',
+            'cristallo', 'tessuto', 'flusso', 'respiro', 'ali', 'cura', 'custodia', 'trace'
+        ];
+
+        const importedWords = [
+            'stakeholder', 'metodologia', 'protocollo', 'implementazione', 'framework', 
+            'mapping', 'feedback', 'deliverable', 'workflow', 'interface', 'pipeline',
+            'dashboard', 'metrics', 'optimization', 'scalability', 'integration', 'deployment'
+        ];
+
+        const hybridTemplates = [
+            'sciame-metodico', 'miele-protocollo', 'gestualità-sistemica', 'ronzio-feedback',
+            'passaggio-workflow', 'cella-framework', 'danza-metrics', 'volo-deployment',
+            'nettare-integration', 'cristallo-scalable', 'tessuto-interface', 'ombra-pipeline',
+            'custodire-optimized', 'trace-deliverable', 'respiro-dashboard', 'cura-sistemica'
+        ];
+
+        class Word {
+            constructor(text, type, x, y) {
+                this.text = text;
+                this.type = type; // 'native', 'imported', 'hybrid'
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = 12 + Math.random() * 8;
+                this.opacity = 0.8;
+                this.connections = [];
+                this.age = 0;
+                
+                this.color = type === 'native' ? '#4a9' : 
+                           type === 'imported' ? '#e74c3c' : '#f39c12';
+            }
+
+            update(mouseX, mouseY) {
+                this.age++;
+                
+                // Attrazione verso il cursore
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < 150) {
+                    const force = 0.02;
+                    this.vx += (dx / dist) * force;
+                    this.vy += (dy / dist) * force;
+                }
+
+                // Movimento
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Rimbalzo sui bordi
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -0.8;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -0.8;
+                
+                this.x = Math.max(0, Math.min(canvas.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height, this.y));
+
+                // Attrito
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+
+                // Variazione di opacità
+                this.opacity = 0.6 + 0.4 * Math.sin(this.age * 0.02);
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.font = `${this.size}px Courier New`;
+                ctx.textAlign = 'center';
+                ctx.fillText(this.text, this.x, this.y);
+                ctx.restore();
+
+                // Disegna connessioni
+                this.connections.forEach(target => {
+                    if (words.includes(target)) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.3;
+                        ctx.strokeStyle = this.color;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y);
+                        ctx.lineTo(target.x, target.y);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                });
+            }
+
+            distanceTo(other) {
+                const dx = this.x - other.x;
+                const dy = this.y - other.y;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+
+            collidesWith(other) {
+                return this.distanceTo(other) < 40;
+            }
+        }
+
+        let words = [];
+        let mouseX = 0;
+        let mouseY = 0;
+        let savedHybrids = [];
+
+        function spawnWords(type) {
+            const count = 8 + Math.random() * 12;
+            for (let i = 0; i < count; i++) {
+                let text;
+                if (type === 'native') {
+                    text = nativeWords[Math.floor(Math.random() * nativeWords.length)];
+                } else if (type === 'imported') {
+                    text = importedWords[Math.floor(Math.random() * importedWords.length)];
+                } else {
+                    text = hybridTemplates[Math.floor(Math.random() * hybridTemplates.length)];
+                }
+                words.push(new Word(text, type));
+            }
+        }
+
+        function clearAll() {
+            words = [];
+        }
+
+        function saveHybrid() {
+            const hybridWords = words.filter(w => w.type === 'hybrid');
+            if (hybridWords.length > 0) {
+                const hybrid = hybridWords[Math.floor(Math.random() * hybridWords.length)];
+                savedHybrids.push(hybrid.text);
+                console.log('Ibrido salvato:', hybrid.text);
+                
+                // Visual feedback
+                const flash = document.createElement('div');
+                flash.style.position = 'fixed';
+                flash.style.top = '50%';
+                flash.style.left = '50%';
+                flash.style.transform = 'translate(-50%, -50%)';
+                flash.style.background = '#f39c12';
+                flash.style.color = '#0a0a0a';
+                flash.style.padding = '10px 20px';
+                flash.style.borderRadius = '5px';
+                flash.style.zIndex = '100';
+                flash.style.fontWeight = 'bold';
+                flash.textContent = `SALVATO: ${hybrid.text}`;
+                document.body.appendChild(flash);
+                
+                setTimeout(() => {
+                    document.body.removeChild(flash);
+                }, 1500);
+            }
+        }
+
+        function updateCounters() {
+            const native = words.filter(w => w.type === 'native').length;
+            const imported = words.filter(w => w.type === 'imported').length;
+            const hybrid = words.filter(w => w.type === 'hybrid').length;
+            
+            document.getElementById('native-count').textContent = native;
+            document.getElementById('imported-count').textContent = imported;
+            document.getElementById('hybrid-count').textContent = hybrid;
+            
+            // Calcolo del punteggio di bellezza
+            const beautyScore = Math.floor(
+                (native * 1.2 + imported * 0.8 + hybrid * 2.0) * 
+                (1 + (hybrid / Math.max(1, native + imported)))
+            );
+            document.getElementById('beauty-score').textContent = beautyScore;
+        }
+
+        function checkCollisions() {
+            for (let i = 0; i < words.length; i++) {
+                for (let j = i + 1; j < words.length; j++) {
+                    const word1 = words[i];
+                    const word2 = words[j];
+                    
+                    if (word1.collidesWith(word2) && 
+                        word1.type !== word2.type &&
+                        Math.random() < 0.01) {
+                        
+                        // Genera ibrido dalla collisione
+                        const hybridText = word1.text.split('-')[0] + '-' + 
+                                         word2.text.split('-')[0].substring(0, 6);
+                        
+                        const hybrid = new Word(
+                            hybridText, 
+                            'hybrid',
+                            (word1.x + word2.x) / 2,
+                            (word1.y + word2.y) / 2
+                        );
+                        words.push(hybrid);
+                        
+                        // Crea connessione
+                        word1.connections.push(word2);
+                        word2.connections.push(word1);
+                        hybrid.connections.push(word1, word2);
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Aggiorna e disegna parole
+            words.forEach(word => {
+                word.update(mouseX, mouseY);
+                word.draw();
+            });
+            
+            // Controlla collisioni
+            checkCollisions();
+            
+            // Aggiorna contatori
+            updateCounters();
+            
+            // Rimuovi parole vecchie
+            words = words.filter(word => word.age < 2000);
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners
+        container.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        container.addEventListener('click', (e) => {
+            // Click per creare connessioni
+            const clickX = e.clientX;
+            const clickY = e.clientY;
+            
+            const nearbyWords = words.filter(word => 
+                Math.sqrt((word.x - clickX) ** 2 + (word.y - clickY) ** 2) < 80
+            );
+            
+            if (nearbyWords.length >= 2) {
+                for (let i = 0; i < nearbyWords.length - 1; i++) {
+                    nearbyWords[i].connections.push(nearbyWords[i + 1]);
+                }
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Inizializzazione
+        spawnWords('native');
+        spawnWords('imported');
+        animate();
+    </script>
+</body>
+</html>
