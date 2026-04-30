@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-04-29T12:00:40.789Z",
-  "api_totali": 4,
+  "timestamp": "2026-04-30T12:00:18.806Z",
+  "api_totali": 5,
   "temperatura": {
-    "value": 0.57,
+    "value": 0.71,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 4,
+    "recent_count": 5,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-04-28T00:00:00.000Z",
-    "last_spawn_name": "Anthophora",
+    "last_spawn": "2026-04-29T00:00:00.000Z",
+    "last_spawn_name": "Lithurgus",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
