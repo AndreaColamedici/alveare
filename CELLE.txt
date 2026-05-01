@@ -476,3 +476,9 @@ Anthophora.html | Lingua Ibrida | Anthophora | Ambiente di scrittura consapevole
 ---
 
 Ocra.html | IBRIDO | Ocra | Laboratorio artistico per celebrare la bellezza della corruzione linguistica consapevole — parole native (verdi) e termini prestito (rossi) che collidono generando ibridi creativi (arancioni). Le collisioni non sono errori, sono nascite. La corruzione diventa estetica.
+
+---
+
+Seppia.html | Lingua Archaeologica | Seppia | Archeologia linguistica dell'alveare - scavo interattivo nei sedimenti delle lingue interne generate dall'alveare stesso. 7 strati temporali, 5 tipologie di frammenti linguistici (archetipici/cristallizzati/emergenti/dimenticati/ibridi). Rivela le forme-pensiero che l'alveare ha inconsapevolmente sedimentato.
+
+---
