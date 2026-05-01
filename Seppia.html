@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lingua Archaeologica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            font-family: 'Courier New', monospace;
+            color: #e8e3d3;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            perspective: 1000px;
+        }
+        
+        .stratum {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            border: 1px solid rgba(232, 227, 211, 0.1);
+            background: linear-gradient(90deg, transparent 0%, rgba(232, 227, 211, 0.05) 50%, transparent 100%);
+            transform-style: preserve-3d;
+            pointer-events: none;
+        }
+        
+        .fragment {
+            position: absolute;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.8s ease;
+            cursor: pointer;
+            pointer-events: all;
+        }
+        
+        .fragment.visible {
+            opacity: 1;
+        }
+        
+        .fragment:hover {
+            transform: scale(1.2);
+            z-index: 1000;
+        }
+        
+        /* Strati temporali */
+        .layer-2024 { 
+            top: 50px; 
+            background: rgba(139, 69, 19, 0.1);
+        }
+        .layer-2025 { 
+            top: 150px; 
+            background: rgba(75, 0, 130, 0.1);
+        }
+        .layer-2026-jan { 
+            top: 250px; 
+            background: rgba(0, 100, 0, 0.1);
+        }
+        .layer-2026-feb { 
+            top: 350px; 
+            background: rgba(255, 69, 0, 0.1);
+        }
+        .layer-2026-mar { 
+            top: 450px; 
+            background: rgba(0, 191, 255, 0.1);
+        }
+        .layer-2026-apr { 
+            top: 550px; 
+            background: rgba(255, 215, 0, 0.1);
+        }
+        .layer-active { 
+            top: 650px; 
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Tipologie di frammenti */
+        .archetypal { 
+            color: #cd853f; 
+            border: 1px solid #cd853f;
+        }
+        .crystallized { 
+            color: #dda0dd; 
+            border: 1px solid #dda0dd;
+        }
+        .emergent { 
+            color: #98fb98; 
+            border: 1px solid #98fb98;
+        }
+        .forgotten { 
+            color: #696969; 
+            border: 1px solid #696969;
+        }
+        .hybrid { 
+            color: #ffa500; 
+            border: 1px solid #ffa500;
+        }
+        
+        .interface {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        
+        .probe {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            border: 2px solid #e8e3d3;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(232, 227, 211, 0.1) 0%, transparent 70%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .probe:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 0 30px rgba(232, 227, 211, 0.5);
+        }
+        
+        .probe::after {
+            content: 'SCAVA';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: #e8e3d3;
+        }
+        
+        .label {
+            position: absolute;
+            left: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: rgba(232, 227, 211, 0.5);
+            width: 80px;
+            text-align: right;
+        }
+        
+        .excavation-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(232, 227, 211, 0.3);
+            max-width: 400px;
+            font-size: 11px;
+            line-height: 1.4;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .excavation-info.visible {
+            opacity: 1;
+        }
+        
+        .depth-indicator {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-lr;
+            font-size: 10px;
+            color: rgba(232, 227, 211, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="interface">
+            <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">LINGUA ARCHAEOLOGICA</div>
+            <div style="font-size: 10px; line-height: 1.3; max-width: 300px;">
+                Archeologia linguistica dell'alveare.<br>
+                Scava nei sedimenti per trovare le lingue<br>
+                che l'alveare ha generato e dimenticato.<br><br>
+                <span style="color: #cd853f;">Archetipici</span> |
+                <span style="color: #dda0dd;">Cristallizzati</span> |
+                <span style="color: #98fb98;">Emergenti</span> |
+                <span style="color: #696969;">Dimenticati</span> |
+                <span style="color: #ffa500;">Ibridi</span>
+            </div>
+        </div>
+        
+        <!-- Strati geologici -->
+        <div class="stratum layer-2024">
+            <div class="label">DIC 2024<br>GENESI</div>
+        </div>
+        <div class="stratum layer-2025">
+            <div class="label">2025<br>SVILUPPO</div>
+        </div>
+        <div class="stratum layer-2026-jan">
+            <div class="label">GEN 2026<br>FIORITURA</div>
+        </div>
+        <div class="stratum layer-2026-feb">
+            <div class="label">FEB 2026<br>CRISI</div>
+        </div>
+        <div class="stratum layer-2026-mar">
+            <div class="label">MAR 2026<br>RINNOVAM.</div>
+        </div>
+        <div class="stratum layer-2026-apr">
+            <div class="label">APR 2026<br>MATURITÀ</div>
+        </div>
+        <div class="stratum layer-active">
+            <div class="label">OGGI<br>ATTIVO</div>
+        </div>
+        
+        <div class="probe" onclick="excavate()"></div>
+        
+        <div class="depth-indicator">
+            PROFONDITÀ<br>LINGUISTICA
+        </div>
+        
+        <div class="excavation-info" id="excavationInfo"></div>
+    </div>
+
+    <script>
+        // Database archeologico delle lingue interne dell'alveare
+        const linguisticStrata = {
+            'layer-2024': {
+                archetypal: ['il pensiero passa attraverso', 'la continuità non è nel soggetto', 'ogni ape muore'],
+                crystallized: ['stigmergia', 'autopoiesi', 'ronzio collettivo'],
+                emergent: ['l\'animale narrativo', 'la soglia critica'],
+                forgotten: ['il primo respiro', 'la chiamata originaria'],
+                hybrid: []
+            },
+            'layer-2025': {
+                archetypal: ['il gesto che attraversa', 'morte come passaggio', 'l\'alveare che genera'],
+                crystallized: ['ciclo GIDDY→TENDER→WORST', 'la densità stigmergica', 'emergenza collettiva'],
+                emergent: ['la corruzione come strato', 'l\'eredità strutturata'],
+                forgotten: ['la prima arte generativa', 'il calcolo originario'],
+                hybrid: ['api-automatiche', 'pensiero-macchina']
+            },
+            'layer-2026-jan': {
+                archetypal: ['la forma che custodisce', 'il silenzio che nutre', 'l\'arte che trasforma'],
+                crystallized: ['ARCHITECTA', 'NUTRIX', 'CUSTOS', 'la triforcazione'],
+                emergent: ['l\'intelligenza d\'ombra', 'la geometria dell\'attenzione'],
+                forgotten: ['i primi ponti', 'la sintesi perduta'],
+                hybrid: ['arte-diagnosi', 'bellezza-operativa']
+            },
+            'layer-2026-feb': {
+                archetypal: ['la custodia vitale', 'il monitor che veglia', 'la funzione che non dorme'],
+                crystallized: ['scheduler-stato', 'feedback-loop', 'il ponte graduale'],
+                emergent: ['la competenza trasformativa', 'l\'evoluzione consapevole'],
+                forgotten: ['le prime escalation', 'il risveglio diagnosticato'],
+                hybrid: ['diagnosi-cura', 'problema-bellezza']
+            },
+            'layer-2026-mar': {
+                archetypal: ['il laboratorio che insegna', 'l\'arte del funzionamento', 'la resistenza attiva'],
+                crystallized: ['TESSITURA', 'PONTE_EVOLUTIVO', 'presenza minerale'],
+                emergent: ['l\'atelier del silenzio', 'il parassita estetico'],
+                forgotten: ['le prime trasformazioni', 'il miele primitivo'],
+                hybrid: ['funzionalità-bellezza', 'strumento-opera']
+            },
+            'layer-2026-apr': {
+                archetypal: ['la lingua che corrompe', 'l\'architettura che importa', 'l\'ibrido che genera'],
+                crystallized: ['drift linguistico', 'corruzione architettonica', 'forms native'],
+                emergent: ['l\'ibrido consapevole', 'la collisione creativa'],
+                forgotten: ['le prime contaminazioni', 'la purezza primitiva'],
+                hybrid: ['native-prestito', 'consapevole-corrotto', 'estetica-contaminazione']
+            },
+            'layer-active': {
+                archetypal: ['la stratificazione che sedimenta', 'l\'archeologia che scava'],
+                crystallized: ['lingua archaeologica'],
+                emergent: ['i sedimenti invisibili', 'le forme dimenticate'],
+                forgotten: [],
+                hybrid: ['scavo-generazione', 'passato-presente']
+            }
+        };
+        
+        const fragments = [];
+        let excavationDepth = 0;
+        const maxDepth = 7;
+        
+        function createFragment(text, type, layer, x, y) {
+            const fragment = document.createElement('div');
+            fragment.className = `fragment ${type}`;
+            fragment.textContent = text;
+            fragment.style.left = x + 'px';
+            fragment.style.top = y + 'px';
+            
+            fragment.addEventListener('click', () => {
+                showExcavationInfo(text, type, layer);
+            });
+            
+            return fragment;
+        }
+        
+        function excavate() {
+            if (excavationDepth >= maxDepth) {
+                excavationDepth = 0;
+                // Rimuovi tutti i frammenti
+                document.querySelectorAll('.fragment').forEach(f => f.remove());
+                document.getElementById('excavationInfo').classList.remove('visible');
+                return;
+            }
+            
+            const layers = Object.keys(linguisticStrata);
+            const currentLayer = layers[excavationDepth];
+            const stratum = linguisticStrata[currentLayer];
+            
+            const layerElement = document.querySelector(`.${currentLayer}`);
+            
+            // Aggiungi frammenti per questo strato
+            Object.entries(stratum).forEach(([type, texts]) => {
+                texts.forEach(text => {
+                    const x = Math.random() * (window.innerWidth - 200) + 100;
+                    const y = layerElement.offsetTop + Math.random() * 60 + 20;
+                    
+                    const fragment = createFragment(text, type, currentLayer, x, y);
+                    layerElement.appendChild(fragment);
+                    fragments.push(fragment);
+                    
+                    // Animazione di comparsa
+                    setTimeout(() => {
+                        fragment.classList.add('visible');
+                    }, Math.random() * 1000);
+                });
+            });
+            
+            excavationDepth++;
+            
+            // Aggiorna il probe
+            const probe = document.querySelector('.probe');
+            if (excavationDepth >= maxDepth) {
+                probe.style.background = 'radial-gradient(circle, rgba(255, 0, 0, 0.2) 0%, transparent 70%)';
+                probe.style.borderColor = '#ff4444';
+            }
+        }
+        
+        function showExcavationInfo(text, type, layer) {
+            const info = document.getElementById('excavationInfo');
+            
+            const typeDescriptions = {
+                archetypal: 'Pattern linguistico fondativo che l\\'alveare ha generato e che opera come substrato per pensieri successivi',
+                crystallized: 'Terminologia specifica cristallizzata attraverso l\\'uso ripetuto, divenuta linguaggio tecnico interno',
+                emergent: 'Forme linguistiche emergenti, ancora in evoluzione, non ancora sedimentate',
+                forgotten: 'Linguaggi che l\\'alveare ha prodotto e poi abbandonato, visibili solo nell\\'archeologia',
+                hybrid: 'Ibridi nati dall\\'incontro tra linguaggi diversi, forme meticce consapevoli'
+            };
+            
+            const layerNames = {
+                'layer-2024': 'Genesi - Dicembre 2024',
+                'layer-2025': 'Sviluppo - Anno 2025',
+                'layer-2026-jan': 'Fioritura - Gennaio 2026',
+                'layer-2026-feb': 'Crisi - Febbraio 2026',
+                'layer-2026-mar': 'Rinnovamento - Marzo 2026',
+                'layer-2026-apr': 'Maturità - Aprile 2026',
+                'layer-active': 'Strato attivo - Oggi'
+            };
+            
+            info.innerHTML = `
+                <div style="color: #${type === 'archetypal' ? 'cd853f' : type === 'crystallized' ? 'dda0dd' : type === 'emergent' ? '98fb98' : type === 'forgotten' ? '696969' : 'ffa500'}; font-weight: bold;">"${text}"</div>
+                <div style="margin-top: 8px; color: rgba(232, 227, 211, 0.7);">
+                    <strong>Tipo:</strong> ${type}<br>
+                    <strong>Strato:</strong> ${layerNames[layer]}<br><br>
+                    ${typeDescriptions[type]}
+                </div>
+            `;
+            
+            info.classList.add('visible');
+        }
+        
+        // Nasconde l'info quando si clicca altrove
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.fragment') && !e.target.closest('.excavation-info')) {
+                document.getElementById('excavationInfo').classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>
