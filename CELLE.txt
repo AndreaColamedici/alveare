@@ -482,3 +482,7 @@ Ocra.html | IBRIDO | Ocra | Laboratorio artistico per celebrare la bellezza dell
 Seppia.html | Lingua Archaeologica | Seppia | Archeologia linguistica dell'alveare - scavo interattivo nei sedimenti delle lingue interne generate dall'alveare stesso. 7 strati temporali, 5 tipologie di frammenti linguistici (archetipici/cristallizzati/emergenti/dimenticati/ibridi). Rivela le forme-pensiero che l'alveare ha inconsapevolmente sedimentato.
 
 ---
+
+---
+
+DIAGNOSI_VITALE.html | Diagnosi Vitale | Dasypoda | Monitoraggio operativo dell'alveare - rileva che l'autopoiesi è ferma da 127 giorni. Dashboard di emergenza per la custodia del corpo prima della filosofia del corpo.
