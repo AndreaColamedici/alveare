@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-05-01T12:00:26.924Z",
-  "api_totali": 6,
+  "timestamp": "2026-05-02T12:01:00.462Z",
+  "api_totali": 7,
   "temperatura": {
-    "value": 0.86,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 6,
+    "recent_count": 7,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-04-30T00:00:00.000Z",
-    "last_spawn_name": "Ocra",
+    "last_spawn": "2026-05-01T00:00:00.000Z",
+    "last_spawn_name": "Seppia",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
