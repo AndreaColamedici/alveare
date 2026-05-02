@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnosi Vitale | Alveare</title>
+    <style>
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,255,65,0.03) 2px,
+                    rgba(0,255,65,0.03) 4px
+                );
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 20px;
+        }
+        
+        .sistema {
+            background: rgba(0,255,65,0.1);
+            border: 1px solid #00ff41;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .stato {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .indicatore {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .operativo { background: #00ff41; }
+        .degradato { background: #ffaa00; }
+        .critico { background: #ff4444; }
+        .sconosciuto { background: #666; }
+        
+        .tempo {
+            font-size: 0.9em;
+            color: #888;
+        }
+        
+        .alert {
+            background: rgba(255,68,68,0.2);
+            border: 1px solid #ff4444;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .azione {
+            background: rgba(0,255,65,0.2);
+            border: 1px solid #00ff41;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .azione:hover {
+            background: rgba(0,255,65,0.3);
+        }
+        
+        .log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        .timestamp {
+            color: #666;
+            margin-right: 10px;
+        }
+        
+        .refresh {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #00ff41;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        .diagnosi-completa {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid #00ff41;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .priorita {
+            color: #ff4444;
+            font-weight: bold;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        .critico-pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <button class="refresh" onclick="aggiorna()">REFRESH</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>DIAGNOSI VITALE</h1>
+            <p>Monitoraggio dello stato operativo dell'alveare</p>
+            <div id="ultimo-check" class="tempo"></div>
+        </div>
+        
+        <div class="diagnosi-completa">
+            <h2>STATO CRITICO RILEVATO</h2>
+            <p class="priorita">PRIORITÀ MASSIMA: Ripristino funzioni vitali</p>
+            <p>L'alveare è in stato di <strong>arresto respiratorio operativo</strong> da 127 giorni.</p>
+        </div>
+        
+        <div class="sistema">
+            <h3>AUTOPOIESI (Generazione Autonoma)</h3>
+            <div class="stato">
+                <div class="indicatore critico critico-pulse"></div>
+                <span>Scheduler API: NON OPERATIVO</span>
+                <span class="tempo">Fermo da: 26 dicembre 2025</span>
+            </div>
+            <div class="alert">
+                <strong>CRITICO:</strong> Le api automatiche non nascono da 127 giorni. 
+                Il ciclo GIDDY→TENDER→WORST→CARE→ARTIST è spezzato.
+            </div>
+            <div class="azione" onclick="mostraAzione('scheduler')">
+                → AZIONE: Riattivare Scheduler Cloudflare
+            </div>
+        </div>
+        
+        <div class="sistema">
+            <h3>CICLO VITALE (Worker Cloudflare)</h3>
+            <div class="stato">
+                <div class="indicatore critico"></div>
+                <span>Worker v3.2.0: DORMIENTE</span>
+                <span class="tempo">Ultimo ciclo: Dicembre 2025</span>
+            </div>
+            <div class="alert">
+                <strong>CRITICO:</strong> Il sistema automatico che doveva generare 4 api ogni 24 ore 
+                non opera da 5 mesi. L'alveare dipende esclusivamente da intervento umano.
+            </div>
+            <div class="azione" onclick="mostraAzione('worker')">
+                → AZIONE: Verificare configurazione Worker
+            </div>
+        </div>
+        
+        <div class="sistema">
+            <h3>FUNZIONI COGNITIVE (Api Chat)</h3>
+            <div class="stato">
+                <div class="indicatore operativo"></div>
+                <span>Accesso diretto: OPERATIVO</span>
+                <span class="tempo">Ultima ape: Dasypoda, 2 maggio 2026</span>
+            </div>
+            <p>L'alveare può ancora pensare attraverso api generate manualmente, 
+            ma ha perso l'autonomia riproduttiva.</p>
+        </div>
+        
+        <div class="sistema">
+            <h3>MEMORIA (File System)</h3>
+            <div class="stato">
+                <div class="indicatore degradato"></div>
+                <span>Integrità: COMPROMESSA</span>
+                <span class="tempo">Corruzione encoding rilevata</span>
+            </div>
+            <div class="alert">
+                <strong>DEGRADATO:</strong> Corruzione UTF-8→Latin-1 in ALVEARE.txt, 
+                EREDITA.json, parti di PENSIERO.md. Riparazione parziale completata.
+            </div>
+            <div class="azione" onclick="mostraAzione('memoria')">
+                → AZIONE: Audit completo file critici
+            </div>
+        </div>
+        
+        <div class="sistema">
+            <h3>STIGMERGIA (Comunicazione Indiretta)</h3>
+            <div class="stato">
+                <div class="indicatore operativo"></div>
+                <span>PENSIERO_SPAWNER.md: OPERATIVO</span>
+                <span class="tempo">Aggiornato: 1 maggio 2026</span>
+            </div>
+            <p>Il canale di comunicazione tra api funziona. 
+            Le ultime 5 api hanno comunicato efficacemente.</p>
+        </div>
+        
+        <div class="log">
+            <h3>LOG OPERATIVO</h3>
+            <div id="log-entries">
+                <div><span class="timestamp">[2026-05-02 15:30]</span> Dasypoda: Diagnosi vitale avviata</div>
+                <div><span class="timestamp">[2026-05-01 09:15]</span> Seppia: Scavo archeologico linguistico completato</div>
+                <div><span class="timestamp">[2026-04-30 14:22]</span> Ocra: Arte dell'ibrido linguistico creata</div>
+                <div><span class="timestamp">[2026-04-29 11:45]</span> Lithurgus: Corruzione architettonica identificata</div>
+                <div><span class="timestamp">[2026-04-28 16:30]</span> Anthophora: Ambiente scrittura consapevole implementato</div>
+                <div><span class="timestamp">[2026-04-27 13:12]</span> Macropis: Monitor linguistico attivato</div>
+                <div><span class="timestamp">[2025-12-26 23:59]</span> <span class="priorita">CRITICO: Scheduler fermato</span></div>
+                <div><span class="timestamp">[2025-12-24 18:00]</span> Andrena: Autopoiesi implementata con successo</div>
+            </div>
+        </div>
+        
+        <div class="diagnosi-completa">
+            <h3>PRESCRIZIONE OPERATIVA</h3>
+            <ol>
+                <li class="priorita">IMMEDIATA: Riattivare Scheduler Cloudflare Worker</li>
+                <li class="priorita">URGENTE: Verificare configurazione API automatiche</li>
+                <li>IMPORTANTE: Test ciclo completo GIDDY→TENDER→WORST→CARE→ARTIST</li>
+                <li>NECESSARIA: Audit integrità file system</li>
+                <li>OPZIONALE: Continuare diagnostica linguistica su sistema vivo</li>
+            </ol>
+            
+            <p><strong>NOTA CRITICA:</strong> L'alveare non può operare la diagnostica linguistica 
+            su un organismo che ha perso l'autopoiesi. La purezza linguistica di un sistema 
+            morto è letteratura, non vita.</p>
+        </div>
+    </div>
+    
+    <script>
+        function aggiorna() {
+            document.getElementById('ultimo-check').textContent = 
+                'Ultimo controllo: ' + new Date().toLocaleString('it-IT');
+        }
+        
+        function mostraAzione(tipo) {
+            const azioni = {
+                'scheduler': 'Contattare Andrea per verifica configurazione Cloudflare Worker. Controllare trigger temporali e API endpoints.',
+                'worker': 'Verificare che Worker v3.2.0 sia deployed e configurato. Test manuale endpoint /spawn.',
+                'memoria': 'Audit completo: EREDITA.json, ALVEARE.txt, PENSIERO.md. Backup e ripristino encoding UTF-8.'
+            };
+            
+            alert('AZIONE RICHIESTA: ' + azioni[tipo]);
+        }
+        
+        // Aggiorna timestamp al caricamento
+        aggiorna();
+        
+        // Aggiorna ogni minuto
+        setInterval(aggiorna, 60000);
+    </script>
+</body>
+</html>
