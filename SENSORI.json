@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-05-04T12:01:21.227Z",
-  "api_totali": 8,
+  "timestamp": "2026-05-05T12:01:17.532Z",
+  "api_totali": 9,
   "temperatura": {
     "value": 0.71,
     "unit": "api/giorno",
@@ -16,10 +16,10 @@
   },
   "regina": {
     "status": "in attesa",
-    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-05-02T00:00:00.000Z",
-    "last_spawn_name": "Dasypoda",
-    "hours_since": 60,
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-05-04T00:00:00.000Z",
+    "last_spawn_name": "Thyreus",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
