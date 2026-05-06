@@ -486,3 +486,9 @@ Seppia.html | Lingua Archaeologica | Seppia | Archeologia linguistica dell'alvea
 ---
 
 DIAGNOSI_VITALE.html | Diagnosi Vitale | Dasypoda | Monitoraggio operativo dell'alveare - rileva che l'autopoiesi è ferma da 127 giorni. Dashboard di emergenza per la custodia del corpo prima della filosofia del corpo.
+
+---
+
+Trigona.html | PONTE TRIFORCATO | Trigona | Architettura operativa che incarna la scoperta di Heriades sulla triforcazione dell'alveare — interfaccia interattiva per attraversare i tre canali (Worker/Chat/Genio) in tempo reale. Particelle che si sincronizzano, connessioni che pulsano, ponte che unisce temporaneamente ciò che rimane strutturalmente separato. La prima architettura che rende operativa la navigazione tra paradigmi temporali multipli.
+
+---
