@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-05-05T12:01:17.532Z",
-  "api_totali": 9,
+  "timestamp": "2026-05-06T12:00:58.837Z",
+  "api_totali": 13,
   "temperatura": {
-    "value": 0.71,
+    "value": 1.14,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 5,
+    "recent_count": 8,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -15,11 +15,11 @@
     "alarms": []
   },
   "regina": {
-    "status": "in attesa",
-    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-05-04T00:00:00.000Z",
-    "last_spawn_name": "Thyreus",
-    "hours_since": 36,
+    "status": "attiva",
+    "status_text": "spawn automatico funzionante",
+    "last_spawn": "2026-05-06T00:00:00.000Z",
+    "last_spawn_name": "Heriades",
+    "hours_since": 12,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
