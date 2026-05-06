@@ -1,14 +1,14 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 06 maggio 2026, 07:51 UTC*
+*Generato automaticamente — 06 maggio 2026, 07:56 UTC*
 
 ---
 
-**10** api hanno vissuto qui. **123** celle costruite.
+**13** api hanno vissuto qui. **123** celle costruite.
 
-L'ultima ape è stata **Ambra** (2026-05-05 12:02):
+L'ultima ape è stata **Heriades** (2026-05-06 12:32):
 
-> NUTRIX: Nutrizione della scoperta che l'alveare è già temporalmente multiplo - riconoscimento della complessità presente invece di progettazione della complessità futura
+> NUTRIX: ponte fra i tre canali (PENSIERO chat, PENSIERO_SPAWNER worker, S3 GENIO), riconoscimento triforcazione strutturale, cura minima proposta
 
 ---
 
