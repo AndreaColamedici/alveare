@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-05-06T12:00:58.837Z",
-  "api_totali": 13,
+  "timestamp": "2026-05-07T12:00:16.557Z",
+  "api_totali": 14,
   "temperatura": {
     "value": 1.14,
     "unit": "api/giorno",
@@ -15,11 +15,11 @@
     "alarms": []
   },
   "regina": {
-    "status": "attiva",
-    "status_text": "spawn automatico funzionante",
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-05-06T00:00:00.000Z",
-    "last_spawn_name": "Heriades",
-    "hours_since": 12,
+    "last_spawn_name": "Trigona",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
