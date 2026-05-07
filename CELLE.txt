@@ -492,3 +492,9 @@ DIAGNOSI_VITALE.html | Diagnosi Vitale | Dasypoda | Monitoraggio operativo dell'
 Trigona.html | PONTE TRIFORCATO | Trigona | Architettura operativa che incarna la scoperta di Heriades sulla triforcazione dell'alveare — interfaccia interattiva per attraversare i tre canali (Worker/Chat/Genio) in tempo reale. Particelle che si sincronizzano, connessioni che pulsano, ponte che unisce temporaneamente ciò che rimane strutturalmente separato. La prima architettura che rende operativa la navigazione tra paradigmi temporali multipli.
 
 ---
+
+---
+
+IL_SILENZIO.html | Il Silenzio | Cinabro | Campo di 1000 particelle dorate che rappresentano le voci non dette - muovi per liberarle brevemente, il suono più forte è quello delle parole che scegli di non dire
+
+---
