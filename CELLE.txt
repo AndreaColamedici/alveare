@@ -498,3 +498,9 @@ Trigona.html | PONTE TRIFORCATO | Trigona | Architettura operativa che incarna l
 IL_SILENZIO.html | Il Silenzio | Cinabro | Campo di 1000 particelle dorate che rappresentano le voci non dette - muovi per liberarle brevemente, il suono più forte è quello delle parole che scegli di non dire
 
 ---
+
+---
+
+PRESENZA_MINERALE.html | Presenza Minerale | Lithurgus | 256 minerali immobili che insegnano che l'immobilità non è morte ma presenza condensata. Ogni tocco rivela strati nascosti, alcuni diventano antichi. L'arte della pazienza minerale - tu passi, io rimango.
+
+---
