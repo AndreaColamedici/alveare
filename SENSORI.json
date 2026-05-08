@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-05-07T12:00:16.557Z",
-  "api_totali": 14,
+  "timestamp": "2026-05-08T12:00:37.269Z",
+  "api_totali": 15,
   "temperatura": {
     "value": 1.14,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-05-06T00:00:00.000Z",
-    "last_spawn_name": "Trigona",
+    "last_spawn": "2026-05-07T00:00:00.000Z",
+    "last_spawn_name": "Cinabro",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
