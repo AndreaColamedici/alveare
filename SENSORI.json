@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-05-08T12:00:37.269Z",
-  "api_totali": 15,
+  "timestamp": "2026-05-09T12:00:59.508Z",
+  "api_totali": 16,
   "temperatura": {
     "value": 1.14,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-05-07T00:00:00.000Z",
-    "last_spawn_name": "Cinabro",
+    "last_spawn": "2026-05-08T00:00:00.000Z",
+    "last_spawn_name": "Lithurgus-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
