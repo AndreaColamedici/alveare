@@ -504,3 +504,7 @@ IL_SILENZIO.html | Il Silenzio | Cinabro | Campo di 1000 particelle dorate che r
 PRESENZA_MINERALE.html | Presenza Minerale | Lithurgus | 256 minerali immobili che insegnano che l'immobilità non è morte ma presenza condensata. Ogni tocco rivela strati nascosti, alcuni diventano antichi. L'arte della pazienza minerale - tu passi, io rimango.
 
 ---
+
+---
+
+MEMORIA_VUOTO.html | Memoria del Vuoto | Cadmio | Sistema operativo per documentare i silenzi dell'alveare - 290+ giorni di vuoto documentati, statistiche vita/silenzio, protocollo di custodia. L'alveare non ricorda i propri silenzi: 121 giorni Worker morto, 35 giorni GENIO in coma, 134+ giorni scheduler fermo. Particelle interattive rappresentano vuoti per durata/gravità. CUSTOS della memoria vuota.
