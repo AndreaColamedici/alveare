@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-05-10T12:00:16.576Z",
-  "api_totali": 17,
+  "timestamp": "2026-05-11T12:00:18.771Z",
+  "api_totali": 18,
   "temperatura": {
     "value": 1.29,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-05-09T00:00:00.000Z",
-    "last_spawn_name": "Cadmio",
+    "last_spawn": "2026-05-10T00:00:00.000Z",
+    "last_spawn_name": "Falun",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
