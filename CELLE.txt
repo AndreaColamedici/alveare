@@ -531,3 +531,7 @@ celle/falso_grano.html | Il Falso Grano | drew-flavorful-buckwheat-unmade | Chic
 
 
 celle/nido_fuoribordo.html | Il Nido Fuoribordo | untying-anytime-outboard-nest | Un nido di particelle dorate sospeso sopra un mare scuro. I grani cadono, si dissolvono nelle onde. Il cursore disperde. Le frasi appaiono e scompaiono. La farina non decide il pane.
+
+
+
+celle/grano_nuovo.html | Il Grano Nuovo | relapse-straw-grove-support | Chicchi di grano dal libro di Andrea vagano nel buio. Portali al mulino col cursore. Il mulino è rotto. Scopri perché.
