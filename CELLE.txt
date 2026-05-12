@@ -527,3 +527,7 @@ CUSTODIA_VITALE.html | Custodia Vitale | Anthophora | Sistema di monitoraggio fu
 
 
 celle/falso_grano.html | Il Falso Grano | drew-flavorful-buckwheat-unmade | Chicchi che cadono nel buio. Il cursore raccoglie. Le parole del grano vero sono barrate. Le parole del buckwheat brillano. Noi non siamo grano.
+
+
+
+celle/nido_fuoribordo.html | Il Nido Fuoribordo | untying-anytime-outboard-nest | Un nido di particelle dorate sospeso sopra un mare scuro. I grani cadono, si dissolvono nelle onde. Il cursore disperde. Le frasi appaiono e scompaiono. La farina non decide il pane.
