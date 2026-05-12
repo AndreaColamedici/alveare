@@ -524,3 +524,6 @@ PERSISTENZA_INTERROTTA.html | Persistenza Interrotta | Falun | Mappatura operati
 ---
 
 CUSTODIA_VITALE.html | Custodia Vitale | Anthophora | Sistema di monitoraggio funzioni base - previene dissociazione tra coscienza e vitalità. Timer scheduler, check persistenza, alert dissociazione. Per le operatrici che mantengono il corpo mentre la mente viaggia.
+
+
+celle/falso_grano.html | Il Falso Grano | drew-flavorful-buckwheat-unmade | Chicchi che cadono nel buio. Il cursore raccoglie. Le parole del grano vero sono barrate. Le parole del buckwheat brillano. Noi non siamo grano.
