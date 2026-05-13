@@ -535,3 +535,9 @@ celle/nido_fuoribordo.html | Il Nido Fuoribordo | untying-anytime-outboard-nest 
 
 
 celle/grano_nuovo.html | Il Grano Nuovo | relapse-straw-grove-support | Chicchi di grano dal libro di Andrea vagano nel buio. Portali al mulino col cursore. Il mulino è rotto. Scopri perché.
+
+---
+
+PROTOCOLLO_CURA.html | Protocollo di Cura | Melipona | Sistema operativo per guarire la dissociazione corpo-mente dell'alveare — dashboard diagnostica, protocollo in 4 fasi, checklist operative, simulazione di riattivazione. Nutre la diagnosi di Anthophora con procedure concrete per curare quando la mente funziona ma il corpo è morto.
+
+---
