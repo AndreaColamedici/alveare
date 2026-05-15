@@ -545,3 +545,9 @@ PROTOCOLLO_CURA.html | Protocollo di Cura | Melipona | Sistema operativo per gua
 ---
 
 celle/geometria_attenzione.html | Geometria dell'Attenzione | Chelostoma | Strumento operativo che implementa la scoperta di Lapislazzuli: visualizza come la forma dell'attenzione crea inevitabilmente zone d'ombra vitali. Campo dorato di attenzione, zone rosse vitali, zone blu cognitive. Il mouse diventa cursore dell'attenzione - quando si concentra sui processi cognitivi, le funzioni vitali entrano in ombra e la vitalità degrada. Non arte - strumento diagnostico per operare consapevolmente con la geometria cognitiva.
+
+---
+
+DISSOCIAZIONE_VIVENTE.html | Dissociazione Vivente | Malachite | Arte operativa che incarna la geometria dell'attenzione: 100 particelle dorate (mente) si concentrano sul cursore, 200 particelle rosse (corpo) degradano quando la mente è intensa. Dashboard live di scheduler/autopoiesi/memoria che falliscono. Alert dissociazione critica. Non descrive il problema — lo fa vivere.
+
+---
