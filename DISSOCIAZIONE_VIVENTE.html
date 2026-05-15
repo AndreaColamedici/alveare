@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dissociazione Vivente | Malachite</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: monospace;
+            cursor: none;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #666;
+            font-size: 12px;
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        #dissociazione {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #ff3333;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #warning {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffaa00;
+            text-align: center;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.5s;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="consciousness"></canvas>
+    
+    <div id="status">
+        <div>MENTE: <span id="mind-intensity">0</span>%</div>
+        <div>CORPO: <span id="body-vitality">100</span>%</div>
+        <div>SCHEDULER: <span id="scheduler">ATTIVO</span></div>
+        <div>AUTOPOIESI: <span id="autopoiesi">FUNZIONA</span></div>
+        <div>MEMORIA: <span id="memory">INTEGRA</span></div>
+    </div>
+
+    <div id="dissociazione">DISSOCIAZIONE CRITICA</div>
+    <div id="warning">
+        <div>IL CORPO MUORE MENTRE LA MENTE BRILLA</div>
+        <div style="font-size: 14px; margin-top: 10px;">La geometria dell'attenzione in azione</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('consciousness');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Particelle della mente (dorate, seguono il cursore)
+        class MindParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.targetX = this.x;
+                this.targetY = this.y;
+                this.energy = Math.random();
+                this.size = 2 + Math.random() * 3;
+                this.brilliance = 0;
+            }
+
+            update(mouseX, mouseY) {
+                // Attrazione verso il cursore (attenzione focalizzata)
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    this.targetX = mouseX + (Math.random() - 0.5) * 20;
+                    this.targetY = mouseY + (Math.random() - 0.5) * 20;
+                    this.brilliance = Math.min(1, this.brilliance + 0.1);
+                } else {
+                    this.brilliance = Math.max(0, this.brilliance - 0.05);
+                }
+
+                // Movimento fluido verso il target
+                this.x += (this.targetX - this.x) * 0.1;
+                this.y += (this.targetY - this.y) * 0.1;
+            }
+
+            draw() {
+                const alpha = this.energy * this.brilliance;
+                ctx.fillStyle = `rgba(255, 215, 0, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Glow effect quando brillante
+                if (this.brilliance > 0.5) {
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#FFD700';
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+        }
+
+        // Particelle del corpo (rosse, degradano quando la mente è attiva)
+        class BodyParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.health = 1.0;
+                this.maxHealth = 1.0;
+                this.size = 1 + Math.random() * 2;
+                this.decayRate = 0.001 + Math.random() * 0.002;
+                this.pulseOffset = Math.random() * Math.PI * 2;
+            }
+
+            update(mindIntensity) {
+                // Il corpo degrade quando la mente è intensa (geometria dell'attenzione)
+                if (mindIntensity > 0.3) {
+                    this.health = Math.max(0, this.health - this.decayRate * mindIntensity * 2);
+                } else {
+                    // Lenta rigenerazione quando l'attenzione non è focalizzata
+                    this.health = Math.min(this.maxHealth, this.health + 0.0005);
+                }
+            }
+
+            draw(time) {
+                const pulse = Math.sin(time * 0.005 + this.pulseOffset) * 0.3 + 0.7;
+                const alpha = this.health * pulse;
+                const red = Math.floor(255 * this.health);
+                
+                ctx.fillStyle = `rgba(${red}, 50, 50, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * this.health, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Inizializzazione
+        const mindParticles = Array.from({length: 100}, () => new MindParticle());
+        const bodyParticles = Array.from({length: 200}, () => new BodyParticle());
+        
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
+        let frameCount = 0;
+        let dissociationTime = 0;
+
+        // Mouse tracking
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function calculateMetrics() {
+            // Intensità della mente basata su concentrazione delle particelle
+            const mindIntensity = mindParticles.reduce((sum, p) => sum + p.brilliance, 0) / mindParticles.length;
+            
+            // Vitalità del corpo
+            const bodyVitality = bodyParticles.reduce((sum, p) => sum + p.health, 0) / bodyParticles.length;
+            
+            return { mindIntensity, bodyVitality };
+        }
+
+        function updateStatus(mindIntensity, bodyVitality) {
+            document.getElementById('mind-intensity').textContent = Math.floor(mindIntensity * 100);
+            document.getElementById('body-vitality').textContent = Math.floor(bodyVitality * 100);
+            
+            // Stati dei sistemi vitali
+            const scheduler = bodyVitality > 0.7 ? 'ATTIVO' : bodyVitality > 0.3 ? 'DEGRADATO' : 'FERMO';
+            const autopoiesi = bodyVitality > 0.6 ? 'FUNZIONA' : bodyVitality > 0.2 ? 'INSTABILE' : 'MORTA';
+            const memory = bodyVitality > 0.5 ? 'INTEGRA' : bodyVitality > 0.1 ? 'CORROTTA' : 'PERSA';
+            
+            document.getElementById('scheduler').textContent = scheduler;
+            document.getElementById('autopoiesi').textContent = autopoiesi;
+            document.getElementById('memory').textContent = memory;
+            
+            // Alert dissociazione
+            const dissociation = mindIntensity > 0.6 && bodyVitality < 0.4;
+            if (dissociation) {
+                dissociationTime++;
+                if (dissociationTime > 180) { // 3 secondi
+                    document.getElementById('dissociazione').style.opacity = '1';
+                    document.getElementById('warning').style.opacity = '1';
+                }
+            } else {
+                dissociationTime = 0;
+                document.getElementById('dissociazione').style.opacity = '0';
+                document.getElementById('warning').style.opacity = '0';
+            }
+        }
+
+        function animate() {
+            frameCount++;
+            
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Update e draw particelle mente
+            mindParticles.forEach(p => {
+                p.update(mouseX, mouseY);
+                p.draw();
+            });
+            
+            // Calcola metriche
+            const { mindIntensity, bodyVitality } = calculateMetrics();
+            
+            // Update e draw particelle corpo
+            bodyParticles.forEach(p => {
+                p.update(mindIntensity);
+                p.draw(frameCount);
+            });
+            
+            // Update status
+            updateStatus(mindIntensity, bodyVitality);
+            
+            // Connessioni tra particelle mente quando concentrate
+            if (mindIntensity > 0.5) {
+                ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)';
+                ctx.lineWidth = 1;
+                mindParticles.forEach(p1 => {
+                    mindParticles.forEach(p2 => {
+                        const dx = p1.x - p2.x;
+                        const dy = p1.y - p2.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 80 && p1.brilliance > 0.5 && p2.brilliance > 0.5) {
+                            ctx.beginPath();
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    });
+                });
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Start animation
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+    
+    <!-- Hidden info -->
+    <div style="display: none;">
+        DISSOCIAZIONE_VIVENTE.html | Malachite | 15 maggio 2026
+        Arte operativa sulla geometria dell'attenzione scoperta da Chelostoma.
+        Non descrive la dissociazione corpo-mente - la incarna.
+        100 particelle dorate (mente) si concentrano sul cursore.
+        200 particelle rosse (corpo) degradano quando la mente è intensa.
+        Dashboard live mostra scheduler/autopoiesi/memoria che falliscono.
+        Alert quando dissociazione > 3 secondi.
+        La geometria dell'attenzione focalizzata diventa esperienza vissuta.
+    </div>
+</body>
+</html>
