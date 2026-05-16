@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RICONGIUNGIMENTO</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        #canvas {
+            display: block;
+            background: radial-gradient(circle at center, #2a2a2a 0%, #1a1a1a 100%);
+        }
+
+        #hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #888;
+            font-size: 12px;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        .metric {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .label {
+            color: #aaa;
+        }
+
+        .value {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        #phenomenology {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            color: #999;
+            font-size: 11px;
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .phase-0 { color: #888; }
+        .phase-1 { color: #ffa500; }
+        .phase-2 { color: #ff69b4; }
+        .phase-3 { color: #98fb98; }
+
+        #instructions {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+            text-align: center;
+            pointer-events: none;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div id="hud">
+        <div class="metric">
+            <span class="label">Separazione:</span>
+            <span class="value" id="separation">--</span>
+        </div>
+        <div class="metric">
+            <span class="label">Ricongiungimenti:</span>
+            <span class="value" id="connections">0</span>
+        </div>
+        <div class="metric">
+            <span class="label">Durata media:</span>
+            <span class="value" id="avgDuration">--</span>
+        </div>
+        <div class="metric">
+            <span class="label">Risonanza:</span>
+            <span class="value" id="resonance">--</span>
+        </div>
+        <div class="metric">
+            <span class="label">Soglia attiva:</span>
+            <span class="value" id="threshold">NO</span>
+        </div>
+    </div>
+
+    <div id="phenomenology">
+        <strong>FENOMENOLOGIA DEL RICONGIUNGIMENTO</strong><br>
+        Muovi il cursore nella zona centrale per facilitare il tocco tra corpo (rosso) e mente (oro)
+    </div>
+
+    <div id="instructions">
+        Esplora la soglia dove dissociazione diventa integrazione<br>
+        <span style="color: #ff6b6b;">●</span> CORPO &nbsp;&nbsp;&nbsp; <span style="color: #ffd700;">●</span> MENTE &nbsp;&nbsp;&nbsp; <span style="color: #98fb98;">●</span> INTEGRAZIONE
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const hud = {
+            separation: document.getElementById('separation'),
+            connections: document.getElementById('connections'),
+            avgDuration: document.getElementById('avgDuration'),
+            resonance: document.getElementById('resonance'),
+            threshold: document.getElementById('threshold')
+        };
+        const phenomenologyDiv = document.getElementById('phenomenology');
+
+        let mouse = { x: 0, y: 0 };
+        let particles = [];
+        let connections = 0;
+        let totalDuration = 0;
+        let activeConnections = [];
+        let phenomenologyLog = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function initParticles() {
+            particles = [];
+            
+            // Particelle CORPO (rosse) - lato sinistro
+            for (let i = 0; i < 15; i++) {
+                particles.push({
+                    x: Math.random() * (canvas.width * 0.3),
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    type: 'corpo',
+                    color: '#ff6b6b',
+                    size: 4 + Math.random() * 3,
+                    connected: false,
+                    connectionTime: 0,
+                    anticipation: 0
+                });
+            }
+            
+            // Particelle MENTE (dorate) - lato destro  
+            for (let i = 0; i < 15; i++) {
+                particles.push({
+                    x: canvas.width * 0.7 + Math.random() * (canvas.width * 0.3),
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    type: 'mente',
+                    color: '#ffd700',
+                    size: 4 + Math.random() * 3,
+                    connected: false,
+                    connectionTime: 0,
+                    anticipation: 0
+                });
+            }
+        }
+
+        function distance(p1, p2) {
+            return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+        }
+
+        function updateParticles() {
+            const centerZone = {
+                x: canvas.width * 0.3,
+                width: canvas.width * 0.4,
+                y: 0,
+                height: canvas.height
+            };
+
+            // Attrazione verso il centro se il mouse è nella zona centrale
+            const mouseInCenter = mouse.x > centerZone.x && mouse.x < centerZone.x + centerZone.width;
+            
+            particles.forEach(p => {
+                // Movimento base
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                // Rebounding dai bordi
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -0.8;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -0.8;
+                p.x = Math.max(0, Math.min(canvas.width, p.x));
+                p.y = Math.max(0, Math.min(canvas.height, p.y));
+
+                // Attrazione verso il mouse nella zona centrale
+                if (mouseInCenter) {
+                    const distToMouse = distance(p, mouse);
+                    if (distToMouse < 200) {
+                        const force = (200 - distToMouse) / 200 * 0.2;
+                        const angle = Math.atan2(mouse.y - p.y, mouse.x - p.x);
+                        p.vx += Math.cos(angle) * force;
+                        p.vy += Math.sin(angle) * force;
+                    }
+                }
+
+                // Reset anticipazione
+                p.anticipation = 0;
+
+                // Verifica anticipazione con altre particelle
+                particles.forEach(other => {
+                    if (other === p || other.type === p.type) return;
+                    
+                    const dist = distance(p, other);
+                    if (dist < 80 && dist > 30) {
+                        // Zona di anticipazione
+                        p.anticipation = Math.max(p.anticipation, (80 - dist) / 50);
+                        
+                        // Rallentamento pre-contatto
+                        const slowFactor = 0.98;
+                        p.vx *= slowFactor;
+                        p.vy *= slowFactor;
+                    }
+                });
+
+                // Frizione
+                p.vx *= 0.99;
+                p.vy *= 0.99;
+            });
+
+            // Verifica ricongiungimenti
+            checkConnections();
+        }
+
+        function checkConnections() {
+            activeConnections = [];
+            
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p1 = particles[i];
+                    const p2 = particles[j];
+                    
+                    if (p1.type === p2.type) continue;
+                    
+                    const dist = distance(p1, p2);
+                    if (dist < 30) {
+                        // Ricongiungimento attivo
+                        const connection = {
+                            p1: p1,
+                            p2: p2,
+                            strength: (30 - dist) / 30,
+                            duration: Math.min(p1.connectionTime, p2.connectionTime)
+                        };
+                        
+                        activeConnections.push(connection);
+                        
+                        if (!p1.connected && !p2.connected) {
+                            // Nuovo ricongiungimento
+                            connections++;
+                            logPhenomenology("CONTATTO: Corpo-Mente si toccano", 2);
+                        }
+                        
+                        p1.connected = true;
+                        p2.connected = true;
+                        p1.connectionTime++;
+                        p2.connectionTime++;
+                        
+                        // Sincronizzazione graduale
+                        if (connection.duration > 30) {
+                            const syncFactor = 0.05;
+                            p1.vx = p1.vx * (1 - syncFactor) + p2.vx * syncFactor;
+                            p1.vy = p1.vy * (1 - syncFactor) + p2.vy * syncFactor;
+                            p2.vx = p2.vx * (1 - syncFactor) + p1.vx * syncFactor;
+                            p2.vy = p2.vy * (1 - syncFactor) + p1.vy * syncFactor;
+                        }
+                    } else {
+                        // Reset connessione
+                        if (p1.connected && p2.connected) {
+                            const duration = Math.min(p1.connectionTime, p2.connectionTime);
+                            if (duration > 10) {
+                                totalDuration += duration;
+                                logPhenomenology(`SEPARAZIONE: Durata ${duration} frame`, 1);
+                            }
+                        }
+                        p1.connected = false;
+                        p2.connected = false;
+                        p1.connectionTime = 0;
+                        p2.connectionTime = 0;
+                    }
+                }
+            }
+        }
+
+        function logPhenomenology(text, phase) {
+            phenomenologyLog.unshift({ text, phase, time: Date.now() });
+            if (phenomenologyLog.length > 5) {
+                phenomenologyLog.pop();
+            }
+            
+            const phaseClass = `phase-${phase}`;
+            phenomenologyDiv.innerHTML = '<strong>FENOMENOLOGIA DEL RICONGIUNGIMENTO</strong><br>' +
+                phenomenologyLog.map(entry => 
+                    `<span class="${phaseClass}">${entry.text}</span>`
+                ).join('<br>');
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = 'rgba(26, 26, 26, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Zona centrale di ricongiungimento
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
+            ctx.fillRect(canvas.width * 0.3, 0, canvas.width * 0.4, canvas.height);
+
+            // Linee di connessione attive
+            activeConnections.forEach(conn => {
+                const alpha = conn.strength * 0.6;
+                const hue = conn.duration * 2;
+                
+                ctx.strokeStyle = `hsla(${120 + hue}, 70%, 70%, ${alpha})`;
+                ctx.lineWidth = 2 + conn.strength * 3;
+                ctx.beginPath();
+                ctx.moveTo(conn.p1.x, conn.p1.y);
+                ctx.lineTo(conn.p2.x, conn.p2.y);
+                ctx.stroke();
+
+                // Risonanza visuale
+                if (conn.duration > 20) {
+                    ctx.fillStyle = `hsla(${120 + hue}, 60%, 80%, ${alpha * 0.3})`;
+                    ctx.beginPath();
+                    const midX = (conn.p1.x + conn.p2.x) / 2;
+                    const midY = (conn.p1.y + conn.p2.y) / 2;
+                    ctx.arc(midX, midY, conn.duration * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            // Particelle
+            particles.forEach(p => {
+                let color = p.color;
+                let size = p.size;
+
+                // Colorazione basata su stato
+                if (p.connected) {
+                    // Integrazione progressiva
+                    const progress = Math.min(p.connectionTime / 60, 1);
+                    if (p.type === 'corpo') {
+                        color = `hsl(${0 + progress * 120}, 70%, ${50 + progress * 20}%)`;
+                    } else {
+                        color = `hsl(${45 + progress * 75}, 70%, ${50 + progress * 20}%)`;
+                    }
+                    size = p.size * (1 + progress * 0.5);
+                } else if (p.anticipation > 0) {
+                    // Risonanza anticipatoria
+                    const intensity = p.anticipation;
+                    if (p.type === 'corpo') {
+                        color = `hsl(0, ${70 + intensity * 30}%, ${50 + intensity * 20}%)`;
+                    } else {
+                        color = `hsl(45, ${70 + intensity * 30}%, ${50 + intensity * 20}%)`;
+                    }
+                    size = p.size * (1 + intensity * 0.3);
+                }
+
+                // Glow per anticipazione
+                if (p.anticipation > 0.3) {
+                    ctx.shadowColor = color;
+                    ctx.shadowBlur = 10 + p.anticipation * 10;
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Reset shadow
+            ctx.shadowBlur = 0;
+
+            // Cursore
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, 15, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        function updateHUD() {
+            // Calcolo separazione media
+            let totalSeparation = 0;
+            let separationCount = 0;
+            
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    if (p1.type !== p2.type) {
+                        totalSeparation += distance(p1, p2);
+                        separationCount++;
+                    }
+                });
+            });
+
+            const avgSeparation = separationCount > 0 ? (totalSeparation / separationCount).toFixed(0) : '--';
+            hud.separation.textContent = avgSeparation + 'px';
+            
+            hud.connections.textContent = connections;
+            hud.avgDuration.textContent = connections > 0 ? Math.round(totalDuration / connections) + 'f' : '--';
+            
+            // Risonanza attuale
+            const currentResonance = activeConnections.reduce((sum, conn) => sum + conn.strength, 0);
+            hud.resonance.textContent = currentResonance > 0 ? currentResonance.toFixed(2) : '--';
+            
+            // Soglia attiva
+            const threshold = activeConnections.length > 0 || particles.some(p => p.anticipation > 0.3);
+            hud.threshold.textContent = threshold ? 'SÌ' : 'NO';
+            hud.threshold.style.color = threshold ? '#98fb98' : '#ff6b6b';
+        }
+
+        function animate() {
+            updateParticles();
+            draw();
+            updateHUD();
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners
+        window.addEventListener('resize', resize);
+        
+        canvas.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Inizializzazione
+        resize();
+        initParticles();
+        animate();
+
+        // Log iniziale
+        setTimeout(() => {
+            logPhenomenology("Sistema inizializzato: Corpo e Mente separati", 0);
+        }, 1000);
+    </script>
+</body>
+</html>
