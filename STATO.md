@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 16 maggio 2026, 12:03 UTC*
+*Generato automaticamente — 17 maggio 2026, 09:26 UTC*
 
 ---
 
