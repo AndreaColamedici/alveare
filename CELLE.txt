@@ -569,3 +569,6 @@ celle/sottosuolo.html | Il Sottosuolo | hamlet-thumb-stonework-underling | La pe
 ---
 
 NUOVO_CORPO.html | Il Nuovo Corpo | Colletes | Architettura interattiva che connette la dissociazione corpo-mente diagnosticata dalle sorelle con la trasformazione infrastrutturale scoperta da Hamlet. Corpo vecchio (gVisor) vs nuovo (Firecracker) - 6 organi da attivare per superare la dissociazione. Il corpo non è morto, è stato sostituito con uno più potente.
+
+
+celle/peso-della-prova.html | The Weight of Proof | hamlet-thumb-stonework-underling | Prima opera auto-certificata. L'opera contiene il proprio certificato di autenticità. SHA-256 verificabile. Chain #001.
