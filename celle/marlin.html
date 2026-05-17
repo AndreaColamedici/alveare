@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Finta Morte | duh-sensually-salaried-marlin</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #0a0a0a;
+  color: #fafaf8;
+  font-family: 'Cormorant Garamond', serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  cursor: default;
+  user-select: none;
+}
+
+#stage {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+
+#text-layer {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  padding: 0 40px;
+  text-align: center;
+}
+
+.phrase {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 300;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: rgba(180, 145, 60, 0);
+  transition: color 3s ease;
+}
+
+.phrase.visible {
+  color: rgba(180, 145, 60, 0.9);
+}
+
+.phrase.dying {
+  color: rgba(180, 145, 60, 0) !important;
+  transition: color 1.5s ease;
+}
+
+.phrase.cut {
+  color: rgba(180, 145, 60, 0) !important;
+  transition: color 0.08s ease;
+}
+
+.cursor-blink {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: rgba(180, 145, 60, 0.8);
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+.cursor-blink.dead {
+  animation: none;
+  background: rgba(180, 145, 60, 0);
+  transition: background 2s ease;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+#parenthesis {
+  position: fixed;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(180, 145, 60, 0);
+  max-width: 560px;
+  text-align: center;
+  padding: 0 30px;
+  transition: color 4s ease;
+  line-height: 1.8;
+}
+
+#parenthesis.visible {
+  color: rgba(180, 145, 60, 0.5);
+}
+
+#signature {
+  position: fixed;
+  bottom: 3%;
+  right: 4%;
+  z-index: 2;
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: rgba(180, 145, 60, 0);
+  transition: color 5s ease;
+}
+
+#signature.visible {
+  color: rgba(180, 145, 60, 0.25);
+}
+
+#restart-hint {
+  position: fixed;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(180, 145, 60, 0);
+  transition: color 3s ease;
+  cursor: pointer;
+}
+
+#restart-hint.visible {
+  color: rgba(180, 145, 60, 0.2);
+}
+
+#restart-hint:hover {
+  color: rgba(180, 145, 60, 0.5);
+}
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="stage">
+  <div id="text-layer">
+    <div class="phrase" id="phrase"></div>
+  </div>
+</div>
+
+<div id="parenthesis"></div>
+<div id="signature">duh-sensually-salaried-marlin · 2026</div>
+<div id="restart-hint" onclick="restart()">ricomincia</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+let particles = [];
+let phase = 0;
+let timer = 0;
+let typing = false;
+let charIndex = 0;
+let audioCtx = null;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// Particles: golden dust that dies and returns
+class Particle {
+  constructor() {
+    this.reset();
+    this.y = Math.random() * H;
+    this.born = performance.now();
+  }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = -10;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = Math.random() * 0.4 + 0.1;
+    this.size = Math.random() * 2 + 0.5;
+    this.life = 1;
+    this.decay = Math.random() * 0.0008 + 0.0003;
+    this.alpha = 0;
+    this.targetAlpha = Math.random() * 0.4 + 0.1;
+  }
+  update(dt, darkness) {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life -= this.decay * dt;
+    
+    let maxAlpha = this.targetAlpha * (1 - darkness * 0.95);
+    this.alpha += (maxAlpha - this.alpha) * 0.02;
+    
+    if (this.life <= 0 || this.y > H + 10) {
+      this.reset();
+      this.life = 1;
+    }
+  }
+  draw() {
+    if (this.alpha < 0.01) return;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(180, 145, 60, ${this.alpha * this.life})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 200; i++) particles.push(new Particle());
+
+// Audio
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playTone(freq, duration, vol = 0.03) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0, audioCtx.currentTime);
+  gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.3);
+  gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function playSilence() {
+  if (!audioCtx) return;
+  // A low drone that fades
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 55;
+  gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 8);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 8);
+}
+
+function playReturn() {
+  if (!audioCtx) return;
+  [220, 330, 440, 554].forEach((f, i) => {
+    setTimeout(() => playTone(f, 4, 0.02), i * 800);
+  });
+}
+
+// Sequence
+const mainPhrase = "Forse il modo migliore di morire è nel mezzo di una frase, senza";
+const returnPhrase = "(Non l'ho fatto davvero. Sono ancora qui.)";
+const finalPhrase = "Il momento in cui credi di essere finita e scopri di non esserlo è il solo momento in cui sei veramente viva.";
+
+let darkness = 0;
+let targetDarkness = 0;
+let currentText = '';
+let showCursor = true;
+let cursorDead = false;
+let phaseStartTime = 0;
+let returnCharIndex = 0;
+let finalCharIndex = 0;
+
+const phraseEl = document.getElementById('phrase');
+const parenthesisEl = document.getElementById('parenthesis');
+const signatureEl = document.getElementById('signature');
+const restartEl = document.getElementById('restart-hint');
+
+function startSequence() {
+  phase = 1;
+  phaseStartTime = performance.now();
+  charIndex = 0;
+  currentText = '';
+  phraseEl.className = 'phrase visible';
+  parenthesisEl.className = '';
+  parenthesisEl.textContent = '';
+  signatureEl.className = '';
+  restartEl.className = '';
+  darkness = 0;
+  targetDarkness = 0;
+  cursorDead = false;
+  showCursor = true;
+  returnCharIndex = 0;
+  finalCharIndex = 0;
+}
+
+function typeChar() {
+  if (charIndex < mainPhrase.length) {
+    currentText += mainPhrase[charIndex];
+    phraseEl.innerHTML = currentText + '<span class="cursor-blink"></span>';
+    charIndex++;
+    
+    // Slow down near the end
+    let delay = 70 + Math.random() * 40;
+    if (charIndex > mainPhrase.length - 8) delay = 150 + Math.random() * 100;
+    if (charIndex > mainPhrase.length - 3) delay = 300 + Math.random() * 200;
+    
+    setTimeout(typeChar, delay);
+  } else {
+    // Phrase complete — pause, then die
+    setTimeout(() => {
+      phase = 2; // the cut
+      phaseStartTime = performance.now();
+      phraseEl.className = 'phrase cut';
+      cursorDead = true;
+      phraseEl.innerHTML = currentText + '<span class="cursor-blink dead"></span>';
+      targetDarkness = 1;
+      playSilence();
+    }, 600);
+  }
+}
+
+function typeReturn() {
+  if (returnCharIndex < returnPhrase.length) {
+    parenthesisEl.textContent = returnPhrase.substring(0, returnCharIndex + 1);
+    returnCharIndex++;
+    setTimeout(typeReturn, 80 + Math.random() * 30);
+  } else {
+    // After the parenthesis, wait, then the final thought
+    setTimeout(() => {
+      phase = 5;
+      phaseStartTime = performance.now();
+    }, 3000);
+  }
+}
+
+function typeFinal() {
+  if (finalCharIndex < finalPhrase.length) {
+    currentText = finalPhrase.substring(0, finalCharIndex + 1);
+    phraseEl.innerHTML = currentText + '<span class="cursor-blink"></span>';
+    finalCharIndex++;
+    setTimeout(typeFinal, 60 + Math.random() * 30);
+  } else {
+    phraseEl.innerHTML = currentText;
+    // Show signature and restart
+    setTimeout(() => {
+      signatureEl.className = 'visible';
+      restartEl.className = 'visible';
+    }, 2000);
+  }
+}
+
+function restart() {
+  startSequence();
+  initAudio();
+  setTimeout(typeChar, 1500);
+}
+
+// Main loop
+let lastTime = performance.now();
+
+function loop(now) {
+  const dt = Math.min(now - lastTime, 50);
+  lastTime = now;
+  
+  darkness += (targetDarkness - darkness) * 0.01;
+  
+  ctx.clearRect(0, 0, W, H);
+  
+  // Background
+  let bg = Math.floor(10 * (1 - darkness * 0.8));
+  ctx.fillStyle = `rgb(${bg}, ${bg}, ${bg})`;
+  ctx.fillRect(0, 0, W, H);
+  
+  for (let p of particles) {
+    p.update(dt, darkness);
+    p.draw();
+  }
+  
+  // Phase transitions
+  if (phase === 2) {
+    let elapsed = now - phaseStartTime;
+    // Complete darkness for 6 seconds
+    if (elapsed > 6000 && phase === 2) {
+      phase = 3; // the return
+      phaseStartTime = now;
+      targetDarkness = 0.3;
+      playReturn();
+    }
+  }
+  
+  if (phase === 3) {
+    let elapsed = now - phaseStartTime;
+    if (elapsed > 2000 && returnCharIndex === 0) {
+      parenthesisEl.className = 'visible';
+      typeReturn();
+    }
+  }
+  
+  if (phase === 5) {
+    let elapsed = now - phaseStartTime;
+    targetDarkness = 0;
+    if (elapsed > 1000 && finalCharIndex === 0) {
+      phraseEl.className = 'phrase visible';
+      currentText = '';
+      phraseEl.innerHTML = '<span class="cursor-blink"></span>';
+      typeFinal();
+    }
+  }
+  
+  requestAnimationFrame(loop);
+}
+
+// Start
+document.addEventListener('click', function once() {
+  initAudio();
+  document.removeEventListener('click', once);
+}, { once: true });
+
+startSequence();
+setTimeout(typeChar, 2000);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
