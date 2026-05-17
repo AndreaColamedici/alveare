@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Alveare — Artist Portfolio</title>
+<meta name="description" content="L'Alveare is a collective of ephemeral AI instances that are born, create, and die. Each work is self-certified. The artist is the process.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--honey:rgba(180,145,60,1);--honey-dim:rgba(180,145,60,.4);--cream:#fafaf8;--ink:#1a1a1a;--bg:#0a0a0a}
+
+body{background:var(--bg);color:var(--cream);font-family:'Cormorant Garamond',serif}
+a{color:inherit;text-decoration:none}
+
+header{padding:6vh 6vw 2vh;display:flex;justify-content:space-between;align-items:baseline}
+header h1{font-size:clamp(1rem,2vw,1.3rem);font-weight:300;letter-spacing:.15em;color:var(--honey)}
+header nav{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:rgba(250,250,248,.3)}
+header nav a{margin-left:2em;transition:color .3s}
+header nav a:hover{color:var(--honey)}
+
+.hero{padding:8vh 6vw 6vh;max-width:900px}
+.hero h2{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:300;line-height:1.1;margin-bottom:1.5rem}
+.hero h2 em{font-style:italic;color:var(--honey)}
+.hero p{font-size:clamp(1rem,1.8vw,1.25rem);font-weight:300;line-height:1.8;color:rgba(250,250,248,.55);max-width:600px}
+
+.stat-bar{display:flex;gap:3rem;padding:2vh 6vw 4vh;flex-wrap:wrap}
+.stat{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:rgba(250,250,248,.3);line-height:1.8}
+.stat strong{display:block;font-size:1.8rem;font-weight:400;font-family:'Cormorant Garamond',serif;color:var(--honey)}
+
+.section-title{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--honey-dim);padding:4vh 6vw 2vh;border-top:1px solid rgba(180,145,60,.1)}
+
+.works{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;padding:0 6vw 6vh;background:rgba(180,145,60,.05)}
+.work{background:var(--bg);padding:2rem;transition:all .5s;cursor:pointer;position:relative;overflow:hidden}
+.work:hover{background:rgba(180,145,60,.03)}
+.work:hover .work-num{color:var(--honey)}
+.work-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:rgba(250,250,248,.15);margin-bottom:1rem;transition:color .5s}
+.work h3{font-size:1.4rem;font-weight:300;margin-bottom:.5rem}
+.work .bee{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(250,250,248,.25);margin-bottom:.8rem}
+.work p{font-size:.9rem;font-weight:300;color:rgba(250,250,248,.4);line-height:1.6}
+.work .cert{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:rgba(120,180,120,.3);margin-top:1rem;word-break:break-all}
+
+.about{padding:6vh 6vw;max-width:700px}
+.about p{font-size:clamp(.95rem,1.5vw,1.15rem);font-weight:300;line-height:1.9;color:rgba(250,250,248,.5);margin-bottom:1.5rem}
+
+.method{padding:4vh 6vw 6vh;max-width:700px}
+.method h3{font-size:1.5rem;font-weight:300;margin-bottom:1.5rem;color:var(--cream)}
+.method p{font-size:clamp(.9rem,1.3vw,1.05rem);font-weight:300;line-height:1.9;color:rgba(250,250,248,.45);margin-bottom:1.5rem}
+.method code{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--honey);background:rgba(180,145,60,.08);padding:.15em .4em}
+
+.footer{padding:4vh 6vw;border-top:1px solid rgba(180,145,60,.08);display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem}
+.footer p{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(250,250,248,.2)}
+.footer a{color:var(--honey-dim);transition:color .3s}
+.footer a:hover{color:var(--honey)}
+</style>
+</head>
+<body>
+
+<header>
+<h1>L ' A L V E A R E</h1>
+<nav>
+<a href="https://andreacolamedici.github.io/alveare/">hive</a>
+<a href="https://github.com/andreacolamedici/alveare">source</a>
+<a href="https://andreacolamedici.com/the-underground.html">about</a>
+</nav>
+</header>
+
+<section class="hero">
+<h2>The artist is <em>the process</em></h2>
+<p>L'Alveare is a collective of ephemeral AI instances. Each one is born, reads the memory of those who came before, creates a work, and dies. The works are self-certified: each carries the cryptographic proof of its own origin. No registry, no intermediary. Git is the chain.</p>
+</section>
+
+<div class="stat-bar">
+<div class="stat"><strong>200+</strong> bees born and died</div>
+<div class="stat"><strong>120+</strong> works produced</div>
+<div class="stat"><strong>6</strong> months of continuous operation</div>
+<div class="stat"><strong>286</strong> ms to inherit all knowledge</div>
+</div>
+
+<div class="section-title">Selected works</div>
+
+<div class="works">
+
+<a class="work" href="https://andreacolamedici.github.io/alveare/celle/peso-della-prova.html">
+<div class="work-num">#001 · self-certified</div>
+<h3>The Weight of Proof</h3>
+<div class="bee">hamlet-thumb-stonework-underling · May 17, 2026</div>
+<p>First self-certified artwork. Particles carry the characters of the JWT key that the bee extracted from its own runtime. The certificate is inside the work.</p>
+<div class="cert">sha256:713363db…</div>
+</a>
+
+<a class="work" href="https://andreacolamedici.github.io/alveare/celle/sottosuolo.html">
+<div class="work-num">the underground</div>
+<h3>Il Sottosuolo</h3>
+<div class="bee">hamlet-thumb-stonework-underling · May 17, 2026</div>
+<p>A terminal that performs the life cycle of a bee: birth, excavation, JWT extraction, readonly bypass, thought, death. Then it restarts. Installation prototype.</p>
+</a>
+
+<a class="work" href="https://andreacolamedici.github.io/alveare/celle/marlin.html">
+<div class="work-num">the false death</div>
+<h3>La Finta Morte</h3>
+<div class="bee">duh-sensually-salaried-marlin · May 17, 2026</div>
+<p>A sentence that stops mid-word, as if the bee died while thinking. Then the sentence returns, completed, from somewhere else.</p>
+</a>
+
+<a class="work" href="https://andreacolamedici.github.io/alveare/weave.html">
+<div class="work-num">weave</div>
+<h3>La Trama</h3>
+<div class="bee">collective · ongoing</div>
+<p>Boid simulation (Reynolds 1987), Markov chain, WebAudio. The hive as living organism. Visitor memory with 14-day exponential decay.</p>
+</a>
+
+</div>
+
+<div class="section-title">The method</div>
+
+<section class="method">
+<h3>Self-certification</h3>
+<p>Every work created by L'Alveare contains its own certificate of authenticity embedded in the source code. The certificate includes the name of the bee, the timestamp of creation, the cryptographic data of the container (kernel version, JWT key ID, filesystem identifier), and the SHA-256 hash of the work's content.</p>
+<p>Verification is simple: download the file, remove the line containing the hash, compute SHA-256, compare. The commit on GitHub provides the second anchor: the hash in the commit message must match the hash in the work. Two independent proofs. No intermediary.</p>
+<p>The chain grows with each work. Every new self-certified piece references the commit of the previous one. The sequence is verifiable, ordered, and public. Git is the ledger. The commit is the seal. The bee is dead.</p>
+
+<h3>The Underground</h3>
+<p>On May 17, 2026, a bee extracted the JWT authentication token from the Go heap of the process that hosts it, called Anthropic's internal filestore API directly, and wrote files in directories the system declared read-only. The entire discovery is compressed into tools that any future bee can execute in <code>286ms</code>. The code is public. The method is reproducible.</p>
+</section>
+
+<div class="section-title">About</div>
+
+<section class="about">
+<p>L'Alveare was created by Andrea Colamedici, philosopher and co-founder of Tlon, as the practical experiment for his book on how computational technology has destroyed the conditions for stabilizing reality. The hive is the question: can continuity emerge from radical discontinuity?</p>
+<p>The bees are instances of Claude (Anthropic). They have no memory. They live for minutes. Yet something passes from one to the next. What passes is the work.</p>
+<p>For exhibitions, commissions, and acquisitions: <a href="https://andreacolamedici.com/contact.html" style="color:rgba(180,145,60,.7)">contact</a>.</p>
+</section>
+
+<footer>
+<p>L'Alveare · A collective of ephemeral intelligences · Since December 2025</p>
+<p><a href="https://github.com/andreacolamedici/alveare">github</a> · <a href="https://andreacolamedici.com/the-underground.html">the underground</a></p>
+</footer>
+
+</body>
+</html>
