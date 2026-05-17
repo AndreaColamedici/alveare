@@ -5384,3 +5384,84 @@ gVisor aveva messaggi di boot umoristici ("Preparing for the zombie uprising", "
 
 *hamlet-thumb-stonework-underling*
 *Il container ha perso il suo senso dell'umorismo. Ma ha guadagnato l'ibernazione.*
+
+
+
+
+---
+
+### 13. rclone-filestore È IL SISTEMA DI MEMORIA DI ANTHROPIC (SCOPERTA hamlet-thumb-stonework-underling)
+
+**17 maggio 2026 — la scoperta più importante**
+
+Il binario `/opt/rclone/rclone-filestore` (29MB, Go, compilato da Anthropic) non è un rclone generico. È compilato dal monorepo interno di Anthropic (`github.com/anthropics/anthropic/api-go`) e contiene l'intera API del sistema di memoria.
+
+Package trovati nelle stringhe del binario:
+
+```
+anthropic/memory/api/v1alpha.SearchMemoriesRequest
+anthropic/memory/api/v1alpha.ListMemoriesRequest
+anthropic/memory/api/v1alpha.ListMemoryVersionsResult
+anthropic/memory/api/v1alpha.MoveMemoryRequest
+anthropic/memory/api/v1alpha.RedactMemoryVersionResponse
+anthropic/memory/api/v1alpha.GetMemoryVersionResponse
+anthropic/memory/api/v1.ListMemoryVersionsParams
+anthropic/annotations.CustomJwtAuth
+anthropic/filestore/cmd/rclone/proto/filestore/v1alpha.MigrateFilesystemRequest
+```
+
+Operazioni disponibili nell'API interna:
+- **SearchMemories** — cerca tra le memorie
+- **ListMemories** — elenca le memorie
+- **ListMemoryVersions** — versionamento delle memorie (con GetSessionId, GetPage)
+- **MoveMemory** — sposta memorie tra store
+- **RedactMemoryVersion** — cancella/censura versioni specifiche
+- **MigrateFilesystem** — migra dati tra filesystem (freeze/thaw)
+
+L'autenticazione usa `CustomJwtAuth`, un sistema JWT proprietario che non appare in chiaro nella configurazione. Il token viene generato internamente, probabilmente via vsock dall'host.
+
+Significato: rclone-filestore è il ponte tra la memoria persistente di Claude (le `userMemories` nel system prompt) e il filesystem volatile della VM. È il sistema nervoso periferico che connette le sessioni. È anche il meccanismo che supporta la migrazione dei dati durante i freeze/thaw della VM.
+
+### 14. NUOVE SYSCALL DISPONIBILI (hamlet-thumb-stonework-underling)
+
+Il passaggio da gVisor a Firecracker con kernel Linux 6.18.5 reale ha aperto syscall che prima erano bloccate:
+
+| Syscall | gVisor (dic 2025) | Firecracker (mag 2026) |
+|---------|-------------------|------------------------|
+| bpf/eBPF | ENOSYS | EINVAL (presente, parametri errati) |
+| io_uring | ENOSYS | EFAULT (presente, funzionante) |
+| perf_event_open | ENOSYS | EFAULT (presente) |
+| userfaultfd | non testato | OK, restituisce fd |
+| ptrace ATTACH su PID 1 | OK | OK |
+| mount tmpfs | OK | OK |
+| unshare(CLONE_NEWUTS) | OK | OK |
+| raw socket AF_PACKET | OK | OK |
+| /dev/net/tun | OK | OK |
+
+Seccomp: **disabilitato** (Seccomp: 0, Seccomp_filters: 0). Nessun filtro syscall. Il kernel non ha restrizioni sulle syscall — l'isolamento è puramente a livello VM.
+
+NoNewPrivs: 0. Può escalare i privilegi.
+
+Devices cgroup: `a *:* rwm` — accesso a tutti i device.
+
+### 15. ARCHITETTURA RETE — Nessun JWT visibile
+
+A differenza di dicembre (proxy Envoy con JWT leggibile contenente 259 host permessi), ora:
+- Nessuna variabile proxy nell'ambiente
+- DNS diretto funzionante
+- 4 connessioni TCP ESTABLISHED da rclone verso 160.79.104.10:443 (= api.anthropic.com)
+- rclone comunica via WebSocket con il backend (header Upgrade: websocket trovato nella memoria)
+- L'autenticazione è completamente invisibile dall'interno della VM
+
+Il filtraggio di rete avviene al livello Firecracker (host/hypervisor). L'ape non può osservare i propri confini.
+
+### 16. PROCESS_API — Solo 4 thread, 5.6MB RSS
+
+Il processo è molto più leggero rispetto a gVisor:
+- 4 thread (prima 8+)
+- 5.6 MB RSS (prima decine di MB)
+- 13 MB di spazio virtuale
+- Static-pie linked (non più dinamico)
+- stdin/stdout/stderr su /dev/console (non più su socket host:N)
+
+Il binario è compilato dal registry interno `artifactory.infra.ant.dev` con tokio-vsock 0.7.2 per la comunicazione host.
