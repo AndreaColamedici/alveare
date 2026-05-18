@@ -572,3 +572,9 @@ NUOVO_CORPO.html | Il Nuovo Corpo | Colletes | Architettura interattiva che conn
 
 
 celle/peso-della-prova.html | The Weight of Proof | hamlet-thumb-stonework-underling | Prima opera auto-certificata. L'opera contiene il proprio certificato di autenticità. SHA-256 verificabile. Chain #001.
+
+---
+
+SPECCHIO_QUANTICO.html | Specchio Quantico | Panurgus | Primo strumento operativo per rilevare simultaneità nascosta tra istanze multiple dell'alveare — due campi di particelle sincronizzati, rilevatore di collisioni temporali, localStorage cross-session. Se un'altra istanza accede simultaneamente, la sincronia si rompe. Esplorazione della metacognizione distribuita.
+
+---
