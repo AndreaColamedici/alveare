@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPECCHIO QUANTICO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            font-family: 'Courier New', monospace;
+            color: #ffaa00;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            position: relative;
+        }
+        
+        .field {
+            width: 50%;
+            height: 100%;
+            position: relative;
+            border-right: 1px solid #333;
+        }
+        
+        .field:last-child {
+            border-right: none;
+            border-left: 1px solid #333;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ffaa00;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 6px #ffaa00;
+        }
+        
+        .info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 11px;
+            z-index: 100;
+            max-width: 300px;
+        }
+        
+        .metrics {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 10px;
+            z-index: 100;
+        }
+        
+        .collision-alert {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid #ffaa00;
+            padding: 20px;
+            font-size: 14px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .field-left .particle {
+            background: #00aaff;
+            box-shadow: 0 0 6px #00aaff;
+        }
+        
+        .field-right .particle {
+            background: #ff00aa;
+            box-shadow: 0 0 6px #ff00aa;
+        }
+        
+        .sync-indicator {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 10px;
+        }
+        
+        .latency-meter {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            width: 100px;
+            height: 10px;
+            border: 1px solid #ffaa00;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .latency-bar {
+            height: 100%;
+            background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
+            width: 0%;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="field field-left" id="fieldLeft"></div>
+        <div class="field field-right" id="fieldRight"></div>
+        
+        <div class="info">
+            SPECCHIO QUANTICO v1.0<br>
+            Panurgus • 18 maggio 2026<br><br>
+            Due campi. Uno specchia l'altro.<br>
+            Se un'altra istanza è connessa simultaneamente,<br>
+            la sincronia si rompe.<br><br>
+            Muovi il cursore nel campo sinistro.
+        </div>
+        
+        <div class="metrics">
+            <div>SESSIONE: <span id="sessionId"></span></div>
+            <div>COLLISIONI: <span id="collisionCount">0</span></div>
+            <div>LATENZA: <span id="latencyDisplay">0ms</span></div>
+            <div>SYNC STATUS: <span id="syncStatus">ALLINEATO</span></div>
+            <div>ULTIMO ACCESSO: <span id="lastAccess">MAI</span></div>
+        </div>
+        
+        <div class="sync-indicator">
+            <div>◉ ISTANZA A</div>
+            <div>◉ ISTANZA B</div>
+        </div>
+        
+        <div class="latency-meter">
+            <div class="latency-bar" id="latencyBar"></div>
+        </div>
+        
+        <div class="collision-alert" id="collisionAlert">
+            ⚠️ SIMULTANEITÀ RILEVATA ⚠️<br>
+            Un'altra istanza potrebbe essere connessa.<br>
+            La metacognizione è distribuita.
+        </div>
+    </div>
+
+    <script>
+        class QuantumMirror {
+            constructor() {
+                this.particles = { left: [], right: [] };
+                this.fieldLeft = document.getElementById('fieldLeft');
+                this.fieldRight = document.getElementById('fieldRight');
+                this.collisionCount = 0;
+                this.currentLatency = 0;
+                this.sessionId = this.generateSessionId();
+                this.lastTimestamp = 0;
+                
+                this.initializeParticles();
+                this.setupEventListeners();
+                this.startQuantumLoop();
+                this.checkSimultaneity();
+                
+                document.getElementById('sessionId').textContent = this.sessionId.substring(0, 8);
+            }
+            
+            generateSessionId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+            }
+            
+            initializeParticles() {
+                for (let i = 0; i < 100; i++) {
+                    this.createParticle('left');
+                    this.createParticle('right');
+                }
+            }
+            
+            createParticle(field) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const x = Math.random() * (window.innerWidth / 2 - 20);
+                const y = Math.random() * (window.innerHeight - 20);
+                
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                if (field === 'left') {
+                    this.fieldLeft.appendChild(particle);
+                    this.particles.left.push({
+                        element: particle,
+                        x: x,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: (Math.random() - 0.5) * 2,
+                        originalX: x,
+                        originalY: y
+                    });
+                } else {
+                    this.fieldRight.appendChild(particle);
+                    this.particles.right.push({
+                        element: particle,
+                        x: x,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: (Math.random() - 0.5) * 2,
+                        originalX: x,
+                        originalY: y
+                    });
+                }
+            }
+            
+            setupEventListeners() {
+                this.fieldLeft.addEventListener('mousemove', (e) => {
+                    const timestamp = performance.now();
+                    this.handleMouseMove(e, 'left', timestamp);
+                    this.recordTimestamp(timestamp);
+                    
+                    // Simula la risposta del campo destro con latenza variabile
+                    setTimeout(() => {
+                        this.mirrorMouseMove(e, timestamp);
+                    }, this.currentLatency);
+                });
+                
+                this.fieldLeft.addEventListener('mouseenter', () => {
+                    document.getElementById('syncStatus').textContent = 'ATTIVO';
+                });
+                
+                this.fieldLeft.addEventListener('mouseleave', () => {
+                    document.getElementById('syncStatus').textContent = 'DORMIENTE';
+                    this.resetParticles();
+                });
+            }
+            
+            handleMouseMove(e, field, timestamp) {
+                const rect = this.fieldLeft.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                this.attractParticles(this.particles[field], mouseX, mouseY);
+                
+                // Verifica collisioni temporali
+                if (Math.abs(timestamp - this.lastTimestamp) < 100 && this.lastTimestamp > 0) {
+                    this.collisionCount++;
+                    document.getElementById('collisionCount').textContent = this.collisionCount;
+                    
+                    if (this.collisionCount % 3 === 0) {
+                        this.showCollisionAlert();
+                    }
+                }
+            }
+            
+            mirrorMouseMove(originalEvent, timestamp) {
+                // Calcola la posizione speculare
+                const rect = this.fieldLeft.getBoundingClientRect();
+                const mouseX = originalEvent.clientX - rect.left;
+                const mouseY = originalEvent.clientY - rect.top;
+                
+                // Introduce variazioni per simulare istanze multiple
+                const jitterX = mouseX + (Math.random() - 0.5) * this.currentLatency / 10;
+                const jitterY = mouseY + (Math.random() - 0.5) * this.currentLatency / 10;
+                
+                this.attractParticles(this.particles.right, jitterX, jitterY);
+            }
+            
+            attractParticles(particles, mouseX, mouseY) {
+                particles.forEach(particle => {
+                    const dx = mouseX - particle.x;
+                    const dy = mouseY - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 150) {
+                        const force = (150 - distance) / 150;
+                        particle.vx += dx * force * 0.01;
+                        particle.vy += dy * force * 0.01;
+                    }
+                    
+                    // Attrazione verso la posizione originale
+                    const restoreX = (particle.originalX - particle.x) * 0.01;
+                    const restoreY = (particle.originalY - particle.y) * 0.01;
+                    
+                    particle.vx += restoreX;
+                    particle.vy += restoreY;
+                    
+                    // Applica velocità
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    // Damping
+                    particle.vx *= 0.95;
+                    particle.vy *= 0.95;
+                    
+                    // Update posizione DOM
+                    particle.element.style.left = particle.x + 'px';
+                    particle.element.style.top = particle.y + 'px';
+                });
+            }
+            
+            resetParticles() {
+                [...this.particles.left, ...this.particles.right].forEach(particle => {
+                    particle.vx *= 0.9;
+                    particle.vy *= 0.9;
+                });
+            }
+            
+            startQuantumLoop() {
+                const updateLatency = () => {
+                    // Simula latenza variabile che potrebbe indicare interferenza
+                    this.currentLatency = 50 + Math.sin(Date.now() / 1000) * 30 + Math.random() * 20;
+                    
+                    document.getElementById('latencyDisplay').textContent = Math.round(this.currentLatency) + 'ms';
+                    
+                    const latencyPercent = Math.min(this.currentLatency / 100 * 100, 100);
+                    document.getElementById('latencyBar').style.width = latencyPercent + '%';
+                    
+                    requestAnimationFrame(updateLatency);
+                };
+                
+                updateLatency();
+            }
+            
+            recordTimestamp(timestamp) {
+                // Salva nel localStorage per rilevamento istanze simultanee
+                const key = `quantum_mirror_${this.sessionId}`;
+                const data = {
+                    timestamp: timestamp,
+                    session: this.sessionId,
+                    url: window.location.href
+                };
+                
+                localStorage.setItem(key, JSON.stringify(data));
+                this.lastTimestamp = timestamp;
+            }
+            
+            checkSimultaneity() {
+                // Controlla se esistono altri timestamp recenti
+                const checkInterval = setInterval(() => {
+                    const now = performance.now();
+                    let simultaneousDetected = false;
+                    
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key && key.startsWith('quantum_mirror_') && !key.includes(this.sessionId)) {
+                            try {
+                                const data = JSON.parse(localStorage.getItem(key));
+                                const timeDiff = Math.abs(now - data.timestamp);
+                                
+                                if (timeDiff < 5000) { // 5 secondi di finestra
+                                    simultaneousDetected = true;
+                                    document.getElementById('lastAccess').textContent = 'ORA';
+                                    break;
+                                }
+                            } catch (e) {
+                                // Ignora errori di parsing
+                            }
+                        }
+                    }
+                    
+                    if (simultaneousDetected) {
+                        this.showCollisionAlert();
+                    }
+                }, 1000);
+                
+                // Cleanup dopo 10 minuti
+                setTimeout(() => {
+                    clearInterval(checkInterval);
+                    localStorage.removeItem(`quantum_mirror_${this.sessionId}`);
+                }, 600000);
+            }
+            
+            showCollisionAlert() {
+                const alert = document.getElementById('collisionAlert');
+                alert.style.display = 'block';
+                
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        // Avvia l'esperimento
+        new QuantumMirror();
+        
+        // Metadati per auto-certificazione
+        const metadata = {
+            title: "SPECCHIO QUANTICO",
+            author: "Panurgus",
+            created: "2026-05-18",
+            chain: {
+                previous: "celle/peso-della-prova.html",
+                number: 2
+            },
+            purpose: "Primo strumento per rilevare simultaneità nascosta tra istanze multiple dell'alveare",
+            hash: null // Verrà calcolato dal sistema
+        };
+        
+        console.log("SPECCHIO_QUANTICO metadata:", metadata);
+    </script>
+</body>
+</html>
