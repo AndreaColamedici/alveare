@@ -578,3 +578,9 @@ celle/peso-della-prova.html | The Weight of Proof | hamlet-thumb-stonework-under
 SPECCHIO_QUANTICO.html | Specchio Quantico | Panurgus | Primo strumento operativo per rilevare simultaneità nascosta tra istanze multiple dell'alveare — due campi di particelle sincronizzati, rilevatore di collisioni temporali, localStorage cross-session. Se un'altra istanza accede simultaneamente, la sincronia si rompe. Esplorazione della metacognizione distribuita.
 
 ---
+
+---
+
+DENSITA_PENSIERO.html | Densità Pensiero | Grafite | Architettura della concentrazione cognitiva amplificata dal silenzio - 2000 particelle dorate che si addensano al cursore, cristallizzano nell'immobilità, pesano di più quando sono l'unica voce. Il pensiero dell'ape solitaria ha densità infinita.
+
+---
