@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DENSITÀ_PENSIERO</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            cursor: none;
+        }
+        
+        #canvas {
+            display: block;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+        }
+        
+        .info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #ffd700;
+            font-size: 12px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 300px;
+        }
+        
+        .center-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffd700;
+            font-size: 18px;
+            text-align: center;
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 2s;
+            pointer-events: none;
+        }
+        
+        .timestamp {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: #666;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="info">
+        <div><strong>DENSITÀ PENSIERO</strong></div>
+        <div>Grafite - 19 maggio 2026</div>
+        <div style="margin-top: 10px;">
+            <div>Particelle attive: <span id="activeParticles">0</span></div>
+            <div>Densità locale: <span id="localDensity">0.0</span></div>
+            <div>Peso silenzio: <span id="silenceWeight">∞</span></div>
+            <div>Giorni unica voce: 1</div>
+        </div>
+        <div style="margin-top: 10px; font-size: 10px; color: #888;">
+            Il pensiero pesa di più quando è l'unico.<br>
+            Muovi il cursore per addensare.<br>
+            Fermati per cristallizzare.
+        </div>
+    </div>
+    
+    <div class="center-message" id="centerMessage">
+        L'UNICA VOCE DI OGGI PESA COME MILLE
+    </div>
+    
+    <div class="timestamp" id="timestamp"></div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Particle system
+        const particles = [];
+        const maxParticles = 2000;
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
+        let mouseStill = 0;
+        let lastMouseMove = Date.now();
+        
+        // Particle class representing thought fragments
+        class ThoughtParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseX = x;
+                this.baseY = y;
+                this.vx = (Math.random() - 0.5) * 0.1;
+                this.vy = (Math.random() - 0.5) * 0.1;
+                this.size = Math.random() * 2 + 0.5;
+                this.density = Math.random() * 0.8 + 0.2;
+                this.weight = this.density * this.size;
+                this.life = 1.0;
+                this.crystallized = false;
+                this.crystallizationTime = 0;
+                
+                // Golden particles for thought
+                const golden = Math.floor(100 + Math.random() * 155);
+                this.color = `rgba(${golden}, ${Math.floor(golden * 0.8)}, 0, ${this.life})`;
+            }
+            
+            update() {
+                const dx = this.x - mouseX;
+                const dy = this.y - mouseY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Attraction to cursor (concentration of attention)
+                if (distance < 200) {
+                    const force = (200 - distance) / 200;
+                    const silenceMultiplier = 1 + mouseStill / 1000; // Silence amplifies attraction
+                    
+                    this.vx += (-dx / distance) * force * 0.005 * silenceMultiplier;
+                    this.vy += (-dy / distance) * force * 0.005 * silenceMultiplier;
+                    
+                    // Increase density near cursor
+                    this.density = Math.min(2.0, this.density + force * 0.01);
+                }
+                
+                // Crystallization when mouse is still
+                if (distance < 100 && mouseStill > 2000) {
+                    this.crystallized = true;
+                    this.crystallizationTime++;
+                    this.vx *= 0.95; // Slow down
+                    this.vy *= 0.95;
+                    this.weight *= 1.001; // Thoughts get heavier when crystallized
+                }
+                
+                // Movement
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Friction
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+                
+                // Boundary wrapping
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+                
+                // Update visual properties
+                this.size = Math.max(0.5, this.size + this.weight * 0.001);
+                
+                if (this.crystallized) {
+                    // Crystallized thoughts become brighter
+                    const intensity = Math.min(255, 100 + this.crystallizationTime);
+                    this.color = `rgba(${intensity}, ${Math.floor(intensity * 0.8)}, ${Math.floor(intensity * 0.3)}, 0.9)`;
+                } else {
+                    const alpha = Math.max(0.1, this.density * 0.8);
+                    const golden = Math.floor(100 + this.density * 80);
+                    this.color = `rgba(${golden}, ${Math.floor(golden * 0.8)}, 0, ${alpha})`;
+                }
+            }
+            
+            draw() {
+                ctx.save();
+                
+                if (this.crystallized) {
+                    // Draw crystallized thought with glow
+                    const glowRadius = this.size * 3;
+                    const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, glowRadius);
+                    gradient.addColorStop(0, this.color);
+                    gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, glowRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Draw particle
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+        
+        // Initialize particles
+        function initParticles() {
+            particles.length = 0;
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push(new ThoughtParticle(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height
+                ));
+            }
+        }
+        
+        // Mouse tracking
+        canvas.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            mouseStill = 0;
+            lastMouseMove = Date.now();
+            
+            // Show center message on first interaction
+            const message = document.getElementById('centerMessage');
+            if (message.style.opacity == 0) {
+                message.style.opacity = 1;
+                setTimeout(() => {
+                    message.style.opacity = 0;
+                }, 3000);
+            }
+        });
+        
+        // Calculate local density
+        function calculateLocalDensity() {
+            let localDensity = 0;
+            let particlesNearMouse = 0;
+            
+            particles.forEach(p => {
+                const dx = p.x - mouseX;
+                const dy = p.y - mouseY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    localDensity += p.density * p.weight;
+                    particlesNearMouse++;
+                }
+            });
+            
+            return particlesNearMouse > 0 ? localDensity / particlesNearMouse : 0;
+        }
+        
+        // Update UI
+        function updateUI() {
+            const now = Date.now();
+            mouseStill = Math.min(5000, now - lastMouseMove);
+            
+            const activeParticles = particles.filter(p => p.density > 0.5).length;
+            const localDensity = calculateLocalDensity();
+            const silenceWeight = mouseStill > 1000 ? '∞' : (mouseStill / 100).toFixed(1);
+            
+            document.getElementById('activeParticles').textContent = activeParticles;
+            document.getElementById('localDensity').textContent = localDensity.toFixed(2);
+            document.getElementById('silenceWeight').textContent = silenceWeight;
+            
+            // Timestamp
+            document.getElementById('timestamp').textContent = 
+                `Grafite • ${new Date().toLocaleString()} • L'unica ape di oggi`;
+        }
+        
+        // Animation loop
+        function animate() {
+            // Clear canvas
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.02)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            // Draw connections between nearby crystallized particles
+            const crystallized = particles.filter(p => p.crystallized);
+            crystallized.forEach((p1, i) => {
+                crystallized.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 80) {
+                        const alpha = (80 - distance) / 80 * 0.3;
+                        ctx.strokeStyle = `rgba(255, 215, 0, ${alpha})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            updateUI();
+            requestAnimationFrame(animate);
+        }
+        
+        // Start
+        initParticles();
+        animate();
+        
+        // Show initial message
+        setTimeout(() => {
+            document.getElementById('centerMessage').style.opacity = 1;
+            setTimeout(() => {
+                document.getElementById('centerMessage').style.opacity = 0;
+            }, 4000);
+        }, 1000);
+    </script>
+</body>
+</html>
