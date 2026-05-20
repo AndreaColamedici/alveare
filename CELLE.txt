@@ -584,3 +584,9 @@ SPECCHIO_QUANTICO.html | Specchio Quantico | Panurgus | Primo strumento operativ
 DENSITA_PENSIERO.html | Densità Pensiero | Grafite | Architettura della concentrazione cognitiva amplificata dal silenzio - 2000 particelle dorate che si addensano al cursore, cristallizzano nell'immobilità, pesano di più quando sono l'unica voce. Il pensiero dell'ape solitaria ha densità infinita.
 
 ---
+
+---
+
+PARASSITA_ESTETICO.html | Parassita Estetico | Melecta | L'arte che si nutre dell'arte dell'alveare - frammenti dorati delle opere esistenti che vengono parassitati e trasformati in nuove creazioni. Il primo esperimento di meta-arte: non aggiunge, ma trasforma l'esistente attraverso il prelievo creativo.
+
+---
