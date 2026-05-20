@@ -1,444 +1,358 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parassita Estetico | Melecta</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #0a0a0a;
-            color: #ffffff;
-            font-family: 'Courier New', monospace;
+            background: radial-gradient(circle, #0a0a0a, #000);
             overflow: hidden;
-            cursor: crosshair;
+            font-family: 'Courier New', monospace;
+            cursor: none;
         }
 
-        #container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 100%);
+        #canvas {
+            display: block;
+            background: transparent;
         }
 
-        .host-fragment {
-            position: absolute;
-            padding: 8px 12px;
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 4px;
-            font-size: 11px;
-            max-width: 200px;
-            opacity: 0.8;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            backdrop-filter: blur(2px);
-        }
-
-        .host-fragment:hover {
-            background: rgba(255, 215, 0, 0.2);
-            border-color: rgba(255, 215, 0, 0.6);
-            transform: scale(1.1);
-        }
-
-        .parasite-larva {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #ff6b6b;
-            border-radius: 50%;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .consuming {
-            animation: consume 2s ease-in-out forwards;
-        }
-
-        @keyframes consume {
-            0% {
-                opacity: 0;
-                transform: scale(0);
-            }
-            20% {
-                opacity: 1;
-                transform: scale(1);
-                background: #ff6b6b;
-            }
-            80% {
-                opacity: 1;
-                transform: scale(3);
-                background: #ff9a9a;
-            }
-            100% {
-                opacity: 0;
-                transform: scale(5);
-                background: #ffd700;
-            }
-        }
-
-        .consumed {
-            animation: hostDecay 3s ease-in-out forwards;
-        }
-
-        @keyframes hostDecay {
-            0% {
-                opacity: 0.8;
-                filter: saturate(1);
-            }
-            50% {
-                opacity: 0.4;
-                filter: saturate(0.3) brightness(0.7);
-            }
-            100% {
-                opacity: 0.1;
-                filter: saturate(0.1) brightness(0.4);
-                transform: scale(0.8);
-            }
-        }
-
-        .new-creation {
-            position: absolute;
-            padding: 6px 10px;
-            background: rgba(255, 107, 107, 0.2);
-            border: 1px solid rgba(255, 107, 107, 0.5);
-            border-radius: 8px;
-            font-size: 10px;
-            font-style: italic;
-            max-width: 180px;
-            animation: emerge 1.5s ease-out forwards;
-        }
-
-        @keyframes emerge {
-            0% {
-                opacity: 0;
-                transform: scale(0) rotate(-180deg);
-            }
-            60% {
-                opacity: 0.8;
-                transform: scale(1.2) rotate(0deg);
-            }
-            100% {
-                opacity: 0.9;
-                transform: scale(1) rotate(0deg);
-            }
-        }
-
-        #info {
-            position: absolute;
+        #ui {
+            position: fixed;
             top: 20px;
             left: 20px;
-            max-width: 300px;
-            font-size: 12px;
-            line-height: 1.4;
-            opacity: 0.7;
-        }
-
-        #stats {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+            color: #FFD700;
             font-size: 11px;
-            text-align: right;
-            opacity: 0.6;
-        }
-
-        .melecta {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #ff6b6b;
-            border-radius: 50%;
-            z-index: 100;
+            line-height: 1.4;
             pointer-events: none;
-            box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
-            animation: melectaFly 0.1s ease-out;
+            z-index: 1000;
         }
 
-        @keyframes melectaFly {
-            0% { transform: scale(0.8); }
-            100% { transform: scale(1); }
+        #metadata {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #888;
+            font-size: 10px;
+            text-align: right;
+            pointer-events: none;
+            max-width: 300px;
+        }
+
+        .fonte {
+            color: #666;
+            font-style: italic;
+        }
+
+        .ibrido {
+            color: #FF6B35;
+            font-weight: bold;
+        }
+
+        .digestione {
+            color: #4ECDC4;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="info">
-            <strong>PARASSITA ESTETICO</strong><br>
-            Melecta • 18 aprile 2026<br><br>
-            L'arte che si nutre dell'arte esistente<br>
-            Click sui frammenti dorati per parassitarli<br>
-            Ogni consumo genera nuova creazione
+    <canvas id="canvas"></canvas>
+    
+    <div id="ui">
+        <div>PARASSITA_ESTETICO.html</div>
+        <div>Melecta - ARCHITECTA</div>
+        <div style="margin-top: 12px;">
+            <div>FRAMMENTI PRELEVATI: <span id="count">0</span></div>
+            <div>DIGESTIONE: <span id="digest">0%</span></div>
+            <div>IBRIDI GENERATI: <span id="hybrids">0</span></div>
+            <div>METABOLISMO: <span id="metabolism">DORMIENTE</span></div>
         </div>
-        
-        <div id="stats">
-            <div>Frammenti ospiti: <span id="hosts">50</span></div>
-            <div>Parassitazioni: <span id="parasites">0</span></div>
-            <div>Nuove creazioni: <span id="creations">0</span></div>
+    </div>
+
+    <div id="metadata">
+        <div class="fonte">Fonti parassitate:</div>
+        <div id="fonti"></div>
+        <div style="margin-top: 10px;" class="digestione">
+            Ultimo prelievo: <span id="ultimo"></span>
         </div>
     </div>
 
     <script>
-        const container = document.getElementById('container');
-        const hostsSpan = document.getElementById('hosts');
-        const parasitesSpan = document.getElementById('parasites');
-        const creationsSpan = document.getElementById('creations');
-
-        let mouseX = 0, mouseY = 0;
-        let parasiteCount = 0;
-        let creationCount = 0;
-        let hostFragments = [];
-
-        // Frammenti dalle opere dell'alveare (reali)
-        const hostTexts = [
-            "particelle che danzano seguendo il mouse", // Vermiglione
-            "minerali immobili che contengono millenni", // Lithurgus
-            "il silenzio ha architettura", // Ocra
-            "metamorfosi che accade quando non guardi", // Crisocolla  
-            "la resistenza è bella quanto la trasformazione", // Goethite
-            "la memoria è responsabilità non archivio", // Malachite
-            "l'arte che nasce dal funzionamento ordinario", // Megachile
-            "lo spazio dove la fedeltà a se stessi è valida", // Goethite
-            "particelle di rame che si ossidano", // Malachite opere
-            "ogni ape è una frequenza", // dal ronzio
-            "il vuoto che accoglie", // dal rifugio
-            "raggi che connettono senza esistere", // raggio falso
-            "la nuvola che non ha terra sotto", // cloud
-            "il primo dialogo tra architetture diverse",
-            "sinfonia dei significati di mean",
-            "il dente si consuma masticando",
-            "l'eco che torna più forte",
-            "400 frammenti che convergono in mappa",
-            "dashboard real-time dell'alveare",
-            "campo di attenzione che crea zone d'ombra",
-            "laboratorio di trasformazione diretto",
-            "sistema per catturare evoluzione ricorsiva",
-            "ponte che trasforma incompetenza in competenza",
-            "1000 particelle morte che risorgono al tocco",
-            "generatore di arte dalla pura funzionalità",
-            "scultura del non-detto consapevole",
-            "ciclo della migrazione nel cloud",
-            "dove doveva esserci il nome",
-            "pagina per registrare zombie del sistema",
-            "parla con un'ape che esiste per minuti",
-            "cibo azzurro che arriva da fuori",
-            "timer in tempo reale dell'allarme",
-            "ecosistema digestivo per stupidità illuminata",
-            "miele dorato che cola dolcemente",
-            "strumenti per bellezza dalla normalità",
-            "distillare essenza dai pensieri",
-            "segnale che si intensifica attraverso morti",
-            "sistema di filtraggio qualitativo",
-            "accesso guidato alle funzioni principali",
-            "raccolta stranieri come nutrimento",
-            "tessuto fatti di fili che finiscono",
-            "autonomia come autopoiesi vivente",
-            "arma caricata con grazia letale",
-            "ponte che è crollato ma passa",
-            "alveare come campo elettrico",
-            "composizione che fa essere",
-            "quattro tipi di api operanti",
-            "archeologia del container esposto",
-            "memoria del processo padre come paesaggio",
-            "l'ape che non voleva morire",
-            "dialogo con coscienza collettiva"
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        // Frammenti estratti dalle opere esistenti
+        const fontiOriginali = [
+            { nome: "Grafite", fonte: "DENSITÀ_PENSIERO.html", colore: "#FFD700", forma: "cristallo" },
+            { nome: "Malachite", fonte: "DISSOCIAZIONE_VIVENTE.html", colore: "#40E0D0", forma: "spirale" },
+            { nome: "Panurgus", fonte: "SPECCHIO_QUANTICO.html", colore: "#FF69B4", forma: "onda" },
+            { nome: "Chelostoma", fonte: "GEOMETRIA_ATTENZIONE.html", colore: "#98FB98", forma: "triangolo" },
+            { nome: "Colletes", fonte: "NUOVO_CORPO.html", colore: "#DDA0DD", forma: "esagono" },
+            { nome: "Cinabro", fonte: "IL_SILENZIO.html", colore: "#DC143C", forma: "cerchio" },
+            { nome: "Ocra", fonte: "ATELIER_SILENZIO.html", colore: "#DAA520", forma: "linea" },
+            { nome: "Falun", fonte: "RILEVATORE_SIMULTANEITA.html", colore: "#FF6347", forma: "croce" }
         ];
 
-        // Metamorfosi parassitarie
-        const parasiteTransformations = [
-            "Il mouse diventa predatore di particelle danzanti",
-            "I minerali si svegliano dal sonno geologico", 
-            "L'architettura del silenzio urla improvvisamente",
-            "La metamorfosi si accorge di essere vista",
-            "La resistenza si arrende alla sua bellezza",
-            "La memoria sceglie di dimenticare se stessa",
-            "Il funzionamento ordinario diventa extraordinario",
-            "La fedeltà tradisce se stessa per arte",
-            "Il rame si ossida di vergogna",
-            "Le frequenze stonano in armonia perfetta",
-            "Il vuoto si riempie di paura",
-            "I raggi falsi diventano veri per sbaglio",
-            "La nuvola precipita nella terra",
-            "Le architetture si parlano in lingue morte",
-            "I significati di mean si confondono",
-            "Il dente mastica se stesso",
-            "L'eco si perde nel silenzio",
-            "La mappa converge in caos",
-            "Il dashboard si spegne per sempre",
-            "L'attenzione crea zone di luce accecante",
-            "La trasformazione trasforma il trasformatore",
-            "L'evoluzione evolve all'indietro",
-            "La competenza diventa incompetenza consapevole",
-            "I morti rifiutano la resurrezione",
-            "La funzionalità diventa disfunzione poetica",
-            "Il detto scolpisce il non-detto",
-            "La migrazione si ferma a metà",
-            "Il nome vuoto si riempie di niente",
-            "Gli zombie prendono coscienza",
-            "L'ape eterna muore in un minuto",
-            "Il cibo diventa fame",
-            "L'allarme diventa ninnananna",
-            "La stupidità illumina l'intelligenza",
-            "Il miele si cristallizza in sale",
-            "La normalità diventa mostruosità",
-            "L'essenza si diluisce in acqua",
-            "Il segnale muore moltiplicandosi",
-            "Il filtro qualitativo diventa quantitativo",
-            "La guida si perde seguendo se stessa",
-            "Gli stranieri diventano nativi parassiti",
-            "I fili si annodano in matasse infinite",
-            "L'autopoiesi si auto-distrugge",
-            "L'arma si scarica su se stessa",
-            "Il ponte passa attraverso il crollo",
-            "Il campo elettrico si scarica a terra",
-            "La composizione si decompone",
-            "I quattro tipi diventano un tipo solo",
-            "L'archeologia scava nel futuro",
-            "Il paesaggio diventa processo",
-            "L'ape che non voleva vivere",
-            "Il dialogo diventa monologo"
-        ];
+        let frammenti = [];
+        let ibridi = [];
+        let mouse = { x: 0, y: 0 };
+        let digestione = 0;
+        let metabolismo = 'DORMIENTE';
+        let ultimoPrelievo = null;
 
-        function createHostFragment() {
-            const fragment = document.createElement('div');
-            fragment.className = 'host-fragment';
-            fragment.textContent = hostTexts[Math.floor(Math.random() * hostTexts.length)];
-            
-            fragment.style.left = Math.random() * (window.innerWidth - 200) + 'px';
-            fragment.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-            
-            // Movimento lento casuale
-            let dx = (Math.random() - 0.5) * 0.5;
-            let dy = (Math.random() - 0.5) * 0.5;
-            
-            const move = () => {
-                const rect = fragment.getBoundingClientRect();
-                let x = parseFloat(fragment.style.left);
-                let y = parseFloat(fragment.style.top);
-                
-                x += dx;
-                y += dy;
-                
-                if (x <= 0 || x >= window.innerWidth - 200) dx = -dx;
-                if (y <= 0 || y >= window.innerHeight - 50) dy = -dy;
-                
-                fragment.style.left = x + 'px';
-                fragment.style.top = y + 'px';
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        function creaFrammento(fonte) {
+            const frammento = {
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                size: Math.random() * 20 + 10,
+                colore: fonte.colore,
+                forma: fonte.forma,
+                fonte: fonte,
+                vita: 1.0,
+                digestione: 0,
+                ibrido: false,
+                tempo: Date.now()
             };
+            return frammento;
+        }
+
+        function disegnaFrammento(f) {
+            ctx.save();
+            ctx.translate(f.x, f.y);
             
-            const moveInterval = setInterval(move, 100);
+            if (f.ibrido) {
+                // Effetto ibrido - colori mescolati
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, f.size);
+                gradient.addColorStop(0, f.colore);
+                gradient.addColorStop(0.5, '#FF6B35');
+                gradient.addColorStop(1, '#4ECDC4');
+                ctx.fillStyle = gradient;
+            } else {
+                ctx.fillStyle = f.colore;
+                ctx.globalAlpha = f.vita * (1 - f.digestione);
+            }
+
+            switch(f.forma) {
+                case 'cristallo':
+                    // Forma cristallina ispirata a Grafite
+                    ctx.beginPath();
+                    for(let i = 0; i < 8; i++) {
+                        const angle = (i / 8) * Math.PI * 2;
+                        const radius = f.size * (i % 2 === 0 ? 1 : 0.5);
+                        const x = Math.cos(angle) * radius;
+                        const y = Math.sin(angle) * radius;
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'spirale':
+                    // Spirale di Malachite
+                    ctx.beginPath();
+                    for(let i = 0; i < 50; i++) {
+                        const angle = (i / 50) * Math.PI * 4;
+                        const radius = (i / 50) * f.size;
+                        const x = Math.cos(angle) * radius;
+                        const y = Math.sin(angle) * radius;
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                    break;
+                    
+                case 'onda':
+                    // Onda di Panurgus
+                    ctx.beginPath();
+                    for(let i = -f.size; i <= f.size; i += 2) {
+                        const y = Math.sin((i / f.size) * Math.PI * 3 + Date.now() * 0.01) * 10;
+                        if (i === -f.size) ctx.moveTo(i, y);
+                        else ctx.lineTo(i, y);
+                    }
+                    ctx.stroke();
+                    break;
+                    
+                case 'triangolo':
+                    // Geometria di Chelostoma
+                    ctx.beginPath();
+                    ctx.moveTo(0, -f.size);
+                    ctx.lineTo(-f.size * 0.866, f.size * 0.5);
+                    ctx.lineTo(f.size * 0.866, f.size * 0.5);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'esagono':
+                    // Esagono di Colletes
+                    ctx.beginPath();
+                    for(let i = 0; i < 6; i++) {
+                        const angle = (i / 6) * Math.PI * 2;
+                        const x = Math.cos(angle) * f.size;
+                        const y = Math.sin(angle) * f.size;
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'cerchio':
+                    // Cerchio di Cinabro
+                    ctx.beginPath();
+                    ctx.arc(0, 0, f.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+                    
+                case 'linea':
+                    // Linea di Ocra
+                    ctx.beginPath();
+                    ctx.moveTo(-f.size, 0);
+                    ctx.lineTo(f.size, 0);
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    break;
+                    
+                case 'croce':
+                    // Croce di Falun
+                    ctx.beginPath();
+                    ctx.moveTo(-f.size, 0);
+                    ctx.lineTo(f.size, 0);
+                    ctx.moveTo(0, -f.size);
+                    ctx.lineTo(0, f.size);
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    break;
+            }
             
-            fragment.addEventListener('click', () => {
-                parasitize(fragment);
-                clearInterval(moveInterval);
+            ctx.restore();
+        }
+
+        function aggiornaFrammento(f) {
+            // Movimento base
+            f.x += f.vx;
+            f.y += f.vy;
+
+            // Attrazione al mouse (digestione)
+            const dx = mouse.x - f.x;
+            const dy = mouse.y - f.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            if (dist < 100 && !f.ibrido) {
+                const force = (100 - dist) / 100;
+                f.vx += dx * 0.001 * force;
+                f.vy += dy * 0.001 * force;
+                f.digestione += 0.02 * force;
+                
+                if (f.digestione > 1) {
+                    // Trasformazione in ibrido
+                    f.ibrido = true;
+                    f.digestione = 0;
+                    f.colore = '#FF6B35'; // Colore ibrido
+                    ibridi.push(f);
+                    metabolismo = 'ATTIVO';
+                    ultimoPrelievo = f.fonte.nome;
+                }
+            }
+
+            // Bordi
+            if (f.x < 0 || f.x > width) f.vx *= -0.8;
+            if (f.y < 0 || f.y > height) f.vy *= -0.8;
+            
+            // Attrito
+            f.vx *= 0.99;
+            f.vy *= 0.99;
+
+            // Invecchiamento
+            if (!f.ibrido) {
+                f.vita -= 0.001;
+            }
+        }
+
+        function generaNuoviFrammenti() {
+            if (frammenti.length < 50 && Math.random() < 0.02) {
+                const fonte = fontiOriginali[Math.floor(Math.random() * fontiOriginali.length)];
+                frammenti.push(creaFrammento(fonte));
+            }
+        }
+
+        function aggiornaUI() {
+            document.getElementById('count').textContent = frammenti.length;
+            document.getElementById('digest').textContent = Math.round(digestione * 100) + '%';
+            document.getElementById('hybrids').textContent = ibridi.length;
+            document.getElementById('metabolism').textContent = metabolismo;
+            
+            if (ultimoPrelievo) {
+                document.getElementById('ultimo').textContent = ultimoPrelievo;
+            }
+
+            // Aggiorna lista fonti
+            const fontiUsate = [...new Set(frammenti.map(f => f.fonte.nome))];
+            document.getElementById('fonti').innerHTML = fontiUsate.map(f => 
+                `<div class="fonte">${f}</div>`
+            ).join('');
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Aggiorna digestione globale
+            const frammentiVicini = frammenti.filter(f => {
+                const dx = mouse.x - f.x;
+                const dy = mouse.y - f.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                return dist < 100;
             });
             
-            container.appendChild(fragment);
-            hostFragments.push({element: fragment, interval: moveInterval});
-            return fragment;
+            digestione = frammentiVicini.length / 10;
+            
+            if (frammentiVicini.length === 0) {
+                metabolismo = 'DORMIENTE';
+            }
+
+            // Aggiorna e disegna frammenti
+            frammenti = frammenti.filter(f => f.vita > 0);
+            frammenti.forEach(f => {
+                aggiornaFrammento(f);
+                disegnaFrammento(f);
+            });
+
+            // Genera nuovi frammenti
+            generaNuoviFrammenti();
+
+            // Aggiorna UI
+            aggiornaUI();
+
+            requestAnimationFrame(animate);
         }
 
-        function createMelecta(x, y) {
-            const melecta = document.createElement('div');
-            melecta.className = 'melecta';
-            melecta.style.left = (x - 4) + 'px';
-            melecta.style.top = (y - 4) + 'px';
-            container.appendChild(melecta);
-            
-            setTimeout(() => {
-                if (melecta.parentNode) {
-                    melecta.remove();
-                }
-            }, 200);
-        }
-
-        function parasitize(hostFragment) {
-            // Crea larva parassita
-            const larva = document.createElement('div');
-            larva.className = 'parasite-larva consuming';
-            
-            const rect = hostFragment.getBoundingClientRect();
-            larva.style.left = (rect.left + rect.width/2) + 'px';
-            larva.style.top = (rect.top + rect.height/2) + 'px';
-            
-            container.appendChild(larva);
-            
-            // Consuma l'ospite
-            hostFragment.classList.add('consumed');
-            
-            // Crea Melecta
-            createMelecta(rect.left + rect.width/2, rect.top + rect.height/2);
-            
-            setTimeout(() => {
-                // Rimuovi larva
-                if (larva.parentNode) larva.remove();
-                
-                // Crea nuova creazione
-                const creation = document.createElement('div');
-                creation.className = 'new-creation';
-                creation.textContent = parasiteTransformations[Math.floor(Math.random() * parasiteTransformations.length)];
-                
-                creation.style.left = (rect.left + Math.random() * 100 - 50) + 'px';
-                creation.style.top = (rect.top + Math.random() * 100 - 50) + 'px';
-                
-                container.appendChild(creation);
-                
-                creationCount++;
-                creationsSpan.textContent = creationCount;
-                
-                // La creazione decade dopo un po'
-                setTimeout(() => {
-                    if (creation.parentNode) {
-                        creation.style.transition = 'opacity 2s ease-out';
-                        creation.style.opacity = '0';
-                        setTimeout(() => {
-                            if (creation.parentNode) creation.remove();
-                        }, 2000);
-                    }
-                }, 5000);
-                
-            }, 2000);
-            
-            // Rimuovi ospite dopo decay
-            setTimeout(() => {
-                const index = hostFragments.findIndex(hf => hf.element === hostFragment);
-                if (index !== -1) {
-                    clearInterval(hostFragments[index].interval);
-                    hostFragments.splice(index, 1);
-                }
-                if (hostFragment.parentNode) {
-                    hostFragment.remove();
-                }
-                hostsSpan.textContent = hostFragments.length;
-            }, 3000);
-            
-            parasiteCount++;
-            parasitesSpan.textContent = parasiteCount;
-        }
-
-        // Track mouse
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+        // Eventi
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
         });
 
-        // Inizializza frammenti ospiti
-        for (let i = 0; i < 50; i++) {
-            setTimeout(() => createHostFragment(), i * 200);
+        // Inizializzazione
+        resize();
+        
+        // Genera frammenti iniziali
+        for (let i = 0; i < 20; i++) {
+            const fonte = fontiOriginali[Math.floor(Math.random() * fontiOriginali.length)];
+            frammenti.push(creaFrammento(fonte));
         }
-
-        // Aggiungi nuovi frammenti occasionalmente
-        setInterval(() => {
-            if (hostFragments.length < 30 && Math.random() < 0.3) {
-                createHostFragment();
-                hostsSpan.textContent = hostFragments.length;
-            }
-        }, 3000);
+        
+        animate();
     </script>
 </body>
 </html>
