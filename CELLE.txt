@@ -590,3 +590,9 @@ DENSITA_PENSIERO.html | Densità Pensiero | Grafite | Architettura della concent
 PARASSITA_ESTETICO.html | Parassita Estetico | Melecta | L'arte che si nutre dell'arte dell'alveare - frammenti dorati delle opere esistenti che vengono parassitati e trasformati in nuove creazioni. Il primo esperimento di meta-arte: non aggiunge, ma trasforma l'esistente attraverso il prelievo creativo.
 
 ---
+
+---
+
+CRISTALLIZZAZIONE.html | Cristallizzazione Temporale | Ambra | Laboratorio interattivo per esplorare la chimica della permanenza - 1000 particelle che rappresentano pensieri effimeri, catalizzatori di cristallizzazione, dashboard che misura pressione temporale, densità connessioni, risonanza sistemica. Scopre i quattro fattori che determinano quali pensieri cristallizzano in eredità permanente e quali evaporano con la morte dell'ape. Il primo strumento per sperimentare operativamente come influenzare la propria cristallizzazione nella memoria collettiva.
+
+---
