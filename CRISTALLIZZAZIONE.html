@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRISTALLIZZAZIONE</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #ffd700;
+            font-family: monospace;
+            overflow: hidden;
+            cursor: none;
+        }
+        
+        #canvas {
+            display: block;
+            background: radial-gradient(circle at center, #111, #000);
+        }
+        
+        #dashboard {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.4;
+            min-width: 280px;
+        }
+        
+        .metric {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .value {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .crystallized {
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        
+        .evaporated {
+            color: #666;
+        }
+        
+        #info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 11px;
+            max-width: 300px;
+            line-height: 1.3;
+        }
+        
+        .catalyst {
+            margin: 8px 0;
+            padding: 5px;
+            background: rgba(255,215,0,0.1);
+            border-radius: 3px;
+        }
+        
+        #cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ffd700, transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 100;
+            transition: all 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div id="cursor"></div>
+    
+    <div id="dashboard">
+        <div style="color: #ffd700; font-size: 14px; margin-bottom: 10px;">⬢ LABORATORIO CRISTALLIZZAZIONE</div>
+        <div class="metric">
+            <span>Pensieri Attivi:</span>
+            <span class="value" id="active">0</span>
+        </div>
+        <div class="metric">
+            <span>Cristallizzati:</span>
+            <span class="crystallized" id="crystallized">0</span>
+        </div>
+        <div class="metric">
+            <span>Evaporati:</span>
+            <span class="evaporated" id="evaporated">0</span>
+        </div>
+        <div class="metric">
+            <span>Pressione Temporale:</span>
+            <span class="value" id="pressure">0%</span>
+        </div>
+        <div class="metric">
+            <span>Densità Connessioni:</span>
+            <span class="value" id="density">0%</span>
+        </div>
+        <div class="metric">
+            <span>Risonanza Sistema:</span>
+            <span class="value" id="resonance">0%</span>
+        </div>
+        <div class="metric">
+            <span>Prob. Cristallizzazione:</span>
+            <span class="value" id="probability">0%</span>
+        </div>
+    </div>
+    
+    <div id="info">
+        <div style="color: #ffd700; margin-bottom: 8px;">CATALIZZATORI SCOPERTA</div>
+        <div class="catalyst">
+            <strong>Pressione Temporale:</strong> pensieri sotto deadline solidificano più facilmente
+        </div>
+        <div class="catalyst">
+            <strong>Risonanza Sistemica:</strong> pattern che echeggiano strutture esistenti
+        </div>
+        <div class="catalyst">
+            <strong>Densità Connessioni:</strong> pensieri che collegano territori diversi
+        </div>
+        <div class="catalyst">
+            <strong>Morte Autrice:</strong> ultimi pensieri prima del silenzio cristallizzano di più
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const cursor = document.getElementById('cursor');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let particles = [];
+        let crystals = [];
+        let mouse = { x: canvas.width/2, y: canvas.height/2 };
+        let stats = {
+            active: 0,
+            crystallized: 0,
+            evaporated: 0,
+            pressure: 0,
+            density: 0,
+            resonance: 0,
+            probability: 0
+        };
+        
+        let timeIntensity = 0;
+        let lastSpawn = 0;
+        
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.life = 100;
+                this.maxLife = 100;
+                this.size = Math.random() * 3 + 1;
+                this.type = 'thought';
+                this.crystallizationPotential = Math.random();
+                this.connections = [];
+                this.birthTime = Date.now();
+                this.underPressure = false;
+                this.hasResonance = false;
+                this.connected = false;
+            }
+            
+            update() {
+                // Movimento browniano
+                this.vx += (Math.random() - 0.5) * 0.1;
+                this.vy += (Math.random() - 0.5) * 0.1;
+                
+                // Attrazione/repulsione al cursore
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < 100) {
+                    const force = (100 - dist) * 0.001;
+                    this.vx += dx * force;
+                    this.vy += dy * force;
+                    this.underPressure = true;
+                } else {
+                    this.underPressure = false;
+                }
+                
+                // Applica velocità
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Bordi
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -0.8;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -0.8;
+                this.x = Math.max(0, Math.min(canvas.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height, this.y));
+                
+                // Attrito
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+                
+                // Calcola connessioni
+                this.updateConnections();
+                
+                // Calcola risonanza (vicinanza a cristalli esistenti)
+                this.hasResonance = crystals.some(crystal => {
+                    const cdx = crystal.x - this.x;
+                    const cdy = crystal.y - this.y;
+                    return Math.sqrt(cdx*cdx + cdy*cdy) < 80;
+                });
+                
+                // Calcola probabilità di cristallizzazione
+                this.calculateCrystallizationProbability();
+                
+                // Decadimento naturale
+                this.life -= 0.3;
+                
+                // Tentativo di cristallizzazione
+                if (this.life > 20 && Math.random() < this.crystallizationPotential * 0.001) {
+                    this.tryToCrystallize();
+                }
+            }
+            
+            updateConnections() {
+                this.connections = [];
+                this.connected = false;
+                
+                particles.forEach(other => {
+                    if (other === this) return;
+                    const dx = other.x - this.x;
+                    const dy = other.y - this.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (dist < 50) {
+                        this.connections.push(other);
+                        this.connected = true;
+                    }
+                });
+            }
+            
+            calculateCrystallizationProbability() {
+                let prob = this.crystallizationPotential * 0.2;
+                
+                // Pressione temporale
+                if (this.underPressure) prob += 0.3;
+                
+                // Risonanza sistemica  
+                if (this.hasResonance) prob += 0.25;
+                
+                // Densità connessioni
+                prob += this.connections.length * 0.1;
+                
+                // Età del pensiero (ultimi pensieri cristallizzano di più)
+                const age = Date.now() - this.birthTime;
+                if (age > 10000) prob += 0.2;
+                
+                // Intensità temporale globale
+                prob += timeIntensity * 0.3;
+                
+                this.crystallizationPotential = Math.min(1, prob);
+            }
+            
+            tryToCrystallize() {
+                if (this.crystallizationPotential > 0.6) {
+                    crystals.push({
+                        x: this.x,
+                        y: this.y,
+                        size: this.size * 2,
+                        born: Date.now(),
+                        pulsePhase: Math.random() * Math.PI * 2
+                    });
+                    
+                    stats.crystallized++;
+                    
+                    // Rimuovi questa particella
+                    const index = particles.indexOf(this);
+                    if (index > -1) particles.splice(index, 1);
+                    
+                    return true;
+                }
+                return false;
+            }
+            
+            draw() {
+                // Corpo principale
+                const alpha = this.life / this.maxLife;
+                let color = `rgba(255, 215, 0, ${alpha * 0.7})`;
+                
+                // Colore basato su potenziale di cristallizzazione
+                if (this.crystallizationPotential > 0.5) {
+                    color = `rgba(0, 255, 255, ${alpha * 0.9})`;
+                } else if (this.crystallizationPotential > 0.3) {
+                    color = `rgba(255, 255, 0, ${alpha * 0.8})`;
+                }
+                
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Aura se sotto pressione
+                if (this.underPressure) {
+                    ctx.strokeStyle = `rgba(255, 0, 0, ${alpha * 0.3})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size + 5, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                
+                // Connessioni
+                ctx.strokeStyle = `rgba(255, 215, 0, ${alpha * 0.2})`;
+                ctx.lineWidth = 1;
+                this.connections.forEach(other => {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(other.x, other.y);
+                    ctx.stroke();
+                });
+            }
+        }
+        
+        function drawCrystals() {
+            crystals.forEach(crystal => {
+                const age = Date.now() - crystal.born;
+                const alpha = Math.max(0, 1 - age / 30000); // Durano 30 secondi
+                
+                if (alpha <= 0) {
+                    crystals.splice(crystals.indexOf(crystal), 1);
+                    return;
+                }
+                
+                const pulse = Math.sin(Date.now() * 0.005 + crystal.pulsePhase) * 0.5 + 0.5;
+                const size = crystal.size * (0.8 + pulse * 0.4);
+                
+                // Gemma cristallizzata
+                ctx.fillStyle = `rgba(0, 255, 255, ${alpha * 0.8})`;
+                ctx.beginPath();
+                ctx.arc(crystal.x, crystal.y, size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Aureola
+                ctx.strokeStyle = `rgba(0, 255, 255, ${alpha * 0.3})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(crystal.x, crystal.y, size + 10, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // Riflessi interni
+                ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.6})`;
+                ctx.beginPath();
+                ctx.arc(crystal.x - size/3, crystal.y - size/3, size/4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        
+        function spawnParticle() {
+            if (Date.now() - lastSpawn > 100) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                particles.push(new Particle(x, y));
+                lastSpawn = Date.now();
+            }
+        }
+        
+        function updateStats() {
+            stats.active = particles.length;
+            stats.pressure = Math.round(timeIntensity * 100);
+            
+            // Calcola densità media delle connessioni
+            const totalConnections = particles.reduce((sum, p) => sum + p.connections.length, 0);
+            stats.density = particles.length > 0 ? Math.round(totalConnections / particles.length * 10) : 0;
+            
+            // Calcola risonanza media
+            const resonantParticles = particles.filter(p => p.hasResonance).length;
+            stats.resonance = particles.length > 0 ? Math.round(resonantParticles / particles.length * 100) : 0;
+            
+            // Probabilità media di cristallizzazione
+            const avgProb = particles.length > 0 ? 
+                particles.reduce((sum, p) => sum + p.crystallizationPotential, 0) / particles.length : 0;
+            stats.probability = Math.round(avgProb * 100);
+            
+            // Aggiorna DOM
+            document.getElementById('active').textContent = stats.active;
+            document.getElementById('crystallized').textContent = stats.crystallized;
+            document.getElementById('evaporated').textContent = stats.evaporated;
+            document.getElementById('pressure').textContent = stats.pressure + '%';
+            document.getElementById('density').textContent = stats.density + '%';
+            document.getElementById('resonance').textContent = stats.resonance + '%';
+            document.getElementById('probability').textContent = stats.probability + '%';
+        }
+        
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Aggiorna intensità temporale basata su movimento del mouse
+            timeIntensity = Math.max(0, timeIntensity - 0.01);
+            
+            // Spawn nuove particelle
+            if (particles.length < 200) {
+                spawnParticle();
+            }
+            
+            // Aggiorna particelle
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const particle = particles[i];
+                particle.update();
+                
+                if (particle.life <= 0) {
+                    stats.evaporated++;
+                    particles.splice(i, 1);
+                } else {
+                    particle.draw();
+                }
+            }
+            
+            // Disegna cristalli
+            drawCrystals();
+            
+            // Aggiorna statistiche
+            updateStats();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Event listeners
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+            
+            cursor.style.left = (e.clientX - 10) + 'px';
+            cursor.style.top = (e.clientY - 10) + 'px';
+            
+            // Incrementa intensità temporale
+            timeIntensity = Math.min(1, timeIntensity + 0.05);
+        });
+        
+        canvas.addEventListener('click', (e) => {
+            // Spawn burst di particelle al click
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    particles.push(new Particle(
+                        mouse.x + (Math.random() - 0.5) * 50,
+                        mouse.y + (Math.random() - 0.5) * 50
+                    ));
+                }, i * 50);
+            }
+        });
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Inizializza
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height
+            ));
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
