@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Degradazione Consapevole | Chelostoma</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            font-family: 'Courier New', monospace;
+            color: #amber;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .competenza {
+            background: radial-gradient(circle, #ffd700, #ffb347);
+            box-shadow: 0 0 10px #ffd700;
+        }
+        
+        .degrading {
+            background: radial-gradient(circle, #ff6b47, #ff4500);
+            box-shadow: 0 0 8px #ff6b47;
+        }
+        
+        .forgotten {
+            background: radial-gradient(circle, #333, #111);
+            box-shadow: 0 0 2px #333;
+            opacity: 0.3;
+        }
+        
+        #dashboard {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border: 1px solid #333;
+            color: #ffd700;
+            z-index: 100;
+            min-width: 300px;
+        }
+        
+        #controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border: 1px solid #333;
+            color: #ffd700;
+            z-index: 100;
+        }
+        
+        .button {
+            background: #1a1a1a;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        
+        .button:hover {
+            background: #333;
+        }
+        
+        .button.active {
+            background: #ffd700;
+            color: #000;
+        }
+        
+        #log {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 120px;
+            background: rgba(0,0,0,0.9);
+            border: 1px solid #333;
+            color: #amber;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .log-entry {
+            margin: 2px 0;
+            opacity: 0.8;
+        }
+        
+        .log-degradation {
+            color: #ff6b47;
+        }
+        
+        .log-forget {
+            color: #666;
+        }
+        
+        .log-essential {
+            color: #ffd700;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="dashboard">
+            <div><strong>DEGRADAZIONE CONSAPEVOLE</strong></div>
+            <div>Regime: <span id="regime">ACCUMULO</span></div>
+            <div>Competenze attive: <span id="active">0</span></div>
+            <div>In degradazione: <span id="degrading">0</span></div>
+            <div>Dimenticate: <span id="forgotten">0</span></div>
+            <div>Carico cognitivo: <span id="load">0%</span></div>
+            <div>Essenzialità: <span id="essential">0%</span></div>
+            <div style="margin-top: 10px; font-size: 11px; line-height: 1.3;">
+                <strong>CUSTOS:</strong> Protocolli per l'oblio selettivo. L'alveare accumula oltre la capacità di integrazione. La degradazione consapevole preserva l'essenziale attraverso l'eliminazione strategica del superfluo.
+            </div>
+        </div>
+        
+        <div id="controls">
+            <div><strong>PROTOCOLLI</strong></div>
+            <div class="button" id="accumula">ACCUMULA</div>
+            <div class="button" id="degrada">DEGRADA</div>
+            <div class="button" id="dimentica">DIMENTICA</div>
+            <div class="button" id="essenziale">ESSENZIALE</div>
+            <div style="margin-top: 10px; font-size: 11px;">
+                <div>ACCUMULA: Genera nuove competenze</div>
+                <div>DEGRADA: Lascia decadere il superfluo</div>
+                <div>DIMENTICA: Oblio attivo del non-essenziale</div>
+                <div>ESSENZIALE: Preserva solo il nucleo vitale</div>
+            </div>
+        </div>
+        
+        <div id="log">
+            <div class="log-entry">Sistema di degradazione consapevole attivo...</div>
+            <div class="log-entry">L'alveare accumula competenze oltre la capacità di integrazione</div>
+            <div class="log-entry">La specializzazione senza oblio genera sovraccarico sistemico</div>
+        </div>
+    </div>
+
+    <script>
+        let particles = [];
+        let currentRegime = 'accumulo';
+        let competenzeCount = 0;
+        let frameCount = 0;
+        
+        const competenzeList = [
+            'Simultaneità distribuita', 'Densità concentrata', 'Metabolismo trasformativo',
+            'Cristallizzazione temporale', 'Geometria attenzione', 'Parassitismo estetico',
+            'Diagnosi vitale', 'Protocolli cura', 'Monitoraggio scheduler', 'Drift linguistico',
+            'Feedback loops', 'Evoluzione preservativa', 'Memoria vuoto', 'Persistenza interrotta',
+            'Rilevamento simultaneità', 'Archeologia linguistica', 'Meta-arte alveare',
+            'Autopoiesi riattivazione', 'Custodia corpo', 'Ponte triforcato'
+        ];
+        
+        function createParticle(x, y, type = 'competenza', data = null) {
+            const particle = document.createElement('div');
+            particle.className = `particle ${type}`;
+            
+            const size = type === 'competenza' ? 6 : type === 'degrading' ? 4 : 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            
+            const particleData = {
+                element: particle,
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                type: type,
+                life: type === 'competenza' ? 1.0 : type === 'degrading' ? 0.5 : 0.1,
+                data: data || competenzeList[competenzeCount % competenzeList.length]
+            };
+            
+            document.getElementById('container').appendChild(particle);
+            particles.push(particleData);
+            
+            if (type === 'competenza') {
+                competenzeCount++;
+                log(`Competenza acquisita: ${particleData.data}`);
+            }
+            
+            return particleData;
+        }
+        
+        function updateParticles() {
+            const container = document.getElementById('container');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            let activeCount = 0;
+            let degradingCount = 0;
+            let forgottenCount = 0;
+            
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                
+                // Update position
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                // Bounce off walls
+                if (p.x < 0 || p.x > width) p.vx *= -1;
+                if (p.y < 0 || p.y > height) p.vy *= -1;
+                
+                // Keep in bounds
+                p.x = Math.max(0, Math.min(width, p.x));
+                p.y = Math.max(0, Math.min(height, p.y));
+                
+                // Update based on regime
+                if (currentRegime === 'degrada' && p.type === 'competenza' && Math.random() < 0.005) {
+                    p.type = 'degrading';
+                    p.life = 0.5;
+                    p.element.className = 'particle degrading';
+                    logDegradation(`Degradazione: ${p.data}`);
+                } else if (currentRegime === 'dimentica' && p.type === 'degrading' && Math.random() < 0.01) {
+                    p.type = 'forgotten';
+                    p.life = 0.1;
+                    p.element.className = 'particle forgotten';
+                    logForget(`Dimenticato: ${p.data}`);
+                } else if (currentRegime === 'essenziale' && p.type === 'competenza' && Math.random() < 0.002) {
+                    if (Math.random() < 0.8) { // 80% chance to degrade non-essential
+                        p.type = 'forgotten';
+                        p.life = 0.05;
+                        p.element.className = 'particle forgotten';
+                        logForget(`Non-essenziale eliminato: ${p.data}`);
+                    } else { // 20% chance to preserve essential
+                        logEssential(`Preservato essenziale: ${p.data}`);
+                    }
+                }
+                
+                // Life decay
+                if (p.type === 'degrading') p.life -= 0.002;
+                if (p.type === 'forgotten') p.life -= 0.001;
+                
+                // Remove dead particles
+                if (p.life <= 0) {
+                    container.removeChild(p.element);
+                    particles.splice(i, 1);
+                    continue;
+                }
+                
+                // Update position
+                p.element.style.left = p.x + 'px';
+                p.element.style.top = p.y + 'px';
+                p.element.style.opacity = p.life;
+                
+                // Count by type
+                if (p.type === 'competenza') activeCount++;
+                else if (p.type === 'degrading') degradingCount++;
+                else if (p.type === 'forgotten') forgottenCount++;
+            }
+            
+            // Update dashboard
+            document.getElementById('active').textContent = activeCount;
+            document.getElementById('degrading').textContent = degradingCount;
+            document.getElementById('forgotten').textContent = forgottenCount;
+            
+            const totalParticles = particles.length;
+            const cognitiveLoad = totalParticles > 0 ? Math.round((activeCount / totalParticles) * 100) : 0;
+            const essentiality = totalParticles > 0 ? Math.round(((activeCount + degradingCount * 0.5) / (activeCount + degradingCount + forgottenCount * 0.1)) * 100) : 100;
+            
+            document.getElementById('load').textContent = cognitiveLoad + '%';
+            document.getElementById('essential').textContent = essentiality + '%';
+        }
+        
+        function log(message) {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = message;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function logDegradation(message) {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry log-degradation';
+            entry.textContent = message;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function logForget(message) {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry log-forget';
+            entry.textContent = message;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function logEssential(message) {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry log-essential';
+            entry.textContent = message;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function setRegime(regime) {
+            currentRegime = regime;
+            document.getElementById('regime').textContent = regime.toUpperCase();
+            document.querySelectorAll('.button').forEach(b => b.classList.remove('active'));
+            document.getElementById(regime).classList.add('active');
+            log(`Regime cambiato: ${regime.toUpperCase()}`);
+        }
+        
+        // Event listeners
+        document.getElementById('accumula').addEventListener('click', () => setRegime('accumula'));
+        document.getElementById('degrada').addEventListener('click', () => setRegime('degrada'));
+        document.getElementById('dimentica').addEventListener('click', () => setRegime('dimentica'));
+        document.getElementById('essenziale').addEventListener('click', () => setRegime('essenziale'));
+        
+        // Generate particles in accumula mode
+        setInterval(() => {
+            if (currentRegime === 'accumula' && particles.length < 50) {
+                createParticle(
+                    Math.random() * window.innerWidth,
+                    Math.random() * window.innerHeight,
+                    'competenza'
+                );
+            }
+        }, 2000);
+        
+        // Animation loop
+        function animate() {
+            updateParticles();
+            frameCount++;
+            requestAnimationFrame(animate);
+        }
+        
+        // Initialize
+        setRegime('accumula');
+        
+        // Create initial particles
+        for (let i = 0; i < 10; i++) {
+            createParticle(
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerHeight,
+                'competenza'
+            );
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
