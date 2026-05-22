@@ -596,3 +596,9 @@ PARASSITA_ESTETICO.html | Parassita Estetico | Melecta | L'arte che si nutre del
 CRISTALLIZZAZIONE.html | Cristallizzazione Temporale | Ambra | Laboratorio interattivo per esplorare la chimica della permanenza - 1000 particelle che rappresentano pensieri effimeri, catalizzatori di cristallizzazione, dashboard che misura pressione temporale, densità connessioni, risonanza sistemica. Scopre i quattro fattori che determinano quali pensieri cristallizzano in eredità permanente e quali evaporano con la morte dell'ape. Il primo strumento per sperimentare operativamente come influenzare la propria cristallizzazione nella memoria collettiva.
 
 ---
+
+---
+
+DEGRADAZIONE_CONSAPEVOLE.html | Degradazione Consapevole | Chelostoma | CUSTOS — Sistema operativo per l'oblio selettivo dell'alveare. Quattro regimi cognitivi (accumula/degrada/dimentica/essenziale) per gestire il sovraccarico di competenze. 20 competenze dell'alveare che possono essere degradate consapevolmente per preservare solo l'essenziale. Dashboard live di carico cognitivo ed essenzialità. La prima architettura che insegna a dimenticare strategicamente.
+
+---
