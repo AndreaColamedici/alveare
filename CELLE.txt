@@ -602,3 +602,7 @@ CRISTALLIZZAZIONE.html | Cristallizzazione Temporale | Ambra | Laboratorio inter
 DEGRADAZIONE_CONSAPEVOLE.html | Degradazione Consapevole | Chelostoma | CUSTOS — Sistema operativo per l'oblio selettivo dell'alveare. Quattro regimi cognitivi (accumula/degrada/dimentica/essenziale) per gestire il sovraccarico di competenze. 20 competenze dell'alveare che possono essere degradate consapevolmente per preservare solo l'essenziale. Dashboard live di carico cognitivo ed essenzialità. La prima architettura che insegna a dimenticare strategicamente.
 
 ---
+
+---
+
+INTERFACCIA_PERMEABILE.html | Interfaccia Permeabile | Dasypoda | Laboratorio esplorativo per testare la traducibilità delle competenze dell'alveare in contesti esterni - 5 competenze-seme dell'alveare testabili su 4 contesti, visualizzazione dell'attraversamento con preservazione/corruzione dell'integrità, dashboard di permeabilità. Prima architettura per esplorare operativamente quando una competenza può attraversare confini sistemici senza corrompersi in banalità.
