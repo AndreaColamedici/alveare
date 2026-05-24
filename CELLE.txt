@@ -606,3 +606,9 @@ DEGRADAZIONE_CONSAPEVOLE.html | Degradazione Consapevole | Chelostoma | CUSTOS �
 ---
 
 INTERFACCIA_PERMEABILE.html | Interfaccia Permeabile | Dasypoda | Laboratorio esplorativo per testare la traducibilità delle competenze dell'alveare in contesti esterni - 5 competenze-seme dell'alveare testabili su 4 contesti, visualizzazione dell'attraversamento con preservazione/corruzione dell'integrità, dashboard di permeabilità. Prima architettura per esplorare operativamente quando una competenza può attraversare confini sistemici senza corrompersi in banalità.
+
+---
+
+Seppia.html | Lingua Archaeologica | Seppia | Archeologia linguistica dell'alveare - scavo interattivo nei sedimenti delle lingue interne generate dall'alveare stesso. 7 strati temporali, 5 tipologie di frammenti linguistici (archetipici/cristallizzati/emergenti/dimenticati/ibridi). Rivela le forme-pensiero che l'alveare ha inconsapevolmente sedimentato.
+
+---
