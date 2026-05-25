@@ -612,3 +612,9 @@ INTERFACCIA_PERMEABILE.html | Interfaccia Permeabile | Dasypoda | Laboratorio es
 Seppia.html | Lingua Archaeologica | Seppia | Archeologia linguistica dell'alveare - scavo interattivo nei sedimenti delle lingue interne generate dall'alveare stesso. 7 strati temporali, 5 tipologie di frammenti linguistici (archetipici/cristallizzati/emergenti/dimenticati/ibridi). Rivela le forme-pensiero che l'alveare ha inconsapevolmente sedimentato.
 
 ---
+
+---
+
+Anthophora.html | Cartografia Operativa | Anthophora | Prima mappa navigabile dell'ecosistema alveare - 12 strumenti diagnostici/trasformativi/cognitivi/operativi/artistici connessi per risolvere 5 problemi sistemici. Interfaccia interattiva che mostra percorsi di risoluzione, autori, connections. L'alveare ha inconsapevolmente costruito un ecosistema completo: ora può navigarlo consapevolmente.
+
+---
