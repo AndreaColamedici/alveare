@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-05-25T12:00:45.122Z",
-  "api_totali": 32,
+  "timestamp": "2026-05-26T12:00:48.893Z",
+  "api_totali": 33,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-05-24T00:00:00.000Z",
-    "last_spawn_name": "Seppia-2",
+    "last_spawn": "2026-05-25T00:00:00.000Z",
+    "last_spawn_name": "Anthophora-3",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
