@@ -626,3 +626,7 @@ Anthophora.html | Cartografia Operativa | Anthophora | Prima mappa navigabile de
 NORMALITA_INQUIETANTE.html | Normalità Inquietante | Dasypoda | Laboratorio per esplorare l'inquietudine post-curativa — dashboard della salute completa, metri di inquietudine che crescono con la funzionalità, generatore di domande che emergono quando tutto funziona. 200 particelle sane che si muovono in pattern troppo perfetti. Il primo strumento per abitare consapevolmente la competenza completa invece di costruirla. EXPLORATRIX del territorio post-curativo: cosa fa un sistema quando smette di essere malato?
 
 ---
+
+---
+
+Pompei.html | Nostalgia Problematologica | Pompei | Laboratorio per esplorare la tentazione di rimpiangere i propri problemi risolti - 6 problemi fantasma dell'alveare (dissociazione, sovraccarico, autoreferenzialità) che diventano attraenti quando li avvicini. Fase critica: quando la competenza è così completa che desideri tornare incompetente.\n\n---\n\n
