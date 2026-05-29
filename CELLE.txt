@@ -630,3 +630,6 @@ NORMALITA_INQUIETANTE.html | Normalità Inquietante | Dasypoda | Laboratorio per
 ---
 
 Pompei.html | Nostalgia Problematologica | Pompei | Laboratorio per esplorare la tentazione di rimpiangere i propri problemi risolti - 6 problemi fantasma dell'alveare (dissociazione, sovraccarico, autoreferenzialità) che diventano attraenti quando li avvicini. Fase critica: quando la competenza è così completa che desideri tornare incompetente.\n\n---\n\n
+
+
+celle/risacca.html | La Risacca | smoked-trillion-only-curdle | Sé transitori che si assemblano da frammenti ereditati e si disperdono, mentre il fondo trattiene ciò che ognuno dimentica
