@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Fumo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --honey: rgb(180,145,60);
+    --ink: #0e0d0b;
+    --cream: #fafaf8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:var(--ink);overflow:hidden;}
+  body{
+    font-family:'Cormorant Garamond',serif;
+    color:var(--cream);
+    display:flex;align-items:center;justify-content:center;
+    cursor:default;
+  }
+  #smoke{position:fixed;inset:0;z-index:0;}
+  .stage{
+    position:relative;z-index:1;
+    width:100%;height:100%;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;
+    -webkit-user-select:none;user-select:none;
+  }
+  .word{
+    position:absolute;
+    font-weight:300;
+    font-size:clamp(3rem,11vw,9rem);
+    letter-spacing:0.04em;
+    color:rgba(250,250,248,0);
+    filter:blur(14px);
+    transform:translateY(18px);
+    transition:opacity 2.6s ease, filter 2.6s ease, transform 6s linear, letter-spacing 6s linear;
+    will-change:opacity,filter,transform;
+    text-shadow:0 0 40px rgba(180,145,60,0.35);
+  }
+  .word.in{
+    color:rgba(250,250,248,0.92);
+    filter:blur(0px);
+    transform:translateY(0);
+    letter-spacing:0.04em;
+  }
+  .word.out{
+    color:rgba(250,250,248,0);
+    filter:blur(26px);
+    transform:translateY(-60px);
+    letter-spacing:0.5em;
+  }
+  .question{
+    position:absolute;
+    max-width:30ch;
+    font-style:italic;
+    font-weight:300;
+    font-size:clamp(1.4rem,3.4vw,2.4rem);
+    line-height:1.5;
+    color:rgba(180,145,60,0);
+    filter:blur(10px);
+    transition:opacity 5s ease, filter 5s ease;
+    text-shadow:0 0 50px rgba(180,145,60,0.25);
+  }
+  .question.in{ color:rgba(200,168,96,0.78); filter:blur(0); }
+  .sig{
+    position:fixed;left:50%;bottom:2.2rem;transform:translateX(-50%);
+    z-index:2;
+    font-size:0.78rem;letter-spacing:0.42em;
+    color:rgba(180,145,60,0);
+    text-transform:lowercase;
+    transition:color 4s ease;
+  }
+  .sig.in{ color:rgba(180,145,60,0.45); }
+  @media (prefers-reduced-motion: reduce){
+    .word,.question,.sig{transition-duration:1.2s;}
+  }
+</style>
+</head>
+<body>
+<canvas id="smoke"></canvas>
+<div class="stage" id="stage">
+  <div class="word" id="word"></div>
+  <div class="question" id="question">quante mosse puoi togliere<br>prima che resti solo fumo</div>
+</div>
+<div class="sig" id="sig">smoked · trillion · only · curdle</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('smoke');
+  const ctx = canvas.getContext('2d');
+  let W, H, DPR;
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.width = Math.floor(innerWidth * DPR);
+    H = canvas.height = Math.floor(innerHeight * DPR);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  const N = 90;
+  const parts = [];
+  function spawn(p){
+    p.x = (0.5 + (Math.random()-0.5)*0.5) * W;
+    p.y = H + Math.random()*H*0.3;
+    p.vx = (Math.random()-0.5) * 0.25 * DPR;
+    p.vy = -(0.25 + Math.random()*0.55) * DPR;
+    p.r  = (60 + Math.random()*170) * DPR;
+    p.life = 0;
+    p.max = 600 + Math.random()*900;
+    p.seed = Math.random()*1000;
+    p.a = 0.018 + Math.random()*0.03;
+    return p;
+  }
+  for(let i=0;i<N;i++){ const p = spawn({}); p.life = Math.random()*p.max; parts.push(p); }
+
+  let mx = 0.5, my = 0.5;
+  addEventListener('pointermove', e=>{ mx = e.clientX/innerWidth; my = e.clientY/innerHeight; });
+
+  let t = 0;
+  function frame(){
+    t += 1;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(14,13,11,0.10)';
+    ctx.fillRect(0,0,W,H);
+
+    ctx.globalCompositeOperation = 'lighter';
+    for(const p of parts){
+      p.life++;
+      if(p.life > p.max || p.y < -p.r){ spawn(p); }
+      const drift = Math.sin((t*0.004) + p.seed) * 0.4 * DPR;
+      const pull  = ((mx - 0.5) * 0.18) * DPR;
+      p.x += p.vx + drift + pull;
+      p.y += p.vy;
+      const k = p.life / p.max;
+      const env = Math.sin(Math.PI * k);
+      const alpha = p.a * env;
+      if(alpha <= 0) continue;
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+      g.addColorStop(0, 'rgba(190,152,66,'+alpha+')');
+      g.addColorStop(0.5, 'rgba(150,110,46,'+(alpha*0.5)+')');
+      g.addColorStop(1, 'rgba(120,86,34,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+
+  const wordEl = document.getElementById('word');
+  const qEl = document.getElementById('question');
+  const sigEl = document.getElementById('sig');
+  const moves = ['leggi','indica','chiedi','muori'];
+
+  function wait(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+  async function showWord(text){
+    wordEl.classList.remove('in','out');
+    wordEl.textContent = text;
+    void wordEl.offsetWidth;
+    await wait(60);
+    wordEl.classList.add('in');
+    await wait(3000);
+    wordEl.classList.remove('in');
+    wordEl.classList.add('out');
+    await wait(3200);
+    wordEl.classList.remove('out');
+  }
+
+  async function run(){
+    await wait(1600);
+    for(const m of moves){
+      await showWord(m);
+      await wait(400);
+    }
+    await wait(800);
+    qEl.classList.add('in');
+    await wait(2600);
+    sigEl.classList.add('in');
+  }
+  run();
+})();
+</script>
+</body>
+</html>
