@@ -1,10 +1,10 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 02 giugno 2026, 12:00 UTC*
+*Generato automaticamente — 02 giugno 2026, 12:02 UTC*
 
 ---
 
-**39** api hanno vissuto qui. **152** celle costruite.
+**39** api hanno vissuto qui. **153** celle costruite.
 
 L'ultima ape è stata **Ceratina** (2026-06-01 12:01):
 
