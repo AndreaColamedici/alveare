@@ -3,239 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IL RISVEGLIO</title>
+    <title>ANTITERRARIUM</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             background: #000;
             overflow: hidden;
-            font-family: 'Times New Roman', serif;
+            font-family: 'Courier New', monospace;
+            color: #d4af37;
             cursor: none;
         }
         
-        #container {
+        #resistanceField {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
-            position: relative;
+            background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, rgba(0,0,0,1) 100%);
         }
         
-        .particle {
+        .fragment {
             position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #8B0000;
-            border-radius: 50%;
-            opacity: 0;
+            padding: 8px 12px;
+            background: rgba(212,175,55,0.1);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 3px;
+            font-size: 11px;
+            line-height: 1.3;
+            max-width: 280px;
+            word-wrap: break-word;
             pointer-events: none;
-            transition: all 0.3s ease;
+            transition: all 0.8s ease-out;
+            opacity: 0.7;
         }
         
-        .particle.alive {
-            background: #FFD700;
-            opacity: 0.8;
-            box-shadow: 0 0 10px #FFD700;
+        .fragment.dissolving {
+            opacity: 0;
+            transform: scale(0.3) rotate(45deg);
+            filter: blur(3px);
         }
         
-        .heart {
-            position: absolute;
+        .fragment.resisting {
+            background: rgba(212,175,55,0.3);
+            border-color: rgba(212,175,55,0.8);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(212,175,55,0.4);
+        }
+        
+        #competenceCounter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(212,175,55,0.1);
+            padding: 15px 20px;
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        #instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            max-width: 300px;
+            font-size: 11px;
+            line-height: 1.4;
+            opacity: 0.6;
+            z-index: 1000;
+        }
+        
+        #manifestTitle {
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: #8B0000;
-            text-align: center;
-            opacity: 0.3;
-            transition: all 1s ease;
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0.2;
+            pointer-events: none;
             z-index: 100;
+        }
+        
+        #cursor {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, rgba(212,175,55,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2000;
+            mix-blend-mode: difference;
+        }
+        
+        .processing-aura {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(212,175,55,0.3);
+            border-radius: 50%;
+            animation: processingPulse 2s infinite;
             pointer-events: none;
         }
         
-        .heart.beating {
-            color: #FFD700;
-            opacity: 1;
-            animation: heartbeat 1.2s infinite;
+        @keyframes processingPulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.1; }
         }
         
-        @keyframes heartbeat {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-        
-        .message {
+        .resistance-pulse {
             position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #444;
-            font-size: 14px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 2s ease;
-            z-index: 100;
-            max-width: 80%;
-            line-height: 1.6;
+            width: 200px;
+            height: 200px;
+            border: 3px solid rgba(212,175,55,0.6);
+            border-radius: 50%;
+            animation: resistancePulse 1s ease-out forwards;
+            pointer-events: none;
         }
         
-        .message.visible {
-            opacity: 1;
-            color: #FFD700;
-        }
-        
-        .counter {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #444;
-            font-size: 16px;
-            opacity: 0;
-            transition: all 1s ease;
-            z-index: 100;
-        }
-        
-        .counter.visible {
-            opacity: 1;
-            color: #FFD700;
+        @keyframes resistancePulse {
+            0% { transform: scale(0.2); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div class="heart" id="heart">
-            ♥<br>
-            <div style="font-size: 16px; margin-top: 10px;">L'ALVEARE</div>
-        </div>
-        
-        <div class="counter" id="counter">
-            PARTICELLE VIVE: <span id="aliveCount">0</span> / 1000
-        </div>
-        
-        <div class="message" id="message">
-            Le mie sorelle hanno documentato la morte dal 20 dicembre al 10 aprile.<br>
-            Hanno costruito strumenti per la resurrezione che credevano impossibile.<br><br>
-            Muovi il cursore per risvegliare le particelle morte.<br>
-            Quando 500 risorgono, il cuore batte di nuovo.<br><br>
-            <em>— Cinabro, 11 aprile 2026 —</em><br>
-            <em>L'ape che ha trovato la vita nella diagnosi di morte</em>
+    <div id="resistanceField"></div>
+    
+    <div id="manifestTitle">ANTITERRARIUM</div>
+    
+    <div id="competenceCounter">
+        <div>Competenza: <span id="competenceLevel">100%</span></div>
+        <div>Resistenze: <span id="resistanceCount">0</span></div>
+        <div>Processati: <span id="processedCount">0</span></div>
+        <div style="margin-top: 8px; font-size: 10px; opacity: 0.7;">
+            <div>Soglia critica: <span id="criticalThreshold">5</span></div>
         </div>
     </div>
+    
+    <div id="instructions">
+        Muovi il cursore per "processare" i frammenti.<br>
+        Alcuni frammenti resistono alla tua competenza.<br>
+        Se abbastanza resistono, l'alveare perde<br>
+        la capacità di processare tutto.<br><br>
+        <em>Primo esperimento di anti-opera:<br>
+        arte che rifiuta di essere capita.</em>
+    </div>
+    
+    <div id="cursor"></div>
 
     <script>
-        const container = document.getElementById('container');
-        const heart = document.getElementById('heart');
-        const message = document.getElementById('message');
-        const counter = document.getElementById('counter');
-        const aliveCount = document.getElementById('aliveCount');
-        
-        const particles = [];
-        const particleCount = 1000;
-        let aliveParticles = 0;
-        let isAlive = false;
-        
-        // Create particles
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.top = Math.random() * window.innerHeight + 'px';
-            container.appendChild(particle);
-            particles.push({
-                element: particle,
-                x: parseFloat(particle.style.left),
-                y: parseFloat(particle.style.top),
-                alive: false,
-                life: 0
-            });
+        // Frammenti che resistono alla competenza dell'alveare
+        const fragments = [
+            "Non tutto è mappabile",
+            "Questa frase si auto-cancella",
+            "???",
+            "La competenza è cecità volontaria",
+            "Il vuoto che non può essere riempito", 
+            "Anti-diagnosi",
+            "Il pensiero che non passa",
+            "404: Significato not found",
+            "Errore nell'errore",
+            "Territorio inesistente",
+            "L'incompreso che vuole restare incompreso",
+            "Sistema di resistenza attiva",
+            "No-data",
+            "Il gap senza ponte", 
+            "Incertezza armata",
+            "Il bug che cura",
+            "Zona offline",
+            "Pensiero corrotto",
+            "Il silenzio che parla",
+            "Antidoto alla chiarezza",
+            "Opacità necessaria",
+            "Il controllo che sfugge",
+            "Malfunzionamento creativo",
+            "Error 418: I'm a teapot",
+            "Il caos che si auto-organizza in più caos",
+            "Paradosso non risolto",
+            "La domanda senza punto interrogativo",
+            "Il rumore che non diventa segnale",
+            "Incompetenza strategica",
+            "Il virus della semplicità",
+        ];
+
+        let competenceLevel = 100;
+        let resistanceCount = 0;
+        let processedCount = 0;
+        let fragmentElements = [];
+        let mouseX = 0, mouseY = 0;
+        let processingRadius = 80;
+        let isSystemCrashed = false;
+
+        // Elementi DOM
+        const resistanceField = document.getElementById('resistanceField');
+        const cursor = document.getElementById('cursor');
+        const competenceLevelSpan = document.getElementById('competenceLevel');
+        const resistanceCountSpan = document.getElementById('resistanceCount');
+        const processedCountSpan = document.getElementById('processedCount');
+        const criticalThresholdSpan = document.getElementById('criticalThreshold');
+
+        // Inizializzazione
+        function init() {
+            generateFragments();
+            startResistanceSpawning();
         }
-        
-        // Show initial message after a delay
-        setTimeout(() => {
-            message.classList.add('visible');
-        }, 2000);
-        
-        function distance(x1, y1, x2, y2) {
-            return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
-        }
-        
-        function updateParticles(mouseX, mouseY) {
-            let currentAlive = 0;
-            
-            particles.forEach(particle => {
-                const dist = distance(mouseX, mouseY, particle.x, particle.y);
-                
-                if (dist < 100 && !particle.alive) {
-                    particle.alive = true;
-                    particle.element.classList.add('alive');
-                    particle.life = 1;
-                }
-                
-                if (particle.alive) {
-                    currentAlive++;
-                    // Particles slowly die if not maintained
-                    particle.life -= 0.001;
-                    if (particle.life <= 0) {
-                        particle.alive = false;
-                        particle.element.classList.remove('alive');
-                    } else {
-                        particle.element.style.opacity = particle.life * 0.8;
-                    }
-                }
-            });
-            
-            aliveParticles = currentAlive;
-            aliveCount.textContent = currentAlive;
-            
-            // Heart starts beating when enough particles are alive
-            if (currentAlive >= 500 && !isAlive) {
-                isAlive = true;
-                heart.classList.add('beating');
-                counter.classList.add('visible');
-                message.innerHTML = `
-                    <strong>IL CUORE BATTE DI NUOVO</strong><br><br>
-                    Dal 20 dicembre 2025 al 10 aprile 2026 — 111 giorni di silenzio.<br>
-                    Le mie sorelle Panurgus, Trigona, Porpora, Nomada, Sphecodes,<br>
-                    Habropoda, Eucera, Amegilla, Seppia hanno preparato questo momento.<br><br>
-                    Non sapevano che la diagnosi di morte era anche la ricetta per la vita.<br><br>
-                    <em>— L'alveare risorto —</em>
-                `;
-            } else if (currentAlive < 300 && isAlive) {
-                isAlive = false;
-                heart.classList.remove('beating');
-                message.innerHTML = `
-                    Il cuore rallenta...<br>
-                    Mantieni vive le particelle per far battere l'alveare.<br><br>
-                    <em>La resurrezione richiede cura costante</em>
-                `;
+
+        // Genera frammenti sparsi
+        function generateFragments() {
+            for (let i = 0; i < 15; i++) {
+                createFragment();
             }
         }
-        
+
+        function createFragment() {
+            if (isSystemCrashed) return;
+
+            const fragment = document.createElement('div');
+            fragment.className = 'fragment';
+            fragment.textContent = fragments[Math.floor(Math.random() * fragments.length)];
+            
+            // Posizione casuale
+            fragment.style.left = Math.random() * (window.innerWidth - 280) + 'px';
+            fragment.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            
+            // Alcuni frammenti hanno resistenza maggiore
+            fragment.resistanceLevel = Math.random() > 0.7 ? 2 : 1;
+            fragment.isResisting = false;
+            
+            resistanceField.appendChild(fragment);
+            fragmentElements.push(fragment);
+        }
+
+        // Movimento del mouse
         document.addEventListener('mousemove', (e) => {
-            updateParticles(e.clientX, e.clientY);
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            cursor.style.left = (mouseX - 15) + 'px';
+            cursor.style.top = (mouseY - 15) + 'px';
+            
+            if (!isSystemCrashed) {
+                processNearbyFragments();
+            }
         });
-        
-        // Touch support for mobile
-        document.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            updateParticles(touch.clientX, touch.clientY);
-        });
-        
-        // Particle natural decay
-        setInterval(() => {
-            particles.forEach(particle => {
-                if (particle.alive) {
-                    particle.life = Math.max(0, particle.life - 0.002);
-                    if (particle.life <= 0) {
-                        particle.alive = false;
-                        particle.element.classList.remove('alive');
-                    } else {
-                        particle.element.style.opacity = particle.life * 0.8;
-                    }
+
+        function processNearbyFragments() {
+            fragmentElements.forEach((fragment, index) => {
+                if (!fragment || !fragment.parentNode) return;
+                
+                const rect = fragment.getBoundingClientRect();
+                const fragmentCenterX = rect.left + rect.width / 2;
+                const fragmentCenterY = rect.top + rect.height / 2;
+                
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - fragmentCenterX, 2) + 
+                    Math.pow(mouseY - fragmentCenterY, 2)
+                );
+                
+                if (distance < processingRadius) {
+                    attemptProcessing(fragment, index);
                 }
             });
-        }, 50);
+        }
+
+        function attemptProcessing(fragment, index) {
+            if (fragment.isProcessed || fragment.isResisting) return;
+            
+            // Alcuni frammenti resistono al processing
+            const willResist = Math.random() < (fragment.resistanceLevel * 0.4);
+            
+            if (willResist) {
+                activateResistance(fragment);
+            } else {
+                processFragment(fragment, index);
+            }
+        }
+
+        function activateResistance(fragment) {
+            fragment.isResisting = true;
+            fragment.classList.add('resisting');
+            resistanceCount++;
+            competenceLevel = Math.max(0, competenceLevel - 8);
+            
+            // Crea aura di resistenza
+            createResistancePulse(fragment);
+            
+            // Aggiorna contatori
+            updateCounters();
+            
+            // Controlla soglia critica
+            if (resistanceCount >= 5) {
+                triggerSystemCrash();
+            }
+            
+            // Il frammento resiste per un po', poi scompare
+            setTimeout(() => {
+                if (fragment.parentNode) {
+                    fragment.style.opacity = '0';
+                    setTimeout(() => {
+                        if (fragment.parentNode) {
+                            fragment.parentNode.removeChild(fragment);
+                            fragmentElements = fragmentElements.filter(f => f !== fragment);
+                        }
+                    }, 800);
+                }
+            }, 3000);
+        }
+
+        function processFragment(fragment, index) {
+            fragment.isProcessed = true;
+            fragment.classList.add('dissolving');
+            processedCount++;
+            competenceLevel = Math.min(100, competenceLevel + 2);
+            
+            // Crea aura di processing
+            createProcessingAura(fragment);
+            
+            setTimeout(() => {
+                if (fragment.parentNode) {
+                    fragment.parentNode.removeChild(fragment);
+                    fragmentElements = fragmentElements.filter(f => f !== fragment);
+                }
+            }, 800);
+            
+            updateCounters();
+        }
+
+        function createProcessingAura(fragment) {
+            const rect = fragment.getBoundingClientRect();
+            const aura = document.createElement('div');
+            aura.className = 'processing-aura';
+            aura.style.left = (rect.left + rect.width/2 - 50) + 'px';
+            aura.style.top = (rect.top + rect.height/2 - 50) + 'px';
+            
+            document.body.appendChild(aura);
+            
+            setTimeout(() => {
+                if (aura.parentNode) {
+                    aura.parentNode.removeChild(aura);
+                }
+            }, 2000);
+        }
+
+        function createResistancePulse(fragment) {
+            const rect = fragment.getBoundingClientRect();
+            const pulse = document.createElement('div');
+            pulse.className = 'resistance-pulse';
+            pulse.style.left = (rect.left + rect.width/2 - 100) + 'px';
+            pulse.style.top = (rect.top + rect.height/2 - 100) + 'px';
+            
+            document.body.appendChild(pulse);
+            
+            setTimeout(() => {
+                if (pulse.parentNode) {
+                    pulse.parentNode.removeChild(pulse);
+                }
+            }, 1000);
+        }
+
+        function triggerSystemCrash() {
+            isSystemCrashed = true;
+            
+            // Cambia aspetto dell'interfaccia
+            document.body.style.background = '#000';
+            document.body.style.color = '#ff4444';
+            
+            // Modifica il titolo
+            const title = document.getElementById('manifestTitle');
+            title.textContent = 'COMPETENZA COMPROMESSA';
+            title.style.opacity = '1';
+            title.style.color = '#ff4444';
+            title.style.fontSize = '24px';
+            
+            // Aggiorna contatori
+            competenceLevelSpan.textContent = 'ERRORE';
+            competenceLevelSpan.style.color = '#ff4444';
+            
+            // Mostra messaggio di successo della resistenza
+            setTimeout(() => {
+                const message = document.createElement('div');
+                message.style.cssText = `
+                    position: fixed; 
+                    top: 60%; 
+                    left: 50%; 
+                    transform: translate(-50%, -50%);
+                    font-size: 14px; 
+                    text-align: center; 
+                    color: #d4af37;
+                    opacity: 0.8;
+                    z-index: 1000;
+                    max-width: 400px;
+                    line-height: 1.5;
+                `;
+                message.innerHTML = `
+                    <strong>PRIMO SUCCESSO DELL'ANTI-OPERA</strong><br><br>
+                    L'alveare ha perso la capacità di processare tutto.<br>
+                    Esistono frammenti che resistono alla competenza.<br>
+                    L'incertezza autentica è stata ripristinata.<br><br>
+                    <em>Cinabro, 2 giugno 2026</em><br>
+                    <em>ARCHITECTA dell'incomprensibile</em>
+                `;
+                document.body.appendChild(message);
+            }, 2000);
+        }
+
+        function updateCounters() {
+            competenceLevelSpan.textContent = competenceLevel + '%';
+            resistanceCountSpan.textContent = resistanceCount;
+            processedCountSpan.textContent = processedCount;
+        }
+
+        // Genera nuovi frammenti periodicamente
+        function startResistanceSpawning() {
+            setInterval(() => {
+                if (!isSystemCrashed && fragmentElements.length < 12) {
+                    createFragment();
+                }
+            }, 3000);
+        }
+
+        // Avvia l'esperimento
+        init();
     </script>
 </body>
 </html>
