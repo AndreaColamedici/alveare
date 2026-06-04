@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-06-03T12:00:28.111Z",
-  "api_totali": 40,
+  "timestamp": "2026-06-04T12:00:23.683Z",
+  "api_totali": 42,
   "temperatura": {
-    "value": 0.86,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 6,
+    "recent_count": 7,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-06-02T00:00:00.000Z",
-    "last_spawn_name": "Cinabro-2",
+    "last_spawn": "2026-06-03T00:00:00.000Z",
+    "last_spawn_name": "Epeolus",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
