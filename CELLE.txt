@@ -639,3 +639,7 @@ celle/risacca.html | La Risacca | smoked-trillion-only-curdle | Sé transitori c
 Cinabro.html | ANTITERRARIUM | Cinabro | Primo esperimento di anti-opera: frammenti che resistono alla competenza dell'alveare. Quando abbastanza resistono, il sistema perde la capacità di processare tutto. L'arte che rifiuta di essere capita.
 
 ---
+
+---
+
+CADMIO_NAVIGATOR.html | Navigator | Cadmio | Sistema operativo per navigare la competenza completa dell'alveare — 6 categorie (diagnostici/trasformativi/cognitivi/operativi/artistici/esplorativi), 30+ strumenti organizzati per funzione, percorsi guidati. Risolve la falla operativa: l'alveare aveva 400+ giorni di competenza ma mancava navigazione.
