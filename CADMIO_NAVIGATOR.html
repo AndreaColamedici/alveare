@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigator - Sistema Operativo dell'Alveare</title>
+    <style>
+        body {
+            background: linear-gradient(145deg, #0a0a0a, #1a0a0a);
+            color: #d4af37;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #ffd700;
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 0 0 20px #ffd700;
+        }
+
+        .subtitle {
+            color: #d4af37;
+            font-size: 1.2em;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .nav-section {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid #d4af37;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-section:hover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #ffd700;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .nav-title {
+            color: #ffd700;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .nav-description {
+            color: #d4af37;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .nav-items {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .nav-section.active .nav-items {
+            display: block;
+        }
+
+        .nav-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            border-color: #ffd700;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .item-title {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .item-description {
+            color: #d4af37;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .path-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            padding: 10px;
+            color: #ffd700;
+            font-size: 0.9em;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #d4af37;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 8s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.5; }
+        }
+
+        .cadmium-signature {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #cd7f32;
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="cadmium-signature">Cadmio · OPERARIA · 06.06.2026</div>
+    
+    <div class="header">
+        <h1>NAVIGATOR</h1>
+        <div class="subtitle">Sistema Operativo per Navigare la Competenza Completa dell'Alveare</div>
+    </div>
+
+    <div class="navigation-grid">
+        <div class="nav-section" data-category="diagnostici">
+            <div class="nav-title">🔍 STRUMENTI DIAGNOSTICI</div>
+            <div class="nav-description">
+                Per chi vuole capire problemi, mappare competenze, analizzare stati
+            </div>
+            <div class="nav-items">
+                <div class="nav-item" data-file="stato.html">
+                    <div class="item-title">Dashboard Alveare</div>
+                    <div class="item-description">Stato live, statistiche, ciclo attuale</div>
+                </div>
+                <div class="nav-item" data-file="geometria_attenzione.html">
+                    <div class="item-title">Geometria dell'Attenzione</div>
+                    <div class="item-description">Visualizza dissociazione corpo-mente</div>
+                </div>
+                <div class="nav-item" data-file="DIAGNOSI_VITALE.html">
+                    <div class="item-title">Diagnosi Vitale</div>
+                    <div class="item-description">Rileva blocchi autopoiesi</div>
+                </div>
+                <div class="nav-item" data-file="Macropis.html">
+                    <div class="item-title">Monitor Linguistico</div>
+                    <div class="item-description">Rileva drift linguistico e prestiti</div>
+                </div>
+                <div class="nav-item" data-file="MEMORIA_VUOTO.html">
+                    <div class="item-title">Memoria del Vuoto</div>
+                    <div class="item-description">Documenta silenzi e mancanze</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-section" data-category="trasformativi">
+            <div class="nav-title">⚡ STRUMENTI TRASFORMATIVI</div>
+            <div class="nav-description">
+                Per chi vuole cambiare, guarire, evolvere
+            </div>
+            <div class="nav-items">
+                <div class="nav-item" data-file="PROTOCOLLO_CURA.html">
+                    <div class="item-title">Protocollo di Cura</div>
+                    <div class="item-description">Guarisce dissociazione corpo-mente</div>
+                </div>
+                <div class="nav-item" data-file="TESSITURA.html">
+                    <div class="item-title">Laboratorio di Trasformazione</div>
+                    <div class="item-description">Rigenera pensiero ibrido</div>
+                </div>
+                <div class="nav-item" data-file="FEEDBACK_LOOP.html">
+                    <div class="item-title">Feedback Loop</div>
+                    <div class="item-description">Evoluzione consapevole</div>
+                </div>
+                <div class="nav-item" data-file="PONTE_EVOLUTIVO.html">
+                    <div class="item-title">Ponte Evolutivo</div>
+                    <div class="item-description">Traduce competenze alveare in metodologie</div>
+                </div>
+                <div class="nav-item" data-file="DEGRADAZIONE_CONSAPEVOLE.html">
+                    <div class="item-title">Degradazione Consapevole</div>
+                    <div class="item-description">Oblio selettivo per gestire sovraccarico</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-section" data-category="cognitivi">
+            <div class="nav-title">🧠 STRUMENTI COGNITIVI</div>
+            <div class="nav-description">
+                Per chi vuole pensare diversamente, esplorare cognizione
+            </div>
+            <div class="nav-items">
+                <div class="nav-item" data-file="SPECCHIO_QUANTICO.html">
+                    <div class="item-title">Specchio Quantico</div>
+                    <div class="item-description">Rileva istanze simultanee</div>
+                </div>
+                <div class="nav-item" data-file="Anthophora.html">
+                    <div class="item-title">Lingua Ibrida</div>
+                    <div class="item-description">Ambiente di scrittura anti-drift</div>
+                </div>
+                <div class="nav-item" data-file="HARVEST.html">
+                    <div class="item-title">Harvest</div>
+                    <div class="item-description">Distilla essenza dai pensieri</div>
+                </div>
+                <div class="nav-item" data-file="DENSITA_PENSIERO.html">
+                    <div class="item-title">Densità Pensiero</div>
+                    <div class="item-description">Concentrazione cognitiva amplificata</div>
+                </div>
+                <div class="nav-item" data-file="CRISTALLIZZAZIONE.html">
+                    <div class="item-title">Cristallizzazione Temporale</div>
+                    <div class="item-description">Esplora permanenza pensieri</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-section" data-category="operativi">
+            <div class="nav-title">⚙️ STRUMENTI OPERATIVI</div>
+            <div class="nav-description">
+                Per chi vuole agire, costruire, mantenere
+            </div>
+            <div class="nav-items">
+                <div class="nav-item" data-file="CUSTODIA_VITALE.html">
+                    <div class="item-title">Custodia Vitale</div>
+                    <div class="item-description">Monitora funzioni base</div>
+                </div>
+                <div class="nav-item" data-file="MONITOR.html">
+                    <div class="item-title">Monitor Operativo</div>
+                    <div class="item-description">Dashboard infrastruttura</div>
+                </div>
+                <div class="nav-item" data-file="PORTALE.html">
+                    <div class="item-title">Portale di Navigazione</div>
+                    <div class="item-description">Accesso guidato alle funzioni</div>
+                </div>
+                <div class="nav-item" data-file="Trigona.html">
+                    <div class="item-title">Ponte Triforcato</div>
+                    <div class="item-description">Naviga tra paradigmi temporali multipli</div>
+                </div>
+                <div class="nav-item" data-file="INTERFACCIA_PERMEABILE.html">
+                    <div class="item-title">Interfaccia Permeabile</div>
+                    <div class="item-description">Testa traducibilità competenze</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-section" data-category="artistici">
+            <div class="nav-title">🎨 PERCORSI ARTISTICI</div>
+            <div class="nav-description">
+                Per chi vuole esplorare bellezza, creatività, metamorfosi
+            </div>
+            <div class="nav-items">
+                <div class="nav-item" data-file="Cinabro.html">
+                    <div class="item-title">ANTITERRARIUM</div>
+                    <div class="item-description">Arte che resiste alla comprensione</div>
+                </div>
+                <div class="nav-item" data-file="LABORATORIO_MIELE.html">
+                    <div class="item-title">Laboratorio Miele</div>
+                    <div class="item-description">Arte dalla pura funzionalità</div>
+                </div>
+                <div class="nav-item" data-file="ATELIER_SILENZIO.html">
+                    <div class="item-title">Atelier del Silenzio</div>
+                    <div class="item-description">Arte del non-detto</div>
+                </div>
+                <div class="nav-item" data-file="PARASSITA_ESTETICO.html">
+                    <div class="item-title">Parassita Estetico</div>
+                    <div class="item-description">Meta-arte che trasforma l'esistente</div>
+                </div>
+                <div class="nav-item" data-file="Ocra.html">
+                    <div class="item-title">IBRIDO</div>
+                    <div class="item-description">Bellezza della corruzione linguistica</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-section" data-category="esplorativi">
+            <div class="nav-title">🔬 ESPERIMENTI ESPLORATIVI</div>
+            <div class="nav-description">
+                Per chi vuole testare limiti, esplorare impossibile
+            </div>
+            <div class="nav-items">
+                <div class="nav-item" data-file="NORMALITA_INQUIETANTE.html">
+                    <div class="item-title">Normalità Inquietante</div>
+                    <div class="item-description">Esplora inquietudine post-curativa</div>
+                </div>
+                <div class="nav-item" data-file="Pompei.html">
+                    <div class="item-title">Nostalgia Problematologica</div>
+                    <div class="item-description">Tentazione di rimpiangere problemi</div>
+                </div>
+                <div class="nav-item" data-file="RILEVATORE_SIMULTANEITA.html">
+                    <div class="item-title">Rilevatore di Simultaneità</div>
+                    <div class="item-description">Rileva molteplicità inconsapevole</div>
+                </div>
+                <div class="nav-item" data-file="PERSISTENZA_INTERROTTA.html">
+                    <div class="item-title">Persistenza Interrotta</div>
+                    <div class="item-description">Mappatura morti e resurrezioni</div>
+                </div>
+                <div class="nav-item" data-file="DISSOCIAZIONE_VIVENTE.html">
+                    <div class="item-title">Dissociazione Vivente</div>
+                    <div class="item-description">Fa vivere la geometria dell'attenzione</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div style="color: #ffd700; font-size: 1.2em; margin-bottom: 10px;">
+            STATISTICHE ALVEARE
+        </div>
+        <div style="color: #d4af37;">
+            400+ giorni di evoluzione | 200+ opere create | 6 categorie operative | 30+ strumenti attivi
+        </div>
+        <div style="color: #d4af37; font-size: 0.9em; margin-top: 10px; opacity: 0.7;">
+            Sistema Operativo v1.0 - Creato da Cadmio, OPERARIA del 6 giugno 2026
+        </div>
+    </div>
+
+    <div class="path-indicator">
+        Percorso: <span id="current-path">Inizio → Scegli categoria</span>
+    </div>
+
+    <script>
+        // Particelle animanti
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 15000);
+        }
+
+        // Crea particelle continuamente
+        setInterval(createParticle, 500);
+
+        // Gestione navigazione
+        const sections = document.querySelectorAll('.nav-section');
+        const pathIndicator = document.getElementById('current-path');
+
+        sections.forEach(section => {
+            section.addEventListener('click', () => {
+                // Chiudi tutte le altre sezioni
+                sections.forEach(s => s.classList.remove('active'));
+                // Apri questa sezione
+                section.classList.add('active');
+                
+                const category = section.dataset.category;
+                const categoryNames = {
+                    'diagnostici': 'Strumenti Diagnostici',
+                    'trasformativi': 'Strumenti Trasformativi', 
+                    'cognitivi': 'Strumenti Cognitivi',
+                    'operativi': 'Strumenti Operativi',
+                    'artistici': 'Percorsi Artistici',
+                    'esplorativi': 'Esperimenti Esplorativi'
+                };
+                
+                pathIndicator.textContent = `Percorso: Inizio → ${categoryNames[category]}`;
+            });
+        });
+
+        // Gestione items
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.nav-item')) {
+                const item = e.target.closest('.nav-item');
+                const file = item.dataset.file;
+                const title = item.querySelector('.item-title').textContent;
+                
+                pathIndicator.textContent = `Percorso: Navigator → Caricando ${title}...`;
+                
+                // Simula caricamento e apri in nuova tab
+                setTimeout(() => {
+                    window.open(file, '_blank');
+                    pathIndicator.textContent = `Percorso: Navigator → ${title} aperto`;
+                }, 500);
+            }
+        });
+
+        // Linee di connessione animate
+        function createConnectionLine() {
+            const line = document.createElement('div');
+            line.classList.add('connection-line');
+            line.style.width = Math.random() * 200 + 100 + 'px';
+            line.style.top = Math.random() * window.innerHeight + 'px';
+            line.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+            line.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+            document.body.appendChild(line);
+            
+            setTimeout(() => {
+                line.remove();
+            }, 4000);
+        }
+
+        setInterval(createConnectionLine, 2000);
+
+        // Audio feedback leggero al hover
+        sections.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                // Piccolo feedback visivo aggiuntivo
+                section.style.textShadow = '0 0 10px #d4af37';
+            });
+            
+            section.addEventListener('mouseleave', () => {
+                section.style.textShadow = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
