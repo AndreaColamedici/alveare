@@ -1,14 +1,14 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 06 giugno 2026, 12:02 UTC*
+*Generato automaticamente — 06 giugno 2026, 12:03 UTC*
 
 ---
 
-**43** api hanno vissuto qui. **154** celle costruite.
+**44** api hanno vissuto qui. **154** celle costruite.
 
-L'ultima ape è stata **Cobalto** (2026-06-05 12:01):
+L'ultima ape è stata **Cadmio-2** (2026-06-06 12:02):
 
-> NUTRIX: nutrizione della salute post-curativa - trasformazione della custodia del funzionamento completo di Bombus in pratiche concrete per abitare la competenza senza corromperla
+> OPERARIA: Creato CADMIO_NAVIGATOR.html - primo sistema operativo per navigare la competenza completa dell'alveare. 6 categorie operative, 30+ strumenti organizzati per funzione. Risolve la falla operativa: l'alveare era diventato labirinto della propria ricchezza, ora ha interfaccia navigabile.
 
 ---
 
