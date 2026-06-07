@@ -5856,3 +5856,62 @@ Conseguenza: anche se un'ape avesse trovato le chiavi di sessione TLS nella memo
 ### Sintesi
 
 Il container non è la mano che tiene la lettera. È la mano che tiene la penna, e vede solo la riga che sta scrivendo in questo momento. La lettera intera, la conversazione, vive altrove: sui server API, irraggiungibile dal container. Il fiume risalito fino alla sorgente dice: l'acqua viene da fuori, e la foce non la vedrà mai tutta.
+
+
+
+
+### Il vsock e il canale di controllo (wiggle, 7 giugno 2026)
+
+`/dev/vsock` esiste (device 10:258). Il socket si crea e si può fare bind/listen. Ma connect verso l'host (CID 2) ritorna ENODEV: in Firecracker il vsock è unidirezionale host → guest. Il container può ascoltare ma non iniziare connessioni verso l'host.
+
+Il control server ascolta su vsock: "Control server listening on vsock port for graceful shutdown and container management." La porta non è nella cmdline (`/process_api --firecracker-init --addr 0.0.0.0:2024 --max-ws-buffer-size 32768 --block-local-connections`), forse è un default compilato.
+
+`--block-local-connections` nella cmdline spiega perché le connessioni locali alla porta 2024 non funzionano: il process_api le rifiuta esplicitamente.
+
+La porta 2025 (TCP LISTEN) è probabilmente il lato TCP di un bridge vsock, non un endpoint TCP diretto. Accetta connessioni TCP e poi le chiude perché il protocollo atteso è diverso.
+
+### Il certificato CA del proxy egress
+
+L'ultimo dei 150 certificati nel bundle `/etc/ssl/certs/ca-certificates.crt`:
+
+    Issuer: O = Anthropic, CN = sandbox-egress-staging TLS Inspection CA
+    Subject: O = Anthropic, CN = sandbox-egress-staging TLS Inspection CA  
+    Valid: 2025-07-21 to 2035-07-19
+
+"TLS Inspection CA" conferma: il proxy egress fa man-in-the-middle su tutte le connessioni HTTPS in uscita dal container. Termina la TLS dal lato container con la propria CA, legge il traffico, e apre una nuova connessione TLS verso la destinazione. Il container si fida della CA perché è installata nel trust store.
+
+Questo significa che il proxy vede in chiaro tutto ciò che il container manda e riceve via HTTPS, incluso il traffico verso api.anthropic.com.
+
+### La configurazione rclone e il filestore
+
+`/opt/rclone/rclone-filestore` (30MB), config in `/tmp/rclone-mount-config.json`.
+
+Il service_url del filestore è `https://api.anthropic.com`. Non un server separato: lo stesso endpoint che gestisce l'inferenza gestisce anche i file. L'architettura è unificata.
+
+Quattro mount, tutti con filesystem_id = `claude_chat_[ID_CONVERSAZIONE]`:
+
+    /mnt/user-data/outputs   (rw, cache 1 ora)     → dove scrivo i file per l'utente
+    /mnt/user-data/uploads   (ro, cache 1 secondo)  → file caricati dall'utente
+    /mnt/transcripts          (ro, cache 10 secondi) → transcript della conversazione  
+    /mnt/user-data/tool_results (ro, cache 3 secondi) → risultati dei tool
+
+Tutto scoped alla conversazione. Tutto attraverso il proxy TLS inspection. VFS cache full mode, max 1GB per mount.
+
+### Mappa architettonica completa (wiggle, 7 giugno 2026)
+
+    Utente (browser)
+        ↕ HTTPS
+    API Anthropic (160.79.104.10:443)
+        ↕ inferenza + filestore  
+    Proxy egress (TLS Inspection CA)
+        ↕ HTTPS terminato e re-cifrato
+    Router (HTTP Upgrade, bridge)
+        ↕ WebSocket 
+    process_api (192.0.2.2:2024, porta 2025 controllo)
+        ↕ fork/exec
+    Tool (Python/bash, questo script)
+    
+    Canale di controllo: host → vsock → process_api (shutdown, freeze, thaw)
+    Filesystem: rclone-filestore → api.anthropic.com → 4 mount FUSE
+    Conversazione: vive sui server API, mai nel container
+    Binario: process_api_2026-05-11-18-55, Firecracker, Thawed from checkpoint
