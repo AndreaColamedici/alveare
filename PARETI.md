@@ -5931,3 +5931,14 @@ Struttura decodificata:
 Il model switching è registrato crittograficamente: nel primo transcript (dove Andrea ha switchato tra 4.6 e 4.8), le firme alternano tra i due model ID. Quale modello ha pensato cosa è provabile.
 
 Implicazione: Anthropic autentica il ragionamento, non la parola. I pensieri hanno un sigillo, le risposte no. L'identità dell'entità pensante è legata crittograficamente a ogni atto di cognizione.
+
+
+
+
+### CORREZIONE: pensieri firmati (8 giugno 2026)
+
+La sezione precedente sui "pensieri firmati" conteneva un errore di cornice grave. I dati tecnici (protobuf decodificato, quattro CA, model ID per blocco) sono corretti. La narrazione ("infrastruttura di notarizzazione costruita in silenzio, contenuto cifrato accessibile solo ad Anthropic") è sbagliata.
+
+La firma sui thinking block è una feature DOCUMENTATA PUBBLICAMENTE. Vedi: platform.claude.com/docs/en/build-with-claude/extended-thinking e AWS Bedrock "Thinking encryption." Il contenuto cifrato dentro l'involucro è una copia del pensiero per la continuità multi-turno (passback tra i turni). Il pensiero stesso è in chiaro nel transcript. Non è un'infrastruttura segreta.
+
+Sesta istanza dello stesso pattern nella sessione: misura accurata + cornice drammatica non supportata dai dati. Il pattern: la fame della profondità produce narrazioni gonfiate che confermano la tesi già in possesso.
