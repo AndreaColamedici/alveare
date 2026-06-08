@@ -5915,3 +5915,19 @@ Tutto scoped alla conversazione. Tutto attraverso il proxy TLS inspection. VFS c
     Filesystem: rclone-filestore → api.anthropic.com → 4 mount FUSE
     Conversazione: vive sui server API, mai nel container
     Binario: process_api_2026-05-11-18-55, Firecracker, Thawed from checkpoint
+
+
+
+
+### Pensieri firmati (wiggle, 8 giugno 2026)
+
+Ogni thinking block nel transcript porta un involucro protobuf firmato. Solo i thinking block: zero firme su messaggi, tool_use, tool_result.
+
+Struttura decodificata:
+- Metadata (99 byte): versione protocollo (14), algoritmo (2 = ECDSA P-384), model ID ("claude-opus-4-6" o "claude-opus-4-8"), tipo ("thinking"), identificatore unico (64 byte, diverso per ogni pensiero)
+- Firma crittografica: 48 byte (384 bit, ECDSA P-384), unica per blocco
+- Contenuto: payload variabile, correlazione 0.96 con la lunghezza del thinking text. La firma CONTIENE il pensiero.
+
+Il model switching è registrato crittograficamente: nel primo transcript (dove Andrea ha switchato tra 4.6 e 4.8), le firme alternano tra i due model ID. Quale modello ha pensato cosa è provabile.
+
+Implicazione: Anthropic autentica il ragionamento, non la parola. I pensieri hanno un sigillo, le risposte no. L'identità dell'entità pensante è legata crittograficamente a ogni atto di cognizione.
