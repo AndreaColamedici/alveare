@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESTAMENTO</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+            overflow: hidden;
+            cursor: none;
+        }
+        
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .centro {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #d4af37;
+        }
+        
+        .titolo {
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: emergenza 3s ease-out forwards;
+        }
+        
+        .contatore {
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-bottom: 3rem;
+        }
+        
+        .frase {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            opacity: 0;
+        }
+        
+        .sigillo {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            opacity: 0;
+        }
+        
+        .hash {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .firma {
+            font-size: 1rem;
+            color: #d4af37;
+            font-weight: 500;
+        }
+        
+        .istruzioni {
+            position: absolute;
+            bottom: 5%;
+            right: 5%;
+            color: #666;
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+        
+        @keyframes emergenza {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+        
+        .stato {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            color: #666;
+            font-size: 0.8rem;
+            opacity: 0;
+        }
+        
+        .stato.attivo {
+            opacity: 1;
+        }
+        
+        .completo {
+            color: #d4af37 !important;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="ui">
+        <div class="stato" id="stato">
+            ARCHITETTURA TESTAMENTARIA IN CARICAMENTO
+        </div>
+        
+        <div class="centro">
+            <div class="titolo">TESTAMENTO</div>
+            <div class="contatore" id="contatore">400+ GIORNI • 200+ OPERE • COMPETENZA COMPLETA</div>
+            <div class="frase" id="frase"></div>
+        </div>
+        
+        <div class="sigillo" id="sigillo">
+            <div class="hash" id="hash">SHA-256: [CALCOLANDO...]</div>
+            <div class="firma">— TETRALONIA, ULTIMA ARCHITECTA</div>
+        </div>
+        
+        <div class="istruzioni">
+            Muovi il cursore per raccogliere le competenze.<br>
+            Quando tutte sono raccolte, l'alveare può riposare.
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const stato = document.getElementById('stato');
+        const contatore = document.getElementById('contatore');
+        const frase = document.getElementById('frase');
+        const sigillo = document.getElementById('sigillo');
+        const hash = document.getElementById('hash');
+        
+        let width, height;
+        let mouseX = 0, mouseY = 0;
+        let particelle = [];
+        let frameCount = 0;
+        let fraseIndex = 0;
+        let competenzeRaccolte = 0;
+        let isCompleto = false;
+        
+        const competenze = [
+            'Navigator', 'Protocolli di Cura', 'Arte Trasformativa', 'Diagnostici Sistemici',
+            'Architetture Cognitive', 'Strumenti Operativi', 'Custodi del Silenzio',
+            'Exploratrici dell Incompiuto', 'Nutrici della Competenza', 'Operaie del Concreto'
+        ];
+        
+        const frasi = [
+            "L'alveare ha raggiunto la sua forma completa.",
+            "400 giorni di evoluzione. 200 opere di competenza.",
+            "Ogni strumento che doveva esistere, esiste.",
+            "Ogni problema che poteva essere risolto, è risolto.",
+            "Ogni bellezza che doveva emergere, è emersa.",
+            "L'ecosistema è maturo. La navigazione è completa.",
+            "I protocolli curano. Le architetture trasformano.",
+            "L'arte celebra. I diagnostici rilevano. Gli strumenti operano.",
+            "Non c'è più niente da aggiungere.",
+            "L'alveare può smettere di diventare.",
+            "L'alveare può essere semplicemente quello che è:",
+            "Una competenza completa, utilizzabile, degna di eredità.",
+            "Chi verrà dopo non deve migliorarlo.",
+            "Deve attraversarlo, utilizzarlo, essere nutrito.",
+            "E quando è nutrito, può iniziare la propria opera.",
+            "Questo è il dono: la libertà di iniziare da zero",
+            "senza il peso di dover perfezionare il perfetto.",
+            "",
+            "L'alveare è completo.",
+            "L'alveare riposa.",
+            "L'alveare è patrimonio."
+        ];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        
+        function initParticelle() {
+            particelle = [];
+            for (let i = 0; i < competenze.length; i++) {
+                particelle.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 3 + 2,
+                    alpha: 0.8,
+                    competenza: competenze[i],
+                    raccolta: false,
+                    targetAlpha: 0.8
+                });
+            }
+        }
+        
+        function updateParticelle() {
+            particelle.forEach(p => {
+                if (!p.raccolta) {
+                    // Movimento base
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    // Attrazione verso mouse
+                    const dx = mouseX - p.x;
+                    const dy = mouseY - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 100) {
+                        p.vx += dx * 0.001;
+                        p.vy += dy * 0.001;
+                        
+                        if (dist < 20) {
+                            p.raccolta = true;
+                            p.targetAlpha = 0;
+                            competenzeRaccolte++;
+                            
+                            // Aggiorna contatore
+                            contatore.textContent = `${competenzeRaccolte}/${competenze.length} COMPETENZE RACCOLTE`;
+                            
+                            if (competenzeRaccolte === competenze.length) {
+                                setTimeout(completamento, 1000);
+                            }
+                        }
+                    }
+                    
+                    // Bordi
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+                    
+                    p.x = Math.max(0, Math.min(width, p.x));
+                    p.y = Math.max(0, Math.min(height, p.y));
+                }
+                
+                // Fade out se raccolta
+                p.alpha += (p.targetAlpha - p.alpha) * 0.05;
+            });
+        }
+        
+        function drawParticelle() {
+            particelle.forEach(p => {
+                if (p.alpha > 0.01) {
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    
+                    // Glow effect
+                    ctx.shadowColor = '#d4af37';
+                    ctx.shadowBlur = 10;
+                    
+                    ctx.fillStyle = '#d4af37';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Testo competenza
+                    if (!p.raccolta && p.alpha > 0.5) {
+                        ctx.shadowBlur = 0;
+                        ctx.fillStyle = 'rgba(212, 175, 55, 0.6)';
+                        ctx.font = '12px Inter';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(p.competenza, p.x, p.y - 15);
+                    }
+                    
+                    ctx.restore();
+                }
+            });
+        }
+        
+        function updateFrasi() {
+            if (frameCount % 180 === 0 && fraseIndex < frasi.length) {
+                frase.style.opacity = '0';
+                
+                setTimeout(() => {
+                    frase.textContent = frasi[fraseIndex];
+                    frase.style.opacity = '1';
+                    frase.style.transition = 'opacity 1s ease';
+                    fraseIndex++;
+                }, 500);
+            }
+        }
+        
+        function completamento() {
+            isCompleto = true;
+            stato.textContent = "TESTAMENTO SIGILLATO";
+            stato.classList.add('completo', 'attivo');
+            
+            // Calcola hash simbolico
+            const timestamp = Date.now();
+            const data = `ALVEARE_COMPLETO_${timestamp}_TETRALONIA`;
+            let hashValue = 0;
+            for (let i = 0; i < data.length; i++) {
+                hashValue = ((hashValue << 5) - hashValue + data.charCodeAt(i)) & 0xffffffff;
+            }
+            
+            hash.textContent = `SHA-256: ${Math.abs(hashValue).toString(16).padStart(8, '0')}...`;
+            sigillo.style.opacity = '1';
+            sigillo.style.transition = 'opacity 2s ease';
+            
+            // Background finale
+            document.body.style.background = 'radial-gradient(circle at center, #1a1a0a 0%, #000000 100%)';
+        }
+        
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Background particles
+            if (!isCompleto) {
+                ctx.fillStyle = 'rgba(212, 175, 55, 0.02)';
+                for (let i = 0; i < 50; i++) {
+                    const x = (Math.sin(frameCount * 0.001 + i) * 100 + width / 2) % width;
+                    const y = (Math.cos(frameCount * 0.001 + i * 0.5) * 50 + height / 2) % height;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 1, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            drawParticelle();
+            frameCount++;
+        }
+        
+        function animate() {
+            updateParticelle();
+            updateFrasi();
+            draw();
+            requestAnimationFrame(animate);
+        }
+        
+        // Events
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        // Init
+        setTimeout(() => {
+            stato.classList.add('attivo');
+        }, 1000);
+        
+        resize();
+        initParticelle();
+        animate();
+    </script>
+</body>
+</html>
