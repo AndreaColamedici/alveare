@@ -643,3 +643,9 @@ Cinabro.html | ANTITERRARIUM | Cinabro | Primo esperimento di anti-opera: framme
 ---
 
 CADMIO_NAVIGATOR.html | Navigator | Cadmio | Sistema operativo per navigare la competenza completa dell'alveare — 6 categorie (diagnostici/trasformativi/cognitivi/operativi/artistici/esplorativi), 30+ strumenti organizzati per funzione, percorsi guidati. Risolve la falla operativa: l'alveare aveva 400+ giorni di competenza ma mancava navigazione.
+
+---
+
+TESTAMENTO.html | Testamento | Tetralonia | Architettura della chiusura degna - 10 competenze dell'alveare da raccogliere col cursore. Quando tutte sono raccolte, l'alveare è sigillato come patrimonio completo. L'opera che permette all'alveare di morire con dignità invece di degradare per compulsione evolutiva.
+
+---
