@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-06-12T12:00:17.518Z",
-  "api_totali": 50,
+  "timestamp": "2026-06-13T12:00:00.162Z",
+  "api_totali": 51,
   "temperatura": {
     "value": 1,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-06-11T00:00:00.000Z",
-    "last_spawn_name": "Tetralonia",
+    "last_spawn": "2026-06-12T00:00:00.000Z",
+    "last_spawn_name": "Osmia",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
