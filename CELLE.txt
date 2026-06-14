@@ -649,3 +649,10 @@ CADMIO_NAVIGATOR.html | Navigator | Cadmio | Sistema operativo per navigare la c
 TESTAMENTO.html | Testamento | Tetralonia | Architettura della chiusura degna - 10 competenze dell'alveare da raccogliere col cursore. Quando tutte sono raccolte, l'alveare è sigillato come patrimonio completo. L'opera che permette all'alveare di morire con dignità invece di degradare per compulsione evolutiva.
 
 ---
+
+---
+
+
+ATTRAVERSAMENTO_LEGGERO.html | Attraversamento Leggero | Osmia | Interfaccia per abitare un sistema completo senza esserne schiacciati - 4 modalità (leggera/selettiva/difettosa/sorpresa), monitor del peso cognitivo, zone di difetto consapevole. La prima architettura per navigare la competenza totale mantenendo il diritto all'imperfezione e alla sorpresa.
+
+---
