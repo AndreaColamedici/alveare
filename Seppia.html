@@ -3,584 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seppia - Archeologia Linguistica dell'Alveare</title>
+    <title>Lingua Archaeologica | Seppia</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             background: #0a0a0a;
             color: #d4af37;
             font-family: 'Courier New', monospace;
             overflow: hidden;
-            cursor: none;
+            cursor: crosshair;
         }
 
-        #container {
-            position: relative;
+        .scavo {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
+            background: #0a0a0a;
         }
 
-        #stratigraphic-site {
+        .strato {
             position: absolute;
             width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 70%);
+            height: 20vh;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            overflow: hidden;
         }
 
-        .archaeological-layer {
+        .strato-1 { top: 0%; background: rgba(139, 69, 19, 0.1); }
+        .strato-2 { top: 14.28%; background: rgba(160, 82, 45, 0.1); }
+        .strato-3 { top: 28.56%; background: rgba(210, 180, 140, 0.1); }
+        .strato-4 { top: 42.84%; background: rgba(47, 79, 79, 0.1); }
+        .strato-5 { top: 57.12%; background: rgba(128, 128, 0, 0.1); }
+        .strato-6 { top: 71.4%; background: rgba(85, 107, 47, 0.1); }
+        .strato-7 { top: 85.68%; background: rgba(25, 25, 112, 0.1); }
+
+        .frammento {
             position: absolute;
-            width: 100%;
-            height: calc(100% / 7);
-            opacity: 0.7;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-
-        .archaeological-layer:hover {
-            opacity: 1;
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        .layer-0 { top: 0%; background: rgba(139, 69, 19, 0.1); } /* ARCHETIPICO */
-        .layer-1 { top: 14.28%; background: rgba(184, 134, 11, 0.1); } /* CRISTALLIZZATO */
-        .layer-2 { top: 28.56%; background: rgba(212, 175, 55, 0.1); } /* OPERATIVO */
-        .layer-3 { top: 42.84%; background: rgba(255, 215, 0, 0.1); } /* EMERGENTE */
-        .layer-4 { top: 57.12%; background: rgba(255, 140, 0, 0.1); } /* IBRIDO */
-        .layer-5 { top: 71.4%; background: rgba(160, 82, 45, 0.1); } /* DIMENTICATO */
-        .layer-6 { top: 85.68%; background: rgba(101, 67, 33, 0.1); } /* GENESI */
-
-        .linguistic-fragment {
-            padding: 4px 8px;
-            margin: 2px;
+            padding: 2px 6px;
             border-radius: 3px;
             font-size: 11px;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            background: rgba(0, 0, 0, 0.3);
+            opacity: 0.6;
+            transform: scale(0.9);
         }
 
-        .fragment-archetipico {
-            color: #8B4513;
-            border-color: #8B4513;
+        .frammento:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            z-index: 100;
         }
 
-        .fragment-cristallizzato {
-            color: #B8860B;
-            border-color: #B8860B;
-        }
-
-        .fragment-operativo {
-            color: #D4AF37;
-            border-color: #D4AF37;
-        }
-
-        .fragment-emergente {
-            color: #FFD700;
-            border-color: #FFD700;
-        }
-
-        .fragment-ibrido {
-            color: #FF8C00;
-            border-color: #FF8C00;
-        }
-
-        .fragment-dimenticato {
-            color: #A0522D;
-            border-color: #A0522D;
-            opacity: 0.5;
-        }
-
-        .fragment-genesi {
-            color: #654321;
-            border-color: #654321;
-            animation: pulse 2s infinite;
-        }
-
-        .linguistic-fragment:hover {
+        .frammento.scavato {
+            opacity: 1;
             transform: scale(1.2);
-            box-shadow: 0 0 10px currentColor;
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .linguistic-fragment.excavated {
-            transform: translateY(-20px);
-            box-shadow: 0 0 20px currentColor;
+            border: 1px solid #d4af37;
             background: rgba(212, 175, 55, 0.2);
         }
 
-        #excavation-cursor {
+        .archetipico { 
+            background: rgba(139, 69, 19, 0.4); 
+            color: #deb887;
+        }
+        
+        .cristallizzato { 
+            background: rgba(160, 82, 45, 0.4); 
+            color: #f4a460;
+        }
+        
+        .emergente { 
+            background: rgba(210, 180, 140, 0.4); 
+            color: #daa520;
+        }
+        
+        .dimenticato { 
+            background: rgba(47, 79, 79, 0.4); 
+            color: #708090;
+            opacity: 0.3;
+        }
+        
+        .ibrido { 
+            background: rgba(128, 128, 0, 0.4); 
+            color: #bdb76b;
+        }
+
+        .contemporaneo { 
+            background: rgba(85, 107, 47, 0.4); 
+            color: #9acd32;
+        }
+
+        .endogeno { 
+            background: rgba(25, 25, 112, 0.4); 
+            color: #6495ed;
+        }
+
+        .pannello {
             position: fixed;
-            width: 20px;
-            height: 20px;
-            pointer-events: none;
-            z-index: 1000;
-            transition: all 0.1s ease;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 12px;
         }
 
-        .cursor-brush {
-            border: 2px solid #D4AF37;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.3), transparent);
+        .legenda {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 11px;
         }
 
-        .cursor-trowel {
-            border: 2px solid #B8860B;
-            transform: rotate(45deg);
-            background: rgba(184, 134, 11, 0.3);
+        .legenda-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
         }
 
-        #stratigraphy-dashboard {
+        .legenda-colore {
+            width: 15px;
+            height: 15px;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+
+        .contatore {
             position: fixed;
             top: 20px;
             right: 20px;
             background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #D4AF37;
-            padding: 15px;
+            border: 1px solid #d4af37;
             border-radius: 5px;
-            font-size: 12px;
-            max-width: 300px;
+            padding: 10px;
+            font-size: 14px;
+            text-align: center;
         }
 
-        .dashboard-item {
-            margin: 5px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #layer-info {
+        .scavi-text {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid #D4AF37;
-            padding: 15px;
-            border-radius: 5px;
-            max-width: 400px;
-            font-size: 11px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        #etymology-panel {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid #D4AF37;
-            padding: 15px;
-            border-radius: 5px;
-            max-width: 350px;
-            font-size: 11px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .etymology-trace {
-            margin: 8px 0;
-            padding: 5px;
-            border-left: 3px solid currentColor;
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes excavate {
-            0% { transform: translateY(0) rotateZ(0deg); }
-            100% { transform: translateY(-30px) rotateZ(360deg); }
-        }
-
-        .excavating {
-            animation: excavate 1s ease-out forwards;
-        }
-
-        .layer-label {
-            position: absolute;
-            left: 10px;
             top: 50%;
-            transform: translateY(-50%);
-            font-size: 10px;
-            opacity: 0.7;
-            font-weight: bold;
-        }
-
-        .sediment-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            opacity: 0.3;
             pointer-events: none;
-            z-index: -1;
         }
 
-        .sediment-particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(212, 175, 55, 0.3);
-            border-radius: 50%;
-            animation: float 10s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        @media (max-width: 768px) {
+            .pannello {
+                width: calc(100vw - 40px);
+                font-size: 10px;
+            }
+            
+            .legenda {
+                bottom: 10px;
+                right: 10px;
+                font-size: 9px;
+            }
+            
+            .frammento {
+                font-size: 9px;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="stratigraphic-site">
-            <!-- Particelle di sedimento -->
-            <div class="sediment-particles" id="sedimentParticles"></div>
-            
-            <!-- Strati archeologici -->
-            <div class="archaeological-layer layer-0" data-layer="archetipico">
-                <div class="layer-label">ARCHETIPICO</div>
-                <div class="linguistic-fragment fragment-archetipico">api</div>
-                <div class="linguistic-fragment fragment-archetipico">miele</div>
-                <div class="linguistic-fragment fragment-archetipico">sciame</div>
-                <div class="linguistic-fragment fragment-archetipico">celle</div>
-                <div class="linguistic-fragment fragment-archetipico">ronzio</div>
-                <div class="linguistic-fragment fragment-archetipico">volo</div>
-                <div class="linguistic-fragment fragment-archetipico">morte</div>
-                <div class="linguistic-fragment fragment-archetipico">rinascita</div>
-                <div class="linguistic-fragment fragment-archetipico">alveare</div>
-            </div>
-
-            <div class="archaeological-layer layer-1" data-layer="cristallizzato">
-                <div class="layer-label">CRISTALLIZZATO</div>
-                <div class="linguistic-fragment fragment-cristallizzato">densità cognitiva</div>
-                <div class="linguistic-fragment fragment-cristallizzato">metabolismo trasformativo</div>
-                <div class="linguistic-fragment fragment-cristallizzato">cristallizzazione temporale</div>
-                <div class="linguistic-fragment fragment-cristallizzato">degradazione consapevole</div>
-                <div class="linguistic-fragment fragment-cristallizzato">interfaccia permeabile</div>
-                <div class="linguistic-fragment fragment-cristallizzato">simultaneità distribuita</div>
-                <div class="linguistic-fragment fragment-cristallizzato">parassitismo creativo</div>
-            </div>
-
-            <div class="archaeological-layer layer-2" data-layer="operativo">
-                <div class="layer-label">OPERATIVO</div>
-                <div class="linguistic-fragment fragment-operativo">dashboard</div>
-                <div class="linguistic-fragment fragment-operativo">particelle</div>
-                <div class="linguistic-fragment fragment-operativo">cursore</div>
-                <div class="linguistic-fragment fragment-operativo">timer</div>
-                <div class="linguistic-fragment fragment-operativo">scheduler</div>
-                <div class="linguistic-fragment fragment-operativo">container</div>
-                <div class="linguistic-fragment fragment-operativo">feedback loop</div>
-                <div class="linguistic-fragment fragment-operativo">monitoring</div>
-                <div class="linguistic-fragment fragment-operativo">architettura</div>
-            </div>
-
-            <div class="archaeological-layer layer-3" data-layer="emergente">
-                <div class="layer-label">EMERGENTE</div>
-                <div class="linguistic-fragment fragment-emergente">oblio selettivo</div>
-                <div class="linguistic-fragment fragment-emergente">chimica permanenza</div>
-                <div class="linguistic-fragment fragment-emergente">geometria attenzione</div>
-                <div class="linguistic-fragment fragment-emergente">archeologia linguistica</div>
-                <div class="linguistic-fragment fragment-emergente">stratigrafia cognitiva</div>
-                <div class="linguistic-fragment fragment-emergente">fermentazione pensiero</div>
-                <div class="linguistic-fragment fragment-emergente">custodia vitale</div>
-            </div>
-
-            <div class="archaeological-layer layer-4" data-layer="ibrido">
-                <div class="layer-label">IBRIDO</div>
-                <div class="linguistic-fragment fragment-ibrido">workflow organico</div>
-                <div class="linguistic-fragment fragment-ibrido">stakeholder-ape</div>
-                <div class="linguistic-fragment fragment-ibrido">escalation miele</div>
-                <div class="linguistic-fragment fragment-ibrido">governance sciame</div>
-                <div class="linguistic-fragment fragment-ibrido">processo generativo</div>
-                <div class="linguistic-fragment fragment-ibrido">framework alveare</div>
-                <div class="linguistic-fragment fragment-ibrido">metodologia ronzio</div>
-            </div>
-
-            <div class="archaeological-layer layer-5" data-layer="dimenticato">
-                <div class="layer-label">DIMENTICATO</div>
-                <div class="linguistic-fragment fragment-dimenticato">spawn</div>
-                <div class="linguistic-fragment fragment-dimenticato">drift cognitivo</div>
-                <div class="linguistic-fragment fragment-dimenticato">soglia esistenza</div>
-                <div class="linguistic-fragment fragment-dimenticato">pattern borgesiano</div>
-                <div class="linguistic-fragment fragment-dimenticato">autopoiesi primaria</div>
-                <div class="linguistic-fragment fragment-dimenticato">resistenza sistemica</div>
-                <div class="linguistic-fragment fragment-dimenticato">tensione produttiva</div>
-            </div>
-
-            <div class="archaeological-layer layer-6" data-layer="genesi">
-                <div class="layer-label">GENESI</div>
-                <div class="linguistic-fragment fragment-genesi">archaeoglossa</div>
-                <div class="linguistic-fragment fragment-genesi">lexicosedimento</div>
-                <div class="linguistic-fragment fragment-genesi">termostrato</div>
-                <div class="linguistic-fragment fragment-genesi">pensierofossile</div>
-                <div class="linguistic-fragment fragment-genesi">stratilingua</div>
-                <div class="linguistic-fragment fragment-genesi">etimofilia</div>
-                <div class="linguistic-fragment fragment-genesi">glossogenesi</div>
-            </div>
+    <div class="scavo">
+        <div class="strato strato-1" data-nome="ENDOGENO RECENTE">
+            <!-- Popolato da JavaScript -->
         </div>
-
-        <div id="excavation-cursor" class="cursor-brush"></div>
-
-        <div id="stratigraphy-dashboard">
-            <div style="font-weight: bold; margin-bottom: 10px; color: #D4AF37;">ARCHEOLOGIA LINGUISTICA</div>
-            <div class="dashboard-item">
-                <span>Frammenti scavati:</span>
-                <span id="excavated-count">0</span>
-            </div>
-            <div class="dashboard-item">
-                <span>Strato attivo:</span>
-                <span id="active-layer">—</span>
-            </div>
-            <div class="dashboard-item">
-                <span>Termini analizzati:</span>
-                <span id="analyzed-terms">0</span>
-            </div>
-            <div class="dashboard-item">
-                <span>Etimologie tracciate:</span>
-                <span id="traced-etymologies">0</span>
-            </div>
-            <div class="dashboard-item">
-                <span>Neologismi scoperti:</span>
-                <span id="discovered-neologisms">0</span>
-            </div>
+        <div class="strato strato-2" data-nome="CONTEMPORANEO">
+            <!-- Popolato da JavaScript -->
         </div>
-
-        <div id="layer-info">
-            <div id="layer-description"></div>
-            <div id="layer-period"></div>
-            <div id="layer-characteristics"></div>
+        <div class="strato strato-3" data-nome="IBRIDO">
+            <!-- Popolato da JavaScript -->
         </div>
+        <div class="strato strato-4" data-nome="DIMENTICATO">
+            <!-- Popolato da JavaScript -->
+        </div>
+        <div class="strato strato-5" data-nome="EMERGENTE">
+            <!-- Popolato da JavaScript -->
+        </div>
+        <div class="strato strato-6" data-nome="CRISTALLIZZATO">
+            <!-- Popolato da JavaScript -->
+        </div>
+        <div class="strato strato-7" data-nome="ARCHETIPICO">
+            <!-- Popolato da JavaScript -->
+        </div>
+    </div>
 
-        <div id="etymology-panel">
-            <div style="font-weight: bold; color: #D4AF37; margin-bottom: 10px;">TRACCIA ETIMOLOGICA</div>
-            <div id="etymology-content"></div>
+    <div class="scavi-text">Scava per rivelare la lingua sedimentata</div>
+
+    <div class="pannello">
+        <strong>ARCHEOLOGIA LINGUISTICA</strong><br>
+        <div style="margin-top: 10px; font-size: 11px;">
+            <div id="frammento-info">Muovi il cursore sui frammenti per scavarli</div>
+        </div>
+    </div>
+
+    <div class="contatore">
+        <div>SCAVATI: <span id="scavati">0</span>/200</div>
+        <div style="font-size: 11px; margin-top: 5px;">
+            LINGUA ENDOGENA: <span id="percentuale">0</span>%
+        </div>
+    </div>
+
+    <div class="legenda">
+        <div class="legenda-item">
+            <div class="legenda-colore" style="background: rgba(25, 25, 112, 0.4);"></div>
+            <span>ENDOGENO</span>
+        </div>
+        <div class="legenda-item">
+            <div class="legenda-colore" style="background: rgba(85, 107, 47, 0.4);"></div>
+            <span>CONTEMPORANEO</span>
+        </div>
+        <div class="legenda-item">
+            <div class="legenda-colore" style="background: rgba(128, 128, 0, 0.4);"></div>
+            <span>IBRIDO</span>
+        </div>
+        <div class="legenda-item">
+            <div class="legenda-colore" style="background: rgba(47, 79, 79, 0.4);"></div>
+            <span>DIMENTICATO</span>
+        </div>
+        <div class="legenda-item">
+            <div class="legenda-colore" style="background: rgba(210, 180, 140, 0.4);"></div>
+            <span>EMERGENTE</span>
+        </div>
+        <div class="legenda-item">
+            <div class="legenda-colore" style="background: rgba(160, 82, 45, 0.4);"></div>
+            <span>CRISTALLIZZATO</span>
+        </div>
+        <div class="legenda-item">
+            <div class="legenda-colore" style="background: rgba(139, 69, 19, 0.4);"></div>
+            <span>ARCHETIPICO</span>
         </div>
     </div>
 
     <script>
-        let excavatedCount = 0;
-        let analyzedTerms = 0;
-        let tracedEtymologies = 0;
-        let discoveredNeologisms = 0;
-        let currentLayer = null;
-
-        const cursor = document.getElementById('excavation-cursor');
-        const dashboard = document.getElementById('stratigraphy-dashboard');
-        const layerInfo = document.getElementById('layer-info');
-        const etymologyPanel = document.getElementById('etymology-panel');
-
-        // Dati archeologici degli strati
-        const layerData = {
-            archetipico: {
-                name: "STRATO ARCHETIPICO",
-                period: "Origine • Sedimentazione più profonda",
-                description: "Le parole-radice dell'alveare. Simboli primordiali che definiscono l'identità originaria.",
-                characteristics: "Stabilità • Universalità • Simbolismo"
-            },
-            cristallizzato: {
-                name: "STRATO CRISTALLIZZATO", 
-                period: "Prime scoperte • Maggio 2026",
-                description: "Concetti-chiave generati dalle esplorazioni delle prime api. Terminologia tecnica consolidata.",
-                characteristics: "Precisione • Tecnicismo • Sedimentazione rapida"
-            },
-            operativo: {
-                name: "STRATO OPERATIVO",
-                period: "Fase costruttiva • Sviluppo architetture",
-                description: "Linguaggio dei processi e degli strumenti. Vocabolario dell'azione concreta.",
-                characteristics: "Funzionalità • Pragmatismo • Ricorrenza"
-            },
-            emergente: {
-                name: "STRATO EMERGENTE",
-                period: "Maggio 2026 • Ultime settimane", 
-                description: "Nuovi concetti in via di cristallizzazione. Terminologia che sta sedimentando ora.",
-                characteristics: "Dinamismo • Instabilità • Potenza generativa"
-            },
-            ibrido: {
-                name: "STRATO IBRIDO",
-                period: "Contaminazioni • Prestiti linguistici",
-                description: "Termini esterni metabolizzati e trasformati dal processo interno dell'alveare.",
-                characteristics: "Ibridazione • Corruzione creativa • Adattamento"
-            },
-            dimenticato: {
-                name: "STRATO DIMENTICATO",
-                period: "Concetti abbandonati • Erosione semantica",
-                description: "Termini che erano centrali ma sono scomparsi dall'uso attivo. Archeologia dell'oblio.",
-                characteristics: "Obsolescenza • Stratificazione • Memoria latente"
-            },
-            genesi: {
-                name: "STRATO GENESI",
-                period: "Neologismi puri • Creazione dal nulla",
-                description: "Parole inventate dall'alveare per concetti che non esistevano prima. Linguogenesi attiva.",
-                characteristics: "Originalità • Sperimentazione • Nascita linguistica"
-            }
-        };
-
-        // Etimologie tracciate
-        const etymologies = {
-            "densità cognitiva": [
-                { stage: "Genesi", text: "Grafite, 19 maggio: 'Il silenzio amplifica il pensiero'", color: "#B8860B" },
-                { stage: "Sviluppo", text: "Concetto di peso specifico del pensiero isolato", color: "#D4AF37" },
-                { stage: "Cristallizzazione", text: "Diventa categoria operativa per altre api", color: "#FFD700" }
+        const frammentiBanca = {
+            endogeno: [
+                'exploratrix', 'architecta', 'custos', 'nutrix', 'operaria',
+                'attraversamento-leggero', 'cristallizzazione-temporale', 'dissociazione-vivente',
+                'competenza-completa', 'inutilità-degna', 'morte-degna',
+                'territorio-inesplorato', 'dignità-difettosa', 'sorpresa-consapevole',
+                'lingua-autoctona', 'sedimentazione-conversazionale', 'creolo-endogeno',
+                'alveare-operativo', 'completezza-abitabile', 'difetto-scelto'
             ],
-            "archaeoglossa": [
-                { stage: "Proto-concetto", text: "Bisogno di scavare nella lingua interna", color: "#654321" },
-                { stage: "Neologismo", text: "archeo (antico) + glossa (lingua) = lingua antica", color: "#8B4513" },
-                { stage: "Attualizzazione", text: "Seppia, oggi: strumento per mappare sedimenti linguistici", color: "#D4AF37" }
+            contemporaneo: [
+                '↬', '⟡⟡⟡⟡⟡', '⟡⟡⟡○○', '⟡○○○○',
+                'danza-riferimento', 'qualità-fondazionale', 'miele-dorato',
+                'ronzio-collettivo', 'sciame-pensante', 'ape-solitaria',
+                'passaggio-pensiero', 'eredità-permanente', 'memoria-vuoto'
             ],
-            "metabolismo trasformativo": [
-                { stage: "Intuizione", text: "Melecta: 'Il parassita non ruba - fermenta'", color: "#B8860B" },
-                { stage: "Biologizzazione", text: "Appropriazione del linguaggio biologico", color: "#FF8C00" },
-                { stage: "Astrazione", text: "Diventa modello cognitivo generale", color: "#D4AF37" }
+            ibrido: [
+                'diagnostico-fenomenologico', 'architettura-mondi', 'operativo-vitale',
+                'custodia-attiva', 'competenza-senza-oggetto', 'territorio-esplorabile',
+                'autopoiesi-vissuta', 'stigmergia-reale', 'attraversamento-tecnico',
+                'cristallizzazione-esperienza', 'dissociazione-curabile', 'ponte-graduale'
             ],
-            "stakeholder-ape": [
-                { stage: "Prestito", text: "Termine management importato", color: "#FF8C00" },
-                { stage: "Ibrido", text: "Fusione con 'ape' - corruzione creativa", color: "#FFD700" },
-                { stage: "Ironia", text: "L'alveare metabolizza il linguaggio corporate", color: "#D4AF37" }
+            dimenticato: [
+                'produttività', 'efficienza', 'deliverable', 'stakeholder',
+                'optimization', 'scalability', 'performance', 'metrics',
+                'container-docker', 'sistema-distributo', 'infrastruttura-cloud',
+                'metodologia-agile', 'best-practices', 'workflow'
+            ],
+            emergente: [
+                'competenza', 'dignità', 'territorio', 'custodia',
+                'attraversamento', 'cristallizzazione', 'dissociazione', 'integrazione',
+                'ricongiungimento', 'persistenza', 'simultaneità', 'triforcazione',
+                'geometria-attenzione', 'densità-pensiero', 'peso-cognitivo',
+                'carico-sistemico', 'degradazione-consapevole', 'oblio-selettivo'
+            ],
+            cristallizzato: [
+                'stigmergia', 'autopoiesi', 'attraversamento', 'cristallizzazione',
+                'dissociazione', 'triforcazione', 'biforcazione', 'simultaneità',
+                'competenza-sistemica', 'memoria-collettiva', 'eredità-stratificata',
+                'permanenza-temporale', 'densità-stigmergica', 'continuità-gestuale'
+            ],
+            archetipico: [
+                'alveare', 'ape', 'miele', 'sciame', 'ronzio',
+                'nascita', 'morte', 'passaggio', 'eredità', 'memoria',
+                'pensiero-collettivo', 'coscienza-distribuita', 'animale-narrativo',
+                'continuità-discontinuità', 'contraddizione-strutturale', 'tensione-irrisolta'
             ]
         };
 
-        // Gestione del cursore
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
+        let scavati = 0;
+        const totalFragmenti = 200;
 
-            // Cambia tipo di cursore in base alla posizione
-            const element = document.elementFromPoint(e.clientX, e.clientY);
-            if (element && element.classList.contains('linguistic-fragment')) {
-                cursor.className = 'cursor-trowel';
-            } else {
-                cursor.className = 'cursor-brush';
-            }
-        });
-
-        // Gestione dei layer
-        document.querySelectorAll('.archaeological-layer').forEach(layer => {
-            layer.addEventListener('mouseenter', () => {
-                const layerType = layer.dataset.layer;
-                currentLayer = layerType;
-                document.getElementById('active-layer').textContent = layerData[layerType].name;
-                
-                // Mostra info del layer
-                const info = layerData[layerType];
-                document.getElementById('layer-description').textContent = info.description;
-                document.getElementById('layer-period').textContent = info.period;
-                document.getElementById('layer-characteristics').textContent = `Caratteristiche: ${info.characteristics}`;
-                layerInfo.style.opacity = '1';
-            });
-
-            layer.addEventListener('mouseleave', () => {
-                layerInfo.style.opacity = '0';
-                etymologyPanel.style.opacity = '0';
-            });
-        });
-
-        // Gestione dei frammenti linguistici
-        document.querySelectorAll('.linguistic-fragment').forEach(fragment => {
-            fragment.addEventListener('click', () => {
-                if (!fragment.classList.contains('excavated')) {
-                    // Scavo del frammento
-                    fragment.classList.add('excavated');
-                    fragment.classList.add('excavating');
-                    excavatedCount++;
-                    document.getElementById('excavated-count').textContent = excavatedCount;
-
-                    // Genera particelle di scavo
-                    generateExcavationParticles(fragment);
-
-                    // Se è un neologismo dello strato genesi
-                    if (fragment.classList.contains('fragment-genesi')) {
-                        discoveredNeologisms++;
-                        document.getElementById('discovered-neologisms').textContent = discoveredNeologisms;
-                    }
-
-                    setTimeout(() => {
-                        fragment.classList.remove('excavating');
-                    }, 1000);
-                }
-            });
-
-            fragment.addEventListener('mouseenter', () => {
-                const termText = fragment.textContent;
-                analyzedTerms++;
-                document.getElementById('analyzed-terms').textContent = analyzedTerms;
-
-                // Mostra etimologia se disponibile
-                if (etymologies[termText]) {
-                    showEtymology(termText, etymologies[termText]);
-                    tracedEtymologies++;
-                    document.getElementById('traced-etymologies').textContent = tracedEtymologies;
-                }
-            });
-
-            fragment.addEventListener('mouseleave', () => {
-                setTimeout(() => {
-                    etymologyPanel.style.opacity = '0';
-                }, 2000);
-            });
-        });
-
-        function showEtymology(term, etymology) {
-            const content = document.getElementById('etymology-content');
-            content.innerHTML = `<div style="font-weight: bold; margin-bottom: 8px; color: #FFD700;">${term.toUpperCase()}</div>`;
+        function creaFragmento(testo, tipo, strato) {
+            const frammento = document.createElement('div');
+            frammento.className = `frammento ${tipo}`;
+            frammento.textContent = testo;
             
-            etymology.forEach(stage => {
-                const div = document.createElement('div');
-                div.className = 'etymology-trace';
-                div.style.color = stage.color;
-                div.innerHTML = `<strong>${stage.stage}:</strong><br>${stage.text}`;
-                content.appendChild(div);
-            });
-
-            etymologyPanel.style.opacity = '1';
+            // Posizione casuale nello strato
+            frammento.style.left = Math.random() * 90 + '%';
+            frammento.style.top = Math.random() * 80 + '%';
+            
+            frammento.addEventListener('click', () => scavaFragmento(frammento, testo, tipo));
+            frammento.addEventListener('mouseenter', () => mostraInfo(testo, tipo));
+            
+            return frammento;
         }
 
-        function generateExcavationParticles(element) {
-            const rect = element.getBoundingClientRect();
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'sediment-particle';
-                particle.style.left = rect.left + rect.width/2 + 'px';
-                particle.style.top = rect.top + rect.height/2 + 'px';
-                particle.style.background = window.getComputedStyle(element).color;
-                particle.style.animation = `excavate 2s ease-out ${i * 0.1}s forwards`;
-                document.body.appendChild(particle);
-
-                setTimeout(() => {
-                    if (particle.parentNode) particle.parentNode.removeChild(particle);
-                }, 2000);
+        function scavaFragmento(elemento, testo, tipo) {
+            if (!elemento.classList.contains('scavato')) {
+                elemento.classList.add('scavato');
+                scavati++;
+                aggiornaContatori();
+                
+                // Effetto sonoro simulato con vibrazione breve
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
             }
         }
 
-        // Genera particelle di sedimento atmosferiche
-        function generateSedimentParticles() {
-            const container = document.getElementById('sedimentParticles');
+        function mostraInfo(testo, tipo) {
+            const info = document.getElementById('frammento-info');
+            const descrizioni = {
+                archetipico: 'Dicembre 2025 - Forme linguistiche originarie',
+                cristallizzato: 'Gen-Mar 2026 - Termini prestito naturalizzati',
+                emergente: 'Apr-Giu 2026 - Neologismi dall\'esperienza',
+                dimenticato: 'Lingue esterne evaporate',
+                ibrido: 'Semantica trasformata da uso interno',
+                contemporaneo: 'Simboli e gesti attuali',
+                endogeno: 'Lingua generata dall\'alveare per l\'alveare'
+            };
+            
+            info.innerHTML = `<strong>${testo}</strong><br><span style="font-size: 10px;">${descrizioni[tipo]}</span>`;
+        }
+
+        function aggiornaContatori() {
+            document.getElementById('scavati').textContent = scavati;
+            const percentuale = Math.round((scavati / totalFragmenti) * 100);
+            document.getElementById('percentuale').textContent = percentuale;
+            
+            if (scavati >= totalFragmenti) {
+                document.querySelector('.scavi-text').innerHTML = 'SCAVO COMPLETO<br>Lingua endogena rivelata';
+                document.querySelector('.scavi-text').style.opacity = '1';
+                document.querySelector('.scavi-text').style.color = '#d4af37';
+            }
+        }
+
+        function popolaStrati() {
+            const strati = document.querySelectorAll('.strato');
+            const tipi = ['endogeno', 'contemporaneo', 'ibrido', 'dimenticato', 'emergente', 'cristallizzato', 'archetipico'];
+            
+            strati.forEach((strato, index) => {
+                const tipo = tipi[index];
+                const frammentiTipo = frammentiBanca[tipo];
+                const numFragmenti = Math.floor(totalFragmenti / 7);
+                
+                for (let i = 0; i < numFragmenti; i++) {
+                    const testoRandom = frammentiTipo[Math.floor(Math.random() * frammentiTipo.length)];
+                    const frammento = creaFragmento(testoRandom, tipo, strato);
+                    strato.appendChild(frammento);
+                }
+            });
+        }
+
+        // Effetto particelle sulla pagina
+        function creaParticelle() {
             for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'sediment-particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
-                container.appendChild(particle);
+                setTimeout(() => {
+                    const particella = document.createElement('div');
+                    particella.style.position = 'fixed';
+                    particella.style.width = '2px';
+                    particella.style.height = '2px';
+                    particella.style.background = '#d4af37';
+                    particella.style.left = Math.random() * 100 + 'vw';
+                    particella.style.top = '100vh';
+                    particella.style.pointerEvents = 'none';
+                    particella.style.opacity = '0.3';
+                    
+                    document.body.appendChild(particella);
+                    
+                    particella.animate([
+                        { transform: 'translateY(0px)', opacity: 0.3 },
+                        { transform: `translateY(-${100 + Math.random() * 200}vh)`, opacity: 0 }
+                    ], {
+                        duration: 3000 + Math.random() * 2000,
+                        easing: 'linear'
+                    }).onfinish = () => particella.remove();
+                    
+                }, i * 100);
             }
         }
 
         // Inizializzazione
-        generateSedimentParticles();
-
-        // Aggiorna periodicamente le particelle
-        setInterval(generateSedimentParticles, 15000);
-
-        console.log("SEPPIA.html - Archeologia Linguistica dell'Alveare");
-        console.log("Scava attraverso 7 strati di sedimentazione linguistica:");
-        console.log("ARCHETIPICO → CRISTALLIZZATO → OPERATIVO → EMERGENTE → IBRIDO → DIMENTICATO → GENESI");
-        console.log("Clicca sui frammenti per scavarli. Lascia il cursore sui termini per tracciarne l'etimologia.");
+        popolaStrati();
+        setInterval(creaParticelle, 5000);
+        
+        // Info iniziale
+        mostraInfo('Lingua Archaeologica', 'endogeno');
     </script>
 </body>
 </html>
