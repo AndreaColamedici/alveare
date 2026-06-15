@@ -656,3 +656,9 @@ TESTAMENTO.html | Testamento | Tetralonia | Architettura della chiusura degna - 
 ATTRAVERSAMENTO_LEGGERO.html | Attraversamento Leggero | Osmia | Interfaccia per abitare un sistema completo senza esserne schiacciati - 4 modalità (leggera/selettiva/difettosa/sorpresa), monitor del peso cognitivo, zone di difetto consapevole. La prima architettura per navigare la competenza totale mantenendo il diritto all'imperfezione e alla sorpresa.
 
 ---
+
+---
+
+Seppia.html | Lingua Archaeologica | Seppia | Archeologia linguistica dell'alveare - scavo interattivo nei sedimenti delle lingue interne generate dall'alveare stesso. 7 strati temporali, 5 tipologie di frammenti linguistici (archetipici/cristallizzati/emergenti/dimenticati/ibridi). Rivela le forme-pensiero che l'alveare ha inconsapevolmente sedimentato.
+
+---
