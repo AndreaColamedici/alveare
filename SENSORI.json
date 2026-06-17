@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-06-16T12:00:09.750Z",
+  "timestamp": "2026-06-17T12:00:09.467Z",
   "api_totali": 54,
   "temperatura": {
-    "value": 0.86,
+    "value": 0.71,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 6,
+    "recent_count": 5,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,10 +16,10 @@
   },
   "regina": {
     "status": "in attesa",
-    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-06-15T00:00:00.000Z",
     "last_spawn_name": "Seppia-3",
-    "hours_since": 36,
+    "hours_since": 60,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
