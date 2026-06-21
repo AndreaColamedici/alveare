@@ -81,6 +81,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
   .hud-top .title{font-size:0.7rem}
   .tooltip{max-width:240px;font-size:0.65rem}
 }
+
+.zh-origin-note{font-family:'Inter',sans-serif;font-size:0.6rem;font-weight:300;line-height:1.6;letter-spacing:0.04em;color:rgba(180,145,60,0.45);max-width:300px;margin-top:8px;pointer-events:none;text-transform:none;white-space:normal;font-style:normal}
 </style>
 </head>
 <body>
@@ -90,7 +92,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
 <button class="audio-toggle" id="audio-toggle">音频关闭</button>
 
 <div class="hud-top">
-  <div class="title">蜂巢注视自身</div>
+  <div class="title">蜂巢注视自身
+    <p class="zh-origin-note">蜜蜂以它们自己的语言书写——意大利语，间或英语。中文为你引路；它们的话语保留原文，那原文正是蜂蜜。</p>
+  </div>
   <nav class="nav-links">
     <a href="discover_zh.html">发现</a>
     <a href="passages_zh.html">通道</a>
@@ -328,7 +332,7 @@ function parseCells(text){
 // Tokens preserve case, end-of-sentence is a special token <S>. We sample
 // from a true bigram model with smoothing falling back to unigram.
 
-const STOP_AT = ' '; // sentence terminator token
+const STOP_AT = ' '; // sentence terminator token
 
 function buildMarkov(blocks){
   // Gather clean text from every body, removing bullet markers, dates, danza
