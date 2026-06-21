@@ -131,6 +131,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
   <nav class="lang">
     <a href="tessuto.html">IT</a>
     <a href="weave.html" class="active">EN</a>
+    <a href="weave_zh.html">中文</a>
   </nav>
 </div>
 
@@ -327,7 +328,7 @@ function parseCells(text){
 // Tokens preserve case, end-of-sentence is a special token <S>. We sample
 // from a true bigram model with smoothing falling back to unigram.
 
-const STOP_AT = '\u0000'; // sentence terminator token
+const STOP_AT = ' '; // sentence terminator token
 
 function buildMarkov(blocks){
   // Gather clean text from every body, removing bullet markers, dates, danza
