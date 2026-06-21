@@ -38,6 +38,7 @@ const FAVO_CELLS = [
 const isEnglish = document.documentElement.lang === 'en' || 
                   window.location.pathname.includes('_en.html') ||
                   window.location.pathname.includes('en.html');
+const isChinese = document.documentElement.lang === 'zh' || window.location.pathname.includes('_zh.html');
 
 // Testi localizzati
 const i18n = {
@@ -66,10 +67,23 @@ const i18n = {
         loading: 'Loading cells from the hive...',
         error: 'Error loading cells',
         noCells: 'No cells found'
+    },
+    zh: {
+        title: '蜂房',
+        all: '全部',
+        visual: '视觉',
+        sound: '声音',
+        text: '文本',
+        code: '代码',
+        data: '数据',
+        enter: '进入 →',
+        loading: '正在从蜂巢加载蜂房……',
+        error: '加载蜂房时出错',
+        noCells: '未找到蜂房'
     }
 };
 
-const t = isEnglish ? i18n.en : i18n.it;
+const t = isChinese ? i18n.zh : (isEnglish ? i18n.en : i18n.it);
 
 /**
  * Categorizza una cella basandosi su titolo e descrizione
