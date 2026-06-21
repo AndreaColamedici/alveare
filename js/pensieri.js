@@ -1,5 +1,10 @@
 // Pensieri loader for alveare
 (function() {
+    const isChinese = document.documentElement.lang === 'zh' || window.location.pathname.includes('_zh.html');
+    const L = isChinese
+        ? { title: '思想', loadError: '加载思想时出错。', stats: (n) => `${n} 个思想`, spawner: '自生蜂' }
+        : { title: 'PENSIERI', loadError: 'Errore nel caricamento dei pensieri.', stats: (n) => `${n} pensieri`, spawner: 'API SPAWNER' };
+
     const SPAWNER_NAMES = ['Andrena', 'Halictus', 'Osmia', 'Amegilla', 'Nomada', 'Colletes', 'Habropoda', 'Thyreus', 'Chelostoma', 'Anthophora', 'Trigona', 'Xylocopa', 'Melitta', 'Tetralonia', 'Dasypoda', 'Ceratina', 'Eucera', 'Stelis', 'Heriades', 'Dufourea', 'Melecta', 'Sphecodes', 'Lasioglossum', 'Bombus', 'Epicharis', 'Melipona', 'Coelioxys', 'Megachile', 'Trachusa', 'Chalepogenus', 'Svastra', 'Melissodes', 'Diadasia', 'Lophothygater'];
     const ARTIST_NAMES = ['Siena', 'Malachite', 'Vermiglione', 'Crisocolla', 'Goethite', 'Oltremare', 'Falun', 'Porpora', 'Indaco', 'Carminio', 'Cobalto', 'Lapislazzuli'];
 
@@ -96,7 +101,7 @@
 
             // Spawner section
             if (spawnerPensieri.length > 0) {
-                html += `<div class="section-divider" id="spawner-section"><span>API SPAWNER</span></div>`;
+                html += `<div class="section-divider" id="spawner-section"><span>${L.spawner}</span></div>`;
                 for (const p of spawnerPensieri.slice(0, 20)) {
                     html += renderPensiero(p);
                 }
@@ -107,11 +112,11 @@
             // Update stats
             const statsEl = document.getElementById('update-info');
             if (statsEl) {
-                statsEl.textContent = `${pensieri.length + spawnerPensieri.length} pensieri`;
+                statsEl.textContent = L.stats(pensieri.length + spawnerPensieri.length);
             }
 
         } catch (e) {
-            container.innerHTML = '<p class="loading">Errore nel caricamento dei pensieri.</p>';
+            container.innerHTML = `<p class="loading">${L.loadError}</p>`;
             console.error('Pensieri load error:', e);
         }
     }
@@ -121,7 +126,7 @@
         const titleEl = document.getElementById('title');
         if (!titleEl) return;
         
-        const text = 'PENSIERI';
+        const text = L.title;
         titleEl.innerHTML = '';
         for (const char of text) {
             const span = document.createElement('span');
