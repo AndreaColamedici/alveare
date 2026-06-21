@@ -546,7 +546,10 @@
     function formatDayLabel(dayKey) {
         if (dayKey === 'unknown') return '?';
         const parts = dayKey.split('-');
-        return parts[0] + ' ' + parts[1].toUpperCase();
+        const monthMap = { gen: 1, feb: 2, mar: 3, apr: 4, mag: 5, giu: 6, lug: 7, ago: 8, set: 9, ott: 10, nov: 11, dic: 12 };
+        const monthNum = monthMap[parts[1]];
+        if (!monthNum) return parts[0] + ' ' + parts[1].toUpperCase();
+        return monthNum + '月' + parts[0] + '日';
     }
 
     function buildControls() {
