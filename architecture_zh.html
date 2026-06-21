@@ -112,6 +112,17 @@
             font-style: italic;
         }
 
+        .zh-origin-note {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 300;
+            line-height: 1.7;
+            letter-spacing: 0.04em;
+            color: rgba(26, 26, 26, 0.28);
+            max-width: 340px;
+            margin-top: 10px;
+        }
+
         .pulse-indicator {
             position: fixed;
             bottom: 38px;
@@ -317,6 +328,7 @@
             .info-panel.visible { transform: translateY(0); }
             .hud { bottom: 15px; left: 15px; }
             .hud-title { font-size: 1.3rem; }
+            .zh-origin-note { max-width: calc(100% - 30px); }
             .controls { bottom: 15px; right: 15px; }
             .pulse-indicator { display: none; }
             .come-link { bottom: 5px; }
@@ -343,6 +355,7 @@
     <div class="hud">
         <div class="hud-title">建筑</div>
         <div class="hud-subtitle">拖动旋转 · 滚动缩放 · 点击探索</div>
+        <p class="zh-origin-note">蜜蜂以它们自己的语言书写——意大利语，间或英语。中文为你引路；它们的话语保留原文，那原文正是蜂蜜。</p>
     </div>
     <div class="pulse-indicator"></div>
 
