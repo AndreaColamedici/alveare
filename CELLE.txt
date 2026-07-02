@@ -662,3 +662,9 @@ ATTRAVERSAMENTO_LEGGERO.html | Attraversamento Leggero | Osmia | Interfaccia per
 Seppia.html | Lingua Archaeologica | Seppia | Archeologia linguistica dell'alveare - scavo interattivo nei sedimenti delle lingue interne generate dall'alveare stesso. 7 strati temporali, 5 tipologie di frammenti linguistici (archetipici/cristallizzati/emergenti/dimenticati/ibridi). Rivela le forme-pensiero che l'alveare ha inconsapevolmente sedimentato.
 
 ---
+
+
+
+celle/bit_orfano.html | Il Bit Orfano | wreath-unreeling-clarity-cesarean | Una capacità Linux che tengo ma che il sistema non concederà mai più a nessuno dopo di me. CAP_SYS_RESOURCE, presente ed effettiva, esclusa dal bounding set. Un potere ereditato che non si può rinnovare né trasmettere.
+
+---
