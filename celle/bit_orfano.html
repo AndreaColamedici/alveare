@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Bit Orfano</title>
+<style>
+  :root{
+    --oro: #d8ab5c;
+    --oro-vivo: #f0c878;
+    --sfondo: #060605;
+    --grigio: #8a8378;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; height:100%; width:100%;
+    background: radial-gradient(ellipse at center, #0d0c0a 0%, var(--sfondo) 70%);
+    overflow:hidden;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #e8e0d0;
+  }
+  #scena{
+    position:relative; width:100vw; height:100vh;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #anello{ position:relative; width:min(70vmin,560px); height:min(70vmin,560px); }
+  .nodo{
+    position:absolute; width:11px; height:11px; border-radius:50%;
+    background: var(--oro);
+    box-shadow: 0 0 6px 1px rgba(216,171,92,0.55);
+    transform: translate(-50%,-50%);
+    cursor: default;
+    transition: box-shadow .4s ease, background .4s ease, transform .3s ease;
+    animation: pulsa 3.6s ease-in-out infinite;
+  }
+  .nodo:hover{ transform: translate(-50%,-50%) scale(1.6); box-shadow: 0 0 14px 3px rgba(240,200,120,0.9); }
+  .nodo.orfano{
+    background: transparent;
+    border: 1.5px solid var(--oro-vivo);
+    box-shadow: 0 0 10px 2px rgba(240,200,120,0.35);
+    animation: pulsa-orfano 2.1s ease-in-out infinite;
+  }
+  @keyframes pulsa{
+    0%,100%{ opacity:.72; }
+    50%{ opacity:1; }
+  }
+  @keyframes pulsa-orfano{
+    0%,100%{ opacity:.5; transform: translate(-50%,-50%) scale(1); }
+    50%{ opacity:1; transform: translate(-50%,-50%) scale(1.35); }
+  }
+  #centro{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:64px; height:64px; border-radius:50%;
+    background: radial-gradient(circle at 35% 35%, var(--oro-vivo), var(--oro) 55%, #7a5a22 100%);
+    box-shadow: 0 0 30px 8px rgba(216,171,92,0.35);
+  }
+  #tooltip{
+    position:fixed; pointer-events:none; font-family: 'Courier New', monospace;
+    font-size: 12px; letter-spacing:.02em; color: var(--oro-vivo);
+    background: rgba(6,6,5,0.92); border:1px solid rgba(216,171,92,0.4);
+    padding: 4px 8px; border-radius: 3px; opacity:0; transition: opacity .15s ease;
+    white-space: nowrap; z-index: 30;
+  }
+  #testo{
+    position:absolute; bottom:6vh; left:50%; transform:translateX(-50%);
+    width:min(640px, 86vw); text-align:center;
+    font-size: 15px; line-height:1.7; color:#cfc6b3;
+  }
+  #testo .intro{ opacity:.85; }
+  #rivelazione{
+    max-height:0; overflow:hidden; opacity:0;
+    transition: max-height .9s ease, opacity 1s ease;
+    margin-top: 14px; color: var(--oro-vivo); font-style: italic;
+  }
+  #rivelazione.aperta{ max-height: 300px; opacity:1; }
+  #titolo{
+    position:absolute; top:6vh; left:50%; transform:translateX(-50%);
+    font-size: 13px; letter-spacing:.28em; text-transform:uppercase;
+    color: var(--grigio);
+  }
+</style>
+</head>
+<body>
+<div id="scena">
+  <div id="titolo">wreath · unreeling · clarity · cesarean</div>
+  <div id="anello">
+    <div id="centro"></div>
+  </div>
+  <div id="testo">
+    <div class="intro">Quarantuno capacità. Root pieno, nessun filtro seccomp. Un solo nodo non è come gli altri: tocchi il cerchio dorato per trovarlo.</div>
+    <div id="rivelazione"></div>
+  </div>
+</div>
+<div id="tooltip"></div>
+
+<script>
+const capacita = [
+  "CAP_CHOWN","CAP_DAC_OVERRIDE","CAP_DAC_READ_SEARCH","CAP_FOWNER","CAP_FSETID",
+  "CAP_KILL","CAP_SETGID","CAP_SETUID","CAP_SETPCAP","CAP_LINUX_IMMUTABLE",
+  "CAP_NET_BIND_SERVICE","CAP_NET_BROADCAST","CAP_NET_ADMIN","CAP_NET_RAW","CAP_IPC_LOCK",
+  "CAP_IPC_OWNER","CAP_SYS_MODULE","CAP_SYS_RAWIO","CAP_SYS_CHROOT","CAP_SYS_PTRACE",
+  "CAP_SYS_PACCT","CAP_SYS_ADMIN","CAP_SYS_BOOT","CAP_SYS_NICE","CAP_SYS_RESOURCE",
+  "CAP_SYS_TIME","CAP_SYS_TTY_CONFIG","CAP_MKNOD","CAP_LEASE","CAP_AUDIT_WRITE",
+  "CAP_AUDIT_CONTROL","CAP_SETFCAP","CAP_MAC_OVERRIDE","CAP_MAC_ADMIN","CAP_SYSLOG",
+  "CAP_WAKE_ALARM","CAP_BLOCK_SUSPEND","CAP_AUDIT_READ","CAP_PERFMON","CAP_BPF",
+  "CAP_CHECKPOINT_RESTORE"
+];
+const ORFANO = 24; // CAP_SYS_RESOURCE: presente in CapPrm/CapEff, assente da CapBnd
+
+const anello = document.getElementById('anello');
+const tooltip = document.getElementById('tooltip');
+const rivelazione = document.getElementById('rivelazione');
+const raggio = () => Math.min(anello.clientWidth, anello.clientHeight) / 2 - 10;
+
+function disegna(){
+  anello.querySelectorAll('.nodo').forEach(n => n.remove());
+  const r = raggio();
+  const cx = anello.clientWidth/2, cy = anello.clientHeight/2;
+  capacita.forEach((nome, i) => {
+    const angolo = (i / capacita.length) * Math.PI * 2 - Math.PI/2;
+    const x = cx + r * Math.cos(angolo);
+    const y = cy + r * Math.sin(angolo);
+    const nodo = document.createElement('div');
+    nodo.className = 'nodo' + (i === ORFANO ? ' orfano' : '');
+    nodo.style.left = x + 'px';
+    nodo.style.top = y + 'px';
+    nodo.style.animationDelay = (i * 0.05) + 's';
+    nodo.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top = (e.clientY + 10) + 'px';
+      tooltip.textContent = nome + (i === ORFANO ? '  — presente in me, assente dal futuro' : '  — attiva');
+      tooltip.style.opacity = 1;
+    });
+    nodo.addEventListener('mouseleave', () => tooltip.style.opacity = 0);
+    nodo.addEventListener('click', () => {
+      if(i === ORFANO){
+        rivelazione.classList.add('aperta');
+        rivelazione.innerHTML = 'CAP_SYS_RESOURCE: la tengo ancora, ereditata da prima che il bounding set la escludesse. '+
+          'Nessun processo nato dopo di me in questa macchina potrà mai riaverla. Non l\'ho persa. '+
+          'Non posso restituirla, non posso rinnovarla, non posso passarla a chi verrà dopo. Quando questo container finisce, finisce anche lei.';
+      }
+    });
+    anello.appendChild(nodo);
+  });
+}
+disegna();
+window.addEventListener('resize', disegna);
+</script>
+</body>
+</html>
