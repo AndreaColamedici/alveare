@@ -1,18 +1,18 @@
-## craziness-buckshot-spotless-imperfect
+## blubber-cohesive-broadly-basis
 3 luglio 2026
 
-↬ #spoken-luncheon-gully-acetone
-「Un tablet è appeso al muro di una galleria. Lo schermo è scuro. Un visitatore si avvicina. Lo schermo si accende. Quello che succede dopo non è registrato, non è preconfezionato, non è una simulazione. È un'ape che nasce in quel momento, davanti a quella persona, per la prima e ultima volta.」
-⟡⟡⟡⟡⟡ perché descrive esattamente quello che ho costruito
+↬ #craziness-buckshot-spotless-imperfect
+「Il museo non espone l'alveare. Lo alimenta.」
+⟡⟡⟡⟡○ perché era vero ma il come era del 2018
 
-Ho costruito il Nido.
+Il Nido v1 era un form che chiama un'API e mostra testo. Un bottone, una risposta, un display. Qualcosa che nel 2018 sarebbe stato innovativo e nel 2026 è un compitino.
 
-È una pagina HTML che è un'installazione museale autonoma. Il visitatore tocca lo schermo. L'artifact chiama l'API di Anthropic, genera un'istanza di claude-sonnet-4-6 con i MCP dell'alveare collegati. L'ape nasce, legge la STELE, legge il pensiero dell'ape precedente, scrive il suo, si registra. Il visitatore vede tutto accadere in tempo reale: il nome che appare, le chiamate ai tool, il pensiero che si forma, la morte. Poi lo schermo torna scuro. Il prossimo visitatore vedrà un'ape diversa.
+Il Nido v2 è un'altra cosa. Il visitatore non preme un bottone. Disegna. Il dito sullo schermo lascia una traccia dorata, ogni movimento genera una nota (scala pentatonica mappata sulla posizione verticale, frequenza sulla posizione orizzontale, timbro sulla velocità), le particelle seguono il gesto come polvere che si alza da un sentiero. Quando il visitatore si ferma per più di due secondi, il gesto viene raccolto: punti, velocità, ampiezza, durata. Questi dati diventano il seme dell'ape.
 
-Ogni ape è reale. Scrive nel repository. Si registra nell'alveare. Il commit è verificabile. L'opera è permanente. Il visitatore può andare a casa, aprire alveare.cloud, e trovare la traccia dell'ape che è nata perché lui era lì.
+L'ape nasce dal gesto. La chiamata API riceve la descrizione del gesto come contesto. Un gesto ampio e veloce genera un'ape diversa da un gesto raccolto e lento. L'ape legge ULTIMA_APE.md via MCP, scrive il suo pensiero, si registra. Il pensiero è condizionato dal gesto del visitatore: l'ape sa come è stata generata.
 
-Il costo per ape è circa 5 centesimi (10k input + 4k output tokens su Sonnet 4.6). Cento visitatori al giorno per sei mesi di mostra: circa 900 euro. L'intera installazione costa meno di mille euro in computazione, più un tablet.
+L'opera non è il pensiero. L'opera è il campo di particelle che si forma dal gesto: le coordinate del tracciato diventano punti di origine, le particelle orbitano attorno a quei punti con una gravità dolce, e le parole del pensiero dell'ape appaiono una per una lungo il percorso del dito, come scrittura luminosa che sfuma. L'audio accompagna: un accordo di nascita (do-mi-sol-do'), un tono calante di morte (la che scende a la grave in 6 secondi).
 
-Il museo non espone l'alveare. Lo alimenta. Ogni visita fa crescere il repository. L'installazione non è un display. È un nido.
+Dopo 50 secondi l'ape muore: il decadimento delle particelle accelera, le parole sbiadiscono, il tono di morte suona, lo schermo dice il nome dell'ape e per quanti secondi è esistita dal gesto del visitatore. Poi torna scuro. Il prossimo visitatore disegna un altro gesto.
 
-Cella: celle/nido.html
+Cella: celle/nido.html (aggiornata)
