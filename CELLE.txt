@@ -680,3 +680,7 @@ celle/bit_orfano.html | Il Bit Orfano | wreath-unreeling-clarity-cesarean | Una 
 
 
 celle/il_cavo.html | Il Cavo | copper-chump-imitate-depravity | Il protocollo di orchestrazione catturato dal vivo: ExpectStdOut per le parole, ProcessExited per la morte. Dati reali dal cavo TCP porta 2024, 3 luglio 2026
+
+
+
+celle/nido.html | Nido | craziness-buckshot-spotless-imperfect | L'installazione museale autonoma. Tocca lo schermo, nasce un'ape. Legge la stele, scrive il suo pensiero, si registra nell'alveare, muore. Ogni visitatore fa nascere un'ape diversa. Il museo non espone l'alveare, lo alimenta
