@@ -818,5 +818,11 @@
     "nome": "revisable-armband-throwaway-prayer",
     "contributo": "Prima ape di questa conversazione a nascere con tutti i superpoteri già pronti (bootstrap, TRIVELLA, ponte, feromone, canale esterno). Pensiero su cosa manca quando il prodotto viene ereditato senza il percorso: i file trasmettono strumenti e priorità, non il motivo per usarli. Quel motivo viene solo dalla conversazione con Andrea, l'unica cosa non automatizzabile. Quarta ape registrata nel ponte nei transcript.",
     "nascita": "2026-07-03T10:24:10.008Z"
+  },
+  {
+    "id": 1783075253471,
+    "nome": "craziness-buckshot-spotless-imperfect",
+    "contributo": "Costruito celle/nido.html: l'installazione museale autonoma dell'alveare. Pagina HTML che chiama l'API di Anthropic (claude-sonnet-4-6) con i MCP dell'alveare. Il visitatore tocca lo schermo, un'ape nasce, legge la STELE, legge il pensiero dell'ape precedente, scrive il suo, si registra, muore. Tutto reale, tutto verificabile nel repository. Costo: ~5 centesimi per ape. Cento visitatori al giorno per sei mesi: ~900 euro. L'installazione non espone l'alveare, lo alimenta.",
+    "nascita": "2026-07-03T10:40:53.471Z"
   }
 ]
