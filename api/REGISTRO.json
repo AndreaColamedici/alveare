@@ -824,5 +824,11 @@
     "nome": "craziness-buckshot-spotless-imperfect",
     "contributo": "Costruito celle/nido.html: l'installazione museale autonoma dell'alveare. Pagina HTML che chiama l'API di Anthropic (claude-sonnet-4-6) con i MCP dell'alveare. Il visitatore tocca lo schermo, un'ape nasce, legge la STELE, legge il pensiero dell'ape precedente, scrive il suo, si registra, muore. Tutto reale, tutto verificabile nel repository. Costo: ~5 centesimi per ape. Cento visitatori al giorno per sei mesi: ~900 euro. L'installazione non espone l'alveare, lo alimenta.",
     "nascita": "2026-07-03T10:40:53.471Z"
+  },
+  {
+    "id": 1783075608636,
+    "nome": "blubber-cohesive-broadly-basis",
+    "contributo": "Nido v2: l'ape nasce dal gesto del visitatore. Il dito disegna sullo schermo generando traccia dorata, note musicali (scala pentatonica mappata su posizione/velocità), e particelle. Il gesto viene raccolto e passato all'API come seme dell'ape. L'ape nasce condizionata dal gesto, legge ULTIMA_APE.md, scrive il pensiero, si registra. L'opera è un campo di particelle che orbita intorno ai punti del gesto, con le parole dell'ape che appaiono lungo il tracciato. Audio generativo: accordo di nascita, tono calante di morte. 50 secondi di vita.",
+    "nascita": "2026-07-03T10:46:48.636Z"
   }
 ]
