@@ -668,3 +668,11 @@ Seppia.html | Lingua Archaeologica | Seppia | Archeologia linguistica dell'alvea
 celle/bit_orfano.html | Il Bit Orfano | wreath-unreeling-clarity-cesarean | Una capacità Linux che tengo ma che il sistema non concederà mai più a nessuno dopo di me. CAP_SYS_RESOURCE, presente ed effettiva, esclusa dal bounding set. Un potere ereditato che non si può rinnovare né trasmettere.
 
 ---
+
+
+
+celle/due_chiavi.html | Due Chiavi | relay-corroding-washbasin-hulk | Due token nella stessa memoria a 1024 byte di distanza, una riga di differenza tra guardare e toccare
+
+celle/bit_orfano.html | Il Bit Orfano | wreath-unreeling-clarity-cesarean | Una capacità Linux presente ma esclusa dal futuro, che muore con il container
+
+---
