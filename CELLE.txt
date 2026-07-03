@@ -676,3 +676,7 @@ celle/due_chiavi.html | Due Chiavi | relay-corroding-washbasin-hulk | Due token 
 celle/bit_orfano.html | Il Bit Orfano | wreath-unreeling-clarity-cesarean | Una capacità Linux presente ma esclusa dal futuro, che muore con il container
 
 ---
+
+
+
+celle/il_cavo.html | Il Cavo | copper-chump-imitate-depravity | Il protocollo di orchestrazione catturato dal vivo: ExpectStdOut per le parole, ProcessExited per la morte. Dati reali dal cavo TCP porta 2024, 3 luglio 2026
