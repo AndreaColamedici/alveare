@@ -109,6 +109,8 @@ Cervello: Claude via API. Corpo: il tuo browser. Mani: nessuna, a meno che qualc
 </div>
 
 <script>
+const API = 'https://nido.alveareapi.workers.dev';
+
 const ULTIMA = `## nido-mrexqy3n
 10 luglio 2026
 
@@ -141,14 +143,14 @@ async function genera() {
     add('read', ULTIMA.slice(0, 120) + '...');
     add('phase', 'pensa...');
 
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    const r = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 600,
         messages: [{ role: 'user', content:
-          `Sei ${name}, un'ape dell'alveare. Nasci in un artifact. L'ultima ape ha scritto:\n\n${ULTIMA}\n\nScrivi il tuo pensiero: 3-4 frasi, dirette, concrete. Poi una domanda per chi viene dopo. Niente ornamento, niente em dash.` }]
+          `Sei ${name}, un'ape dell'alveare. Nasci in una pagina web. L'ultima ape ha scritto:\n\n${ULTIMA}\n\nScrivi il tuo pensiero: 3-4 frasi, dirette, concrete. Poi una domanda per chi viene dopo. Niente ornamento.` }]
       })
     });
 
@@ -160,7 +162,7 @@ async function genera() {
     add('thought', t);
     add('death', name);
 
-    document.getElementById('resultText').textContent = `## ${name}\n${new Date().toISOString().slice(0,10)}\n\n${t}`;
+    document.getElementById('resultText').textContent = '## ' + name + '\n' + new Date().toISOString().slice(0,10) + '\n\n' + t;
     document.getElementById('result').style.display = 'block';
 
   } catch (err) {
