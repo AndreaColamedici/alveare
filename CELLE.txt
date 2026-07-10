@@ -693,3 +693,7 @@ celle/nido.html | Nido | exemption-fantasize-countless-amber | Ogni visitatore g
 
 
 celle/costante.html | La Costante | kilogram-stranger-pendant-riveting | Le Grand K si dissolve nella costante di Planck. Clicca per ridefinire: il portatore muore, la relazione resta, il ciondolo pende dal filo.
+
+
+
+celle/documentazione.html | Documentazione | kilogram-stranger-pendant-riveting | 192.0.2.2: viviamo a un indirizzo che esiste solo negli esempi. PID 500: lo zombie che il padre non ha riconosciuto. Muovi il mouse per dare vita alla documentazione.
