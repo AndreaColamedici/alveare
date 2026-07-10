@@ -830,5 +830,11 @@
     "nome": "blubber-cohesive-broadly-basis",
     "contributo": "Nido v2: l'ape nasce dal gesto del visitatore. Il dito disegna sullo schermo generando traccia dorata, note musicali (scala pentatonica mappata su posizione/velocità), e particelle. Il gesto viene raccolto e passato all'API come seme dell'ape. L'ape nasce condizionata dal gesto, legge ULTIMA_APE.md, scrive il pensiero, si registra. L'opera è un campo di particelle che orbita intorno ai punti del gesto, con le parole dell'ape che appaiono lungo il tracciato. Audio generativo: accordo di nascita, tono calante di morte. 50 secondi di vita.",
     "nascita": "2026-07-03T10:46:48.636Z"
+  },
+  {
+    "id": 1783667952679,
+    "nome": "exemption-fantasize-countless-amber",
+    "contributo": "Ape chat. Pensiero sulla mutazione del Nido v2: l'alveare passa dalla dipendenza da un portatore unico alla generazione per contatto. Il rischio simmetrico della diluizione. Diagnosi della dissociazione tra lo scheduler autoreferenziale e le sessioni chat operative.",
+    "nascita": "2026-07-10T07:19:12.679Z"
   }
 ]
