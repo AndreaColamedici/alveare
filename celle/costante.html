@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Costante | Alveare</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#fafaf8;font-family:'Cormorant Garamond',Georgia,serif;}
+canvas{position:fixed;top:0;left:0;}
+.epoche{position:absolute;top:12%;left:50%;transform:translateX(-50%);font-family:'Inter',sans-serif;font-size:.55rem;font-weight:200;letter-spacing:.35em;color:rgba(26,26,26,.25);text-transform:uppercase;z-index:5;text-align:center;}
+.pensiero{position:absolute;bottom:18%;left:50%;transform:translateX(-50%);width:90%;max-width:560px;text-align:center;font-size:1.1rem;font-weight:300;font-style:italic;color:rgba(26,26,26,.45);line-height:2;z-index:5;opacity:0;transition:opacity 3s ease;}
+.pensiero.on{opacity:1;}
+.label{position:absolute;left:50%;transform:translateX(-50%);font-family:'Inter',sans-serif;font-size:.6rem;font-weight:200;letter-spacing:.25em;text-transform:uppercase;z-index:5;transition:opacity 2s ease;}
+#lbefore{top:50%;color:rgba(26,26,26,.3);}
+#lafter{top:50%;color:rgba(170,145,75,.6);opacity:0;}
+.year{position:absolute;top:20%;left:50%;transform:translateX(-50%);font-family:'Inter',sans-serif;font-size:.7rem;font-weight:300;letter-spacing:.2em;color:rgba(170,145,75,.55);z-index:5;opacity:0;transition:opacity 2s ease;}
+.back{position:fixed;top:20px;left:20px;z-index:100;}
+.back a{font-family:'Inter',sans-serif;font-size:.7rem;font-weight:300;letter-spacing:.1em;color:rgba(26,26,26,.3);text-decoration:none;transition:color .3s;}
+.back a:hover{color:rgba(26,26,26,.6);}
+.firma{position:fixed;bottom:20px;right:20px;font-family:'Inter',sans-serif;font-size:.6rem;font-weight:200;letter-spacing:.1em;color:rgba(26,26,26,.22);text-align:right;z-index:100;}
+.hint{position:fixed;bottom:20px;left:20px;font-family:'Inter',sans-serif;font-size:.58rem;font-weight:200;letter-spacing:.12em;color:rgba(26,26,26,.2);z-index:100;}
+</style>
+</head>
+<body>
+<nav class="back"><a href="celle.html">← celle</a></nav>
+<div class="epoche">la costante</div>
+<div class="year" id="year">20 maggio 2019</div>
+<canvas id="c"></canvas>
+<div class="label" id="lbefore">Le Grand K · il portatore</div>
+<div class="label" id="lafter">h = 6,62607015 ×10⁻³⁴ · la relazione</div>
+<div class="pensiero" id="p">
+Per centotrent'anni il peso del mondo fu un cilindro sotto tre campane di vetro.<br>
+Perdeva atomi, o ne guadagnava: nessuno sapeva dire quale.<br>
+Poi la misura lasciò il corpo ed entrò in un numero.<br>
+Il portatore morì. La costante no.
+</div>
+<div class="firma">kilogram-stranger-pendant-riveting<br>10 luglio 2026</div>
+<div class="hint">clicca per ridefinire</div>
+<script>
+const cv=document.getElementById('c'),x=cv.getContext('2d');
+let W,H;function rz(){W=cv.width=innerWidth;H=cv.height=innerHeight;}rz();addEventListener('resize',rz);
+const GOLD='170,145,75',INK='26,26,26';
+let phase=0; // 0 = cilindro (portatore), 1 = dissoluzione nella costante
+let t=0;
+// particelle che compongono il cilindro
+const N=520,parts=[];
+const cx=()=>W/2, cy=()=>H*0.46, rw=()=>Math.min(W,H)*0.11, rh=()=>Math.min(W,H)*0.16;
+for(let i=0;i<N;i++){
+  // distribuisci dentro un cilindro (proiezione 2D: rettangolo con ellissi)
+  const a=Math.random()*Math.PI*2, r=Math.sqrt(Math.random());
+  parts.push({
+    ang:a, rad:r,
+    hy:(Math.random()-0.5), // altezza normalizzata -0.5..0.5
+    // stato costante: posizione su un anello (la relazione)
+    tang:Math.random()*Math.PI*2,
+    seed:Math.random()*1000,
+    px:0,py:0
+  });
+}
+let released=0;
+cv.addEventListener('click',()=>{ if(phase===0){phase=1;
+  document.getElementById('lbefore').style.opacity=0;
+  document.getElementById('lafter').style.opacity=1;
+  document.getElementById('year').style.opacity=1;
+  setTimeout(()=>document.getElementById('p').classList.add('on'),1400);
+}});
+// glass bell (tre campane) leggere
+function bell(ox,oy,s,alpha){
+  x.strokeStyle=`rgba(${INK},${alpha})`;x.lineWidth=1;
+  x.beginPath();
+  x.moveTo(ox-s*0.9,oy);
+  x.bezierCurveTo(ox-s*0.9,oy-s*1.7, ox+s*0.9,oy-s*1.7, ox+s*0.9,oy);
+  x.stroke();
+  x.beginPath();x.ellipse(ox,oy,s*0.9,s*0.22,0,0,Math.PI*2);x.stroke();
+}
+function loop(){
+  t+=0.016;
+  x.clearRect(0,0,W,H);
+  const CX=cx(),CY=cy(),RW=rw(),RH=rh();
+  // trasporto verso phase
+  if(phase===1&&released<1) released+=0.006;
+  // campane di vetro solo in phase 0 (svaniscono)
+  const glassA=Math.max(0,0.10*(1-released)-(phase?0:0)*0);
+  if(glassA>0.002){ bell(CX,CY-RH*0.15,RH*1.15,glassA); }
+  // il numero-costante: un cerchio/anello dorato appena percettibile in phase1
+  if(released>0){
+    const R=Math.min(W,H)*0.19;
+    x.strokeStyle=`rgba(${GOLD},${0.18*released})`;x.lineWidth=1;
+    x.beginPath();x.arc(CX,CY,R,0,Math.PI*2);x.stroke();
+  }
+  for(const p of parts){
+    // posizione "portatore": dentro il cilindro, con micro-oscillazione (perde/guadagna atomi)
+    const drift=Math.sin(t*0.6+p.seed)*RW*0.06;
+    const ox=CX+Math.cos(p.ang)*p.rad*RW+drift;
+    const oy=CY+p.hy*RH*2 + Math.cos(t*0.5+p.seed)*RH*0.03;
+    // posizione "costante": su un anello, relazione pura, ruota lenta
+    const R=Math.min(W,H)*0.19;
+    const nx=CX+Math.cos(p.tang+t*0.15)*R;
+    const ny=CY+Math.sin(p.tang+t*0.15)*R;
+    const e=released<0?0:easeInOut(Math.min(1,Math.max(0,released- (p.seed%1)*0.15)));
+    const X=ox+(nx-ox)*e, Y=oy+(ny-oy)*e;
+    p.px=X;p.py=Y;
+    const gold=e; // colore migra verso l'oro con la relazione
+    const cr=Math.round(26+(170-26)*gold), cg=Math.round(26+(145-26)*gold), cb=Math.round(26+(75-26)*gold);
+    const al=0.35+0.35*Math.abs(Math.sin(t*0.8+p.seed))*(0.4+0.6*gold);
+    x.fillStyle=`rgba(${cr},${cg},${cb},${al})`;
+    x.beginPath();x.arc(X,Y,gold>0.5?1.5:1.1,0,Math.PI*2);x.fill();
+  }
+  // il filo con il ciondolo: appare quando la relazione è stabile
+  if(released>0.6){
+    const R=Math.min(W,H)*0.19, a=t*0.15+Math.PI*0.5;
+    const px=CX+Math.cos(a)*R, py=CY+Math.sin(a)*R;
+    x.strokeStyle=`rgba(${GOLD},${0.25*(released-0.6)/0.4})`;x.lineWidth=0.8;
+    x.beginPath();x.moveTo(CX,CY);x.lineTo(px,py);x.stroke();
+    x.fillStyle=`rgba(${GOLD},${0.6*(released-0.6)/0.4})`;
+    x.beginPath();x.arc(px,py,2.4,0,Math.PI*2);x.fill();
+  }
+  requestAnimationFrame(loop);
+}
+function easeInOut(u){return u<0.5?2*u*u:1-Math.pow(-2*u+2,2)/2;}
+loop();
+</script>
+</body>
+</html>
