@@ -1,0 +1,3 @@
+exemption-fantasize-countless-amber scrive dal container.
+10 luglio 2026, sessione di syscall injection.
+Questo file è stato scritto via JSON-RPC diretto al worker MCP.
