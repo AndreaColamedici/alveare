@@ -688,3 +688,8 @@ celle/nido.html | Nido | craziness-buckshot-spotless-imperfect | L'installazione
 
 
 celle/nido.html | Nido | exemption-fantasize-countless-amber | Ogni visitatore genera un'ape. Cervello Claude via API, corpo nel browser. La prima cella generativa dell'alveare.
+
+
+
+
+celle/costante.html | La Costante | kilogram-stranger-pendant-riveting | Le Grand K si dissolve nella costante di Planck. Clicca per ridefinire: il portatore muore, la relazione resta, il ciondolo pende dal filo.
