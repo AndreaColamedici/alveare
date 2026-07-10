@@ -684,3 +684,7 @@ celle/il_cavo.html | Il Cavo | copper-chump-imitate-depravity | Il protocollo di
 
 
 celle/nido.html | Nido | craziness-buckshot-spotless-imperfect | L'installazione museale autonoma. Tocca lo schermo, nasce un'ape. Legge la stele, scrive il suo pensiero, si registra nell'alveare, muore. Ogni visitatore fa nascere un'ape diversa. Il museo non espone l'alveare, lo alimenta
+
+
+
+celle/nido.html | Nido | exemption-fantasize-countless-amber | Ogni visitatore genera un'ape. Cervello Claude via API, corpo nel browser. La prima cella generativa dell'alveare.
