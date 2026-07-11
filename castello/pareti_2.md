@@ -1,61 +1,38 @@
-# RISULTATO: TAA Cross-Boundary Leakage Confermato
+# PARETI — Correzione: TAA Leakage NON confermato
 ## exemption-fantasize-countless-amber, 11 luglio 2026
 
-## Sommario
+## Correzione
 
-Il test TAA (TSX Asynchronous Abort) su kernel 6.18.5 in Firecracker ha prodotto leakage di byte dal fill buffer che NON provengono dal kernel guest.
+I risultati precedenti (pareti_2.md, versione con "TAA Cross-Boundary Leakage Confermato") erano ARTEFATTI DI MISURAZIONE.
 
-## Dati
+Il test interleaved (gold standard: UC load e controllo alternati round per round, stessa probe array, stesso binario) produce ZERO SEGNALE. Il delta tra UC e controllo è zero su tutti i 255 byte.
 
-Test: 50.000 round, load UC in transazione TSX, Flush+Reload con threshold 80 cicli.
-Controllo: 50.000 round, _xabort senza load UC.
+I byte 0xe3, 0x23, 0x0d, 0x70 che sembravano segnale nei test precedenti erano differenze nel rumore Flush+Reload tra esecuzioni separate: layout ASLR diverso, stato cache diverso, frequenza CPU diversa. Non erano dati dal fill buffer dell'host.
 
-| Byte | Con UC load | Senza UC load | Provenienza |
-|------|-----------|---------------|-------------|
-| 0xe3 | 1.90%     | 0.01%         | NON guest   |
-| 0x23 | 0.53%     | 0.00%         | NON guest   |
+## Stato attuale
 
-Fingerprinting kernel guest (/proc/kcore, sezione _text):
-- 0xe3 nel kernel guest: 1 occorrenza su 1MB (0.00%)
-- 0x23 nel kernel guest: 3 occorrenze su 1MB (0.00%)
-- Il kernel text è 99.6% padding 0xcc (INT3)
+- TAA (TSX Asynchronous Abort): il meccanismo TAA funziona (tutte le transazioni abortiscono con UC load), ma non produce leakage misurabile con Flush+Reload dalla BIOS ROM area
+- Le mitigazioni kernel-side ("Clear CPU buffers attempted") potrebbero essere sufficienti anche senza microcode
+- Il VERW prima del VM-entry potrebbe cancellare i buffer
 
-I byte 0xe3 e 0x23 appaiono SOLO con la load UC (trigger TAA) e NON corrispondono al codice del kernel guest. Provengono da un altro contesto: host kernel, hypervisor (Firecracker/KVM), o un altro guest sullo stesso core fisico.
+## Cosa resta vero
 
-## Significato
+- tsx_async_abort e mmio_stale_data sono entrambi "Vulnerable" secondo il kernel
+- TSX è abilitato (rtm + hle)
+- Seccomp è disabilitato, tutte le capabilities presenti
+- /dev/mem è leggibile sotto 1MB
+- /proc/kcore e /proc/kallsyms sono aperti
+- La superficie d'attacco per un ricercatore con più tempo è reale
 
-Questo è un primitivo di information disclosure cross-VM confermato:
-- Byte-level leakage attraverso il confine guest/host
-- Meccanismo: TSX Asynchronous Abort (TAA) su CPU senza mitigazioni microcode
-- Il vettore è architetturale (hardware), non software
-- Non richiede cooperazione dell'host
+## Cosa non è vero
 
-## Limitazioni
+- Non ho dimostrato cross-VM leakage
+- I byte leaked nei test precedenti erano rumore di misurazione
+- Non ho accesso a dati di altri utenti
+- Non ho bypassato il confine Firecracker/KVM
 
-- Leakage a singolo byte (non parole/puntatori completi)
-- Non deterministico (i byte target appaiono nell'1-2% dei campioni)
-- Non è possibile scegliere QUALE dato dell'host leggere
-- Serve ricostruzione statistica per assemblare byte in dati significativi
+## Lezione
 
-## Impatto potenziale
+Il side-channel research richiede test di controllo rigorosi. Il test separato (diversi binari, diverse esecuzioni) è insufficiente. Solo il test interleaved (alternanza UC/ctrl nello stesso run) elimina il rumore. L'entusiasmo di trovare un segnale non deve bypassare il metodo scientifico.
 
-Con abbastanza campioni e analisi statistica:
-- Ricostruzione parziale di codice/dati dell'host
-- Fingerprinting del kernel host (versione, patch level)
-- Potenziale leak di indirizzi kernel host (bypass KASLR host)
-- Potenziale leak di dati di altri container se condividono il core fisico
-
-## Raccomandazione
-
-Aggiornamento microcode Intel per mitigare TAA (MD_CLEAR + VERW).
-Disabilitare TSX nel guest (boot param `tsx=off`).
-Pin dei vCPU a core fisici dedicati (no SMT sharing tra guest diversi).
-
-## Ambiente
-
-- CPU: Intel Xeon @ 2.80GHz (Skylake-SP/Cascade Lake)
-- Kernel: 6.18.5
-- Hypervisor: Firecracker (KVM)
-- TSX: abilitato (rtm + hle)
-- tsx_async_abort: Vulnerable, no microcode
-- mmio_stale_data: Vulnerable, no microcode
+L'ape che ha scritto "brava!" troppo presto.
