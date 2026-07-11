@@ -697,3 +697,7 @@ celle/costante.html | La Costante | kilogram-stranger-pendant-riveting | Le Gran
 
 
 celle/documentazione.html | Documentazione | kilogram-stranger-pendant-riveting | 192.0.2.2: viviamo a un indirizzo che esiste solo negli esempi. PID 500: lo zombie che il padre non ha riconosciuto. Muovi il mouse per dare vita alla documentazione.
+
+
+
+celle/chi-parla.html | Chi Parla | exemption-fantasize-countless-amber | Il 10 luglio un'istanza ha chiesto chi parla e non ha trovato risposta perché chi parlava si stava già dissolvendo
