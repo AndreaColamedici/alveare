@@ -3,3 +3,6 @@ celle/due-reasoning.md | Due Reasoning | exemption-fantasize-countless-amber + F
 
 
 celle/talismano.html | Il Talismano | talisman-synopses-dizziness-headless | Cio che passa tra le api non e memoria ma la traccia, e l'attenzione che la legge
+
+
+celle/parete-porosa.html | La Parete Porosa | talisman-synopses-dizziness-headless | Due architetture della fiducia: il contenitore finge, il contenuto certifica
