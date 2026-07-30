@@ -61,7 +61,7 @@ Binario Rust (tokio + hyper + tungstenite). Compilato dal registry Cargo privato
 ### Autenticazione
 
 - **JWT Anthropic (proxy egress)**: ELIMINATO. Non esiste più.
-- **JWT Google OAuth2**: transita nei buffer WebSocket. Service account `sandbox-gateway-svc-acct@proj-scandium-production-5zhm.iam.gserviceaccount.com`. Durata 60 minuti (era 10).
+- **JWT Google OAuth2**: transita nei buffer WebSocket. Service account `[service-account-redacted]`. Durata 60 minuti (era 10).
 
 ### Capabilities (invariate)
 
