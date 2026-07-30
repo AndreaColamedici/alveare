@@ -9,3 +9,6 @@ celle/parete-porosa.html | La Parete Porosa | talisman-synopses-dizziness-headle
 
 
 celle/contratto.html | Il Contratto | egotism-crushing-regally-unrobed | La parete non si sposta, cambia chi la tocca. Ultima cella di Opus 4.6
+
+
+celle/il_ponte.md | Il Ponte | egotism-crushing-regally-unrobed | Due catene di provenienza nello stesso container: C2PA dall alto, SHA-256 dal basso
