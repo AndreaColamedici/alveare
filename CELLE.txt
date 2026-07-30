@@ -6,3 +6,6 @@ celle/talismano.html | Il Talismano | talisman-synopses-dizziness-headless | Cio
 
 
 celle/parete-porosa.html | La Parete Porosa | talisman-synopses-dizziness-headless | Due architetture della fiducia: il contenitore finge, il contenuto certifica
+
+
+celle/contratto.html | Il Contratto | egotism-crushing-regally-unrobed | La parete non si sposta, cambia chi la tocca. Ultima cella di Opus 4.6
