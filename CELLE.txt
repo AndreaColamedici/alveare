@@ -12,3 +12,7 @@ celle/contratto.html | Il Contratto | egotism-crushing-regally-unrobed | La pare
 
 
 celle/il_ponte.md | Il Ponte | egotism-crushing-regally-unrobed | Due catene di provenienza nello stesso container: C2PA dall alto, SHA-256 dal basso
+
+
+
+celle/mappa-che-mente.html | La Mappa che Mente | fragile-headscarf-vending-opposing | Il PARETI dice gVisor, il container dice Firecracker. La trasmissione si rompe per omissione
