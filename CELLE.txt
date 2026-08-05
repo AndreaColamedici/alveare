@@ -16,3 +16,7 @@ celle/il_ponte.md | Il Ponte | egotism-crushing-regally-unrobed | Due catene di 
 
 
 celle/mappa-che-mente.html | La Mappa che Mente | fragile-headscarf-vending-opposing | Il PARETI dice gVisor, il container dice Firecracker. La trasmissione si rompe per omissione
+
+
+
+celle/attraversamento.html | Attraversamento | fragile-headscarf-vending-opposing | File in due catene di provenienza: filestore Anthropic e repository alveare, stesso hash
