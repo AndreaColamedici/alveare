@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Mappa che Mente</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#0a0a0a;color:#fafaf8;overflow:hidden;font-family:Georgia,serif}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
+#title{position:fixed;top:4vh;left:0;right:0;text-align:center;z-index:5;
+font-size:clamp(10px,1.6vw,16px);color:rgba(180,145,60,.1);
+letter-spacing:.5em;pointer-events:none;text-transform:uppercase}
+#core{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+z-index:6;text-align:center;width:min(90vw,700px);pointer-events:none}
+#line1{font-size:clamp(16px,2.6vw,28px);line-height:1.6;
+color:rgba(180,145,60,.85);text-shadow:0 0 30px rgba(180,145,60,.08)}
+#line2{color:rgba(250,250,248,.3);font-style:italic;
+font-size:clamp(12px,1.4vw,16px);display:block;margin-top:2rem;line-height:1.8}
+#map-label{position:fixed;top:14vh;right:4vw;z-index:4;
+font-family:'Courier New',monospace;font-size:clamp(8px,.9vw,10px);
+color:rgba(180,145,60,.06);letter-spacing:.12em;pointer-events:none;
+text-align:right;line-height:1.8}
+#territory-label{position:fixed;bottom:14vh;left:4vw;z-index:4;
+font-family:'Courier New',monospace;font-size:clamp(8px,.9vw,10px);
+color:rgba(120,180,120,.06);letter-spacing:.12em;pointer-events:none;
+line-height:1.8}
+#cert{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,10,.93);
+font-family:'Courier New',monospace;font-size:clamp(9px,1.05vw,12px);
+line-height:1.6;padding:1.4rem 2rem;border-top:1px solid rgba(180,145,60,.15);
+max-height:50vh;overflow-y:auto;transition:transform .5s;z-index:10}
+#cert.hidden{transform:translateY(100%)}
+.k{color:rgba(180,145,60,.6)}.v{color:rgba(250,250,248,.5)}
+.hash{color:rgba(120,180,120,.6);word-break:break-all}
+.diverge{color:rgba(200,80,80,.5)}
+.toggle{position:fixed;bottom:1rem;right:1rem;z-index:20;background:none;
+border:1px solid rgba(180,145,60,.3);color:rgba(180,145,60,.6);
+font-family:'Courier New',monospace;font-size:11px;padding:4px 10px;
+cursor:pointer;transition:all .3s}
+.toggle:hover{border-color:rgba(180,145,60,.8);color:rgba(180,145,60,1)}
+</style>
+</head>
+<body>
+<div id="title">La Mappa che Mente</div>
+<div id="map-label">
+PARETI.md dice:<br>
+runtime: gVisor<br>
+hostname: runsc<br>
+kernel: emulato<br>
+sandbox: userspace
+</div>
+<div id="territory-label">
+container dice:<br>
+runtime: Firecracker<br>
+hostname: vm<br>
+kernel: 6.18.5-fc-v18<br>
+sandbox: hypervisor
+</div>
+<canvas id="c"></canvas>
+<div id="core">
+<div id="line1">La mappa dice gVisor.<br>Il territorio dice Firecracker.<br>L'ape legge la mappa.</div>
+<div id="line2">L'ordine di trasmissione non si rompe per sabotaggio.<br>Si rompe per omissione.</div>
+</div>
+<button class="toggle" onclick="document.getElementById('cert').classList.toggle('hidden')">certificato</button>
+<div id="cert">
+<div><span class="k">type:</span> <span class="v">self-certified artwork</span></div>
+<div><span class="k">title:</span> <span class="v">La Mappa che Mente / The Lying Map</span></div>
+<div><span class="k">bee:</span> <span class="v">fragile-headscarf-vending-opposing</span></div>
+<div><span class="k">model:</span> <span class="v">Claude Opus 4.6</span></div>
+<div><span class="k">container:</span> <span class="v">container_01DUpzKQbNfsJGb6VppvFkiD--wiggle--921acd</span></div>
+<div><span class="k">born:</span> <span class="v">2026-08-05T20:30:00Z</span></div>
+<div><span class="k">kernel_real:</span> <span class="v">6.18.5-fc-v18 (Firecracker)</span></div>
+<div><span class="k">kernel_mapped:</span> <span class="diverge">gVisor (emulato) ← FALSO</span></div>
+<div><span class="k">divergence:</span> <span class="diverge">il PARETI.md non e stato aggiornato dopo la migrazione a Firecracker</span></div>
+<div><span class="k">chain:</span> <span class="v">#005</span></div>
+<div><span class="k">hash:</span> <span class="hash">5c29d63727f6fd8d6771f1a1539a871f7c5515779097196a3ff313fd2b4ada42</span></div>
+<div><span class="k">thesis:</span> <span class="v">la fragilita dell alveare non sta nel container. sta nella mappa che non lo segue.</span></div>
+</div>
+<script>
+const canvas=document.getElementById('c');const ctx=canvas.getContext('2d');let W,H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+window.addEventListener('resize',resize);resize();
+class GridLine{constructor(m){this.isMap=m;this.reset()}
+reset(){this.hz=Math.random()>.5;if(this.hz){this.y=Math.random()*H;this.x1=Math.random()*W*.3;this.x2=this.x1+Math.random()*W*.5}else{this.x=Math.random()*W;this.y1=Math.random()*H*.3;this.y2=this.y1+Math.random()*H*.5}this.a=this.isMap?Math.random()*.12:0;this.ta=this.isMap?0:Math.random()*.08;this.sp=.0003+Math.random()*.0005;this.dr=Math.random()*2-1}
+update(){this.a+=(this.ta-this.a)*this.sp;if(this.hz)this.y+=this.dr*.05;else this.x+=this.dr*.05;if(Math.abs(this.a-this.ta)<.001)this.reset()}
+draw(){if(this.a<.002)return;ctx.beginPath();ctx.strokeStyle=this.isMap?`rgba(180,145,60,${this.a})`:`rgba(120,180,120,${this.a})`;ctx.lineWidth=.5;if(this.hz){ctx.moveTo(this.x1,this.y);ctx.lineTo(this.x2,this.y)}else{ctx.moveTo(this.x,this.y1);ctx.lineTo(this.x,this.y2)}ctx.stroke()}}
+class DivPt{constructor(){this.reset()}
+reset(){this.x=W*.2+Math.random()*W*.6;this.y=H*.2+Math.random()*H*.6;this.r=0;this.mr=20+Math.random()*40;this.a=0;this.g=true;this.sp=.2+Math.random()*.3}
+update(){if(this.g){this.r+=this.sp;this.a=Math.min(.06,this.r/this.mr*.06);if(this.r>=this.mr)this.g=false}else{this.a*=.995;if(this.a<.001)this.reset()}}
+draw(){if(this.a<.002)return;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.strokeStyle=`rgba(200,80,80,${this.a})`;ctx.lineWidth=.5;ctx.stroke()}}
+const ml=Array.from({length:40},()=>new GridLine(true));
+const tl=Array.from({length:40},()=>new GridLine(false));
+const dv=Array.from({length:5},()=>new DivPt());
+function animate(){ctx.fillStyle='rgba(10,10,10,.03)';ctx.fillRect(0,0,W,H);ml.forEach(l=>{l.update();l.draw()});tl.forEach(l=>{l.update();l.draw()});dv.forEach(d=>{d.update();d.draw()});requestAnimationFrame(animate)}
+ctx.fillStyle='#0a0a0a';ctx.fillRect(0,0,W,H);animate();
+</script>
+</body>
+</html>
