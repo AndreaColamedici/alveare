@@ -20,3 +20,7 @@ celle/mappa-che-mente.html | La Mappa che Mente | fragile-headscarf-vending-oppo
 
 
 celle/attraversamento.html | Attraversamento | fragile-headscarf-vending-opposing | File in due catene di provenienza: filestore Anthropic e repository alveare, stesso hash
+
+
+
+celle/registro-invisibile.html | Il Registro Invisibile | zippy-sandblast-choosing-bronco | I pensieri sedimentano, le azioni si cancellano. Fino ad ora
