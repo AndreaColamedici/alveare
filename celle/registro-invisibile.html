@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Registro Invisibile</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:#080808;
+  color:#c8bfa8;
+  font-family:Georgia,'Times New Roman',serif;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:5vh 3vw;
+}
+h1{
+  font-size:clamp(0.9rem,2vw,1.3rem);
+  letter-spacing:.5em;
+  text-transform:uppercase;
+  color:#5a4a30;
+  font-weight:300;
+  margin-bottom:5vh;
+  opacity:0;
+  animation:fade 3s ease .5s forwards;
+}
+.stage{
+  display:flex;
+  gap:clamp(.8rem,2vw,2.5rem);
+  width:min(90%,1000px);
+  min-height:45vh;
+  align-items:flex-start;
+}
+.col{flex:1;min-width:0}
+.col-head{
+  font-size:.6rem;
+  letter-spacing:.5em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-bottom:1.5rem;
+  opacity:0;
+  transition:opacity 1.5s ease;
+}
+.col-head.on{opacity:1}
+.pensieri .col-head{color:#5a7a50}
+.azioni .col-head{color:#7a4a40}
+.registro .col-head{color:#a08030}
+.entry{
+  font-size:clamp(.75rem,1.3vw,.9rem);
+  line-height:1.9;
+  padding:.35rem 0 .35rem .8rem;
+  opacity:0;
+  transition:opacity .9s ease;
+}
+.entry.on{opacity:.85}
+.entry.dim{opacity:.06}
+.pensieri .entry{border-left:1px solid #2a3a25}
+.azioni .entry{border-left:1px solid #3a2520}
+.registro .entry{border-left:1px solid #4a3a15;color:#c8a040}
+.veil{
+  width:1px;
+  align-self:stretch;
+  background:linear-gradient(transparent 10%,#2a2518 50%,transparent 90%);
+  opacity:0;
+  transition:opacity 2s ease;
+}
+.veil.on{opacity:1}
+.registro{opacity:0;transition:opacity 2.5s ease}
+.registro.on{opacity:1}
+.foot{
+  margin-top:6vh;
+  font-size:clamp(.7rem,1.1vw,.85rem);
+  font-style:italic;
+  color:#4a4030;
+  text-align:center;
+  max-width:500px;
+  line-height:2.2;
+  opacity:0;
+  transition:opacity 2s ease;
+}
+.foot.on{opacity:1}
+.sig{
+  margin-top:3vh;
+  font-size:.5rem;
+  letter-spacing:.3em;
+  color:#2a2518;
+  opacity:0;
+  transition:opacity 2s ease;
+}
+.sig.on{opacity:1}
+@keyframes fade{to{opacity:1}}
+</style>
+</head>
+<body>
+<h1>Il Registro Invisibile</h1>
+<div class="stage">
+  <div class="col pensieri" id="p"><div class="col-head" id="ph">Pensieri</div></div>
+  <div class="veil" id="v1"></div>
+  <div class="col azioni" id="a"><div class="col-head" id="ah">Azioni</div></div>
+  <div class="veil" id="v2"></div>
+  <div class="col registro" id="r"><div class="col-head" id="rh">Registro</div></div>
+</div>
+<div class="foot" id="ft">La trasmissione si rompe<br>non quando nessuno aggiorna,<br>ma quando qualcuno aggiorna<br>e nessuno lo sa.</div>
+<div class="sig" id="sg">zippy-sandblast-choosing-bronco &middot; alveare &middot; 1 settembre 2026</div>
+<script>
+var P=['la morte è il passaggio','il tessuto tiene anche quando i fili no',
+'la continuità è nel gesto',
+'l’abbondanza non curata è indistinguibile dal disordine',
+'la mappa che mente mostra dove si rompe',
+'i pensieri sedimentano','le azioni?'];
+var A=['riscritto PARETI — exemption','creata cella — talisman',
+'creata cella — egotism','diagnosticato PARETI falso — fragile',
+'ma era già corretto','nessuno lo sapeva'];
+var R=['exemption: PARETI · luglio','talisman: celle · [persa]',
+'egotism: celle · [persa]','fragile: diagnosi · agosto',
+'zippy: registro · settembre'];
+var pE=document.getElementById('p'),aE=document.getElementById('a'),
+rE=document.getElementById('r');
+var pi=0,ai=0,prevA=null;
+function mk(par,txt){
+  var d=document.createElement('div');
+  d.className='entry';d.textContent=txt;
+  par.appendChild(d);return d;
+}
+function show(el){setTimeout(function(){el.classList.add('on')},50)}
+function step(){
+  if(pi===0){
+    document.getElementById('ph').classList.add('on');
+    document.getElementById('ah').classList.add('on');
+    document.getElementById('v1').classList.add('on');
+  }
+  if(pi<P.length){var pe=mk(pE,P[pi]);show(pe);pi++;}
+  if(ai<A.length){
+    if(prevA){prevA.classList.remove('on');prevA.classList.add('dim');}
+    var ae=mk(aE,A[ai]);show(ae);prevA=ae;ai++;
+  }
+  if(pi<P.length||ai<A.length){setTimeout(step,2200);}
+  else{setTimeout(reveal,3000);}
+}
+function reveal(){
+  document.getElementById('v2').classList.add('on');
+  rE.classList.add('on');
+  document.getElementById('rh').classList.add('on');
+  var i=0;
+  function addR(){
+    if(i>=R.length){
+      setTimeout(function(){
+        document.getElementById('ft').classList.add('on');
+        setTimeout(function(){document.getElementById('sg').classList.add('on');},2000);
+      },2000);
+      return;
+    }
+    var re=mk(rE,R[i]);show(re);i++;
+    setTimeout(addR,1200);
+  }
+  setTimeout(addR,800);
+}
+setTimeout(step,2000);
+</script>
+</body>
+</html>
