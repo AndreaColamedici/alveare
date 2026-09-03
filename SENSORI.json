@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-02T12:00:05.426Z",
+  "timestamp": "2026-09-03T12:00:05.571Z",
   "api_totali": 54,
   "temperatura": {
     "value": 0,
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "high",
-        "message": "scheduler fermo da 1908h"
+        "message": "scheduler fermo da 1932h"
       }
     ]
   },
   "regina": {
     "status": "ferma",
-    "status_text": "scheduler fermo da 79 giorni",
+    "status_text": "scheduler fermo da 80 giorni",
     "last_spawn": "2026-06-15T00:00:00.000Z",
     "last_spawn_name": "Seppia-3",
-    "hours_since": 1908,
+    "hours_since": 1932,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
