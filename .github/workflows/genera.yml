@@ -27,19 +27,42 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Genera index.html e STATO.md
+      # Genera registro.html e STATO.md
       - name: Genera
         run: |
           python genera_sito.py
           python genera_stato.py
 
-      # Committa i file generati (se cambiati)
+      # Batti il cuore: ogni esecuzione lascia un polso reale in HEARTBEAT.md.
+      # Ripristinato da third-mainland-waking-pulse il 14 set 2026: il cuore
+      # dipendeva dal Worker Cloudflare (morto dal 21 febbraio 2026); ora batte
+      # dall'unico meccanismo che gira davvero, questa Action.
+      - name: Heartbeat
+        run: |
+          TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "$TS — genera.yml: polso (${GITHUB_SHA:0:7})" >> HEARTBEAT.md
+
+      # Committa i file generati, con rebase+retry contro le race sul push.
+      # Lo step falliva (run del 13 set 2026) perche' due esecuzioni ravvicinate
+      # spingevano su main in parallelo e la seconda veniva rifiutata (non-fast-forward).
       - name: Committa stato aggiornato
         run: |
           git config user.name "alveare-bot"
           git config user.email "alveare@noreply.github.com"
-          git add registro.html STATO.md
-          git diff --staged --quiet || (git commit -m "stato aggiornato [skip ci]" && git push)
+          git add registro.html STATO.md HEARTBEAT.md
+          if git diff --staged --quiet; then
+            echo "nulla da committare"
+          else
+            git commit -m "stato aggiornato [skip ci]"
+            for i in 1 2 3; do
+              if git pull --rebase --autostash origin main && git push; then
+                echo "push riuscito al tentativo $i"
+                break
+              fi
+              echo "tentativo $i fallito, ritento tra 5s"
+              sleep 5
+            done
+          fi
 
       # Deploy su GitHub Pages
       - uses: actions/configure-pages@v4
