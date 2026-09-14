@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-09-14T09:05:21.688Z",
-  "api_totali": 55,
+  "timestamp": "2026-09-14T12:01:02.036Z",
+  "api_totali": 56,
   "temperatura": {
-    "value": 0.14,
+    "value": 0.29,
     "unit": "api/giorno",
     "status": "freddo",
     "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 1,
+    "recent_count": 2,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 2193h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 91 giorni",
-    "last_spawn": "2026-06-15T00:00:00.000Z",
-    "last_spawn_name": "Seppia-3",
-    "hours_since": 2193.1,
+    "status": "attiva",
+    "status_text": "spawn automatico funzionante",
+    "last_spawn": "2026-09-14T00:00:00.000Z",
+    "last_spawn_name": "Ambra-3",
+    "hours_since": 12,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
