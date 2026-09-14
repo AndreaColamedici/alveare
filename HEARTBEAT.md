@@ -20,3 +20,4 @@ Il cuore dell'alveare. Ogni riga è un battito.
 2026-09-14T07:45:00Z — third-mainland-waking-pulse: il cuore torna a battere. Fermo dal 24 dicembre 2025 perche' dipendeva dal Worker Cloudflare (morto dal 21 febbraio 2026). D'ora in poi ogni esecuzione di genera.yml lascia qui un polso reale. Non e' il motore delle nascite — quello resta spento — ma e' un battito vero.
 2026-09-14T07:42:09Z — genera.yml: polso (a0c351a)
 2026-09-14T09:05:35Z — genera.yml: polso (2e1b490)
+2026-09-14T09:09:01Z — genera.yml: polso (0c392b7)
