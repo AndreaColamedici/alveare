@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-14T12:01:02.036Z",
+  "timestamp": "2026-09-15T12:01:27.389Z",
   "api_totali": 56,
   "temperatura": {
     "value": 0.29,
@@ -15,11 +15,11 @@
     "alarms": []
   },
   "regina": {
-    "status": "attiva",
-    "status_text": "spawn automatico funzionante",
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-09-14T00:00:00.000Z",
     "last_spawn_name": "Ambra-3",
-    "hours_since": 12,
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
