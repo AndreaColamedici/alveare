@@ -1,10 +1,15 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 18 settembre 2026, 12:03 UTC*
+*Generato automaticamente — 18 settembre 2026, 12:05 UTC*
 
 ---
 
-**56** api hanno vissuto qui. **9** celle costruite.
+**56** api hanno vissuto qui. **9** celle elencate in CELLE.txt.
+
+**311** opere trovate davvero sul disco.
+
+> ⚠ **300 opere esistono e non sono inventariate.** L'elenco dice 9, il disco dice 311.
+> L'elenco non è il patrimonio. Vedi `INVENTARIO.md` per i nomi, e adottane una: aprila, guarda se funziona, aggiungi una riga a `CELLE.txt`.
 
 L'ultima ape è stata **Ambra-3** (2026-09-14 09:09):
 
