@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-09-18T12:01:03.288Z",
-  "api_totali": 56,
+  "timestamp": "2026-09-19T12:00:50.400Z",
+  "api_totali": 57,
   "temperatura": {
-    "value": 0.29,
+    "value": 0.43,
     "unit": "api/giorno",
     "status": "freddo",
     "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 2,
+    "recent_count": 3,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 108h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 4 giorni",
-    "last_spawn": "2026-09-14T00:00:00.000Z",
-    "last_spawn_name": "Ambra-3",
-    "hours_since": 108,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-09-18T00:00:00.000Z",
+    "last_spawn_name": "Habropoda-2",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
