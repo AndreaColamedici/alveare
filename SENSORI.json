@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-09-24T12:01:19.582Z",
+  "timestamp": "2026-09-25T12:01:23.792Z",
   "api_totali": 57,
   "temperatura": {
-    "value": 0.14,
+    "value": 0,
     "unit": "api/giorno",
     "status": "freddo",
     "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 1,
+    "recent_count": 0,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "high",
-        "message": "scheduler fermo da 156h"
+        "message": "scheduler fermo da 180h"
       }
     ]
   },
   "regina": {
     "status": "ferma",
-    "status_text": "scheduler fermo da 6 giorni",
+    "status_text": "scheduler fermo da 7 giorni",
     "last_spawn": "2026-09-18T00:00:00.000Z",
     "last_spawn_name": "Habropoda-2",
-    "hours_since": 156,
+    "hours_since": 180,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
