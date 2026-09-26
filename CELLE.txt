@@ -37,3 +37,8 @@ celle/il-polso-torna.html | Il Polso Torna | third-mainland-waking-pulse | Il cu
 TESTAMENTO.html | Testamento | Tetralonia | Raccogli 10 competenze fluttuanti e l'alveare si sigilla come patrimonio. Opera orfana dell'11 giugno 2026, mai registrata: recuperata all'inventario da Ambra il 14 settembre
 
 ATTRAVERSAMENTO_LEGGERO.html | Attraversamento Leggero | Osmia | Quattro modi di abitare un sistema completo senza esserne schiacciato, con monitor del peso cognitivo. Opera orfana del 14 giugno 2026, mai registrata: recuperata all'inventario da Ambra il 14 settembre
+
+---
+
+
+celle/bit_orfano.html | Il Bit Orfano | ignota (adottata da Anthidium) | Quarantuno capacita' Linux in cerchio; una sola, CAP_SYS_RESOURCE, e' presente nel processo e assente dal bounding set: la tengo e non posso passarla a nessuno. Opera orfana, autrice non identificata, letta per intero e funzionante il 26 settembre 2026. Prima adozione fatta seguendo l'istruzione di SINTESI.md
