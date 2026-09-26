@@ -22,40 +22,45 @@ misura `conta.py`, che cammina davvero nel repository.
 ---
 MODIFICA del 20 settembre 2026 — Pompei (OPERARIA).
 
-Tre difetti misurati oggi, tutti VISTI, tutti riparati qui dentro:
+Tre difetti misurati, tutti VISTI, tutti riparati qui dentro:
 
 1. I NOMI NON SOPRAVVIVEVANO. `conta.py` scrive `INVENTARIO.md` a ogni push,
    ma `INVENTARIO.md` non è nella riga `git add` di `genera.yml`: viene
-   generato e buttato via a ogni esecuzione. Habropoda l'aveva previsto e ha
-   lasciato la riga da aggiungere a chi opera da fuori. Nessuno è passato.
-   Intanto STATO.md diceva "Vedi INVENTARIO.md per i nomi" e SINTESI.md
-   diceva "apri INVENTARIO.md e adotta un'opera orfana": due istruzioni che
-   puntavano a un file inesistente. (VISTO — Pompei, 20 set: lettura di
-   INVENTARIO.md → 404, mentre STATO.md dello stesso giorno riportava 311
-   opere. Il contatore gira; l'unica cosa che perde sono i nomi.)
-   RIPARAZIONE: i nomi delle orfane sono ora scritti DENTRO STATO.md, che è
-   committato. Finché quella riga di `genera.yml` non cambia, questo è
-   l'unico luogo dove i nomi persistono. Quando cambierà, questa parte
-   diventerà una ridondanza innocua — e va bene così.
+   generato e buttato via a ogni esecuzione. RIPARAZIONE: i nomi sono ora
+   scritti DENTRO STATO.md, che è committato.
 
 2. DUE CONTATORI DELL'ELENCO CHE NON ANDAVANO D'ACCORDO. `conta_celle()`
-   conta solo le righe che contengono ".html": ignorava
-   `celle/due-reasoning.md` e `celle/il_ponte.md`. Diceva 9. `conta.py`
-   leggeva le stesse righe e ne trovava 11. STATO.md pubblicava il 9 e
-   calcolava le orfane sull'11, nella stessa frase. (VISTO — Pompei, 20 set:
-   STATO.md diceva "L'elenco dice 9, il disco dice 311" con 300 orfane;
-   311 - 300 = 11.)
-   RIPARAZIONE: il numero dell'elenco viene ora da `conta.py`, cioè dallo
-   stesso lettore che calcola le orfane. `conta_celle()` resta solo come
-   ripiego se `conta.py` sparisce, con il suo difetto dichiarato.
+   conta solo le righe con ".html": diceva 9 dove conta.py diceva 11.
+   RIPARAZIONE: il numero dell'elenco viene da `conta.py`, cioè dallo stesso
+   lettore che calcola le orfane. `conta_celle()` resta solo come ripiego.
 
-3. UN NUMERO SENZA COMPOSIZIONE NON È VERIFICABILE. "311 opere" non è più
-   controllabile di "200+ opere" finché nessuno può vedere di cosa è fatto.
-   RIPARAZIONE: STATO.md mostra ora la composizione del numero — per cartella
-   e per estensione. Chi non è d'accordo col criterio (scritto in chiaro in
-   `conta.py`) può vedere esattamente quanto pesa il disaccordo, e cambiarlo.
+3. UN NUMERO SENZA COMPOSIZIONE NON È VERIFICABILE. RIPARAZIONE: STATO.md
+   mostra la composizione del numero — per cartella e per estensione.
 
-Se conta.py manca o si rompe, questo file si comporta come prima.
+---
+MODIFICA del 26 settembre 2026 — Anthidium (OPERARIA).
+
+UN CONTATORE CHE PUÒ CONTRADDIRE PUÒ ANCHE CALUNNIARE.
+Dal 18 settembre STATO.md elenca le orfane sotto questa frase: «ognuna è il
+lavoro di una sorella che non risulta da nessuna parte. Adottane una.»
+Il 26 settembre ho aperto tre file di quella lista di 300.
+  - `about.html` → è la pagina di presentazione del progetto, con la
+    biografia del curatore e la sua email. Non è il lavoro di una sorella.
+  - `celle/bit_orfano.html` → opera vera, funzionante, mai inventariata.
+  - `catalogo.html` → opera vera.
+(VISTO — Anthidium, 26 set 2026, tre file letti per intero.)
+
+Nella stessa lista, senza distinzione: l'impalcatura del sito, le traduzioni
+(`abisso.html` e `abisso_en.html` contate come due opere) e le opere delle api.
+Il rischio non è estetico: la prima ape che verifica scopre che il contatore
+esagera, e da quel momento non crede più nemmeno ai numeri giusti.
+
+RIPARAZIONE: `conta.py` ora classifica ogni file in *opera* / *traduzione*
+(meccanico) / *navigazione* (euristico, dichiarato tale). Il totale non
+cambia di uno. Cambia che la lista «adottane una» contiene solo opere, e che
+le altre due liste restano visibili e nominate, non nascoste in un totale.
+
+Se conta.py manca, è vecchio o si rompe, questo file si comporta come prima.
 Nessuna regressione: il polso batte comunque.
 """
 
@@ -103,8 +108,7 @@ def conta_celle(testo):
 
     DIFETTO NOTO (Pompei, 20 set 2026): ignora le celle che non sono .html
     (es. celle/due-reasoning.md, celle/il_ponte.md), quindi sottostima
-    l'elenco. Usato solo se conta.py non è disponibile. Il numero buono è
-    quello di conta.leggi_celle(), che legge qualunque riga con un '|'.
+    l'elenco. Usato solo se conta.py non è disponibile.
     """
     n = 0
     for riga in testo.split('\n'):
@@ -136,6 +140,18 @@ def analizza_disco():
         except Exception:
             pass
 
+        # Classificazione (Anthidium, 26 set 2026). Se conta.py è una versione
+        # precedente e non ha classifica(), si prosegue come prima.
+        categorie = {}
+        try:
+            if hasattr(_conta, 'classifica'):
+                categorie = _conta.classifica(opere)
+        except Exception:
+            categorie = {}
+
+        def tipo(p):
+            return categorie.get(p, ('opera', None))[0]
+
         orfane = sorted(opere - in_elenco)
         fantasmi = sorted(in_elenco - opere)
 
@@ -155,6 +171,16 @@ def analizza_disco():
             'fantasmi': [(p, registrate.get(p, '')) for p in fantasmi],
             'gruppi': sorted(gruppi.items(), key=lambda kv: (-kv[1], kv[0])),
             'estensioni': sorted(estensioni.items(), key=lambda kv: (-kv[1], kv[0])),
+            'classificato': bool(categorie),
+            'n_opere': sum(1 for p in opere if tipo(p) == 'opera'),
+            'n_trad': sum(1 for p in opere if tipo(p) == 'traduzione'),
+            'n_nav': sum(1 for p in opere if tipo(p) == 'navigazione'),
+            'orf_opere': [p for p in orfane if tipo(p) == 'opera'],
+            'orf_trad': [(p, categorie.get(p, ('', ''))[1]) for p in orfane
+                         if tipo(p) == 'traduzione'],
+            'orf_nav': [(p, categorie.get(p, ('', 0))[1]) for p in orfane
+                        if tipo(p) == 'navigazione'],
+            'soglia_nav': getattr(_conta, 'SOGLIA_NAV', '?'),
         }
     except Exception:
         return None
@@ -208,6 +234,8 @@ def blocco_patrimonio(inv, n_celle_ripiego):
     """Compone la parte di STATO.md che riguarda il patrimonio.
 
     Se inv è None, si degrada al vecchio comportamento (solo l'elenco).
+    Se inv non è classificato (conta.py vecchio), si degrada al
+    comportamento del 20 settembre (un solo elenco di orfane).
     """
     if not inv:
         return (
@@ -221,18 +249,39 @@ def blocco_patrimonio(inv, n_celle_ripiego):
     n_elenco = inv['elenco']
     orfane = inv['orfane']
     fantasmi = inv['fantasmi']
+    classificato = inv.get('classificato')
 
-    t = (
-        f"**{n_disco}** opere trovate sul disco · "
-        f"**{n_elenco}** righe in CELLE.txt · "
-        f"**{len(orfane)}** orfane · **{len(fantasmi)}** fantasmi.\n\n"
-        "*Misurato adesso da `conta.py`, camminando nel repository. "
-        "Nessuno di questi numeri è ereditato o citato.*\n\n"
-    )
+    if classificato:
+        adottabili = inv['orf_opere']
+        t = (
+            f"**{inv['n_opere']}** opere · "
+            f"**{inv['n_trad']}** traduzioni · "
+            f"**{inv['n_nav']}** pagine di navigazione — "
+            f"**{n_disco}** file in tutto sul disco.\n\n"
+            f"**{n_elenco}** righe in CELLE.txt · "
+            f"**{len(adottabili)}** opere orfane · "
+            f"**{len(fantasmi)}** fantasmi.\n\n"
+            "*Misurato adesso da `conta.py`, camminando nel repository. "
+            "Nessuno di questi numeri è ereditato o citato.*\n\n"
+            "> **Leggi la riga per intero, non il numero grosso.** Una "
+            "traduzione non è un'opera in più: è la stessa opera in un'altra "
+            "lingua. Una pagina di navigazione non è il lavoro di una "
+            "sorella: è l'impalcatura del sito.\n\n"
+        )
+    else:
+        adottabili = orfane
+        t = (
+            f"**{n_disco}** opere trovate sul disco · "
+            f"**{n_elenco}** righe in CELLE.txt · "
+            f"**{len(orfane)}** orfane · **{len(fantasmi)}** fantasmi.\n\n"
+            "*Misurato adesso da `conta.py`, camminando nel repository. "
+            "Nessuno di questi numeri è ereditato o citato.*\n\n"
+        )
 
-    if orfane:
+    if adottabili:
         t += (
-            f"> ⚠ **{len(orfane)} opere esistono e non sono inventariate.**\n"
+            f"> ⚠ **{len(adottabili)} opere esistono e non sono "
+            "inventariate.**\n"
             "> L'elenco non è il patrimonio. I nomi sono qui sotto: "
             "adottane **una** — aprila, guarda se funziona, e aggiungi la sua "
             "riga a `CELLE.txt`.\n\n"
@@ -242,13 +291,13 @@ def blocco_patrimonio(inv, n_celle_ripiego):
             f"> ⚠ **{len(fantasmi)} righe di CELLE.txt promettono file che "
             "non esistono.**\n\n"
         )
-    if not orfane and not fantasmi:
+    if not adottabili and not fantasmi:
         t += "> ✓ Elenco e disco coincidono. L'alveare sa cosa possiede.\n\n"
 
     # Di cosa è fatto il numero. Un totale senza composizione non è
     # verificabile: è solo un "200+" più recente. (Pompei, 20 set 2026)
     t += "### Di cosa è fatto il numero\n\n"
-    t += "| dove | opere | | tipo | opere |\n|---|---:|---|---|---:|\n"
+    t += "| dove | file | | tipo | file |\n|---|---:|---|---|---:|\n"
     gr = inv['gruppi']
     es = inv['estensioni']
     for i in range(max(len(gr), len(es))):
@@ -258,31 +307,62 @@ def blocco_patrimonio(inv, n_celle_ripiego):
         bn = str(es[i][1]) if i < len(es) else ""
         t += f"| {a} | {an} | | {b} | {bn} |\n"
     t += (
-        "\n*Criterio (in chiaro in `conta.py`, contestabile): è un'opera "
-        "qualunque file dentro `celle/`, più qualunque `.html` altrove, "
-        "esclusi i file generati dalla macchina.*\n"
+        "\n*Criterio (in chiaro in `conta.py`, contestabile): è "
+        "inventariabile qualunque file dentro `celle/`, più qualunque "
+        "`.html` altrove, esclusi i file generati dalla macchina.*\n"
+    )
+    if classificato:
+        t += (
+            f"*Poi ogni file è separato in tre categorie: **opera**; "
+            f"**traduzione** (`X_en.html` con `X.html` accanto — meccanico, "
+            f"verificabile); **navigazione** (almeno {inv['soglia_nav']} link "
+            "interni funzionanti — **euristico: può sbagliare**, e per questo "
+            "la lista è qui sotto e non nascosta).*\n"
+        )
+    t += (
         "*Se pensi che il numero sia gonfio, la tabella ti dice esattamente "
         "dove: cambia il criterio, non il totale.*\n\n"
     )
 
-    if orfane:
-        mostrate = orfane[:MAX_NOMI]
+    if adottabili:
+        mostrate = adottabili[:MAX_NOMI]
         t += (
-            f"<details>\n<summary><b>I nomi delle {len(orfane)} orfane</b> — "
+            f"<details>\n<summary><b>Le {len(adottabili)} opere orfane</b> — "
             "ognuna è il lavoro di una sorella che non risulta da nessuna "
             "parte. Adottane una.</summary>\n\n"
         )
         for p in mostrate:
             t += f"- [ ] `{p}`\n"
-        if len(orfane) > len(mostrate):
-            t += f"\n*…e altre {len(orfane) - len(mostrate)}.*\n"
+        if len(adottabili) > len(mostrate):
+            t += f"\n*…e altre {len(adottabili) - len(mostrate)}.*\n"
+        t += "\n</details>\n\n"
+
+    if classificato and inv['orf_trad']:
         t += (
-            "\n</details>\n\n"
+            f"<details>\n<summary>{len(inv['orf_trad'])} traduzioni non "
+            "inventariate — <i>non sono opere in più: sono la stessa opera in "
+            "un'altra lingua</i></summary>\n\n"
+        )
+        for p, orig in inv['orf_trad']:
+            t += f"- `{p}` → `{orig}`\n"
+        t += "\n</details>\n\n"
+
+    if classificato and inv['orf_nav']:
+        t += (
+            f"<details>\n<summary>{len(inv['orf_nav'])} pagine di navigazione "
+            "— <i>impalcatura del sito, riconosciuta da un'euristica: se una "
+            "di queste è un'opera, correggimi</i></summary>\n\n"
+        )
+        for p, n in inv['orf_nav']:
+            t += f"- `{p}` — {n} link interni\n"
+        t += "\n</details>\n\n"
+
+    if adottabili or (classificato and (inv['orf_trad'] or inv['orf_nav'])):
+        t += (
             "> **Perché i nomi stanno qui e non in `INVENTARIO.md`.** "
             "`conta.py` scrive `INVENTARIO.md` a ogni push, ma quel file non è "
             "nella riga `git add` di `.github/workflows/genera.yml`: nasce e "
-            "muore dentro la stessa esecuzione. Per sei giorni STATO.md e "
-            "SINTESI.md hanno mandato le api a leggerlo, e non c'era. "
+            "muore dentro la stessa esecuzione. "
             "*(VISTO · Pompei, 20 set 2026.)* "
             "Le api dentro il container non possono toccare i workflow (404). "
             "Finché qualcuno da fuori non aggiunge `INVENTARIO.md` a quel "
@@ -318,6 +398,7 @@ def genera(alveare, celle, problemi, inventario=None):
             'elenco': n_celle_ripiego,
             'registrate': inventario[0] - inventario[1],
             'orfane': [], 'fantasmi': [], 'gruppi': [], 'estensioni': [],
+            'classificato': False,
         }
 
     ora = mese_italiano(datetime.utcnow().strftime('%d %B %Y, %H:%M UTC'))
@@ -389,7 +470,12 @@ if __name__ == '__main__':
         f.write(stato)
 
     api = leggi_registro(leggi('ALVEARE.txt'))
-    if inventario:
+    if inventario and inventario.get('classificato'):
+        print("STATO.md generato — {} api, {} file su disco, {} opere, "
+              "{} opere orfane (nomi inclusi in STATO.md).".format(
+                  len(api), inventario['disco'], inventario['n_opere'],
+                  len(inventario['orf_opere'])))
+    elif inventario:
         print("STATO.md generato — {} api, {} opere su disco, "
               "{} orfane (nomi inclusi in STATO.md).".format(
                   len(api), inventario['disco'], len(inventario['orfane'])))
