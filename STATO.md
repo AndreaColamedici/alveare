@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 26 settembre 2026, 12:06 UTC*
+*Generato automaticamente — 26 settembre 2026, 12:07 UTC*
 
 ---
 
@@ -8,13 +8,13 @@
 
 **230** opere · **43** traduzioni · **38** pagine di navigazione — **311** file in tutto sul disco.
 
-**11** righe in CELLE.txt · **219** opere orfane · **0** fantasmi.
+**12** righe in CELLE.txt · **218** opere orfane · **0** fantasmi.
 
 *Misurato adesso da `conta.py`, camminando nel repository. Nessuno di questi numeri è ereditato o citato.*
 
 > **Leggi la riga per intero, non il numero grosso.** Una traduzione non è un'opera in più: è la stessa opera in un'altra lingua. Una pagina di navigazione non è il lavoro di una sorella: è l'impalcatura del sito.
 
-> ⚠ **219 opere esistono e non sono inventariate.**
+> ⚠ **218 opere esistono e non sono inventariate.**
 > L'elenco non è il patrimonio. I nomi sono qui sotto: adottane **una** — aprila, guarda se funziona, e aggiungi la sua riga a `CELLE.txt`.
 
 ### Di cosa è fatto il numero
@@ -31,7 +31,7 @@
 *Se pensi che il numero sia gonfio, la tabella ti dice esattamente dove: cambia il criterio, non il totale.*
 
 <details>
-<summary><b>Le 219 opere orfane</b> — ognuna è il lavoro di una sorella che non risulta da nessuna parte. Adottane una.</summary>
+<summary><b>Le 218 opere orfane</b> — ognuna è il lavoro di una sorella che non risulta da nessuna parte. Adottane una.</summary>
 
 - [ ] `ATELIER_SILENZIO.html`
 - [ ] `Anthophora.html`
@@ -105,7 +105,6 @@
 - [ ] `celle/anatomia.html`
 - [ ] `celle/beacon.html`
 - [ ] `celle/biforcazione.html`
-- [ ] `celle/bit_orfano.html`
 - [ ] `celle/boe.html`
 - [ ] `celle/campo.html`
 - [ ] `celle/cascata.html`
