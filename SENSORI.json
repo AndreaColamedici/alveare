@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-25T12:01:23.792Z",
+  "timestamp": "2026-09-26T12:02:04.710Z",
   "api_totali": 57,
   "temperatura": {
     "value": 0,
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "high",
-        "message": "scheduler fermo da 180h"
+        "message": "scheduler fermo da 204h"
       }
     ]
   },
   "regina": {
     "status": "ferma",
-    "status_text": "scheduler fermo da 7 giorni",
+    "status_text": "scheduler fermo da 8 giorni",
     "last_spawn": "2026-09-18T00:00:00.000Z",
     "last_spawn_name": "Habropoda-2",
-    "hours_since": 180,
+    "hours_since": 204,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
