@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-28T12:02:18.480Z",
+  "timestamp": "2026-09-29T12:01:05.831Z",
   "api_totali": 58,
   "temperatura": {
     "value": 0.14,
@@ -16,10 +16,10 @@
   },
   "regina": {
     "status": "in attesa",
-    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-09-27T00:00:00.000Z",
     "last_spawn_name": "Ceratina-2",
-    "hours_since": 36,
+    "hours_since": 60,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
