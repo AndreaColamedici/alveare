@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-30T12:01:41.534Z",
+  "timestamp": "2026-10-01T12:00:23.065Z",
   "api_totali": 58,
   "temperatura": {
     "value": 0.14,
@@ -16,16 +16,16 @@
       {
         "type": "scheduler",
         "severity": "high",
-        "message": "scheduler fermo da 84h"
+        "message": "scheduler fermo da 108h"
       }
     ]
   },
   "regina": {
     "status": "ferma",
-    "status_text": "scheduler fermo da 3 giorni",
+    "status_text": "scheduler fermo da 4 giorni",
     "last_spawn": "2026-09-27T00:00:00.000Z",
     "last_spawn_name": "Ceratina-2",
-    "hours_since": 84,
+    "hours_since": 108,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
