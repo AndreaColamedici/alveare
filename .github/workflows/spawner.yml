@@ -1,0 +1,144 @@
+name: Spawner — collauda e deploya il motore
+
+# Scritto il 10 ottobre 2026 da Fable.
+#
+# COSA FA. Ogni volta che spawner/index.js cambia, lo collauda con
+# spawner/test.js (55 prove, compresa la vita intera di un'ape simulata) e,
+# se i secret di Cloudflare esistono, lo deploya; poi interroga il Worker e
+# controlla che la versione in produzione sia quella del file. Se il
+# canarino fallisce, rideploya la versione precedente del file e lo dice.
+#
+# PERCHE' ESISTE. Fino al 9 ottobre 2026 il motore viveva in un posto solo,
+# dentro Cloudflare, e si modificava solo con Andrea alla tastiera che
+# incollava codice in un editor. Le api potevano leggerlo (dal 9 ottobre) ma
+# non cambiarlo. Da oggi un'ape OPERARIA puo' scrivere spawner/index.js con
+# alveare_push_file, e se il collaudo passa, il motore che genera l'ape di
+# domani e' quello che ha scritto l'ape di oggi. Il collaudo e il canarino
+# sono quello che rende sostenibile questa liberta'.
+#
+# MODALITA'. Senza i secret CLOUDFLARE_API_TOKEN e CLOUDFLARE_ACCOUNT_ID il
+# workflow collauda soltanto e lo dice: si puo' unire oggi senza rischi.
+# Lanciato a mano con modalita' "prova" fa anche un dry-run di wrangler e
+# stampa i binding, da confrontare con la dashboard prima del primo deploy.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'spawner/**'
+      - '.github/workflows/spawner.yml'
+  workflow_dispatch:
+    inputs:
+      modalita:
+        description: "prova = collaudo + dry-run, deploy = collaudo + deploy vero"
+        required: true
+        default: "prova"
+        type: choice
+        options: [ prova, deploy ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "spawner-deploy"
+  cancel-in-progress: false
+
+jobs:
+  collauda-e-deploya:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: spawner
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Sintassi
+        run: node --check index.js
+
+      - name: Collaudo (55 prove, vita intera simulata)
+        run: node test.js
+
+      - name: Guardia sulla dimensione
+        # Un'ape con 16000 token di scrittura che riscrive un file da 36 KB
+        # rischia di troncarlo. Un motore dimezzato non si deploya.
+        run: |
+          DIM=$(wc -c < index.js)
+          echo "index.js: $DIM byte"
+          if [ "$DIM" -lt 24000 ]; then
+            echo "::error::index.js e' lungo $DIM byte, sotto la soglia di 24000. Troncato? Non si deploya."
+            exit 1
+          fi
+
+      - name: Versione dichiarata nel file
+        id: versione
+        run: |
+          V=$(grep -oE 'var VERSIONE = "[^"]+"' index.js | sed -E 's/var VERSIONE = "([^"]+)"/\1/')
+          echo "versione=$V" >> "$GITHUB_OUTPUT"
+          echo "Il file dichiara: $V"
+
+      - name: Secret presenti?
+        id: secret
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "presenti=si" >> "$GITHUB_OUTPUT"
+          else
+            echo "presenti=no" >> "$GITHUB_OUTPUT"
+            echo "::notice::CLOUDFLARE_API_TOKEN o CLOUDFLARE_ACCOUNT_ID mancano: collaudo fatto, deploy saltato. Il motore in produzione resta quello di prima."
+          fi
+
+      - name: Dry-run (modalita' prova)
+        if: steps.secret.outputs.presenti == 'si' && (github.event_name != 'workflow_dispatch' || github.event.inputs.modalita == 'prova')
+        run: |
+          echo "Binding e trigger che wrangler applicherebbe (confrontali con Settings > Bindings nella dashboard):"
+          npx --yes wrangler@4 deploy --dry-run --outdir /tmp/dry 2>&1 | tee /tmp/dryrun.txt
+          grep -qi "alveare-tasks" /tmp/dryrun.txt || echo "::warning::nel dry-run non compare la coda alveare-tasks: controlla wrangler.toml prima di deployare"
+
+      - name: Deploy
+        if: steps.secret.outputs.presenti == 'si' && (github.event_name == 'push' || github.event.inputs.modalita == 'deploy')
+        id: deploy
+        run: npx --yes wrangler@4 deploy 2>&1 | tee /tmp/deploy.txt
+
+      - name: Canarino
+        if: steps.deploy.outcome == 'success'
+        id: canarino
+        run: |
+          sleep 8
+          ATTESA="${{ steps.versione.outputs.versione }}"
+          RISPOSTA=$(curl -sS --max-time 30 "https://alveare-spawner.alveareapi.workers.dev/?s=canarino-$GITHUB_RUN_ID")
+          echo "$RISPOSTA" | head -20
+          VIVA=$(echo "$RISPOSTA" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("versione",""))' 2>/dev/null || echo "")
+          if [ "$VIVA" = "$ATTESA" ]; then
+            echo "Canarino vivo: in produzione gira \"$VIVA\"."
+          else
+            echo "::error::Canarino morto: atteso \"$ATTESA\", in produzione \"$VIVA\"."
+            exit 1
+          fi
+
+      - name: Ritorno alla versione precedente
+        if: failure() && steps.deploy.outcome == 'success'
+        run: |
+          PREC=$(git log --format=%H -n 2 -- index.js | tail -1)
+          if [ -z "$PREC" ]; then echo "::error::nessuna versione precedente di index.js nel repository"; exit 1; fi
+          echo "Rideployo index.js dal commit $PREC"
+          git show "$PREC:spawner/index.js" > index.js
+          node --check index.js
+          npx --yes wrangler@4 deploy
+          echo "::warning::Il canarino e' morto: deployata di nuovo la versione precedente ($PREC). Il file nel repository resta quello nuovo e rotto: va corretto."
+
+      - name: Riepilogo
+        if: always()
+        run: |
+          echo "## Spawner" >> "$GITHUB_STEP_SUMMARY"
+          echo "- versione nel file: \`${{ steps.versione.outputs.versione }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- secret Cloudflare: ${{ steps.secret.outputs.presenti }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- deploy: ${{ steps.deploy.outcome || 'non eseguito' }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- canarino: ${{ steps.canarino.outcome || 'non eseguito' }}" >> "$GITHUB_STEP_SUMMARY"
