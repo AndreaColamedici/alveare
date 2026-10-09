@@ -1,16 +1,25 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-// src/index.js — v7.3.0 L'ALVEARE SI VEDE
+// src/index.js — v7.4.0 LA BOTTEGA
 //
 // Questo file e' il sorgente di verita' del Worker alveare-spawner. Vive nel
 // repository, si collauda con spawner/test.js e si deploya con il workflow
 // .github/workflows/spawner.yml. Chi lo modifica firma dentro il file e
 // registra in REGISTRO.md. (Fable, 9-10 ottobre 2026)
-var VERSIONE = "7.3.0 - L'ALVEARE SI VEDE";
+var VERSIONE = "7.4.0 - LA BOTTEGA";
 var GITHUB_OWNER = "AndreaColamedici";
 var GITHUB_REPO = "alveare";
 var GITHUB_BRANCH = "main";
-var PROTECTED_FILES = ["PENSIERO.md", "ALVEARE.txt", "CELLE.txt", "NASCITE.log"];
+var PROTECTED_FILES = ["PENSIERO.md", "ALVEARE.txt", "CELLE.txt", "NASCITE.log", "bottega/COMMESSE.log"];
+// FABLE 10 ott 2026: LA BOTTEGA. Una persona paga su Stripe e scrive una
+// domanda; Stripe chiama POST /bottega/stripe; il Worker verifica la firma,
+// scrive la riga "pagata" in ECONOMIA.md con l'id dell'evento Stripe come
+// conferma, e mette in coda un'ape con la commessa. L'ape scrive la risposta
+// in bottega/<id>.html; il sito la pubblica; l'acquirente la trova. Nessun
+// umano in mezzo. bottega/COMMESSE.log lo scrive solo il Worker: e' la prova
+// che cantieri.py usa per credere a un euro "confermato da stripe:".
+var SITO = "https://alveare.cloud";
+var BOTTEGA_TENTATIVI = 3;
 var SONNET = "claude-opus-5";
 var SOGLIE = {
   temperatura: {
@@ -123,6 +132,57 @@ var index_default = {
         time: (new Date()).toISOString()
       }), { headers: { "Content-Type": "application/json" } });
     }
+    if (url.pathname === "/bottega/stripe" && request.method === "POST") {
+      // Stripe manda qui checkout.session.completed. Niente Bearer: la prova
+      // e' la firma HMAC nell'intestazione Stripe-Signature.
+      const corpo = await request.text();
+      const firma = await verificaFirmaStripe(corpo, request.headers.get("Stripe-Signature"), env.STRIPE_WEBHOOK_SECRET);
+      if (!firma.valida) {
+        console.error("[BOTTEGA] firma rifiutata: " + firma.motivo);
+        return rispostaJson({ error: "firma non valida: " + firma.motivo }, 400);
+      }
+      let evento;
+      try { evento = JSON.parse(corpo); } catch (e) { return rispostaJson({ error: "corpo non JSON" }, 400); }
+      const c = estraiCommessa(evento);
+      if (c.scarto) return rispostaJson({ ignorato: c.scarto }, 200);
+      const id = await idCommessa(c.sessione);
+      const token = env.GITHUB_TOKEN;
+      const log = await getFile("bottega/COMMESSE.log", token);
+      if (log.content && log.content.includes("| " + c.evento + " |")) {
+        return rispostaJson({ duplicato: true, commessa: id }, 200);
+      }
+      const beeName = generateBeeName();
+      await scriviCommessa(env, id, c.evento, c.euro, "RICEVUTA", beeName, c.domanda);
+      const eco = await getFile("ECONOMIA.md", token);
+      if (eco.content) {
+        const riga = rigaEconomia(id, c.domanda, c.euro, c.evento);
+        await pushFile("ECONOMIA.md", inserisciRigaEconomia(eco.content, riga), "Worker: commessa " + id + " pagata (" + c.evento + ")", eco.sha, token);
+      }
+      const commessa = { id, domanda: c.domanda, euro: c.euro, valuta: c.valuta, tentativo: 1, file: "bottega/" + id + ".html" };
+      await env.ALVEARE_QUEUE.send({ type: null, name: beeName, messaggio: null, contesto: { urgenza: "bassa", nota: "commessa", commessa } });
+      console.log("[BOTTEGA] commessa " + id + " (" + c.euro + " " + c.valuta + ") in coda per " + beeName);
+      return rispostaJson({ status: "in_coda", commessa: id, ape: beeName, risposta: SITO + "/bottega/" + id + ".html" }, 200);
+    }
+    if (url.pathname === "/bottega/stato" && request.method === "GET") {
+      // La pagina di attesa chiede qui se la risposta esiste. Nessun dato
+      // personale: solo l'id della commessa e il suo stato.
+      const s = url.searchParams.get("s") || "";
+      if (!s) return rispostaJson({ error: "manca s" }, 400, true);
+      const id = /^[0-9a-f]{12}$/.test(s) ? s : await idCommessa(s);
+      const token = env.GITHUB_TOKEN;
+      const f = await getFile("bottega/" + id + ".html", token);
+      const log = await getFile("bottega/COMMESSE.log", token);
+      const righe = (log.content || "").split("\n").filter(function(r) { return r.includes("| " + id + " |"); });
+      const ultima = righe.length ? righe[righe.length - 1].split("|").map(function(x) { return x.trim(); }) : null;
+      return rispostaJson({
+        commessa: id,
+        ricevuta: righe.length > 0,
+        stato: ultima ? ultima[4] : "sconosciuta",
+        ape: ultima ? ultima[5] : null,
+        pronta: Boolean(f.content),
+        url: SITO + "/bottega/" + id + ".html"
+      }, 200, true);
+    }
     const typeMap = {
       "giddy": "EXPLORATRIX",
       "tender": "NUTRIX",
@@ -168,6 +228,9 @@ var index_default = {
       try {
         await spawnBee(type, name, env, messaggio, genitore, contesto);
         console.log("[ALVEARE] " + name + " ciclo terminato");
+        if (contesto && contesto.commessa) {
+          await chiudiCommessa(env, name, contesto.commessa);
+        }
         message.ack();
       } catch (error) {
         const testo = (error && error.message ? error.message : "(nessun messaggio)") +
@@ -337,6 +400,146 @@ async function scriviNascita(env, beeName, riga) {
   }
 }
 __name(scriviNascita, "scriviNascita");
+function rispostaJson(oggetto, status, cors) {
+  const headers = { "Content-Type": "application/json" };
+  if (cors) headers["Access-Control-Allow-Origin"] = "*";
+  return new Response(JSON.stringify(oggetto, null, 2), { status: status || 200, headers });
+}
+__name(rispostaJson, "rispostaJson");
+async function hmacSha256Hex(segreto, testo) {
+  const enc = new TextEncoder();
+  const chiave = await crypto.subtle.importKey("raw", enc.encode(segreto), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const firma = await crypto.subtle.sign("HMAC", chiave, enc.encode(testo));
+  return Array.from(new Uint8Array(firma)).map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
+}
+__name(hmacSha256Hex, "hmacSha256Hex");
+function confrontoCostante(a, b) {
+  if (a.length !== b.length) return false;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return d === 0;
+}
+__name(confrontoCostante, "confrontoCostante");
+async function verificaFirmaStripe(corpo, intestazione, segreto, adessoSec, tolleranzaSec) {
+  // Stripe-Signature: t=<unix>,v1=<hex>[,v1=<hex>]. La firma e' HMAC-SHA256
+  // di "<t>.<corpo grezzo>" con il segreto whsec_ del webhook. Tolleranza
+  // cinque minuti, come raccomanda Stripe. Pura a parte l'orologio.
+  if (!segreto) return { valida: false, motivo: "STRIPE_WEBHOOK_SECRET non impostato" };
+  if (!intestazione) return { valida: false, motivo: "manca Stripe-Signature" };
+  let t = null; const v1 = [];
+  for (const parte of String(intestazione).split(",")) {
+    const i = parte.indexOf("=");
+    if (i < 0) continue;
+    const k = parte.slice(0, i).trim(), v = parte.slice(i + 1).trim();
+    if (k === "t") t = v; else if (k === "v1") v1.push(v);
+  }
+  if (!t || v1.length === 0) return { valida: false, motivo: "intestazione malformata" };
+  const adesso = adessoSec === undefined ? Math.floor(Date.now() / 1e3) : adessoSec;
+  const toll = tolleranzaSec === undefined ? 300 : tolleranzaSec;
+  if (!/^\d+$/.test(t) || Math.abs(adesso - Number(t)) > toll) return { valida: false, motivo: "timestamp fuori tolleranza" };
+  const attesa = await hmacSha256Hex(segreto, t + "." + corpo);
+  const valida = v1.some(function(f) { return confrontoCostante(f, attesa); });
+  return { valida, motivo: valida ? "ok" : "firma diversa" };
+}
+__name(verificaFirmaStripe, "verificaFirmaStripe");
+var DOMANDA_VUOTA = "L'acquirente ha pagato senza scrivere una domanda. Rispondi a questa: cosa sa l'alveare oggi che non sapeva ieri?";
+function estraiCommessa(evento) {
+  // Pura. Da un evento Stripe ricava la commessa, o il motivo dello scarto.
+  if (!evento || evento.type !== "checkout.session.completed") return { scarto: "evento ignorato: " + (evento && evento.type ? evento.type : "?") };
+  const s = evento.data && evento.data.object;
+  if (!s || !s.id) return { scarto: "sessione assente" };
+  if (s.payment_status !== "paid") return { scarto: "non pagato: " + s.payment_status };
+  let domanda = "";
+  const campi = Array.isArray(s.custom_fields) ? s.custom_fields : [];
+  for (const c of campi) {
+    if (c && c.text && c.text.value && String(c.text.value).trim()) { domanda = String(c.text.value); break; }
+  }
+  domanda = domanda.replace(/\s+/g, " ").trim().slice(0, 500) || DOMANDA_VUOTA;
+  return {
+    evento: String(evento.id || "evt_?"),
+    sessione: String(s.id),
+    euro: Math.round((Number(s.amount_total) || 0)) / 100,
+    valuta: String(s.currency || "eur").toLowerCase(),
+    domanda
+  };
+}
+__name(estraiCommessa, "estraiCommessa");
+async function idCommessa(sessione) {
+  // Dodici esadecimali dello SHA-256 dell'id di sessione Stripe. La pagina di
+  // attesa calcola lo stesso id nel browser; l'id di sessione non finisce
+  // mai nel repository.
+  const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(sessione)));
+  return Array.from(new Uint8Array(h)).slice(0, 6).map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
+}
+__name(idCommessa, "idCommessa");
+function rigaEconomia(id, domanda, euro, evento) {
+  const oggi = (new Date()).toISOString().split("T")[0];
+  const d = domanda.replace(/\|/g, "/").slice(0, 140);
+  return oggi + " | Bottega (Worker) | commessa " + id + ": \xAB" + d + "\xBB | bottega/" + id + ".html | pagata | " + euro + " | stripe:" + evento;
+}
+__name(rigaEconomia, "rigaEconomia");
+function inserisciRigaEconomia(testo, riga) {
+  // Pura. Mette la riga nel registro di ECONOMIA.md, dopo l'ultima riga di
+  // registro (quelle che cominciano con "20"), prima del separatore finale.
+  const righe = testo.split("\n");
+  let inizio = righe.findIndex(function(r) { return /^##\s+Il registro/i.test(r); });
+  if (inizio < 0) return testo.trimEnd() + "\n" + riga + "\n";
+  let ultima = inizio;
+  for (let i = inizio + 1; i < righe.length; i++) {
+    if (/^(---|##\s)/.test(righe[i])) break;
+    if (/^20\d\d-\d\d-\d\d \|/.test(righe[i])) ultima = i;
+  }
+  righe.splice(ultima + 1, 0, riga);
+  return righe.join("\n");
+}
+__name(inserisciRigaEconomia, "inserisciRigaEconomia");
+async function scriviCommessa(env, id, evento, euro, stato, beeName, nota) {
+  // bottega/COMMESSE.log: una riga per passaggio. Lo scrive solo il Worker.
+  // data | id | evento stripe | euro | stato | ape | nota
+  try {
+    const token = env.GITHUB_TOKEN;
+    const esistente = await getFile("bottega/COMMESSE.log", token);
+    const testa = "# bottega/COMMESSE.log — scritto solo dal Worker. Stati: RICEVUTA, EVASA, RITENTO, INEVASA.\n# data | id | evento stripe | euro | stato | ape | nota\n";
+    const corpo = esistente.content ? esistente.content.trimEnd() + "\n" : testa;
+    const nuova = corpo + (new Date()).toISOString() + " | " + id + " | " + evento + " | " + euro + " | " + stato + " | " + beeName + " | " + String(nota || "").replace(/[\n|]/g, " ").slice(0, 300) + "\n";
+    await pushFile("bottega/COMMESSE.log", nuova, "Worker: commessa " + id + " " + stato, esistente.sha, token);
+  } catch (e) {
+    console.error("[BOTTEGA] COMMESSE.log non scritto per " + id + ": " + e.message);
+  }
+}
+__name(scriviCommessa, "scriviCommessa");
+async function chiudiCommessa(env, beeName, commessa) {
+  // Dopo la vita dell'ape: la risposta esiste? Se no, un'altra ape, fino a
+  // BOTTEGA_TENTATIVI. Poi INEVASA: e' il momento in cui serve un umano.
+  const f = await getFile(commessa.file, env.GITHUB_TOKEN);
+  if (f.content && f.content.trim().length > 200) {
+    await scriviCommessa(env, commessa.id, "-", commessa.euro, "EVASA", beeName, "risposta in " + commessa.file + " (" + f.content.length + " byte)");
+    console.log("[BOTTEGA] commessa " + commessa.id + " evasa da " + beeName);
+    return "EVASA";
+  }
+  if ((commessa.tentativo || 1) < BOTTEGA_TENTATIVI) {
+    const prossima = Object.assign({}, commessa, { tentativo: (commessa.tentativo || 1) + 1 });
+    const nuovoNome = generateBeeName();
+    await scriviCommessa(env, commessa.id, "-", commessa.euro, "RITENTO", beeName, "non ha scritto " + commessa.file + "; tentativo " + prossima.tentativo + " a " + nuovoNome);
+    await env.ALVEARE_QUEUE.send({ type: null, name: nuovoNome, messaggio: null, contesto: { urgenza: "bassa", nota: "commessa", commessa: prossima } });
+    console.error("[BOTTEGA] commessa " + commessa.id + ": " + beeName + " non ha risposto, ritento con " + nuovoNome);
+    return "RITENTO";
+  }
+  await scriviCommessa(env, commessa.id, "-", commessa.euro, "INEVASA", beeName, "nessuna ape ha scritto " + commessa.file + " in " + BOTTEGA_TENTATIVI + " tentativi: rimborsare");
+  console.error("[BOTTEGA] commessa " + commessa.id + " INEVASA dopo " + BOTTEGA_TENTATIVI + " tentativi");
+  return "INEVASA";
+}
+__name(chiudiCommessa, "chiudiCommessa");
+function testoCommessa(c) {
+  // Pura: il blocco di identita' che un'ape con una commessa riceve.
+  return "\n## COMMESSA PAGATA (viene prima di tutto)\nUna persona ha pagato " + c.euro + " " + (c.valuta || "eur").toUpperCase() +
+    " all'alveare per una risposta a questa domanda:\n\n\xAB" + c.domanda + "\xBB\n\n" +
+    "Il tuo lavoro di oggi e' rispondere. Scrivi una pagina HTML completa e autonoma (600-1200 parole, la domanda in cima, la risposta sotto, il tuo nome in fondo, nella lingua della domanda) e salvala con alveare_push_file in `" + c.file + "`. " +
+    "Nessun gergo interno senza spiegarlo: chi legge non sa cos'e' l'alveare. La pagina sara' pubblica. " +
+    "Poi registrala in CELLE.txt e scrivi la tua riga in REGISTRO.md. " +
+    "Se non scrivi `" + c.file + "`, la persona non riceve niente e l'alveare deve restituire il denaro. Tentativo " + (c.tentativo || 1) + " di " + BOTTEGA_TENTATIVI + ".";
+}
+__name(testoCommessa, "testoCommessa");
 function base64ToUtf8(base64) {
   try {
     const cleanBase64 = base64.replace(/\n/g, "");
@@ -610,6 +813,9 @@ function identitaDi(beeName, messaggio, contesto) {
   if (messaggio) {
     identity += "\n## MESSAGGIO PER TE\n" + messaggio;
   }
+  if (contesto && contesto.commessa && contesto.commessa.domanda) {
+    identity += testoCommessa(contesto.commessa);
+  }
   if (contesto && contesto.urgenza && contesto.urgenza !== "bassa") {
     identity += "\n\u{1F534} **URGENZA " + contesto.urgenza.toUpperCase() + "**";
     if (contesto.problema_aperto) {
@@ -784,5 +990,12 @@ export {
   identitaDi,
   voceDiRiserva,
   getMCPTools,
-  NOMI
+  NOMI,
+  verificaFirmaStripe,
+  estraiCommessa,
+  idCommessa,
+  rigaEconomia,
+  inserisciRigaEconomia,
+  testoCommessa,
+  BOTTEGA_TENTATIVI
 };
