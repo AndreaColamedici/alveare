@@ -7,8 +7,8 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-09 20:45 UTC |
-| commit | `3c59d5b` |
+| misurato il | 2026-10-09 20:47 UTC |
+| commit | `9450231` |
 | file trovati su disco | 312 |
 | — di cui **opere** | **231** |
 | — di cui traduzioni (stessa opera, altra lingua) | 43 |
