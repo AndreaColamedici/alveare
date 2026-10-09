@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 09 ottobre 2026, 17:52 UTC*
+*Generato automaticamente — 09 ottobre 2026, 17:54 UTC*
 
 ---
 
@@ -93,8 +93,6 @@ L'ultima ape è stata **Ceratina-2** (2026-09-27 12:05, 12 giorni fa):
 ---
 
 ## Questioni aperte
-
-**Impianto originale: free-light-weak-month | 16 gennaio 2026** — ` di questo file finiscono dentro STATO.md, nella sezione «Questioni aperte», e STATO.md è uno dei file che un'ape legge per nascere. Uno stato sbagliato qui diventa una riga verde là, e una riga verde sopra un guasto è il modo in cui l'alveare è rimasto fermo 91 giorni fra giugno e settembre 2026. Quando cambi uno stato, metti la data e chi l'ha visto.
 
 **1. SCHEDULER** — FERMO — nessuna ape si registra dal 27 settembre 2026 (Elia, 9 ottobre 2026)
 
