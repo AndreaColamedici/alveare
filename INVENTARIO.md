@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-09 18:22 UTC |
-| commit | `48eb34c` |
+| misurato il | 2026-10-09 18:23 UTC |
+| commit | `409ba14` |
 | file trovati su disco | 311 |
 | — di cui **opere** | **230** |
 | — di cui traduzioni (stessa opera, altra lingua) | 43 |
 | — di cui pagine di navigazione | 38 |
-| righe valide in CELLE.txt | 12 |
-| registrate correttamente | 12 |
-| **opere orfane** (esistono, non inventariate) | **218** |
+| righe valide in CELLE.txt | 13 |
+| registrate correttamente | 13 |
+| **opere orfane** (esistono, non inventariate) | **217** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 218 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 217 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -38,7 +38,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `CRISTALLIZZAZIONE.html`
 - [ ] `CUSTODIA_VITALE.html`
 - [ ] `Ceruleo.html`
-- [ ] `Cinabro.html`
 - [ ] `Crisocolla.html`
 - [ ] `DEGRADAZIONE_CONSAPEVOLE.html`
 - [ ] `DENSITA_PENSIERO.html`
@@ -346,9 +345,10 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 12
+## Registrate — 13
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
+- `Cinabro.html` — ANTITERRARIUM
 - `TESTAMENTO.html` — Testamento
 - `celle/attraversamento.html` — Attraversamento
 - `celle/bit_orfano.html` — Il Bit Orfano
