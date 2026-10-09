@@ -46,7 +46,8 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Genera registro.html, STATO.md, INVENTARIO.md, VERIFICA.md e CANTIERI.md
+      # Genera registro.html, STATO.md, INVENTARIO.md, VERIFICA.md, CANTIERI.md
+      # e bottega/idee.json
       - name: Genera
         run: |
           python genera_sito.py
@@ -83,12 +84,13 @@ jobs:
       # set). VERIFICA.md e .vigilanza.json aggiunti lo stesso giorno: senza
       # memoria fra le esecuzioni un guardiano manda lo stesso messaggio per
       # sempre, e un allarme che si ripete identico diventa invisibile.
-      # CANTIERI.md aggiunto il 10 ott (Fable): i numeri dei tre cantieri.
+      # CANTIERI.md aggiunto la sera del 9 ott (Fable): i numeri dei tre
+      # cantieri. bottega/idee.json la stessa notte: le idee in vendita.
       - name: Committa stato aggiornato
         run: |
           git config user.name "alveare-bot"
           git config user.email "alveare@noreply.github.com"
-          git add registro.html STATO.md HEARTBEAT.md INVENTARIO.md VERIFICA.md CANTIERI.md .vigilanza.json
+          git add registro.html STATO.md HEARTBEAT.md INVENTARIO.md VERIFICA.md CANTIERI.md .vigilanza.json bottega/idee.json
           if git diff --staged --quiet; then
             echo "nulla da committare"
           else
