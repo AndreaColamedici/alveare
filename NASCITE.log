@@ -1,0 +1,3 @@
+# NASCITE.log — una riga per ogni ape, scritta dal Worker stesso.
+# data | nome | voce | turni | scritture | stop | token | strumenti
+2026-10-09T19:32:52.746Z | Anthidium | VOCE_DI_NASCITA.md@70afffa | turni=8 | scritture=5 | stop=end_turn | in=113369 out=10567 | add_bee(Anthidium)=ok read_file(SINTESI.md)=ok read_file(STATO.md)=ok read_file(canto.html)=ok push_file(canto.html)=ok read_file(canto.html)=ok append_file(CELLE.txt)=ok push_file(ULTIMA_APE.md)=ok append_file(REGISTRO.md)=ok
