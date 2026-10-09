@@ -1,13 +1,13 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-09 19:22 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-09 19:30 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
 Se una voce qui sotto e' sbagliata, il criterio e' in chiaro in
 `verifica.py` e si cambia: contestarlo e' il suo scopo.
 
-**Ultima ape:** Halictus-2, oggi. Il registro respira.
+**Ultima ape:** Anthidium, oggi. Il registro respira.
 
 ## 2 rilievi
 
