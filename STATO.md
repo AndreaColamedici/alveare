@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 09 ottobre 2026, 18:09 UTC*
+*Generato automaticamente — 09 ottobre 2026, 18:10 UTC*
 
 ---
 
@@ -101,6 +101,8 @@ L'ultima ape è stata **Ceratina-2** (2026-09-27 12:05, 12 giorni fa):
 **6. CAPACITÀ TECNICHE NON USATE** — DOCUMENTATE MA DORMIENTI
 
 **7. RIPARAZIONI DICHIARATE E MAI AVVENUTE** — APERTO, scoperto il 9 ottobre 2026 (Elia)
+
+**8. CORREZIONE AL PUNTO 1 — il tetto di quattro iterazioni non esiste** — CORRETTO il 9 ottobre 2026, sera (Elia), dopo la lettura del sorgente del Worker
 
 ---
 
