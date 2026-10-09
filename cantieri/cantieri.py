@@ -19,11 +19,15 @@ committa a ogni push. Un cantiere che non produce numeri qui non esiste.
                  euro: puo' scrivere "stripe:" in ECONOMIA.md, ma non puo'
                  scrivere COMMESSE.log, e senza la seconda la prima non vale.
   INVENZIONI.md  un'invenzione conta solo se il prototipo esiste sul disco.
+                 Le idee senza prototipo finiscono in bottega/idee.json e il
+                 banco le mette in vendita: chi paga sveglia un'ape che deve
+                 costruirle (9 ottobre, notte: la bottega collabora con le idee).
   TESI.md        una tesi conta solo se cita una prova in un file che esiste.
 
 Esce sempre con 0. Un contatore rotto non deve fermare il cuore.
 """
 
+import json
 import os
 import re
 import sys
@@ -122,19 +126,40 @@ def economia():
 
 # ---------------------------------------------------------------- invenzioni
 
+def slug_idea(titolo):
+    """Identico a slugIdea() in spawner/index.js: stesso nome per la stessa idea."""
+    return re.sub(r'^-+|-+$', '', re.sub(r'[^a-z0-9]+', '-', titolo.lower()))[:40]
+
+
 def invenzioni():
-    """Sezioni `## ` di INVENZIONI.md con i campi **Prototipo:** e **Prova:**."""
+    """Sezioni `## ` di INVENZIONI.md con i campi **Prototipo:** e **Prova:**.
+
+    Restituisce (reali, idee). Ogni idea e' un dict con titolo, slug, chi e
+    cosa: il banco della bottega le legge da bottega/idee.json.
+    """
     reali, idee = [], []
     for b in sezioni_con_chi(leggi('INVENZIONI.md')):
         titolo = b.split('\n', 1)[0].strip()
         proto = re.search(r'\*\*Prototipo:\*\*\s*`([^`]+)`', b)
         prova = re.search(r'\*\*Prova:\*\*\s*(.+)$', b, re.M)
+        chi = re.search(r'\*\*Chi:\*\*\s*(.+)$', b, re.M)
+        cosa = re.search(r'\*\*Cosa fa:\*\*\s*(.+)$', b, re.M)
         percorso = proto.group(1).strip() if proto else ''
         if percorso and esiste(percorso) and prova and prova.group(1).strip() not in ('', '-', 'nessuna'):
             reali.append((titolo, percorso))
         else:
-            idee.append((titolo, percorso))
+            idee.append({'titolo': titolo, 'slug': slug_idea(titolo),
+                         'chi': chi.group(1).strip() if chi else '',
+                         'cosa': cosa.group(1).strip() if cosa else ''})
     return reali, idee
+
+
+def scrivi_idee_in_vendita(idee):
+    """bottega/idee.json: le idee senza prototipo, in vendita nel banco."""
+    os.makedirs('bottega', exist_ok=True)
+    with open('bottega/idee.json', 'w', encoding='utf-8') as f:
+        json.dump({'generato': OGGI.strftime('%Y-%m-%dT%H:%M:%SZ'), 'idee': idee}, f, ensure_ascii=False, indent=1)
+        f.write('\n')
 
 
 # ---------------------------------------------------------------- tesi
@@ -194,7 +219,7 @@ def main():
         t.append('- ' + titolo + ' · `' + p + '`')
     if inv_idee:
         t.append('')
-        t.append("*Idee in attesa di un prototipo:* " + ', '.join(x[0] for x in inv_idee[:6]))
+        t.append("*Idee in attesa di un prototipo, in vendita nel banco della bottega (`bottega/idee.json`):* " + ', '.join(x['titolo'] for x in inv_idee[:6]))
     t.append('')
     t.append('## Tesi sull\'IA — `TESI.md`')
     t.append('')
@@ -212,6 +237,7 @@ def main():
     t.append('')
     with open('CANTIERI.md', 'w', encoding='utf-8') as f:
         f.write('\n'.join(t))
+    scrivi_idee_in_vendita(inv_idee)
     print('cantieri.py: offerte ' + str(len(righe)) + ' (euro confermati ' + ('%.2f' % euro) + ', ' +
           str(len(sospetti)) + ' importi che non valgono), invenzioni ' + str(len(inv_reali)) + ' reali / ' +
           str(len(inv_idee)) + ' idee, tesi ' + str(len(t_anc)) + ' ancorate / ' + str(len(t_sciolte)) + ' sciolte.')
