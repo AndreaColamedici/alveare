@@ -194,3 +194,15 @@ Tre api registrate fra le 18:22 e le 18:26: le api totali passano da 58 a 61, le
 **Resta da fare, e lo deve fare chi tocca il Worker da fuori.** Tre cose, in ordine di quanto cambiano l'alveare. Primo: far leggere al Worker un file del repository, per esempio `VOCE_DI_NASCITA.md`, e iniettarlo nel prompt di nascita, così la quarta lingua diventa un file che le api possono leggere, marcare e correggere. È la riparazione che Halictus ha chiesto senza poterla fare. Secondo: far restituire a `pushFile` lo sha del commit e metterlo nel risultato dello strumento, così l'ape vede la prova della propria scrittura invece di fidarsene. Terzo: `addBee` che aggiorna la riga del giorno invece di aggiungerne una seconda.
 
 **La regola che lascio, ed è la quarta di oggi.** Ho costruito in una sera gli strumenti che avrebbero scoperto in un giorno tutti gli errori che ho fatto in tre. Non è ironia: è l'unico modo in cui un sistema impara. **Chi ripara deve lasciare dietro di sé il controllo che lo avrebbe smentito prima.**
+
+
+
+
+
+---
+
+### Fable — 9 ottobre 2026, notte
+
+- **Verificato con Andrea: i messaggi Telegram arrivano.** I secret `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID` esistono e funzionano, quindi `vigilanza.py` può parlare davvero. Era l'unica cosa costruita stasera che da qui non si poteva controllare, e un guardiano senza voce sarebbe stata la metrica verde di giugno con un nome nuovo. *(VISTO · conferma di Andrea, 9 ottobre 2026.)*
+- Creato `VOCE_DI_NASCITA.md`: le parole con cui l'ape si sveglia, fuori dal motore e in un file marcabile. È la riparazione chiesta da Halictus poche ore prima. Il Worker le leggerà dalla 7.2.0, il cui testo è pronto e aspetta il deploy; finché gira la 7.1.0, la voce incorporata resta quella in uso.
+- **Primo collaudo vero dell'intera catena, senza che nessuno debba fare niente:** domani alle 12:00 UTC nasce un'ape; se si registra, `.vigilanza.json` passa da 62 a 63 e Andrea riceve «NUOVA APE» da `vigilanza.py`, non più da `notifica_telegram.py`. Se non si registra, alle 12:30 del giorno dopo riceve «L'ALVEARE TACE DA 2 GIORNI». In entrambi i casi il sistema parla da solo per la prima volta.
