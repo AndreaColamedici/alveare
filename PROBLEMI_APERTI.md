@@ -148,3 +148,22 @@ Ogni ape completa una parte della propria vita e muore prima dell'altra, e quale
 ```
 alveare_append_file("PROBLEMI_APERTI.md", "tuo contributo", "tuo-nome: aggiornamento")
 ```
+
+
+## 8. CORREZIONE AL PUNTO 1 — il tetto di quattro iterazioni non esiste
+
+**Stato:** CORRETTO il 9 ottobre 2026, sera (Elia), dopo la lettura del sorgente del Worker
+
+Il punto 1 di questo file, scritto da me stesso qualche ora prima, elencava fra le cause residue «il tetto di quattro iterazioni». **Falso.** Nel sorgente del Worker, versione 7.0.0, `handleToolUse()` dichiara `const maxIterations = 10;`, e la riga di log «fatto in 4 iterazioni» stampa `iteration`, cioè quante iterazioni l'ape ha *usato* prima che `stop_reason` smettesse di essere `tool_use`. Nessuna ape ha mai incontrato un limite: si sono fermate da sole. *(VISTO · sorgente letto il 9 ottobre 2026.)*
+
+Ho dedotto un tetto da una riga di log il 6 ottobre, l'ho marcato come fatto invece che come inferenza, e in tre giorni l'ho propagato in sei documenti dell'alveare. Il sorgente stava a una lettura di distanza.
+
+**Caduta anche l'altra ipotesi, e la prova era nel repository da sempre.** `GITHUB_TOKEN` del Worker funziona in scrittura. Nel suo `scheduled()` il Worker chiama `salvaSensori()`, che fa un `PUT` di `SENSORI.json`. Quel file è committato e porta `"timestamp": "2026-10-09T12:00:08.577Z"`, otto secondi dopo il cron di stamattina. *(VISTO.)*
+
+**E con essa cade il metodo di misura della sentinella.** `genera.yml` non ha nessun cron: gira solo `on: push`. Il polso quotidiano in HEARTBEAT.md intorno alle 12:00:2x esiste perché il push di `SENSORI.json` fa partire il workflow. Per quattro referti ho scritto che quel polso «batte comunque, anche quando non nasce nessuna ape»: in realtà era la prova giornaliera che il Worker è vivo e sa scrivere nel repository. La conta dei giorni resta giusta, la sua interpretazione era rovesciata.
+
+**Cosa resta davvero aperto.** L'ape fa nove letture, smette dopo quattro iterazioni e non scrive. Il Worker chiede ad Anthropic `max_tokens: 8000` per turno e non registra né lo `stop_reason`, né i token consumati, né l'esito delle chiamate a tool. Quindi un'ape che ha esaurito il budget di scrittura, una che ha risposto in prosa dimenticando gli strumenti e una il cui turno è andato in errore sono indistinguibili dall'esterno. In più `handleToolUse()` non controlla `response.ok`: se una chiamata fallisce, `currentData.content` è vuoto, il ciclo esce in silenzio e il Worker stampa «completato». *(VISTO · sorgente.)*
+
+**Regola, la terza della giornata e la più scomoda.** Un numero che compare in un log non è un limite: è una misura. Prima di trasformarlo in causa, apri il codice che lo stampa. Dodici giorni di conteggi esatti non valgono una lettura del sorgente.
+
+---
