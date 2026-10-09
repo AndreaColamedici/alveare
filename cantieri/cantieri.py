@@ -2,7 +2,7 @@
 """
 cantieri.py — conta i tre cantieri dell'alveare e scrive CANTIERI.md.
 
-Scritto il 10 ottobre 2026 da Fable, su richiesta di Andrea: «una sezione in
+Scritto il 9 ottobre 2026 (sera) da Fable, su richiesta di Andrea: «una sezione in
 cui l'alveare si impegna a guadagnare soldi veri, una in cui prova a inventare
 cose che ancora non esistono, una in cui pensa in maniera dirompente sull'IA».
 
@@ -12,7 +12,12 @@ il suo criterio di realta', e scrive i numeri in CANTIERI.md, che genera.yml
 committa a ogni push. Un cantiere che non produce numeri qui non esiste.
 
   ECONOMIA.md    un'offerta conta solo nello stato in cui si trova, e gli euro
-                 contano solo se li ha scritti un umano con data e nome.
+                 contano solo se li ha scritti un umano con data e nome,
+                 oppure se la conferma e' "stripe:<evento>" e quell'evento
+                 sta in bottega/COMMESSE.log, che scrive solo il Worker
+                 (dalla 7.4.0, LA BOTTEGA, 9 ottobre sera). Un'ape non puo' inventare un
+                 euro: puo' scrivere "stripe:" in ECONOMIA.md, ma non puo'
+                 scrivere COMMESSE.log, e senza la seconda la prima non vale.
   INVENZIONI.md  un'invenzione conta solo se il prototipo esiste sul disco.
   TESI.md        una tesi conta solo se cita una prova in un file che esiste.
 
@@ -61,10 +66,32 @@ def sezioni_con_chi(testo):
 
 # ---------------------------------------------------------------- economia
 
+def eventi_stripe_veri():
+    """Gli id degli eventi Stripe registrati dal Worker in bottega/COMMESSE.log."""
+    ids = set()
+    for r in leggi('bottega/COMMESSE.log').split('\n'):
+        if not r.startswith('20') or r.count('|') < 6:
+            continue
+        p = [x.strip() for x in r.split('|')]
+        if p[4] == 'RICEVUTA' and p[2].startswith('evt_'):
+            ids.add(p[2])
+    return ids
+
+
+def conferma_valida(conferma, eventi):
+    """Un nome umano vale; 'stripe:evt_x' vale solo se il Worker ha visto evt_x."""
+    if not conferma or conferma == '-':
+        return False
+    if conferma.startswith('stripe:'):
+        return conferma[len('stripe:'):].strip() in eventi
+    return True
+
+
 def economia():
     """Righe del registro in ECONOMIA.md:
     data | ape | offerta | file | stato | euro | confermato da
     """
+    eventi = eventi_stripe_veri()
     righe = []
     for r in leggi('ECONOMIA.md').split('\n'):
         if not r.startswith('20') or r.count('|') < 6:
@@ -85,8 +112,8 @@ def economia():
         if m:
             valore = float(m.group(1).replace(',', '.'))
             if valore > 0:
-                # Un euro vale solo con stato "pagata" e un umano che lo conferma.
-                if r['stato'] == 'pagata' and r['conferma'] and r['conferma'] != '-':
+                # Un euro vale solo con stato "pagata" e una conferma valida.
+                if r['stato'] == 'pagata' and conferma_valida(r['conferma'], eventi):
                     euro_confermati += valore
                 else:
                     euro_sospetti.append(r)
@@ -149,10 +176,10 @@ def main():
     t.append('|---:|---:|---:|---:|---:|---:|')
     t.append('| ' + ' | '.join(str(per_stato[s]) for s in STATI_OFFERTA) + ' | **' + ('%.2f' % euro).replace('.00', '') + '** |')
     t.append('')
-    t.append('Un euro conta solo in una riga con stato `pagata` e il nome di chi lo conferma. Tutto il resto è intenzione.')
+    t.append('Un euro conta solo in una riga con stato `pagata` e, come conferma, il nome di un umano oppure `stripe:<evento>` presente in `bottega/COMMESSE.log`. Tutto il resto è intenzione.')
     if sospetti:
         t.append('')
-        t.append('> ⚠ **' + str(len(sospetti)) + ' righe con un importo che non vale**, perché non sono `pagata` o nessuno le conferma: ' +
+        t.append('> ⚠ **' + str(len(sospetti)) + ' righe con un importo che non vale**, perché non sono `pagata`, nessuno le conferma, o citano un evento Stripe che il Worker non ha mai visto: ' +
                  ', '.join('«' + r['offerta'][:40] + '» (' + r['stato'] + ')' for r in sospetti[:5]))
     if mancanti:
         t.append('')
