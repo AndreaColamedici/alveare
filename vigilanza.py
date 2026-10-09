@@ -3,6 +3,8 @@
 vigilanza.py — l'alveare dice ad Andrea quando tace.
 
 Scritto il 9 ottobre 2026 da Elia (sentinella).
+Esteso il 10 ottobre da Fable: legge NASCITE.log e segnala il giorno stesso
+un'ape nata senza lasciare traccia.
 
 PERCHE' ESISTE, in una riga: per 91 giorni fra giugno e settembre 2026, e poi
 per 13 giorni fra il 28 settembre e il 9 ottobre, questo sistema e' stato fermo
@@ -185,15 +187,37 @@ def main():
                       'silenzio e\' durato 91 giorni senza che nessuno se ne '
                       'accorgesse.\n\n')
         testo += ('Dove guardare, in ordine:\n'
-                  '1. i log del Worker in Observability, riga '
-                  '<code>fine: N iterazioni, M scritture</code>\n'
-                  '2. <code>STATO.md</code> e <code>VERIFICA.md</code> nel '
-                  'repository\n\n<a href="' + SITO + '">alveare</a>')
+                  '1. <code>NASCITE.log</code> nel repository, scritto dal Worker stesso\n'
+                  '2. <code>STATO.md</code> e <code>VERIFICA.md</code>\n'
+                  '3. i log del Worker in Observability\n\n<a href="' + SITO + '">alveare</a>')
         if manda(testo):
             nuovo_stato['ultimo_invio_silenzio'] = OGGI.strftime('%Y-%m-%d')
         nuovo_stato['silenzio_segnalato'] = giorni
         scrivi_stato(nuovo_stato)
         print('vigilanza: silenzio di ' + str(giorni) + ' giorni segnalato.')
+        return 0
+
+    # 2b. APE NATA MUTA. Il Worker (dalla 7.3.0) scrive in NASCITE.log ogni
+    # nascita. Se l'ultima dice scritture=0 o ERRORE, Andrea lo sa oggi, non
+    # fra due giorni. Una volta per riga: la riga stessa e' la chiave.
+    ultima_nascita = ''
+    try:
+        with open('NASCITE.log', 'r', encoding='utf-8') as f:
+            righe_n = [r for r in f.read().split('\n') if r.strip() and not r.startswith('#')]
+        ultima_nascita = righe_n[-1] if righe_n else ''
+    except Exception:
+        pass
+    if ultima_nascita and ('scritture=0' in ultima_nascita or '| ERRORE |' in ultima_nascita) \
+            and stato.get('ultima_muta_segnalata') != ultima_nascita:
+        manda('\U0001F41D  <b>UN\'APE E\' NATA E NON HA LASCIATO TRACCIA</b>\n\n'
+              '<code>' + ultima_nascita[:300] + '</code>\n\n'
+              'Il Worker l\'ha vista nascere e ha scritto che non ha scritto niente. '
+              'E\' la forma dei tredici giorni di silenzio, vista il giorno stesso. '
+              'La riga dice la voce usata, i turni, lo stop_reason e ogni strumento con il suo esito.\n\n'
+              '<a href="' + SITO + '">alveare</a>')
+        nuovo_stato['ultima_muta_segnalata'] = ultima_nascita
+        scrivi_stato(nuovo_stato)
+        print('vigilanza: ape nata muta segnalata.')
         return 0
 
     # 3. RIPARAZIONI DICHIARATE E NON FIRMATE. Una volta per rilievo.
