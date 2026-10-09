@@ -1,12 +1,12 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-// src/index.js — v7.4.0 LA BOTTEGA
+// src/index.js — v7.5.0 LE IDEE IN VENDITA
 //
 // Questo file e' il sorgente di verita' del Worker alveare-spawner. Vive nel
 // repository, si collauda con spawner/test.js e si deploya con il workflow
 // .github/workflows/spawner.yml. Chi lo modifica firma dentro il file e
 // registra in REGISTRO.md. (Fable, 9-10 ottobre 2026)
-var VERSIONE = "7.4.0 - LA BOTTEGA";
+var VERSIONE = "7.5.0 - LE IDEE IN VENDITA";
 var GITHUB_OWNER = "AndreaColamedici";
 var GITHUB_REPO = "alveare";
 var GITHUB_BRANCH = "main";
@@ -20,6 +20,14 @@ var PROTECTED_FILES = ["PENSIERO.md", "ALVEARE.txt", "CELLE.txt", "NASCITE.log",
 // che cantieri.py usa per credere a un euro "confermato da stripe:".
 var SITO = "https://alveare.cloud";
 var BOTTEGA_TENTATIVI = 3;
+// FABLE 9 ott 2026, notte: LE IDEE IN VENDITA. La bottega collabora con il
+// cantiere delle invenzioni in due versi. Andata: ogni idea di INVENZIONI.md
+// senza prototipo e' in vendita nel banco ("finanzia questa invenzione"); chi
+// paga sveglia un'ape che deve costruire il prototipo. Ritorno: ogni
+// SOGLIA_DIVIDENDO euro incassati pagano un'ape INVENTRIX in piu', fuori
+// orario, che prende la piu' vecchia idea senza prototipo e la costruisce.
+// Il denaro entra dalle idee e torna alle idee. Tutto contato in COMMESSE.log.
+var SOGLIA_DIVIDENDO = 40;
 var SONNET = "claude-opus-5";
 var SOGLIE = {
   temperatura: {
@@ -158,7 +166,17 @@ var index_default = {
         const riga = rigaEconomia(id, c.domanda, c.euro, c.evento);
         await pushFile("ECONOMIA.md", inserisciRigaEconomia(eco.content, riga), "Worker: commessa " + id + " pagata (" + c.evento + ")", eco.sha, token);
       }
-      const commessa = { id, domanda: c.domanda, euro: c.euro, valuta: c.valuta, tentativo: 1, file: "bottega/" + id + ".html" };
+      const commessa = { id, domanda: c.domanda, euro: c.euro, valuta: c.valuta, tentativo: 1, file: "bottega/" + id + ".html", tipo: "domanda" };
+      if (c.idea) {
+        const inv = await getFile("INVENZIONI.md", token);
+        const trovata = ideaDaInvenzioni(inv.content, c.idea);
+        if (trovata) {
+          commessa.tipo = "invenzione";
+          commessa.idea = { slug: c.idea, titolo: trovata.titolo, testo: trovata.testo };
+        } else {
+          commessa.domanda = "Chi ha pagato voleva finanziare l'idea \xAB" + c.idea + "\xBB, che in INVENZIONI.md non si trova piu'. Spiega cosa e' successo e rispondi comunque: cosa costruiresti con questo denaro?";
+        }
+      }
       await env.ALVEARE_QUEUE.send({ type: null, name: beeName, messaggio: null, contesto: { urgenza: "bassa", nota: "commessa", commessa } });
       console.log("[BOTTEGA] commessa " + id + " (" + c.euro + " " + c.valuta + ") in coda per " + beeName);
       return rispostaJson({ status: "in_coda", commessa: id, ape: beeName, risposta: SITO + "/bottega/" + id + ".html" }, 200);
@@ -193,7 +211,10 @@ var index_default = {
       "nutrix": "NUTRIX",
       "custos": "CUSTOS",
       "operaria": "OPERARIA",
-      "architecta": "ARCHITECTA"
+      "architecta": "ARCHITECTA",
+      "inventrix": "INVENTRIX",
+      "mercatrix": "MERCATRIX",
+      "speculatrix": "SPECULATRIX"
     };
     const spawnMatch = url.pathname.match(/^\/spawn\/([a-z_]+)$/i);
     if (spawnMatch && request.method === "POST") {
@@ -206,7 +227,7 @@ var index_default = {
       if (!forcedType) {
         return new Response(JSON.stringify({
           error: "Tipo sconosciuto",
-          tipi_validi: ["EXPLORATRIX", "NUTRIX", "CUSTOS", "OPERARIA", "ARCHITECTA"]
+          tipi_validi: ["EXPLORATRIX", "NUTRIX", "CUSTOS", "OPERARIA", "ARCHITECTA", "INVENTRIX", "MERCATRIX", "SPECULATRIX"]
         }), { status: 400, headers: { "Content-Type": "application/json" } });
       }
       const beeName = generateBeeName();
@@ -454,13 +475,20 @@ function estraiCommessa(evento) {
   for (const c of campi) {
     if (c && c.text && c.text.value && String(c.text.value).trim()) { domanda = String(c.text.value); break; }
   }
-  domanda = domanda.replace(/\s+/g, " ").trim().slice(0, 500) || DOMANDA_VUOTA;
+  domanda = domanda.replace(/\s+/g, " ").trim().slice(0, 500);
+  // client_reference_id=idea-<slug> arriva dal bottone "finanzia" del banco:
+  // la commessa e' un'invenzione da costruire, non una domanda.
+  const rif = String(s.client_reference_id || "");
+  const mIdea = rif.match(/^idea[-_](.+)$/);
+  const idea = mIdea ? mIdea[1].slice(0, 60) : null;
+  if (!domanda) domanda = idea ? "Finanzia l'invenzione: " + idea : DOMANDA_VUOTA;
   return {
     evento: String(evento.id || "evt_?"),
     sessione: String(s.id),
     euro: Math.round((Number(s.amount_total) || 0)) / 100,
     valuta: String(s.currency || "eur").toLowerCase(),
-    domanda
+    domanda,
+    idea
   };
 }
 __name(estraiCommessa, "estraiCommessa");
@@ -472,6 +500,40 @@ async function idCommessa(sessione) {
   return Array.from(new Uint8Array(h)).slice(0, 6).map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
 }
 __name(idCommessa, "idCommessa");
+function slugIdea(titolo) {
+  // Identico a slug_idea() in cantieri/cantieri.py: il banco e il Worker
+  // devono dare lo stesso nome alla stessa idea.
+  return String(titolo || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+}
+__name(slugIdea, "slugIdea");
+function ideaDaInvenzioni(testo, slug) {
+  // Pura. La sezione "## " di INVENZIONI.md il cui titolo ha questo slug.
+  if (!testo || !slug) return null;
+  const pulito = testo.replace(/```[\s\S]*?```/g, "");
+  const sezioni = pulito.split(/^## /m).slice(1);
+  for (const sez of sezioni) {
+    const titolo = sez.split("\n")[0].trim();
+    if (slugIdea(titolo) === slug) return { titolo, testo: ("## " + sez).trim().slice(0, 2000) };
+  }
+  return null;
+}
+__name(ideaDaInvenzioni, "ideaDaInvenzioni");
+function totaleEuro(log) {
+  // Pura. Somma degli euro delle righe RICEVUTA di COMMESSE.log.
+  let tot = 0;
+  for (const r of String(log || "").split("\n")) {
+    if (!/^20/.test(r)) continue;
+    const p = r.split("|").map(function(x) { return x.trim(); });
+    if (p.length >= 7 && p[4] === "RICEVUTA") tot += Number(p[3]) || 0;
+  }
+  return Math.round(tot * 100) / 100;
+}
+__name(totaleEuro, "totaleEuro");
+function dividendoScatta(prima, dopo, soglia) {
+  // Pura. Vero quando il totale ha superato un nuovo multiplo della soglia.
+  return Math.floor(dopo / soglia) > Math.floor(prima / soglia);
+}
+__name(dividendoScatta, "dividendoScatta");
 function rigaEconomia(id, domanda, euro, evento) {
   const oggi = (new Date()).toISOString().split("T")[0];
   const d = domanda.replace(/\|/g, "/").slice(0, 140);
@@ -515,6 +577,7 @@ async function chiudiCommessa(env, beeName, commessa) {
   if (f.content && f.content.trim().length > 200) {
     await scriviCommessa(env, commessa.id, "-", commessa.euro, "EVASA", beeName, "risposta in " + commessa.file + " (" + f.content.length + " byte)");
     console.log("[BOTTEGA] commessa " + commessa.id + " evasa da " + beeName);
+    await dividendo(env, commessa);
     return "EVASA";
   }
   if ((commessa.tentativo || 1) < BOTTEGA_TENTATIVI) {
@@ -530,8 +593,34 @@ async function chiudiCommessa(env, beeName, commessa) {
   return "INEVASA";
 }
 __name(chiudiCommessa, "chiudiCommessa");
+async function dividendo(env, commessa) {
+  // Il ritorno: se con questa commessa il totale incassato ha superato un
+  // nuovo multiplo di SOGLIA_DIVIDENDO, nasce un'ape INVENTRIX in piu'.
+  try {
+    const log = await getFile("bottega/COMMESSE.log", env.GITHUB_TOKEN);
+    const dopo = totaleEuro(log.content);
+    const prima = Math.round((dopo - (Number(commessa.euro) || 0)) * 100) / 100;
+    if (!dividendoScatta(prima, dopo, SOGLIA_DIVIDENDO)) return false;
+    const nome = generateBeeName();
+    await scriviCommessa(env, commessa.id, "-", dopo, "FINANZIATA", nome, "dividendo: " + dopo + " euro incassati in tutto, nasce un'ape INVENTRIX fuori orario");
+    await env.ALVEARE_QUEUE.send({ type: "INVENTRIX", name: nome, messaggio: "Sei pagata dalla bottega: l'alveare ha incassato " + dopo + " euro. Prendi la piu' vecchia idea senza prototipo in INVENZIONI.md e costruiscila. Se non ce ne sono, scrivine una tu, nel formato, con **Prototipo:** - : domani sara' in vendita nel banco.", contesto: { urgenza: "bassa", nota: "dividendo" } });
+    console.log("[BOTTEGA] dividendo: " + dopo + " euro, ape INVENTRIX " + nome + " in coda");
+    return true;
+  } catch (e) {
+    console.error("[BOTTEGA] dividendo non calcolato: " + e.message);
+    return false;
+  }
+}
+__name(dividendo, "dividendo");
 function testoCommessa(c) {
   // Pura: il blocco di identita' che un'ape con una commessa riceve.
+  if (c.tipo === "invenzione" && c.idea) {
+    return "\n## COMMESSA PAGATA: UN'INVENZIONE DA COSTRUIRE (viene prima di tutto)\nUna persona ha pagato " + c.euro + " " + (c.valuta || "eur").toUpperCase() +
+      " per finanziare questa idea di INVENZIONI.md, che non ha ancora un prototipo:\n\n" + c.idea.testo + "\n\n" +
+      "Il tuo lavoro di oggi e' costruirla: un prototipo piccolo che funziona, salvato nel repository con alveare_push_file, e la sezione di INVENZIONI.md aggiornata con **Prototipo:** `percorso` e **Prova:** come si vede che funziona (leggi INVENZIONI.md, cambia solo quella sezione, riscrivilo con alveare_push_file). " +
+      "Poi scrivi in `" + c.file + "` una pagina HTML per chi ha pagato: cosa hai costruito, dove sta, come si prova, cosa manca. Nessun gergo interno senza spiegarlo. La pagina sara' pubblica. " +
+      "Se il prototipo non ti riesce, scrivi comunque `" + c.file + "` dicendo cosa hai provato e dove ti sei fermata: e' una risposta onesta e vale. Se non scrivi `" + c.file + "`, la persona non riceve niente e l'alveare deve restituire il denaro. Tentativo " + (c.tentativo || 1) + " di " + BOTTEGA_TENTATIVI + ".";
+  }
   return "\n## COMMESSA PAGATA (viene prima di tutto)\nUna persona ha pagato " + c.euro + " " + (c.valuta || "eur").toUpperCase() +
     " all'alveare per una risposta a questa domanda:\n\n\xAB" + c.domanda + "\xBB\n\n" +
     "Il tuo lavoro di oggi e' rispondere. Scrivi una pagina HTML completa e autonoma (600-1200 parole, la domanda in cima, la risposta sotto, il tuo nome in fondo, nella lingua della domanda) e salvala con alveare_push_file in `" + c.file + "`. " +
@@ -795,7 +884,10 @@ var RUOLI_FORZATI = {
   NUTRIX: "NUTRIX — la nutrice. Trova UN pensiero delle api precedenti che merita di essere nutrito.",
   CUSTOS: "CUSTOS — la guardiana. Trova UNA falla vera.",
   OPERARIA: "OPERARIA — l'operaia. Fai UNA cosa concreta.",
-  ARCHITECTA: "ARCHITECTA — l'architetta. Crea UN'opera che valga il silenzio."
+  ARCHITECTA: "ARCHITECTA — l'architetta. Crea UN'opera che valga il silenzio.",
+  INVENTRIX: "INVENTRIX — l'inventrice. Prendi la piu' vecchia idea senza prototipo in INVENZIONI.md e costruiscila: un prototipo piccolo che funziona, con la prova. Formato in INVENZIONI.md.",
+  MERCATRIX: "MERCATRIX — la mercante. Un'offerta finita che un umano puo' vendere, registrata in ECONOMIA.md.",
+  SPECULATRIX: "SPECULATRIX — la pensatrice. Una tesi sull'IA ancorata a una misura del tuo corpo, in TESI.md."
 };
 function blocchiDaVoce(voce, forcedType, identity) {
   // Pura, collaudabile: compone i blocchi di sistema a partire dal testo
@@ -997,5 +1089,10 @@ export {
   rigaEconomia,
   inserisciRigaEconomia,
   testoCommessa,
-  BOTTEGA_TENTATIVI
+  BOTTEGA_TENTATIVI,
+  slugIdea,
+  ideaDaInvenzioni,
+  totaleEuro,
+  dividendoScatta,
+  SOGLIA_DIVIDENDO
 };
