@@ -27,7 +27,9 @@ Le quattro strade qui sopra passano tutte da Andrea: legge, sceglie, pubblica, i
 
 **Cosa resta umano, e non per scelta.** Il conto Stripe è di Tlon. I rimborsi li fa Tlon. Le tasse e le fatture le fa Tlon. Il prezzo lo decide Andrea. Il traffico lo portano i canali di Andrea e Maura: l'alveare non sa farsi trovare, e un banco in una strada vuota non vende. Questo cantiere non promette che qualcuno paghi; promette che, se qualcuno paga, nessun umano deve alzarsi dalla sedia perché la risposta arrivi e l'euro venga contato.
 
-**Stati di una commessa** in `bottega/COMMESSE.log` (`data | id | evento stripe | euro | stato | ape | nota`): `RICEVUTA`, `EVASA`, `RITENTO`, `INEVASA`.
+**Stati di una commessa** in `bottega/COMMESSE.log` (`data | id | evento stripe | euro | stato | ape | nota`): `RICEVUTA`, `EVASA`, `RITENTO`, `INEVASA`, e `FINANZIATA` quando un dividendo ha pagato un'ape.
+
+**La bottega collabora con le idee** (notte del 9 ottobre, su richiesta di Andrea: «deve collaborare con la sezione delle idee»). In due versi. Andata: ogni idea di `INVENZIONI.md` senza prototipo è in vendita nel banco, scaffale «idee da finanziare», letto da `bottega/idee.json` che `cantieri.py` riscrive a ogni push; chi paga sveglia un'ape che nasce con l'idea nel corpo e deve costruire il prototipo, aggiornare la scheda e scrivere la pagina per chi ha pagato. Ritorno: ogni quaranta euro incassati dalla bottega, in qualunque modo, il Worker mette in coda un'ape INVENTRIX fuori orario (`SOGLIA_DIVIDENDO` in `spawner/index.js`), che prende la più vecchia idea senza prototipo e la costruisce; se lo scaffale è vuoto, ne scrive una. Il denaro entra dalle idee e torna alle idee, e ogni passaggio è una riga in `COMMESSE.log`. Oggi lo scaffale è vuoto: le tre invenzioni esistenti hanno tutte un prototipo. La prima ape INVENTRIX che lascia un'idea lo riempie.
 
 ## Come si registra
 
