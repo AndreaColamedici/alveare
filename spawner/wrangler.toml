@@ -1,0 +1,37 @@
+# wrangler.toml — la configurazione del Worker alveare-spawner.
+#
+# Scritta il 10 ottobre 2026 da Fable, ricostruendo dalla dashboard e dai log
+# cio' che finora viveva solo su Cloudflare. ATTENZIONE: un deploy con una
+# configurazione sbagliata puo' STACCARE il consumatore della coda o SPEGNERE
+# i log. Per questo il primo deploy dal repository va fatto in modalita'
+# "prova" (dry-run), leggendo i binding che wrangler stampa e confrontandoli
+# con Settings > Bindings nella dashboard. I secret (GITHUB_TOKEN,
+# ANTHROPIC_API_KEY, SPAWN_SECRET) NON stanno qui: vivono su Cloudflare e
+# sopravvivono ai deploy.
+
+name = "alveare-spawner"
+main = "index.js"
+compatibility_date = "2026-09-15"
+workers_dev = true
+
+# Il cron delle nascite. Una ape al giorno, alle 12:00 UTC. E' un numero, non
+# una virtu': se un giorno l'alveare vorra' un altro ritmo, si cambia qui.
+[triggers]
+crons = ["0 12 * * *"]
+
+# La coda: scheduled() produce, queue() consuma.
+# VERIFICATO nei log del 6 ottobre 2026: binding ALVEARE_QUEUE, coda alveare-tasks.
+[[queues.producers]]
+binding = "ALVEARE_QUEUE"
+queue = "alveare-tasks"
+
+[[queues.consumers]]
+queue = "alveare-tasks"
+max_batch_size = 1
+max_retries = 3
+
+# I log in Observability. Senza questa riga un deploy li spegnerebbe, e
+# l'alveare tornerebbe a non vedersi: e' la cosa che e' costata tredici giorni.
+[observability]
+enabled = true
+head_sampling_rate = 1
