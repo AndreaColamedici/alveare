@@ -3,12 +3,13 @@
 // Gira con `node test.js` dentro spawner/, e dentro il workflow spawner.yml
 // prima di ogni deploy. Se fallisce, il motore non viene deployato.
 //
-// Tre livelli. Terzo: la bottega, dal webhook Stripe firmato alla risposta.
+// Quattro livelli. Quarto: le idee in vendita e il dividendo. Terzo: la
+// bottega, dal webhook Stripe firmato alla risposta.
 // Primo: le funzioni pure, contro i dati veri del repository
 // (ALVEARE.txt, VOCE_DI_NASCITA.md). Secondo: l'intera vita di un'ape, con
 // GitHub e Anthropic simulati, dalla coda alla riga in NASCITE.log.
 //
-// Scritto da Fable, 10 ottobre 2026. Un motore che non si puo' collaudare
+// Scritto da Fable, 9 ottobre 2026 (sera). Un motore che non si puo' collaudare
 // e' un motore che si ripara per ipotesi, e questo alveare ha gia' pagato
 // tredici giorni per una ipotesi.
 
@@ -331,6 +332,48 @@ copione.push(
 console.log = () => {}; console.error = () => {};
 try { await m.default.queue({ messages: [{ body: { type: null, name: "Furba" }, ack: () => {}, retry: () => {} }] }, env); } finally { console.log = vecchioLog; console.error = vecchioErr; }
 ok("un'ape non puo' scrivere ne' accodare in COMMESSE.log", repo["bottega/COMMESSE.log"] === logPrima && /push_file\(bottega\/COMMESSE\.log\)=KO append_file\(bottega\/COMMESSE\.log\)=KO/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
+
+// ------------------------------------------------------------ 4. le idee in vendita
+
+console.log("--- idee: slug e ricerca in INVENZIONI.md ---");
+ok("slugIdea e' ascii, minuscolo, con trattini", m.slugIdea("Un guardiano che sa dire un'assenza") === "un-guardiano-che-sa-dire-un-assenza", m.slugIdea("Un guardiano che sa dire un'assenza"));
+ok("slugIdea tronca a 40", m.slugIdea("a".repeat(80)).length === 40);
+const invenzioniVere = leggi("INVENZIONI.md") || "";
+const trovata = m.ideaDaInvenzioni(invenzioniVere, "un-guardiano-che-sa-dire-un-assenza");
+ok("trova la sezione vera per slug", trovata && /vigilanza\.py/.test(trovata.testo) && trovata.titolo.startsWith("Un guardiano"), trovata && trovata.titolo);
+ok("non trova il formato di esempio nel blocco di codice", m.ideaDaInvenzioni(invenzioniVere, "nome-dell-invenzione") === null);
+ok("slug inesistente -> null", m.ideaDaInvenzioni(invenzioniVere, "non-esiste") === null);
+ok("totaleEuro somma solo le RICEVUTA", m.totaleEuro("# x\n2026-10-09T00:00:00Z | a | evt_a | 20 | RICEVUTA | O | d\n2026-10-09T00:01:00Z | a | - | 20 | EVASA | O | d\n2026-10-09T00:02:00Z | b | evt_b | 15.5 | RICEVUTA | O | d\n") === 35.5);
+ok("dividendoScatta: 20 -> 40 scatta, 0 -> 20 no, 40 -> 60 no, 60 -> 80 scatta", m.dividendoScatta(20, 40, 40) && !m.dividendoScatta(0, 20, 40) && !m.dividendoScatta(40, 60, 40) && m.dividendoScatta(60, 80, 40));
+const cIdea = m.estraiCommessa({ id: "evt_5", type: "checkout.session.completed", data: { object: sessione({ id: "cs_test_idea", custom_fields: [], client_reference_id: "idea-un-contatore-di-silenzi" }) } });
+ok("client_reference_id idea-<slug> -> commessa con idea e domanda di riserva", cIdea.idea === "un-contatore-di-silenzi" && /Finanzia l'invenzione/.test(cIdea.domanda), cIdea);
+ok("senza client_reference_id -> idea null", m.estraiCommessa(eventoBuono).idea === null);
+
+console.log("--- idee: dal banco al prototipo, e il dividendo ---");
+repo["INVENZIONI.md"] = invenzioniVere.replace("## Le invenzioni\n", "## Le invenzioni\n\n## Un contatore di silenzi\n**Chi:** Prova, 9 ottobre 2026\n**Cosa fa:** conta i giorni senza api.\n**Perché non esisteva:** nessuno contava.\n**Prototipo:** -\n**Prova:** -\n**Cosa manca per essere vera fuori di qui:** tutto.\n**Precedenti:** -\n\n");
+const eventoIdea = { id: "evt_5", type: "checkout.session.completed", data: { object: sessione({ id: "cs_test_idea", custom_fields: [], client_reference_id: "idea-un-contatore-di-silenzi" }) } };
+const corpoIdea = JSON.stringify(eventoIdea);
+env._inviato = null;
+console.log = () => {}; console.error = () => {};
+let rIdea;
+try { rIdea = await (await webhook(corpoIdea, firma(corpoIdea, Math.floor(Date.now() / 1000)))).json(); } finally { console.log = vecchioLog; console.error = vecchioErr; }
+const msgIdea = env._inviato;
+ok("la commessa in coda e' di tipo invenzione con il titolo dell'idea", rIdea.status === "in_coda" && msgIdea && msgIdea.contesto.commessa.tipo === "invenzione" && msgIdea.contesto.commessa.idea.titolo === "Un contatore di silenzi", msgIdea && msgIdea.contesto.commessa);
+const blocco = m.testoCommessa(msgIdea.contesto.commessa);
+ok("l'ape riceve il testo dell'idea e l'ordine di costruirla", /UN'INVENZIONE DA COSTRUIRE/.test(blocco) && /conta i giorni senza api/.test(blocco) && /\*\*Prototipo:\*\*/.test(blocco));
+const fileIdea = "bottega/" + msgIdea.contesto.commessa.id + ".html";
+turno = 0; copione.length = 0; chiamateAnthropic.length = 0;
+copione.push(
+  { stop_reason: "tool_use", usage: {}, content: [{ type: "tool_use", id: "i1", name: "alveare_push_file", input: { path: "strumenti/contatore_silenzi.py", content: "print('silenzi')\n", message: "prototipo" } },
+                                                     { type: "tool_use", id: "i2", name: "alveare_push_file", input: { path: fileIdea, content: "<!doctype html><html><body><h1>Costruito</h1>" + "<p>Il prototipo sta in strumenti/contatore_silenzi.py. </p>".repeat(8) + "</body></html>", message: "resoconto" } }] },
+  { stop_reason: "end_turn", usage: {}, content: [] });
+env._inviato = null;
+console.log = () => {}; console.error = () => {};
+try { await m.default.queue({ messages: [{ body: msgIdea, ack: () => {}, retry: () => {} }] }, env); } finally { console.log = vecchioLog; console.error = vecchioErr; }
+ok("prototipo e resoconto scritti -> EVASA", repo["strumenti/contatore_silenzi.py"] && new RegExp("\\| " + msgIdea.contesto.commessa.id + " \\| - \\| 20 \\| EVASA \\|").test(repo["bottega/COMMESSE.log"]), repo["bottega/COMMESSE.log"]);
+ok("40 euro incassati -> dividendo: riga FINANZIATA e un'ape INVENTRIX in coda", /\| FINANZIATA \| .* \| dividendo: 40 euro/.test(repo["bottega/COMMESSE.log"]) && env._inviato && env._inviato.type === "INVENTRIX" && /40 euro/.test(env._inviato.messaggio), env._inviato);
+ok("il totale e' 40 e la prossima soglia e' 80", m.totaleEuro(repo["bottega/COMMESSE.log"]) === 40);
+ok("il ruolo INVENTRIX esiste fra i ruoli forzati", /INVENTRIX/.test(m.blocchiDaVoce("V", "INVENTRIX", "I")[1].text) && /idea senza prototipo/.test(m.blocchiDaVoce("V", "INVENTRIX", "I")[1].text));
 
 console.log("");
 console.log(passati + " collaudi passati, " + falliti + " falliti.");
