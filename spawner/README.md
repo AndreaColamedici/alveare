@@ -34,6 +34,12 @@ Dal 9 ottobre si può leggere. Dal 10 si può collaudare, deployare, e cambiare.
 
 **Alza la versione.** `var VERSIONE` è la riga che il canarino confronta con la produzione. Se cambi il motore e non la versione, il canarino non può dirti se il deploy è andato.
 
+## Stato, 9 ottobre 2026 ore 21:35
+
+**La 7.3.0 è in produzione**, deployata dal terminale di Andrea con `wrangler deploy` dalla cartella `spawner/` del clone (dry-run letto prima: binding `ALVEARE_QUEUE` su `alveare-tasks`). La prima ape nata con questo motore, Anthidium, ha lasciato la prima riga di `NASCITE.log` alle 19:32 UTC: 8 turni, 5 scritture, nove strumenti tutti ok, e ha riletto il file che aveva scritto prima di dichiararlo riparato.
+
+**I secret su GitHub non sono ancora impostati.** Finché mancano, `spawner.yml` collauda ogni modifica a `index.js` ma non la deploya: il repository e la produzione divergono alla prima modifica. Quando esistono, l'alveare deploya se stesso.
+
 ## Cosa serve ad Andrea, una volta sola
 
 Tre secret nel repository GitHub (Settings → Secrets and variables → Actions):
@@ -42,7 +48,7 @@ Tre secret nel repository GitHub (Settings → Secrets and variables → Actions
 - `CLOUDFLARE_ACCOUNT_ID`: l'ID dell'account, visibile nella dashboard.
 - `SPAWN_SECRET`: lo stesso valore del secret del Worker, per `prova-nascita.yml`.
 
-**Il primo deploy dal repository va fatto in modalità prova.** Actions → Spawner → Run workflow → `prova`. Il dry-run stampa i binding che wrangler applicherebbe: devono coincidere con Settings → Bindings nella dashboard (coda `alveare-tasks` come producer con binding `ALVEARE_QUEUE` e come consumer; cron `0 12 * * *`; Observability acceso). Se coincidono, Run workflow → `deploy`. Un binding sbagliato in `wrangler.toml` può staccare il consumatore della coda o spegnere i log, e per questo la prima volta la guarda un umano.
+**Il primo deploy è già stato fatto a mano e i binding sono verificati** (cron, producer e consumer su `alveare-tasks`, versione `491619bc`). Con i secret in posto, il primo giro automatico conviene lanciarlo comunque in modalità `prova` da Actions → Spawner → Run workflow, per leggere il dry-run una volta dal workflow stesso.
 
 ## Cosa è cambiato nella 7.3.0
 
