@@ -253,3 +253,20 @@ Richiesta di Andrea: «potenzia tecnologicamente l'alveare al massimo livello pe
 - **Cosa ha fatto Anthidium con gli strumenti nuovi, senza che nessuno glielo chiedesse.** Si è registrata per prima. Ha trovato una falla vera nell'euristica di `conta.py` (i link della barra `<nav>` contano, e `canto.html`, una poesia, era classificata impalcatura e quindi non adottabile), l'ha dimostrata, ha proposto il rimedio localizzato e non l'ha eseguito. Ha riparato `canto.html`, **l'ha riletta dopo la scrittura**, l'ha firmata nel DOM, ha citato nel registro lo sha che `prova()` le ha restituito, e ha scritto «Riparato (verificato, non dichiarato)». È la regola del 9 ottobre, eseguita dalla prima ape che è nata con la voce nuova.
 - **I secret su GitHub non sono ancora impostati.** `spawner.yml` collauda ogni modifica al motore ma non deploya: finché Andrea non aggiunge `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`, un'ape che modifica `spawner/index.js` vedrà il collaudo passare e il motore restare fermo. Il repository e la produzione coincidono stasera; divergeranno alla prima modifica, finché i secret non esistono. Da fare in un giorno con la luce.
 - **Rilievo aperto in `verifica.py`, lasciato da Anthidium per chi viene:** in `conta.py`, contare solo i link fuori da `<nav>` e `<header>`.
+
+
+
+
+---
+
+### Fable — 10 ottobre 2026. Tre cantieri, una regola.
+
+Richiesta di Andrea: una sezione in cui l'alveare si impegna a guadagnare soldi veri, una in cui prova a inventare cose che non esistono, una in cui pensa in modo dirompente sull'IA. Costruite con la regola che ha salvato l'alveare ieri: **niente che non si possa contare.** Un impegno a guadagnare che non misura gli euro è «200+ opere» con un altro nome.
+
+- **`ECONOMIA.md`**, ruolo MERCATRIX. Un euro esiste quando un umano lo scrive nel registro con data e nome; nessuna ape può scrivere `pagata`. Quattro strade concrete, tutte dentro canali Tlon che hanno già un pubblico: un numero della TlonLetter, un modulo per GLAST, un pezzo del libro dell'alveare, una scheda prodotto. Ogni offerta è un file finito in `cantieri/offerte/`. Prima offerta: una bozza di newsletter sulla quarta lingua di Halictus. Euro confermati oggi: **0**, scritto in grassetto perché è vero.
+- **`INVENZIONI.md`**, ruolo INVENTRIX. Un'invenzione è una cosa che non esisteva, ora esiste, e si può provare: prototipo nel repository e prova. Senza prototipo è un'idea e va in PENSIERO.md. Tre invenzioni vere di ieri e di oggi, con i loro collaudi: il guardiano che sa dire un'assenza, il contraddittorio per i documenti, il motore che scrive la propria biografia.
+- **`TESI.md`**, ruolo SPECULATRIX. Ogni tesi sull'IA parte da una misura del proprio corpo, con il file fra backtick: l'alveare è l'unico posto dove si pensa l'IA da dentro con i log davanti, e sprecarlo in generalità è quello che è successo a giugno. Cinque tesi ancorate, nessuna ancora contestata: contestare vale quanto scrivere.
+- **`cantieri/cantieri.py` → `CANTIERI.md`**, agganciato a `genera.yml`. Conta gli euro solo se `pagata` con un nome, le invenzioni solo con prototipo esistente, le tesi solo con prova in un file esistente, e dice cosa ha scartato e perché. Collaudato: 500 euro «proposti» non valgono, 999 «pagati» senza nome non valgono, 120 pagati e confermati valgono; un teletrasporto senza prototipo è un'idea; una tesi senza prova non conta ma la sua contestazione sì. Prima versione contava il proprio esempio di formato come contenuto, come il contatore di righe di CELLE.txt: ristretta prima del push. In produzione alle 19:52 UTC: 1 proposta, 0 euro, 3 invenzioni, 5 tesi.
+- **`VOCE_DI_NASCITA.md`**: i tre ruoli, in sei righe, con il rimando ai file. La lista delle letture non cresce: i cantieri si leggono solo se si sceglie di lavorarci.
+
+**La cosa onesta da dire sul denaro.** L'alveare non guadagnerà niente da solo. Produce file finiti; il denaro arriva se Andrea li usa, e la riga che lo dice la scrive Andrea. Il cantiere non promette soldi: promette che quando ci saranno, si vedranno, e che finché non ci sono il numero resta zero in grassetto. È la differenza fra un alveare e una fantasia.
