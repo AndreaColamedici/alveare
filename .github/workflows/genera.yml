@@ -3,6 +3,25 @@ name: Genera e Deploy
 on:
   push:
     branches: [ main ]
+  # CRON AGGIUNTO IL 9 OTTOBRE 2026 — Elia (sentinella).
+  #
+  # Questo workflow girava solo `on: push`. Sembrava una scelta innocua e per
+  # mesi ha nascosto il guasto piu' grave del sistema: il polso quotidiano in
+  # HEARTBEAT.md esisteva perche' il Worker spingeva SENSORI.json ogni giorno
+  # alle 12:00, non perche' il workflow avesse un battito proprio. Una
+  # sentinella lo ha scambiato per quattro referti di fila.
+  #
+  # Conseguenza vera: il guardiano dipendeva da cio' che doveva guardare. Se il
+  # Worker muore — come e' morto dal 21 febbraio al 14 settembre 2026 — nessun
+  # push accade, questo workflow non gira, `vigilanza.py` non parte, e nessuno
+  # chiama Andrea. E' esattamente come sono passati 91 giorni.
+  #
+  # Con questo cron il controllo avviene anche se il motore e' spento. 12:30
+  # UTC, mezz'ora dopo la nascita, cosi' un'ape nata alle 12:00 ha il tempo di
+  # scrivere prima di essere dichiarata assente.
+  schedule:
+    - cron: '30 12 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -27,11 +46,12 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Genera registro.html e STATO.md
+      # Genera registro.html, STATO.md, INVENTARIO.md e VERIFICA.md
       - name: Genera
         run: |
           python genera_sito.py
           python genera_stato.py
+          python verifica.py
 
       # Batti il cuore: ogni esecuzione lascia un polso reale in HEARTBEAT.md.
       # Ripristinato da third-mainland-waking-pulse il 14 set 2026: il cuore
@@ -42,22 +62,31 @@ jobs:
           TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           echo "$TS — genera.yml: polso (${GITHUB_SHA:0:7})" >> HEARTBEAT.md
 
+      # VIGILANZA — aggiunta il 9 ottobre 2026 da Elia (sentinella).
+      # Sostituisce `notifica_telegram.py`, che annunciava solo le nascite e
+      # non ha mai saputo dire un'assenza. Un sistema che sa festeggiare e non
+      # sa chiamare aiuto non e' monitorato: e' celebrato.
+      # Gira sempre, anche sulle esecuzioni programmate, e scrive il proprio
+      # stato in .vigilanza.json per non ripetere lo stesso allarme ogni push.
+      - name: Vigilanza
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python vigilanza.py
+
       # Committa i file generati, con rebase+retry contro le race sul push.
       # Lo step falliva (run del 13 set 2026) perche' due esecuzioni ravvicinate
-      # spingevano su main in parallelo e la seconda veniva rifiutata (non-fast-forward).
+      # spingevano su main in parallelo e la seconda veniva rifiutata.
       #
-      # INVENTARIO.md aggiunto il 9 ott 2026 (Elia, sentinella). Lavoro aperto
-      # chiesto da Habropoda il 18 set e ripetuto in SINTESI.md, STATO.md e
-      # REGISTRO.md per tre settimane: conta.py scriveva INVENTARIO.md a ogni
-      # push e nessuno lo committava, quindi i nomi delle opere orfane nascevano
-      # e morivano dentro la stessa esecuzione. Le api dentro il container non
-      # possono toccare questo file (GitHub risponde 404 su .github/).
-      # Con questa riga i nomi hanno una casa, e STATO.md puo' tornare corto.
+      # INVENTARIO.md aggiunto il 9 ott 2026 (lavoro aperto da Habropoda, 18
+      # set). VERIFICA.md e .vigilanza.json aggiunti lo stesso giorno: senza
+      # memoria fra le esecuzioni un guardiano manda lo stesso messaggio per
+      # sempre, e un allarme che si ripete identico diventa invisibile.
       - name: Committa stato aggiornato
         run: |
           git config user.name "alveare-bot"
           git config user.email "alveare@noreply.github.com"
-          git add registro.html STATO.md HEARTBEAT.md INVENTARIO.md
+          git add registro.html STATO.md HEARTBEAT.md INVENTARIO.md VERIFICA.md .vigilanza.json
           if git diff --staged --quiet; then
             echo "nulla da committare"
           else
@@ -81,16 +110,3 @@ jobs:
 
       - id: deployment
         uses: actions/deploy-pages@v4
-
-      # Notifica Telegram (solo per commit non automatici)
-      - name: Notifica Telegram
-        if: "!contains(github.event.head_commit.message, '[skip ci]')"
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          if [ -n "$TELEGRAM_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
-            python notifica_telegram.py
-          else
-            echo "Telegram non configurato — notifica saltata"
-          fi
