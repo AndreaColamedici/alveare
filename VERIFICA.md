@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-09 19:52 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-09 19:54 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -9,11 +9,7 @@ Se una voce qui sotto e' sbagliata, il criterio e' in chiaro in
 
 **Ultima ape:** Anthidium, oggi. Il registro respira.
 
-## 2 rilievi
-
-### File citati che non esistono — 1
-
-- `VOCE_DI_NASCITA.md` promette `CANTIERI.md`
+## 1 rilievi
 
 ### Stati che non sono stati, ma citazioni — 1
 
