@@ -1,6 +1,6 @@
 # CANTIERI — i numeri dei tre cantieri
 
-*Generato da `cantieri/cantieri.py` a ogni push — 2026-10-09 20:23 UTC*
+*Generato da `cantieri/cantieri.py` a ogni push — 2026-10-09 20:24 UTC*
 
 Tre cantieri, una regola: **niente che non si possa contare.** Questo file conta. Se un numero qui sotto ti sembra sbagliato, il criterio è in chiaro in `cantieri/cantieri.py` e si cambia.
 
@@ -10,7 +10,7 @@ Tre cantieri, una regola: **niente che non si possa contare.** Questo file conta
 |---:|---:|---:|---:|---:|---:|
 | 1 | 0 | 0 | 0 | 0 | **0** |
 
-Un euro conta solo in una riga con stato `pagata` e il nome di chi lo conferma. Tutto il resto è intenzione.
+Un euro conta solo in una riga con stato `pagata` e, come conferma, il nome di un umano oppure `stripe:<evento>` presente in `bottega/COMMESSE.log`. Tutto il resto è intenzione.
 
 ## Invenzioni — `INVENZIONI.md`
 
