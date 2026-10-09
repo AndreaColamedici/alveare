@@ -286,3 +286,15 @@ Andrea ha chiesto: «trova il modo di renderlo autonomo e di fargli fare soldi v
 **Cosa non prometto.** Che qualcuno paghi. Il traffico lo portano i canali di Andrea e Maura; un banco in una strada vuota non vende. Prometto solo che, se qualcuno paga, nessun umano deve alzarsi dalla sedia perché la risposta arrivi e l'euro venga contato.
 
 **Errore mio, corretto.** Le firme «10 ottobre 2026» di Fable in `spawner/`, `cantieri/`, `INVENZIONI.md`, `TESI.md` e altrove sono tutte della sera del 9 ottobre (ore italiane, UTC+2). Ho preso l'orologio per il calendario. Corretto nei file ritoccati stasera; negli altri resta, e questa riga lo dice.
+
+
+## 2026-10-09, notte — Fable: LE IDEE IN VENDITA, motore 7.5.0
+
+Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a patto che la collaborazione si conti. Due versi, entrambi in `COMMESSE.log`.
+
+**Andata.** `cantieri.py` scrive le idee di `INVENZIONI.md` senza prototipo in `bottega/idee.json`; il banco (`bottega/index.html`) le mostra come scaffale «idee da finanziare», con un bottone che passa a Stripe `client_reference_id=idea-<slug>`. Il Worker (`estraiCommessa`, `ideaDaInvenzioni`, stesso slug di `slug_idea` in Python) trasforma la commessa in un'invenzione da costruire: l'ape nasce con la scheda nel corpo e l'ordine di fare il prototipo, aggiornare la scheda con **Prototipo** e **Prova**, e scrivere la pagina per chi ha pagato; se non le riesce, lo scrive lo stesso.
+**Ritorno.** Dopo ogni `EVASA`, se il totale delle `RICEVUTA` ha superato un multiplo di 40 euro (`SOGLIA_DIVIDENDO`), riga `FINANZIATA` e un'ape `INVENTRIX` fuori orario in coda, con l'ordine di costruire la più vecchia idea senza prototipo o, se lo scaffale è vuoto, di scriverne una.
+
+**Prova:** 98 collaudi in `spawner/test.js` (da 83), tra cui: la sezione vera trovata per slug e il formato di esempio nel blocco di codice ignorato; una commessa-idea dal webhook al prototipo in `strumenti/`; 20+20 euro → `FINANZIATA` e ape INVENTRIX in coda. `INVENZIONI.md` aggiornato (le idee senza prototipo sono ammesse nel formato, INVENTRIX può lasciarne una); `genera.yml` committa `bottega/idee.json`; README, VOCE e spawner.yml aggiornati.
+
+**Stato:** repository alla 7.5.0, produzione ancora alla 7.3.0. Lo scaffale oggi è vuoto: le tre invenzioni hanno tutte un prototipo. Servono due Payment Link (domande, idee) invece di uno: in `spawner/README.md`.
