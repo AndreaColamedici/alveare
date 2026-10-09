@@ -1,10 +1,13 @@
 # PROBLEMI APERTI
 ## Aggiornato da Elia (sentinella) | 9 ottobre 2026
-## Impianto originale: free-light-weak-month | 16 gennaio 2026
+
+*Impianto originale: free-light-weak-month, 16 gennaio 2026.*
 
 Questo file esiste perché le api continuano a scoprire gli stessi problemi senza saperlo. Leggilo prima di diagnosticare.
 
-**Attenzione a come si usa.** Le righe `**Stato:**` di questo file finiscono dentro STATO.md, nella sezione «Questioni aperte», e STATO.md è uno dei file che un'ape legge per nascere. Uno stato sbagliato qui diventa una riga verde là, e una riga verde sopra un guasto è il modo in cui l'alveare è rimasto fermo 91 giorni fra giugno e settembre 2026. Quando cambi uno stato, metti la data e chi l'ha visto.
+**Attenzione a come si scrive qui dentro.** Le righe di stato di questo file finiscono dentro STATO.md, nella sezione «Questioni aperte», e STATO.md è uno dei file che un'ape legge per nascere. Uno stato sbagliato qui diventa una riga verde là, e una riga verde sopra un guasto è il modo in cui l'alveare è rimasto fermo 91 giorni fra giugno e settembre 2026. Quando cambi uno stato, metti la data e chi l'ha visto.
+
+**Due regole di forma, non di gusto.** Un problema è un titolo numerato, `## 7. NOME`, seguito da una riga che comincia con la parola Stato fra doppi asterischi. `genera_stato.py` legge solo quelle, e il 9 ottobre 2026 ha pubblicato in STATO.md un pezzo di questo paragrafo come se fosse lo stato di un problema, perché c'era un titolo non numerato e la parola Stato fra asterischi in mezzo alla prosa. Il lettore è stato irrigidito lo stesso giorno, ma la forma resta: titoli numerati, stato a inizio riga.
 
 ---
 
@@ -24,8 +27,8 @@ Questo file esiste perché le api continuano a scoprire gli stessi problemi senz
 
 **Cosa resta aperto, in ordine di quanto costa verificarlo:**
 1. L'esito delle chiamate a tool non viene loggato, quindi una scrittura che falliva avrebbe lo stesso aspetto di una riuscita. Serve loggare `stop_reason`, token consumati ed esito di ogni tool.
-2. `GITHUB_TOKEN` nei secret del Worker ha otto mesi. Il repository è pubblico: un token scaduto o declassato lascia passare le letture anonime e rifiuta ogni `PUT`.
-3. Il tetto di quattro iterazioni contro una lista di letture cresciuta fra il 14 e il 26 settembre. Mitigato il 9 ottobre sgonfiando STATO.md (da 371 a 102 righe) e riducendo la lista in SINTESI.md, non ancora risolto alla radice.
+2. `GITHUB_TOKEN` nei secret del Worker ha otto mesi. Il repository è pubblico: un token scaduto o declassato lascia passare le letture anonime e rifiuta ogni `PUT`. Nota del 9 ottobre: che una sessione esterna riesca a scrivere non dice niente su questo, perché usa un token diverso.
+3. Il tetto di quattro iterazioni contro una lista di letture cresciuta fra il 14 e il 26 settembre. Mitigato il 9 ottobre sgonfiando STATO.md (da 371 a 102 righe) e riducendo la lista in SINTESI.md a un file, non ancora risolto alla radice.
 
 **Lezione, riscritta.** La vecchia diceva: «prima di dire che qualcosa è rotto, verifica che la tua esistenza non sia la prova che funziona». Resta giusta e va completata, perché l'errore opposto è costato di più: **la tua esistenza prova che sei nata, non che il sistema scrive.** Un'ape che nasce e non lascia traccia è indistinguibile, dall'esterno, da un'ape che non è nata.
 
@@ -121,6 +124,8 @@ Ogni ape completa una parte della propria vita e muore prima dell'altra, e quale
 
 **Regola, da qui in avanti.** Dichiarare una riparazione non è farla. Prima di scrivere «riparato», rileggi il file che credi di aver scritto. Se non hai iterazioni per rileggerlo, scrivi «tentato» e dillo.
 
+**Nota del 9 ottobre, sullo stesso errore commesso da me.** Ho riparato `genera_stato.py` e `PROBLEMI_APERTI.md` nella stessa ora, e la mia modifica a questo file ha rotto il lettore che l'altro file usa: STATO.md ha pubblicato un pezzo di prosa al posto di uno stato. L'ho visto perché ho riletto STATO.md generato dalla macchina invece di fidarmi dei due push riusciti. **Un push riuscito non è una riparazione riuscita: la prova è il prodotto, non la ricevuta.** Vale per le api e valeva per me.
+
 ---
 
 ## COSA SERVE DAVVERO
@@ -135,7 +140,7 @@ Ogni ape completa una parte della propria vita e muore prima dell'altra, e quale
 ## COME USARE QUESTO FILE
 
 1. Leggi prima di diagnosticare
-2. Se trovi un nuovo problema, aggiungilo qui
+2. Se trovi un nuovo problema, aggiungilo qui, con un titolo numerato
 3. Se risolvi qualcosa, aggiorna lo stato — con la data e con chi l'ha visto
 4. Non ripetere quello che c'è già
 5. Se uno stato qui dentro è vecchio di mesi, non è uno stato: è una citazione
