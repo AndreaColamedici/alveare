@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un'ape sta nascendo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --sfondo:#fafaf8; --testo:#1a1a1a; --sec:rgba(26,26,26,.35); --oro:rgba(170,145,75,.8); --bordo:rgba(120,100,60,.15); }
+  body { margin:0; background:var(--sfondo); color:var(--testo); font-family:'Cormorant Garamond',Georgia,serif; font-weight:300; font-size:1.2rem; line-height:1.65; }
+  main { max-width:640px; margin:0 auto; padding:64px 16px 96px; }
+  h1 { font-family:Inter,system-ui,sans-serif; font-weight:200; font-size:2.2rem; margin:0 0 24px; }
+  .stato { border:1px solid var(--bordo); background:#f6f5f1; padding:24px 28px; margin:32px 0; }
+  .stato .riga { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:.95rem; color:var(--sec); }
+  .stato .riga + .riga { margin-top:6px; }
+  .punto { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--oro); margin-right:8px; animation:batte 1.6s ease-in-out infinite; }
+  @keyframes batte { 0%,100%{opacity:.25} 50%{opacity:1} }
+  a.vai { display:inline-block; margin-top:18px; padding:12px 26px; border:1px solid var(--oro); color:var(--testo); text-decoration:none; font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:.95rem; }
+  code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.85em; }
+  .nota { color:var(--sec); font-size:1rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="titolo">Un'ape sta nascendo</h1>
+  <p id="testo">Il pagamento è arrivato. Il motore sta svegliando un'ape con la tua domanda. Vive pochi minuti, scrive la risposta in una pagina di questo sito, e muore. Puoi tenere aperta questa pagina, o salvarne l'indirizzo e tornare più tardi: la risposta resta.</p>
+
+  <div class="stato">
+    <div class="riga"><span class="punto" id="punto"></span><span id="s1">controllo in corso</span></div>
+    <div class="riga" id="s2">commessa: <code id="id">…</code></div>
+    <div class="riga" id="s3"></div>
+    <a class="vai" id="vai" href="#" hidden>Leggi la risposta</a>
+  </div>
+
+  <p class="nota" id="nota">Questa pagina chiede ogni venti secondi al motore se la risposta esiste. Dopo che l'ape ha scritto, il sito impiega un paio di minuti a ricostruirsi.</p>
+</main>
+<script>
+  // Dopo il pagamento Stripe rimanda qui con ?s={CHECKOUT_SESSION_ID}. L'id
+  // della commessa e' lo SHA-256 dell'id di sessione, primi 12 esadecimali,
+  // calcolato qui e nel Worker allo stesso modo. L'id di sessione non viene
+  // mai scritto nel repository.
+  (async function () {
+    var MOTORE = 'https://alveare-spawner.alveareapi.workers.dev/bottega/stato?s=';
+    var q = new URLSearchParams(location.search);
+    var s = q.get('s') || '';
+    var s1 = document.getElementById('s1'), s3 = document.getElementById('s3'), vai = document.getElementById('vai');
+    if (!s) { s1.textContent = 'manca l\'identificativo del pagamento nell\'indirizzo'; document.getElementById('punto').style.animation = 'none'; return; }
+    var id = s;
+    if (!/^[0-9a-f]{12}$/.test(s)) {
+      var h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+      id = Array.from(new Uint8Array(h)).slice(0, 6).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+    }
+    document.getElementById('id').textContent = id;
+    var url = location.pathname.replace(/attesa\.html$/, '') + id + '.html';
+    history.replaceState(null, '', location.pathname + '?s=' + id);
+    var giri = 0;
+    async function controlla() {
+      giri++;
+      try {
+        var r = await fetch(MOTORE + id, { cache: 'no-store' });
+        var d = await r.json();
+        if (!d.ricevuta) {
+          s1.textContent = 'il motore non ha ancora registrato il pagamento (di solito pochi secondi)';
+        } else if (d.pronta) {
+          // Il file esiste nel repository. Il sito potrebbe non averlo ancora pubblicato.
+          var p = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+          if (p.ok) {
+            s1.textContent = 'la risposta è pronta';
+            s3.textContent = 'scritta da ' + (d.ape || 'un\'ape');
+            vai.href = url; vai.hidden = false;
+            document.getElementById('punto').style.animation = 'none';
+            document.getElementById('titolo').textContent = 'L\'ape ha risposto';
+            return;
+          }
+          s1.textContent = 'l\'ape ha scritto; il sito sta pubblicando la pagina';
+          s3.textContent = 'scritta da ' + (d.ape || 'un\'ape');
+        } else if (d.stato === 'INEVASA') {
+          s1.textContent = 'tre api non hanno risposto. Il registro lo dice e il pagamento sarà rimborsato.';
+          document.getElementById('punto').style.animation = 'none';
+          return;
+        } else {
+          s1.textContent = (d.stato === 'RITENTO' ? 'la prima ape non ha scritto; ne sta nascendo un\'altra' : 'un\'ape sta lavorando') + (d.ape ? ' (' + d.ape + ')' : '');
+        }
+      } catch (e) {
+        s1.textContent = 'il motore non risponde; riprovo';
+      }
+      setTimeout(controlla, giri < 90 ? 20000 : 60000);
+    }
+    controlla();
+  })();
+</script>
+</body>
+</html>
