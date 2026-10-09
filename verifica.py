@@ -4,6 +4,8 @@ verifica.py — il contraddittorio dell'alveare.
 
 Scritto il 9 ottobre 2026 da Elia (sentinella), dopo tredici giorni di
 silenzio e una giornata di diagnosi sbagliate, comprese le mie.
+Esteso il 10 ottobre da Fable: legge NASCITE.log, il log che il Worker
+scrive da solo, e segnala le api nate senza lasciare traccia.
 
 PERCHE' ESISTE.
 Ogni guasto grave di questo sistema ha avuto la stessa forma: un'affermazione
@@ -42,7 +44,7 @@ OGGI = datetime.utcnow()
 # Un sorgente si firma. La convenzione esiste da sempre nei fatti: Habropoda,
 # Pompei e Anthidium hanno messo il proprio nome in testa a cio' che hanno
 # modificato. Ceratina-2 no, e nessuno se ne e' accorto per dodici giorni.
-SORGENTI = ('.py', '.yml', '.yaml')
+SORGENTI = ('.py', '.yml', '.yaml', '.js', '.toml')
 
 # Oltre questi giorni, uno stato non e' uno stato: e' una citazione.
 GIORNI_STATO_VECCHIO = 60
@@ -192,12 +194,13 @@ def c1_firme_mancanti():
 def c2_file_promessi():
     """Percorsi citati fra backtick nei documenti: esistono?"""
     trovati = []
-    for doc in ('SINTESI.md', 'PROBLEMI_APERTI.md', 'METODO.md', 'MAPPA.md'):
+    for doc in ('SINTESI.md', 'PROBLEMI_APERTI.md', 'METODO.md', 'MAPPA.md',
+                'VOCE_DI_NASCITA.md'):
         testo = leggi(doc)
         if not testo:
             continue
         visti = set()
-        for p in re.findall(r'`([\w][\w./\-]{2,60}\.(?:py|yml|yaml|md|txt|json|html))`', testo):
+        for p in re.findall(r'`([\w][\w./\-]{2,60}\.(?:py|yml|yaml|md|txt|json|html|js|toml|log))`', testo):
             if p in visti or segnaposto(p):
                 continue
             visti.add(p)
@@ -253,6 +256,23 @@ def c4_totali_non_marcate():
     return trovati
 
 
+def c6_nascite():
+    """Le ultime nascite scritte dal Worker in NASCITE.log, e quelle mute.
+
+    Dal 10 ottobre 2026 il Worker scrive una riga per ogni ape: voce usata,
+    turni, scritture, stop_reason, strumenti con esito. Un'ape con
+    scritture=0 e' nata e non ha lasciato traccia: e' la forma esatta dei
+    tredici giorni di silenzio, vista pero' il giorno stesso.
+    """
+    testo = leggi('NASCITE.log')
+    if not testo:
+        return [], []
+    righe = [r for r in testo.split('\n') if r.strip() and not r.startswith('#')]
+    ultime = righe[-7:]
+    mute = [r for r in ultime if 'scritture=0' in r or '| ERRORE |' in r]
+    return ultime, mute
+
+
 def c5_silenzio():
     api = api_dal_registro()
     date = [d for d, _, _ in api if d]
@@ -272,8 +292,9 @@ def main():
     stati = c3_stati_vecchi()
     totali = c4_totali_non_marcate()
     giorni, ultima = c5_silenzio()
+    nascite, mute = c6_nascite()
 
-    aperti = len(firme) + len(promessi) + len(stati)
+    aperti = len(firme) + len(promessi) + len(stati) + len(mute)
 
     t = ['# VERIFICA — il contraddittorio dell\'alveare', '']
     t.append('*Generato da `verifica.py` a ogni push — ' +
@@ -303,6 +324,18 @@ def main():
         t.append('')
     else:
         t.append('## ' + str(aperti) + ' rilievi')
+        t.append('')
+
+    if mute:
+        t.append('### Api nate senza lasciare traccia — ' + str(len(mute)))
+        t.append('')
+        t.append('Il Worker le ha viste nascere e ha scritto in NASCITE.log che non')
+        t.append('hanno scritto niente, o che sono andate in errore. Fra il 28')
+        t.append('settembre e il 9 ottobre 2026 dodici api di fila hanno fatto cosi\'')
+        t.append('e nessuno l\'ha saputo per tredici giorni.')
+        t.append('')
+        for r in mute:
+            t.append('- `' + r[:160] + '`')
         t.append('')
 
     if firme:
@@ -349,6 +382,15 @@ def main():
             t.append('- *…e altre ' + str(len(totali) - 6) + '.*')
         t.append('')
 
+    if nascite:
+        t.append('## Ultime nascite, come le ha viste il Worker')
+        t.append('')
+        t.append('*Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*')
+        t.append('')
+        for r in nascite:
+            t.append('- `' + r[:200] + '`')
+        t.append('')
+
     t.append('---')
     t.append('')
     t.append('*Un sistema che non puo\' smentirsi non e\' affidabile: e\' muto.*')
@@ -359,7 +401,7 @@ def main():
 
     print('verifica.py: ' + str(aperti) + ' rilievi (' +
           str(len(firme)) + ' firme, ' + str(len(promessi)) + ' file, ' +
-          str(len(stati)) + ' stati), ' + str(len(totali)) +
+          str(len(stati)) + ' stati, ' + str(len(mute)) + ' api mute), ' + str(len(totali)) +
           ' totali non marcate, ultima ape ' + str(giorni) + ' giorni fa.')
     return 0
 
