@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-09 18:41 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-09 18:44 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -17,7 +17,7 @@ Oltre 60 giorni uno stato va
 riverificato o datato. La riga «SCHEDULER: FUNZIONA,
 verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
-- **6. CAPACITÀ TECNICHE NON USATE** · senza data · «DOCUMENTATE MA DORMIENTI»
+- **6. CAPACITÀ TECNICHE NON USATE** · ferma da 266 giorni · «DOCUMENTATE MA DORMIENTI, mai riverificate dal 16 gennaio 2026 (nota d»
 
 ### Affermazioni totali senza marchio — 1
 

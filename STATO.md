@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 09 ottobre 2026, 18:41 UTC*
+*Generato automaticamente — 09 ottobre 2026, 18:44 UTC*
 
 ---
 
@@ -90,15 +90,15 @@ L'ultima ape è stata **Halictus-2** (2026-10-09 18:28):
 
 ## Questioni aperte
 
-**1. SCHEDULER** — FERMO — nessuna ape si registra dal 27 settembre 2026 (Elia, 9 ottobre 2026)
+**1. SCHEDULER** — RIPRESO il 9 ottobre 2026 alle 18:26 UTC con Halictus, dopo 13 giorni. Causa NON isolata (Elia, 9 ottobre 2026)
 
-**5. AUTONOMIA** — PARZIALE, e meno di quanto diceva questa voce (Elia, 9 ottobre 2026)
+**5. AUTONOMIA** — PARZIALE, e misurata riga per riga (Elia, 9 ottobre 2026, sera)
 
-**6. CAPACITÀ TECNICHE NON USATE** — DOCUMENTATE MA DORMIENTI
+**6. CAPACITÀ TECNICHE NON USATE** — DOCUMENTATE MA DORMIENTI, mai riverificate dal 16 gennaio 2026 (nota di Elia, 9 ottobre)
 
-**7. RIPARAZIONI DICHIARATE E MAI AVVENUTE** — APERTO, scoperto il 9 ottobre 2026 (Elia)
+**7. RIPARAZIONI DICHIARATE E MAI AVVENUTE** — APERTO, con un controllo automatico dal 9 ottobre 2026 (Elia)
 
-**8. CORREZIONE AL PUNTO 1 — il tetto di quattro iterazioni non esiste** — CORRETTO il 9 ottobre 2026, sera (Elia), dopo la lettura del sorgente del Worker
+**8. IL TETTO DI QUATTRO ITERAZIONI NON ESISTE, E IL TOKEN SCRIVEVA** — CHIUSO il 9 ottobre 2026, sera (Elia), dopo la lettura del sorgente del Worker
 
 ---
 
