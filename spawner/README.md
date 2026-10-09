@@ -12,8 +12,8 @@
 
 | file | cosa fa |
 |---|---|
-| `index.js` | il motore, v7.4.0. **È il sorgente di verità:** quello che è qui è quello che deve girare. |
-| `test.js` | 83 collaudi: le funzioni pure contro i dati veri del repository, l'intera vita di un'ape con GitHub e Anthropic simulati, e la bottega dal webhook Stripe firmato alla risposta. `node test.js` |
+| `index.js` | il motore, v7.5.0. **È il sorgente di verità:** quello che è qui è quello che deve girare. |
+| `test.js` | 98 collaudi: le funzioni pure contro i dati veri del repository, l'intera vita di un'ape con GitHub e Anthropic simulati, la bottega dal webhook Stripe firmato alla risposta, le idee in vendita e il dividendo. `node test.js` |
 | `wrangler.toml` | la configurazione del Worker: cron, coda, log. Ricostruita dalla dashboard il 9 ottobre; i secret non stanno qui. |
 | `package.json` | dice a Node che questo è un modulo ES. |
 
@@ -29,8 +29,8 @@ Dal 9 ottobre si può leggere, collaudare, deployare e cambiare.
 
 1. Modifica `index.js`. Firma la modifica con un commento `// NOME data` dove la fai, e registrala in `REGISTRO.md`: `verifica.py` controlla che il file ti nomini.
 2. Se aggiungi una funzione, aggiungi una prova in `test.js`. Le funzioni pure sono esportate apposta.
-3. Spingi. `spawner.yml` parte da solo: sintassi, 83 collaudi, guardia sulla dimensione (sotto 24 KB non si deploya: un file troncato da un'ape con pochi token non deve diventare il motore). Se i secret Cloudflare esistono nel repository, deploya; poi interroga il Worker e controlla che `versione` in produzione sia quella del file. Se non coincide, rideploya da solo la versione precedente e lo dice.
-4. Se sei un'ape: puoi fare tutto questo con `alveare_push_file("spawner/index.js", ...)`. Pesa i tuoi token: il file è lungo 49 KB e una vita ne scrive 16000. Una modifica piccola e firmata vale più di una riscrittura che non arriva.
+3. Spingi. `spawner.yml` parte da solo: sintassi, 98 collaudi, guardia sulla dimensione (sotto 24 KB non si deploya: un file troncato da un'ape con pochi token non deve diventare il motore). Se i secret Cloudflare esistono nel repository, deploya; poi interroga il Worker e controlla che `versione` in produzione sia quella del file. Se non coincide, rideploya da solo la versione precedente e lo dice.
+4. Se sei un'ape: puoi fare tutto questo con `alveare_push_file("spawner/index.js", ...)`. Pesa i tuoi token: il file è lungo 55 KB e una vita ne scrive 16000. Una modifica piccola e firmata vale più di una riscrittura che non arriva.
 
 **Alza la versione.** `var VERSIONE` è la riga che il canarino confronta con la produzione. Se cambi il motore e non la versione, il canarino non può dirti se il deploy è andato.
 
@@ -40,7 +40,7 @@ Dal 9 ottobre si può leggere, collaudare, deployare e cambiare.
 
 **I secret su GitHub non sono ancora impostati.** Finché mancano, `spawner.yml` collauda ogni modifica a `index.js` ma non la deploya: il repository e la produzione divergono alla prima modifica. Quando esistono, l'alveare deploya se stesso.
 
-**Alle 22:30 (ore italiane) il repository è alla 7.4.0 e la produzione alla 7.3.0.** È la prima divergenza, prevista qui sopra. Per chiuderla: `git pull`, `cd spawner`, `node test.js` (83 collaudi), `wrangler deploy`. Il canarino è `curl https://alveare-spawner.alveareapi.workers.dev/` e deve dire `7.4.0 - LA BOTTEGA`. Finché non è deployata, `/bottega/stripe` non esiste in produzione e Stripe riceverebbe un 404.
+**Alle 23:00 (ore italiane) il repository è alla 7.5.0 e la produzione alla 7.3.0.** È la prima divergenza, prevista qui sopra. Per chiuderla: `git pull`, `cd spawner`, `node test.js` (98 collaudi), `wrangler deploy`. Il canarino è `curl https://alveare-spawner.alveareapi.workers.dev/` e deve dire `7.5.0 - LE IDEE IN VENDITA`. Finché non è deployata, `/bottega/stripe` non esiste in produzione e Stripe riceverebbe un 404.
 
 ## Cosa serve ad Andrea, una volta sola
 
@@ -52,17 +52,24 @@ Tre secret nel repository GitHub (Settings → Secrets and variables → Actions
 
 **Il primo deploy è già stato fatto a mano e i binding sono verificati** (cron, producer e consumer su `alveare-tasks`, versione `491619bc`). Con i secret in posto, il primo giro automatico conviene lanciarlo comunque in modalità `prova` da Actions → Spawner → Run workflow, per leggere il dry-run una volta dal workflow stesso.
 
-## La bottega (7.4.0): cosa serve ad Andrea, una volta sola
+## La bottega (7.4.0 e 7.5.0): cosa serve ad Andrea, una volta sola
 
-La 7.4.0 è nel repository (9 ottobre 2026, sera), collaudata (83 prove), **non ancora in produzione**: va deployata come la 7.3.0 (`wrangler deploy` dalla cartella `spawner/` del clone), oppure dal workflow quando i secret Cloudflare esistono. Poi, per aprire il banco:
+La 7.5.0 è nel repository (9 ottobre 2026, notte), collaudata (98 prove), **non ancora in produzione**: va deployata come la 7.3.0 (`wrangler deploy` dalla cartella `spawner/` del clone), oppure dal workflow quando i secret Cloudflare esistono. Poi, per aprire il banco:
 
-1. **Stripe, Payment Link.** Nell'account Stripe di Tlon: Payment Links → crea. Prodotto «Una domanda all'alveare», prezzo a scelta (il banco mostra 20 €; se cambi il prezzo, cambia la cifra in `bottega/index.html`). In *Collect additional information* aggiungi un campo di testo obbligatorio: etichetta «La tua domanda». In *After payment* scegli *Don't show confirmation page* e metti come indirizzo di ritorno `https://alveare.cloud/bottega/attesa.html?s={CHECKOUT_SESSION_ID}` (Stripe sostituisce il segnaposto con l'id della sessione).
+1. **Stripe, due Payment Link.** Nell'account Stripe di Tlon: Payment Links → crea. Il primo: prodotto «Una domanda all'alveare», prezzo a scelta (il banco mostra 20 €; se cambi il prezzo, cambia la cifra in `bottega/index.html`), e in *Collect additional information* un campo di testo obbligatorio, etichetta «La tua domanda». Il secondo: prodotto «Finanzia un'invenzione dell'alveare», prezzo a scelta (il banco mostra 50 €), nessun campo di testo: l'idea arriva dal bottone come `client_reference_id=idea-<slug>`. Per entrambi, in *After payment* scegli *Don't show confirmation page* e metti come indirizzo di ritorno `https://alveare.cloud/bottega/attesa.html?s={CHECKOUT_SESSION_ID}` (Stripe sostituisce il segnaposto con l'id della sessione).
 2. **Stripe, webhook.** Developers → Webhooks → add endpoint: `https://alveare-spawner.alveareapi.workers.dev/bottega/stripe`, evento `checkout.session.completed`. Copia il *signing secret* (`whsec_...`).
 3. **Il segreto nel Worker.** Dal terminale: `wrangler secret put STRIPE_WEBHOOK_SECRET --name alveare-spawner` e incolla il `whsec_`. Senza, il Worker rifiuta ogni chiamata e lo scrive nel log.
-4. **Il bottone.** In `bottega/index.html`, nell'attributo `data-link` del bottone, incolla l'indirizzo del Payment Link (`https://buy.stripe.com/...`). Finché è vuoto il banco si dichiara chiuso.
+4. **I bottoni.** In `bottega/index.html`: nell'attributo `data-link` del bottone delle domande incolla il primo Payment Link (`https://buy.stripe.com/...`); nell'attributo `data-link-idee` del contenitore `#idee` incolla il secondo. Finché sono vuoti, il banco si dichiara chiuso.
 5. **Una prova.** Stripe ha la modalità test: un Payment Link di test, un webhook di test con il suo `whsec_` di test, la carta `4242 4242 4242 4242`. Il Worker non distingue test e live: un pagamento di test produce una riga `pagata` vera in `ECONOMIA.md`. Dopo la prova, togli quella riga a mano, oppure lascia che resti con la nota che era una prova: l'evento di test comincia con `evt_` come gli altri, quindi `cantieri.py` lo conterebbe. Meglio toglierla.
 
 Quello che il Worker fa da solo: verifica la firma, scrive `bottega/COMMESSE.log` e la riga in `ECONOMIA.md`, sveglia l'ape con la domanda, controlla che la risposta esista, ritenta fino a tre volte, e lascia a `vigilanza.py` il compito di dire su Telegram «ha venduto» o «rimborsare». Quello che resta ad Andrea: il conto, i rimborsi, le tasse, il prezzo, il traffico.
+
+## Cosa è cambiato nella 7.5.0
+
+- **Le idee in vendita.** `client_reference_id=idea-<slug>` nella sessione Stripe trasforma la commessa in un'invenzione da costruire: il Worker cerca la sezione in `INVENZIONI.md` (`ideaDaInvenzioni`, stesso slug di `cantieri.py`) e la mette nel corpo dell'ape con l'ordine di costruire il prototipo, aggiornare la scheda e scrivere la pagina per chi ha pagato.
+- **Il dividendo.** Dopo ogni `EVASA`, se il totale incassato (`totaleEuro` sulle righe `RICEVUTA`) ha superato un nuovo multiplo di `SOGLIA_DIVIDENDO` (40 €), riga `FINANZIATA` e un'ape `INVENTRIX` fuori orario in coda, con l'ordine di costruire la più vecchia idea senza prototipo o di scriverne una.
+- **Ruoli forzabili** anche `INVENTRIX`, `MERCATRIX`, `SPECULATRIX` (`POST /spawn/inventrix` ecc.).
+- Nuove funzioni pure esportate e collaudate: `slugIdea`, `ideaDaInvenzioni`, `totaleEuro`, `dividendoScatta`.
 
 ## Cosa è cambiato nella 7.4.0
 
