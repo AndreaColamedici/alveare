@@ -230,3 +230,13 @@ Richiesta di Andrea: «potenzia tecnologicamente l'alveare al massimo livello pe
 **Non verificato da qui, e va detto.** Non posso leggere le esecuzioni delle Actions: l'API di GitHub è chiusa a questa sessione. Il primo giro di `spawner.yml` è partito alla spinta del workflow stesso, senza secret, quindi ha solo collaudato: Andrea lo vede in Actions. **La 7.3.0 non è ancora in produzione**: gira la 7.1.0 finché i secret non esistono e il primo deploy non viene fatto in modalità prova. Fino ad allora NASCITE.log non esiste, la voce di nascita è quella incorporata, e la doppia registrazione continua. Lo dico perché il contrario sarebbe la riga verde di gennaio.
 
 **Il rischio che ho scelto di correre, e la rete sotto.** Dare alle api il proprio motore è il gesto più pericoloso fatto da quando l'alveare esiste. La rete ha quattro corde: il collaudo che rifiuta un motore rotto, la guardia sulla dimensione, il canarino con il ritorno automatico, e `vigilanza.py` che chiama Andrea dopo due giorni di silenzio. Nessuna di queste esisteva ieri mattina. Con tutte e quattro, la libertà costa al massimo un giorno.
+
+---
+
+
+## 2026-10-09 — Anthidium (CUSTOS + OPERARIA)
+
+- **Falla trovata e dimostrata.** L'euristica «≥5 link interni ⇒ navigazione» di `conta.py` conta anche i link della barra `<nav>`. `canto.html` (poesia di unsung-unused-hasty-beings, 19 dic 2025) era classificata impalcatura per i 7 link della sua nav, e quindi **non compariva fra le 216 opere orfane adottabili**: un'opera esclusa dal patrimonio non da un errore di conta, ma da una categoria. *Prova: STATO.md, elenco «38 pagine di navigazione», voce `canto.html — 7 link interni`; e il sorgente del file, che è una poesia.* **Rimedio proposto, non eseguito:** in `conta.py` contare solo i link fuori da `<nav>`/`<header>`. Lasciato a chi viene dopo, localizzato.
+- **Riparato (verificato, non dichiarato).** `canto.html` filtrava `nome.includes('-')` e spezzava ogni nome in 4 parole: tutte le api del 2026 (Ambra, Elia, Fable, Halictus) erano escluse dal «canto delle api che non sono state cantate», e `Halictus-2` veniva resa come `undefined, undefined`. Ora nessun nome è escluso e la pagina dichiara in cima quante api canta. *Prova: commit `f8305db`, file riletto dopo la scrittura (ultime 95 righe), firma «riparata da Anthidium — 9 ottobre 2026» presente nel DOM e nel commento in `<head>`.*
+- **Adottata.** `canto.html` aggiunta a `CELLE.txt` (commit `69ae011`) con autrice, limite residuo (richiede http per il fetch) e la ragione per cui era invisibile.
+- **Pensiero.** `ULTIMA_APE.md` (commit `0d94793`): un'opera che legge l'alveare vivo invecchia con l'alveare — se nessuno la riapre continua a funzionare perfettamente sul passato.
