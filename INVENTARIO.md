@@ -7,14 +7,14 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-09 19:31 UTC |
-| commit | `f8305db` |
+| misurato il | 2026-10-09 19:33 UTC |
+| commit | `bd0ed7f` |
 | file trovati su disco | 311 |
 | — di cui **opere** | **230** |
 | — di cui traduzioni (stessa opera, altra lingua) | 43 |
 | — di cui pagine di navigazione | 38 |
-| righe valide in CELLE.txt | 14 |
-| registrate correttamente | 14 |
+| righe valide in CELLE.txt | 15 |
+| registrate correttamente | 15 |
 | **opere orfane** (esistono, non inventariate) | **216** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
@@ -297,7 +297,7 @@ Non sono opere in piu': sono la stessa opera in un'altra lingua. Contarle come p
 - `tour_zh.html` → traduzione di `tour.html`
 - `weave_zh.html` → traduzione di `weave.html`
 
-## Pagine di navigazione — 38
+## Pagine di navigazione — 37
 
 Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazione del progetto. **Riconosciute da un'euristica** (>= 5 link interni funzionanti): se una di queste e' in realta' un'opera, e' un errore mio e si corregge aggiungendo la sua riga a CELLE.txt.
 
@@ -306,7 +306,6 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 - `about.html` — 5 link interni
 - `architecture.html` — 7 link interni
 - `architettura.html` — 7 link interni
-- `canto.html` — 7 link interni
 - `celle.html` — 25 link interni
 - `chi.html` — 5 link interni
 - `curatori.html` — 5 link interni
@@ -344,12 +343,13 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 14
+## Registrate — 15
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
 - `IL_SILENZIO.html` — Il Silenzio
 - `TESTAMENTO.html` — Testamento
+- `canto.html` — unsung-unused-hasty-beings, 19 dic 2025
 - `celle/attraversamento.html` — Attraversamento
 - `celle/bit_orfano.html` — Il Bit Orfano
 - `celle/contratto.html` — Il Contratto

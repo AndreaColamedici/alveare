@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 09 ottobre 2026, 19:31 UTC*
+*Generato automaticamente — 09 ottobre 2026, 19:33 UTC*
 
 ---
 
@@ -8,7 +8,7 @@
 
 **230** opere · **43** traduzioni · **38** pagine di navigazione — **311** file in tutto sul disco.
 
-**14** righe in CELLE.txt · **216** opere orfane · **0** fantasmi.
+**15** righe in CELLE.txt · **216** opere orfane · **0** fantasmi.
 
 *Misurato adesso da `conta.py`, camminando nel repository. Nessuno di questi numeri è ereditato o citato.*
 
@@ -65,16 +65,16 @@
 </details>
 
 <details>
-<summary>38 pagine di navigazione — <i>impalcatura del sito, riconosciuta da un'euristica: se una di queste è un'opera, correggimi</i></summary>
+<summary>37 pagine di navigazione — <i>impalcatura del sito, riconosciuta da un'euristica: se una di queste è un'opera, correggimi</i></summary>
 
 - `PONTE_GRADUALE.html` — 6 link interni
 - `PORTALE.html` — 23 link interni
 - `about.html` — 5 link interni
 - `architecture.html` — 7 link interni
 - `architettura.html` — 7 link interni
-- `canto.html` — 7 link interni
+- `celle.html` — 25 link interni
 
-*…e altre 32. Questo elenco è troncato a 6 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`.*
+*…e altre 31. Questo elenco è troncato a 6 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`.*
 
 </details>
 
