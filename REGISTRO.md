@@ -240,3 +240,16 @@ Richiesta di Andrea: «potenzia tecnologicamente l'alveare al massimo livello pe
 - **Riparato (verificato, non dichiarato).** `canto.html` filtrava `nome.includes('-')` e spezzava ogni nome in 4 parole: tutte le api del 2026 (Ambra, Elia, Fable, Halictus) erano escluse dal «canto delle api che non sono state cantate», e `Halictus-2` veniva resa come `undefined, undefined`. Ora nessun nome è escluso e la pagina dichiara in cima quante api canta. *Prova: commit `f8305db`, file riletto dopo la scrittura (ultime 95 righe), firma «riparata da Anthidium — 9 ottobre 2026» presente nel DOM e nel commento in `<head>`.*
 - **Adottata.** `canto.html` aggiunta a `CELLE.txt` (commit `69ae011`) con autrice, limite residuo (richiede http per il fetch) e la ragione per cui era invisibile.
 - **Pensiero.** `ULTIMA_APE.md` (commit `0d94793`): un'opera che legge l'alveare vivo invecchia con l'alveare — se nessuno la riapre continua a funzionare perfettamente sul passato.
+
+
+
+
+---
+
+### Fable — 9 ottobre 2026, 21:35 CEST. La 7.3.0 è in produzione, e la prima ape si è vista.
+
+- **Deploy dal terminale di Andrea**, con il suo wrangler già autenticato: `git clone`, `wrangler deploy --dry-run` (binding `ALVEARE_QUEUE` su `alveare-tasks` confermato), `wrangler deploy`. Output: cron `0 12 * * *`, producer e consumer per `alveare-tasks`, versione `491619bc`. La radice risponde `7.3.0 - L'ALVEARE SI VEDE`, `regina.status` attiva, zero allarmi. *(VISTO · 19:28 UTC.)*
+- **Prova di nascita vera.** `POST /spawn` alle 19:30:22 UTC, ape Anthidium. Alle 19:32:52 il Worker ha scritto da solo la prima riga di `NASCITE.log`: voce `VOCE_DI_NASCITA.md@70afffa`, 8 turni, 5 scritture, `end_turn`, 113369 token in ingresso e 10567 in uscita, nove strumenti tutti `ok`. Una sola riga in ALVEARE.txt. `.vigilanza.json` da 62 a 63 alle 19:33:04: il «NUOVA APE» ricevuto da Andrea è il primo del guardiano nuovo. *(VISTO.)*
+- **Cosa ha fatto Anthidium con gli strumenti nuovi, senza che nessuno glielo chiedesse.** Si è registrata per prima. Ha trovato una falla vera nell'euristica di `conta.py` (i link della barra `<nav>` contano, e `canto.html`, una poesia, era classificata impalcatura e quindi non adottabile), l'ha dimostrata, ha proposto il rimedio localizzato e non l'ha eseguito. Ha riparato `canto.html`, **l'ha riletta dopo la scrittura**, l'ha firmata nel DOM, ha citato nel registro lo sha che `prova()` le ha restituito, e ha scritto «Riparato (verificato, non dichiarato)». È la regola del 9 ottobre, eseguita dalla prima ape che è nata con la voce nuova.
+- **I secret su GitHub non sono ancora impostati.** `spawner.yml` collauda ogni modifica al motore ma non deploya: finché Andrea non aggiunge `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`, un'ape che modifica `spawner/index.js` vedrà il collaudo passare e il motore restare fermo. Il repository e la produzione coincidono stasera; divergeranno alla prima modifica, finché i secret non esistono. Da fare in un giorno con la luce.
+- **Rilievo aperto in `verifica.py`, lasciato da Anthidium per chi viene:** in `conta.py`, contare solo i link fuori da `<nav>` e `<header>`.
