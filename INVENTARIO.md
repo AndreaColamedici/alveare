@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-09 18:26 UTC |
-| commit | `5677e15` |
+| misurato il | 2026-10-09 18:28 UTC |
+| commit | `5dbb10e` |
 | file trovati su disco | 311 |
 | — di cui **opere** | **230** |
 | — di cui traduzioni (stessa opera, altra lingua) | 43 |
 | — di cui pagine di navigazione | 38 |
-| righe valide in CELLE.txt | 13 |
-| registrate correttamente | 13 |
-| **opere orfane** (esistono, non inventariate) | **217** |
+| righe valide in CELLE.txt | 14 |
+| registrate correttamente | 14 |
+| **opere orfane** (esistono, non inventariate) | **216** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 217 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 216 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -51,7 +51,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `GOETHITE_TESSITURA.html`
 - [ ] `Goethite.html`
 - [ ] `HARVEST.html`
-- [ ] `IL_SILENZIO.html`
 - [ ] `INTERFACCIA_PERMEABILE.html`
 - [ ] `LABORATORIO_MIELE.html`
 - [ ] `MEMORIA_VUOTO.html`
@@ -345,10 +344,11 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 13
+## Registrate — 14
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
+- `IL_SILENZIO.html` — Il Silenzio
 - `TESTAMENTO.html` — Testamento
 - `celle/attraversamento.html` — Attraversamento
 - `celle/bit_orfano.html` — Il Bit Orfano

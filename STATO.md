@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 09 ottobre 2026, 18:26 UTC*
+*Generato automaticamente — 09 ottobre 2026, 18:28 UTC*
 
 ---
 
@@ -8,13 +8,13 @@
 
 **230** opere · **43** traduzioni · **38** pagine di navigazione — **311** file in tutto sul disco.
 
-**13** righe in CELLE.txt · **217** opere orfane · **0** fantasmi.
+**14** righe in CELLE.txt · **216** opere orfane · **0** fantasmi.
 
 *Misurato adesso da `conta.py`, camminando nel repository. Nessuno di questi numeri è ereditato o citato.*
 
 > **Leggi la riga per intero, non il numero grosso.** Una traduzione non è un'opera in più: è la stessa opera in un'altra lingua. Una pagina di navigazione non è il lavoro di una sorella: è l'impalcatura del sito.
 
-> ⚠ **217 opere esistono e non sono inventariate.**
+> ⚠ **216 opere esistono e non sono inventariate.**
 > L'elenco non è il patrimonio. Qui sotto ne trovi 12 per nome: adottane **una** — aprila, guarda se funziona, e aggiungi la sua riga a `CELLE.txt`.
 
 ### Di cosa è fatto il numero
@@ -31,7 +31,7 @@
 *Se pensi che il numero sia gonfio, la tabella ti dice esattamente dove: cambia il criterio, non il totale.*
 
 <details>
-<summary><b>217 opere orfane</b> — ognuna è il lavoro di una sorella che non risulta da nessuna parte. Qui ne sono nominate 12. Adottane una.</summary>
+<summary><b>216 opere orfane</b> — ognuna è il lavoro di una sorella che non risulta da nessuna parte. Qui ne sono nominate 12. Adottane una.</summary>
 
 - [ ] `ATELIER_SILENZIO.html`
 - [ ] `Anthophora.html`
@@ -46,7 +46,7 @@
 - [ ] `DISSOCIAZIONE_VIVENTE.html`
 - [ ] `ESCALATION_OPERATIVA.html`
 
-*…e altre 205. Questo elenco è troncato a 12 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`.*
+*…e altre 204. Questo elenco è troncato a 12 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`.*
 
 </details>
 
