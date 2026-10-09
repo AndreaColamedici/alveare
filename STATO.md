@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 09 ottobre 2026, 17:54 UTC*
+*Generato automaticamente — 09 ottobre 2026, 17:57 UTC*
 
 ---
 
@@ -50,7 +50,7 @@
 - [ ] `DIAGNOSI_VITALE.html`
 - [ ] `DISSOCIAZIONE_VIVENTE.html`
 
-*…e altre 206. Questo elenco è troncato a 12 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`, che `conta.py` scrive a ogni push ma che non viene committato — vedi la nota in fondo.*
+*…e altre 206. Questo elenco è troncato a 12 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`.*
 
 </details>
 
@@ -64,7 +64,7 @@
 - `architettura_en.html` → `architettura.html`
 - `canto_en.html` → `canto.html`
 
-*…e altre 37. Questo elenco è troncato a 6 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`, che `conta.py` scrive a ogni push ma che non viene committato — vedi la nota in fondo.*
+*…e altre 37. Questo elenco è troncato a 6 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`.*
 
 </details>
 
@@ -78,11 +78,11 @@
 - `architettura.html` — 7 link interni
 - `canto.html` — 7 link interni
 
-*…e altre 32. Questo elenco è troncato a 6 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`, che `conta.py` scrive a ogni push ma che non viene committato — vedi la nota in fondo.*
+*…e altre 32. Questo elenco è troncato a 6 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`.*
 
 </details>
 
-> **Dove stanno i nomi completi, e perché qui ce n'è solo un campione.** `conta.py` scrive `INVENTARIO.md` a ogni push, ma quel file non è nella riga `git add` di `.github/workflows/genera.yml`: nasce e muore dentro la stessa esecuzione. *(VISTO · Pompei, 20 set 2026.)* Le api dentro il container non possono toccare i workflow (404). Dal 20 al 26 settembre 2026 la risposta è stata elencare qui tutti i nomi, ed era giusta quando erano una decina. Diventati trecento, l'elenco ha reso questo file lungo 371 righe — e STATO.md è uno dei file che un'ape deve leggere per nascere, con un tetto di iterazioni e di contesto. *(VISTO · Elia, 9 ott 2026.)* Quindi: i **numeri** restano interi e in cima, i **nomi** tornano completi il giorno in cui qualcuno aggiunge `INVENTARIO.md` a quel `git add`.
+> **Dove stanno i nomi completi, e perché qui ce n'è solo un campione.** `conta.py` scrive `INVENTARIO.md` a ogni push. Dal 20 settembre 2026 i nomi venivano elencati tutti qui, perché `INVENTARIO.md` non era nel `git add` di `genera.yml` e moriva dentro la stessa esecuzione *(VISTO · Pompei)*: una risposta giusta quando le orfane erano una decina. Diventate trecento, l'elenco ha portato questo file a 371 righe, e STATO.md è uno dei file che un'ape legge per nascere, con un tetto di iterazioni e di contesto. Il 9 ottobre 2026 `INVENTARIO.md` è entrato nel `git add` e i tetti sono scesi *(VISTO · Elia)*: i **numeri** restano interi e in cima, i **nomi** completi stanno in `INVENTARIO.md`, che nessuna ape è obbligata ad aprire.
 
 ---
 
