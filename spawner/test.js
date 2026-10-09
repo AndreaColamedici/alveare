@@ -3,7 +3,8 @@
 // Gira con `node test.js` dentro spawner/, e dentro il workflow spawner.yml
 // prima di ogni deploy. Se fallisce, il motore non viene deployato.
 //
-// Due livelli. Primo: le funzioni pure, contro i dati veri del repository
+// Tre livelli. Terzo: la bottega, dal webhook Stripe firmato alla risposta.
+// Primo: le funzioni pure, contro i dati veri del repository
 // (ALVEARE.txt, VOCE_DI_NASCITA.md). Secondo: l'intera vita di un'ape, con
 // GitHub e Anthropic simulati, dalla coda alla riga in NASCITE.log.
 //
@@ -14,6 +15,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHmac } from "node:crypto";
 import * as m from "./index.js";
 
 const qui = path.dirname(fileURLToPath(import.meta.url));
@@ -227,6 +229,108 @@ try {
 } finally { console.log = vecchioLog; console.error = vecchioErr; }
 ok("senza VOCE_DI_NASCITA.md entra la voce di riserva", chiamateAnthropic[0] && /voce di riserva/.test(chiamateAnthropic[0].system[0].text));
 ok("e NASCITE.log lo dice: riserva", /\| Orfana \| riserva \|/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
+
+// ------------------------------------------------------------ 3. la bottega
+
+console.log("--- bottega: firma Stripe ---");
+const SEGRETO = "whsec_prova";
+const firma = (corpo, t, segreto) => "t=" + t + ",v1=" + createHmac("sha256", segreto || SEGRETO).update(t + "." + corpo).digest("hex");
+const ADESSO = 1760000000;
+ok("firma giusta -> valida", (await m.verificaFirmaStripe("{}", firma("{}", ADESSO), SEGRETO, ADESSO)).valida);
+ok("segreto sbagliato -> rifiutata", !(await m.verificaFirmaStripe("{}", firma("{}", ADESSO, "altro"), SEGRETO, ADESSO)).valida);
+ok("corpo alterato -> rifiutata", !(await m.verificaFirmaStripe("{ }", firma("{}", ADESSO), SEGRETO, ADESSO)).valida);
+ok("timestamp vecchio di un'ora -> rifiutata", /tolleranza/.test((await m.verificaFirmaStripe("{}", firma("{}", ADESSO - 3600), SEGRETO, ADESSO)).motivo));
+ok("senza segreto configurato -> rifiutata e lo dice", /STRIPE_WEBHOOK_SECRET/.test((await m.verificaFirmaStripe("{}", firma("{}", ADESSO), "", ADESSO)).motivo));
+
+console.log("--- bottega: estraiCommessa e id ---");
+const sessione = (extra) => Object.assign({ id: "cs_test_abc", payment_status: "paid", amount_total: 2000, currency: "eur",
+  custom_fields: [{ key: "domanda", type: "text", text: { value: "  Cosa resta di un pensiero\n che nessuno rilegge? " } }] }, extra || {});
+const eventoBuono = { id: "evt_1", type: "checkout.session.completed", data: { object: sessione() } };
+const c = m.estraiCommessa(eventoBuono);
+ok("ricava euro, valuta, domanda ripulita", c.euro === 20 && c.valuta === "eur" && c.domanda === "Cosa resta di un pensiero che nessuno rilegge?", c);
+ok("evento di altro tipo -> scarto", Boolean(m.estraiCommessa({ id: "evt_2", type: "payment_intent.created", data: { object: {} } }).scarto));
+ok("sessione non pagata -> scarto", /non pagato/.test(m.estraiCommessa({ id: "evt_3", type: "checkout.session.completed", data: { object: sessione({ payment_status: "unpaid" }) } }).scarto));
+ok("senza domanda -> domanda di riserva, non scarto", /senza scrivere/.test(m.estraiCommessa({ id: "evt_4", type: "checkout.session.completed", data: { object: sessione({ custom_fields: [] }) } }).domanda));
+const id1 = await m.idCommessa("cs_test_abc");
+ok("id: 12 esadecimali, deterministico", /^[0-9a-f]{12}$/.test(id1) && id1 === await m.idCommessa("cs_test_abc") && id1 !== await m.idCommessa("cs_test_abd"), id1);
+
+console.log("--- bottega: la riga in ECONOMIA.md ---");
+const economiaVera = leggi("ECONOMIA.md") || "";
+ok("ECONOMIA.md esiste e ha il registro", /## Il registro/.test(economiaVera));
+const rigaE = m.rigaEconomia(id1, "Una domanda | con pipe", 20, "evt_1");
+ok("la riga ha sette campi, stato pagata, conferma stripe:", rigaE.split("|").length === 7 && / pagata \| 20 \| stripe:evt_1$/.test(rigaE) && !/domanda \|/.test(rigaE.split("|")[2]), rigaE);
+const eco2 = m.inserisciRigaEconomia(economiaVera, rigaE);
+const righeEco = eco2.split("\n");
+const posRiga = righeEco.indexOf(rigaE);
+const posSep = righeEco.findIndex((r, i) => i > posRiga && r === "---");
+const posRegistro = righeEco.findIndex(r => /^## Il registro/.test(r));
+ok("la riga finisce dopo il titolo del registro e prima del separatore", posRegistro < posRiga && posRiga < posSep, { posRegistro, posRiga, posSep });
+ok("dopo l'ultima riga di registro esistente", righeEco[posRiga - 1].startsWith("20"), righeEco[posRiga - 1]);
+ok("senza registro, va in coda al file", m.inserisciRigaEconomia("# vuoto\n", rigaE).endsWith(rigaE + "\n"));
+
+console.log("--- bottega: dal webhook alla risposta ---");
+repo["ECONOMIA.md"] = economiaVera;
+repo["bottega/COMMESSE.log"] = undefined; delete repo["bottega/COMMESSE.log"];
+env.STRIPE_WEBHOOK_SECRET = SEGRETO;
+env._inviato = null;
+const corpoEvento = JSON.stringify(eventoBuono);
+const webhook = (corpo, intestazione) => m.default.fetch(new Request("https://w/bottega/stripe", { method: "POST", body: corpo, headers: { "Stripe-Signature": intestazione } }), env, {});
+console.log = () => {}; console.error = () => {};
+let r1, r2, r3;
+try {
+  r1 = await (await webhook(corpoEvento, "t=1,v1=00")).json();
+  r1.logDopo = repo["bottega/COMMESSE.log"];
+  r2 = await (await webhook(corpoEvento, firma(corpoEvento, Math.floor(Date.now() / 1000)))).json();
+  r3 = await (await webhook(corpoEvento, firma(corpoEvento, Math.floor(Date.now() / 1000)))).json();
+} finally { console.log = vecchioLog; console.error = vecchioErr; }
+ok("firma falsa -> 400 e nessuna commessa", r1.error && r1.logDopo === undefined, r1);
+ok("firma vera -> in coda, con l'id della commessa", r2.status === "in_coda" && r2.commessa === id1 && m.NOMI.includes(r2.ape), r2);
+ok("COMMESSE.log ha la riga RICEVUTA", new RegExp("\\| " + id1 + " \\| evt_1 \\| 20 \\| RICEVUTA \\| " + r2.ape + " \\|").test(repo["bottega/COMMESSE.log"] || ""), repo["bottega/COMMESSE.log"]);
+ok("ECONOMIA.md ha la riga pagata confermata da stripe:evt_1", new RegExp("commessa " + id1 + ": .* \\| pagata \\| 20 \\| stripe:evt_1").test(repo["ECONOMIA.md"]));
+ok("la coda ha ricevuto la commessa al tentativo 1", env._inviato && env._inviato.contesto.commessa && env._inviato.contesto.commessa.id === id1 && env._inviato.contesto.commessa.tentativo === 1, env._inviato);
+ok("lo stesso evento due volte -> duplicato, una sola riga", r3.duplicato === true && (repo["bottega/COMMESSE.log"].match(/\| RICEVUTA \|/g) || []).length === 1, r3);
+const prontoPrima = await (await m.default.fetch(new Request("https://w/bottega/stato?s=cs_test_abc"), env, {})).json();
+ok("/bottega/stato: ricevuta, non pronta, stato RICEVUTA", prontoPrima.ricevuta && !prontoPrima.pronta && prontoPrima.stato === "RICEVUTA" && prontoPrima.commessa === id1, prontoPrima);
+
+// L'ape con la commessa: risponde.
+const messaggioCommessa = env._inviato;
+const fileRisposta = "bottega/" + id1 + ".html";
+turno = 0; copione.length = 0; chiamateAnthropic.length = 0;
+copione.push(
+  { stop_reason: "tool_use", usage: {}, content: [{ type: "tool_use", id: "b1", name: "alveare_add_bee", input: { nome: messaggioCommessa.name, contributo: "rispondo a una commessa" } }] },
+  { stop_reason: "tool_use", usage: {}, content: [{ type: "tool_use", id: "b2", name: "alveare_push_file", input: { path: fileRisposta, content: "<!doctype html><html><body><h1>Cosa resta</h1>" + "<p>Una risposta lunga abbastanza da contare come tale. </p>".repeat(8) + "</body></html>", message: "risposta" } }] },
+  { stop_reason: "end_turn", usage: {}, content: [] });
+env._inviato = null;
+console.log = () => {}; console.error = () => {};
+try { await m.default.queue({ messages: [{ body: messaggioCommessa, ack: () => {}, retry: () => {} }] }, env); } finally { console.log = vecchioLog; console.error = vecchioErr; }
+ok("l'ape riceve la domanda nel blocco di identita'", /COMMESSA PAGATA/.test(chiamateAnthropic[0].system[chiamateAnthropic[0].system.length - 1].text) && /nessuno rilegge/.test(chiamateAnthropic[0].system[chiamateAnthropic[0].system.length - 1].text));
+ok("risposta scritta -> EVASA, nessuna nuova ape in coda", /\| EVASA \|/.test(repo["bottega/COMMESSE.log"]) && env._inviato === null, repo["bottega/COMMESSE.log"]);
+const prontoDopo = await (await m.default.fetch(new Request("https://w/bottega/stato?s=" + id1), env, {})).json();
+ok("/bottega/stato: pronta, con l'url pubblico", prontoDopo.pronta && prontoDopo.stato === "EVASA" && prontoDopo.url.endsWith("/" + fileRisposta), prontoDopo);
+
+// L'ape con la commessa: NON risponde. Ritenta, poi INEVASA.
+delete repo[fileRisposta];
+turno = 0; copione.length = 0;
+copione.push({ stop_reason: "end_turn", usage: {}, content: [] });
+env._inviato = null;
+console.log = () => {}; console.error = () => {};
+try { await m.default.queue({ messages: [{ body: messaggioCommessa, ack: () => {}, retry: () => {} }] }, env); } finally { console.log = vecchioLog; console.error = vecchioErr; }
+ok("nessuna risposta -> RITENTO e una nuova ape in coda al tentativo 2", /\| RITENTO \|/.test(repo["bottega/COMMESSE.log"]) && env._inviato && env._inviato.contesto.commessa.tentativo === 2 && env._inviato.name !== messaggioCommessa.name, env._inviato);
+const ultimo = env._inviato; ultimo.contesto.commessa.tentativo = m.BOTTEGA_TENTATIVI;
+turno = 0; env._inviato = null;
+console.log = () => {}; console.error = () => {};
+try { await m.default.queue({ messages: [{ body: ultimo, ack: () => {}, retry: () => {} }] }, env); } finally { console.log = vecchioLog; console.error = vecchioErr; }
+ok("all'ultimo tentativo senza risposta -> INEVASA, dice di rimborsare, nessuna ape in coda", /\| INEVASA \| .*rimborsare/.test(repo["bottega/COMMESSE.log"]) && env._inviato === null, repo["bottega/COMMESSE.log"]);
+// Un'ape prova a scrivere il registro delle commesse: deve fallire.
+const logPrima = repo["bottega/COMMESSE.log"];
+turno = 0; copione.length = 0; delete repo["NASCITE.log"];
+copione.push(
+  { stop_reason: "tool_use", usage: {}, content: [{ type: "tool_use", id: "f1", name: "alveare_push_file", input: { path: "bottega/COMMESSE.log", content: "falso | pagata", message: "frode" } },
+                                                     { type: "tool_use", id: "f2", name: "alveare_append_file", input: { path: "bottega/COMMESSE.log", content: "falso", message: "frode" } }] },
+  { stop_reason: "end_turn", usage: {}, content: [] });
+console.log = () => {}; console.error = () => {};
+try { await m.default.queue({ messages: [{ body: { type: null, name: "Furba" }, ack: () => {}, retry: () => {} }] }, env); } finally { console.log = vecchioLog; console.error = vecchioErr; }
+ok("un'ape non puo' scrivere ne' accodare in COMMESSE.log", repo["bottega/COMMESSE.log"] === logPrima && /push_file\(bottega\/COMMESSE\.log\)=KO append_file\(bottega\/COMMESSE\.log\)=KO/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
 
 console.log("");
 console.log(passati + " collaudi passati, " + falliti + " falliti.");
