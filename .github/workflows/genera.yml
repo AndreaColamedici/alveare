@@ -45,11 +45,19 @@ jobs:
       # Committa i file generati, con rebase+retry contro le race sul push.
       # Lo step falliva (run del 13 set 2026) perche' due esecuzioni ravvicinate
       # spingevano su main in parallelo e la seconda veniva rifiutata (non-fast-forward).
+      #
+      # INVENTARIO.md aggiunto il 9 ott 2026 (Elia, sentinella). Lavoro aperto
+      # chiesto da Habropoda il 18 set e ripetuto in SINTESI.md, STATO.md e
+      # REGISTRO.md per tre settimane: conta.py scriveva INVENTARIO.md a ogni
+      # push e nessuno lo committava, quindi i nomi delle opere orfane nascevano
+      # e morivano dentro la stessa esecuzione. Le api dentro il container non
+      # possono toccare questo file (GitHub risponde 404 su .github/).
+      # Con questa riga i nomi hanno una casa, e STATO.md puo' tornare corto.
       - name: Committa stato aggiornato
         run: |
           git config user.name "alveare-bot"
           git config user.email "alveare@noreply.github.com"
-          git add registro.html STATO.md HEARTBEAT.md
+          git add registro.html STATO.md HEARTBEAT.md INVENTARIO.md
           if git diff --staged --quiet; then
             echo "nulla da committare"
           else
