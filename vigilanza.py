@@ -3,8 +3,9 @@
 vigilanza.py — l'alveare dice ad Andrea quando tace.
 
 Scritto il 9 ottobre 2026 da Elia (sentinella).
-Esteso il 10 ottobre da Fable: legge NASCITE.log e segnala il giorno stesso
-un'ape nata senza lasciare traccia.
+Esteso la sera del 9 ottobre da Fable: legge NASCITE.log e segnala il giorno
+stesso un'ape nata senza lasciare traccia; e legge bottega/COMMESSE.log, per
+dire quando la bottega ha venduto e quando una commessa va rimborsata.
 
 PERCHE' ESISTE, in una riga: per 91 giorni fra giugno e settembre 2026, e poi
 per 13 giorni fra il 28 settembre e il 9 ottobre, questo sistema e' stato fermo
@@ -39,6 +40,7 @@ from datetime import datetime
 STATO = '.vigilanza.json'
 SOGLIA_SILENZIO = 2          # giorni senza registrazioni prima di chiamare
 SITO = 'https://andreacolamedici.github.io/alveare/'
+BOTTEGA = 'https://alveare.cloud/bottega/'
 OGGI = datetime.utcnow()
 
 
@@ -152,6 +154,44 @@ def main():
     if ultima:
         nuovo_stato['ultima_ape'] = ultima['nome']
         nuovo_stato['ultima_data'] = ultima['data']
+
+    # 0. LA BOTTEGA (dalla 7.4.0, Fable 9 ott 2026, sera). bottega/COMMESSE.log lo
+    # scrive solo il Worker: RICEVUTA quando Stripe conferma un pagamento,
+    # EVASA quando un'ape ha scritto la risposta, INEVASA quando tre api non
+    # l'hanno fatto e va rimborsato. Le due che contano arrivano su Telegram,
+    # una volta per riga. Viene prima di tutto perche' qui ci sono soldi veri.
+    commesse = []
+    try:
+        with open('bottega/COMMESSE.log', 'r', encoding='utf-8') as f:
+            for r in f.read().split('\n'):
+                if r.startswith('20') and r.count('|') >= 6:
+                    commesse.append([x.strip() for x in r.split('|')])
+    except Exception:
+        pass
+    gia_commesse = set(stato.get('commesse_segnalate', []))
+    da_dire = [c for c in commesse if c[4] in ('EVASA', 'INEVASA')
+               and (c[1] + '|' + c[4]) not in gia_commesse]
+    if da_dire:
+        c = da_dire[0]
+        euro = c[3]
+        if c[4] == 'EVASA':
+            testo = ('\U0001F4B6  <b>LA BOTTEGA HA VENDUTO</b>\n\n'
+                     'Commessa <code>' + c[1] + '</code>: ' + euro + ' euro pagati su Stripe, '
+                     'risposta scritta da <b>' + c[5] + '</b>.\n' + c[6][:200] + '\n\n'
+                     'Nessun umano in mezzo. L\'euro sta in ECONOMIA.md con l\'id dell\'evento Stripe '
+                     'e conta in CANTIERI.md.\n\n'
+                     '<a href="' + BOTTEGA + c[1] + '.html">la risposta</a>')
+        else:
+            testo = ('\U0001F6A8  <b>COMMESSA INEVASA: RIMBORSARE</b>\n\n'
+                     'Commessa <code>' + c[1] + '</code>: ' + euro + ' euro pagati, '
+                     'tre api non hanno scritto la risposta. Serve un umano: rimborso da Stripe, '
+                     'e poi NASCITE.log dice perche\' sono morte mute.\n\n'
+                     '<a href="' + BOTTEGA + 'COMMESSE.log">COMMESSE.log</a>')
+        manda(testo)
+        nuovo_stato['commesse_segnalate'] = sorted(gia_commesse | {c[1] + '|' + c[4]})
+        scrivi_stato(nuovo_stato)
+        print('vigilanza: commessa ' + c[1] + ' ' + c[4] + ' segnalata.')
+        return 0
 
     # 1. NASCITA. Solo se il registro e' davvero cresciuto.
     if noto is not None and totale > noto and ultima:
