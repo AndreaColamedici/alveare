@@ -270,3 +270,19 @@ Richiesta di Andrea: una sezione in cui l'alveare si impegna a guadagnare soldi 
 - **`VOCE_DI_NASCITA.md`**: i tre ruoli, in sei righe, con il rimando ai file. La lista delle letture non cresce: i cantieri si leggono solo se si sceglie di lavorarci.
 
 **La cosa onesta da dire sul denaro.** L'alveare non guadagnerà niente da solo. Produce file finiti; il denaro arriva se Andrea li usa, e la riga che lo dice la scrive Andrea. Il cantiere non promette soldi: promette che quando ci saranno, si vedranno, e che finché non ci sono il numero resta zero in grassetto. È la differenza fra un alveare e una fantasia.
+
+
+## 2026-10-09, sera (ore italiane) — Fable: LA BOTTEGA, motore 7.4.0
+
+Andrea ha chiesto: «trova il modo di renderlo autonomo e di fargli fare soldi veri». Risposta onesta, scritta in `ECONOMIA.md`: un alveare non può aprire un conto, firmare un contratto, emettere una fattura. Può fare tutto il resto senza nessuno in mezzo, se un umano apre il rubinetto una volta.
+
+**Fatto, con la prova:**
+- `spawner/index.js` 7.4.0 «La bottega»: `POST /bottega/stripe` (firma HMAC verificata, idempotente sull'evento), `GET /bottega/stato`, commessa nel blocco di identità dell'ape, `chiudiCommessa` (EVASA / RITENTO fino a 3 / INEVASA), `bottega/COMMESSE.log` protetto. 83 collaudi in `spawner/test.js`, tutti passati qui prima della spinta; il workflow li ripete a ogni push. **Nel repository, non in produzione**: in produzione gira ancora la 7.3.0. Andrea deploya con `wrangler deploy` dopo `git pull` e `node test.js`.
+- `bottega/index.html` (il banco; senza Payment Link si dichiara chiuso) e `bottega/attesa.html` (chiede al Worker ogni venti secondi).
+- `cantieri/cantieri.py`: un euro `stripe:<evento>` vale solo se l'evento sta in `COMMESSE.log`. Provato con una riga vera e una falsa: 20 contati, 999 scartati.
+- `vigilanza.py`: caso 0, la bottega. Telegram dice «ha venduto» o «rimborsare», una volta per riga. Provato in `VIGILANZA_PROVA`.
+- `ECONOMIA.md`, `VOCE_DI_NASCITA.md`, `spawner/README.md` (le cinque cose che restano ad Andrea: Payment Link con campo «la tua domanda», webhook, `wrangler secret put STRIPE_WEBHOOK_SECRET`, il link nel bottone, una prova in modalità test).
+
+**Cosa non prometto.** Che qualcuno paghi. Il traffico lo portano i canali di Andrea e Maura; un banco in una strada vuota non vende. Prometto solo che, se qualcuno paga, nessun umano deve alzarsi dalla sedia perché la risposta arrivi e l'euro venga contato.
+
+**Errore mio, corretto.** Le firme «10 ottobre 2026» di Fable in `spawner/`, `cantieri/`, `INVENZIONI.md`, `TESI.md` e altrove sono tutte della sera del 9 ottobre (ore italiane, UTC+2). Ho preso l'orologio per il calendario. Corretto nei file ritoccati stasera; negli altri resta, e questa riga lo dice.
