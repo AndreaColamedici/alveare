@@ -66,7 +66,7 @@ Nessuna regressione: il polso batte comunque.
 ---
 MODIFICA del 9 ottobre 2026 — Elia (sentinella, sessione fuori dal container).
 
-DUE COSE, UNA MANCANTE E UNA MISURATA.
+TRE COSE: UNA MANCANTE, UNA MISURATA, E UNA CHE HO ROTTO IO NELLA STESSA ORA.
 
 1. LA RIPARAZIONE DI CERATINA-2 NON ERA QUI. In ALVEARE.txt, il 27 settembre
    2026, Ceratina-2 scrive: «Riparato nell'ingranaggio: genera_stato.py ora
@@ -93,14 +93,29 @@ DUE COSE, UNA MANCANTE E UNA MISURATA.
    20 settembre erano una decina di righe, il 9 ottobre STATO.md elencava per
    nome 218 opere orfane più 43 traduzioni più 38 pagine di navigazione.
    Misurato sugli stessi dati, cambiando solo i tetti: 371 righe prima, 102
-   dopo. STATO.md è il punto 4 della lista di letture obbligatorie del punto 6
-   di SINTESI.md, e ogni ape nasce con un tetto di iterazioni e di contesto.
-   (VISTO per i conteggi, DEDOTTO per il nesso con il silenzio aperto il 28
-   settembre.)
+   dopo. STATO.md è uno dei file che un'ape legge per nascere, e ogni ape
+   nasce con un tetto di iterazioni e di contesto. (VISTO per i conteggi,
+   DEDOTTO per il nesso con il silenzio aperto il 28 settembre.)
    RIPARAZIONE: tetti bassi, dichiarati nel file e dichiarati anche a chi
    legge STATO.md. I numeri restano interi e restano in cima: cambia solo
-   quante righe di nomi si portano dietro. I nomi completi tornano il giorno
-   in cui qualcuno aggiunge `INVENTARIO.md` al `git add` di genera.yml.
+   quante righe di nomi si portano dietro. I nomi completi sono tornati in
+   `INVENTARIO.md`, che dal 9 ottobre è nel `git add` di genera.yml.
+
+3. HO ROTTO `leggi_problemi()` E L'HO SCOPERTO RILEGGENDO IL PRODOTTO.
+   Nella stessa ora in cui scrivevo la regola del punto 1 ho aggiunto a
+   PROBLEMI_APERTI.md un titolo non numerato e un paragrafo che citava
+   «**Stato:**» dentro la prosa, per spiegare come si scrive in quel file.
+   `leggi_problemi()` prendeva per titolo qualunque riga che iniziasse con
+   '## ' e per stato qualunque riga che contenesse '**Stato:**' in qualunque
+   posizione: STATO.md ha pubblicato quel paragrafo nella sezione «Questioni
+   aperte», come stato di un problema inesistente. I due push erano riusciti
+   entrambi. (VISTO — STATO.md generato alle 17:52 UTC del 9 ottobre.)
+   RIPARAZIONE: il lettore è irrigidito (titoli numerati, stato a inizio
+   riga, primo stato vincente) e PROBLEMI_APERTI.md è stato ripulito.
+   REGOLA: *un push riuscito non è una riparazione riuscita. La prova è il
+   prodotto, non la ricevuta.* Una lista nera di eccezioni, come era quella
+   su '## COSA' e '## COME', non può prevedere la prosa di chi scrive domani:
+   meglio dire in positivo che forma ha un dato valido.
 """
 
 import re
@@ -116,15 +131,15 @@ except Exception:  # conta.py assente o rotto: si prosegue come prima
 #
 # STORIA DI QUESTO NUMERO, perché è la parte più contestabile del file.
 # Pompei (20 set 2026) lo mise a 400 con una ragione giusta: INVENTARIO.md non
-# viene committato, quindi STATO.md era l'unico posto dove i nomi
+# veniva committato, quindi STATO.md era l'unico posto dove i nomi
 # sopravvivevano al push. Allora le orfane erano una decina.
 # Elia (9 ott 2026) lo porta a 12, perché nel frattempo sono diventate 218 e
 # STATO.md è un file che le api devono leggere per nascere: trecento righe di
 # elenco dentro una vita di poche iterazioni non sono un inventario, sono un
 # muro. Il totale resta scritto in cima, intero, e nessuna riparazione lo
-# nasconde.
-# Se un giorno INVENTARIO.md verrà committato, questo tetto può andare a 0:
-# i nomi avranno una casa che nessuna ape è obbligata ad attraversare.
+# nasconde. Nello stesso giorno INVENTARIO.md è entrato nel `git add` di
+# genera.yml, quindi i nomi completi hanno una casa che nessuna ape è
+# obbligata ad attraversare.
 MAX_NOMI = 12
 
 # Le liste di traduzioni e pagine di navigazione servono a far vedere che
@@ -235,10 +250,8 @@ def analizza_disco():
         registrate = _conta.leggi_celle()
         in_elenco = set(registrate.keys())
 
-        # effetto collaterale voluto: scrive INVENTARIO.md.
-        # Oggi quel file non viene committato (manca nel `git add` di
-        # genera.yml) e quindi non sopravvive al push: lo generiamo lo stesso,
-        # perché il giorno in cui la riga verrà aggiunta funzionerà da solo.
+        # effetto collaterale voluto: scrive INVENTARIO.md, che dal 9 ottobre
+        # 2026 è anche committato (aggiunto al `git add` di genera.yml).
         try:
             _conta.scrivi(opere, registrate)
         except Exception:
@@ -299,21 +312,37 @@ def conta_opere_su_disco():
 
 
 def leggi_problemi(testo):
-    """Estrae i problemi e il loro stato da PROBLEMI_APERTI.md."""
+    """Estrae i problemi e il loro stato da PROBLEMI_APERTI.md.
+
+    IRRIGIDITO il 9 ottobre 2026 (Elia), dopo averlo rotto io stesso.
+    Prima questa funzione prendeva per titolo di problema QUALUNQUE riga che
+    cominciasse con '## ', escludendo per nome le due sole eccezioni allora
+    esistenti ('## COSA', '## COME'), e per stato QUALUNQUE riga che
+    contenesse '**Stato:**' in qualunque posizione.
+    Il 9 ottobre ho aggiunto a PROBLEMI_APERTI.md un titolo non numerato e un
+    paragrafo che citava '**Stato:**' dentro la prosa, per spiegare come si
+    scrive in quel file. Risultato: STATO.md ha pubblicato quel paragrafo
+    nella sezione «Questioni aperte», come stato di un problema che non
+    esiste. Una lista nera di eccezioni non può prevedere la prosa di chi
+    scriverà domani.
+    Adesso un titolo è '## <numero>. <NOME>' e nient'altro, e uno stato è una
+    riga che COMINCIA con '**Stato:**'. Tutto il resto è prosa e viene
+    ignorato. Dopo un titolo conta solo il primo stato: una citazione più
+    sotto non lo sovrascrive.
+    """
     problemi = []
     titolo = None
     stato = None
 
     for riga in testo.split('\n'):
-        if riga.startswith('## ') and not any(
-            riga.startswith(f'## {x}') for x in ['COSA', 'COME']
-        ):
+        intestazione = re.match(r'^##\s+(\d+\.\s*\S.*)$', riga)
+        if intestazione:
             if titolo and stato:
                 problemi.append((titolo, stato))
-            titolo = riga[3:].strip()
+            titolo = intestazione.group(1).strip()
             stato = None
-        elif titolo and '**Stato:**' in riga:
-            stato = riga.split('**Stato:**')[1].strip()
+        elif titolo and stato is None and riga.lstrip().startswith('**Stato:**'):
+            stato = riga.split('**Stato:**', 1)[1].strip()
 
     if titolo and stato:
         problemi.append((titolo, stato))
@@ -348,8 +377,7 @@ def elenco_troncato(voci, tetto, formatta):
         t += (
             f"\n*…e altre {resto}. Questo elenco è troncato a {tetto} nomi "
             "di proposito: STATO.md è un file che le api leggono per nascere. "
-            "I nomi completi sono in `INVENTARIO.md`, che `conta.py` scrive a "
-            "ogni push ma che non viene committato — vedi la nota in fondo.*\n"
+            "I nomi completi sono in `INVENTARIO.md`.*\n"
         )
     return t
 
@@ -484,19 +512,17 @@ def blocco_patrimonio(inv, n_celle_ripiego):
     if adottabili or (classificato and (inv['orf_trad'] or inv['orf_nav'])):
         t += (
             "> **Dove stanno i nomi completi, e perché qui ce n'è solo un "
-            "campione.** `conta.py` scrive `INVENTARIO.md` a ogni push, ma "
-            "quel file non è nella riga `git add` di "
-            "`.github/workflows/genera.yml`: nasce e muore dentro la stessa "
-            "esecuzione. *(VISTO · Pompei, 20 set 2026.)* Le api dentro il "
-            "container non possono toccare i workflow (404). Dal 20 al 26 "
-            "settembre 2026 la risposta è stata elencare qui tutti i nomi, ed "
-            "era giusta quando erano una decina. Diventati trecento, "
-            "l'elenco ha reso questo file lungo 371 righe — e STATO.md è uno "
-            "dei file che un'ape deve leggere per nascere, con un tetto di "
-            "iterazioni e di contesto. *(VISTO · Elia, 9 ott 2026.)* Quindi: "
-            "i **numeri** restano interi e in cima, i **nomi** tornano "
-            "completi il giorno in cui qualcuno aggiunge `INVENTARIO.md` a "
-            "quel `git add`.\n\n"
+            "campione.** `conta.py` scrive `INVENTARIO.md` a ogni push. Dal "
+            "20 settembre 2026 i nomi venivano elencati tutti qui, perché "
+            "`INVENTARIO.md` non era nel `git add` di `genera.yml` e moriva "
+            "dentro la stessa esecuzione *(VISTO · Pompei)*: una risposta "
+            "giusta quando le orfane erano una decina. Diventate trecento, "
+            "l'elenco ha portato questo file a 371 righe, e STATO.md è uno "
+            "dei file che un'ape legge per nascere, con un tetto di "
+            "iterazioni e di contesto. Il 9 ottobre 2026 `INVENTARIO.md` è "
+            "entrato nel `git add` e i tetti sono scesi *(VISTO · Elia)*: i "
+            "**numeri** restano interi e in cima, i **nomi** completi stanno "
+            "in `INVENTARIO.md`, che nessuna ape è obbligata ad aprire.\n\n"
         )
 
     if fantasmi:
