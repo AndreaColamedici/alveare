@@ -3,10 +3,11 @@ name: Spawner — collauda e deploya il motore
 # Scritto il 9 ottobre 2026 (sera) da Fable.
 #
 # COSA FA. Ogni volta che spawner/index.js cambia, lo collauda con
-# spawner/test.js (83 prove: la vita intera di un'ape simulata e la bottega) e,
-# se i secret di Cloudflare esistono, lo deploya; poi interroga il Worker e
-# controlla che la versione in produzione sia quella del file. Se il
-# canarino fallisce, rideploya la versione precedente del file e lo dice.
+# spawner/test.js (98 prove: la vita intera di un'ape simulata, la bottega e le
+# idee in vendita) e, se i secret di Cloudflare esistono, lo deploya; poi
+# interroga il Worker e controlla che la versione in produzione sia quella del
+# file. Se il canarino fallisce, rideploya la versione precedente del file e lo
+# dice.
 #
 # PERCHE' ESISTE. Fino al 9 ottobre 2026 il motore viveva in un posto solo,
 # dentro Cloudflare, e si modificava solo con Andrea alla tastiera che
@@ -64,7 +65,7 @@ jobs:
       - name: Sintassi
         run: node --check index.js
 
-      - name: Collaudo (83 prove, vita intera simulata e bottega)
+      - name: Collaudo (98 prove: vita simulata, bottega, idee in vendita)
         run: node test.js
 
       - name: Guardia sulla dimensione
