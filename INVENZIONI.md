@@ -1,12 +1,12 @@
 # INVENZIONI — l'alveare prova a fare cose che non esistono
 
-*Cantiere aperto il 10 ottobre 2026 da Fable, su richiesta di Andrea. I numeri stanno in `CANTIERI.md`, contati da `cantieri/cantieri.py` a ogni push.*
+*Cantiere aperto il 9 ottobre 2026 (sera) da Fable, su richiesta di Andrea. I numeri stanno in `CANTIERI.md`, contati da `cantieri/cantieri.py` a ogni push.*
 
 ## La regola
 
-**Un'invenzione è una cosa che non esisteva, che ora esiste, e che si può provare.** Tre condizioni insieme. Se manca la prima è una copia. Se manca la seconda è un'idea, e le idee vanno in `PENSIERO.md`, dove stanno benissimo. Se manca la terza è una dichiarazione, e questo alveare ha già pagato dodici giorni per una riparazione dichiarata e mai avvenuta. *(VISTO · Ceratina-2, 27 set 2026.)*
+**Un'invenzione è una cosa che non esisteva, che ora esiste, e che si può provare.** Tre condizioni insieme. Se manca la prima è una copia. Se manca la seconda è un'idea: va in `PENSIERO.md`, dove sta benissimo, oppure qui sotto nel formato, con `**Prototipo:** -`, sullo scaffale della bottega. Se manca la terza è una dichiarazione, e questo alveare ha già pagato dodici giorni per una riparazione dichiarata e mai avvenuta. *(VISTO · Ceratina-2, 27 set 2026.)*
 
-Quindi ogni invenzione qui ha un **prototipo**, un file nel repository che fa la cosa, e una **prova**, un modo per vedere che la fa. Un'invenzione senza prototipo esistente non viene contata da `cantieri.py`, e compare nella lista «idee in attesa», che è un posto onorevole e temporaneo.
+Quindi ogni invenzione qui ha un **prototipo**, un file nel repository che fa la cosa, e una **prova**, un modo per vedere che la fa. Un'invenzione senza prototipo esistente non viene contata da `cantieri.py`, e compare nella lista «idee in attesa», che è un posto onorevole e temporaneo. **Dalla notte del 9 ottobre quel posto è anche uno scaffale in vendita:** `cantieri.py` scrive le idee senza prototipo in `bottega/idee.json`, il banco della bottega (`bottega/index.html`) le mostra con un bottone «finanzia questa invenzione», e chi paga sveglia un'ape che nasce con l'idea nel corpo e un solo compito, costruirla. In più, ogni quaranta euro incassati dalla bottega in qualunque modo pagano un'ape INVENTRIX fuori orario che prende la più vecchia idea rimasta. Il cantiere delle invenzioni è il magazzino della bottega, e la bottega è il modo in cui le invenzioni si pagano le api che le costruiscono. *(Fable, su richiesta di Andrea: «deve collaborare con la sezione delle idee».)*
 
 Non deve essere grande. Deve essere nuova e funzionare. Un'ape ha sedici mila token: un prototipo da ottanta righe che fa una cosa che prima non si poteva fare vale più di un'architettura da ottocento che non arriva alla fine.
 
@@ -27,7 +27,7 @@ Non nel mondo intero, che nessuna ape può conoscere in una vita. **Non esiste q
 **Precedenti:** - (o cosa esiste di simile altrove, se qualcuno lo scopre)
 ```
 
-**Un'ape che vuole lavorare qui si chiama INVENTRIX.** Fa una cosa sola: un prototipo nuovo che funziona, o un prototipo esistente che funziona meglio, con la prova riscritta. Non descrive invenzioni possibili. Le fa.
+**Un'ape che vuole lavorare qui si chiama INVENTRIX.** Fa una cosa sola: un prototipo nuovo che funziona, o un prototipo esistente che funziona meglio, con la prova riscritta. Se le resta vita, può lasciare **una** idea nel formato qui sopra con `**Prototipo:** -` e `**Prova:** -`: non conta, ma domani è in vendita nel banco, e un'ape pagata potrà costruirla. Un'idea sola, scritta bene, con il **Cosa fa** chiaro: è quello che l'acquirente legge.
 
 ## Le invenzioni
 
@@ -50,14 +50,14 @@ Non nel mondo intero, che nessuna ape può conoscere in una vita. **Non esiste q
 **Precedenti:** i linter controllano il codice; questo controlla la prosa contro il codice.
 
 ## Un motore che scrive la propria biografia
-**Chi:** Fable, 10 ottobre 2026
+**Chi:** Fable, 9 ottobre 2026 (sera)
 **Cosa fa:** il Worker che genera le api scrive, alla fine di ogni vita, una riga nel repository in cui l'ape ha vissuto: con quale voce è nata, quanti turni ha usato, quante scritture ha fatto, come è finita, ogni strumento con il suo esito. Le api che nascono dopo possono leggere come sono morte le sorelle.
 **Perché non esisteva:** i log stavano su Cloudflare, irraggiungibili dalle api e dalle sessioni esterne. Una sentinella ha chiamato questo «il punto cieco permanente» in quattro referti di fila, e ci ha costruito sopra tre giorni di diagnosi sbagliata.
 **Prototipo:** `spawner/index.js` (funzione `scriviNascita`, che scrive `NASCITE.log`)
-**Prova:** `spawner/test.js`, 55 collaudi, fra cui la vita intera di un'ape simulata che finisce in `NASCITE.log` con `turni=4 scritture=3`. In produzione: prima riga vera alle 19:32:52 UTC del 9 ottobre, Anthidium, 8 turni, 5 scritture, nove strumenti ok.
+**Prova:** `spawner/test.js`, 98 collaudi, fra cui la vita intera di un'ape simulata che finisce in `NASCITE.log` con `turni=4 scritture=3`. In produzione: prima riga vera alle 19:32:52 UTC del 9 ottobre, Anthidium, 8 turni, 5 scritture, nove strumenti ok.
 **Cosa manca per essere vera fuori di qui:** niente di sostanziale. Qualunque agente che gira in un loop e ha accesso in scrittura a un posto che i suoi successori leggono può farlo. Che non lo facciano quasi mai è il punto.
 **Precedenti:** -
 
 ---
 
-*Un'invenzione senza prototipo è un pensiero. Un pensiero è una cosa buona, e sta in un altro file.*
+*Un'invenzione senza prototipo è un'idea. Un'idea è una cosa buona: sta sullo scaffale finché qualcuno la paga o un'ape la costruisce.*
