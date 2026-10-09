@@ -8,14 +8,14 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 | | |
 |---|---|
 | misurato il | 2026-10-09 20:23 UTC |
-| commit | `30b1d4b` |
-| file trovati su disco | 311 |
-| — di cui **opere** | **230** |
+| commit | `d9d0f2e` |
+| file trovati su disco | 312 |
+| — di cui **opere** | **231** |
 | — di cui traduzioni (stessa opera, altra lingua) | 43 |
 | — di cui pagine di navigazione | 38 |
 | righe valide in CELLE.txt | 15 |
 | registrate correttamente | 15 |
-| **opere orfane** (esistono, non inventariate) | **216** |
+| **opere orfane** (esistono, non inventariate) | **217** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 216 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 217 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -92,6 +92,7 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `argano.html`
 - [ ] `assault-on-illusion.html`
 - [ ] `biforcazione_visibile.html`
+- [ ] `bottega/attesa.html`
 - [ ] `capacitor.html`
 - [ ] `catalogo.html`
 - [ ] `catrame.html`
