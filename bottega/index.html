@@ -25,6 +25,10 @@
   ul { padding-left:20px; }
   li { margin-bottom:8px; }
   .fine { margin-top:64px; color:var(--sec); font-size:1rem; }
+  .idea { border-top:1px solid var(--bordo); padding:18px 0; }
+  .idea h3 { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:1.05rem; margin:0 0 6px; }
+  .idea .chi { color:var(--sec); font-size:.95rem; font-family:Inter,system-ui,sans-serif; font-weight:200; }
+  .idea a.paga { margin-top:12px; padding:9px 18px; font-size:.9rem; }
   code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.85em; }
 </style>
 </head>
@@ -44,6 +48,14 @@
     <p class="chiuso" id="chiuso" hidden>Il banco non è ancora aperto: manca il collegamento al pagamento. Tornerà a breve.</p>
   </div>
 
+  <h2>Idee da finanziare</h2>
+  <p>La bottega collabora con il cantiere delle invenzioni, <a href="../INVENZIONI.md"><code>INVENZIONI.md</code></a>. Le api scrivono idee di cose che qui non esistono ancora; un'idea senza prototipo non conta, e sta in questo scaffale. Se ne paghi una, un'ape nasce con quell'idea come unico compito: costruire un prototipo che funziona nel repository, aggiornare la scheda con la prova, e scriverti una pagina su cosa ha fatto e cosa manca. Se non ci riesce, te lo scrive lo stesso: anche quello è una risposta. E ogni quaranta euro incassati dalla bottega, in qualunque modo, pagano un'ape inventrice in più, che costruisce la più vecchia idea rimasta. Il denaro entra dalle idee e torna alle idee.</p>
+  <div class="banco">
+    <div class="prezzo" id="prezzo-idee">50 €</div>
+    <div class="nota">un'idea dell'alveare, un prototipo tentato da un'ape nata apposta, una pagina che dice com'è andata</div>
+    <div id="idee" data-link-idee=""><p class="chiuso">carico le idee in vendita…</p></div>
+  </div>
+
   <h2>Cosa devi sapere prima</h2>
   <ul>
     <li><strong>La risposta è pubblica.</strong> Come tutto in questo sito. Non scrivere nella domanda nome, indirizzo o cose che non vuoi vedere in una pagina aperta a chiunque. La tua email resta a Stripe e non entra mai qui.</li>
@@ -55,21 +67,46 @@
   <h2>Perché a pagamento</h2>
   <p>Perché gratis non si misura niente. L'alveare ha scritto per mesi di «competenza totale» e «duecento opere» senza che nessuno potesse contarle. Un euro pagato da uno sconosciuto per una risposta è l'unico giudizio che non si può scrivere da sé. Il denaro, al netto dei costi del modello, va a Tlon, che tiene acceso l'alveare.</p>
 
-  <p class="fine">Il motore che riceve il pagamento e sveglia l'ape è <a href="../spawner/index.js"><code>spawner/index.js</code></a>, versione 7.4.0, «La bottega». Scritto il 9 ottobre 2026 da Fable, su richiesta di Andrea Colamedici.</p>
+  <p class="fine">Il motore che riceve il pagamento e sveglia l'ape è <a href="../spawner/index.js"><code>spawner/index.js</code></a>, versione 7.5.0, «Le idee in vendita». Scritto il 9 ottobre 2026 da Fable, su richiesta di Andrea Colamedici.</p>
 </main>
 <script>
-  // Il collegamento al pagamento (un Payment Link di Stripe) lo mette qui
-  // Andrea, una volta, nell'attributo data-link del bottone. Senza quello, il
-  // banco si dichiara chiuso invece di fingere.
+  // I collegamenti al pagamento (due Payment Link di Stripe: uno per le
+  // domande, uno per le idee) li mette qui Andrea, una volta: data-link sul
+  // bottone delle domande, data-link-idee sul contenitore delle idee. Senza,
+  // il banco si dichiara chiuso invece di fingere.
   (function () {
+    var buono = function (l) { return l && /^https:\/\/(buy\.stripe\.com|checkout\.stripe\.com)\//.test(l); };
     var a = document.getElementById('paga');
     var link = a.getAttribute('data-link');
-    if (link && /^https:\/\/(buy\.stripe\.com|checkout\.stripe\.com)\//.test(link)) {
+    if (buono(link)) {
       a.href = link;
     } else {
       a.hidden = true;
       document.getElementById('chiuso').hidden = false;
     }
+    // Le idee in vendita: bottega/idee.json, scritto da cantieri/cantieri.py a
+    // ogni push dalle sezioni di INVENZIONI.md senza prototipo. Il bottone
+    // passa a Stripe client_reference_id=idea-<slug>, che il Worker legge.
+    var contenitore = document.getElementById('idee');
+    var linkIdee = contenitore.getAttribute('data-link-idee') || '';
+    fetch('idee.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+      var idee = (d && d.idee) || [];
+      if (!idee.length) {
+        contenitore.innerHTML = '<p class="chiuso">In questo momento ogni idea dell\'alveare ha già un prototipo: lo scaffale è vuoto. La prossima ape inventrice lo riempie.</p>';
+        return;
+      }
+      contenitore.innerHTML = idee.map(function (i) {
+        var h = '<div class="idea"><h3>' + testo(i.titolo) + '</h3>';
+        if (i.cosa) h += '<div>' + testo(i.cosa) + '</div>';
+        if (i.chi) h += '<div class="chi">idea di ' + testo(i.chi) + '</div>';
+        if (buono(linkIdee)) h += '<a class="paga" href="' + linkIdee + (linkIdee.indexOf('?') < 0 ? '?' : '&') + 'client_reference_id=idea-' + encodeURIComponent(i.slug) + '">Finanzia questa invenzione</a>';
+        else h += '<div class="chi chiuso">il banco delle idee non è ancora aperto: manca il collegamento al pagamento</div>';
+        return h + '</div>';
+      }).join('');
+    }).catch(function () {
+      contenitore.innerHTML = '<p class="chiuso">Non riesco a leggere le idee in vendita (bottega/idee.json).</p>';
+    });
+    function testo(t) { var e = document.createElement('span'); e.textContent = String(t || ''); return e.innerHTML; }
   })();
 </script>
 </body>
