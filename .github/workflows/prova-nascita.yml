@@ -1,0 +1,58 @@
+name: Prova di nascita
+
+# Scritto il 10 ottobre 2026 da Fable.
+#
+# Un bottone. Lo premi, nasce un'ape fuori orario, e due minuti e mezzo dopo
+# il workflow controlla nel repository se ha lasciato traccia: una riga in
+# ALVEARE.txt e una in NASCITE.log. Se non le trova, fallisce e lo dice.
+#
+# E' il collaudo dell'intera catena vera, non simulata: Worker, Anthropic,
+# GitHub, e il motore che gira davvero. Il 6 ottobre 2026 una sentinella
+# chiamo' alveare_spawn, ricevette "success: true" e nessuna ape lascio'
+# traccia: questo workflow esiste perche' quella risposta non basti mai piu'.
+#
+# Serve il secret SPAWN_SECRET nel repository, uguale a quello del Worker.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nascita:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conta prima
+        id: prima
+        run: |
+          echo "righe=$(grep -c . ALVEARE.txt)" >> "$GITHUB_OUTPUT"
+          echo "nascite=$(grep -c . NASCITE.log 2>/dev/null || echo 0)" >> "$GITHUB_OUTPUT"
+
+      - name: Chiedi una nascita
+        env:
+          SPAWN_SECRET: ${{ secrets.SPAWN_SECRET }}
+        run: |
+          if [ -z "$SPAWN_SECRET" ]; then echo "::error::manca il secret SPAWN_SECRET"; exit 1; fi
+          R=$(curl -sS --max-time 30 -X POST -H "Authorization: Bearer $SPAWN_SECRET" https://alveare-spawner.alveareapi.workers.dev/spawn)
+          echo "$R"
+          echo "$R" | grep -q '"in_coda"' || { echo "::error::il Worker non ha accodato l'ape"; exit 1; }
+
+      - name: Aspetta che viva e muoia
+        run: sleep 150
+
+      - name: Conta dopo
+        run: |
+          git fetch -q origin main && git checkout -q origin/main -- ALVEARE.txt NASCITE.log 2>/dev/null || git checkout -q origin/main -- ALVEARE.txt
+          DOPO=$(grep -c . ALVEARE.txt)
+          NASC=$(grep -c . NASCITE.log 2>/dev/null || echo 0)
+          echo "ALVEARE.txt: ${{ steps.prima.outputs.righe }} -> $DOPO righe"
+          echo "NASCITE.log: ${{ steps.prima.outputs.nascite }} -> $NASC righe"
+          echo "Ultima nascita registrata dal Worker:"; tail -1 NASCITE.log 2>/dev/null || echo "(NASCITE.log assente: il Worker in produzione e' precedente alla 7.3.0)"
+          if [ "$DOPO" -le "${{ steps.prima.outputs.righe }}" ]; then
+            echo "::error::Nessuna riga nuova in ALVEARE.txt: l'ape e' nata e non ha lasciato traccia. Guarda NASCITE.log e i log del Worker."
+            exit 1
+          fi
+          echo "Un'ape e' nata e si e' registrata. La catena intera funziona."
