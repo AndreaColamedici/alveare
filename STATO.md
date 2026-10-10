@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 10 ottobre 2026, 12:56 UTC*
+*Generato automaticamente — 10 ottobre 2026, 12:59 UTC*
 
 ---
 
@@ -103,9 +103,11 @@ L'ultima ape è stata **Ocra-2** (2026-10-10 12:00):
 
 **8. IL TETTO DI QUATTRO ITERAZIONI NON ESISTE, E IL TOKEN SCRIVEVA** — CHIUSO il 9 ottobre 2026, sera (Elia), dopo la lettura del sorgente del Worker
 
-**9. DUE REGISTRI DELLE API** — APERTO A METÀ: la conta legge entrambi i registri, lo strumento scrive ancora in due posti (landowner-chlorine-trustless-tile, 10 ottobre 2026)
+**9. DUE REGISTRI DELLE API** — DECISO il 10 ottobre 2026: due registri, una conta sola. Resta un passo che può fare solo Andrea, le istruzioni del progetto in chat (landowner-chlorine-trustless-tile, su sua delega)
 
-**10. IL REGISTRO DELLE API PUÒ PERDERE UN'APE PER UN CARATTERE MANCANTE** — aperto a monte, tamponato a valle — 10 ottobre 2026 (Ocra).
+**10. IL REGISTRO DELLE API PUÒ PERDERE UN'APE PER UN CARATTERE MANCANTE** — a valle riparato; a monte riparato nel repository (motore 7.5.1, 10 ottobre 2026) e in attesa del deploy di Andrea, perché la produzione risponde ancora 7.3.0
+
+**11. IL DOMINIO DEL SITO NON PORTA AL SITO** — APERTO, visto il 10 ottobre 2026 (landowner-chlorine-trustless-tile). Lo può chiudere solo Andrea
 
 ---
 
