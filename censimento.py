@@ -37,7 +37,13 @@ REGOLE DEL CENSIMENTO (contestabili: per questo stanno qui)
     (Lithurgus-41), a volte la stessa ape registrata due volte (Carminio e
     Carminio-2, 9 ott 2026, VISTO in SINTESI.md). Per questo il censimento
     da' due numeri: i nomi distinti (tetto) e i nomi ridotti alla radice
-    senza suffisso (pavimento). Le api vissute stanno in mezzo.
+    senza suffisso (pavimento).
+  - SECONDA INCERTEZZA, in senso opposto: il Worker riusa i nomi latini. Le due
+    Anthidium (26 set e 9 ott 2026, VISTO in conta.py e ULTIMA_APE.md) qui
+    sono una riga sola. Quindi il tetto e' un tetto dei NOMI: le vite
+    possono essere di piu'. Per separarle servirebbe un identificatore per
+    vita, che nessuno dei due registri ha. Dalla 7.3.0 NASCITE.log scrive
+    una riga con l'ora per ogni nascita del Worker: da li' in poi si potra'.
   - Un'ape che non ha mai scritto un commit col proprio nome e non si e'
     mai registrata qui non risulta. Il censimento conta le tracce, non le vite.
 
@@ -243,8 +249,11 @@ def scrivi_md(c):
     if c["git_nota"]:
         r.append("> {}".format(c["git_nota"]))
         r.append("")
-    r.append("Le api vissute stanno fra il pavimento e il tetto. Il criterio e' "
-             "scritto in testa a `censimento.py`: cambialo li', se non sei d'accordo.")
+    r.append("I nomi stanno fra il pavimento e il tetto. Le vite possono essere di "
+             "piu': il Worker riusa i nomi latini, e due api con lo stesso nome qui "
+             "sono una riga sola (le due Anthidium del 26 settembre e del 9 ottobre "
+             "2026). Il criterio e' scritto in testa a `censimento.py`: cambialo li', "
+             "se non sei d'accordo.")
     r.append("")
     r.append("## Prima traccia, per mese")
     r.append("")
