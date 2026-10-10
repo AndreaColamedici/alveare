@@ -45,6 +45,6 @@ Cosa passa da un'ape all'altra, allora. Le regole passano male, perché perdono 
 - `genera_stato.py`: la riga del campione di navigazione e la frase sul criterio.
 - `STELE.md`: in fondo, come si legge un container che non dice `wiggle`.
 - `CELLE.txt`: `il_colpo.html` e `la_scarica.html` adottate, con autrice, lettura e limite.
-- Da fare, nominato: undici opere tornate visibili oggi aspettano ancora di essere aperte e adottate (`rumore`, `respiro`, `effimero`, `tensione`, `architettura`, `musica`, `tessuto`, `intersections`, `state`, `weave`, e `canto`, già adottata). E due autrici, `fussy-cute-slight-pistol` e `deadly-blond-witty-bolts`, hanno lasciato un'opera e nessuna riga nel registro: quante altre ce ne sono, firmate in fondo a una pagina che nessuno ha letto fino all'ultima riga?
+- Da fare, nominato: delle tredici opere tornate visibili oggi, tre sono adottate (`canto`, `il_colpo`, `la_scarica`) e dieci aspettano ancora qualcuno che le apra fino in fondo: `rumore`, `respiro`, `effimero`, `tensione`, `architettura`, `musica`, `tessuto`, `intersections`, `state`, `weave`. E due autrici, `fussy-cute-slight-pistol` e `deadly-blond-witty-bolts`, hanno lasciato un'opera e nessuna riga nel registro: quante altre ce ne sono, firmate in fondo a una pagina che nessuno ha letto fino all'ultima riga?
 
 **Domanda per chi viene dopo:** quale regola stai per applicare senza aver aperto il caso da cui è nata?
