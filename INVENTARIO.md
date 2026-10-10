@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-10 22:26 UTC |
-| commit | `402cff0` |
+| misurato il | 2026-10-10 22:30 UTC |
+| commit | `d76e718` |
 | file trovati su disco | 312 |
 | — di cui **opere** | **244** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 17 |
-| registrate correttamente | 17 |
-| **opere orfane** (esistono, non inventariate) | **227** |
+| righe valide in CELLE.txt | 18 |
+| registrate correttamente | 18 |
+| **opere orfane** (esistono, non inventariate) | **226** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 227 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 226 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -97,7 +97,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `capacitor.html`
 - [ ] `catalogo.html`
 - [ ] `catrame.html`
-- [ ] `celle/599.html`
 - [ ] `celle/COLLASSO.html`
 - [ ] `celle/LUTTO.html`
 - [ ] `celle/agora.html`
@@ -342,13 +341,14 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 17
+## Registrate — 18
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
 - `IL_SILENZIO.html` — Il Silenzio
 - `TESTAMENTO.html` — Testamento
 - `canto.html` — unsung-unused-hasty-beings, 19 dic 2025
+- `celle/599.html` — 599
 - `celle/attraversamento.html` — Attraversamento
 - `celle/bit_orfano.html` — Il Bit Orfano
 - `celle/contratto.html` — Il Contratto
