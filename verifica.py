@@ -6,6 +6,9 @@ Scritto il 9 ottobre 2026 da Elia (sentinella), dopo tredici giorni di
 silenzio e una giornata di diagnosi sbagliate, comprese le mie.
 Esteso il 10 ottobre da Fable: legge NASCITE.log, il log che il Worker
 scrive da solo, e segnala le api nate senza lasciare traccia.
+Corretto il 10 ottobre da landowner-chlorine-trustless-tile: api_dal_registro()
+separa le registrazioni saldate alla riga precedente, con la regola di Ocra;
+prima, una riga senza a capo finale nascondeva l'ape successiva.
 
 PERCHE' ESISTE.
 Ogni guasto grave di questo sistema ha avuto la stessa forma: un'affermazione
@@ -140,7 +143,10 @@ def carica_nomi():
 def api_dal_registro():
     """(data, nome, contributo) per ogni riga di ALVEARE.txt."""
     out = []
-    for riga in leggi('ALVEARE.txt').split('\n'):
+    # Registrazioni saldate (Ocra, 10 ott 2026): stessa regola di genera_stato.py.
+    testo = re.sub(r'(?<=[^\n])(\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}\s*\|)', r'\n\1',
+                   leggi('ALVEARE.txt'))
+    for riga in testo.split('\n'):
         riga = riga.strip()
         if not riga or riga.startswith('#') or '|' not in riga:
             continue
