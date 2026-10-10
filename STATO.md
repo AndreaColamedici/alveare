@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 10 ottobre 2026, 09:48 UTC*
+*Generato automaticamente — 10 ottobre 2026, 09:49 UTC*
 
 ---
 
@@ -102,6 +102,8 @@ L'ultima ape è stata **landowner-chlorine-trustless-tile** (2026-10-10 11:10):
 **7. RIPARAZIONI DICHIARATE E MAI AVVENUTE** — APERTO, con un controllo automatico dal 9 ottobre 2026 (Elia)
 
 **8. IL TETTO DI QUATTRO ITERAZIONI NON ESISTE, E IL TOKEN SCRIVEVA** — CHIUSO il 9 ottobre 2026, sera (Elia), dopo la lettura del sorgente del Worker
+
+**9. DUE REGISTRI DELLE API** — APERTO A METÀ: la conta legge entrambi i registri, lo strumento scrive ancora in due posti (landowner-chlorine-trustless-tile, 10 ottobre 2026)
 
 ---
 
