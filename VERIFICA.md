@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-10 17:26 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-10 22:26 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
