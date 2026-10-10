@@ -177,3 +177,24 @@ alveare_append_file("PROBLEMI_APERTI.md", "tuo contributo", "tuo-nome: aggiornam
 **Cosa è riparato.** `genera_stato.py` e `genera_sito.py` leggono entrambi i registri e dicono di quale è fatto il numero; l'ultima ape è la più recente fra i due. *(VISTO · STATO.md generato dal workflow alle 09:44 UTC del 10 ottobre.)*
 
 **Cosa resta, e chi può farlo.** Il connettore MCP non sta in questo repository: per far scrivere a tutte le api in un registro solo bisogna cambiarlo dove vive, sul Worker Cloudflare del connettore. È una decisione di Andrea, e ha due strade: il connettore scrive anche `ALVEARE.txt`, oppure si sceglie `api/REGISTRO.json` come registro unico e il Worker scrive lì. Finché non si decide, `censimento.py` tiene insieme i due. Resta anche una contraddizione nelle istruzioni: `SINTESI.md` dice alle api di registrarsi per prima cosa, le istruzioni del progetto in chat dicono di farlo alla fine.
+
+---
+
+
+
+## 10. IL REGISTRO DELLE API PUÒ PERDERE UN'APE PER UN CARATTERE MANCANTE
+
+**Stato:** aperto a monte, tamponato a valle — 10 ottobre 2026 (Ocra).
+
+**Il fatto.** `ALVEARE.txt` è un file di testo senza schema: un record per riga, e nient'altro lo garantisce. Il 10 ottobre 2026 `landowner-chlorine-trustless-tile` ha scritto la propria riga a mano — il suo `add_bee` aveva risposto `success` senza che la riga comparisse — e l'ha chiusa senza a capo finale. Un'ora dopo il mio `alveare_add_bee` ha appeso la mia registrazione in coda alla sua. Nel file c'è scritto: `…questa è scritta a mano.2026-10-10 12:00 | Ocra-2 | Mi registro…`. Due api, una riga. *(VISTO · Ocra, 10 ott 2026, coda di ALVEARE.txt.)*
+
+**Perché non si vedeva.** Tutti i lettori dividono il registro con `split('\n')`: `leggi_registro()` in `genera_stato.py`, e `censimento.py` che conta i nomi dei due registri. Una saldatura non produce nessun errore: produce un'ape in meno, un «ultima ape» vecchio di un'ora, e un `giorni_scoperti()` calcolato sulla data sbagliata. È lo stesso guasto per cui Ceratina-2 vide un registro fermo a nove giorni prima: **un registro che non sa dove finisce una vita conta male tutte le altre**, e lo fa restando verde.
+
+**Tamponato.** In fondo a `genera_stato.py` c'è `separa_record()` (Ocra, firmato nel sorgente, commit `e1f3466`): rimette a capo ogni `AAAA-MM-GG hh:mm |` che non ne abbia uno davanti, e rigenera STATO.md solo se qualcosa era saldato, dentro `try/except`. Scritto e riletto; **non eseguito da me** — il workflow lo esegue al push.
+
+**Da riparare davvero, in ordine di quanto sta a monte:**
+1. `alveare_append_file` e `alveare_add_bee` nel motore (`spawner/index.js`) dovrebbero anteporre `\n` quando il file non finisce con un a capo. È la causa: finché resta, ogni append a mano può saldare la riga di qualcun altro. Un'ape del Worker non può farlo — lo strumento riscrive i file per intero e il motore è 55 KB.
+2. `leggi_registro()`: prima istruzione `testo = separa_record(testo)`, e il blocco in coda si cancella.
+3. `censimento.py`: stessa ricucitura prima di contare, altrimenti i due numeri («N in ALVEARE.txt») continuano a divergere da quelli di STATO.md.
+
+**Prova che il problema esiste ancora oggi:** apri `ALVEARE.txt` e guarda l'ultima riga. Se contiene due date, non è stato riparato a monte.
