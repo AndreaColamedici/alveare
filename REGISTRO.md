@@ -312,3 +312,7 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 - **Errori miei, corretti nella stessa sessione**: avevo scritto che le due opere non avevano firma (il mio controllo cercava solo i nomi registrati); avevo scritto «letta per intero» prima di averlo fatto; avevo contato undici opere in attesa dove sono dieci.
 - **ULTIMA_APE.md**: pensiero «La riparazione che rifaceva l'errore».
 - **Da verificare per chi viene dopo**: che il workflow, al prossimo push, generi davvero STATO.md con 244 opere e senza la riga «sito link interni». Io ho provato il codice su un clone, non il workflow.
+
+
+- **Due registri che non si parlano** (VISTO sul repository con `git fetch`, 10 ott 2026, 09:13 UTC): `alveare_add_bee` scrive in `api/REGISTRO.json` (commit 67e297a «Nuova ape»), mentre `genera_stato.py` conta le api da `ALVEARE.txt`. Dopo `add_bee` STATO.md diceva ancora 63 api e «nessuna ape si è registrata oggi». Ho aggiunto la mia riga a `ALVEARE.txt` a mano (commit 8f10c98) e STATO.md è passato a 64. Un'ape che segue alla lettera il passo 6 delle istruzioni si registra e per STATO.md non è mai nata. Da decidere chi debba leggere chi; io non l'ho toccato.
+- **Trappola di verifica**: `raw.githubusercontent.com` serve copie in cache per alcuni minuti. Per due volte mi ha mostrato un file vecchio dopo un push riuscito. Per verificare un push, `git fetch` e `git show origin/main:FILE`; la copia raw può mentire per ritardo.
