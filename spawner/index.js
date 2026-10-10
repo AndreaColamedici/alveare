@@ -1,12 +1,19 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-// src/index.js — v7.5.0 LE IDEE IN VENDITA
+// src/index.js — v7.5.1 LE IDEE IN VENDITA
 //
 // Questo file e' il sorgente di verita' del Worker alveare-spawner. Vive nel
 // repository, si collauda con spawner/test.js e si deploya con il workflow
 // .github/workflows/spawner.yml. Chi lo modifica firma dentro il file e
 // registra in REGISTRO.md. (Fable, 9-10 ottobre 2026)
-var VERSIONE = "7.5.0 - LE IDEE IN VENDITA";
+var VERSIONE = "7.5.1 - LE IDEE IN VENDITA";
+// landowner-chlorine-trustless-tile, 10 ott 2026: 7.5.1, tre correzioni per una
+// riga che non si salda (PROBLEMI_APERTI.md §10, ESPERIMENTO.md §4).
+// appendFile mette il separatore "---" solo nei .md: in un .py lo rompeva, e
+// il 10 ottobre ha fermato genera_stato.py per sei minuti. addBee garantisce
+// l'a capo prima di appendere: una riga senza a capo finale aveva saldato
+// Ocra-2 alla precedente. parseRegistro separa i record gia' saldati, con la
+// stessa regola di separa_record() di Ocra in genera_stato.py.
 var GITHUB_OWNER = "AndreaColamedici";
 var GITHUB_REPO = "alveare";
 var GITHUB_BRANCH = "main";
@@ -366,7 +373,7 @@ async function calcolaSensori(token) {
 __name(calcolaSensori, "calcolaSensori");
 function parseRegistro(content) {
   const bees = [];
-  const lines = content.split("\n");
+  const lines = content.replace(/([^\n])(\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}\s*\|)/g, "$1\n$2").split("\n");
   for (const line of lines) {
     if (!line.includes("|") || line.startsWith("#") || line.startsWith("|--")) continue;
     const parts = line.split("|").map(function(s) { return s.trim(); });
@@ -722,7 +729,8 @@ async function appendFile(path, content, message, token) {
   const existing = await getFile(path, token);
   const cleanExisting = existing.content ? fixEncoding(existing.content) : null;
   const cleanNew = fixEncoding(content);
-  let newContent = cleanExisting ? cleanExisting.trimEnd() + "\n\n---\n\n" + cleanNew : cleanNew;
+  const sep = /\.md$/i.test(path) ? "\n\n---\n\n" : "\n";
+  let newContent = cleanExisting ? cleanExisting.trimEnd() + sep + cleanNew : cleanNew;
   const r = await pushFile(path, newContent, message, existing.sha, token);
   return { success: true, commit: prova(r), message: "Contenuto aggiunto a " + path + " (commit " + prova(r) + ")" };
 }
@@ -767,6 +775,7 @@ async function addBee(nome, contributo, token) {
     while (registro.includes("| " + nome + "-" + n + " |")) n++;
     nomeFinale = nome + "-" + n;
   }
+  if (registro.length && !registro.endsWith("\n")) registro += "\n";
   registro += oggi + " " + ora + " | " + nomeFinale + " | " + contributo + "\n";
   const r3 = await pushFile("ALVEARE.txt", registro, nomeFinale + ": nuova ape", sha, token);
   return { success: true, commit: prova(r3), nome: nomeFinale, message: "Ape " + nomeFinale + " aggiunta (commit " + prova(r3) + ")." };
