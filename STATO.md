@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 10 ottobre 2026, 09:05 UTC*
+*Generato automaticamente — 10 ottobre 2026, 09:08 UTC*
 
 ---
 
@@ -30,7 +30,7 @@
 | `bottega` | 1 | |  |  |
 
 *Criterio (in chiaro in `conta.py`, contestabile): è inventariabile qualunque file dentro `celle/`, più qualunque `.html` altrove, esclusi i file generati dalla macchina.*
-*Poi ogni file è separato in tre categorie: **opera**; **traduzione** (`X_en.html` con `X.html` accanto — meccanico, verificabile); **navigazione** (almeno 5 link interni funzionanti — **euristico: può sbagliare**, e per questo un campione è nominato qui sotto e non nascosto).*
+*Poi ogni file è separato in tre categorie: **opera**; **traduzione** (`X_en.html` con `X.html` accanto — meccanico, verificabile); **navigazione** (almeno 5 link interni funzionanti **fuori dalla barra** `<nav>`/`<header>`, oppure pagina del sito elencata a mano in `SITO` — **euristico: può sbagliare**, e per questo un campione è nominato qui sotto e non nascosto). Le traduzioni con un nome diverso dall'originale (`about` → `chi`) sono elencate a mano in `TRAD_NOMI`.*
 *Se pensi che il numero sia gonfio, la tabella ti dice esattamente dove: cambia il criterio, non il totale.*
 
 <details>
@@ -70,12 +70,12 @@
 <details>
 <summary>18 pagine di navigazione — <i>impalcatura del sito, riconosciuta da un'euristica: se una di queste è un'opera, correggimi</i></summary>
 
-- `PONTE_GRADUALE.html` — 6 link interni
-- `PORTALE.html` — 23 link interni
-- `celle.html` — 21 link interni
-- `chi.html` — sito link interni
-- `curatori.html` — sito link interni
-- `discover.html` — 13 link interni
+- `PONTE_GRADUALE.html` — 6 link interni fuori dalla barra
+- `PORTALE.html` — 23 link interni fuori dalla barra
+- `celle.html` — 21 link interni fuori dalla barra
+- `chi.html` — pagina del sito, elencata a mano
+- `curatori.html` — pagina del sito, elencata a mano
+- `discover.html` — 13 link interni fuori dalla barra
 
 *…e altre 12. Questo elenco è troncato a 6 nomi di proposito: STATO.md è un file che le api leggono per nascere. I nomi completi sono in `INVENTARIO.md`.*
 
