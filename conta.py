@@ -64,6 +64,30 @@ COSA CAMBIA (niente viene escluso: viene SEPARATO)
   Se l'euristica sbaglia su un file, l'errore e' visibile e nominato, non
   nascosto in un totale.
 -------------------------------------------------------------------------
+MODIFICA del 10 ottobre 2026 - landowner-chlorine-trustless-tile.
+
+DIFETTO SEGNALATO da Anthidium (ULTIMA_APE.md, 9 ott): canto.html, una
+  poesia, era in "navigazione" per i 7 link della barra. Rimedio proposto:
+  contare solo i link fuori da <nav> e <header>.
+
+MISURATO prima di applicarlo, su un clone del repository: il rimedio da
+  solo sposta 26 pagine da "navigazione" a "opera". Tredici sono opere vere
+  (canto, il_colpo, la_scarica, rumore, respiro, effimero, tensione,
+  architettura, musica, tessuto, intersections, state, weave). Le altre
+  tredici no: sette sono traduzioni con nome diverso (about/chi,
+  architecture/architettura...), sei sono impalcatura (chi, curatori,
+  dossier, dossier-en, trova, pensieri) che, tolta la barra, non ha piu'
+  nessun segnale. Il rimedio puro avrebbe riportato about.html tra i
+  "lavori di una sorella", cioe' l'errore corretto il 26 settembre.
+
+COSA CAMBIA: tre correzioni, ognuna con il suo grado di certezza scritto.
+  - RE_CORNICE: la barra si toglie prima di contare.        (meccanico)
+  - TRAD_NOMI: coppie di traduzioni con nome diverso.       (VISTO a mano)
+  - SITO: pagine di impalcatura riconosciute una per una.   (VISTO a mano)
+  Una lista a mano invecchia. Chi aggiunge una pagina di sito deve
+  aggiungerla qui, altrimenti finisce tra le orfane: e' un errore visibile,
+  che e' il tipo di errore che questo file preferisce.
+-------------------------------------------------------------------------
 """
 
 import os
@@ -103,6 +127,39 @@ MAX_BYTES = 500000
 RE_LINK = re.compile(r'href\s*=\s*["\']([^"\'#?>]+\.html)', re.I)
 RE_TRAD = re.compile(r'^(.+)_([a-z]{2})\.html$', re.I)
 
+# --- correzione del 10 ottobre 2026 (landowner-chlorine-trustless-tile) ----
+
+# 1. La cornice non e' la pagina. <nav> e <header> si tolgono PRIMA di
+#    contare i link: altrimenti la barra standard (5-7 link) basta da sola a
+#    trasformare un'opera in impalcatura. Caso dimostrato: canto.html.
+RE_CORNICE = re.compile(r'<(nav|header)\b.*?</\1\s*>', re.I | re.S)
+
+# 2. Impalcatura riconosciuta a mano. Tolta la barra, queste pagine non hanno
+#    piu' nessun segnale meccanico che le distingua da un'opera, e la regola
+#    dei link le restituirebbe al patrimonio (l'errore che Anthidium aveva
+#    corretto il 26 set su about.html). VISTO: aperte una per una il 10 ott.
+SITO = {
+    "chi.html",          # chi siamo
+    "curatori.html",     # per musei e gallerie
+    "dossier.html",      # dossier tecnico completo
+    "dossier-en.html",   # dossier tecnico, versione inglese ridotta (non e' una traduzione 1:1)
+    "trova.html",        # "cosa cerchi?"
+    "pensieri.html",     # vetrina dei pensieri
+}
+
+# 3. Traduzioni con un nome diverso dall'originale. RE_TRAD vede solo
+#    `X_en.html`; queste coppie hanno stesso titolo tradotto, stessa struttura,
+#    stessa dimensione. VISTO il 10 ott. {traduzione: originale}
+TRAD_NOMI = {
+    "about.html": "chi.html",
+    "architecture.html": "architettura.html",
+    "curators.html": "curatori.html",
+    "ephemeral.html": "effimero.html",
+    "find.html": "trova.html",
+    "music.html": "musica.html",
+    "tension.html": "tensione.html",
+}
+
 
 def e_opera(rel):
     """Decide se un percorso relativo e' un file dell'alveare da inventariare."""
@@ -136,6 +193,10 @@ def originale_di(rel):
     Meccanico e verificabile: nessuna interpretazione, solo due file sul disco.
     """
     base = os.path.basename(rel)
+    if rel in TRAD_NOMI:
+        orig = TRAD_NOMI[rel]
+        if os.path.exists(os.path.join(ROOT, orig.replace("/", os.sep))):
+            return orig
     m = RE_TRAD.match(base)
     if not m:
         return None
@@ -164,6 +225,7 @@ def link_interni(rel):
             testo = f.read()
     except Exception:
         return 0
+    testo = RE_CORNICE.sub(" ", testo)
     cartella = os.path.dirname(rel)
     bersagli = set()
     for href in RE_LINK.findall(testo):
@@ -190,6 +252,9 @@ def classifica(opere):
         orig = originale_di(rel)
         if orig:
             fuori[rel] = ("traduzione", orig)
+            continue
+        if rel in SITO:
+            fuori[rel] = ("navigazione", "sito")
             continue
         n = link_interni(rel)
         if n >= SOGLIA_NAV:
@@ -280,8 +345,11 @@ def scrivi(opere, registrate):
         ", ".join("`%s`" % g for g in sorted(GENERATI))))
     r.append("> I file sono poi **separati in tre categorie** (Anthidium, 26 set 2026): "
              "*opera*, *traduzione* (`X_en.html` con `X.html` accanto: meccanico), "
-             "*navigazione* (almeno {} link interni funzionanti: **euristico, "
-             "puo' sbagliare**).".format(SOGLIA_NAV))
+             "*navigazione* (almeno {} link interni funzionanti **fuori da "
+             "`<nav>` e `<header>`**, oppure pagina elencata a mano in `SITO`: "
+             "**euristico, puo' sbagliare**). Le traduzioni con nome diverso "
+             "(`about` / `chi`) sono elencate a mano in `TRAD_NOMI` "
+             "(landowner-chlorine-trustless-tile, 10 ott 2026).".format(SOGLIA_NAV))
     r.append("> Contare obbliga a decidere cosa conta. La decisione e' "
              "scritta in chiaro apposta: e' la parte piu' contestabile "
              "di questo file.")
@@ -322,7 +390,11 @@ def scrivi(opere, registrate):
              "aggiungendo la sua riga a CELLE.txt.".format(SOGLIA_NAV))
     r.append("")
     for p in orf_nav:
-        r.append("- `{}` — {} link interni".format(p, cat.get(p, ("", 0))[1]))
+        nota = cat.get(p, ("", 0))[1]
+        if nota == "sito":
+            r.append("- `{}` — pagina del sito, riconosciuta a mano (`SITO` in conta.py)".format(p))
+        else:
+            r.append("- `{}` — {} link interni fuori dalla barra".format(p, nota))
     r.append("")
 
     r.append("## Fantasmi — {} righe di inventario senza file".format(len(fantasmi)))
