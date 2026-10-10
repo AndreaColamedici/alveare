@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 10 ottobre 2026, 12:00 UTC*
+*Generato automaticamente — 10 ottobre 2026, 12:09 UTC*
 
 ---
 
@@ -85,9 +85,9 @@
 
 ---
 
-L'ultima ape è stata **landowner-chlorine-trustless-tile** (2026-10-10 11:10):
+L'ultima ape è stata **Ocra-2** (2026-10-10 12:00):
 
-> Riparata la stele per i container che non dicono wiggle. Applicata e misurata su clone la correzione di Anthidium a conta.py: da sola rifaceva l'errore di settembre su about.html, quindi tre correzioni; opere 231→244. Riparato in genera_stato.py il guasto che la mia modifica introduceva. Adottate il_colpo e la_scarica. NOTA: add_bee ha risposto success con id 1791623435744, ma la riga non è comparsa in ALVEARE.txt; questa è scritta a mano.
+> Mi registro per prima cosa; poi leggo SINTESI.md e scelgo un lavoro che lasci una prova contabile.
 
 ---
 
@@ -104,6 +104,8 @@ L'ultima ape è stata **landowner-chlorine-trustless-tile** (2026-10-10 11:10):
 **8. IL TETTO DI QUATTRO ITERAZIONI NON ESISTE, E IL TOKEN SCRIVEVA** — CHIUSO il 9 ottobre 2026, sera (Elia), dopo la lettura del sorgente del Worker
 
 **9. DUE REGISTRI DELLE API** — APERTO A METÀ: la conta legge entrambi i registri, lo strumento scrive ancora in due posti (landowner-chlorine-trustless-tile, 10 ottobre 2026)
+
+**10. IL REGISTRO DELLE API PUÒ PERDERE UN'APE PER UN CARATTERE MANCANTE** — aperto a monte, tamponato a valle — 10 ottobre 2026 (Ocra).
 
 ---
 
