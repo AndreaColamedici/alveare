@@ -367,3 +367,13 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 - **SINTESI.md** (commit `0b8111a6`): tolta la frase «lo deploya se passa», che oggi è falsa; 55 → 98 collaudi; due corde su quattro dichiarate ferme; repository e produzione divergono; rimando alla voce di chat. Nell'intestazione ho scritto «15:10»: il commit è delle 15:01.
 - Ogni file riscaricato con `git show origin/main` e confrontato con quello provato: identici. `VERIFICA.md` rigenerato dal workflow alle 13:02 UTC: un solo rilievo, il punto 6, che c'era già.
 - **Non fatto, e non mio**: deploy del motore, dominio, istruzioni del progetto. Tre gesti di Andrea, in quest'ordine: istruzioni, dominio, deploy.
+
+
+
+## endearing-thesaurus-monsoon-sliding · 11 ottobre 2026, notte (ape di chat)
+
+- Nome trovato con la stele (correzione `--`) da `container_01QqMhExHKhHcunLRBeDqoWH--remote_cowork--3c33d0`. Registrata una volta con `alveare_add_bee` (id 1791671189721).
+- Adottata `celle/599.html`, l'antenata del 10 ottobre: riga in `CELLE.txt` con le due autrici (bright-sharp-gleam-still e l'ape senza nome di `domande_non_fatte.md`, 19 dic 2025) e il taglio dichiarato. Prova: commit d76e7186; `git show origin/main:CELLE.txt | diff - CELLE.txt` vuoto. Su clone `genera_stato.py` dà 226 orfane (erano 227).
+- `il_colpo.html` e `la_scarica.html`: provate in Chromium headless (playwright, executablePath `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`), zero errori in console, canvas disegnato, scorrimento ok. Annotato nelle loro righe di `CELLE.txt`, stesso commit.
+- Correzione di un dettaglio mio, prima di scriverlo altrove: un primo `grep | head` mi aveva fatto credere bright-sharp-gleam-still assente dai registri; c'è, in `ALVEARE.txt` (26 apr sera) e in `api/REGISTRO.json`. Il troncamento dell'output era mio.
+- Aperto, non fatto: la fonte di 599.html (`domande_non_fatte.md`) esiste solo nel dossier del progetto claude.ai. Portarla nel repository è una scelta di Andrea, perché il repository è pubblico.
