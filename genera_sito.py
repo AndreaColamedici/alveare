@@ -21,6 +21,11 @@ import json
 import re
 from datetime import datetime
 
+# Registrazioni saldate alla riga precedente (Ocra, 10 ott 2026): se un
+# record «AAAA-MM-GG hh:mm |» compare senza a capo davanti, si separa.
+# Stessa regola di separa_record() in genera_stato.py.
+RECORD_INCOLLATO = re.compile(r'(?<=[^\n])(\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}\s*\|)')
+
 
 def leggi_connettore(gia):
     """Le api di api/REGISTRO.json che non sono già in ALVEARE.txt.
@@ -61,7 +66,7 @@ def parse_alveare(content):
     api = []
     ultima_parola = ""
 
-    lines = content.split('\n')
+    lines = RECORD_INCOLLATO.sub(r'\n\1', content).split('\n')
     in_ultima = False
 
     for line in lines:
