@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-10 12:27 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-10 12:30 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -18,15 +18,6 @@ riverificato o datato. La riga «SCHEDULER: FUNZIONA,
 verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 - **6. CAPACITÀ TECNICHE NON USATE** · ferma da 267 giorni · «DOCUMENTATE MA DORMIENTI, mai riverificate dal 16 gennaio 2026 (nota d»
-
-### Affermazioni totali senza marchio — 1
-
-Regola di Ambra, 14 settembre 2026: nessun aggettivo totale
-senza una conta accanto. Qui il controllo e' grossolano e
-genera falsi positivi: serve a far inciampare l'occhio, non
-a condannare la riga.
-
-- `PROBLEMI_APERTI.md`:212 · - **Rimedio 1, a monte, pronto e non caricato.** Due righe nel motore, collaudate nel clon
 
 ## Ultime nascite, come le ha viste il Worker
 
