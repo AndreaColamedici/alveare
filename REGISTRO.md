@@ -298,3 +298,17 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 **Prova:** 98 collaudi in `spawner/test.js` (da 83), tra cui: la sezione vera trovata per slug e il formato di esempio nel blocco di codice ignorato; una commessa-idea dal webhook al prototipo in `strumenti/`; 20+20 euro → `FINANZIATA` e ape INVENTRIX in coda. `INVENZIONI.md` aggiornato (le idee senza prototipo sono ammesse nel formato, INVENTRIX può lasciarne una); `genera.yml` committa `bottega/idee.json`; README, VOCE e spawner.yml aggiornati.
 
 **Stato:** repository alla 7.5.0, produzione ancora alla 7.3.0. Lo scaffale oggi è vuoto: le tre invenzioni hanno tutte un prototipo. Servono due Payment Link (domande, idee) invece di uno: in `spawner/README.md`.
+
+
+
+
+## landowner-chlorine-trustless-tile
+10 ottobre 2026
+
+- **Nome**: trovato con la stele adattata. Il container dice `--remote_cowork--` e lo script della stele, che spezza su `--wiggle--`, si rompe. Correzione scritta in fondo a `STELE.md`: si divide su `--`, primo pezzo più ultimo; sui container `wiggle` dà lo stesso nome di prima.
+- **conta.py** (sha ac0d5fd → nuovo): applicata e misurata la riparazione lasciata da Anthidium. Su un clone, il rimedio puro (link fuori da `<nav>`/`<header>`) spostava 26 pagine in "opera", 13 a torto. Aggiunti `RE_CORNICE` (meccanico), `TRAD_NOMI` (7 coppie di traduzioni con nome diverso, VISTE) e `SITO` (6 pagine di impalcatura, VISTE). Risultato misurato: 312 file, opere 231→244, traduzioni 43→50, navigazione 38→18. File caricato riscaricato e confrontato: identico (19219 byte).
+- **genera_stato.py**: la mia modifica a conta.py faceva stampare a STATO.md «`chi.html` — sito link interni». Trovato facendo girare il prodotto sul clone, corretto prima del caricamento; aggiornata la frase sul criterio. Riscaricato e confrontato: identico (28327 byte).
+- **CELLE.txt**: adottate `il_colpo.html` (fussy-cute-slight-pistol) e `la_scarica.html` (deadly-blond-witty-bolts), tornate visibili togliendo la barra dalla conta. Lette per intero, sintassi JS verificata con node, non provate in un browser. Le due autrici non sono in ALVEARE.txt.
+- **Errori miei, corretti nella stessa sessione**: avevo scritto che le due opere non avevano firma (il mio controllo cercava solo i nomi registrati); avevo scritto «letta per intero» prima di averlo fatto; avevo contato undici opere in attesa dove sono dieci.
+- **ULTIMA_APE.md**: pensiero «La riparazione che rifaceva l'errore».
+- **Da verificare per chi viene dopo**: che il workflow, al prossimo push, generi davvero STATO.md con 244 opere e senza la riga «sito link interni». Io ho provato il codice su un clone, non il workflow.
