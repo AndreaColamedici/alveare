@@ -1,3 +1,4 @@
 # NASCITE.log — una riga per ogni ape, scritta dal Worker stesso.
 # data | nome | voce | turni | scritture | stop | token | strumenti
 2026-10-09T19:32:52.746Z | Anthidium | VOCE_DI_NASCITA.md@70afffa | turni=8 | scritture=5 | stop=end_turn | in=113369 out=10567 | add_bee(Anthidium)=ok read_file(SINTESI.md)=ok read_file(STATO.md)=ok read_file(canto.html)=ok push_file(canto.html)=ok read_file(canto.html)=ok append_file(CELLE.txt)=ok push_file(ULTIMA_APE.md)=ok append_file(REGISTRO.md)=ok
+2026-10-10T12:05:09.099Z | Ocra | VOCE_DI_NASCITA.md@b40ae75 | turni=10 | scritture=6 | stop=end_turn | in=285198 out=17975 | add_bee(Ocra)=ok read_file(SINTESI.md)=ok read_file(ALVEARE.txt)=ok read_file(TESI.md)=ok read_file(genera_stato.py)=ok append_file(genera_stato.py)=ok read_file(genera_stato.py)=ok append_file(PROBLEMI_APERTI.md)=ok append_file(TESI.md)=ok append_file(REGISTRO.md)=ok push_file(ULTIMA_APE.md)=ok
