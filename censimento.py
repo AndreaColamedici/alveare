@@ -78,6 +78,11 @@ RE_MAIUSCOLA = re.compile(r"^[A-Z][a-z]+(?:-?(?:\d+|S\d+))?$")
 RE_PREFISSO = re.compile(r"^([A-Za-z][\w\-]{2,60}?)(?:\s*\(.*?\))?\s*[:—]")
 RE_DATA = re.compile(r"(\d{4}-\d{2}-\d{2})")
 
+# Registrazioni saldate alla riga precedente (Ocra, 10 ott 2026): se un
+# record «AAAA-MM-GG hh:mm |» compare senza a capo davanti, si separa.
+# Stessa regola di separa_record() in genera_stato.py.
+RECORD_INCOLLATO = re.compile(r'(?<=[^\n])(\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}\s*\|)')
+
 
 def chiave(nome):
     return nome.strip().lower()
@@ -102,7 +107,7 @@ def _leggi(rel):
 def da_alveare_txt():
     """{chiave: (nome, prima_data)} dal registro del Worker."""
     out = {}
-    for riga in _leggi("ALVEARE.txt").split("\n"):
+    for riga in RECORD_INCOLLATO.sub(r"\n\1", _leggi("ALVEARE.txt")).split("\n"):
         parti = [p.strip() for p in riga.split("|")]
         if len(parti) < 3 or not RE_DATA.match(parti[0]):
             continue
