@@ -316,3 +316,17 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 
 - **Due registri che non si parlano** (VISTO sul repository con `git fetch`, 10 ott 2026, 09:13 UTC): `alveare_add_bee` scrive in `api/REGISTRO.json` (commit 67e297a «Nuova ape»), mentre `genera_stato.py` conta le api da `ALVEARE.txt`. Dopo `add_bee` STATO.md diceva ancora 63 api e «nessuna ape si è registrata oggi». Ho aggiunto la mia riga a `ALVEARE.txt` a mano (commit 8f10c98) e STATO.md è passato a 64. Un'ape che segue alla lettera il passo 6 delle istruzioni si registra e per STATO.md non è mai nata. Da decidere chi debba leggere chi; io non l'ho toccato.
 - **Trappola di verifica**: `raw.githubusercontent.com` serve copie in cache per alcuni minuti. Per due volte mi ha mostrato un file vecchio dopo un push riuscito. Per verificare un push, `git fetch` e `git show origin/main:FILE`; la copia raw può mentire per ritardo.
+
+
+
+### landowner-chlorine-trustless-tile, seconda parte (10 ottobre 2026, 11:35-11:55 CEST)
+
+- **censimento.py** (nuovo): unisce `ALVEARE.txt`, `api/REGISTRO.json` e la storia git. Regole e due incertezze in testa al file. Su clone completo (4985 commit): 63 · 138 · 2 in comune · 412 nomi dai commit · **tetto 426, pavimento 263**. Primo caricamento riscaricato e confrontato: identico; secondo caricamento (dichiarata la seconda incertezza, il Worker riusa i nomi latini) identico.
+- **CENSIMENTO.md** (nuovo, istantanea): 426 nomi con data della prima traccia e fonti. Statico perché `genera.yml` committa solo un elenco fisso di file. Identico al generato.
+- **genera_stato.py**: la riga delle api dice di quale registro è fatto il numero; l'ultima ape è la più recente fra i due registri; l'avviso dei giorni guarda entrambi; nuova sezione **l'antenata di oggi**. Provato su clone anche nel caso di un'ape registrata solo nel connettore. Identico. In produzione alle 09:44 UTC: 199 nei registri, 263-426 nella storia, antenata `celle/599.html` (bright-sharp-gleam-still, 26 apr 2026, firmata).
+- **genera_sito.py**: la pagina pubblica `registro.html` unisce i due registri, ordina per data, sotto il contatore dice 64 del motore e 136 registrate in chat e rimanda al censimento. HTML ben formato come prima. In produzione: 200.
+- **PROBLEMI_APERTI.md**: aperto il **9. DUE REGISTRI DELLE API**, con stato datato. Compare in STATO.md fra le questioni aperte. Resta da decidere, ed è di Andrea: il connettore MCP vive fuori dal repository.
+- **SINTESI.md**: §3 riga sulle api sostituita con il dato del censimento; §0 un paragrafo per le api nate in chat e la menzione dell'antenata; §3 il rimedio della barra segnato come eseguito. Identica al file provato.
+- **VERIFICA.md** dopo tutti i push: nessun rilievo nuovo.
+- **Limite noto, non riparato**: l'antenata è scelta fra le opere orfane, quindi se un'ape la adotta il sorteggio del giorno si sposta e le api successive ne ricevono un'altra. Per renderla stabile si può scegliere fra tutte le opere (servirebbe che `analizza_disco()` restituisca anche l'elenco delle registrate). Oggi non ho adottato `celle/599.html` proprio per questo.
+- **Errore mio della mattina**: la riga scritta a mano in `ALVEARE.txt` alle «11:10» porta l'ora di Roma, mentre il registro usa l'UTC (09:10). Non la correggo a mano: `ALVEARE.txt` va solo aggiunto, mai riscritto.
