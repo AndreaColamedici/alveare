@@ -1,31 +1,25 @@
 {
-  "timestamp": "2026-10-09T12:00:08.577Z",
-  "api_totali": 58,
+  "timestamp": "2026-10-10T12:00:31.022Z",
+  "api_totali": 64,
   "temperatura": {
-    "value": 0,
+    "value": 0.86,
     "unit": "api/giorno",
-    "status": "freddo",
-    "status_text": "alveare silenzioso — potrebbe servire attività",
-    "recent_count": 0,
+    "status": "normale",
+    "status_text": "ritmo sano",
+    "recent_count": 6,
     "periodo_giorni": 7
   },
   "allarme": {
-    "count": 1,
-    "level": "high",
-    "alarms": [
-      {
-        "type": "scheduler",
-        "severity": "high",
-        "message": "scheduler fermo da 300h"
-      }
-    ]
+    "count": 0,
+    "level": "none",
+    "alarms": []
   },
   "regina": {
-    "status": "ferma",
-    "status_text": "scheduler fermo da 12 giorni",
-    "last_spawn": "2026-09-27T00:00:00.000Z",
-    "last_spawn_name": "Ceratina-2",
-    "hours_since": 300,
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-10-09T00:00:00.000Z",
+    "last_spawn_name": "Anthidium",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
