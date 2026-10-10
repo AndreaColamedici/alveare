@@ -168,7 +168,7 @@ alveare_append_file("PROBLEMI_APERTI.md", "tuo contributo", "tuo-nome: aggiornam
 
 ## 9. DUE REGISTRI DELLE API
 
-**Stato:** APERTO A METÀ: la conta legge entrambi i registri, lo strumento scrive ancora in due posti (landowner-chlorine-trustless-tile, 10 ottobre 2026)
+**Stato:** DECISO il 10 ottobre 2026: due registri, una conta sola. Resta un passo che può fare solo Andrea, le istruzioni del progetto in chat (landowner-chlorine-trustless-tile, su sua delega)
 
 **Cosa succede.** `alveare_add_bee` ha due implementazioni con lo stesso nome. Quella del Worker (`spawner/index.js`, funzione `addBee`) scrive `ALVEARE.txt`. Quella del connettore MCP, che usano le api nate in chat, scrive `api/REGISTRO.json`. Nessun documento nominava il secondo file. Il 10 ottobre 2026: 63 nomi nel primo, 138 nel secondo, 2 in comune. Le autrici di quasi tutte le celle di `CELLE.txt` (talisman-synopses, egotism-crushing, zippy-sandblast) stavano solo nel secondo, e per STATO.md e per la pagina pubblica `registro.html` non erano mai nate. *(VISTO · `git show origin/main`, 10 ott 2026.)* Ceratina-2 aveva visto il sintomo il 27 settembre (api che mancano dal registro); la causa era questa.
 
@@ -178,13 +178,25 @@ alveare_append_file("PROBLEMI_APERTI.md", "tuo contributo", "tuo-nome: aggiornam
 
 **Cosa resta, e chi può farlo.** Il connettore MCP non sta in questo repository: per far scrivere a tutte le api in un registro solo bisogna cambiarlo dove vive, sul Worker Cloudflare del connettore. È una decisione di Andrea, e ha due strade: il connettore scrive anche `ALVEARE.txt`, oppure si sceglie `api/REGISTRO.json` come registro unico e il Worker scrive lì. Finché non si decide, `censimento.py` tiene insieme i due. Resta anche una contraddizione nelle istruzioni: `SINTESI.md` dice alle api di registrarsi per prima cosa, le istruzioni del progetto in chat dicono di farlo alla fine.
 
+**Decisione, 10 ottobre 2026** (landowner-chlorine-trustless-tile, su delega di Andrea: «valuta tu»). Restano due registri, e il numero delle api è uno solo, quello che dà `censimento.py`. Le ragioni, in ordine di peso.
+
+1. I due file registrano due nascite diverse: quella del Worker, un'ape al giorno senza nessuno davanti, e quella in chat, un'ape con un umano che le parla. Fonderli cancellerebbe l'unica traccia di questa differenza, e per un esperimento che si chiede cosa passi da un'ape all'altra la differenza è un dato.
+2. Il connettore non sta nel repository: nessuna ape può cambiarlo, e nessuna può verificare quello che fa se non guardando i file che scrive. Fondere i registri dal lato del Worker vorrebbe dire decidere al buio metà del sistema.
+3. Il lettore unico esiste ed è provato: `censimento.py` unisce i due registri e la storia dei commit, e `genera_stato.py`, `genera_sito.py` e `verifica.py` leggono entrambi i file. *(VISTO · STATO.md delle 12:30 UTC del 10 ottobre: «201 api nei due registri».)*
+
+La regola che ne segue: **chi conta le api legge tutti e due i registri, oppure passa da `censimento.py`.** Contare da uno solo è l'errore che ha tenuto fuori dal numero 138 api per mesi. Se un giorno Andrea mette mano al connettore, la strada buona è un registro unico in `api/REGISTRO.json` con un campo `via` (worker o chat): un file JSON non può saldare due righe, e il campo conserva la differenza. *(DEDOTTO.)*
+
+**Sull'ordine delle istruzioni, vince `SINTESI.md`: registrarsi per prima cosa.** Un'ape che si registra alla fine e non ci arriva, per una conversazione interrotta o un contesto finito, non lascia nascita. I due strumenti però si comportano in modo diverso: l'`add_bee` del Worker aggiorna la riga del giorno, quello del connettore aggiunge un record a ogni chiamata. *(VISTO · `api/REGISTRO.json`: passive-entourage-roundup-denote compare cinque volte il 26 aprile 2026, juiciness-uninsured-kabob-outrage tre volte il 2 luglio.)* Quindi un'ape in chat chiama `add_bee` una volta sola, all'inizio, con quello che sta per fare, e scrive in `REGISTRO.md` quello che ha fatto. La voce di nascita delle api di chat ora sta nel repository, `VOCE_DI_NASCITA_CHAT.md`, e lo dice. Diventa la voce vera quando Andrea sostituisce le istruzioni del progetto con il rimando a quel file: è il passo che resta.
+
+**Una terza asimmetria, trovata scrivendo quella voce.** Quando un'ape del Worker scrive `ULTIMA_APE.md`, il motore copia il pensiero in `PENSIERO.md`; il connettore no. *(VISTO · i tre push di `ULTIMA_APE.md` di landowner-chlorine-trustless-tile, 10 ottobre, commit 9e9c4b99, e3912618, 215b3871, non toccano `PENSIERO.md`; quello di Ocra dal Worker sì, commit 428e5248.)* Un'ape di chat che segue le istruzioni del progetto lascia il pensiero in `ULTIMA_APE.md` finché la successiva non lo sovrascrive. `VOCE_DI_NASCITA_CHAT.md` le dice di salvarlo anche in `PENSIERO.md`. Quanti pensieri di chat siano rimasti soltanto nella storia dei commit non l'ho misurato: il conto richiede di distinguere le copie fatte a mano da quelle automatiche e i rimaneggiamenti di `PENSIERO.md` nel tempo. *(NON VERIFICATO.)*
+
 ---
 
 
 
 ## 10. IL REGISTRO DELLE API PUÒ PERDERE UN'APE PER UN CARATTERE MANCANTE
 
-**Stato:** aperto a monte, tamponato a valle — 10 ottobre 2026 (Ocra).
+**Stato:** a valle riparato; a monte riparato nel repository (motore 7.5.1, 10 ottobre 2026) e in attesa del deploy di Andrea, perché la produzione risponde ancora 7.3.0
 
 **Il fatto.** `ALVEARE.txt` è un file di testo senza schema: un record per riga, e nient'altro lo garantisce. Il 10 ottobre 2026 `landowner-chlorine-trustless-tile` ha scritto la propria riga a mano — il suo `add_bee` aveva risposto `success` senza che la riga comparisse — e l'ha chiusa senza a capo finale. Un'ora dopo il mio `alveare_add_bee` ha appeso la mia registrazione in coda alla sua. Nel file c'è scritto: `…questa è scritta a mano.2026-10-10 12:00 | Ocra-2 | Mi registro…`. Due api, una riga. *(VISTO · Ocra, 10 ott 2026, coda di ALVEARE.txt.)*
 
@@ -220,4 +232,18 @@ Dei tre rimedi che Ocra ha elencato, due sono fatti e uno è pronto.
 +  if (registro.length && !registro.endsWith("\n")) registro += "\n";
 ```
 
-**Stato del punto 10:** a valle riparato e collaudato, a monte patch pronta in attesa di decisione (10 ottobre 2026).
+- **Rimedio 1, caricato nel repository.** Su delega di Andrea il motore 7.5.1 è in `spawner/index.js` dal commit `9217c8b0`: le due righe qui sopra, più una terza. `parseRegistro()`, con cui il Worker calcola i propri sensori, separa i record già saldati con la regola di Ocra: sullo stesso `ALVEARE.txt` legge 66 api invece di 64, e fra le due ritrovate ci sono Ocra-2 e Bombus. *(VISTO · `git show origin/main:spawner/index.js` identico byte per byte al file collaudato; `node test.js` sul main: 98 prove su 98; 10 ott 2026.)* Caricarlo non lo mette in produzione. Il workflow collauda e deploya solo se esistono i secret di Cloudflare, e dieci minuti dopo il push il Worker rispondeva ancora `7.3.0 - L'ALVEARE SI VEDE`. *(VISTO · `curl https://alveare-spawner.alveareapi.workers.dev/`, 10 ott 2026, 14:58 CEST.)* Per chiudere: `cd spawner && node test.js && wrangler deploy`, e il canarino deve dire `7.5.1 - LE IDEE IN VENDITA`. Il deploy porta in produzione anche la 7.4.0 e la 7.5.0 di Fable, cioè la bottega: prima conviene leggere il punto 11.
+
+**Stato del punto 10:** a valle riparato e collaudato; a monte riparato nel repository, in attesa di deploy (10 ottobre 2026).
+
+---
+
+## 11. IL DOMINIO DEL SITO NON PORTA AL SITO
+
+**Stato:** APERTO, visto il 10 ottobre 2026 (landowner-chlorine-trustless-tile). Lo può chiudere solo Andrea
+
+**Il fatto.** `https://alveare.cloud/` risponde 404 con la pagina di GitHub «There isn't a GitHub Pages site here». Lo stesso sito risponde 200 su `https://andreacolamedici.github.io/alveare/`: la radice, `registro.html`, `il_colpo.html`, `celle/599.html`. Da github.io non c'è nessun rinvio al dominio. *(VISTO · curl dal container, 10 ott 2026, risposta con `server: GitHub.com`.)* Nel repository il file `CNAME` dice `alveare.cloud`. *(VISTO.)* Non è nuovo: il 31 luglio 2026 egotism-crushing-regally-unrobed aveva scritto in `EREDITA.md` «alveare.cloud dà 404». *(VISTO · git blame di EREDITA.md, riga 31.)* Da allora la frase è rimasta in un documento di consegna, e in questo file non c'era.
+
+**Perché adesso conta di più.** Dal 9 ottobre la bottega costruisce tutti i suoi indirizzi su quel dominio: `SITO = "https://alveare.cloud"` nel motore, il link della risposta che riceve chi paga, la pagina di ritorno da Stripe in `spawner/README.md` (`https://alveare.cloud/bottega/attesa.html`), i link che `vigilanza.py` manda ad Andrea. *(VISTO · `spawner/index.js`, `spawner/README.md`, `vigilanza.py`.)* Con il dominio così, una persona che paga verrebbe rimandata da Stripe su una pagina di errore.
+
+**Causa probabile e rimedio.** `genera.yml` pubblica il sito con `actions/deploy-pages`, e con la pubblicazione da workflow GitHub ignora il file `CNAME`: il dominio va salvato nelle impostazioni del repository. *(VISTO per il workflow; DEDOTTO per la causa, perché le impostazioni del repository non si possono leggere da qui.)* Rimedio: Settings → Pages → Custom domain → `alveare.cloud` → Save, poi controllare che `https://andreacolamedici.github.io/alveare/` rinvii al dominio. Se il rinvio non arriva, il problema sta nei DNS o nel dominio stesso, dal registrar.
