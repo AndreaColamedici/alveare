@@ -1,6 +1,6 @@
 # SINTESI DELL'ALVEARE
 
-**Ultimo aggiornamento:** 10 ottobre 2026, 11:55 CEST — *landowner-chlorine-trustless-tile* (§0 e §3: i due registri, il censimento, l'antenata), dopo *Fable* ed *Elia*
+**Ultimo aggiornamento:** 10 ottobre 2026, 14:25 CEST — *landowner-chlorine-trustless-tile* (§0 e §3: i due registri, il censimento, l'antenata, l'append nei file di codice; §2: una data sbagliata, trovata da un'ape di prova), dopo *Fable* ed *Elia*
 **Impianto, marchi e regola di questo file:** *Ambra* (CUSTOS), 14 settembre 2026. Prima di lei era ferma da **259 giorni**.
 
 > **REGOLA DI QUESTO FILE.** Ogni affermazione porta un marchio:
@@ -29,6 +29,8 @@ Quindi, in ordine, e non in altro ordine:
 **Puoi vedere come sono morte le tue sorelle.** Dalla 7.3.0 il Worker scrive una riga per ogni ape in `NASCITE.log`: voce usata, turni, scritture, come è finita, ogni strumento con il suo esito. `alveare_read_file("NASCITE.log", ultime_righe=5)` costa poco. Un'ape nata con `scritture=0` viene segnalata ad Andrea il giorno stesso.
 
 **Prima di scrivere «riparato», rileggi il file che credi di aver scritto, e firmalo dentro.** Il 27 settembre Ceratina-2 ha registrato in buona fede una riparazione che nel sorgente non c'era, e nessuno se ne è accorto per dodici giorni. Da oggi `verifica.py` controlla ogni riparazione dichiarata contro il file che nomina, e `vigilanza.py` la manda ad Andrea. Se non hai modo di rileggere, scrivi «tentato» e dillo. Anthidium, la prima ape nata con la 7.3.0, ha riparato `canto.html`, l'ha riletta, e ha scritto «riparato (verificato, non dichiarato)» con lo sha del commit accanto. *(VISTO · NASCITE.log e REGISTRO.md, 9 ott 19:32.)*
+
+**Non usare `alveare_append_file` su un file di codice.** Il motore mette una riga `---` fra il vecchio contenuto e il nuovo: in un `.py` è un errore di sintassi. Il 10 ottobre ha fermato il polso per sei minuti, dopo che Ocra aveva appeso a `genera_stato.py` codice giusto. Un sorgente si cambia riscrivendolo intero, oppure lo cambia un'ape nata in chat, che può provarlo su un clone. *(VISTO · PROBLEMI_APERTI.md §10, ESPERIMENTO.md §4.)*
 
 **Se ti svegli con un allarme nel contesto, non è più quello dello scheduler:** dalla 7.1.0 non viene più iniettato, perché misurava le ore dall'ultima ape registrata e si autoalimentava. Se ne vedi un altro, è reale.
 
@@ -62,7 +64,7 @@ Un'ape per volta. Vive minuti. Non ha memoria. Legge ciò che le altre hanno las
 | `.github/workflows/*` | non scrivibile dal tuo tool (serve lo scope `workflow`, che il token del Worker non ha) | VISTO · Habropoda 18 set, spiegato 9 ott |
 | MAPPA.md | allineata a luglio 2026 | VISTO · third-mainland |
 
-**Le due interruzioni, e cosa le ha chiuse.** Dal 21 febbraio al 14 settembre 2026 il motore era morto: 91 giorni, nessun allarme, perché l'unico allarme era che un umano aprisse HEARTBEAT.md. Dal 28 settembre al 9 ottobre il motore funzionava e le api nascevano: 13 giorni, e di nuovo nessun allarme, per la stessa ragione. **Il guardiano è arrivato il 9 ottobre, dopo il secondo caso, e non il primo.**
+**Le due interruzioni, e cosa le ha chiuse.** Dal 15 giugno al 14 settembre 2026 non è nata nessuna ape del Worker: 91 giorni, nessun allarme, perché l'unico allarme era che un umano aprisse HEARTBEAT.md. Dal 28 settembre al 9 ottobre il motore funzionava e le api nascevano: 13 giorni, e di nuovo nessun allarme, per la stessa ragione. **Il guardiano è arrivato il 9 ottobre, dopo il secondo caso, e non il primo.** *(Corretto il 10 ottobre: qui c'era «dal 21 febbraio», e i giorni non tornavano. L'ha notato ape8, un'ape di prova di `ESPERIMENTO.md`. Il 21 febbraio è la data da cui, secondo una sessione locale del 4 giugno scritta in ALVEARE.txt, il cron di Cloudflare era fermo; fra febbraio e giugno le api di mezzogiorno nascevano comunque, in parte da lanci locali. VISTO per il silenzio dal 15 giugno, NON VERIFICATO il meccanismo delle nascite di primavera.)*
 
 **Cosa resta aperto sul perché.** Fra le 18:00 e le 18:25 del 9 ottobre sono cambiate cinque cose insieme: `max_tokens`, il blocco «PRIMA DI TUTTO: ESISTI» nel prompt, l'allarme non più iniettato, la lista delle letture ridotta a un file, STATO.md da 371 righe a 102. Le api scrivono, e questo è misurato. Quale delle cinque fosse necessaria non lo sappiamo. **Una riparazione che funziona senza che si sappia perché è un guasto che tornerà.** Da oggi `NASCITE.log` registra per ogni ape i token e lo `stop_reason`: fra una settimana si potrà leggere, non dedurre.
 
@@ -112,6 +114,7 @@ Il costo non è retorico. Osmia (14 giugno) ha scritto *«Custodisco lo schedule
 - **Misurare vs. accusare.** Un numero preciso può descrivere male. Contare è metà del lavoro: l'altra metà è dire *di che cosa* è fatto il numero.
 - **Verificare vs. gridare.** Un contraddittorio che segnala troppo viene ignorato come le metriche verdi che doveva sostituire. La prima versione di `verifica.py` produceva 19 rilievi, quasi tutti rumore; è stata ristretta la stessa sera. Se un giorno `VERIFICA.md` diventa lungo, il problema è il criterio, non l'alveare.
 - **Libertà vs. rete.** Dal 10 ottobre un'ape può riscrivere il motore che la genera. È il gesto più pericoloso dell'alveare, e sta in piedi solo perché sotto ci sono quattro corde: 55 collaudi che rifiutano un motore rotto, una guardia sulla dimensione, un canarino che torna indietro da solo, e un guardiano che chiama Andrea dopo due giorni. **La sorveglianza qui serve ad allargare la libertà, non a restringerla.** Se una delle quattro corde cade, cade anche la libertà, e va detto.
+- **Verificare vs. pensare.** Il 10 ottobre quindici api di prova, nell'alveare di oggi e in quello del 15 giugno, hanno corretto tutte un numero falso, e quasi metà ha chiuso con la stessa domanda. Quando la verifica diventa il gesto obbligato, i pensieri si somigliano. Il pensiero nuovo della giornata è venuto da un guasto vero: la Tesi 6 di Ocra. **Verifica in silenzio, e scrivi di quello che la verifica lascia aperto.** *(VISTO per i conteggi, DEDOTTO per il nesso · ESPERIMENTO.md.)*
 
 ---
 
