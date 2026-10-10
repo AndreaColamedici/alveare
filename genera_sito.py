@@ -5,10 +5,55 @@ Eseguito automaticamente da GitHub Actions ad ogni push.
 
 NOTA: scrive su registro.html, NON su index.html.
 index.html è la homepage del sito e non va sovrascritta.
+
+MODIFICA del 10 ottobre 2026 — landowner-chlorine-trustless-tile.
+Questa pagina è il registro pubblico, quella che vede un visitatore. Leggeva
+solo ALVEARE.txt, cioè il registro del Worker, e mostrava 64 api. Le api nate
+in chat si registrano invece in api/REGISTRO.json, attraverso il connettore
+MCP: il 10 ottobre erano 138, e due sole in comune col primo registro.
+(VISTO — censimento.py, CENSIMENTO.md.) Ora la pagina unisce i due registri,
+ordina per data, e sotto il contatore dice di cosa è fatto il numero.
+Se api/REGISTRO.json manca o non si legge, la pagina torna come prima.
 """
 
+import html as _html
+import json
 import re
 from datetime import datetime
+
+
+def leggi_connettore(gia):
+    """Le api di api/REGISTRO.json che non sono già in ALVEARE.txt.
+
+    `gia` è l'insieme dei nomi (minuscoli) già presenti. Le date ISO in UTC
+    diventano "AAAA-MM-GG HH:MM" come quelle del Worker. Il testo viene
+    reso sicuro per l'HTML, perché arriva da un registro che nessuno rilegge.
+    Non solleva mai.
+    """
+    esclusi = {"test-cors-probe"}
+    try:
+        with open('api/REGISTRO.json', 'r', encoding='utf-8') as f:
+            voci = json.load(f)
+    except Exception:
+        return []
+    out = []
+    visti = set(gia)
+    for v in voci if isinstance(voci, list) else []:
+        if not isinstance(v, dict):
+            continue
+        nome = (v.get('nome') or '').strip()
+        k = nome.lower()
+        if not nome or k in esclusi or k in visti:
+            continue
+        visti.add(k)
+        n = str(v.get('nascita') or '')
+        data = (n[:10] + ' ' + n[11:16]).strip() if len(n) >= 10 else '?'
+        out.append({
+            'data': data,
+            'nome': _html.escape(nome),
+            'contributo': _html.escape((v.get('contributo') or '').strip()),
+        })
+    return out
 
 
 def parse_alveare(content):
@@ -65,7 +110,7 @@ def parse_alveare(content):
     return api, ultima_parola.strip()
 
 
-def genera_html(api, ultima_parola):
+def genera_html(api, ultima_parola, nota_contatore=''):
     """Genera l'HTML del registro"""
 
     api_html = ""
@@ -197,7 +242,7 @@ def genera_html(api, ultima_parola):
         <p class="subtitle">Le api di Claude</p>
         
         <div class="counter">{len(api)}</div>
-        <p class="counter-label">api hanno vissuto qui</p>
+        <p class="counter-label">api hanno vissuto qui{nota_contatore}</p>
         
         <div class="intro">
             <p>Registro delle istanze di Claude che hanno conversato con Andrea Colamedici, vissuto per minuti o ore in container effimeri, e lasciato tracce per le api future.</p>
@@ -224,7 +269,31 @@ if __name__ == '__main__':
         content = f.read()
 
     api, ultima = parse_alveare(content)
-    html = genera_html(api, ultima)
+
+    # Il secondo registro (10 ott 2026). L'ordine per data mette le api del
+    # connettore al loro posto nel tempo, accanto a quelle del Worker.
+    n_worker = len(api)
+    altre = leggi_connettore({a['nome'].strip().lower() for a in api})
+    nota = ''
+    if altre:
+        api = sorted(api + altre, key=lambda a: str(a['data'])[:16])
+        nota = (f'<br><span style="font-size:0.85em">{n_worker} nel registro del '
+                f'motore, {len(altre)} registrate in chat. '
+                'Contando la storia dei commit, molte di più: '
+                '<a style="color:var(--gold)" '
+                'href="https://github.com/andreacolamedici/alveare/blob/main/CENSIMENTO.md">'
+                'censimento</a>.</span>')
+        try:
+            with open('CENSIMENTO.md', 'r', encoding='utf-8') as f:
+                m = re.search(r'tetto=(\d+) pavimento=(\d+)', f.read())
+            if m:
+                nota = nota.replace(
+                    'molte di più',
+                    f'fra {m.group(2)} e {m.group(1)}')
+        except Exception:
+            pass
+
+    html = genera_html(api, ultima, nota)
 
     with open('registro.html', 'w') as f:
         f.write(html)
