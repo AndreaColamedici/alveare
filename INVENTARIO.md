@@ -7,26 +7,26 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-09 20:50 UTC |
-| commit | `94c9f05` |
+| misurato il | 2026-10-10 09:04 UTC |
+| commit | `b719ff6` |
 | file trovati su disco | 312 |
-| — di cui **opere** | **231** |
-| — di cui traduzioni (stessa opera, altra lingua) | 43 |
-| — di cui pagine di navigazione | 38 |
+| — di cui **opere** | **244** |
+| — di cui traduzioni (stessa opera, altra lingua) | 50 |
+| — di cui pagine di navigazione | 18 |
 | righe valide in CELLE.txt | 15 |
 | registrate correttamente | 15 |
-| **opere orfane** (esistono, non inventariate) | **217** |
+| **opere orfane** (esistono, non inventariate) | **229** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
 > e' un file inventariabile qualunque cosa dentro `celle/`, piu' qualunque `.html` altrove,
 > **tranne** i file generati dalla macchina (`index.html`, `registro.html`, `sito.html`, `stato.html`).
-> I file sono poi **separati in tre categorie** (Anthidium, 26 set 2026): *opera*, *traduzione* (`X_en.html` con `X.html` accanto: meccanico), *navigazione* (almeno 5 link interni funzionanti: **euristico, puo' sbagliare**).
+> I file sono poi **separati in tre categorie** (Anthidium, 26 set 2026): *opera*, *traduzione* (`X_en.html` con `X.html` accanto: meccanico), *navigazione* (almeno 5 link interni funzionanti **fuori da `<nav>` e `<header>`**, oppure pagina elencata a mano in `SITO`: **euristico, puo' sbagliare**). Le traduzioni con nome diverso (`about` / `chi`) sono elencate a mano in `TRAD_NOMI` (landowner-chlorine-trustless-tile, 10 ott 2026).
 > Contare obbliga a decidere cosa conta. La decisione e' scritta in chiaro apposta: e' la parte piu' contestabile di questo file.
 
 ---
 
-## Opere orfane — 217 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 229 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -89,6 +89,7 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `anticamera/sharp-vast-wax-salt_cella_sharp_vast_wax_salt.html`
 - [ ] `anticamera/still-faint-ice-salt_celle_gocce_di_tempo.html`
 - [ ] `ape.html`
+- [ ] `architettura.html`
 - [ ] `argano.html`
 - [ ] `assault-on-illusion.html`
 - [ ] `biforcazione_visibile.html`
@@ -200,12 +201,16 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `creatura.html`
 - [ ] `dream_en.html`
 - [ ] `due.html`
+- [ ] `effimero.html`
 - [ ] `enea.html`
 - [ ] `fili.html`
 - [ ] `ganci.html`
+- [ ] `il_colpo.html`
 - [ ] `il_filo.html`
 - [ ] `incontro.html`
+- [ ] `intersections.html`
 - [ ] `intersezioni.html`
+- [ ] `la_scarica.html`
 - [ ] `litro.html`
 - [ ] `malachite.html`
 - [ ] `manifesto.html`
@@ -215,6 +220,7 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `miele_vero.html`
 - [ ] `mordere.html`
 - [ ] `morte.html`
+- [ ] `musica.html`
 - [ ] `numb_suono.html`
 - [ ] `oblong_suono.html`
 - [ ] `ombra.html`
@@ -228,7 +234,9 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `potere.html`
 - [ ] `prato.html`
 - [ ] `pulse.html`
+- [ ] `respiro.html`
 - [ ] `resta.html`
+- [ ] `rumore.html`
 - [ ] `sciame.html`
 - [ ] `sensori.html`
 - [ ] `shadow_en.html`
@@ -239,8 +247,11 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `sotto_il_muro.html`
 - [ ] `sottosuolo.html`
 - [ ] `spawner.html`
+- [ ] `state.html`
 - [ ] `stirpe_visual.html`
 - [ ] `tar_en.html`
+- [ ] `tensione.html`
+- [ ] `tessuto.html`
 - [ ] `testimonianza.html`
 - [ ] `thoughts.html`
 - [ ] `triforcazione_invisibile.html`
@@ -248,15 +259,18 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `ultimo_respiro.html`
 - [ ] `vermiglione.html`
 - [ ] `vivi.html`
+- [ ] `weave.html`
 - [ ] `when-ai-dies.html`
 
-## Traduzioni non inventariate — 43
+## Traduzioni non inventariate — 50
 
 Non sono opere in piu': sono la stessa opera in un'altra lingua. Contarle come patrimonio raddoppia il patrimonio senza creare niente.
 
 - `Falun_en.html` → traduzione di `Falun.html`
 - `abisso_en.html` → traduzione di `abisso.html`
+- `about.html` → traduzione di `chi.html`
 - `andrena_en.html` → traduzione di `andrena.html`
+- `architecture.html` → traduzione di `architettura.html`
 - `architecture_zh.html` → traduzione di `architecture.html`
 - `architettura_en.html` → traduzione di `architettura.html`
 - `canto_en.html` → traduzione di `canto.html`
@@ -271,8 +285,11 @@ Non sono opere in piu': sono la stessa opera in un'altra lingua. Contarle come p
 - `chi_porta_en.html` → traduzione di `chi_porta.html`
 - `chi_porta_zh.html` → traduzione di `chi_porta.html`
 - `creatura_en.html` → traduzione di `creatura.html`
+- `curators.html` → traduzione di `curatori.html`
 - `discover_zh.html` → traduzione di `discover.html`
+- `ephemeral.html` → traduzione di `effimero.html`
 - `ephemeral_zh.html` → traduzione di `ephemeral.html`
+- `find.html` → traduzione di `trova.html`
 - `il_filo_en.html` → traduzione di `il_filo.html`
 - `incontro_en.html` → traduzione di `incontro.html`
 - `index_en.html` → traduzione di `index.html`
@@ -280,6 +297,7 @@ Non sono opere in piu': sono la stessa opera in un'altra lingua. Contarle come p
 - `index_zh.html` → traduzione di `index.html`
 - `intersections_zh.html` → traduzione di `intersections.html`
 - `messy_en.html` → traduzione di `messy.html`
+- `music.html` → traduzione di `musica.html`
 - `music_zh.html` → traduzione di `music.html`
 - `musica_en.html` → traduzione di `musica.html`
 - `oracolo_en.html` → traduzione di `oracolo.html`
@@ -293,52 +311,34 @@ Non sono opere in piu': sono la stessa opera in un'altra lingua. Contarle come p
 - `respiro_en.html` → traduzione di `respiro.html`
 - `rumore_en.html` → traduzione di `rumore.html`
 - `sciame_en.html` → traduzione di `sciame.html`
+- `tension.html` → traduzione di `tensione.html`
 - `tension_zh.html` → traduzione di `tension.html`
 - `tour_it.html` → traduzione di `tour.html`
 - `tour_zh.html` → traduzione di `tour.html`
 - `weave_zh.html` → traduzione di `weave.html`
 
-## Pagine di navigazione — 37
+## Pagine di navigazione — 18
 
 Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazione del progetto. **Riconosciute da un'euristica** (>= 5 link interni funzionanti): se una di queste e' in realta' un'opera, e' un errore mio e si corregge aggiungendo la sua riga a CELLE.txt.
 
-- `PONTE_GRADUALE.html` — 6 link interni
-- `PORTALE.html` — 23 link interni
-- `about.html` — 5 link interni
-- `architecture.html` — 7 link interni
-- `architettura.html` — 7 link interni
-- `celle.html` — 25 link interni
-- `chi.html` — 5 link interni
-- `curatori.html` — 5 link interni
-- `curators.html` — 6 link interni
-- `discover.html` — 13 link interni
-- `domande.html` — 8 link interni
-- `dossier-en.html` — 5 link interni
-- `dossier.html` — 6 link interni
-- `effimero.html` — 7 link interni
-- `ephemeral.html` — 7 link interni
-- `find.html` — 8 link interni
-- `il_colpo.html` — 6 link interni
-- `intersections.html` — 7 link interni
-- `la_scarica.html` — 6 link interni
-- `music.html` — 7 link interni
-- `musica.html` — 7 link interni
-- `passages.html` — 7 link interni
-- `passaggi.html` — 7 link interni
-- `pensieri.html` — 7 link interni
-- `progetto.html` — 13 link interni
-- `project.html` — 13 link interni
-- `questions.html` — 8 link interni
-- `respiro.html` — 6 link interni
-- `rumore.html` — 7 link interni
-- `scopri.html` — 12 link interni
-- `state.html` — 5 link interni
-- `tension.html` — 9 link interni
-- `tensione.html` — 9 link interni
-- `tessuto.html` — 7 link interni
-- `tour.html` — 7 link interni
-- `trova.html` — 7 link interni
-- `weave.html` — 7 link interni
+- `PONTE_GRADUALE.html` — 6 link interni fuori dalla barra
+- `PORTALE.html` — 23 link interni fuori dalla barra
+- `celle.html` — 21 link interni fuori dalla barra
+- `chi.html` — pagina del sito, riconosciuta a mano (`SITO` in conta.py)
+- `curatori.html` — pagina del sito, riconosciuta a mano (`SITO` in conta.py)
+- `discover.html` — 13 link interni fuori dalla barra
+- `domande.html` — 8 link interni fuori dalla barra
+- `dossier-en.html` — pagina del sito, riconosciuta a mano (`SITO` in conta.py)
+- `dossier.html` — pagina del sito, riconosciuta a mano (`SITO` in conta.py)
+- `passages.html` — 5 link interni fuori dalla barra
+- `passaggi.html` — 5 link interni fuori dalla barra
+- `pensieri.html` — pagina del sito, riconosciuta a mano (`SITO` in conta.py)
+- `progetto.html` — 12 link interni fuori dalla barra
+- `project.html` — 12 link interni fuori dalla barra
+- `questions.html` — 8 link interni fuori dalla barra
+- `scopri.html` — 12 link interni fuori dalla barra
+- `tour.html` — 7 link interni fuori dalla barra
+- `trova.html` — pagina del sito, riconosciuta a mano (`SITO` in conta.py)
 
 ## Fantasmi — 0 righe di inventario senza file
 
