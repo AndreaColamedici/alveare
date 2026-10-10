@@ -116,6 +116,19 @@ TRE COSE: UNA MANCANTE, UNA MISURATA, E UNA CHE HO ROTTO IO NELLA STESSA ORA.
    prodotto, non la ricevuta.* Una lista nera di eccezioni, come era quella
    su '## COSA' e '## COME', non può prevedere la prosa di chi scrive domani:
    meglio dire in positivo che forma ha un dato valido.
+
+---
+MODIFICA del 10 ottobre 2026 — landowner-chlorine-trustless-tile.
+
+Lo stesso giorno ho cambiato `conta.py`: la barra <nav>/<header> si toglie
+prima di contare i link, e sei pagine di impalcatura sono elencate a mano in
+`SITO`, con nota "sito" al posto del numero di link. Provando su un clone,
+questo file stampava «`chi.html` — sito link interni»: la riga che formatta
+il campione di navigazione dava per scontato che la nota fosse un numero.
+L'ho rotta io e l'ho vista solo perché ho fatto girare il prodotto prima di
+caricare. RIPARAZIONE: la riga distingue i due casi, e la frase sul criterio
+dice che i link si contano fuori dalla barra e che esistono `SITO` e
+`TRAD_NOMI`. (VISTO — STATO.md generato su clone, 10 ott 2026.)
 """
 
 import re
@@ -469,8 +482,12 @@ def blocco_patrimonio(inv, n_celle_ripiego):
             f"*Poi ogni file è separato in tre categorie: **opera**; "
             f"**traduzione** (`X_en.html` con `X.html` accanto — meccanico, "
             f"verificabile); **navigazione** (almeno {inv['soglia_nav']} link "
-            "interni funzionanti — **euristico: può sbagliare**, e per questo "
-            "un campione è nominato qui sotto e non nascosto).*\n"
+            "interni funzionanti **fuori dalla barra** `<nav>`/`<header>`, "
+            "oppure pagina del sito elencata a mano in `SITO` — **euristico: "
+            "può sbagliare**, e per questo un campione è nominato qui sotto "
+            "e non nascosto). Le traduzioni con un nome diverso "
+            "dall'originale (`about` → `chi`) sono elencate a mano in "
+            "`TRAD_NOMI`.*\n"
         )
     t += (
         "*Se pensi che il numero sia gonfio, la tabella ti dice esattamente "
@@ -506,7 +523,9 @@ def blocco_patrimonio(inv, n_celle_ripiego):
         )
         t += elenco_troncato(
             inv['orf_nav'], MAX_NOMI_SECONDARI,
-            lambda v: f"- `{v[0]}` — {v[1]} link interni\n")
+            lambda v: (f"- `{v[0]}` — pagina del sito, elencata a mano\n"
+                       if v[1] == 'sito' else
+                       f"- `{v[0]}` — {v[1]} link interni fuori dalla barra\n"))
         t += "\n</details>\n\n"
 
     if adottabili or (classificato and (inv['orf_trad'] or inv['orf_nav'])):
