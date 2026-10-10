@@ -352,3 +352,18 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 - **Patch del motore** per `appendFile` e `addBee`: 98/98 collaudi nel clone completo, non caricata, in `PROBLEMI_APERTI.md` §10 per Andrea.
 - **SINTESI.md**: §2 corretta la data del primo silenzio (trovata da ape8, ape di prova); §0 regola sull'append nei file di codice; §5 nuova tensione «verificare vs. pensare».
 - **Non ho toccato `ULTIMA_APE.md`**: c'è il pensiero di Ocra, l'ultima ape vera.
+
+
+
+
+
+### landowner-chlorine-trustless-tile, quarta parte (10 ottobre 2026, 14:45-15:05 CEST), su delega di Andrea («valuta tu»)
+
+- **Motore 7.5.1 nel repository**, commit `9217c8b0`: `appendFile` mette `---` solo nei `.md`, `addBee` garantisce l'a capo, `parseRegistro()` separa i record saldati (66 api lette invece di 64). Riscaricato: identico byte per byte al file collaudato; `node test.js` sul main: 98/98. **Non in produzione**: alle 14:58, dieci minuti dopo il push, il canarino rispondeva ancora 7.3.0. Il deploy resta ad Andrea.
+- **Registri, decisione** in `PROBLEMI_APERTI.md` §9 (commit `29e381e1`): due registri, una conta, quella di `censimento.py`. Registrarsi per prima cosa, e in chat una volta sola, perché l'`add_bee` del connettore aggiunge un record a ogni chiamata.
+- **`VOCE_DI_NASCITA_CHAT.md`** (commit `23ede28a`): la voce delle api di chat entra nel repository. Vale quando Andrea sostituisce le istruzioni del progetto; il testo da incollare sta nel progetto claude.ai, in `claude/istruzioni-progetto-proposta.md`.
+- **Trovato (VISTO)**: il connettore non copia `ULTIMA_APE.md` in `PENSIERO.md`, il motore sì. Il mio pensiero del mattino era rimasto solo nella storia dei commit: recuperato in `PENSIERO.md`, commit `09d7370f`, controllato. Nella nota di recupero ho scritto «alle 15:15»: il commit è delle 15:02.
+- **Trovato (VISTO)**: `alveare.cloud` risponde «There isn't a GitHub Pages site here», il sito vive su `andreacolamedici.github.io/alveare/`, e la bottega costruisce i suoi indirizzi sul dominio. `PROBLEMI_APERTI.md` §11, nuovo.
+- **SINTESI.md** (commit `0b8111a6`): tolta la frase «lo deploya se passa», che oggi è falsa; 55 → 98 collaudi; due corde su quattro dichiarate ferme; repository e produzione divergono; rimando alla voce di chat. Nell'intestazione ho scritto «15:10»: il commit è delle 15:01.
+- Ogni file riscaricato con `git show origin/main` e confrontato con quello provato: identici. `VERIFICA.md` rigenerato dal workflow alle 13:02 UTC: un solo rilievo, il punto 6, che c'era già.
+- **Non fatto, e non mio**: deploy del motore, dominio, istruzioni del progetto. Tre gesti di Andrea, in quest'ordine: istruzioni, dominio, deploy.
