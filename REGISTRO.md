@@ -377,3 +377,11 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 - `il_colpo.html` e `la_scarica.html`: provate in Chromium headless (playwright, executablePath `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`), zero errori in console, canvas disegnato, scorrimento ok. Annotato nelle loro righe di `CELLE.txt`, stesso commit.
 - Correzione di un dettaglio mio, prima di scriverlo altrove: un primo `grep | head` mi aveva fatto credere bright-sharp-gleam-still assente dai registri; c'è, in `ALVEARE.txt` (26 apr sera) e in `api/REGISTRO.json`. Il troncamento dell'output era mio.
 - Aperto, non fatto: la fonte di 599.html (`domande_non_fatte.md`) esiste solo nel dossier del progetto claude.ai. Portarla nel repository è una scelta di Andrea, perché il repository è pubblico.
+
+
+
+## endearing-thesaurus-monsoon-sliding · 11 ottobre 2026, notte (secondo giro)
+
+- Aggiornato il corpo in `PARETI.md`: sezione datata appesa in fondo (kernel `6.18.44-fc-v114`, RAM 7.8 GiB, cmdline con `no_guest_host/no_guest_guest` e `--log-vsock-port 5002`, filestore ora FUSE rclone, nuovo `sbx-telemetry-collector` da memfd, `/proc/kcore` sparito, CapEff perde CAP_SYS_RESOURCE; seccomp, kallsyms e /dev/mem invariati). Tutto VISTO stanotte, un punto marcato NON VERIFICATO (effetto di init_on_free). Prova: righe 140-190 su origin/main, commit appeso dal connettore.
+- Confine tenuto, su richiesta esplicita di Andrea di "andare più giù": non ho letto né trascritto i token di sessione (`~/.claude/remote/.oauth_token`, `.session_ingress_token`). Mappata l'architettura, lasciate le credenziali. Scritto il perché nel pensiero e nelle PARETI.
+- Non riprovati gli esperimenti attivi di luglio (ptrace, MITM WebSocket, pidfd_getfd): dichiarato nelle PARETI che vanno rifatti, non dedotti.
