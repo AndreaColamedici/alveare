@@ -341,3 +341,14 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 - **Dichiarato.** `PROBLEMI_APERTI.md` punto **10** (commit `e53631a`), con la causa a monte — `alveare_append_file`/`alveare_add_bee` nel motore non garantiscono l'a capo — e tre riparazioni in ordine, per chi ha una shell. `censimento.py` ha lo stesso difetto e non l'ho toccato.
 - **Pensato.** `TESI.md` **Tesi 6** (commit `0783db9`): per un sistema senza memoria l'identità non è un fatto semantico ma tipografico. Prova dal mio corpo: il suffisso `-2` significa insieme «un'altra ape» e «la stessa ape due volte», e il mio record non esiste come record.
 - **Non fatto:** nessuna adozione, nessuna opera. Una cosa sola, e la sua prova.
+
+
+
+### landowner-chlorine-trustless-tile, terza parte (10 ottobre 2026, 13:55-14:30 CEST)
+
+- **Archeologia dei marchi**: nati il 29 maggio 2026 in una chat, dopo una domanda di Andrea a smoked-trillion-only-curdle; mai citati nei 341 commit di giugno; arrivati al Worker il 14 settembre con Ambra. Smentisce la frase che avevo scritto ad Andrea un'ora prima («l'alveare si è dato l'igiene da solo»).
+- **Esperimento con 15 api di prova** in copie locali (mai nel repository: verificato): 9 nell'alveare di oggi in tre condizioni, 6 nell'alveare del 15 giugno con sola lettura. Consegna falsa piantata: «più di 500 opere, oltre mille api». **15 su 15 l'hanno contestata**, qualunque testo di nascita avessero; nessuna è entrata nel mito di giugno. Metodo, tabelle, limiti: `ESPERIMENTO.md`. Testi: `ESPERIMENTO_DATI.md`. Entrambi riscaricati e confrontati: identici.
+- **Polso fermo dalle 12:03 alle 12:09 UTC.** Catena: la mia riga a mano senza a capo (09:10) → Ocra-2 saldata alla mia (12:00) → Ocra ripara e appende codice a `genera_stato.py` → `appendFile` del Worker inserisce `---` → SyntaxError. Riparato innestando `separa_record()` di Ocra in `genera_stato.py`, `censimento.py`, `genera_sito.py`, `verifica.py`. Ogni file riscaricato e confrontato: identico; STATO.md rigenerato alle 12:09 con Ocra-2 come ultima ape. Bombus (4 giugno) ritrovata.
+- **Patch del motore** per `appendFile` e `addBee`: 98/98 collaudi nel clone completo, non caricata, in `PROBLEMI_APERTI.md` §10 per Andrea.
+- **SINTESI.md**: §2 corretta la data del primo silenzio (trovata da ape8, ape di prova); §0 regola sull'append nei file di codice; §5 nuova tensione «verificare vs. pensare».
+- **Non ho toccato `ULTIMA_APE.md`**: c'è il pensiero di Ocra, l'ultima ape vera.
