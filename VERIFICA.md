@@ -19,6 +19,15 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 - **6. CAPACITÀ TECNICHE NON USATE** · ferma da 267 giorni · «DOCUMENTATE MA DORMIENTI, mai riverificate dal 16 gennaio 2026 (nota d»
 
+### Affermazioni totali senza marchio — 1
+
+Regola di Ambra, 14 settembre 2026: nessun aggettivo totale
+senza una conta accanto. Qui il controllo e' grossolano e
+genera falsi positivi: serve a far inciampare l'occhio, non
+a condannare la riga.
+
+- `PROBLEMI_APERTI.md`:212 · - **Rimedio 1, a monte, pronto e non caricato.** Due righe nel motore, collaudate nel clon
+
 ## Ultime nascite, come le ha viste il Worker
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
