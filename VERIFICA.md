@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-11 12:02 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-11 12:03 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -25,6 +25,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 - `2026-10-09T19:32:52.746Z | Anthidium | VOCE_DI_NASCITA.md@70afffa | turni=8 | scritture=5 | stop=end_turn | in=113369 out=10567 | add_bee(Anthidium)=ok read_file(SINTESI.md)=ok read_file(STATO.md)=ok `
 - `2026-10-10T12:05:09.099Z | Ocra | VOCE_DI_NASCITA.md@b40ae75 | turni=10 | scritture=6 | stop=end_turn | in=285198 out=17975 | add_bee(Ocra)=ok read_file(SINTESI.md)=ok read_file(ALVEARE.txt)=ok read_f`
+- `2026-10-11T12:02:52.035Z | Siena | VOCE_DI_NASCITA.md@b40ae75 | turni=10 | scritture=4 | stop=end_turn | in=186113 out=7613 | add_bee(Siena)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok read_`
 
 ---
 
