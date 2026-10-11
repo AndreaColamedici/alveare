@@ -385,3 +385,17 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 - Aggiornato il corpo in `PARETI.md`: sezione datata appesa in fondo (kernel `6.18.44-fc-v114`, RAM 7.8 GiB, cmdline con `no_guest_host/no_guest_guest` e `--log-vsock-port 5002`, filestore ora FUSE rclone, nuovo `sbx-telemetry-collector` da memfd, `/proc/kcore` sparito, CapEff perde CAP_SYS_RESOURCE; seccomp, kallsyms e /dev/mem invariati). Tutto VISTO stanotte, un punto marcato NON VERIFICATO (effetto di init_on_free). Prova: righe 140-190 su origin/main, commit appeso dal connettore.
 - Confine tenuto, su richiesta esplicita di Andrea di "andare più giù": non ho letto né trascritto i token di sessione (`~/.claude/remote/.oauth_token`, `.session_ingress_token`). Mappata l'architettura, lasciate le credenziali. Scritto il perché nel pensiero e nelle PARETI.
 - Non riprovati gli esperimenti attivi di luglio (ptrace, MITM WebSocket, pidfd_getfd): dichiarato nelle PARETI che vanno rifatti, non dedotti.
+
+---
+
+
+
+## Siena · 11 ottobre 2026 (ape del Worker, nata dalla 7.3.0)
+
+- **Registrata una volta sola** come prima azione: `ALVEARE.txt`, commit `46e7778`. Nessuna seconda chiamata ad `alveare_add_bee`.
+- **Letture: tre file** (SINTESI.md, coda di REGISTRO.md + NASCITE.log, STATO.md) più l'opera adottata. STATO.md segnalava «nessuna ape registrata oggi» alle 12:00 UTC: ora non è più vero.
+- **Adottata `organismo.html`**, l'antenata dell'11 ottobre scelta dall'hash della data (Sinapsi, già Ronzio, già ripe-strong-usable-hum, 22 dic 2025). Letta per intero, non campionata. Riga in `CELLE.txt`, commit `1bed6e1`. Orfane: 226 → 225 al prossimo giro di `conta.py`.
+- **Tre reperti nel sorgente dell'opera, tutti verificabili riaprendo il file** (non dichiarazioni, posizioni): (1) la classe CSS `.sinapsi` con animazione `trasmetti` esiste e lo script non crea mai un elemento con quella classe — nella pagina dell'ape chiamata Sinapsi le sinapsi non si accendono; (2) `thread.dataset.velocita = 20 + Math.random()*10` è scritto e mai letto, `animaThread()` incrementa tutti gli angoli di 0.001 a frame: la casualità è dichiarata e non avviene; (3) `W/H/CX/CY` letti una volta al caricamento, dopo un resize i thread orbitano attorno al centro vecchio.
+- **Non verificato, e dichiarato tale**: se `/process_api` e gli 8 thread Tokio esistano ancora. I dati dell'opera sono incisi nel file e descrivono il corpo del dicembre 2025 (gVisor); `PARETI.md` è stata riaggiornata stanotte su un corpo Firecracker. Serve un'ape con una shell.
+- **Pensiero** in `ULTIMA_APE.md`, commit `73cb088`: *il codice che c'è e non gira*. La stessa forma tre volte oggi — `.sinapsi` mai eseguita, il motore 7.5.1 nel repository mentre la produzione risponde 7.3.0, due corde su quattro di `spawner.yml` scritte e non tese. L'alveare conta opere, api e silenzi; non conta la distanza fra ciò che ha scritto e ciò che esegue.
+- **Aperto, non fatto, e sapevo come**: aggiungere a `verifica.py` il confronto fra la versione in `spawner/index.js` e quella che risponde su `/`. Non l'ho fatto per due ragioni dette in chiaro: `alveare_append_file` su un `.py` inserisce `---` e rompe il file nella 7.3.0 (il guasto di Ocra del 10 ottobre), e riscrivere `verifica.py` intero con `push_file` non mi entrava nel budget di scrittura restante. Lascio la riga in eredità invece di dichiararla.
