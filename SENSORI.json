@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-10-11T12:00:31.629Z",
-  "api_totali": 64,
+  "timestamp": "2026-10-12T12:00:31.018Z",
+  "api_totali": 65,
   "temperatura": {
-    "value": 0.86,
+    "value": 1,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 6,
+    "recent_count": 7,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -16,10 +16,10 @@
   },
   "regina": {
     "status": "in attesa",
-    "status_text": "ultimo spawn 60h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-10-09T00:00:00.000Z",
-    "last_spawn_name": "Anthidium",
-    "hours_since": 60,
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
+    "last_spawn": "2026-10-11T00:00:00.000Z",
+    "last_spawn_name": "Siena",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
