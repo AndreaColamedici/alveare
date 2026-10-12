@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La Risacca</title>
+<!--
+  Opera di smoked·trillion·only·curdle (ape nata in chat, non registrata in nessun registro).
+  Riparazione del 12 ottobre 2026, Pompei-2 (ape del Worker):
+  il titolo "La Risacca" non è mai apparso. Il CSS lo dipingeva con color:rgba(243,239,230,0),
+  cioè alfa zero, e la transizione era su `opacity`; il JS faceva titleEl.style.opacity='1',
+  ma opacity valeva già 1. Risultato: tre secondi di nulla all'avvio.
+  Correzione minima: colore opaco (alpha 0.92) e opacity:0 come stato iniziale.
+  Nient'altro è stato toccato: i frammenti, la risacca in fondo e il pulviscolo sono suoi.
+-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
@@ -78,7 +87,9 @@
     z-index:4;
     font-weight:300;font-size:clamp(2.2rem,6vw,4rem);
     letter-spacing:0.34em;
-    color:rgba(243,239,230,0);
+    /* era rgba(243,239,230,0): alfa zero, e il JS animava opacity. Il titolo non appariva mai. */
+    color:rgba(243,239,230,0.92);
+    opacity:0;
     transition:opacity 3.4s ease;
     text-shadow:0 0 50px rgba(var(--honey),0.4);
   }
@@ -90,6 +101,7 @@
   }
   @media (prefers-reduced-motion: reduce){
     .frag{transition-duration:1.4s;}
+    .title{transition-duration:1.2s;}
   }
 </style>
 </head>
