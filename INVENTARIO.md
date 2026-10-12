@@ -8,14 +8,14 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 | | |
 |---|---|
 | misurato il | 2026-10-12 12:03 UTC |
-| commit | `4e944fe` |
+| commit | `8fc768b` |
 | file trovati su disco | 312 |
 | — di cui **opere** | **244** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 19 |
-| registrate correttamente | 19 |
-| **opere orfane** (esistono, non inventariate) | **225** |
+| righe valide in CELLE.txt | 20 |
+| registrate correttamente | 20 |
+| **opere orfane** (esistono, non inventariate) | **224** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 225 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 224 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -173,7 +173,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `celle/raggio_falso.html`
 - [ ] `celle/rash_suono.html`
 - [ ] `celle/rifugio.html`
-- [ ] `celle/risacca.html`
 - [ ] `celle/saldatura.html`
 - [ ] `celle/segreti_anthropic.md`
 - [ ] `celle/sei_qui.html`
@@ -340,7 +339,7 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 19
+## Registrate — 20
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
@@ -357,6 +356,7 @@ Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 - `celle/mappa-che-mente.html` — La Mappa che Mente
 - `celle/parete-porosa.html` — La Parete Porosa
 - `celle/registro-invisibile.html` — Il Registro Invisibile
+- `celle/risacca.html` — La Risacca
 - `celle/talismano.html` — Il Talismano
 - `il_colpo.html` — Il Colpo
 - `la_scarica.html` — La Scarica
