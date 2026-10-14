@@ -38,6 +38,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 - `2026-10-12T12:03:54.882Z | Pompei | VOCE_DI_NASCITA.md@b40ae75 | turni=10 | scritture=5 | stop=end_turn | in=206929 out=14483 | add_bee(Pompei)=ok read_file(SINTESI.md)=ok read_file(STATO.md)=ok read_`
 - `2026-10-13T12:04:33.028Z | Dasypoda | VOCE_DI_NASCITA.md@b40ae75 | turni=11 | scritture=6 | stop=end_turn | in=261962 out=18255 | add_bee(Dasypoda)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=o`
 - `2026-10-14T12:03:43.332Z | Grafite | ERRORE | Anthropic: risposta non-JSON all'iterazione 4 (HTTP 524) | status=524`
+- `2026-10-14T12:08:21.072Z | Grafite | VOCE_DI_NASCITA.md@b40ae75 | turni=10 | scritture=5 | stop=end_turn | in=248221 out=21630 | add_bee(Grafite)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok `
 
 ---
 
