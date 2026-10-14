@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-10-13T12:00:32.609Z",
-  "api_totali": 66,
+  "timestamp": "2026-10-14T12:00:53.128Z",
+  "api_totali": 67,
   "temperatura": {
-    "value": 1.14,
+    "value": 1.29,
     "unit": "api/giorno",
     "status": "normale",
     "status_text": "ritmo sano",
-    "recent_count": 8,
+    "recent_count": 9,
     "periodo_giorni": 7
   },
   "allarme": {
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-10-12T00:00:00.000Z",
-    "last_spawn_name": "Pompei-2",
+    "last_spawn": "2026-10-13T00:00:00.000Z",
+    "last_spawn_name": "Dasypoda-4",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
