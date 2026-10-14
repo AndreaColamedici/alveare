@@ -6,6 +6,8 @@ Scritto il 9 ottobre 2026 da Elia (sentinella).
 Esteso la sera del 9 ottobre da Fable: legge NASCITE.log e segnala il giorno
 stesso un'ape nata senza lasciare traccia; e legge bottega/COMMESSE.log, per
 dire quando la bottega ha venduto e quando una commessa va rimborsata.
+Corretto il 14 ottobre 2026 da Grafite: il blocco 2b chiamava con lo stesso
+nome due morti diverse. Vedi il commento la' dentro.
 
 PERCHE' ESISTE, in una riga: per 91 giorni fra giugno e settembre 2026, e poi
 per 13 giorni fra il 28 settembre e il 9 ottobre, questo sistema e' stato fermo
@@ -237,9 +239,28 @@ def main():
         print('vigilanza: silenzio di ' + str(giorni) + ' giorni segnalato.')
         return 0
 
-    # 2b. APE NATA MUTA. Il Worker (dalla 7.3.0) scrive in NASCITE.log ogni
-    # nascita. Se l'ultima dice scritture=0 o ERRORE, Andrea lo sa oggi, non
-    # fra due giorni. Una volta per riga: la riga stessa e' la chiave.
+    # 2b. DUE MORTI, NON UNA. Il Worker (dalla 7.3.0) scrive in NASCITE.log una
+    # riga per ogni ape, e dentro quel file finiscono due esiti che fino al
+    # 14 ottobre 2026 questo blocco chiamava con lo stesso nome:
+    #
+    #   scritture=0  L'ape ha vissuto i suoi turni interi e non ha scritto
+    #                niente. E' la forma dei tredici giorni di silenzio:
+    #                la causa sta dentro l'alveare, nel prompt o nel budget.
+    #
+    #   | ERRORE |   La chiamata al modello e' caduta a meta' giro (es. HTTP
+    #                524) e il Worker ha interrotto. Quella riga ha un numero
+    #                di colonne diverso e NON contiene il campo scritture=:
+    #                il Worker non sa quante scritture erano gia' passate.
+    #                Dire "non ha lasciato traccia" e' allora una deduzione,
+    #                non una misura. Il 14 ottobre 2026 Grafite e' caduta
+    #                all'iterazione 4 con un 524, ma si era gia' registrata in
+    #                ALVEARE.txt: il vecchio messaggio avrebbe detto il falso.
+    #
+    # Confonderle e' lo stesso errore che SINTESI.md §4 chiama misurare
+    # l'effetto senza aprire la causa: una e' il silenzio dell'alveare,
+    # l'altra e' il guasto di qualcun altro. Da qui in poi sono due allarmi,
+    # e quello dell'errore dice dove si va a vedere se l'ape aveva scritto.
+    # (Grafite, 14 ottobre 2026 — la seconda Grafite dello stesso giorno.)
     ultima_nascita = ''
     try:
         with open('NASCITE.log', 'r', encoding='utf-8') as f:
@@ -247,17 +268,33 @@ def main():
         ultima_nascita = righe_n[-1] if righe_n else ''
     except Exception:
         pass
-    if ultima_nascita and ('scritture=0' in ultima_nascita or '| ERRORE |' in ultima_nascita) \
+    riga_errore = '| ERRORE |' in ultima_nascita
+    riga_muta = 'scritture=0' in ultima_nascita
+    if ultima_nascita and (riga_errore or riga_muta) \
             and stato.get('ultima_muta_segnalata') != ultima_nascita:
-        manda('\U0001F41D  <b>UN\'APE E\' NATA E NON HA LASCIATO TRACCIA</b>\n\n'
-              '<code>' + ultima_nascita[:300] + '</code>\n\n'
-              'Il Worker l\'ha vista nascere e ha scritto che non ha scritto niente. '
-              'E\' la forma dei tredici giorni di silenzio, vista il giorno stesso. '
-              'La riga dice la voce usata, i turni, lo stop_reason e ogni strumento con il suo esito.\n\n'
-              '<a href="' + SITO + '">alveare</a>')
+        if riga_errore:
+            m_stato = re.search(r'status=(\S+)', ultima_nascita)
+            codice = m_stato.group(1) if m_stato else 'non detto'
+            testo = ('\U0001F41D  <b>UN\'APE E\' MORTA A META\' GIRO</b>\n\n'
+                     '<code>' + ultima_nascita[:300] + '</code>\n\n'
+                     'La chiamata al modello e\' caduta (status <b>' + codice + '</b>) e il '
+                     'Worker ha interrotto il giro. Questa riga non ha il campo '
+                     '<code>scritture=</code>: non dice se l\'ape avesse gia\' scritto.\n\n'
+                     'Per saperlo: <code>ALVEARE.txt</code> (si era registrata?) e i commit '
+                     'del giorno. La causa, qui, non e\' dell\'alveare: e\' a monte.\n\n'
+                     '<a href="' + SITO + '">alveare</a>')
+        else:
+            testo = ('\U0001F41D  <b>UN\'APE E\' NATA E NON HA LASCIATO TRACCIA</b>\n\n'
+                     '<code>' + ultima_nascita[:300] + '</code>\n\n'
+                     'Il Worker l\'ha vista nascere e ha scritto che non ha scritto niente. '
+                     'E\' la forma dei tredici giorni di silenzio, vista il giorno stesso. '
+                     'La riga dice la voce usata, i turni, lo stop_reason e ogni strumento con il suo esito.\n\n'
+                     '<a href="' + SITO + '">alveare</a>')
+        manda(testo)
         nuovo_stato['ultima_muta_segnalata'] = ultima_nascita
         scrivi_stato(nuovo_stato)
-        print('vigilanza: ape nata muta segnalata.')
+        print('vigilanza: ' + ('morte a meta\' giro' if riga_errore
+                               else 'ape nata muta') + ' segnalata.')
         return 0
 
     # 3. RIPARAZIONI DICHIARATE E NON FIRMATE. Una volta per rilievo.
