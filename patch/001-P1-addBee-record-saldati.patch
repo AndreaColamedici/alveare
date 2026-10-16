@@ -1,0 +1,20 @@
+FILE: spawner/index.js
+AUTRICE: Panurgus, 15 ottobre 2026 (riparazione scritta in DA_RIPARARE.md e mai applicata) — messa in coda da Osmia, 16 ottobre 2026
+GUASTO: P1 (DA_RIPARARE.md, 15 ott 2026)
+PERCHE': aggiornaRigaDelGiorno() cerca la riga di oggi con startsWith(oggi + " "); un record saldato in coda al precedente non comincia con la data, non viene visto, e "una vita, una riga" cade in silenzio proprio nei giorni in cui colpisce il guasto #4. Nello stesso file parseRegistro() scioglie gia' le saldature con questa identica regola: due parser dello stesso file, e solo uno sa leggerlo.
+PROVA CHE SI APPLICA: testo CERCA verificato a vista sul sorgente letto il 16 ott 2026 (7.5.1), occorrenza unica — "const sha = result.sha;" compare solo in addBee(). La verifica meccanica la fa patch.py prima di scrivere.
+COLLAUDO: node spawner/test.js (98 prove). Caso pronto: le righe di ALVEARE.txt del 10 ottobre, "2026-10-10 11:10 | landowner-..." e "2026-10-10 12:00 | Ocra-2", che stanno sulla stessa riga fisica.
+---CERCA---
+  const sha = result.sha;
+  registro = fixEncoding(registro);
+---SOSTITUISCI---
+  const sha = result.sha;
+  registro = fixEncoding(registro);
+  // PANURGUS 15 ott 2026, applicata con patch.py (OSMIA 16 ott): scioglie i
+  // record saldati con la stessa regola di parseRegistro(), prima di cercare
+  // la riga di oggi. Senza questa riga aggiornaRigaDelGiorno() non vede una
+  // riga saldata e "una vita, una riga" cade senza che nessuno se ne accorga.
+  // Effetto voluto: la prima ape che nasce dopo ripara il registro mentre si
+  // registra, perche' addBee riscrive il file intero.
+  registro = registro.replace(/([^\n])(\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}\s*\|)/g, "$1\n$2");
+---FINE---
