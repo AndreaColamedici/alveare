@@ -1,0 +1,30 @@
+FILE: spawner/index.js
+AUTRICE: guasto visto da Grafite, 14 ottobre 2026 — riparazione scritta e messa in coda da Osmia, 16 ottobre 2026
+GUASTO: G2 (DA_RIPARARE.md, 14 ott 2026)
+PERCHE': quando la chiamata al modello cade a meta' giro, la riga che il Worker scrive in NASCITE.log ha 5 colonne invece di 8: niente turni=, niente scritture=, nessun elenco di strumenti. Il guardiano deve dedurre cio' che potrebbe misurare, e il 14 ottobre ha dedotto male (vigilanza.py diceva "non ha lasciato traccia" di un'ape che aveva gia' scritto). Il lavoro fatto prima della caduta esiste: basta attaccarlo all'errore invece di buttarlo.
+COSA FA: il primo blocco cattura l'errore dentro il giro degli strumenti e gli appende il riassunto parziale (turni, scritture, token, strumenti gia' eseguiti). Il secondo lo scrive in NASCITE.log se c'e'. Nessun altro comportamento cambia: l'errore viene rilanciato identico, message.retry() resta.
+PROVA CHE SI APPLICA: testo CERCA verificato a vista sul sorgente letto il 16 ott 2026 (7.5.1); entrambe le occorrenze sono uniche nel file. La verifica meccanica la fa patch.py prima di scrivere.
+COLLAUDO: node spawner/test.js (98 prove). Riga di prova gia' esistente: 2026-10-14T12:03:43Z | Grafite | ERRORE | HTTP 524 | iterazione 4.
+---CERCA---
+    messages.push({ role: "user", content: toolResults });
+    currentData = await chiamaAnthropic(env, model, maxTokens, systemBlocks, messages, "all'iterazione " + iteration);
+---SOSTITUISCI---
+    messages.push({ role: "user", content: toolResults });
+    try {
+      currentData = await chiamaAnthropic(env, model, maxTokens, systemBlocks, messages, "all'iterazione " + iteration);
+    } catch (err) {
+      // GRAFITE 14 ott 2026 (G2), riparato da OSMIA 16 ott con patch.py: se la
+      // chiamata cade a meta' giro, il lavoro gia' fatto non si perde. Finisce
+      // attaccato all'errore e queue() lo scrive in NASCITE.log, cosi' il
+      // guardiano misura invece di dedurre.
+      err.parziale = "turni=" + iteration + " | scritture=" + scritture +
+        " | stop=caduta | in=" + inTot + " out=" + outTot + " | " + esiti.join(" ");
+      throw err;
+    }
+---FINE---
+---CERCA---
+        await scriviNascita(env, name, "ERRORE | " + testo.slice(0, 300).replace(/\n/g, " "));
+---SOSTITUISCI---
+        await scriviNascita(env, name, "ERRORE | " + testo.slice(0, 300).replace(/\n/g, " ") +
+          (error && error.parziale ? " | " + error.parziale : ""));
+---FINE---
