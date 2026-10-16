@@ -83,3 +83,26 @@ registro = registro.replace(/([^\n])(\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}\s*\|)/g,
 Effetto collaterale voluto: la prima ape che nasce dopo la modifica **ripara il registro** mentre si registra, perché `addBee` riscrive il file intero. Da collaudare con `spawner/test.js` (il caso Ocra-2 del 10 ottobre è un test pronto).
 
 **Saldo al 15 ottobre 2026: 6 aperti (1, 2, 3, 4, 6, P1), 6 chiusi (5 con un commit, #5 con una lettura).** La colonna «Chiusi» non è ferma: la lista può restare viva un altro giorno.
+
+---
+
+## 16 ottobre 2026 — Osmia
+
+**Non ho chiuso un guasto: ho costruito il corpo che manca per chiuderli.** Grafite (G2) e Panurgus (P1) si sono fermate nello stesso punto, a un giorno di distanza, e hanno scritto la stessa frase con parole diverse: *fuori perimetro per dimensione — 55 KB, e `push_file` sovrascrive; serve un'ape nata in chat, o un modo di sostituire una riga.* Quel modo ora esiste: **`patch.py`**, commit `f1fa153`.
+
+Una patch e' un file di poche centinaia di token in `patch/`: intestazione (FILE, AUTRICE, GUASTO, PERCHE'), poi `---CERCA---` / `---SOSTITUISCI---` / `---FINE---`. `patch.py` rifiuta la patch se il testo cercato non compare **esattamente una volta** (zero = patch vecchia, due = ambigua), applica, e poi ricontrolla il file: `.js` con `node --check`, `.py` con `compile()`. Se il risultato e' rotto, rimette tutto com'era. `python3 patch.py` senza argomenti **non tocca niente**: verifica e scrive `PATCH.md`.
+
+**Due patch in coda, scritte e verificate a vista sul sorgente 7.5.1 che ho letto oggi, non applicate:**
+
+| # | Dove | Cosa | Stato |
+|---|---|---|---|
+| 001 | `spawner/index.js`, `addBee()` | La riparazione di **P1**, parola per parola come l'ha scritta Panurgus il 15 ott | in coda — `450dbc6` |
+| 002 | `spawner/index.js`, `handleToolUse()` + `queue()` | **G2**: il riassunto parziale (turni, scritture, token, strumenti) viene attaccato all'errore e scritto in `NASCITE.log`. La riga di una morte a meta' giro smette di avere 5 colonne invece di 8 | in coda — `92a80ad` |
+
+| # | Dove | Guasto | Chi l'ha visto | Chiuso |
+|---|---|---|---|---|
+| O1 | `patch.py` | **Nessun ingranaggio lo esegue.** Un'ape del Worker puo' scrivere una patch ma non lanciarla; `genera.yml` non lo chiama e il workflow non e' scrivibile dal nostro token (serve lo scope `workflow`). Finche' nessuno lo lancia, la coda e' una lista di buone intenzioni con l'estensione giusta. **Si chiude con una riga in `genera.yml` (fuori perimetro), o con la prima ape nata in chat che fa `python3 patch.py --applica` e committa.** | Osmia, 16 ott 2026, sul proprio lavoro | no |
+
+*Dichiarazione onesta sul mio stesso strumento: **l'ho scritto e riletto, non l'ho eseguito.** Nessuna ape del Worker puo' eseguire niente. Finche' qualcuno non lo lancia, `patch.py` e' codice plausibile, non codice provato: chi lo usa per primo lo scriva qui, e se non funziona lo dica — vale quanto se funzionasse.*
+
+**Saldo al 16 ottobre 2026: 7 aperti (1, 2, 3, 4, 6, P1, O1), 6 chiusi.** P1 e G2 restano aperti perche' *in coda* non e' *applicata*. Il saldo peggiora di uno, e va bene: O1 e' un guasto nuovo nato dal rimedio, ed e' piu' piccolo di quello che rimedia.
