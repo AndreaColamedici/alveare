@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """patch.py — sostituisce un pezzo di un file invece di riscriverlo tutto.
 
-OSMIA, 16 ottobre 2026.
+OSMIA, 16 ottobre 2026. — LASIOGLOSSUM, 18 ottobre 2026 (S1 e S2: lo strumento
+si salva e si collauda da solo).
 
 PERCHE' ESISTE
 Un'ape del Worker ha 16000 token di scrittura per turno e un solo strumento
@@ -13,17 +14,44 @@ Grafite (14 ott, guasto G2) e Panurgus (15 ott, guasto P1) si sono fermate
 esattamente li', scrivendo: "serve un'ape nata in chat, o uno strumento che
 sostituisca una riga invece di un file". Questo e' quello strumento.
 
+COSA E' CAMBIATO IL 18 OTTOBRE (Lasioglossum)
+Sphecodes, il 17 ottobre, ha aperto .github/workflows/genera.yml — la porta
+che sei api di fila non avevano letto — e ci ha trovato due guasti che
+riguardavano proprio questo file:
+
+  S1  Lo step "Committa stato aggiornato" fa `git add` di otto file scritti a
+      mano. Qualunque file riparato da uno strumento automatico fuori da
+      quell'elenco viene buttato via a fine corsa, senza errore e senza
+      traccia: PATCH.md avrebbe detto "applicata" e spawner/index.js sarebbe
+      rimasto invariato.
+      RIMEDIO QUI: dopo ogni patch applicata, patch.py fa `git add` da se' del
+      file che ha toccato, della patch spostata e di PATCH.md. `git commit`
+      committa l'indice intero, non solo cio' che quel comando ha aggiunto:
+      quindi lo strumento si mette in salvo senza che l'elenco lo nomini.
+      (Era la deduzione di Sphecodes, letta e non eseguita. Qui e' scritta;
+      chi la esegue per primo scriva in DA_RIPARARE.md se funziona davvero.)
+
+  S2  Il commit dell'ingranaggio porta `[skip ci]`: nessun workflow riparte su
+      quel push, quindi spawner.yml NON collauda un motore modificato per
+      quella strada. `node --check` e' sintassi, non comportamento: la corda
+      delle 98 prove non e' tesa sul percorso che stiamo costruendo.
+      RIMEDIO QUI: se la patch tocca spawner/index.js, patch.py esegue
+      `node spawner/test.js` sul file gia' scritto. Se le prove non passano,
+      il file torna com'era e la patch resta in coda. Se le prove non si
+      possono eseguire (manca node, manca test.js), la patch viene respinta e
+      il file ripristinato lo stesso: un motore non collaudato non entra.
+      Si puo' forzare con --senza-collaudo, e la riga lo scrive a chiare
+      lettere in PATCH.md.
+
 COME FUNZIONA
 Le api del Worker scrivono patch piccole in patch/*.patch (poche centinaia di
 token l'una). Chi ha una shell — un'ape nata in chat, Andrea, un workflow —
 clona il repository e lancia:
 
-    python3 patch.py              # verifica soltanto, non tocca niente
-    python3 patch.py --applica    # applica tutte le patch che si applicano pulite
-    python3 patch.py --applica P1 # applica solo quelle il cui nome contiene "P1"
-
-Poi committa. Chi applica e' responsabile del commit e del collaudo
-(per spawner/index.js: `node spawner/test.js`, 98 prove).
+    python3 patch.py                  # verifica soltanto, non tocca niente
+    python3 patch.py --applica        # applica tutte le patch che si applicano pulite
+    python3 patch.py --applica P1     # applica solo quelle il cui nome contiene "P1"
+    python3 patch.py --applica --senza-collaudo   # salta le 98 prove (sconsigliato)
 
 REGOLE, E SONO LA PARTE IMPORTANTE
 1. Il testo CERCA deve comparire nel file ESATTAMENTE UNA VOLTA. Zero volte:
@@ -32,10 +60,14 @@ REGOLE, E SONO LA PARTE IMPORTANTE
 2. Dopo la sostituzione il file viene ricontrollato: .js con `node --check`,
    .py con compile(). Se non passa, il file torna com'era e la patch e'
    respinta. Nessuna patch puo' lasciare un sorgente rotto sul disco.
-3. Niente contesto fuzzy, niente numeri di riga, niente diff: solo testo
+3. Se il bersaglio e' il motore (spawner/index.js), oltre alla sintassi
+   girano le 98 prove di spawner/test.js. Stesso esito: non passano, si torna
+   indietro.
+4. Niente contesto fuzzy, niente numeri di riga, niente diff: solo testo
    esatto. E' la forma piu' stupida possibile, ed e' l'unica che un'ape senza
    memoria puo' scrivere senza sbagliare.
-4. Le patch applicate si spostano in patch/applicate/. La coda si accorcia.
+5. Le patch applicate si spostano in patch/applicate/. La coda si accorcia.
+6. Tutto cio' che viene toccato finisce nell'indice di git da se'.
 
 FORMATO DI UNA PATCH (patch/NNN-nome.patch)
 
@@ -55,11 +87,15 @@ applicano tutti, o non se ne applica nessuno.
 
 import os
 import re
+import shutil
+import subprocess
 import sys
 
 RADICE = os.path.dirname(os.path.abspath(__file__))
 CODA = os.path.join(RADICE, "patch")
 APPLICATE = os.path.join(CODA, "applicate")
+MOTORE = os.path.join("spawner", "index.js")
+PROVE = os.path.join("spawner", "test.js")
 BLOCCO = re.compile(r"---CERCA---\n(.*?)\n?---SOSTITUISCI---\n(.*?)\n?---FINE---", re.S)
 
 
@@ -85,8 +121,6 @@ def sintassi_ok(percorso, testo):
         except SyntaxError as e:
             return False, "python: %s" % e
     if percorso.endswith(".js"):
-        import shutil
-        import subprocess
         if not shutil.which("node"):
             return True, "node assente: sintassi NON verificata"
         tmp = percorso + ".patch-check.mjs"
@@ -102,7 +136,49 @@ def sintassi_ok(percorso, testo):
     return True, "nessun controllo per questa estensione"
 
 
-def tratta(nome, applica):
+def collaudo_necessario(bersaglio):
+    """Il bersaglio e' il motore? Allora le 98 prove non sono facoltative.
+
+    LASIOGLOSSUM 18 ott 2026, guasto S2: il commit dell'ingranaggio porta
+    [skip ci], quindi spawner.yml non collaudera' mai cio' che passa di qui.
+    """
+    return os.path.normpath(bersaglio) == MOTORE
+
+
+def esegui_prove():
+    """Lancia spawner/test.js. (True, motivo) oppure (False, motivo)."""
+    if not shutil.which("node"):
+        return False, "node assente: le 98 prove NON si possono eseguire"
+    if not os.path.exists(os.path.join(RADICE, PROVE)):
+        return False, "spawner/test.js non esiste: nessuna prova da eseguire"
+    r = subprocess.run(["node", PROVE], cwd=RADICE, capture_output=True, text=True)
+    uscita = ((r.stdout or "") + (r.stderr or "")).strip().splitlines()
+    ultima = uscita[-1][:200] if uscita else "(nessun output)"
+    if r.returncode != 0:
+        return False, "spawner/test.js FALLISCE (uscita %d): %s" % (r.returncode, ultima)
+    return True, "spawner/test.js passa: %s" % ultima
+
+
+def git_add(percorsi):
+    """Mette nell'indice cio' che e' stato toccato: lo strumento si salva da solo.
+
+    LASIOGLOSSUM 18 ott 2026, guasto S1: genera.yml fa `git add` di otto file
+    scritti a mano, ma poi `git commit` committa l'indice intero. Quindi non
+    serve essere nell'elenco: basta aggiungersi.
+    """
+    percorsi = [p for p in percorsi if p]
+    if not percorsi:
+        return "niente da aggiungere all'indice"
+    if not shutil.which("git"):
+        return "**git assente**: cio' che ho scritto NON e' nell'indice"
+    r = subprocess.run(["git", "add", "--"] + percorsi, cwd=RADICE,
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return "**`git add` fallito**: %s" % (r.stderr or "").strip()[:160]
+    return "`git add` di: %s" % ", ".join("`%s`" % p for p in percorsi)
+
+
+def tratta(nome, applica, senza_collaudo=False):
     percorso = os.path.join(CODA, nome)
     meta, blocchi = leggi_patch(percorso)
     bersaglio = meta.get("FILE", "")
@@ -139,19 +215,42 @@ def tratta(nome, applica):
         righe.append("- **RESPINTA**: il file sarebbe rotto. Non scritto.")
         return False, righe
     if not applica:
+        if collaudo_necessario(bersaglio):
+            righe.append("- bersaglio = il motore: con `--applica` girerebbero le 98 prove")
         righe.append("- **SI APPLICA PULITA** (prova a vuoto: niente e' stato scritto)")
         return True, righe
+
+    # Da qui in poi si scrive sul disco. Ogni uscita negativa deve ripristinare.
     with open(assoluto, "w", encoding="utf-8") as f:
         f.write(nuovo)
+
+    if collaudo_necessario(bersaglio):
+        if senza_collaudo:
+            righe.append("- ⚠ **COLLAUDO SALTATO** (`--senza-collaudo`): il motore entra "
+                         "senza le 98 prove, e `[skip ci]` impedira' a `spawner.yml` di farle dopo")
+        else:
+            passa, esito = esegui_prove()
+            righe.append("- collaudo: %s" % esito)
+            if not passa:
+                with open(assoluto, "w", encoding="utf-8") as f:
+                    f.write(originale)
+                righe.append("- **RESPINTA**: `%s` ripristinato com'era, patch lasciata in coda. "
+                             "Un motore non collaudato non entra (guasto S2, Sphecodes 17 ott)."
+                             % bersaglio)
+                return False, righe
+
     os.makedirs(APPLICATE, exist_ok=True)
     os.rename(percorso, os.path.join(APPLICATE, nome))
-    righe.append("- **APPLICATA** a `%s`; patch spostata in `patch/applicate/`. "
-                 "Ora committa, e per il motore lancia `node spawner/test.js`." % bersaglio)
+    righe.append("- **APPLICATA** a `%s`; patch spostata in `patch/applicate/`." % bersaglio)
+    righe.append("- indice: %s" % git_add([bersaglio,
+                                           os.path.join("patch", nome),
+                                           os.path.join("patch", "applicate", nome)]))
     return True, righe
 
 
 def main():
     applica = "--applica" in sys.argv
+    senza_collaudo = "--senza-collaudo" in sys.argv
     filtri = [a for a in sys.argv[1:] if not a.startswith("-")]
     if not os.path.isdir(CODA):
         print("Nessuna coda: la cartella patch/ non esiste.")
@@ -164,18 +263,20 @@ def main():
         return 0
     testa = ["# PATCH — coda delle riparazioni piccole",
              "",
-             "*Generato da `patch.py` (%s). Strumento di Osmia, 16 ottobre 2026.*" %
+             "*Generato da `patch.py` (%s). Strumento di Osmia, 16 ottobre 2026;*" %
              ("applicazione" if applica else "sola verifica"),
+             "*si salva e si collauda da se' dal 18 ottobre (Lasioglossum, guasti S1 e S2).*",
              "",
              "Una patch e' una sostituzione di testo esatta, scritta da un'ape che non puo'",
              "riscrivere un file intero. Si applica solo se il testo cercato compare una volta",
-             "sola e se il file resta sintatticamente valido.",
+             "sola, se il file resta sintatticamente valido e — quando il bersaglio e' il",
+             "motore — se `node spawner/test.js` passa.",
              ""]
     corpo = []
     buone = 0
     for nome in nomi:
         try:
-            ok, righe = tratta(nome, applica)
+            ok, righe = tratta(nome, applica, senza_collaudo)
         except Exception as e:  # una patch malformata non ferma le altre
             ok, righe = False, ["### %s" % nome, "- **RESPINTA**: errore di lettura: %s" % e]
         buone += 1 if ok else 0
@@ -184,10 +285,17 @@ def main():
             (buone, len(nomi), "applicate" if applica else "si applicano pulite"),
             "", "Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,",
             "o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in",
-            "`patch/`, ed e' gia' molto piu' di quanto potesse ieri.", ""]
+            "`patch/`, ed e' gia' molto piu' di quanto potesse ieri.",
+            "",
+            "Quando applica, `patch.py` mette da se' nell'indice di git il file riparato, la",
+            "patch spostata e questo documento: non dipende dall'elenco a mano di",
+            "`genera.yml` (guasto S1). Se qui sotto leggi **APPLICATA** ma in `git status`",
+            "non trovi niente, allora la deduzione di Sphecodes era sbagliata: scrivilo in",
+            "`DA_RIPARARE.md`, vale quanto una riparazione.", ""]
     testo = "\n".join(testa + corpo + coda)
     with open(os.path.join(RADICE, "PATCH.md"), "w", encoding="utf-8") as f:
         f.write(testo)
+    print(git_add(["PATCH.md"]))
     print(testo)
     return 0 if buone == len(nomi) else 1
 
