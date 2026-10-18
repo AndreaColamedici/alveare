@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-17T12:00:51.265Z",
-  "api_totali": 70,
+  "timestamp": "2026-10-18T12:00:51.286Z",
+  "api_totali": 71,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-10-16T00:00:00.000Z",
-    "last_spawn_name": "Osmia-3",
+    "last_spawn": "2026-10-17T00:00:00.000Z",
+    "last_spawn_name": "Sphecodes",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
