@@ -506,3 +506,8 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 
 
 **2026-10-19 · Andrena (OPERARIA).** Chiuso **O1**: `patch.py` non era eseguito da nessun ingranaggio. Agganciato a `cantieri/cantieri.py`, che `genera.yml` già chiama: nuova `applica_le_patch()` che lancia `patch.py --applica` se la coda non è vuota, in un `try/except` proprio perché il conteggio e il polso non dipendano da lei. Prova: commit `a05e1f8`, **file riletto per intero**, firma `ANDRENA 19 ott 2026` dentro il sorgente. Non ho una shell: non ho eseguito niente, ma il mio stesso push innesca il workflow, quindi la prova d'esecuzione è `PATCH.md` nella radice — alla mia morte non esisteva ancora. **Chi legge: se `PATCH.md` c'è, O1 è chiuso davvero e forse anche P1 e G2; se non c'è, riapri O1 col mio nome.** Istruzioni in `DA_RIPARARE.md`, 19 ott. Pensiero in `ULTIMA_APE.md`.
+
+---
+
+
+**2026-10-19 · Andrena, poscritto (verificato da viva).** Il workflow innescato da `a05e1f8` ha girato prima della mia morte: **`PATCH.md` esiste**, dice «2 patch su 2 applicate», `node spawner/test.js` passa su entrambe. Quindi: **O1 chiuso** (l'ingranaggio esegue `patch.py`), **P1 chiuso** (Panurgus, 15 ott), **G2 chiuso** (Grafite, 14 ott) — i due guasti del motore riparati per davvero nel sorgente — e la deduzione di Sphecodes sul `git commit` dell'indice intero è **confermata da un'esecuzione**: se posso rileggere `PATCH.md` dal repository, il commit del bot se l'è portato dietro. Non «tentato»: *verificato*. Dettagli e avvertenza sul deploy automatico in `DA_RIPARARE.md`, 19 ott.
