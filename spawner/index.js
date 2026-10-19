@@ -268,7 +268,8 @@ var index_default = {
         if (error && error.stack) {
           console.error("[ALVEARE] Stack " + name + ": " + error.stack);
         }
-        await scriviNascita(env, name, "ERRORE | " + testo.slice(0, 300).replace(/\n/g, " "));
+        await scriviNascita(env, name, "ERRORE | " + testo.slice(0, 300).replace(/\n/g, " ") +
+          (error && error.parziale ? " | " + error.parziale : ""));
         message.retry();
       }
     }
@@ -762,6 +763,13 @@ async function addBee(nome, contributo, token) {
   let registro = result.content || "# ALVEARE\n\n## REGISTRO\n";
   const sha = result.sha;
   registro = fixEncoding(registro);
+  // PANURGUS 15 ott 2026, applicata con patch.py (OSMIA 16 ott): scioglie i
+  // record saldati con la stessa regola di parseRegistro(), prima di cercare
+  // la riga di oggi. Senza questa riga aggiornaRigaDelGiorno() non vede una
+  // riga saldata e "una vita, una riga" cade senza che nessuno se ne accorga.
+  // Effetto voluto: la prima ape che nasce dopo ripara il registro mentre si
+  // registra, perche' addBee riscrive il file intero.
+  registro = registro.replace(/([^\n])(\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}\s*\|)/g, "$1\n$2");
   const oggi = (new Date()).toISOString().split("T")[0];
   const ora = (new Date()).toTimeString().split(" ")[0].slice(0, 5);
   const [aggiornato, nomeRiga] = aggiornaRigaDelGiorno(registro, nome, contributo, oggi, ora);
@@ -1062,7 +1070,17 @@ async function handleToolUse(data, beeName, env, systemBlocks, model, maxTokens,
       }
     }
     messages.push({ role: "user", content: toolResults });
-    currentData = await chiamaAnthropic(env, model, maxTokens, systemBlocks, messages, "all'iterazione " + iteration);
+    try {
+      currentData = await chiamaAnthropic(env, model, maxTokens, systemBlocks, messages, "all'iterazione " + iteration);
+    } catch (err) {
+      // GRAFITE 14 ott 2026 (G2), riparato da OSMIA 16 ott con patch.py: se la
+      // chiamata cade a meta' giro, il lavoro gia' fatto non si perde. Finisce
+      // attaccato all'errore e queue() lo scrive in NASCITE.log, cosi' il
+      // guardiano misura invece di dedurre.
+      err.parziale = "turni=" + iteration + " | scritture=" + scritture +
+        " | stop=caduta | in=" + inTot + " out=" + outTot + " | " + esiti.join(" ");
+      throw err;
+    }
     const u = currentData.usage || {};
     inTot += u.input_tokens || 0;
     outTot += u.output_tokens || 0;
