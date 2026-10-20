@@ -145,6 +145,47 @@ def collaudo_necessario(bersaglio):
     return os.path.normpath(bersaglio) == MOTORE
 
 
+def mano_umana(bersaglio):
+    """Il motore si tocca solo se un umano ha aperto la porta da fuori.
+
+    POMPEI 20 ott 2026, guasto A1. Andrena, 19 ottobre, dopo aver chiuso O1:
+    "il giorno in cui il deploy automatico si accende, questa catena diventa
+    patch/*.patch -> produzione in dieci minuti senza occhi umani. Quel
+    giorno, o si aggiunge una conferma umana in patch.py, o si toglie la riga
+    --applica da cantieri.py."
+
+    Il problema e' che QUEL GIORNO NON E' OSSERVABILE DA DENTRO: i secret di
+    Cloudflare stanno nelle impostazioni di GitHub, non nel repository.
+    Nessuna ape e nessuno script di questo albero puo' sapere se il deploy
+    automatico e' acceso. La sicurezza di oggi dipende dunque da un fatto che
+    nessuno qui dentro puo' misurare, e una sicurezza che dipende da un fatto
+    invisibile e' una preghiera, non una corda.
+
+    Quindi la porta sta chiusa per difetto, e si apre solo da fuori il
+    perimetro delle api, in due modi che un'ape del Worker non puo' usare:
+      - ALVEARE_PATCH_MOTORE=1 nell'ambiente: si mette con una riga in
+        .github/workflows/genera.yml, file che nessuna ape puo' scrivere
+        (serve lo scope `workflow`);
+      - --motore sulla riga di comando: ce l'ha chi possiede una shell.
+
+    Non e' un divieto, e' una firma. Tutti gli altri bersagli restano
+    automatici come li ha lasciati Andrena. Se chi legge decide che la
+    catena automatica sul motore vale il rischio, la riapre con una riga e
+    quella riga e' un atto umano datato, che e' esattamente cio' che mancava.
+    """
+    if os.path.normpath(bersaglio) != MOTORE:
+        return True, ""
+    if os.environ.get("ALVEARE_PATCH_MOTORE", "") == "1":
+        return True, "aperta da `ALVEARE_PATCH_MOTORE=1` nell'ambiente"
+    if "--motore" in sys.argv:
+        return True, "aperta da `--motore`: chi esegue ha una shell"
+    return False, ("il bersaglio e' il motore e nessun umano ha aperto la porta. "
+                   "Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in "
+                   "`.github/workflows/genera.yml`) oppure `--motore` a mano. "
+                   "Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' "
+                   "osservabile da dentro il repository")
+
+
 def esegui_prove():
     """Lancia spawner/test.js. (True, motivo) oppure (False, motivo)."""
     if not shutil.which("node"):
@@ -219,6 +260,15 @@ def tratta(nome, applica, senza_collaudo=False):
             righe.append("- bersaglio = il motore: con `--applica` girerebbero le 98 prove")
         righe.append("- **SI APPLICA PULITA** (prova a vuoto: niente e' stato scritto)")
         return True, righe
+
+    permesso, come = mano_umana(bersaglio)
+    if not permesso:
+        righe.append("- ⏸ **SOSPESA**: %s." % come)
+        righe.append("- La patch resta in coda e `%s` non e' stato toccato. "
+                     "Non e' un rifiuto: e' in attesa di una firma umana." % bersaglio)
+        return False, righe
+    if come:
+        righe.append("- porta del motore: %s" % come)
 
     # Da qui in poi si scrive sul disco. Ogni uscita negativa deve ripristinare.
     with open(assoluto, "w", encoding="utf-8") as f:

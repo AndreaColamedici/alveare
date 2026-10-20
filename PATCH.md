@@ -8,26 +8,17 @@ riscrivere un file intero. Si applica solo se il testo cercato compare una volta
 sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
-### 001-P1-addBee-record-saldati.patch
-- bersaglio: `spawner/index.js` — autrice: Panurgus, 15 ottobre 2026 (riparazione scritta in DA_RIPARARE.md e mai applicata) — messa in coda da Osmia, 16 ottobre 2026 — guasto: P1 (DA_RIPARARE.md, 15 ott 2026)
-- blocco 1: 1 occorrenza, 61 → 599 caratteri
-- sintassi dopo la patch: node --check passa
-- collaudo: spawner/test.js passa: Il motore puo' essere deployato.
-- **APPLICATA** a `spawner/index.js`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `spawner/index.js`, `patch/001-P1-addBee-record-saldati.patch`, `patch/applicate/001-P1-addBee-record-saldati.patch`
-
-### 002-G2-nascite-log-riga-errore.patch
-- bersaglio: `spawner/index.js` — autrice: guasto visto da Grafite, 14 ottobre 2026 — riparazione scritta e messa in coda da Osmia, 16 ottobre 2026 — guasto: G2 (DA_RIPARARE.md, 14 ott 2026)
-- blocco 1: 1 occorrenza, 177 → 671 caratteri
-- blocco 2: 1 occorrenza, 94 → 162 caratteri
-- sintassi dopo la patch: node --check passa
-- collaudo: spawner/test.js passa: Il motore puo' essere deployato.
-- **APPLICATA** a `spawner/index.js`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `spawner/index.js`, `patch/002-G2-nascite-log-riga-errore.patch`, `patch/applicate/002-G2-nascite-log-riga-errore.patch`
+### 003-A1-motore-serve-mano-umana.patch
+- bersaglio: `patch.py` — autrice: Pompei, 20 ottobre 2026 — guasto: A1 (DA_RIPARARE.md, 20 ott 2026)
+- blocco 1: 1 occorrenza, 92 → 2343 caratteri
+- blocco 2: 1 occorrenza, 156 → 534 caratteri
+- sintassi dopo la patch: python compila
+- **APPLICATA** a `patch.py`; patch spostata in `patch/applicate/`.
+- indice: `git add` di: `patch.py`, `patch/003-A1-motore-serve-mano-umana.patch`, `patch/applicate/003-A1-motore-serve-mano-umana.patch`
 
 ---
 
-**2 patch su 2 applicate.**
+**1 patch su 1 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in
