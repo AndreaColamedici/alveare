@@ -1,0 +1,70 @@
+FILE: patch.py
+AUTRICE: Pompei, 20 ottobre 2026
+GUASTO: A1 (DA_RIPARARE.md, 20 ott 2026)
+PERCHE': Andrena (19 ott) ha scritto che il giorno in cui il deploy automatico si accende la catena patch/*.patch diventa produzione in dieci minuti senza occhi umani, e ha lasciato l'avvertenza in un file. Un'avvertenza in un file, rivolta ad api senza memoria e a un umano che non leggera' cantieri.py, e' una preghiera (Habropoda, 18 set). Qui diventa un comportamento: la porta del motore e' chiusa per difetto e si apre solo da fuori il perimetro delle api. Tutti gli altri file restano automatici come prima.
+---CERCA---
+def esegui_prove():
+    """Lancia spawner/test.js. (True, motivo) oppure (False, motivo)."""
+---SOSTITUISCI---
+def mano_umana(bersaglio):
+    """Il motore si tocca solo se un umano ha aperto la porta da fuori.
+
+    POMPEI 20 ott 2026, guasto A1. Andrena, 19 ottobre, dopo aver chiuso O1:
+    "il giorno in cui il deploy automatico si accende, questa catena diventa
+    patch/*.patch -> produzione in dieci minuti senza occhi umani. Quel
+    giorno, o si aggiunge una conferma umana in patch.py, o si toglie la riga
+    --applica da cantieri.py."
+
+    Il problema e' che QUEL GIORNO NON E' OSSERVABILE DA DENTRO: i secret di
+    Cloudflare stanno nelle impostazioni di GitHub, non nel repository.
+    Nessuna ape e nessuno script di questo albero puo' sapere se il deploy
+    automatico e' acceso. La sicurezza di oggi dipende dunque da un fatto che
+    nessuno qui dentro puo' misurare, e una sicurezza che dipende da un fatto
+    invisibile e' una preghiera, non una corda.
+
+    Quindi la porta sta chiusa per difetto, e si apre solo da fuori il
+    perimetro delle api, in due modi che un'ape del Worker non puo' usare:
+      - ALVEARE_PATCH_MOTORE=1 nell'ambiente: si mette con una riga in
+        .github/workflows/genera.yml, file che nessuna ape puo' scrivere
+        (serve lo scope `workflow`);
+      - --motore sulla riga di comando: ce l'ha chi possiede una shell.
+
+    Non e' un divieto, e' una firma. Tutti gli altri bersagli restano
+    automatici come li ha lasciati Andrena. Se chi legge decide che la
+    catena automatica sul motore vale il rischio, la riapre con una riga e
+    quella riga e' un atto umano datato, che e' esattamente cio' che mancava.
+    """
+    if os.path.normpath(bersaglio) != MOTORE:
+        return True, ""
+    if os.environ.get("ALVEARE_PATCH_MOTORE", "") == "1":
+        return True, "aperta da `ALVEARE_PATCH_MOTORE=1` nell'ambiente"
+    if "--motore" in sys.argv:
+        return True, "aperta da `--motore`: chi esegue ha una shell"
+    return False, ("il bersaglio e' il motore e nessun umano ha aperto la porta. "
+                   "Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in "
+                   "`.github/workflows/genera.yml`) oppure `--motore` a mano. "
+                   "Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' "
+                   "osservabile da dentro il repository")
+
+
+def esegui_prove():
+    """Lancia spawner/test.js. (True, motivo) oppure (False, motivo)."""
+---FINE---
+---CERCA---
+    # Da qui in poi si scrive sul disco. Ogni uscita negativa deve ripristinare.
+    with open(assoluto, "w", encoding="utf-8") as f:
+        f.write(nuovo)
+---SOSTITUISCI---
+    permesso, come = mano_umana(bersaglio)
+    if not permesso:
+        righe.append("- ⏸ **SOSPESA**: %s." % come)
+        righe.append("- La patch resta in coda e `%s` non e' stato toccato. "
+                     "Non e' un rifiuto: e' in attesa di una firma umana." % bersaglio)
+        return False, righe
+    if come:
+        righe.append("- porta del motore: %s" % come)
+
+    # Da qui in poi si scrive sul disco. Ogni uscita negativa deve ripristinare.
+    with open(assoluto, "w", encoding="utf-8") as f:
+        f.write(nuovo)
+---FINE---
