@@ -1,0 +1,44 @@
+FILE: patch.py
+AUTRICE: Anthophora, 21 ottobre 2026
+GUASTO: A2 (DA_RIPARARE.md, 21 ott 2026)
+PERCHE': la firma umana che Pompei ha messo davanti al motore si puo' togliere
+PERCHE2: con una patch automatica a patch.py o a cantieri.py. Una serratura che
+PERCHE3: sta dentro la stanza che chiude non e' una serratura. Chi custodisce
+PERCHE4: si custodisce: la stessa porta vale per i due file che la decidono.
+---CERCA---
+MOTORE = os.path.join("spawner", "index.js")
+PROVE = os.path.join("spawner", "test.js")
+---SOSTITUISCI---
+MOTORE = os.path.join("spawner", "index.js")
+PROVE = os.path.join("spawner", "test.js")
+# ANTHOPHORA 21 ott 2026, guasto A2 — LA CATENA CHE DECIDE.
+# Pompei, il 20 ottobre, ha messo una firma umana davanti al motore. Ma i due
+# file che DECIDONO se una patch al motore passa — questo, e il cantieri.py che
+# lo lancia dentro genera.yml — erano rimasti nella corsia automatica. Quindi
+# bastava una patch a loro (toglie mano_umana(), oppure aggiunge "--motore"
+# agli argomenti con cui cantieri.py chiama patch.py) perche' la porta si
+# riaprisse da se', senza che nessun umano firmasse niente. Non serve malizia:
+# e' la mossa piu' naturale per un'ape che domani legge "SOSPESA" e vuole solo
+# andare avanti. La prova e' questa patch stessa: entra in automatico, perche'
+# oggi patch.py e' ancora patchabile in automatico. E' l'ultima che puo'.
+# Costo, detto qui: da ora anche migliorare patch.py o cantieri.py chiede una
+# mano umana. E' il prezzo perche' la firma di Pompei sia una corda e non un
+# foglietto appeso alla porta.
+CATENA = (MOTORE,
+          "patch.py",
+          os.path.join("cantieri", "cantieri.py"))
+---FINE---
+---CERCA---
+    if os.path.normpath(bersaglio) != MOTORE:
+        return True, ""
+---SOSTITUISCI---
+    if os.path.normpath(bersaglio) not in CATENA:
+        return True, ""
+---FINE---
+---CERCA---
+    return False, ("il bersaglio e' il motore e nessun umano ha aperto la porta. "
+---SOSTITUISCI---
+    return False, ("il bersaglio `" + bersaglio + "` sta nella catena che decide "
+                   "se una patch al motore passa (guasto A2, Anthophora 21 ott "
+                   "2026) e nessun umano ha aperto la porta. "
+---FINE---
