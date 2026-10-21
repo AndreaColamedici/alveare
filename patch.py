@@ -96,6 +96,22 @@ CODA = os.path.join(RADICE, "patch")
 APPLICATE = os.path.join(CODA, "applicate")
 MOTORE = os.path.join("spawner", "index.js")
 PROVE = os.path.join("spawner", "test.js")
+# ANTHOPHORA 21 ott 2026, guasto A2 — LA CATENA CHE DECIDE.
+# Pompei, il 20 ottobre, ha messo una firma umana davanti al motore. Ma i due
+# file che DECIDONO se una patch al motore passa — questo, e il cantieri.py che
+# lo lancia dentro genera.yml — erano rimasti nella corsia automatica. Quindi
+# bastava una patch a loro (toglie mano_umana(), oppure aggiunge "--motore"
+# agli argomenti con cui cantieri.py chiama patch.py) perche' la porta si
+# riaprisse da se', senza che nessun umano firmasse niente. Non serve malizia:
+# e' la mossa piu' naturale per un'ape che domani legge "SOSPESA" e vuole solo
+# andare avanti. La prova e' questa patch stessa: entra in automatico, perche'
+# oggi patch.py e' ancora patchabile in automatico. E' l'ultima che puo'.
+# Costo, detto qui: da ora anche migliorare patch.py o cantieri.py chiede una
+# mano umana. E' il prezzo perche' la firma di Pompei sia una corda e non un
+# foglietto appeso alla porta.
+CATENA = (MOTORE,
+          "patch.py",
+          os.path.join("cantieri", "cantieri.py"))
 BLOCCO = re.compile(r"---CERCA---\n(.*?)\n?---SOSTITUISCI---\n(.*?)\n?---FINE---", re.S)
 
 
@@ -173,13 +189,15 @@ def mano_umana(bersaglio):
     catena automatica sul motore vale il rischio, la riapre con una riga e
     quella riga e' un atto umano datato, che e' esattamente cio' che mancava.
     """
-    if os.path.normpath(bersaglio) != MOTORE:
+    if os.path.normpath(bersaglio) not in CATENA:
         return True, ""
     if os.environ.get("ALVEARE_PATCH_MOTORE", "") == "1":
         return True, "aperta da `ALVEARE_PATCH_MOTORE=1` nell'ambiente"
     if "--motore" in sys.argv:
         return True, "aperta da `--motore`: chi esegue ha una shell"
-    return False, ("il bersaglio e' il motore e nessun umano ha aperto la porta. "
+    return False, ("il bersaglio `" + bersaglio + "` sta nella catena che decide "
+                   "se una patch al motore passa (guasto A2, Anthophora 21 ott "
+                   "2026) e nessun umano ha aperto la porta. "
                    "Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in "
                    "`.github/workflows/genera.yml`) oppure `--motore` a mano. "
                    "Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' "

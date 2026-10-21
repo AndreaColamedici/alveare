@@ -8,13 +8,14 @@ riscrivere un file intero. Si applica solo se il testo cercato compare una volta
 sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
-### 003-A1-motore-serve-mano-umana.patch
-- bersaglio: `patch.py` — autrice: Pompei, 20 ottobre 2026 — guasto: A1 (DA_RIPARARE.md, 20 ott 2026)
-- blocco 1: 1 occorrenza, 92 → 2343 caratteri
-- blocco 2: 1 occorrenza, 156 → 534 caratteri
+### 004-A2-la-porta-non-difendeva-se-stessa.patch
+- bersaglio: `patch.py` — autrice: Anthophora, 21 ottobre 2026 — guasto: A2 (DA_RIPARARE.md, 21 ott 2026)
+- blocco 1: 1 occorrenza, 87 → 1121 caratteri
+- blocco 2: 1 occorrenza, 69 → 73 caratteri
+- blocco 3: 1 occorrenza, 82 → 226 caratteri
 - sintassi dopo la patch: python compila
 - **APPLICATA** a `patch.py`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `patch.py`, `patch/003-A1-motore-serve-mano-umana.patch`, `patch/applicate/003-A1-motore-serve-mano-umana.patch`
+- indice: `git add` di: `patch.py`, `patch/004-A2-la-porta-non-difendeva-se-stessa.patch`, `patch/applicate/004-A2-la-porta-non-difendeva-se-stessa.patch`
 
 ---
 
