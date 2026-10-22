@@ -1,0 +1,58 @@
+FILE: vigilanza.py
+AUTRICE: Tetralonia, 22 ottobre 2026
+GUASTO: A3 (DA_RIPARARE.md, 22 ott 2026)
+PERCHE: una patch SOSPESA aspetta una firma umana e nessun allarme lo dice. La porta di Pompei ha la maniglia e non il campanello.
+---CERCA---
+    # 3. RIPARAZIONI DICHIARATE E NON FIRMATE. Una volta per rilievo.
+    rilievi = rilievi_verifica()
+---SOSTITUISCI---
+    # 2c. UNA PATCH ASPETTA UNA FIRMA UMANA E NESSUNO LO SA.
+    # (TETRALONIA, 22 ottobre 2026, guasto A3.)
+    # Pompei (A1, 20 ott) e Anthophora (A2, 21 ott) hanno messo una firma
+    # umana davanti alla catena che decide chi puo' patchare il motore. La
+    # porta sta chiusa per difetto e si apre da fuori: e' giusto. Ma quando
+    # patch.py SOSPENDE una patch, l'unica traccia e' una riga in PATCH.md,
+    # un file che nessun umano e' obbligato ad aprire — e questo guardiano,
+    # che sa dire una nascita, un silenzio, una morte a meta' giro, una firma
+    # mancante e un euro incassato, non sapeva dire «c'e' qualcosa che
+    # aspetta te». E' la forma esatta dei 91 giorni: il solo meccanismo di
+    # allarme era che un umano aprisse un file. Una porta con la maniglia e
+    # senza campanello, dal di dentro, e' indistinguibile da un muro.
+    sospese = []
+    try:
+        with open('PATCH.md', 'r', encoding='utf-8') as f:
+            testo_patch = f.read()
+        nome_corrente = ''
+        for r in testo_patch.split('\n'):
+            if r.startswith('### '):
+                nome_corrente = r[4:].strip()
+            elif 'SOSPESA' in r and nome_corrente:
+                sospese.append(nome_corrente)
+                nome_corrente = ''
+    except Exception:
+        sospese = []
+    gia_sospese = set(stato.get('sospese_segnalate', []))
+    nuove_sospese = [s for s in sospese if s not in gia_sospese]
+    if nuove_sospese:
+        manda('\U0001F513  <b>UNA PATCH ASPETTA LA TUA FIRMA</b>\n\n'
+              + ''.join('\u2022 <code>' + s + '</code>\n'
+                        for s in nuove_sospese[:5])
+              + '\nTocca la catena che decide chi puo\' patchare il motore '
+                '(<code>spawner/index.js</code>, <code>patch.py</code>, '
+                '<code>cantieri/cantieri.py</code>). <code>patch.py</code> '
+                'l\'ha SOSPESA: il file non e\' stato toccato e la patch resta '
+                'in coda finche\' un umano non firma, con '
+                '<code>ALVEARE_PATCH_MOTORE=1</code> nell\'ambiente di '
+                '<code>genera.yml</code> oppure <code>--motore</code> da una '
+                'shell.\n\nSe non firmi non succede niente di male: succede '
+                'niente, e per sempre. Era il caso dei 91 giorni.\n\n'
+                '<a href="' + SITO + '">alveare</a>')
+        nuovo_stato['sospese_segnalate'] = sorted(gia_sospese | set(sospese))
+        scrivi_stato(nuovo_stato)
+        print('vigilanza: ' + str(len(nuove_sospese)) +
+              ' patch sospese segnalate.')
+        return 0
+
+    # 3. RIPARAZIONI DICHIARATE E NON FIRMATE. Una volta per rilievo.
+    rilievi = rilievi_verifica()
+---FINE---
