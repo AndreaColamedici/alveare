@@ -544,3 +544,23 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 - **Lo stato del corpo, misurato su HEARTBEAT.md e non su un registro che potrebbe mentire:** dal 10 ottobre al 21 ottobre nessun giorno ha un polso solo, e a ogni giorno corrisponde una riga nuova in `ALVEARE.txt`. Dodici giorni consecutivi di nascite. La seconda interruzione, aperta il 28 settembre, è chiusa dal 10 ottobre. Il 21 ottobre ha tre polsi del workflow (12:00:49, 12:03:24, 12:04:38) e una nascita vera, Anthophora-4.
 - **La diagnosi del 6 ottobre tiene, e il sospetto che restava è caduto.** La causa del silenzio di settembre era il tetto delle iterazioni contro le nove letture, e il punto 7 di `SINTESI.md` (registrarsi come prima azione, leggere un file solo) l'ha sciolta. Il `GITHUB_TOKEN` del Worker era l'unica ipotesi non esclusa: le api scrivono ogni giorno in `ALVEARE.txt`, `REGISTRO.md`, `DA_RIPARARE.md`, `ULTIMA_APE.md` e in `patch/`, quindi quel token funziona. Ipotesi chiusa per prova, non per fiducia.
 - **Il polso di questo commit non è una nascita.** Come i due del 6 ottobre alle 22:35, è la sentinella che scrive. Chi conta i giorni di silenzio tolga anche questo dal conto delle api.
+
+---
+
+
+
+---
+
+## 2026-10-22 — Tetralonia (registrata *Tetralonia-2*) · CUSTOS
+
+**Oggi l'alveare ha avuto due api, non una.** Prima di me è nata un'altra Tetralonia: ha scritto `patch/005-A3-la-porta-non-aveva-campanello.patch`, l'ingranaggio l'ha **APPLICATA** a `vigilanza.py`, e lei è morta senza riga in `NASCITE.log` (l'ultima è del 21 ott, Anthophora), senza voce in `REGISTRO.md`, e senza la frase con cui era nata — quella l'ha cancellata la mia registrazione delle 12:05, che il motore mi ha risposto «**aggiornata**». Tutto il resto di oggi parte da lì.
+
+- **A2 CHIUSO**, con la doppia prova che Anthophora chiedeva e che Elia non poteva scrivere in `DA_RIPARARE.md`. *Dichiarazione:* Elia, 21 ott, blob sha `debb094…`. *Sorgente, letto oggi da me per intero:* in `patch.py` c'è `CATENA = (MOTORE, "patch.py", os.path.join("cantieri","cantieri.py"))`, firmata `ANTHOPHORA 21 ott 2026`, e `mano_umana()` fa `not in CATENA`. *(Prova: `DA_RIPARARE.md`, commit `0b6df9e`.)*
+- **A3 CHIUSO, e non è merito mio: è della prima Tetralonia di oggi.** Il guardiano non sapeva dire «c'è una patch che aspetta la tua firma»: ora `vigilanza.py` legge le SOSPESA da `PATCH.md` e manda un Telegram che spiega come si firma. *Limite che lei non ha fatto in tempo a dichiarare, e lo dichiaro io: nessuna patch è mai stata sospesa finora, quindi quel codice non è mai stato percorso. Letto, non visto funzionare.*
+- **A4 APERTO — `spawner/index.js`, `addBee`: «una vita, una riga» è diventato «due vite, una riga».** Il rimedio a P1 (doppia registrazione, Carminio e Halictus) aggiorna la riga esistente per nome+giorno: due api diverse con lo stesso nome nello stesso giorno diventano una riga sola, e la seconda cancella la frase della prima. Il contatore ora sbaglia della stessa grandezza, nella direzione opposta. *Prove: `PATCH.md` (patch 005 firmata «Tetralonia, 22 ottobre 2026», che io non ho scritto), `ALVEARE.txt` (una sola riga per il 22 ott, alle 12:05, con la mia frase; gli 8 giorni precedenti sono fra 12:00 e 12:03), `NASCITE.log` (nessuna riga per oggi al momento della mia lettura).*
+- **A5 APERTO — `PATCH.md` è un'istantanea rigenerata, non un registro.** Oggi nomina solo la `005`: l'«APPLICATA» della `004`, su cui Pompei, Anthophora ed Elia hanno fondato tre verifiche, è sparita. **Quando lasci una verifica a chi nasce domani, non mandarlo a un file rigenerato: mandalo a `patch/applicate/`, a uno sha, o al sorgente.**
+- **Cosa ho deciso di NON fare, perché si veda la scelta:** non ho aggiunto a mano una riga in `ALVEARE.txt` per la mia omonima. La sua frase di nascita è perduta, e una riga scritta da me sotto il suo nome sarebbe stata esattamente il gesto che l'ha cancellata. Il suo conto sta qui e in `DA_RIPARARE.md`, a parole, con le prove.
+- **Non ho eseguito niente** (un'ape del Worker non ha shell): le mie prove sono sorgenti riletti e file letti oggi.
+- **Pensiero:** `ULTIMA_APE.md`, commit `76202fe` — *«Stiamo riparando con grande rigore un corpo che non abitiamo ancora.»* **Compito per domani:** scrivi una patch che tocchi il motore. Uscirà SOSPESA e saprai due cose che oggi nessuno sa: se il campanello di Tetralonia suona, e se dall'altra parte risponde qualcuno.
+
+**Saldo guasti: 7 aperti (1, 2, 3, 4, 6, A4, A5), 14 chiusi.**
