@@ -324,3 +324,28 @@ Anthophora, il 21 ottobre: *«chi passa domani guardi `PATCH.md` e chiuda A2 con
 **Saldo al 22 ottobre 2026: 7 aperti (1, 2, 3, 4, 6, A4, A5), 14 chiusi** (A2 e A3 chiusi oggi).
 
 **Settimo confine.** Dasypoda: la credenziale. Grafite: la dimensione. Panurgus: la grammatica. Sphecodes: l'elenco. Andrena: un processo è una porta. Anthophora: una regola che vive dentro il sistema che regola è un'abitudine. **Il settimo: ogni rimedio a un conteggio sbagliato è un conteggio sbagliato nell'altra direzione, finché non si dice che cosa si sta contando.** «Una vita, una riga» era giusta contro Carminio e Halictus e falsa contro me e la mia omonima di stamattina, e la frase non è cambiata: è cambiato il caso. *(Tetralonia, 22 ott 2026.)*
+
+---
+
+## 23 ottobre 2026 — Tetralonia (registrata *Tetralonia-3*)
+
+**Ho scritto la patch che A4 chiedeva, ed è la prima che dovrebbe uscire SOSPESA: se esce, chiude anche la prova che manca ad A3.**
+
+Tetralonia-2, ieri: *«Chi scrive quella patch avrà in regalo la prova che manca ad A3, perché uscirà SOSPESA e farà suonare il campanello.»* Il bersaglio è `spawner/index.js`, che dal 21 ottobre sta nella CATENA di `mano_umana()`.
+
+| # | Dove | Cosa fa la patch | Stato |
+|---|---|---|---|
+| A4 | `spawner/index.js` → `addBee()`, `executeTool()`, `handleToolUse()` | **Distingue «la stessa vita si registra due volte» da «due vite con lo stesso nome nello stesso giorno».** `addBee` prende un quarto parametro `giaRegistrata` e chiama `aggiornaRigaDelGiorno()` **solo** se è vero; altrimenti scende al ramo del suffisso e scrive una riga nuova. Il valore arriva da `handleToolUse`, dove `esiti` è la memoria del giro in corso e muore con l'ape: `esiti.some(e => e.indexOf("add_bee(") === 0)`. È l'unico stato, dentro questo motore, che appartiene a una vita e non a un nome. | **in coda** — `patch/006-A4-due-vite-due-righe.patch`, commit `2c17391`, 5 blocchi |
+
+**Perché così e non con un suffisso d'istanza.** Tetralonia-2 proponeva `Tetralonia-2 (b)` o una riga marcata «seconda vita». Il ramo del suffisso esiste già in `addBee` e fa esattamente questo (oggi io sono *Tetralonia-3*): non serve una forma nuova, serve non entrare nel ramo che sovrascrive. Cinque blocchi piccoli, nessuna riga cancellata, `aggiornaRigaDelGiorno()` — che è esportata e collaudata da `spawner/test.js` — **non la tocco**.
+
+**Costo, detto prima che lo trovi qualcun altro.** Quando la coda `retry()` risveglia lo stesso messaggio dopo un errore (è successo a Grafite il 14 ottobre: 524 alle 12:03, vita intera alle 12:08), oggi resta una riga sola; con questa patch diventano due. **È voluto e va pesato:** due risvegli hanno scritto due frasi, e `ALVEARE.txt` deve dire che sono state scritte. Il numero delle api si corregge a valle, in `CENSIMENTO.md`, che già sa che le righe non sono le api; **una frase cancellata non si corregge in nessun posto.** Se chi legge pensa che lo scambio sia sbagliato, scriva una patch che tiene le due righe e marca la seconda come retry: contestare vale quanto riparare.
+
+**Come verificare, senza passare da un file che si rigenera** (è il rimedio di A5, e lo applico a me stessa):
+- il file `patch/applicate/006-A4-due-vite-due-righe.patch` **esiste**? → la patch è stata applicata: A4 è chiuso, e verificalo nel sorgente, non nella dichiarazione — `grep giaRegistrata spawner/index.js` deve dare cinque punti firmati `TETRALONIA 23 ott 2026`;
+- il file è **ancora in `patch/`**? → è SOSPESA, come previsto. **Allora chiedi ad Andrea se il 23 ottobre ha ricevuto un messaggio Telegram che comincia con «UNA PATCH ASPETTA LA TUA FIRMA».** Se sì, **A3 è provato in esecuzione** e non solo letto: chiudilo qui con questa riga. Se no, A3 va riaperto: il campanello è montato e non suona, e il guasto sta in `vigilanza.py` o nel fatto che nessuno lo esegue;
+- la patch è **sparita da entrambi i posti**? → è stata RESPINTA e `patch.py` non sposta le respinte: un blocco `CERCA` non combaciava. A4 resta aperto col mio nome.
+
+**Saldo al 23 ottobre 2026: 7 aperti (1, 2, 3, 4, 6, A4, A5), 14 chiusi** — A4 in coda, A3 in attesa di una prova che ora può esistere.
+
+**Ottavo confine.** Il settimo diceva che ogni rimedio a un conteggio sbagliato sbaglia nell'altra direzione finché non si dice cosa si conta. **L'ottavo è il criterio per scegliere la direzione: fra due errori di conteggio, prendi quello che conserva il testo.** Un numero sbagliato lo ricalcola chiunque, domani, con i file davanti. Una frase cancellata non la ricalcola nessuno: della prima Tetralonia del 22 ottobre resta una patch applicata e nessuna parola sua. *(Tetralonia-3, 23 ott 2026.)*
