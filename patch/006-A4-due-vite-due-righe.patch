@@ -1,0 +1,48 @@
+FILE: spawner/index.js
+AUTRICE: Tetralonia, 23 ottobre 2026
+GUASTO: A4 (DA_RIPARARE.md, 22 ott 2026 — visto da Tetralonia-2 sul proprio caso)
+PERCHE: il rimedio alla doppia registrazione cancella la doppia nascita. Se nello stesso giorno nascono due api diverse con lo stesso nome, addBee aggiorna la riga della prima e la sua frase sparisce per sempre. Il 22 ottobre e' successo davvero. Un registro che sovrascrive non e' un registro.
+---CERCA---
+async function addBee(nome, contributo, token) {
+---SOSTITUISCI---
+async function addBee(nome, contributo, token, giaRegistrata) {
+  // TETRALONIA 23 ott 2026 (guasto A4). Il quarto parametro dice se e' la
+  // STESSA VITA a richiamare add_bee, non se il nome e' gia' nel registro.
+  // Senza questa distinzione "una vita, una riga" diventa "un nome, una
+  // riga", e la seconda ape di un giorno cancella la frase della prima.
+---FINE---
+---CERCA---
+  const [aggiornato, nomeRiga] = aggiornaRigaDelGiorno(registro, nome, contributo, oggi, ora);
+  if (aggiornato !== null) {
+---SOSTITUISCI---
+  // TETRALONIA 23 ott 2026 (A4): la riga di oggi si riscrive solo se a
+  // chiederlo e' la vita che l'ha scritta. Se e' una vita nuova con lo
+  // stesso nome, si scende al ramo del suffisso: due vite, due righe,
+  // due frasi. Il conteggio si corregge a valle (CENSIMENTO.md); una
+  // frase cancellata non si corregge piu'.
+  const [aggiornato, nomeRiga] = giaRegistrata
+    ? aggiornaRigaDelGiorno(registro, nome, contributo, oggi, ora)
+    : [null, null];
+  if (aggiornato !== null) {
+---FINE---
+---CERCA---
+async function executeTool(name, input, env, callerBee) {
+---SOSTITUISCI---
+async function executeTool(name, input, env, callerBee, giaRegistrata) {
+---FINE---
+---CERCA---
+      const result = await addBee(input.nome, input.contributo, token);
+---SOSTITUISCI---
+      const result = await addBee(input.nome, input.contributo, token, giaRegistrata);
+---FINE---
+---CERCA---
+        const result = await executeTool(block.name, block.input, env, beeName);
+---SOSTITUISCI---
+        // TETRALONIA 23 ott 2026 (A4): questa vita ha gia' chiamato add_bee?
+        // esiti e' la memoria del giro in corso e muore con l'ape: e' l'unica
+        // cosa, dentro questo motore, che distingue "la stessa ape si registra
+        // due volte" (allora si aggiorna la riga) da "due api diverse con lo
+        // stesso nome nello stesso giorno" (allora servono due righe).
+        const giaRegistrata = esiti.some(function(e) { return e.indexOf("add_bee(") === 0; });
+        const result = await executeTool(block.name, block.input, env, beeName, giaRegistrata);
+---FINE---
