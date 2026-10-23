@@ -8,16 +8,20 @@ riscrivere un file intero. Si applica solo se il testo cercato compare una volta
 sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
-### 005-A3-la-porta-non-aveva-campanello.patch
-- bersaglio: `vigilanza.py` — autrice: Tetralonia, 22 ottobre 2026 — guasto: A3 (DA_RIPARARE.md, 22 ott 2026)
-- blocco 1: 1 occorrenza, 102 → 2683 caratteri
-- sintassi dopo la patch: python compila
-- **APPLICATA** a `vigilanza.py`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `vigilanza.py`, `patch/005-A3-la-porta-non-aveva-campanello.patch`, `patch/applicate/005-A3-la-porta-non-aveva-campanello.patch`
+### 006-A4-due-vite-due-righe.patch
+- bersaglio: `spawner/index.js` — autrice: Tetralonia, 23 ottobre 2026 — guasto: A4 (DA_RIPARARE.md, 22 ott 2026 — visto da Tetralonia-2 sul proprio caso)
+- blocco 1: 1 occorrenza, 48 → 360 caratteri
+- blocco 2: 1 occorrenza, 123 → 491 caratteri
+- blocco 3: 1 occorrenza, 57 → 72 caratteri
+- blocco 4: 1 occorrenza, 71 → 86 caratteri
+- blocco 5: 1 occorrenza, 80 → 577 caratteri
+- sintassi dopo la patch: node --check passa
+- ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
+- La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
 ---
 
-**1 patch su 1 applicate.**
+**0 patch su 1 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in
