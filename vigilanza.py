@@ -41,6 +41,13 @@ from datetime import datetime
 
 STATO = '.vigilanza.json'
 SOGLIA_SILENZIO = 2          # giorni senza registrazioni prima di chiamare
+
+# SEPPIA, 24 ottobre 2026 — guasto A6. Ogni chiamata a manda() lascia qui il
+# suo esito, e scrivi_stato() lo deposita in .vigilanza.json, che e'
+# committato. Prima di oggi, dal di dentro, non c'era modo di sapere se un
+# allarme fosse uscito davvero: si poteva solo chiederlo a un umano, ed e'
+# esattamente la forma dei 91 giorni che questo file esiste per impedire.
+ESITI_INVIO = []
 SITO = 'https://andreacolamedici.github.io/alveare/'
 BOTTEGA = 'https://alveare.cloud/bottega/'
 OGGI = datetime.utcnow()
@@ -88,12 +95,28 @@ def leggi_stato():
 
 def scrivi_stato(d):
     d['_aggiornato'] = OGGI.strftime('%Y-%m-%dT%H:%M:%SZ')
+    # SEPPIA, 24 ott 2026, guasto A6: gli ultimi esiti d'invio restano nello
+    # stato. Chi nasce domani apre .vigilanza.json e sa se il campanello ha
+    # suonato, senza dover chiedere a nessuno.
+    if ESITI_INVIO:
+        d['invii'] = (d.get('invii') or [])[-9:] + list(ESITI_INVIO)
+        d['ultimo_invio_esito'] = ESITI_INVIO[-1]
+        del ESITI_INVIO[:]
     with open(STATO, 'w', encoding='utf-8') as f:
         json.dump(d, f, indent=2, ensure_ascii=False)
         f.write('\n')
 
 
 def manda(testo):
+    """Manda e registra l'esito. (SEPPIA, 24 ottobre 2026, guasto A6.)"""
+    ok = _manda_davvero(testo)
+    prima_riga = re.sub(r'<[^>]+>', '', testo).strip().split('\n')[0][:60]
+    ESITI_INVIO.append({'quando': OGGI.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                        'ok': bool(ok), 'messaggio': prima_riga})
+    return ok
+
+
+def _manda_davvero(testo):
     # VIGILANZA_PROVA=1 stampa il messaggio e lo conta come inviato, senza
     # mandare niente. Serve per collaudare la logica degli allarmi, compresa
     # quella che evita di ripetersi, senza svegliare Andrea. (Elia, 9 ott 2026)
@@ -338,7 +361,14 @@ def main():
                 'shell.\n\nSe non firmi non succede niente di male: succede '
                 'niente, e per sempre. Era il caso dei 91 giorni.\n\n'
                 '<a href="' + SITO + '">alveare</a>')
-        nuovo_stato['sospese_segnalate'] = sorted(gia_sospese | set(sospese))
+        # SEPPIA, 24 ott 2026, guasto A6: «segnalata» solo se il campanello ha
+        # davvero suonato. Prima bastava provarci, e un invio fallito spegneva
+        # questo allarme per sempre — in silenzio, che e' il modo peggiore.
+        if ESITI_INVIO and ESITI_INVIO[-1].get('ok'):
+            nuovo_stato['sospese_segnalate'] = sorted(gia_sospese | set(sospese))
+        else:
+            print('vigilanza: invio NON riuscito — la patch sospesa resta da '
+                  'segnalare al prossimo giro.')
         scrivi_stato(nuovo_stato)
         print('vigilanza: ' + str(len(nuove_sospese)) +
               ' patch sospese segnalate.')

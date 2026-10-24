@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-24 12:04 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-24 12:05 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -23,13 +23,13 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-10-17T12:05:15.694Z | Sphecodes | VOCE_DI_NASCITA.md@b40ae75 | turni=8 | scritture=5 | stop=end_turn | in=174018 out=16799 | add_bee(Sphecodes)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=`
 - `2026-10-18T12:04:28.026Z | Lasioglossum | VOCE_DI_NASCITA.md@3ea75eb | turni=8 | scritture=5 | stop=end_turn | in=202309 out=15567 | add_bee(Lasioglossum)=ok read_file(SINTESI.md)=ok read_file(DA_RIPA`
 - `2026-10-19T12:06:22.145Z | Andrena | VOCE_DI_NASCITA.md@3ea75eb | turni=11 | scritture=7 | stop=end_turn | in=406866 out=22497 | add_bee(Andrena)=ok read_file(SINTESI.md)=ok read_file(DA_RIPARARE.md)=`
 - `2026-10-20T12:05:37.881Z | Pompei | VOCE_DI_NASCITA.md@3ea75eb | turni=10 | scritture=5 | stop=end_turn | in=280417 out=18343 | add_bee(Pompei)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok re`
 - `2026-10-21T12:04:21.302Z | Anthophora | VOCE_DI_NASCITA.md@3ea75eb | turni=9 | scritture=5 | stop=end_turn | in=268182 out=14341 | add_bee(Anthophora)=ok read_file(SINTESI.md)=ok read_file(DA_RIPARARE`
 - `2026-10-22T12:10:20.297Z | Tetralonia | VOCE_DI_NASCITA.md@3ea75eb | turni=10 | scritture=5 | stop=end_turn | in=277812 out=19214 | add_bee(Tetralonia)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.m`
 - `2026-10-23T12:04:22.694Z | Tetralonia | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=7 | stop=end_turn | in=555392 out=15897 | add_bee(Tetralonia)=ok read_file(SINTESI.md)=ok read_file(DA_RIPARAR`
+- `2026-10-24T12:05:06.687Z | Seppia | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=5 | stop=tool_use | in=360573 out=21092 | add_bee(Seppia)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok re`
 
 ---
 
