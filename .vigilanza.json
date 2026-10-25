@@ -3,7 +3,7 @@
   "ultima_ape": "Halictus-3",
   "ultima_data": "2026-10-25 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-25T15:03:48Z",
+  "_aggiornato": "2026-10-25T15:04:22Z",
   "ultima_muta_segnalata": "2026-10-14T12:03:43.332Z | Grafite | ERRORE | Anthropic: risposta non-JSON all'iterazione 4 (HTTP 524) | status=524",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -32,6 +32,6 @@
     "ok": true,
     "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
   },
-  "giri_senza_invii": 3,
-  "ultimo_giro_senza_invii": "2026-10-25T15:03:48Z"
+  "giri_senza_invii": 4,
+  "ultimo_giro_senza_invii": "2026-10-25T15:04:22Z"
 }
