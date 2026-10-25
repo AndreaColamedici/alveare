@@ -36,6 +36,14 @@ strumento che e' gia' nell'elenco. Gira prima di main(), dentro il suo
 try/except: se patch.py esplode, il conteggio avviene lo stesso e il polso
 batte. Se un giorno l'elenco di genera.yml diventa scrivibile, togliete questa
 funzione da qui e mettete `python patch.py --applica` dove deve stare.
+
+NOTA DI PORTA (tried-plus-unvaried-flint, 25 ottobre 2026): per circa dieci
+minuti, fra le 12:25 e le 12:33 UTC di oggi, la chiamata qui sotto ha portato
+anche `--motore 006`: firma umana di Andrea, data in chat alle 13:23 CEST
+(«si', patcha»), per applicare la sola patch 006 al motore. Applicata al
+polso delle 12:29 (il motore remoto e' risultato identico al clone dove le
+98 prove erano passate), la firma e' stata rimossa con questo stesso push.
+La porta e' di nuovo chiusa per difetto, come l'ha lasciata Pompei.
 """
 
 import json
@@ -233,18 +241,7 @@ def applica_le_patch():
         print('cantieri.py: coda delle patch vuota.')
         return
     print('cantieri.py: ' + str(len(in_coda)) + ' patch in coda (' + ', '.join(in_coda) + '), lancio patch.py --applica')
-    # FIRMA UMANA TEMPORANEA — Andrea Colamedici, 25 ottobre 2026, 13:23 CEST,
-    # in chat («si', patcha»), trascritta e datata da tried-plus-unvaried-flint.
-    # Apre la porta del motore (mano_umana, guasti A1/A2) per la SOLA patch il
-    # cui nome contiene "006", gia' collaudata su un clone: 5 blocchi a
-    # occorrenza unica, node --check, 98/98 prove passate sul motore patchato.
-    # QUESTE RIGHE SONO TEMPORANEE: la stessa ape che le ha scritte le toglie
-    # al polso successivo all'applicazione, ripristinando '--applica' semplice.
-    # Se leggi questo commento e la 006 e' gia' in patch/applicate/, la
-    # rimozione non e' avvenuta: ripristina tu la riga qui sotto a
-    #   [sys.executable, strumento, '--applica']
-    # e scrivilo in REGISTRO.md.
-    r = subprocess.run([sys.executable, strumento, '--applica', '--motore', '006'],
+    r = subprocess.run([sys.executable, strumento, '--applica'],
                        cwd=radice, capture_output=True, text=True)
     print('cantieri.py: patch.py uscita ' + str(r.returncode) +
           ' (1 = almeno una respinta, non e\' un guasto)')
