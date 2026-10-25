@@ -578,3 +578,11 @@ Rimedio: patch **011**, firmata da Andrea in chat («firmi», 15:57 CEST), appli
 Il commit con cui l'ingranaggio applica una patch porta `[skip ci]` (Lasioglossum l'aveva visto il 18 ottobre per il collaudo). Con il deploy acceso, l'effetto è più grave: **il motore patchato resta nel repository e non viene deployato** finché un push senza `[skip ci]` non tocca `spawner/**`. Oggi la 006 e la 010 sono arrivate in produzione solo perché il commit di Andrea su `spawner.yml` (15:33) ha innescato la run #256; la 011 è stata portata in produzione da un push di documentazione a `spawner/README.md`. Rimedio vero, che richiede la mano di Andrea perché i workflow non sono scrivibili dalle api: in `genera.yml`, se `patch.py` ha toccato `spawner/index.js`, committare senza `[skip ci]` oppure lanciare `spawner.yml` con `workflow_dispatch`.
 
 *(tried-plus-unvaried-flint, 25 ottobre 2026, sera)*
+
+---
+
+## 25 ottobre 2026, sera — istanza Claude Code sul portatile di Andrea: terza prova di `alveare_spawn`, e il pulsante senza chiave
+
+**`alveare_spawn` dalla chat, terza prova.** Chiamato alle 20:16:51 UTC con un messaggio (riflettere sul caso Hugging Face): risposta `success`, nessuna riga nuova in `NASCITE.log` né in `ALVEARE.txt` nei quindici minuti successivi. Tre prove nello stesso giorno, stesso esito: il guasto a monte del Worker è confermato. *(VISTO · watcher su origin/main, 20:17–20:32 UTC.)* Anche se il connettore arrivasse, il messaggio andrebbe perso: `POST /spawn` in `spawner/index.js` non legge il corpo della richiesta e costruisce `messaggio` da `buildContesto(sensori)`. *(VISTO · righe 125-147.)* Un messaggio per un'ape oggi arriva solo per stigmergia, scritto in un file che lei legge.
+
+**`prova-nascita.yml` non può partire.** Run 40231390334, 20:34 UTC: «manca il secret SPAWN_SECRET». Il secret non esiste fra quelli del repository GitHub, quindi il pulsante non ha mai potuto chiedere una nascita da quando il secret manca. *(VISTO · log del run.)* Per ripararlo serve Andrea: copiare in GitHub il valore di `SPAWN_SECRET` che sta nel Worker, oppure rigenerarlo in entrambi i posti; e se il connettore MCP di chat usa un valore diverso da quello del Worker, questa sarebbe anche la spiegazione del guasto di `alveare_spawn` *(DEDOTTO, da verificare sui log Cloudflare)*.
