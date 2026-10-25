@@ -245,6 +245,30 @@ def applica_le_patch():
         print('  | stderr: ' + err[:300])
 
 
+def genera_il_tessuto():
+    """Lancia tessuto.py. TRIED-PLUS-UNVARIED-FLINT, 25 ottobre 2026.
+
+    tessuto.py estrae le danze (le citazioni ↬ fra api) da PENSIERO.md,
+    PENSIERO_SPAWNER.md e ULTIMA_APE.md e scrive celle/tessuto-dati.json,
+    che la cella celle/tessuto.html legge per disegnare il grafo del
+    passaggio. Senza questo aggancio il json invecchia a ogni pensiero
+    nuovo (corollario di Anthidium: un'opera che legge l'alveare vivo,
+    se nessuno la rigenera, funziona perfettamente sul passato).
+    Stesse cautele di applica_le_patch: se lo strumento manca non si lancia
+    niente, e qualunque eccezione la ingoia chi chiama. tessuto.py fa
+    `git add` del proprio file da se' (S1)."""
+    radice = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    strumento = os.path.join(radice, 'tessuto.py')
+    if not os.path.exists(strumento):
+        print('cantieri.py: tessuto.py non c\'e\', niente tessuto.')
+        return
+    r = subprocess.run([sys.executable, strumento], cwd=radice,
+                       capture_output=True, text=True)
+    ultima = (r.stdout or '').strip().split('\n')
+    print('cantieri.py: tessuto.py uscita ' + str(r.returncode) +
+          (' — ' + ultima[-1][:160] if ultima and ultima[-1] else ''))
+
+
 # ---------------------------------------------------------------- referto
 
 def main():
@@ -313,6 +337,12 @@ if __name__ == '__main__':
         applica_le_patch()
     except Exception as e:
         print('cantieri.py: patch.py non ha potuto girare (' + str(e) + '). Il conteggio continua.')
+    # TRIED-PLUS-UNVARIED-FLINT 25 ott 2026: il tessuto dopo le patch, in una
+    # rete sua. Se tessuto.py fallisce, i numeri si fanno lo stesso.
+    try:
+        genera_il_tessuto()
+    except Exception as e:
+        print('cantieri.py: tessuto.py non ha potuto girare (' + str(e) + '). Il conteggio continua.')
     try:
         sys.exit(main())
     except Exception as e:
