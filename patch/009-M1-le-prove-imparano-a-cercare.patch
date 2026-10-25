@@ -1,0 +1,42 @@
+FILE: spawner/test.js
+AUTRICE: tried-plus-unvaried-flint, 25 ottobre 2026
+GUASTO: M1 (potenziamento, non guasto: il metabolismo delle letture. Mandato di Andrea in chat, 25 ott 13:42: «potenziare davvero l'Alveare»)
+PERCHE: questa patch prepara il collaudo per il quinto strumento (alveare_cerca, patch 010). Va applicata INSIEME alla 010, nello stesso giro: da sola lascia test.js che pretende cinque strumenti da un motore che ne ha quattro. L'ordine alfabetico delle patch (009 prima della 010) garantisce che quando la 010 esegue le prove, queste gia' conoscono il nuovo strumento. Collaudata su un clone il 25 ott: con la 010 applicata, 101 collaudi passati, 0 falliti.
+---CERCA---
+ok("quattro strumenti", tools.length === 4);
+ok("read_file accetta ultime_righe", tools[0].input_schema.properties.ultime_righe !== undefined);
+ok("add_bee dice di essere la prima azione", /PRIMA azione/.test(tools[3].description));
+---SOSTITUISCI---
+ok("cinque strumenti", tools.length === 5);
+ok("read_file accetta ultime_righe", tools[0].input_schema.properties.ultime_righe !== undefined);
+ok("cerca e' il secondo strumento e vuole path+testo", tools[1].name === "alveare_cerca" && tools[1].input_schema.required.includes("testo"), tools[1]);
+ok("cerca dichiara di costare meno di una lettura intera", /meno/.test(tools[1].description));
+ok("add_bee dice di essere la prima azione", /PRIMA azione/.test(tools[4].description));
+---FINE---
+---CERCA---
+  { stop_reason: "tool_use", usage: { input_tokens: 5200, output_tokens: 60 },
+    content: [{ type: "tool_use", id: "t2", name: "alveare_read_file", input: { path: "SINTESI.md" } }] },
+---SOSTITUISCI---
+  { stop_reason: "tool_use", usage: { input_tokens: 5200, output_tokens: 60 },
+    content: [{ type: "tool_use", id: "t2", name: "alveare_read_file", input: { path: "SINTESI.md" } }] },
+  { stop_reason: "tool_use", usage: { input_tokens: 5400, output_tokens: 50 },
+    content: [{ type: "tool_use", id: "t2b", name: "alveare_cerca", input: { path: "PENSIERO.md", testo: "P" } }] },
+---FINE---
+---CERCA---
+ok("quattro chiamate ad Anthropic, come da copione", chiamateAnthropic.length === 4, chiamateAnthropic.length);
+---SOSTITUISCI---
+ok("cinque chiamate ad Anthropic, come da copione", chiamateAnthropic.length === 5, chiamateAnthropic.length);
+ok("cerca ha trovato la riga e l'esito e' tornato all'ape", chiamateAnthropic.some(c => JSON.stringify(c.messages).includes("1: # P")), repo["PENSIERO.md"]);
+---FINE---
+---CERCA---
+ok("NASCITE.log dice turni=4, scritture=3, stop=end_turn", /turni=4 \| scritture=3 \| stop=end_turn/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
+ok("NASCITE.log elenca gli strumenti con l'esito", /add_bee\(Prova\)=ok read_file\(SINTESI\.md\)=KO push_file\(ULTIMA_APE\.md\)=ok add_bee\(Prova\)=ok/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
+---SOSTITUISCI---
+ok("NASCITE.log dice turni=5, scritture=3 (cercare non e' scrivere), stop=end_turn", /turni=5 \| scritture=3 \| stop=end_turn/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
+ok("NASCITE.log elenca gli strumenti con l'esito, cerca incluso", /add_bee\(Prova\)=ok read_file\(SINTESI\.md\)=KO cerca\(PENSIERO\.md\)=ok push_file\(ULTIMA_APE\.md\)=ok add_bee\(Prova\)=ok/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
+---FINE---
+---CERCA---
+ok("il log stampa lo stop_reason di ogni turno (1 + 3 iterazioni)", logs.filter(l => /(turno 1|iter \d+): stop_reason=/.test(l)).length === 4, logs.filter(l => /stop_reason=/.test(l)));
+---SOSTITUISCI---
+ok("il log stampa lo stop_reason di ogni turno (1 + 4 iterazioni)", logs.filter(l => /(turno 1|iter \d+): stop_reason=/.test(l)).length === 5, logs.filter(l => /stop_reason=/.test(l)));
+---FINE---
