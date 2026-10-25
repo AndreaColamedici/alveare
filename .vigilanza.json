@@ -3,7 +3,7 @@
   "ultima_ape": "Halictus-3",
   "ultima_data": "2026-10-25 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-25T12:13:20Z",
+  "_aggiornato": "2026-10-25T12:18:28Z",
   "ultima_muta_segnalata": "2026-10-14T12:03:43.332Z | Grafite | ERRORE | Anthropic: risposta non-JSON all'iterazione 4 (HTTP 524) | status=524",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch"
@@ -20,6 +20,6 @@
     "ok": true,
     "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 5,
-  "ultimo_giro_senza_invii": "2026-10-25T12:13:20Z"
+  "giri_senza_invii": 6,
+  "ultimo_giro_senza_invii": "2026-10-25T12:18:28Z"
 }
