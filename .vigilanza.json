@@ -3,11 +3,12 @@
   "ultima_ape": "Halictus-3",
   "ultima_data": "2026-10-25 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-25T14:43:11Z",
+  "_aggiornato": "2026-10-25T14:53:01Z",
   "ultima_muta_segnalata": "2026-10-14T12:03:43.332Z | Grafite | ERRORE | Anthropic: risposta non-JSON all'iterazione 4 (HTTP 524) | status=524",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
-    "010-M1-le-api-imparano-a-cercare.patch"
+    "010-M1-le-api-imparano-a-cercare.patch",
+    "011-M2-il-motore-si-tocca-solo-con-la-firma.patch"
   ],
   "invii": [
     {
@@ -19,13 +20,18 @@
       "quando": "2026-10-25T12:50:50Z",
       "ok": true,
       "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
+    },
+    {
+      "quando": "2026-10-25T14:53:01Z",
+      "ok": true,
+      "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-10-25T12:50:50Z",
+    "quando": "2026-10-25T14:53:01Z",
     "ok": true,
     "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
   },
-  "giri_senza_invii": 12,
+  "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-10-25T14:43:11Z"
 }

@@ -8,20 +8,17 @@ riscrivere un file intero. Si applica solo se il testo cercato compare una volta
 sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
-### 010-M1-le-api-imparano-a-cercare.patch
-- bersaglio: `spawner/index.js` — autrice: tried-plus-unvaried-flint, 25 ottobre 2026 — guasto: M1 (potenziamento del metabolismo, su mandato di Andrea in chat, 25 ott 13:42: «potenziare davvero l'Alveare»)
-- blocco 1: 1 occorrenza, 39 → 1300 caratteri
-- blocco 2: 1 occorrenza, 108 → 621 caratteri
-- blocco 3: 1 occorrenza, 72 → 106 caratteri
+### 011-M2-il-motore-si-tocca-solo-con-la-firma.patch
+- bersaglio: `spawner/index.js` — autrice: tried-plus-unvaried-flint, 25 ottobre 2026 — guasto: M2 (falla trovata il 25 ott dopo l'accensione del deploy automatico: la porta di Pompei e Anthophora si poteva aggirare)
+- blocco 1: 1 occorrenza, 35 → 756 caratteri
+- blocco 2: 1 occorrenza, 86 → 164 caratteri
 - sintassi dopo la patch: node --check passa
-- porta del motore: aperta da `--motore`: chi esegue ha una shell
-- collaudo: spawner/test.js passa: Il motore puo' essere deployato.
-- **APPLICATA** a `spawner/index.js`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `spawner/index.js`, `patch/010-M1-le-api-imparano-a-cercare.patch`, `patch/applicate/010-M1-le-api-imparano-a-cercare.patch`
+- ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
+- La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
 ---
 
-**1 patch su 1 applicate.**
+**0 patch su 1 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in

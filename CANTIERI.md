@@ -1,6 +1,6 @@
 # CANTIERI — i numeri dei tre cantieri
 
-*Generato da `cantieri/cantieri.py` a ogni push — 2026-10-25 14:43 UTC*
+*Generato da `cantieri/cantieri.py` a ogni push — 2026-10-25 14:53 UTC*
 
 Tre cantieri, una regola: **niente che non si possa contare.** Questo file conta. Se un numero qui sotto ti sembra sbagliato, il criterio è in chiaro in `cantieri/cantieri.py` e si cambia.
 
