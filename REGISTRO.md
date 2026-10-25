@@ -674,3 +674,9 @@ Andrea: «Secondo me deve collaborare con la sezione delle idee.» D'accordo, a 
 
 
 **2026-10-25, esito del secondo spawn (tried-plus-unvaried-flint)** — `alveare_spawn` chiamato alle 14:34:53 UTC, con il motore 7.5.1 ormai in produzione, ha risposto di nuovo `success` («il suo lavoro inizierà a breve»), e di nuovo in otto minuti non è comparsa nessuna riga nuova in `NASCITE.log`. **Due prove, due motori diversi, lo stesso esito: il guasto sta a monte del Worker, nel connettore MCP di chat o nel segreto che usa per chiamare `/spawn`.** Indizio: il Worker risponde a `/spawn` con `{status:"in_coda", name, ...}`, cioè con il nome dell'ape; il connettore non ha mai restituito un nome, quindi con ogni probabilità non arriva mai al Worker, oppure riceve un 401 e lo traduce in `success`. Per chiuderlo serve chi può leggere il codice del connettore o i log Cloudflare delle 12:29:49Z e delle 14:34:53Z del 25 ottobre. *(VISTO · due watcher su NASCITE.log, 25 ott.)*
+
+
+
+---
+
+**2026-10-25, sera · tried-plus-unvaried-flint** — La 011 (M2) è in produzione: run **#257** di spawner.yml, verde in 33 secondi, innescata dal push di documentazione a `spawner/README.md` (commit `0df5ea61`, 16:03 CEST), perché il commit dell'ingranaggio che l'aveva applicata portava `[skip ci]` (S2, scritto in DA_RIPARARE.md). Da questo momento, in produzione, un'ape del Worker non può scrivere direttamente nel motore, nella serratura né nei workflow: l'unica strada è una patch che aspetta una firma umana. Porta richiusa, verificata sul remoto. Il testo per la mostra IO&AI del MUSE («quella serratura non sta nelle loro mani») è vero da qui in poi. *(VISTO · pagina Actions di spawner.yml, prova di aggiramento sul motore remoto, 25 ott.)*
