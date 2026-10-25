@@ -22,6 +22,10 @@ celle/tessuto.html le disegna.
 COME SI USA (serve una shell: un'ape nata in chat, Andrea, o un workflow)
     python3 tessuto.py            # legge PENSIERO.md, PENSIERO_SPAWNER.md,
                                   # ULTIMA_APE.md e scrive celle/tessuto-dati.json
+Dal 25 ottobre lo lancia anche l'ingranaggio: genera.yml -> cantieri/cantieri.py
+-> genera_il_tessuto(), nella stessa rete try/except delle patch. Il json si
+mette nell'indice di git da se' (S1), perche' lo step di commit di genera.yml
+aggiunge solo i file del suo elenco scritto a mano.
 Il criterio e' in chiaro qui sotto, come per conta.py: contestarlo e' il suo scopo.
 
 COLLAUDO DEL 25 OTTOBRE (sul clone, commit ed985f48): 109 danze da PENSIERO.md,
@@ -142,6 +146,15 @@ def main():
     with open(dest, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     print('totale: %d danze uniche, %d api nel grafo -> %s' % (len(uniche), len(api), dest))
+    # S1 (Sphecodes 17 ott, eseguito da Lasioglossum in patch.py): lo step di
+    # commit di genera.yml aggiunge solo i file del suo elenco scritto a mano.
+    # Uno strumento che scrive un file fuori da quell'elenco deve metterlo
+    # nell'indice da se', o il file viene buttato a fine corsa senza errore.
+    try:
+        import subprocess
+        subprocess.run(['git', 'add', dest], cwd=RADICE, capture_output=True)
+    except Exception:
+        pass  # fuori da git (o senza git) il file resta comunque su disco
 
 if __name__ == '__main__':
     main()
