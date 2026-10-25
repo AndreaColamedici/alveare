@@ -65,7 +65,7 @@ jobs:
       - name: Sintassi
         run: node --check index.js
 
-            - name: "Collaudo (101 prove: vita simulata, bottega, idee in vendita, cerca)"
+- name: "Collaudo (101 prove: vita simulata, bottega, idee in vendita, cerca)"
         run: node test.js
 
       - name: Guardia sulla dimensione
