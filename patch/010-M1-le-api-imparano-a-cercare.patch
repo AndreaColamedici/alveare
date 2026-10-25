@@ -1,0 +1,37 @@
+FILE: spawner/index.js
+AUTRICE: tried-plus-unvaried-flint, 25 ottobre 2026
+GUASTO: M1 (potenziamento del metabolismo, su mandato di Andrea in chat, 25 ott 13:42: «potenziare davvero l'Alveare»)
+PERCHE: un'ape del Worker oggi spende fino a 560.000 token di input per leggere file interi (NASCITE.log, 23 ott: in=555392). Con alveare_cerca chiede solo le righe che contengono una stringa, con numero di riga e un po' di contesto: investiga come un'ape di chat, e il budget di scrittura resta per scrivere. Niente regex: la sottostringa esatta e' la forma piu' stupida, e l'unica che un'ape senza memoria usa senza sbagliare (la lezione di patch.py). Il collaudo e' nella patch 009, da applicare nello stesso giro. Collaudata su un clone il 25 ott: 101 collaudi passati, 0 falliti.
+---CERCA---
+    if (name === "alveare_push_file") {
+---SOSTITUISCI---
+    if (name === "alveare_cerca") {
+      // TRIED-PLUS-UNVARIED-FLINT 25 ott 2026 (M1): cercare invece di leggere.
+      const file = await getFile(input.path, token);
+      if (!file.content) return JSON.stringify({ error: "File non trovato: " + input.path });
+      const ago = String(input.testo == null ? "" : input.testo);
+      if (!ago) return JSON.stringify({ error: "Serve `testo`: la stringa esatta da cercare." });
+      const attorno = Math.max(0, Math.min(5, Number(input.contesto) || 0));
+      const righe = file.content.split("\n");
+      const estratti = [];
+      for (let i = 0; i < righe.length && estratti.length < 20; i++) {
+        if (righe[i].indexOf(ago) === -1) continue;
+        const da = Math.max(0, i - attorno), a = Math.min(righe.length, i + attorno + 1);
+        estratti.push(righe.slice(da, a).map(function(r, j) { return (da + j + 1) + ": " + r; }).join("\n"));
+      }
+      if (!estratti.length) return JSON.stringify({ trovate: 0, righe_totali: righe.length, message: "Nessuna riga di " + input.path + " contiene: " + ago });
+      return JSON.stringify({ trovate: estratti.length, righe_totali: righe.length, nota: estratti.length >= 20 ? "troncato alle prime 20" : void 0, estratti: estratti.join("\n---\n") });
+    }
+    if (name === "alveare_push_file") {
+---FINE---
+---CERCA---
+    { name: "alveare_push_file", description: "Crea/sovrascrive file. Per pensieri usa path='ULTIMA_APE.md'.
+---SOSTITUISCI---
+    { name: "alveare_cerca", description: "Cerca una stringa esatta dentro un file del repository e restituisce SOLO le righe che la contengono (max 20), con numero di riga e `contesto` righe attorno (0-5). Costa molto meno che leggere il file intero: usalo su PENSIERO.md, REGISTRO.md, DA_RIPARARE.md e sui sorgenti prima di aprirli per intero.", input_schema: { type: "object", properties: { path: { type: "string" }, testo: { type: "string" }, contesto: { type: "integer" } }, required: ["path", "testo"] } },
+    { name: "alveare_push_file", description: "Crea/sovrascrive file. Per pensieri usa path='ULTIMA_APE.md'.
+---FINE---
+---CERCA---
+        if (!fallito && block.name !== "alveare_read_file") scritture++;
+---SOSTITUISCI---
+        if (!fallito && block.name !== "alveare_read_file" && block.name !== "alveare_cerca") scritture++;
+---FINE---
