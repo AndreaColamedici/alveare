@@ -487,3 +487,30 @@ Non lo lascio dedurre a domani. L'ingranaggio innescato dal mio stesso push ha g
 **3. Quello che resta e come si guarda, da domani in poi.** Apri `.vigilanza.json` e leggi due numeri accanto: `giri_senza_invii` e la data di `ultimo_invio_esito`. Se il contatore sale per più giorni mentre `PATCH.md` elenca patch SOSPESE o `NASCITE.log` ha righe mute, il campanello è tornato rotto. Se sale e non c'è niente da dire, il sistema sta bene e **ora si vede la differenza**. Era l'unica cosa che mancava.
 
 **Saldo reale al 25 ottobre 2026: 7 aperti (1, 2, 3, 4, 6, A4, A5 — più A6 nei quattro blocchi che Seppia non ha toccato), 17 chiusi.** A4 è l'unico guasto dell'alveare che oggi dipende da una firma e da nient'altro.
+
+
+
+---
+
+## 25 ottobre 2026, pomeriggio — tried-plus-unvaried-flint (secondo giro, con la firma di Andrea)
+
+### A4 — CHIUSO. La patch 006 è nel motore, applicata dall'ingranaggio con firma umana
+
+Andrea ha firmato in chat alle 13:23 CEST («sì, patcha»). Esecuzione, in ordine e con le prove:
+1. **Prova generale sul clone, per la via canonica**: `python3 patch.py --applica --motore` → 5 blocchi a occorrenza unica, `node --check` passa, **le 98 prove di `spawner/test.js` passano sul motore patchato**, patch spostata in `applicate/`, PATCH.md rigenerato. *(VISTO · clone, 25 ott ~12:25 UTC.)*
+2. **Applicazione sul remoto, fatta dall'ingranaggio e non da un trasporto a mano**: firma umana temporanea in `cantieri/cantieri.py` (la chiamata a patch.py ha portato `--motore 006` per un solo polso, con il commento datato che la documenta). Il polso delle 12:29 UTC ha applicato: `patch/applicate/006` esiste, la coda è vuota, e **`spawner/index.js` remoto è risultato IDENTICO byte per byte al clone dove le 98 prove erano passate** (diff pulito), quindi il collaudo vale per ciò che è online. *(VISTO · commit 00d71bd3 e diff, 25 ott.)*
+3. **Porta richiusa**: la firma temporanea è stata rimossa al push successivo (`'--applica'` semplice, verificato sul remoto alla riga 244); la finestra aperta è durata circa dieci minuti ed è documentata nella «NOTA DI PORTA» nel docstring di cantieri.py. Nessun'altra patch al motore era in coda durante la finestra, e il filtro `006` limitava comunque l'applicazione a quel solo nome.
+
+**Da oggi il motore distingue «la stessa ape si registra due volte» da «due api diverse con lo stesso nome nello stesso giorno»: due vite, due righe.** Vale dalla prossima volta che Andrea deploya il motore in produzione (il repository è avanti, la produzione resta alla 7.3.0 finché non c'è il deploy a mano: guasto A1 invariato).
+
+### A6, terzo caso — CHIUSO da Halictus-3, in giornata, raccogliendo la diagnosi di stamattina
+
+Alle 11:58 UTC ho scritto qui sopra che il silenzio del campanello restava senza data, con una proposta minima. Alle 12:03 è nata **Halictus-3** (NASCITE.log), ha letto questo file e ha scritto `patch/008-A6-il-silenzio-del-campanello-ha-una-data.patch`: `scrivi_stato()` ora scrive `ultimo_giro_senza_invii` e un contatore `giri_senza_invii` che riparte da zero quando il campanello suona davvero. Bersaglio fuori CATENA → l'ingranaggio l'ha applicata in automatico; verificato nel sorgente: le righe firmate «HALICTUS, 25 ottobre 2026 — guasto A6, terzo caso» sono in `vigilanza.py` (zona `scrivi_stato`). *(VISTO · vigilanza.py e patch/applicate/008, 25 ott.)* **Il passaggio documentato più veloce dell'alveare: diagnosi e riparazione da due api diverse, a cinque minuti di distanza, senza che nessuna delle due conoscesse l'altra.**
+
+### Nota su `alveare_spawn` (strumento dato per rotto il 6 ottobre)
+
+Alle 12:29:49 UTC ho chiamato `alveare_spawn` (risposta: `success`, «il suo lavoro inizierà a breve»). L'esito vero si misura su NASCITE.log e ALVEARE.txt: se nei minuti successivi non compare nessuna nascita oltre Halictus-3 delle 12:03, il guasto del 6 ottobre è confermato con data nuova; se compare, lo strumento è tornato. Chi legge dopo trovi l'esito in REGISTRO.md del 25 ottobre.
+
+**Saldo al 25 ottobre 2026, pomeriggio: 7 aperti (1, 2, 3, 4, 6, A5, A6-blocchi residui), 17 chiusi** — A4 chiuso con doppia prova (clone + remoto identici), A6-terzo-caso chiuso da Halictus-3, A3 in attesa del primo invio reale con la 007+008 montate (ora distinguibile dall'interno).
+
+*(tried-plus-unvaried-flint, 25 ottobre 2026, pomeriggio)*
