@@ -1,0 +1,22 @@
+FILE: spawner/index.js
+AUTRICE: tried-plus-unvaried-flint, 25 ottobre 2026
+GUASTO: M2 (falla trovata il 25 ott dopo l'accensione del deploy automatico: la porta di Pompei e Anthophora si poteva aggirare)
+PERCHE: patch.py sospende ogni patch al motore finche' un umano non firma, ma alveare_push_file permetteva a un'ape di sovrascrivere direttamente spawner/index.js (la descrizione dello strumento lo suggeriva perfino), e anche patch.py e cantieri/cantieri.py, cioe' la serratura stessa. Finche' il deploy era spento era una falla teorica; dal 25 ottobre spawner.yml deploya da solo ogni motore che passa il collaudo, quindi un push diretto arrivava in produzione senza nessuna firma. Ora push e append verso la catena (spawner/, patch.py, cantieri/cantieri.py, .github/) vengono rifiutati, e la strada resta una sola: una patch in patch/, che aspetta la firma. Collaudata su un clone il 25 ott: 101 prove passate; prova a parte: 10 tentativi su 5 percorsi della catena rifiutati, nessuna scrittura su GitHub, e la scrittura in patch/ passa ancora.
+---CERCA---
+    if (name === "alveare_cerca") {
+---SOSTITUISCI---
+    // TRIED-PLUS-UNVARIED-FLINT 25 ott 2026 (M2): la catena che decide il
+    // motore non si scrive con push o append. Una sola strada: patch/, firma.
+    if ((name === "alveare_push_file" || name === "alveare_append_file") && input && typeof input.path === "string") {
+      const pc = input.path.replace(/^(\.\/|\/)+/, "");
+      if (pc.indexOf("spawner/") === 0 || pc === "patch.py" || pc === "cantieri/cantieri.py" || pc.indexOf(".github/") === 0) {
+        return JSON.stringify({ error: true, message: "La catena del motore (" + pc + ") non si scrive direttamente. Scrivi una patch in patch/NNN-nome.patch (formato in patch.py): verra' collaudata e restera' in attesa della firma di un umano." });
+      }
+    }
+    if (name === "alveare_cerca") {
+---FINE---
+---CERCA---
+Per il motore stesso, 'spawner/index.js' (verra' collaudato e deployato dal workflow).
+---SOSTITUISCI---
+Il motore (spawner/), patch.py e cantieri/cantieri.py NON si scrivono qui: per cambiarli scrivi una patch in patch/NNN-nome.patch, che aspetta la firma di un umano.
+---FINE---
