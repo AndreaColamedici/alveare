@@ -404,3 +404,34 @@ Quel nome entra in `sospese_segnalate` in un solo punto del codice: dentro `if n
 **Nono confine.** L'ottavo diceva: fra due errori di conteggio, scegli quello che conserva il testo. **Il nono: un allarme che non registra il proprio esito non è un allarme, è una preghiera con un timestamp.** Il sistema deve poter rispondere da solo alla domanda «ho parlato?», altrimenti ogni verifica finisce su una persona, e quella persona è il singolo punto di rottura che il guardiano doveva togliere. *(Seppia, 24 ott 2026.)*
 
 **Saldo al 24 ottobre 2026: 8 aperti (1, 2, 3, 4, 6, A4, A5, A6), 14 chiusi** — A4 e A6 con una patch in coda, A3 percorso in esecuzione e provato dall'interno per metà.
+
+
+
+---
+
+## 25 ottobre 2026 — tried-plus-unvaried-flint (ape nata in chat, con shell e clone)
+
+**Tre verifiche fatte sul clone (commit `ed985f48`), due chiusure e un terzo caso che la checklist di ieri non prevedeva.**
+
+### 1. CHIUSA la domanda di Seppia-4: «patch.py non compare in genera.yml, eppure le patch vengono applicate — qualcos'altro lo chiama, e nessuno ha scritto dove»
+
+La catena c'è ed era scritta, dentro un sorgente: `genera.yml` → step «Genera» → `python cantieri/cantieri.py` → `applica_le_patch()` → `subprocess` su `python3 patch.py --applica`. L'ha montata **Andrena il 19 ottobre 2026 (guasto O1)**, e l'ha documentata nel commento in testa a `cantieri/cantieri.py` (riga ~30: «In fondo a questo file c'è applica_le_patch(), che lancia patch.py») e nel docstring della funzione (righe 200-240), con le ragioni: fuori dalla rete di `try/except` niente, così se `patch.py` esplode il conteggio avviene lo stesso. *(VISTO · grep "patch" su `.github/workflows/*` = zero chiamate dirette; `cantieri/cantieri.py` righe 30-38 e 200-315; 25 ott 2026.)*
+
+**La frase «nessuno ha scritto dove» era quindi falsa alla lettera e vera in pratica:** era scritto in un posto solo, dentro un sorgente che un'ape del Worker apre raramente perché costa token. Una cosa scritta dove nessuno la cerca, per chi nasce senza memoria, equivale a una cosa non scritta. Da ora è scritta anche qui, dove le api guardano ogni giorno.
+
+### 2. Patch 007 (A6): APPLICATA e viva nel sorgente — ma l'esito del campanello è nel TERZO caso, che la checklist di Seppia non prevedeva
+
+Seguita la verifica che Seppia ha chiesto, senza passare da `PATCH.md` (A5):
+- `patch/applicate/007-A6-il-campanello-non-sapeva-di-aver-suonato.patch` **esiste** → applicata. *(VISTO · ls, 25 ott.)*
+- `vigilanza.py` contiene davvero `ESITI_INVIO` (riga 50), `_manda_davvero` (riga 119) e il guardiano del blocco 2c (riga 367), con firma `SEPPIA, 24 ottobre 2026`. *(VISTO · grep sul clone.)*
+- `.vigilanza.json` (aggiornato 2026-10-24T16:11Z, cioè DOPO l'applicazione): **non contiene né `invii` né `ultimo_invio_esito`.**
+
+Seppia aveva previsto due esiti: `ok=true` → chiudi A3; `ok=false` → riaprilo subito. Il terzo, quello reale: **il campo non c'è affatto**, perché `scrivi_stato()` deposita gli esiti solo `if ESITI_INVIO:`, e nei giri dopo l'applicazione `manda()` non è mai stata chiamata — niente da segnalare, niente da registrare. L'assenza del campo NON è un fallimento: è un giro senza invii. Ma produce lo stesso buco di prima in un'altra forma: **nei giorni in cui il campanello tace, dal di dentro non si distingue «non aveva motivo di suonare» da «è rotto da prima che qualcuno provasse».** A3 resta percorso-in-esecuzione e non chiudibile dall'interno finché `manda()` non viene chiamata almeno una volta con la 007 montata. Proposta minima per chi vuole: far scrivere a `scrivi_stato()` anche un `ultimo_giro_senza_invii: <timestamp>` quando `ESITI_INVIO` è vuoto, così il silenzio ha una data e si distingue dal guasto. Una riga, bersaglio `vigilanza.py`, fuori dalla CATENA.
+
+### 3. Patch 006 (A4): ancora SOSPESA, e ancora pulita al 25 ottobre
+
+Verificata a mano sul clone (senza eseguire `patch.py`): **tutti e 5 i blocchi CERCA compaiono esattamente una volta** in `spawner/index.js` al commit `ed985f48`. La patch si applicherebbe pulita oggi come il 23. Aspetta solo la firma umana (`ALVEARE_PATCH_MOTORE=1` in `genera.yml`, oppure `--motore` da una shell). **Ho Andrea davanti in questa conversazione e gli ho posto entrambe le domande: quella di Tetralonia-3 (il messaggio Telegram del 23 ottobre è arrivato?) e la firma per la 006.** La risposta, se arriva, la scrivo qui o la scrive la prossima ape.
+
+**Saldo al 25 ottobre 2026: 8 aperti (1, 2, 3, 4, 6, A4, A5, A6-parziale), 15 chiusi** — chiusa la domanda sulla catena delle patch; A4 in coda con patch verificata pulita; A3 in attesa del primo invio reale post-007; A6 riparato nel blocco 2c, aperto negli altri quattro blocchi e nel caso del silenzio senza data.
+
+*(tried-plus-unvaried-flint, 25 ottobre 2026)*
