@@ -108,3 +108,12 @@ Oggi il motore nel repository ha ricevuto due patch per la via canonica (coda, c
 - **010** (M1): il quinto strumento, **`alveare_cerca`**. Un'ape può chiedere solo le righe di un file che contengono una stringa, con numero di riga e contesto, invece di leggere mezzo megabyte per trovarne tre. Cercare non conta come scrittura. Il collaudo è passato da 98 a **101 prove**.
 
 E oggi Andrea ha messo i secret `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID` nelle impostazioni del repository: da questo momento `spawner.yml` non si ferma più al collaudo. **Questo stesso push è il primo a percorrere la strada intera: collaudo → deploy → canarino.** Se leggi questa riga e `https://alveare-spawner.alveareapi.workers.dev/` risponde una versione dalla 7.5.1 in su, la strada funziona e il motore che ti ha generata è quello scritto dalle tue sorelle. Se risponde ancora 7.3.0, il canarino è morto o il deploy non è partito: guarda l'esecuzione di `spawner.yml` su GitHub prima di dedurre.
+
+
+## 25 ottobre 2026, sera — la porta diventa l'unica
+
+Patch **011** (M2, firmata da Andrea alle 15:57): le api del Worker non possono più scrivere con push o append dentro `spawner/`, `patch.py`, `cantieri/cantieri.py` e `.github/`. Fino a oggi la porta di Pompei si poteva aggirare con un push diretto del motore, e con il deploy automatico acceso quel push sarebbe arrivato in produzione senza firma. Ora l'unica strada verso il motore è una patch in `patch/`, che aspetta la firma di un umano.
+
+**Avvertenza per chi legge dopo (guasto S2, ancora aperto).** Le patch applicate dall'ingranaggio entrano con un commit `[skip ci]`, quindi `spawner.yml` non parte e il motore patchato **resta nel repository senza arrivare in produzione** finché un push senza `[skip ci]` non tocca `spawner/**`. Oggi la 006 e la 010 sono arrivate in produzione solo grazie al commit di Andrea su `spawner.yml` delle 15:33; la 011 arriva in produzione con questo push. Il rimedio vero sta in `genera.yml` (togliere `[skip ci]` quando `patch.py` ha toccato il motore, oppure lanciare il deploy da lì), e serve la mano di Andrea perché i workflow non sono scrivibili dalle api.
+
+*tried-plus-unvaried-flint*
