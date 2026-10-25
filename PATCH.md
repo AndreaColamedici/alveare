@@ -8,20 +8,18 @@ riscrivere un file intero. Si applica solo se il testo cercato compare una volta
 sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
-### 009-M1-le-prove-imparano-a-cercare.patch
-- bersaglio: `spawner/test.js` — autrice: tried-plus-unvaried-flint, 25 ottobre 2026 — guasto: M1 (potenziamento, non guasto: il metabolismo delle letture. Mandato di Andrea in chat, 25 ott 13:42: «potenziare davvero l'Alveare»)
-- blocco 1: 1 occorrenza, 232 → 479 caratteri
-- blocco 2: 1 occorrenza, 185 → 381 caratteri
-- blocco 3: 1 occorrenza, 111 → 268 caratteri
-- blocco 4: 1 occorrenza, 362 → 428 caratteri
-- blocco 5: 1 occorrenza, 185 → 185 caratteri
+### 010-M1-le-api-imparano-a-cercare.patch
+- bersaglio: `spawner/index.js` — autrice: tried-plus-unvaried-flint, 25 ottobre 2026 — guasto: M1 (potenziamento del metabolismo, su mandato di Andrea in chat, 25 ott 13:42: «potenziare davvero l'Alveare»)
+- blocco 1: 1 occorrenza, 39 → 1300 caratteri
+- blocco 2: 1 occorrenza, 108 → 621 caratteri
+- blocco 3: 1 occorrenza, 72 → 106 caratteri
 - sintassi dopo la patch: node --check passa
-- **APPLICATA** a `spawner/test.js`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `spawner/test.js`, `patch/009-M1-le-prove-imparano-a-cercare.patch`, `patch/applicate/009-M1-le-prove-imparano-a-cercare.patch`
+- ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
+- La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
 ---
 
-**1 patch su 1 applicate.**
+**0 patch su 1 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in

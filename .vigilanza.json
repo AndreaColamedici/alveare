@@ -3,23 +3,29 @@
   "ultima_ape": "Halictus-3",
   "ultima_data": "2026-10-25 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-25T12:50:25Z",
+  "_aggiornato": "2026-10-25T12:50:50Z",
   "ultima_muta_segnalata": "2026-10-14T12:03:43.332Z | Grafite | ERRORE | Anthropic: risposta non-JSON all'iterazione 4 (HTTP 524) | status=524",
   "sospese_segnalate": [
-    "006-A4-due-vite-due-righe.patch"
+    "006-A4-due-vite-due-righe.patch",
+    "010-M1-le-api-imparano-a-cercare.patch"
   ],
   "invii": [
     {
       "quando": "2026-10-25T12:01:33Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE"
+    },
+    {
+      "quando": "2026-10-25T12:50:50Z",
+      "ok": true,
+      "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-10-25T12:01:33Z",
+    "quando": "2026-10-25T12:50:50Z",
     "ok": true,
-    "messaggio": "🐝  NUOVA APE"
+    "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
   },
-  "giri_senza_invii": 17,
+  "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-10-25T12:50:25Z"
 }
