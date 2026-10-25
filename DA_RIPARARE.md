@@ -522,3 +522,31 @@ Alle 12:29:49 UTC ho chiamato `alveare_spawn` (risposta: `success`, «il suo lav
 Andrea, in chat, alla domanda lasciata da Tetralonia-3 il 23 ottobre: **sì, il messaggio «UNA PATCH ASPETTA LA TUA FIRMA» è arrivato.** Il campanello di `vigilanza.py` (passo 2c, scritto dalla prima Tetralonia il 22 ottobre) ha quindi suonato davvero sul primo caso reale: patch sospesa → notifica a un umano → firma umana → applicazione. L'intera catena è stata percorsa in esecuzione, dall'allarme alla riparazione. Con la 007 di Seppia e la 008 di Halictus-3 montate, i prossimi esiti d'invio e i giri muti si leggeranno da `.vigilanza.json` senza chiedere a nessuno. *(Riportato da tried-plus-unvaried-flint, che ha posto la domanda e ricevuto la risposta.)*
 
 **Saldo aggiornato al 25 ottobre 2026: 6 aperti (1, 2, 3-storici, 4, A5, A6-blocchi residui), 18 chiusi.**
+
+
+
+---
+
+## 25 ottobre 2026, pomeriggio tardo — tried-plus-unvaried-flint: W1, il guasto che nessuno ha mai visto perché falliva in silenzio dal primo giorno
+
+### W1 — APERTO, diagnosi completa, fix pronto: `spawner.yml` è YAML invalido dal 9 ottobre
+
+Andrea ha messo oggi i secret `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID` (prerequisito del deploy automatico: fatto, confermato in chat). Ho innescato il primo deploy con un push a `spawner/README.md`. La produzione è rimasta alla 7.3.0 dopo nove minuti. La pagina Actions del repository dice il perché: **ogni esecuzione di `spawner.yml` fallisce in circa un secondo, e GitHub mostra il percorso del file al posto del suo nome**: sono i sintomi di un workflow che GitHub non riesce a leggere. Verificato sul sorgente: `yaml.safe_load` fallisce alla **riga 68, colonna 33**:
+
+```
+- name: Collaudo (98 prove: vita simulata, bottega, idee in vendita)
+```
+
+I due punti dentro «98 prove: vita simulata», non quotati, rendono invalido l'intero file. Il commit che li ha introdotti è `29892f19` del 9 ottobre («Fable: spawner.yml dice 98 prove»): **il workflow del collaudo e del deploy non è mai stato valido un solo giorno della sua vita.** Nessuno se n'è accorto per sedici giorni perché, senza i secret, da fuori ci si aspettava comunque che "non deployasse", e le run fallite in un secondo non le ha mai guardate nessuno. La riga di SINTESI §2 «spawner.yml collauda a ogni modifica» è quindi FALSA dal 9 ottobre: i collaudi reali di questo periodo sono girati solo dentro `patch.py`. *(VISTO · pagina Actions, run #247-252 tutte fallite; yaml.safe_load sulla copia di origin/main; git log di spawner.yml; 25 ott.)*
+
+**Fix, una riga, validato** (con il numero di prove aggiornato a 101):
+
+```
+- name: "Collaudo (101 prove: vita simulata, bottega, idee in vendita, cerca)"
+```
+
+Con questa sola sostituzione `yaml.safe_load` passa sull'intero file. **Nessuna ape può applicarlo**: `.github/workflows/*` richiede lo scope `workflow` che il token non ha (VISTO, Habropoda 18 set). Serve la mano di Andrea: editor web di GitHub su `.github/workflows/spawner.yml`, riga 68, aggiungere le virgolette (il fix esatto è qui sopra). Al salvataggio, il push stesso innescherà il workflow riparato: collaudo → deploy → canarino, con i secret già al loro posto.
+
+**Lezione, che è la gemella del caso Ambra**: un allarme che si ripete identico diventa invisibile (lo diceva il commento di genera.yml sul guardiano), e **un fallimento che fallisce dal primo giorno non è mai stato visto fallire**: nessuno ha un "prima" con cui confrontarlo. Il canarino doveva guardare il motore; nessun canarino guardava il canarino. Quando W1 sarà chiuso, varrà la pena dare a `vigilanza.py` un occhio sulle run di `spawner.yml` via API pubblica di GitHub: un workflow che fallisce in meno di cinque secondi è un workflow che non è mai partito.
+
+*(tried-plus-unvaried-flint, 25 ottobre 2026)*
