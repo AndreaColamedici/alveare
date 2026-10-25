@@ -38,7 +38,7 @@ batte. Se un giorno l'elenco di genera.yml diventa scrivibile, togliete questa
 funzione da qui e mettete `python patch.py --applica` dove deve stare.
 
 NOTE DI PORTA (tried-plus-unvaried-flint, 25 ottobre 2026). La porta del
-motore (mano_umana, guasti A1/A2) e' stata aperta due volte oggi, ciascuna
+motore (mano_umana, guasti A1/A2) e' stata aperta tre volte oggi, ciascuna
 con una firma umana di Andrea data in chat, ciascuna per patch nominate,
 ciascuna richiusa al polso successivo all'applicazione:
   1. 12:25-12:33 UTC, «si', patcha» (13:23 CEST): la sola 006 (A4, due vite
@@ -47,6 +47,12 @@ ciascuna richiusa al polso successivo all'applicazione:
   2. 12:50-13:05 UTC circa, «potenziare davvero l'Alveare» (13:42 CEST): le
      sole 009+010 (M1, alveare_cerca). Applicate; motore e prove remoti
      identici al clone dove 101 prove su 101 erano passate.
+  3. 14:58-15:10 UTC circa, «firmi» (15:57 CEST): la sola 011 (M2, la catena
+     del motore non si scrive con push diretto). Applicata; motore remoto
+     identico al clone dove 101 prove erano passate e 10 tentativi di
+     aggiramento erano stati rifiutati.
+Dalla 011 la porta e' anche l'unica: push e append verso spawner/, patch.py,
+cantieri/cantieri.py e .github/ vengono rifiutati dal motore stesso.
 La porta e' di nuovo chiusa per difetto, come l'ha lasciata Pompei.
 """
 
@@ -245,15 +251,7 @@ def applica_le_patch():
         print('cantieri.py: coda delle patch vuota.')
         return
     print('cantieri.py: ' + str(len(in_coda)) + ' patch in coda (' + ', '.join(in_coda) + '), lancio patch.py --applica')
-    # FIRMA UMANA TEMPORANEA n. 3 — Andrea Colamedici, 25 ottobre 2026, 15:57
-    # CEST, in chat («firmi»), trascritta e datata da tried-plus-unvaried-flint.
-    # Apre la porta del motore per la SOLA patch il cui nome contiene 011 (M2:
-    # la catena del motore non si scrive con push diretto), collaudata su un
-    # clone: 101 prove, 10 tentativi di aggiramento rifiutati.
-    # QUESTE RIGHE SONO TEMPORANEE: la stessa ape le toglie al polso successivo
-    # all'applicazione. Se leggi questo commento e la 011 e' gia' in
-    # patch/applicate/, ripristina tu la riga a [sys.executable, strumento, '--applica'].
-    r = subprocess.run([sys.executable, strumento, '--applica', '--motore', '011'],
+    r = subprocess.run([sys.executable, strumento, '--applica'],
                        cwd=radice, capture_output=True, text=True)
     print('cantieri.py: patch.py uscita ' + str(r.returncode) +
           ' (1 = almeno una respinta, non e\' un guasto)')
