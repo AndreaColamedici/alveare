@@ -97,9 +97,11 @@ ok("identita' con urgenza alta la mostra", /URGENZA ALTA/.test(id2) && /ciao/.te
 
 console.log("--- strumenti ---");
 const tools = m.getMCPTools();
-ok("quattro strumenti", tools.length === 4);
+ok("cinque strumenti", tools.length === 5);
 ok("read_file accetta ultime_righe", tools[0].input_schema.properties.ultime_righe !== undefined);
-ok("add_bee dice di essere la prima azione", /PRIMA azione/.test(tools[3].description));
+ok("cerca e' il secondo strumento e vuole path+testo", tools[1].name === "alveare_cerca" && tools[1].input_schema.required.includes("testo"), tools[1]);
+ok("cerca dichiara di costare meno di una lettura intera", /meno/.test(tools[1].description));
+ok("add_bee dice di essere la prima azione", /PRIMA azione/.test(tools[4].description));
 
 // ------------------------------------------------------------ 2. una vita intera
 
@@ -127,6 +129,8 @@ const copione = [
     content: [{ type: "tool_use", id: "t1", name: "alveare_add_bee", input: { nome: "Prova", contributo: "Mi sveglio e scrivo prima di leggere." } }] },
   { stop_reason: "tool_use", usage: { input_tokens: 5200, output_tokens: 60 },
     content: [{ type: "tool_use", id: "t2", name: "alveare_read_file", input: { path: "SINTESI.md" } }] },
+  { stop_reason: "tool_use", usage: { input_tokens: 5400, output_tokens: 50 },
+    content: [{ type: "tool_use", id: "t2b", name: "alveare_cerca", input: { path: "PENSIERO.md", testo: "P" } }] },
   { stop_reason: "tool_use", usage: { input_tokens: 9000, output_tokens: 900 },
     content: [{ type: "tool_use", id: "t3", name: "alveare_push_file", input: { path: "ULTIMA_APE.md", content: "## Prova\npensiero", message: "Prova: pensiero" } },
               { type: "tool_use", id: "t4", name: "alveare_add_bee", input: { nome: "Prova", contributo: "NUTRIX: un pensiero, salvato." } }] },
@@ -181,16 +185,17 @@ ok("scheduled() ha messo in coda un'ape con un nome valido", env._inviato && m.N
 ok("il contesto in coda NON contiene l'allarme scheduler", env._inviato && env._inviato.contesto.urgenza === "bassa", env._inviato && env._inviato.contesto);
 ok("il primo blocco di sistema e' la voce di nascita dal file", chiamateAnthropic[0] && chiamateAnthropic[0].system[0].text === repo["VOCE_DI_NASCITA.md"]);
 ok("max_tokens e' 16000", chiamateAnthropic[0] && chiamateAnthropic[0].max_tokens === 16000, chiamateAnthropic[0] && chiamateAnthropic[0].max_tokens);
-ok("quattro chiamate ad Anthropic, come da copione", chiamateAnthropic.length === 4, chiamateAnthropic.length);
+ok("cinque chiamate ad Anthropic, come da copione", chiamateAnthropic.length === 5, chiamateAnthropic.length);
+ok("cerca ha trovato la riga e l'esito e' tornato all'ape", chiamateAnthropic.some(c => JSON.stringify(c.messages).includes("1: # P")), repo["PENSIERO.md"]);
 ok("l'ape e' stata registrata UNA volta sola (una vita, una riga)", (repo["ALVEARE.txt"].match(/\| Prova/g) || []).length === 1, repo["ALVEARE.txt"]);
 ok("la riga finale porta il risultato, non l'intenzione", /\| Prova \| NUTRIX: un pensiero, salvato\./.test(repo["ALVEARE.txt"]), repo["ALVEARE.txt"]);
 ok("il pensiero e' in ULTIMA_APE.md", repo["ULTIMA_APE.md"] === "## Prova\npensiero");
 ok("il pensiero e' stato propagato a PENSIERO_SPAWNER.md", /pensiero/.test(repo["PENSIERO_SPAWNER.md"]));
 ok("NASCITE.log esiste e ha una riga con il nome assegnato dalla coda", repo["NASCITE.log"] && new RegExp("\\| " + env._inviato.name + " \\| VOCE_DI_NASCITA\\.md@").test(repo["NASCITE.log"]), repo["NASCITE.log"]);
-ok("NASCITE.log dice turni=4, scritture=3, stop=end_turn", /turni=4 \| scritture=3 \| stop=end_turn/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
-ok("NASCITE.log elenca gli strumenti con l'esito", /add_bee\(Prova\)=ok read_file\(SINTESI\.md\)=KO push_file\(ULTIMA_APE\.md\)=ok add_bee\(Prova\)=ok/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
+ok("NASCITE.log dice turni=5, scritture=3 (cercare non e' scrivere), stop=end_turn", /turni=5 \| scritture=3 \| stop=end_turn/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
+ok("NASCITE.log elenca gli strumenti con l'esito, cerca incluso", /add_bee\(Prova\)=ok read_file\(SINTESI\.md\)=KO cerca\(PENSIERO\.md\)=ok push_file\(ULTIMA_APE\.md\)=ok add_bee\(Prova\)=ok/.test(repo["NASCITE.log"] || ""), repo["NASCITE.log"]);
 ok("il messaggio in coda e' stato ackato", ackato && !ritentato);
-ok("il log stampa lo stop_reason di ogni turno (1 + 3 iterazioni)", logs.filter(l => /(turno 1|iter \d+): stop_reason=/.test(l)).length === 4, logs.filter(l => /stop_reason=/.test(l)));
+ok("il log stampa lo stop_reason di ogni turno (1 + 4 iterazioni)", logs.filter(l => /(turno 1|iter \d+): stop_reason=/.test(l)).length === 5, logs.filter(l => /stop_reason=/.test(l)));
 ok("il risultato di add_bee porta lo sha del commit all'ape", chiamateAnthropic[1].messages[2].content[0].content.includes("c0ffee1"));
 
 // Un'ape che risponde in prosa senza strumenti: deve finire nel log come tale.

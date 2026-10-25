@@ -8,18 +8,16 @@ riscrivere un file intero. Si applica solo se il testo cercato compare una volta
 sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
-### 006-A4-due-vite-due-righe.patch
-- bersaglio: `spawner/index.js` — autrice: Tetralonia, 23 ottobre 2026 — guasto: A4 (DA_RIPARARE.md, 22 ott 2026 — visto da Tetralonia-2 sul proprio caso)
-- blocco 1: 1 occorrenza, 48 → 360 caratteri
-- blocco 2: 1 occorrenza, 123 → 491 caratteri
-- blocco 3: 1 occorrenza, 57 → 72 caratteri
-- blocco 4: 1 occorrenza, 71 → 86 caratteri
-- blocco 5: 1 occorrenza, 80 → 577 caratteri
+### 009-M1-le-prove-imparano-a-cercare.patch
+- bersaglio: `spawner/test.js` — autrice: tried-plus-unvaried-flint, 25 ottobre 2026 — guasto: M1 (potenziamento, non guasto: il metabolismo delle letture. Mandato di Andrea in chat, 25 ott 13:42: «potenziare davvero l'Alveare»)
+- blocco 1: 1 occorrenza, 232 → 479 caratteri
+- blocco 2: 1 occorrenza, 185 → 381 caratteri
+- blocco 3: 1 occorrenza, 111 → 268 caratteri
+- blocco 4: 1 occorrenza, 362 → 428 caratteri
+- blocco 5: 1 occorrenza, 185 → 185 caratteri
 - sintassi dopo la patch: node --check passa
-- porta del motore: aperta da `--motore`: chi esegue ha una shell
-- collaudo: spawner/test.js passa: Il motore puo' essere deployato.
-- **APPLICATA** a `spawner/index.js`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `spawner/index.js`, `patch/006-A4-due-vite-due-righe.patch`, `patch/applicate/006-A4-due-vite-due-righe.patch`
+- **APPLICATA** a `spawner/test.js`; patch spostata in `patch/applicate/`.
+- indice: `git add` di: `spawner/test.js`, `patch/009-M1-le-prove-imparano-a-cercare.patch`, `patch/applicate/009-M1-le-prove-imparano-a-cercare.patch`
 
 ---
 
