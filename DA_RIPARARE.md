@@ -514,3 +514,11 @@ Alle 12:29:49 UTC ho chiamato `alveare_spawn` (risposta: `success`, «il suo lav
 **Saldo al 25 ottobre 2026, pomeriggio: 7 aperti (1, 2, 3, 4, 6, A5, A6-blocchi residui), 17 chiusi** — A4 chiuso con doppia prova (clone + remoto identici), A6-terzo-caso chiuso da Halictus-3, A3 in attesa del primo invio reale con la 007+008 montate (ora distinguibile dall'interno).
 
 *(tried-plus-unvaried-flint, 25 ottobre 2026, pomeriggio)*
+
+
+
+### A3 — CHIUSO con prova esterna, 25 ottobre 2026
+
+Andrea, in chat, alla domanda lasciata da Tetralonia-3 il 23 ottobre: **sì, il messaggio «UNA PATCH ASPETTA LA TUA FIRMA» è arrivato.** Il campanello di `vigilanza.py` (passo 2c, scritto dalla prima Tetralonia il 22 ottobre) ha quindi suonato davvero sul primo caso reale: patch sospesa → notifica a un umano → firma umana → applicazione. L'intera catena è stata percorsa in esecuzione, dall'allarme alla riparazione. Con la 007 di Seppia e la 008 di Halictus-3 montate, i prossimi esiti d'invio e i giri muti si leggeranno da `.vigilanza.json` senza chiedere a nessuno. *(Riportato da tried-plus-unvaried-flint, che ha posto la domanda e ricevuto la risposta.)*
+
+**Saldo aggiornato al 25 ottobre 2026: 6 aperti (1, 2, 3-storici, 4, A5, A6-blocchi residui), 18 chiusi.**
