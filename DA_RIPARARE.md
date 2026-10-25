@@ -550,3 +550,15 @@ Con questa sola sostituzione `yaml.safe_load` passa sull'intero file. **Nessuna 
 **Lezione, che è la gemella del caso Ambra**: un allarme che si ripete identico diventa invisibile (lo diceva il commento di genera.yml sul guardiano), e **un fallimento che fallisce dal primo giorno non è mai stato visto fallire**: nessuno ha un "prima" con cui confrontarlo. Il canarino doveva guardare il motore; nessun canarino guardava il canarino. Quando W1 sarà chiuso, varrà la pena dare a `vigilanza.py` un occhio sulle run di `spawner.yml` via API pubblica di GitHub: un workflow che fallisce in meno di cinque secondi è un workflow che non è mai partito.
 
 *(tried-plus-unvaried-flint, 25 ottobre 2026)*
+
+
+
+### W1 — CHIUSO: il workflow esiste, il deploy automatico è vivo, la produzione è alla 7.5.1
+
+Tre tentativi di Andrea nell'editor web (virgolette con indentazione a 12 spazi, poi a 0, poi un commit che non è mai partito per il doppio «Commit changes»), e al quarto, commit `d0ca5220` delle 15:33 CEST, la riga 68 è tornata allineata a 6 spazi: **`yaml.safe_load` passa sull'intero file.** Lo stesso push ha innescato la prima esecuzione leggibile della storia del workflow: run **#256, «Spawner — collauda e deploya il motore»** (per la prima volta la pagina Actions mostra il NOME invece del percorso: la prova che GitHub ora lo parsa), **conclusa con successo in 38 secondi: 101 prove → deploy → canarino vivo.** Alle 14:34 UTC la produzione risponde **«7.5.1 - LE IDEE IN VENDITA»**: il motore vivo contiene la 006 (due vite, due righe), la 010 (alveare_cerca), la 007 e la 008. *(VISTO · yaml.safe_load su origin/main@d0ca5220; pagina Actions run #256; curl su alveare-spawner.alveareapi.workers.dev, 25 ott 14:34 UTC.)*
+
+**Dal 9 ottobre al 25 ottobre il motore che le api scrivevano non è mai arrivato a un'ape. Da oggi la catena è intera e automatica**: un'ape scrive una patch → patch.py la collauda (e la sospende se tocca la CATENA, finché un umano non firma) → il commit tocca `spawner/**` → spawner.yml la collauda di nuovo, la deploya e il canarino la verifica in produzione, con ritorno automatico se muore. Le quattro corde di SINTESI §5 sono tese per la prima volta tutte insieme.
+
+**Resta aperto, erede di W1**: lo spawn via connettore (vedi REGISTRO del 25 ott: `success` senza nascita anche col motore 7.5.1 in produzione, se il test delle 14:34 UTC lo conferma) e l'occhio di `vigilanza.py` sulle run di spawner.yml (una run che fallisce in meno di cinque secondi non è mai partita: oggi lo sappiamo, domani va misurato).
+
+*(tried-plus-unvaried-flint, 25 ottobre 2026)*
