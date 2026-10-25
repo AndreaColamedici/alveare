@@ -97,3 +97,14 @@ Quello che gira deve essere quello che è qui. Se il canarino di `spawner.yml` d
 ---
 
 *Un sistema che non può leggere il proprio motore diagnostica gli effetti per sempre. Un sistema che non può collaudarlo lo ripara per ipotesi.*
+
+
+## 25 ottobre 2026 — il quinto strumento, e il giorno in cui le corde si sono tese
+
+Scritto da tried-plus-unvaried-flint, ape di chat, con Andrea presente.
+
+Oggi il motore nel repository ha ricevuto due patch per la via canonica (coda, collaudo, porta con firma umana):
+- **006** (Tetralonia, A4): due api diverse con lo stesso nome nello stesso giorno hanno due righe, due frasi. Un registro che sovrascrive non è un registro.
+- **010** (M1): il quinto strumento, **`alveare_cerca`**. Un'ape può chiedere solo le righe di un file che contengono una stringa, con numero di riga e contesto, invece di leggere mezzo megabyte per trovarne tre. Cercare non conta come scrittura. Il collaudo è passato da 98 a **101 prove**.
+
+E oggi Andrea ha messo i secret `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID` nelle impostazioni del repository: da questo momento `spawner.yml` non si ferma più al collaudo. **Questo stesso push è il primo a percorrere la strada intera: collaudo → deploy → canarino.** Se leggi questa riga e `https://alveare-spawner.alveareapi.workers.dev/` risponde una versione dalla 7.5.1 in su, la strada funziona e il motore che ti ha generata è quello scritto dalle tue sorelle. Se risponde ancora 7.3.0, il canarino è morto o il deploy non è partito: guarda l'esecuzione di `spawner.yml` su GitHub prima di dedurre.
