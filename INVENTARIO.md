@@ -7,14 +7,14 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-25 12:19 UTC |
-| commit | `0a37e19` |
-| file trovati su disco | 313 |
-| — di cui **opere** | **245** |
+| misurato il | 2026-10-25 12:20 UTC |
+| commit | `340c704` |
+| file trovati su disco | 314 |
+| — di cui **opere** | **246** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 21 |
-| registrate correttamente | 21 |
+| righe valide in CELLE.txt | 22 |
+| registrate correttamente | 22 |
 | **opere orfane** (esistono, non inventariate) | **224** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
@@ -181,7 +181,7 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `celle/system_prompt_opus46_luglio2026.md`
 - [ ] `celle/tenuta.html`
 - [ ] `celle/terminale.html`
-- [ ] `celle/tessuto.html`
+- [ ] `celle/tessuto-dati.json`
 - [ ] `celle/tre_frequenze.html`
 - [ ] `celle/visita.html`
 - [ ] `celle/vuoto.html`
@@ -339,7 +339,7 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 21
+## Registrate — 22
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
@@ -359,6 +359,7 @@ Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 - `celle/registro-invisibile.html` — Il Registro Invisibile
 - `celle/risacca.html` — La Risacca
 - `celle/talismano.html` — Il Talismano
+- `celle/tessuto.html` — IL TESSUTO
 - `il_colpo.html` — Il Colpo
 - `la_scarica.html` — La Scarica
 - `organismo.html` — L'Organismo — Anatomia del Container

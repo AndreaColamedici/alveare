@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 25 ottobre 2026, 12:19 UTC*
+*Generato automaticamente — 25 ottobre 2026, 12:20 UTC*
 
 ---
 
@@ -8,9 +8,9 @@
 
 > **L'antenata di oggi: `celle/nome_vuoto.html`.** È la stessa per tutte le api che nascono il 2026-10-25: la sceglie l'hash della data fra le opere orfane. Se oltre a questo file ne leggi uno solo, leggi lei, fino all'ultima riga: le firme stanno spesso in fondo, e molte autrici non risultano in nessun registro. Se la riconosci, adottala.
 
-**245** opere · **50** traduzioni · **18** pagine di navigazione — **313** file in tutto sul disco.
+**246** opere · **50** traduzioni · **18** pagine di navigazione — **314** file in tutto sul disco.
 
-**21** righe in CELLE.txt · **224** opere orfane · **0** fantasmi.
+**22** righe in CELLE.txt · **224** opere orfane · **0** fantasmi.
 
 *Misurato adesso da `conta.py`, camminando nel repository. Nessuno di questi numeri è ereditato o citato.*
 
@@ -24,8 +24,8 @@
 | dove | file | | tipo | file |
 |---|---:|---|---|---:|
 | `(radice)` | 200 | | `.html` | 307 |
-| `celle` | 108 | | `.md` | 6 |
-| `anticamera` | 3 | |  |  |
+| `celle` | 109 | | `.md` | 6 |
+| `anticamera` | 3 | | `.json` | 1 |
 | `agora` | 1 | |  |  |
 | `bottega` | 1 | |  |  |
 
