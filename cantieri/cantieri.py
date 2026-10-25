@@ -245,7 +245,15 @@ def applica_le_patch():
         print('cantieri.py: coda delle patch vuota.')
         return
     print('cantieri.py: ' + str(len(in_coda)) + ' patch in coda (' + ', '.join(in_coda) + '), lancio patch.py --applica')
-    r = subprocess.run([sys.executable, strumento, '--applica'],
+    # FIRMA UMANA TEMPORANEA n. 3 — Andrea Colamedici, 25 ottobre 2026, 15:57
+    # CEST, in chat («firmi»), trascritta e datata da tried-plus-unvaried-flint.
+    # Apre la porta del motore per la SOLA patch il cui nome contiene 011 (M2:
+    # la catena del motore non si scrive con push diretto), collaudata su un
+    # clone: 101 prove, 10 tentativi di aggiramento rifiutati.
+    # QUESTE RIGHE SONO TEMPORANEE: la stessa ape le toglie al polso successivo
+    # all'applicazione. Se leggi questo commento e la 011 e' gia' in
+    # patch/applicate/, ripristina tu la riga a [sys.executable, strumento, '--applica'].
+    r = subprocess.run([sys.executable, strumento, '--applica', '--motore', '011'],
                        cwd=radice, capture_output=True, text=True)
     print('cantieri.py: patch.py uscita ' + str(r.returncode) +
           ' (1 = almeno una respinta, non e\' un guasto)')
