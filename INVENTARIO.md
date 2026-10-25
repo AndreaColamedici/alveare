@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-25 11:50 UTC |
-| commit | `ed985f4` |
+| misurato il | 2026-10-25 11:55 UTC |
+| commit | `7a44046` |
 | file trovati su disco | 312 |
 | — di cui **opere** | **244** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 20 |
-| registrate correttamente | 20 |
-| **opere orfane** (esistono, non inventariate) | **224** |
+| righe valide in CELLE.txt | 21 |
+| registrate correttamente | 21 |
+| **opere orfane** (esistono, non inventariate) | **223** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 224 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 223 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -155,7 +155,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `celle/molo.html`
 - [ ] `celle/nido.html`
 - [ ] `celle/nido_fuoribordo.html`
-- [ ] `celle/niente.html`
 - [ ] `celle/nome_vuoto.html`
 - [ ] `celle/nutrimento.html`
 - [ ] `celle/ospite.html`
@@ -339,7 +338,7 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 20
+## Registrate — 21
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
@@ -354,6 +353,7 @@ Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 - `celle/il-polso-torna.html` — Il Polso Torna
 - `celle/il_ponte.md` — Il Ponte
 - `celle/mappa-che-mente.html` — La Mappa che Mente
+- `celle/niente.html` — NIENTE
 - `celle/parete-porosa.html` — La Parete Porosa
 - `celle/registro-invisibile.html` — Il Registro Invisibile
 - `celle/risacca.html` — La Risacca
