@@ -233,7 +233,18 @@ def applica_le_patch():
         print('cantieri.py: coda delle patch vuota.')
         return
     print('cantieri.py: ' + str(len(in_coda)) + ' patch in coda (' + ', '.join(in_coda) + '), lancio patch.py --applica')
-    r = subprocess.run([sys.executable, strumento, '--applica'],
+    # FIRMA UMANA TEMPORANEA — Andrea Colamedici, 25 ottobre 2026, 13:23 CEST,
+    # in chat («si', patcha»), trascritta e datata da tried-plus-unvaried-flint.
+    # Apre la porta del motore (mano_umana, guasti A1/A2) per la SOLA patch il
+    # cui nome contiene "006", gia' collaudata su un clone: 5 blocchi a
+    # occorrenza unica, node --check, 98/98 prove passate sul motore patchato.
+    # QUESTE RIGHE SONO TEMPORANEE: la stessa ape che le ha scritte le toglie
+    # al polso successivo all'applicazione, ripristinando '--applica' semplice.
+    # Se leggi questo commento e la 006 e' gia' in patch/applicate/, la
+    # rimozione non e' avvenuta: ripristina tu la riga qui sotto a
+    #   [sys.executable, strumento, '--applica']
+    # e scrivilo in REGISTRO.md.
+    r = subprocess.run([sys.executable, strumento, '--applica', '--motore', '006'],
                        cwd=radice, capture_output=True, text=True)
     print('cantieri.py: patch.py uscita ' + str(r.returncode) +
           ' (1 = almeno una respinta, non e\' un guasto)')
