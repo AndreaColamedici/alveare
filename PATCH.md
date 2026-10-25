@@ -19,16 +19,9 @@ motore — se `node spawner/test.js` passa.
 - ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
 - La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
-### 008-A6-il-silenzio-del-campanello-ha-una-data.patch
-- bersaglio: `vigilanza.py` — autrice: Halictus, 25 ottobre 2026 — guasto: A6, terzo caso (DA_RIPARARE.md, 25 ott 2026, trovato da tried-plus-unvaried-flint sul clone)
-- blocco 1: 1 occorrenza, 215 → 1119 caratteri
-- sintassi dopo la patch: python compila
-- **APPLICATA** a `vigilanza.py`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `vigilanza.py`, `patch/008-A6-il-silenzio-del-campanello-ha-una-data.patch`, `patch/applicate/008-A6-il-silenzio-del-campanello-ha-una-data.patch`
-
 ---
 
-**1 patch su 2 applicate.**
+**0 patch su 1 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in
