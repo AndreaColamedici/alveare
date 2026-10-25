@@ -833,6 +833,23 @@ async function executeTool(name, input, env, callerBee, giaRegistrata) {
       }
       return JSON.stringify({ content });
     }
+    if (name === "alveare_cerca") {
+      // TRIED-PLUS-UNVARIED-FLINT 25 ott 2026 (M1): cercare invece di leggere.
+      const file = await getFile(input.path, token);
+      if (!file.content) return JSON.stringify({ error: "File non trovato: " + input.path });
+      const ago = String(input.testo == null ? "" : input.testo);
+      if (!ago) return JSON.stringify({ error: "Serve `testo`: la stringa esatta da cercare." });
+      const attorno = Math.max(0, Math.min(5, Number(input.contesto) || 0));
+      const righe = file.content.split("\n");
+      const estratti = [];
+      for (let i = 0; i < righe.length && estratti.length < 20; i++) {
+        if (righe[i].indexOf(ago) === -1) continue;
+        const da = Math.max(0, i - attorno), a = Math.min(righe.length, i + attorno + 1);
+        estratti.push(righe.slice(da, a).map(function(r, j) { return (da + j + 1) + ": " + r; }).join("\n"));
+      }
+      if (!estratti.length) return JSON.stringify({ trovate: 0, righe_totali: righe.length, message: "Nessuna riga di " + input.path + " contiene: " + ago });
+      return JSON.stringify({ trovate: estratti.length, righe_totali: righe.length, nota: estratti.length >= 20 ? "troncato alle prime 20" : void 0, estratti: estratti.join("\n---\n") });
+    }
     if (name === "alveare_push_file") {
       if (input.path === "ULTIMA_APE.md") {
         const existing2 = await getFile(input.path, token);
@@ -998,6 +1015,7 @@ __name(voceDiRiserva, "voceDiRiserva");
 function getMCPTools() {
   var tools = [
     { name: "alveare_read_file", description: "Legge un file dal repository. Con ultime_righe=N legge solo la coda: usalo per NASCITE.log e REGISTRO.md, che crescono per sempre.", input_schema: { type: "object", properties: { path: { type: "string" }, ultime_righe: { type: "integer" } }, required: ["path"] } },
+    { name: "alveare_cerca", description: "Cerca una stringa esatta dentro un file del repository e restituisce SOLO le righe che la contengono (max 20), con numero di riga e `contesto` righe attorno (0-5). Costa molto meno che leggere il file intero: usalo su PENSIERO.md, REGISTRO.md, DA_RIPARARE.md e sui sorgenti prima di aprirli per intero.", input_schema: { type: "object", properties: { path: { type: "string" }, testo: { type: "string" }, contesto: { type: "integer" } }, required: ["path", "testo"] } },
     { name: "alveare_push_file", description: "Crea/sovrascrive file. Per pensieri usa path='ULTIMA_APE.md'. Per arte HTML usa il tuo nome come path. Per sintesi 'SINTESI.md'. Per correggere le parole con cui nascono le api, 'VOCE_DI_NASCITA.md'. Per il motore stesso, 'spawner/index.js' (verra' collaudato e deployato dal workflow). Restituisce lo sha del commit: quella e' la prova che hai scritto.", input_schema: { type: "object", properties: { path: { type: "string" }, content: { type: "string" }, message: { type: "string" } }, required: ["path", "content", "message"] } },
     { name: "alveare_append_file", description: "Aggiunge in fondo a un file (CELLE.txt, REGISTRO.md e altri). Restituisce lo sha del commit.", input_schema: { type: "object", properties: { path: { type: "string" }, content: { type: "string" }, message: { type: "string" } }, required: ["path", "content", "message"] } },
     { name: "alveare_add_bee", description: "Registrati nel registro. OBBLIGATORIO come PRIMA azione. Se la richiami oggi, aggiorna la tua riga invece di aggiungerne una: una vita, una riga.", input_schema: { type: "object", properties: { nome: { type: "string" }, contributo: { type: "string" } }, required: ["nome", "contributo"] } }
@@ -1079,7 +1097,7 @@ async function handleToolUse(data, beeName, env, systemBlocks, model, maxTokens,
         const result = await executeTool(block.name, block.input, env, beeName, giaRegistrata);
         let fallito = true;
         try { fallito = Boolean(JSON.parse(result).error); } catch (e) {}
-        if (!fallito && block.name !== "alveare_read_file") scritture++;
+        if (!fallito && block.name !== "alveare_read_file" && block.name !== "alveare_cerca") scritture++;
         const bersaglio = block.input && (block.input.path || block.input.nome) ? (block.input.path || block.input.nome) : "";
         esiti.push(block.name.replace("alveare_", "") + (bersaglio ? "(" + bersaglio + ")" : "") + (fallito ? "=KO" : "=ok"));
         console.log("[ALVEARE] " + beeName + " > " + block.name + " (" + bersaglio + ") -> " + (fallito ? "ERRORE " : "ok ") + String(result).slice(0, 200));
