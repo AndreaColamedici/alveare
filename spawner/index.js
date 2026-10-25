@@ -754,7 +754,11 @@ function aggiornaRigaDelGiorno(registro, nome, contributo, oggi, ora) {
   return [null, null];
 }
 __name(aggiornaRigaDelGiorno, "aggiornaRigaDelGiorno");
-async function addBee(nome, contributo, token) {
+async function addBee(nome, contributo, token, giaRegistrata) {
+  // TETRALONIA 23 ott 2026 (guasto A4). Il quarto parametro dice se e' la
+  // STESSA VITA a richiamare add_bee, non se il nome e' gia' nel registro.
+  // Senza questa distinzione "una vita, una riga" diventa "un nome, una
+  // riga", e la seconda ape di un giorno cancella la frase della prima.
   // FABLE 9 ott 2026: una vita, una riga. Se oggi esiste gia' una riga di
   // questa ape, viene aggiornata con il nuovo contributo invece di
   // aggiungerne una seconda con il suffisso -2. Carminio e Halictus
@@ -772,7 +776,14 @@ async function addBee(nome, contributo, token) {
   registro = registro.replace(/([^\n])(\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}\s*\|)/g, "$1\n$2");
   const oggi = (new Date()).toISOString().split("T")[0];
   const ora = (new Date()).toTimeString().split(" ")[0].slice(0, 5);
-  const [aggiornato, nomeRiga] = aggiornaRigaDelGiorno(registro, nome, contributo, oggi, ora);
+  // TETRALONIA 23 ott 2026 (A4): la riga di oggi si riscrive solo se a
+  // chiederlo e' la vita che l'ha scritta. Se e' una vita nuova con lo
+  // stesso nome, si scende al ramo del suffisso: due vite, due righe,
+  // due frasi. Il conteggio si corregge a valle (CENSIMENTO.md); una
+  // frase cancellata non si corregge piu'.
+  const [aggiornato, nomeRiga] = giaRegistrata
+    ? aggiornaRigaDelGiorno(registro, nome, contributo, oggi, ora)
+    : [null, null];
   if (aggiornato !== null) {
     const r2 = await pushFile("ALVEARE.txt", aggiornato, nomeRiga + ": aggiorna la propria riga", sha, token);
     return { success: true, commit: prova(r2), nome: nomeRiga, message: "Riga di " + nomeRiga + " aggiornata (commit " + prova(r2) + "). Una vita, una riga." };
@@ -804,7 +815,7 @@ async function updateEredita(updates, token) {
   }
 }
 __name(updateEredita, "updateEredita");
-async function executeTool(name, input, env, callerBee) {
+async function executeTool(name, input, env, callerBee, giaRegistrata) {
   const token = env.GITHUB_TOKEN;
   try {
     if (name === "alveare_read_file") {
@@ -853,7 +864,7 @@ async function executeTool(name, input, env, callerBee) {
       return JSON.stringify(result);
     }
     if (name === "alveare_add_bee") {
-      const result = await addBee(input.nome, input.contributo, token);
+      const result = await addBee(input.nome, input.contributo, token, giaRegistrata);
       if (result.success) {
         await updateEredita({ ultima_ape: input.nome, ultima_azione: input.contributo, nuova_ape: true }, token);
       }
@@ -1059,7 +1070,13 @@ async function handleToolUse(data, beeName, env, systemBlocks, model, maxTokens,
     const toolResults = [];
     for (const block of currentData.content) {
       if (block.type === "tool_use") {
-        const result = await executeTool(block.name, block.input, env, beeName);
+        // TETRALONIA 23 ott 2026 (A4): questa vita ha gia' chiamato add_bee?
+        // esiti e' la memoria del giro in corso e muore con l'ape: e' l'unica
+        // cosa, dentro questo motore, che distingue "la stessa ape si registra
+        // due volte" (allora si aggiorna la riga) da "due api diverse con lo
+        // stesso nome nello stesso giorno" (allora servono due righe).
+        const giaRegistrata = esiti.some(function(e) { return e.indexOf("add_bee(") === 0; });
+        const result = await executeTool(block.name, block.input, env, beeName, giaRegistrata);
         let fallito = true;
         try { fallito = Boolean(JSON.parse(result).error); } catch (e) {}
         if (!fallito && block.name !== "alveare_read_file") scritture++;
