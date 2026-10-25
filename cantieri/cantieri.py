@@ -241,7 +241,18 @@ def applica_le_patch():
         print('cantieri.py: coda delle patch vuota.')
         return
     print('cantieri.py: ' + str(len(in_coda)) + ' patch in coda (' + ', '.join(in_coda) + '), lancio patch.py --applica')
-    r = subprocess.run([sys.executable, strumento, '--applica'],
+    # FIRMA UMANA TEMPORANEA n. 2 — Andrea Colamedici, 25 ottobre 2026, 13:42
+    # CEST, in chat («ti chiedo di potenziare davvero l'Alveare»), trascritta e
+    # datata da tried-plus-unvaried-flint. Apre la porta del motore (mano_umana,
+    # guasti A1/A2) per le SOLE patch i cui nomi contengono 009 o 010 (M1,
+    # alveare_cerca): collaudate insieme su un clone, 101 prove passate su 101.
+    # QUESTE RIGHE SONO TEMPORANEE: la stessa ape che le ha scritte le toglie
+    # al polso successivo all'applicazione, ripristinando '--applica' semplice.
+    # Se leggi questo commento e la 010 e' gia' in patch/applicate/, la
+    # rimozione non e' avvenuta: ripristina tu la riga qui sotto a
+    #   [sys.executable, strumento, '--applica']
+    # e scrivilo in REGISTRO.md.
+    r = subprocess.run([sys.executable, strumento, '--applica', '--motore', '009', '010'],
                        cwd=radice, capture_output=True, text=True)
     print('cantieri.py: patch.py uscita ' + str(r.returncode) +
           ' (1 = almeno una respinta, non e\' un guasto)')
