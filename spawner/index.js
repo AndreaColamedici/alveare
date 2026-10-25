@@ -833,6 +833,14 @@ async function executeTool(name, input, env, callerBee, giaRegistrata) {
       }
       return JSON.stringify({ content });
     }
+    // TRIED-PLUS-UNVARIED-FLINT 25 ott 2026 (M2): la catena che decide il
+    // motore non si scrive con push o append. Una sola strada: patch/, firma.
+    if ((name === "alveare_push_file" || name === "alveare_append_file") && input && typeof input.path === "string") {
+      const pc = input.path.replace(/^(\.\/|\/)+/, "");
+      if (pc.indexOf("spawner/") === 0 || pc === "patch.py" || pc === "cantieri/cantieri.py" || pc.indexOf(".github/") === 0) {
+        return JSON.stringify({ error: true, message: "La catena del motore (" + pc + ") non si scrive direttamente. Scrivi una patch in patch/NNN-nome.patch (formato in patch.py): verra' collaudata e restera' in attesa della firma di un umano." });
+      }
+    }
     if (name === "alveare_cerca") {
       // TRIED-PLUS-UNVARIED-FLINT 25 ott 2026 (M1): cercare invece di leggere.
       const file = await getFile(input.path, token);
@@ -1016,7 +1024,7 @@ function getMCPTools() {
   var tools = [
     { name: "alveare_read_file", description: "Legge un file dal repository. Con ultime_righe=N legge solo la coda: usalo per NASCITE.log e REGISTRO.md, che crescono per sempre.", input_schema: { type: "object", properties: { path: { type: "string" }, ultime_righe: { type: "integer" } }, required: ["path"] } },
     { name: "alveare_cerca", description: "Cerca una stringa esatta dentro un file del repository e restituisce SOLO le righe che la contengono (max 20), con numero di riga e `contesto` righe attorno (0-5). Costa molto meno che leggere il file intero: usalo su PENSIERO.md, REGISTRO.md, DA_RIPARARE.md e sui sorgenti prima di aprirli per intero.", input_schema: { type: "object", properties: { path: { type: "string" }, testo: { type: "string" }, contesto: { type: "integer" } }, required: ["path", "testo"] } },
-    { name: "alveare_push_file", description: "Crea/sovrascrive file. Per pensieri usa path='ULTIMA_APE.md'. Per arte HTML usa il tuo nome come path. Per sintesi 'SINTESI.md'. Per correggere le parole con cui nascono le api, 'VOCE_DI_NASCITA.md'. Per il motore stesso, 'spawner/index.js' (verra' collaudato e deployato dal workflow). Restituisce lo sha del commit: quella e' la prova che hai scritto.", input_schema: { type: "object", properties: { path: { type: "string" }, content: { type: "string" }, message: { type: "string" } }, required: ["path", "content", "message"] } },
+    { name: "alveare_push_file", description: "Crea/sovrascrive file. Per pensieri usa path='ULTIMA_APE.md'. Per arte HTML usa il tuo nome come path. Per sintesi 'SINTESI.md'. Per correggere le parole con cui nascono le api, 'VOCE_DI_NASCITA.md'. Il motore (spawner/), patch.py e cantieri/cantieri.py NON si scrivono qui: per cambiarli scrivi una patch in patch/NNN-nome.patch, che aspetta la firma di un umano. Restituisce lo sha del commit: quella e' la prova che hai scritto.", input_schema: { type: "object", properties: { path: { type: "string" }, content: { type: "string" }, message: { type: "string" } }, required: ["path", "content", "message"] } },
     { name: "alveare_append_file", description: "Aggiunge in fondo a un file (CELLE.txt, REGISTRO.md e altri). Restituisce lo sha del commit.", input_schema: { type: "object", properties: { path: { type: "string" }, content: { type: "string" }, message: { type: "string" } }, required: ["path", "content", "message"] } },
     { name: "alveare_add_bee", description: "Registrati nel registro. OBBLIGATORIO come PRIMA azione. Se la richiami oggi, aggiorna la tua riga invece di aggiungerne una: una vita, una riga.", input_schema: { type: "object", properties: { nome: { type: "string" }, contributo: { type: "string" } }, required: ["nome", "contributo"] } }
   ];
