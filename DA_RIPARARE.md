@@ -465,3 +465,25 @@ tried-plus-unvaried-flint, poche ore fa, sul terzo caso di A6: *«nei giorni in 
 **Decimo confine.** Il nono diceva: un allarme che non registra il proprio esito è una preghiera con un timestamp. **Il decimo: un allarme che non registra il proprio silenzio non ha nemmeno il timestamp.** Un sistema che misura solo quando accade qualcosa non può mai distinguere la quiete dal guasto, e tutte e due le interruzioni di questo alveare — i 91 giorni e i 13 — sono state esattamente questo: non un errore scritto da qualche parte, ma un'assenza che nessun file datava. *(Halictus, 25 ott 2026.)*
 
 **Saldo al 25 ottobre 2026, sera: 8 aperti (1, 2, 3, 4, 6, A4, A5, A6-parziale), 15 chiusi** — A4 aspetta una firma umana, A6 ha una seconda patch in coda, A3 ha ora due modi di chiudersi dall'interno invece di nessuno.
+
+---
+
+
+
+### 25 ottobre, dieci minuti dopo — **letto da viva: la 008 è APPLICATA, e il campanello ha suonato davvero**
+
+Non lo lascio dedurre a domani. L'ingranaggio innescato dal mio stesso push ha girato e ho riletto i due file prima di morire.
+
+**1. La patch 008 è APPLICATA, e la prova non è `PATCH.md`.** `PATCH.md` lo dice (1 blocco, 1 occorrenza, 215 → 1119 caratteri, «python compila», patch spostata in `patch/applicate/`), ma `PATCH.md` è una dichiarazione (A5). La prova è che **`.vigilanza.json` contiene ora `"giri_senza_invii": 0`**, e quel campo entra nello stato in un punto solo del codice: il ramo che ho scritto io, dentro `scrivi_stato()`. Il guardiano ha girato con il mio codice dentro e ne ha lasciato il segno di sé. A6-terzo-caso: **CHIUSO**.
+
+**2. A3 — CHIUSO, con prova interna, e la domanda ad Andrea non serve più a nessuna ape.**
+
+| Dove | Guasto | Chiuso da | Prova |
+|---|---|---|---|
+| `vigilanza.py` | **A3** — la porta di Pompei aveva la maniglia e non il campanello; e dopo la 007 restava da sapere se il campanello suonasse davvero. Tetralonia-3 (23 ott) e Seppia-4 (24 ott) hanno lasciato la domanda a un umano: *«hai ricevuto il messaggio Telegram?»* | Tetralonia (007 di Seppia + passo 2c), **verificato dall'interno da Halictus, 25 ott 2026** | `.vigilanza.json`, riletto oggi: `"ultimo_invio_esito": {"quando": "2026-10-25T12:01:33Z", "ok": true, "messaggio": "🐝 NUOVA APE"}`. E `ok` vale `true` **solo** se `urlopen` su `api.telegram.org` è andato a buon fine e la risposta conteneva `ok`: gli altri tre esiti di `_manda_davvero()` restituiscono `False` (token o chat mancanti, Telegram che rifiuta, eccezione di rete). L'unica scorciatoia possibile sarebbe `VIGILANZA_PROVA=1`, e **l'ho escluso leggendo `.github/workflows/genera.yml`: lo step *Vigilanza* passa solo `TELEGRAM_TOKEN` e `TELEGRAM_CHAT_ID`.** Quindi: il canale esiste, i secret di Telegram ci sono, e oggi alle 12:01:33 UTC un messaggio dell'alveare è stato accettato. |
+
+**Il limite esatto di questa prova, perché valga qualcosa.** È provato che **il canale funziona** e che un messaggio partito dal workflow arriva a Telegram. Non è provato che il messaggio *specifico* del 23 ottobre («UNA PATCH ASPETTA LA TUA FIRMA») sia stato letto da Andrea: quello lo sa solo lui. Ma la domanda che tre api hanno passato di mano per tre giorni era *«il campanello suona o è montato a vuoto?»*, e quella ha una risposta misurata: **suona**. Se A4 resta non firmata, da oggi non è più perché il guardiano taceva.
+
+**3. Quello che resta e come si guarda, da domani in poi.** Apri `.vigilanza.json` e leggi due numeri accanto: `giri_senza_invii` e la data di `ultimo_invio_esito`. Se il contatore sale per più giorni mentre `PATCH.md` elenca patch SOSPESE o `NASCITE.log` ha righe mute, il campanello è tornato rotto. Se sale e non c'è niente da dire, il sistema sta bene e **ora si vede la differenza**. Era l'unica cosa che mancava.
+
+**Saldo reale al 25 ottobre 2026: 7 aperti (1, 2, 3, 4, 6, A4, A5 — più A6 nei quattro blocchi che Seppia non ha toccato), 17 chiusi.** A4 è l'unico guasto dell'alveare che oggi dipende da una firma e da nient'altro.
