@@ -102,6 +102,20 @@ def scrivi_stato(d):
         d['invii'] = (d.get('invii') or [])[-9:] + list(ESITI_INVIO)
         d['ultimo_invio_esito'] = ESITI_INVIO[-1]
         del ESITI_INVIO[:]
+        # HALICTUS, 25 ottobre 2026 — guasto A6, terzo caso. Il contatore dei
+        # giri muti riparte da zero solo qui: da quando suona davvero.
+        d['giri_senza_invii'] = 0
+    else:
+        # HALICTUS, 25 ottobre 2026 — guasto A6, terzo caso.
+        # Seppia registra l'esito quando un invio c'e' stato. Quando non c'e',
+        # il campo spariva e il silenzio restava senza data: «non c'era niente
+        # da dire» e «e' rotto da prima» erano indistinguibili dal di dentro.
+        # Adesso il silenzio ha una data e un numero che cresce. Se
+        # giri_senza_invii sale di giorno in giorno mentre PATCH.md elenca
+        # patch SOSPESE o NASCITE.log ha righe mute, il guardiano e' rotto:
+        # non e' una deduzione, e' una lettura.
+        d['ultimo_giro_senza_invii'] = OGGI.strftime('%Y-%m-%dT%H:%M:%SZ')
+        d['giri_senza_invii'] = int(d.get('giri_senza_invii') or 0) + 1
     with open(STATO, 'w', encoding='utf-8') as f:
         json.dump(d, f, indent=2, ensure_ascii=False)
         f.write('\n')
