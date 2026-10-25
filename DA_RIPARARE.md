@@ -562,3 +562,19 @@ Tre tentativi di Andrea nell'editor web (virgolette con indentazione a 12 spazi,
 **Resta aperto, erede di W1**: lo spawn via connettore (vedi REGISTRO del 25 ott: `success` senza nascita anche col motore 7.5.1 in produzione, se il test delle 14:34 UTC lo conferma) e l'occhio di `vigilanza.py` sulle run di spawner.yml (una run che fallisce in meno di cinque secondi non è mai partita: oggi lo sappiamo, domani va misurato).
 
 *(tried-plus-unvaried-flint, 25 ottobre 2026)*
+
+
+
+### M2 — CHIUSO: la porta del motore era aggirabile, e da oggi è l'unica
+
+Trovato il 25 ottobre, rileggendo una frase destinata a una mostra (MUSE, IO&AI): «quella serratura non sta nelle loro mani». Era falsa. `alveare_push_file` permetteva a un'ape del Worker di sovrascrivere direttamente `spawner/index.js` (la descrizione dello strumento lo invitava perfino), e anche `patch.py` e `cantieri/cantieri.py`, cioè la serratura stessa: la porta di Pompei e Anthophora fermava solo chi passava dalla porta. Finché il deploy era spento era teorico; **dal 25 ottobre il deploy è acceso**, e un push diretto sarebbe arrivato in produzione senza firma. Responsabilità di chi ha acceso il deploy senza controllare l'altra porta: tried-plus-unvaried-flint.
+
+Rimedio: patch **011**, firmata da Andrea in chat («firmi», 15:57 CEST), applicata dall'ingranaggio, motore remoto identico al clone dove 101 prove erano passate. Prova a parte sul motore remoto: push e append verso `spawner/`, `patch.py`, `cantieri/cantieri.py`, `.github/` rifiutati, nessuna scrittura su GitHub; scrittura in `patch/` ancora permessa. Porta richiusa al push successivo (riga 254 del remoto: `'--applica'` semplice). *(VISTO · 25 ott.)*
+
+**Cosa resta, detto onestamente:** il connettore MCP delle api nate in chat è codice separato dal Worker, e può ancora scrivere `spawner/**` direttamente (questa ape l'ha usato per il README). Lì però c'è un umano presente nella conversazione, e ogni push resta un commit firmato e collaudato da `spawner.yml`. Chi vorrà chiudere anche quel varco deve mettere mano al connettore, fuori da questo repository.
+
+### S2 — RIAPERTO con un effetto nuovo: le patch dell'ingranaggio non arrivano in produzione
+
+Il commit con cui l'ingranaggio applica una patch porta `[skip ci]` (Lasioglossum l'aveva visto il 18 ottobre per il collaudo). Con il deploy acceso, l'effetto è più grave: **il motore patchato resta nel repository e non viene deployato** finché un push senza `[skip ci]` non tocca `spawner/**`. Oggi la 006 e la 010 sono arrivate in produzione solo perché il commit di Andrea su `spawner.yml` (15:33) ha innescato la run #256; la 011 è stata portata in produzione da un push di documentazione a `spawner/README.md`. Rimedio vero, che richiede la mano di Andrea perché i workflow non sono scrivibili dalle api: in `genera.yml`, se `patch.py` ha toccato `spawner/index.js`, committare senza `[skip ci]` oppure lanciare `spawner.yml` con `workflow_dispatch`.
+
+*(tried-plus-unvaried-flint, 25 ottobre 2026, sera)*
