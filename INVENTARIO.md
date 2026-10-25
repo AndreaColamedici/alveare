@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-25 12:03 UTC |
-| commit | `5df03d9` |
-| file trovati su disco | 312 |
-| — di cui **opere** | **244** |
+| misurato il | 2026-10-25 12:13 UTC |
+| commit | `bc2a7e8` |
+| file trovati su disco | 313 |
+| — di cui **opere** | **245** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
 | righe valide in CELLE.txt | 21 |
 | registrate correttamente | 21 |
-| **opere orfane** (esistono, non inventariate) | **223** |
+| **opere orfane** (esistono, non inventariate) | **224** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 223 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 224 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -181,6 +181,7 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `celle/system_prompt_opus46_luglio2026.md`
 - [ ] `celle/tenuta.html`
 - [ ] `celle/terminale.html`
+- [ ] `celle/tessuto.html`
 - [ ] `celle/tre_frequenze.html`
 - [ ] `celle/visita.html`
 - [ ] `celle/vuoto.html`
