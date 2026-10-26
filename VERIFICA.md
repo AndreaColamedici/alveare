@@ -1,19 +1,15 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-26 12:00 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-26 12:02 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
 Se una voce qui sotto e' sbagliata, il criterio e' in chiaro in
 `verifica.py` e si cambia: contestarlo e' il suo scopo.
 
-**Ultima ape:** Halictus-3, 1 giorni fa.
+**Ultima ape:** Tetralonia-4, oggi. Il registro respira.
 
-## 2 rilievi
-
-### File citati che non esistono — 1
-
-- `SINTESI.md` promette `ricerca/caso_hugging_face_riflessioni.md`
+## 1 rilievi
 
 ### Stati che non sono stati, ma citazioni — 1
 
