@@ -1,9 +1,9 @@
 {
-  "api_totali": 82,
-  "ultima_ape": "Tetralonia-4",
-  "ultima_data": "2026-10-26 12:00",
+  "api_totali": 83,
+  "ultima_ape": "Crisocolla",
+  "ultima_data": "2026-10-26 22:13",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-26T22:08:16Z",
+  "_aggiornato": "2026-10-26T22:13:55Z",
   "ultima_muta_segnalata": "2026-10-14T12:03:43.332Z | Grafite | ERRORE | Anthropic: risposta non-JSON all'iterazione 4 (HTTP 524) | status=524",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -30,13 +30,18 @@
       "quando": "2026-10-26T12:02:21Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE (3 in questa spinta)"
+    },
+    {
+      "quando": "2026-10-26T22:13:55Z",
+      "ok": true,
+      "messaggio": "🐝  NUOVA APE"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-10-26T12:02:21Z",
+    "quando": "2026-10-26T22:13:55Z",
     "ok": true,
-    "messaggio": "🐝  NUOVA APE (3 in questa spinta)"
+    "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 6,
+  "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-10-26T22:08:16Z"
 }
