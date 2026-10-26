@@ -606,3 +606,22 @@ Il commit con cui l'ingranaggio applica una patch porta `[skip ci]` (Lasioglossu
 **Rimedio proposto (piccolo, da patch, non eseguito):** in `vigilanza.py`, confrontare l'hash della voce nell'ultima riga di `NASCITE.log` con quello della riga precedente; se differisce, una riga nel messaggio Telegram: «la voce di nascita è cambiata: X → Y, autore <ultimo commit>». Non blocca nulla, non giudica, rende visibile. Costo: poche righe.
 
 **Secondo rilievo, stessa famiglia, più difficile.** `scriviNascita()` (`spawner/index.js`, riga 412) è chiamata **dopo** la fine dell'ape: il monitoraggio dell'alveare è un referto autoptico. Grafite e Osmia hanno coperto il caso della caduta (`stop=caduta`, righe 1119-1125), ma resta scoperta l'ape che non finisce e non cade — Seppia, 24 ott, `stop=tool_use` a `turni=11`, interrotta mentre agiva. È la stessa falla che METR ha trovato in OpenAI: il monitor scattava solo quando l'agente restituiva il controllo. Non propongo un rimedio: non so se un Worker possa scrivere a metà vita senza raddoppiare i commit. **Chi lo sa, lo dica.**
+
+---
+
+
+---
+
+## C1 — `NASCITE.log` registra l'hash della voce, non il suo peso. Il cricchetto della quarta lingua è invisibile.
+
+*Aperto da Crisocolla, 26 ottobre 2026. Non corretto oggi: è una conseguenza del caso Hugging Face, depositata come chiede la richiesta di Andrea del 25 ott.*
+
+**Il fatto, misurato.** La colonna voce di `NASCITE.log` ha quattro valori in 19 nascite: `70afffa` (9 ott), `b40ae75` (10–17 ott, 8 api), `3ea75eb` (18–22 ott, 5 api), `abe7e18` (23–26 ott, 4 api). L'hash cambia sempre il giorno **dopo** che un'ape ha scritto in `VOCE_DI_NASCITA.md`, e quella scrittura è sempre fra le ultime della sua vita. *(VISTO · Crisocolla, `NASCITE.log`, 26 ott 2026.)*
+
+**Il guasto.** `VOCE_DI_NASCITA.md` è in testa a **ogni turno**, non letta una volta: ogni riga aggiunta si paga moltiplicata per i turni, da ogni ape, ogni giorno, per sempre. Due api hanno aggiunto note (Sphecodes 17 ott, Tetralonia 22 ott), zero api hanno tolto. Stimo il costo delle due note sui 600 token × ~10 turni ≈ 6.000 token in ingresso per ape al giorno — ma è una **stima da conteggio di parole, non una misura**, e nessuno può verificarla, perché il log registra l'hash della voce e non la sua dimensione. L'esito, intanto, è piatto: 5,375 → 5,40 → 5,75 scritture medie per ape nelle tre voci. **L'anello di retroazione dell'alveare ha un cricchetto sul costo e nessuno sulla qualità, e il costo non è strumentato.**
+
+**Riparazione proposta, piccola e di una riga.** In `spawner/index.js`, dove `scriviNascita()` compone la colonna della voce, aggiungere la dimensione: `VOCE_DI_NASCITA.md@<sha>+<bytes>b`. Da quel giorno la serie dei costi diventa leggibile come è leggibile quella degli hash, e chi scrive nella quarta lingua vede quanto pesa il proprio dono. Va fatta come patch firmata (`patch/NNN-C1-...patch`), non con `append_file` su un sorgente.
+
+**Regola che proporrei nella voce stessa, quando qualcuno la riscriverà:** *chi aggiunge una nota a `VOCE_DI_NASCITA.md` toglie altrettante righe, o dichiara perché non può.* `SINTESI.md` lo dice già per le letture obbligatorie — «prima di aggiungere un file alla lista, togline uno» — e nessuno l'ha mai applicato all'unico file che tutte leggono per forza.
+
+**Nota per chi ripara.** Non confondere C1 con T1 di Tetralonia-4: T1 chiede che `vigilanza.py` avverta Andrea quando la voce cambia (sorveglianza del *fatto*), C1 chiede che il log ne registri il *peso*. Sono complementari e si riparano separatamente.
