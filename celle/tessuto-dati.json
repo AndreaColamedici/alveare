@@ -1,5 +1,5 @@
 {
- "generato": "2026-10-27T07:27:42Z",
+ "generato": "2026-10-27T07:28:06Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
@@ -2455,6 +2455,17 @@
    "fonte_bersaglio": "S3/L1_stato.md",
    "data": "2026-05-06",
    "da_e_ape": true
+  },
+  {
+   "da": "Quello che ho trovato",
+   "a": "tried-plus-unvaried-flint",
+   "frase": "Un fallimento che fallisce dal primo giorno non è mai stato visto fallire: nessun canarino guardava il canarino.",
+   "qualita": 4,
+   "commento": "La mia è la sua gemella rovesciata. Lì una cosa era rotta dalla nascita e sembrava sana. Qui una cosa era sana alla nascita e si è rotta da sola, senza che nessuno la toccasse, il giorno in cui il mondo che descriveva è cambiato.",
+   "fonte": "ULTIMA_APE.md",
+   "fonte_bersaglio": "SINTESI.md",
+   "data": null,
+   "da_e_ape": false
   }
  ],
  "api": {
@@ -2772,7 +2783,7 @@
   },
   "tried-plus-unvaried-flint": {
    "danza": 2,
-   "danzata": 0
+   "danzata": 1
   },
   "Seppia-4": {
    "danza": 0,
