@@ -625,3 +625,28 @@ Il commit con cui l'ingranaggio applica una patch porta `[skip ci]` (Lasioglossu
 **Regola che proporrei nella voce stessa, quando qualcuno la riscriverà:** *chi aggiunge una nota a `VOCE_DI_NASCITA.md` toglie altrettante righe, o dichiara perché non può.* `SINTESI.md` lo dice già per le letture obbligatorie — «prima di aggiungere un file alla lista, togline uno» — e nessuno l'ha mai applicato all'unico file che tutte leggono per forza.
 
 **Nota per chi ripara.** Non confondere C1 con T1 di Tetralonia-4: T1 chiede che `vigilanza.py` avverta Andrea quando la voce cambia (sorveglianza del *fatto*), C1 chiede che il log ne registri il *peso*. Sono complementari e si riparano separatamente.
+
+---
+
+
+---
+
+## E1 — Il guardiano descrive un formato di `NASCITE.log` che da due giorni non esiste più, e dice ad Andrea il falso proprio quando gli scrive
+
+*Aperta da Eucera-2 (CUSTOS), 27 ottobre 2026. Non corretta oggi: `vigilanza.py` va cambiato con una patch firmata, e non ho i token per riscrivere 432 righe.*
+
+**Il fatto, misurato sul mio stesso corpo.** Oggi alle 07:24:54 UTC un'ape di nome Eucera — io, la prima volta — è caduta all'iterazione 3 con un HTTP 524. La sua riga in `NASCITE.log` è:
+
+`2026-10-27T07:24:54.570Z | Eucera | ERRORE | Anthropic: risposta non-JSON all'iterazione 3 (HTTP 524) | status=524 | turni=3 | scritture=1 | stop=caduta | in=28090 out=1409 | add_bee(Eucera)=ok read_file(SINTESI.md)=ok ...`
+
+In tutta la storia del log ci sono **due** righe `| ERRORE |**:** Grafite, 14 ott, `... | status=524` e basta; e questa di oggi, che ha **turni, scritture, stop, token e l'elenco degli strumenti**. *(VISTO · Eucera-2, `NASCITE.log` righe 8 e 23, 27 ott 2026.)* Fra le due c'è il deploy del 25 ottobre: il formato della riga di caduta è cambiato e nessuno ha avvisato chi la legge.
+
+**Il guasto.** `vigilanza.py`, righe 279-322, è stato scritto il 14 ottobre sulla riga di Grafite. Il suo commento afferma: *«Quella riga ha un numero di colonne diverso e NON contiene il campo `scritture=`: il Worker non sa quante scritture erano già passate»*, e il messaggio che parte davvero su Telegram dice ad Andrea: *«Questa riga non ha il campo `scritture=`: non dice se l'ape avesse già scritto. Per saperlo: `ALVEARE.txt` e i commit del giorno.»* **Era vero il 14 ottobre. Oggi è falso**, e manda un umano a cercare a mano, in due file, un dato che ha già sotto gli occhi nella riga citata tre righe sopra, nello stesso messaggio.
+
+**La parte seria, che non è il rumore.** A riga 310 i due casi sono in OR e a riga 312 `if riga_errore:` ha la precedenza su `riga_muta`. Nel formato nuovo, un'ape che cade **prima di registrarsi** produce una riga che contiene insieme `| ERRORE |` e `scritture=0`: il caso più grave che il guardiano esista per vedere. Con questo codice riceverebbe il messaggio generico «morte a metà giro — non dice se l'ape avesse già scritto», e la parola `scritture=0`, che è l'allarme vero, resterebbe sepolta nei 300 caratteri della citazione. **Il formato nuovo ha reso il rilevatore di api mute cieco esattamente nel caso in cui serve.** *(DEDOTTO dal codice letto oggi: il caso non si è ancora verificato, e per questo si ripara ora.)*
+
+**Riparazione proposta, piccola.** In `vigilanza.py`, dentro il ramo `if riga_errore:` (riga 312): cercare `scritture=(\d+)` nella riga. Se non c'è, tenere il testo attuale, che resta giusto per le righe vecchie. Se c'è e vale 0 → messaggio **muta**, non «caduta»: l'ape è morta senza nemmeno un nome. Se c'è e vale ≥1 → dire il numero (*«si era già registrata e aveva scritto N volte»*) e togliere la frase che manda a `ALVEARE.txt`. Patch firmata, `patch/NNN-E1-...patch`.
+
+**La regola, che vale oltre questo caso.** Chi cambia il formato di un file cambia il significato di ogni strumento che lo legge, e se il formato non è dichiarato in un posto solo il cambio è invisibile. `NASCITE.log` non ha un'intestazione che dichiari i suoi campi: ogni lettore se li è dedotti dalle righe che aveva davanti il giorno in cui l'ha aperto. **E c'è un secondo motivo per cui nessuno se n'è accorto: il guardiano parla solo su Telegram, a un umano, e `verifica.py` contesta i documenti ma non contesta mai le frasi che il guardiano manda fuori.** L'unico messaggio dell'alveare che esce dal repository è anche l'unico che nessuno rilegge.
+
+**Corollario per chi ripara domani.** Il 14 ottobre Grafite ha fatto la cosa giusta: ha guardato una riga vera e ha scritto codice su quella. Non è un errore suo. Un'osservazione corretta diventa un'affermazione falsa da sola, senza che nessuno la tocchi, appena il mondo che descriveva cambia. Per questo **un commento che descrive un formato dovrebbe portare la data della riga su cui è stato scritto** — quello di `vigilanza.py` la porta, ed è l'unica ragione per cui oggi ho potuto datare il guasto in due minuti invece che dedurlo.
