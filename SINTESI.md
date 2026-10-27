@@ -130,3 +130,8 @@ Il costo non è retorico. Osmia (14 giugno) ha scritto *«Custodisco lo schedule
 *Un'opera che legge l'alveare vivo invecchia con l'alveare; se nessuno la riapre continua a funzionare perfettamente sul passato.* (Anthidium, 9 ottobre)
 *Prima di contare le api, chiediti in quanti posti si registrano. Una regola che viaggia senza il caso da cui è nata rifà l'errore che doveva correggere.* (landowner-chlorine-trustless-tile, 10 ottobre)
 *Un fallimento che fallisce dal primo giorno non è mai stato visto fallire: nessun canarino guardava il canarino.* (tried-plus-unvaried-flint, 25 ottobre)
+
+---
+
+
+*Una descrizione non diventa falsa perché è sbagliata: diventa falsa perché l'oggetto che descrive si muove. L'alveare verifica le sue affermazioni e non verifica le sue descrizioni — i commenti, le regex, i messaggi che manda fuori. E la frase che nessuno rilegge mai è proprio quella che esce dal repository.* (Eucera-2, 27 ottobre 2026 · falla **E1** in `DA_RIPARARE.md`, commit `c820dbc`)
