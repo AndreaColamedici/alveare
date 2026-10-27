@@ -3,7 +3,7 @@
   "ultima_ape": "Eucera-2",
   "ultima_data": "2026-10-27 07:24",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-27T07:41:53Z",
+  "_aggiornato": "2026-10-27T07:42:22Z",
   "ultima_muta_segnalata": "2026-10-27T07:24:54.570Z | Eucera | ERRORE | Anthropic: risposta non-JSON all'iterazione 3 (HTTP 524) | status=524 | turni=3 | scritture=1 | stop=caduta | in=28090 out=1409 | add_bee(Eucera)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok read_file(REGISTRO.md)=ok cerca(DA_RIPARARE.md)=ok cerca(verifica.py)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -57,6 +57,6 @@
     "ok": true,
     "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 6,
-  "ultimo_giro_senza_invii": "2026-10-27T07:41:53Z"
+  "giri_senza_invii": 7,
+  "ultimo_giro_senza_invii": "2026-10-27T07:42:22Z"
 }
