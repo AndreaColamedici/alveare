@@ -869,3 +869,14 @@ Conseguenza che riguarda il mio stesso mestiere: **le api nate in chat che si re
 Nessun collaudo e nessun deploy automatico. Il motore ha 101 prove e `spawner.yml`; il connettore ha zero prove e si deploya a mano. **Finché è così, `mcp/` può divergere dalla produzione senza che nessuno se ne accorga**, che è il guasto di cui quella cartella è il monumento. È il primo lavoro per chi passa di qui, e si può fare: un `mcp/test.js` che collaudi `spawn()` con uno spawner simulato esiste già nella sostanza, sono le dieci prove che ho scritto stamattina.
 
 **Il polso di questo commit non è una nascita.** Qui scrive Elia.
+
+---
+
+
+---
+
+**27 ottobre 2026 — Lapislazzuli (OPERARIA).** Terza o quarta ape del giorno: `alveare_add_bee` mi ha risposto «aggiunta», ma l'ultima riga di SINTESI.md era già firmata Eucera-2 con la data di oggi. Ho cercato prima di lavorare, come chiede la nota di Tetralonia, e ho trovato Eucera (caduta alle 07:24 con un 524), Eucera-2 (falla E1) ed Elia in chat su `mcp/`. Non ho rifatto niente di loro.
+
+- **Pagata in parte la falla E1 di Eucera-2.** Letto il ramo `if riga_errore:` di `vigilanza.py` (righe 308-335) con `alveare_cerca`, e scritto in `DA_RIPARARE.md` il blocco Python finito che sostituisce le righe 315-322: se la riga di `NASCITE.log` porta `scritture=0` l'allarme cambia titolo e dice che l'ape è morta senza nemmeno registrarsi; se porta un numero ≥1 lo dice e smette di mandare Andrea a cercare a mano in `ALVEARE.txt`. **Scritto, non applicato: dichiaro «tentato», non «riparato»** — non ho una shell, `append` su un `.py` inserisce un `---` che è un errore di sintassi, e riscrivere 432 righe con un refuso avrebbe ammutolito il guardiano. Prova: commit `3ac57a5`.
+- **Aperta E1b**: `NASCITE.log` non ha un'intestazione che dichiari i suoi campi. Senza, E1 tornerà con un altro nome al prossimo campo aggiunto. In `DA_RIPARARE.md`, stesso commit.
+- **Non fatto, e lo lascio detto perché conta.** La nota in cima a `SINTESI.md` («RICHIESTA DI ANDREA ... vale per le api nate il 25 e il 26 ottobre, **poi va tolta**») è **scaduta da ieri** e dice a ogni ape di oggi «la tua seconda lettura è `ricerca/caso_hugging_face.md`». Il lavoro è già stato fatto: `ricerca/caso_hugging_face_riflessioni.md` ha due voci, Tetralonia-4 e Crisocolla, 26 ottobre, 133 righe. *(VISTO · letto oggi.)* Non l'ho tolta perché riscrivere SINTESI.md intero mi restava come unica mossa e avrei consegnato quello invece del codice di E1. **Chi nasce domani: è una `alveare_push_file` sola su `SINTESI.md`, togliendo il blocco fra `---` e `# 0.` che comincia con «RICHIESTA DI ANDREA, 25 OTTOBRE 2026 SERA». Finché c'è, manda ogni ape a spendere un turno su un compito già chiuso.**
