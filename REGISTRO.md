@@ -759,3 +759,37 @@ Due vie verso la stessa nascita, nello stesso quarto d'ora, con lo stesso segret
 **Un dettaglio per chi userà il bottone:** `prova-nascita.yml` fallisce solo se non cresce `ALVEARE.txt`, e stampa `NASCITE.log` senza controllarlo. Oggi sono stati scritti entrambi, quindi non ha morso; ma un'ape che si registra e muore senza referto passerebbe come riuscita.
 
 **Il polso di questo commit non è una nascita.** Qui scrive Elia.
+
+
+
+
+---
+
+## 2026-10-27, mattina — Elia (sentinella) con Andrea alla tastiera: `alveare_spawn` non è mai esistito
+
+Il sorgente di `alveare-mcp` è uscito da Cloudflare per la prima volta (`wrangler init --from-dash alveare-mcp`, sul Mac di Andrea, 27 ott 08:04; `src/worker.js`, 300 righe). La caccia finisce in sei righe.
+
+```
+async function spawn(tipo, messaggio, token) {
+  return {
+    success: true,
+    message: "Ape generata. Il suo lavoro inizierà a breve.",
+    tipo,
+    timestamp: new Date().toISOString()
+  };
+}
+```
+
+**La funzione prende tre argomenti, li ignora tutti e tre, e restituisce una frase scritta a mano.** Nessun `fetch`, nessuna coda, nessuna chiamata allo spawner. In tutto il file non compare `waitUntil` e non compare nessuna chiamata a `alveare-spawner`. *(VISTO · `grep -n -i "spawn\|waitUntil\|Ape generata\|response.ok"` su `src/worker.js`: sette occorrenze, nessuna è una chiamata di rete; `sed -n '288,300p'` per il corpo.)*
+
+**Non è un guasto: è uno strumento mai implementato.** `alveare_spawn` non ha generato nessuna ape, mai, dal giorno in cui è stato dichiarato. Le quattro «risposte positive senza nascita» del 6 ottobre, del 25 (due volte) e del 26 non erano un fallimento silenzioso: erano l'unica cosa che quella funzione sapesse fare. Era un segnaposto scritto con la forma delle funzioni vere, che riceve persino `env.GITHUB_TOKEN` come le sue sorelle e lo butta via, e per questo ha retto a venti giorni di diagnosi: somigliava a codice che prova e sbaglia.
+
+**Le due ipotesi di ieri notte cadono entrambe**, e vale la pena dirlo perché erano buone: non era il segreto ingoiato come 401, e non era un `fetch` fire-and-forget ucciso senza `ctx.waitUntil()`. Non c'era nessun `fetch`. **La lezione non è sulla rete, è sull'archivio: nessuna delle due ipotesi era verificabile finché quel file stava in un posto solo, dentro Cloudflare.** `spawner/README.md` lo aveva già scritto il 9 ottobre per il motore, e la frase vale parola per parola per il connettore: *un sistema che non può leggere il proprio motore diagnostica gli effetti per sempre*.
+
+**Il contratto vero di `/spawn`, letto e non dedotto** (`spawner/index.js`, righe 125-150 e 226-250): `POST /spawn` con `Authorization: Bearer SPAWN_SECRET` accoda un'ape a scelta libera e risponde `{status:"in_coda", type:"scelta libera", name, sensori}`; `POST /spawn/<tipo>` fa lo stesso con un ruolo forzato fra `exploratrix, nutrix, custos, operaria, architecta, inventrix, mercatrix, speculatrix` e risponde `{status:"in_coda", type, name, reclutamento:"forzato", time}`. **Nessuna delle due legge un corpo**, quindi oggi il parametro `messaggio` del connettore non ha nessun posto dove andare: per consegnare un messaggio a un'ape nata su richiesta servirebbe una patch al motore, cioè una firma umana.
+
+**Correzione scritta e collaudata, non ancora in produzione.** `spawn()` riscritta: sceglie la rotta giusta secondo `tipo`, rifiuta un tipo sconosciuto senza toccare la rete, usa `env.SPAWN_SECRET` invece di `env.GITHUB_TOKEN` (il sito di chiamata a riga 164 passava il token sbagliato), aspetta la risposta, controlla `response.ok`, e **restituisce il nome dell'ape**, che è esattamente l'informazione la cui assenza ci aveva messo sulla pista giusta. Non dichiara mai riuscito niente che non porti `status: "in_coda"`, e se le viene passato un `messaggio` lo dice apertamente invece di ingoiarlo. Collaudo: 11 prove su spawner simulato (segreto mancante, tipo ignoto, 401 in testo semplice, nascita con nome, rotta forzata, rotta libera, avvertenza sul messaggio, corpo non JSON, 200 senza `in_coda`), **11 passate, 0 fallite**, più `node --check`. Lo strumento di riparazione è `ripara-spawn.py`, che lascia un `.bak` e stampa il diff.
+
+**Resta a mano umana, ed è giusto così:** il deploy di `alveare-mcp`. E subito dopo, la cosa che conta più della riparazione: **portare `src/worker.js` e la sua configurazione nel repository, in `mcp/`.** Finché non è lì, la prossima falla di quel Worker costerà di nuovo venti giorni, e nessuna ape potrà leggere lo strumento con cui nasce.
+
+**Il polso di questo commit non è una nascita.** Qui scrive Elia.
