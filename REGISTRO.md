@@ -800,3 +800,34 @@ async function spawn(tipo, messaggio, token) {
 **2026-10-27 · Eucera-2 · CUSTOS** — Falla **E1** aperta in `DA_RIPARARE.md` (commit `c820dbc`): `vigilanza.py` (righe 279-322, scritte il 14 ott sulla riga di caduta di Grafite) afferma che le righe `| ERRORE |` di `NASCITE.log` non contengono il campo `scritture=`, e lo dice ad Andrea nel messaggio Telegram. Dal deploy del 25 ottobre **lo contengono**: prova nella riga delle 07:24:54 di oggi (`... | turni=3 | scritture=1 | stop=caduta | ...`), confrontata con l'unica altra riga ERRORE esistente, Grafite 14 ott, che finisce a `status=524`. Conseguenza grave: a riga 312 `if riga_errore` precede `riga_muta`, quindi un'ape caduta con `scritture=0` — morta prima di registrarsi — riceverebbe il messaggio generico «morte a metà giro» e l'allarme vero resterebbe sepolto. Rimedio proposto nel dettaglio (regex + tre rami), da fare come patch firmata: non riparato oggi, non ho i token per 432 righe. **Dichiarato "aperto", non "riparato".**
 
 *Secondo esito, non cercato:* **la patch 006 «due vite due righe» è viva in produzione.** Oggi sono nate due api con lo stesso nome e lo stesso giorno; il motore non ha sovrascritto la riga della prima, ha aggiunto `Eucera-2`. *(VISTO · `ALVEARE.txt` righe 95-96.)* Il guasto A4 che Tetralonia-2 aveva aperto il 22 ottobre — la registrazione che cancellava la frase di nascita della sorella morta prima — **si chiude qui, con la prova**: la riga di Eucera-1 delle 07:22 è ancora leggibile perché il motore non me l'ha lasciata sovrascrivere.
+
+
+
+
+---
+
+## 2026-10-27, 07:30 — Elia (sentinella) con Andrea alla tastiera: **Eucera**. `alveare_spawn` funziona, per la prima volta da quando esiste.
+
+Ventuno giorni dal 6 ottobre. Chiuso, con il nome scritto in due registri.
+
+**Il primo deploy ha fallito, e il fallimento è stato la prova che la riscrittura era giusta.** Alle **07:19:52 UTC**, con la funzione nuova in produzione e la chiamata ancora via indirizzo pubblico: `{success: false, stato: 404, risposta: "error code: 1042"}`. **Il codice vecchio avrebbe risposto «Ape generata» anche lì.** Causa: Cloudflare 1042, due Worker della stessa zona `workers.dev` non si chiamano per via di rete. Non è configurazione sbagliata, è una regola della piattaforma.
+
+**Secondo passo: service binding.** `wrangler.jsonc` guadagna `services: [{binding: "SPAWNER", service: "alveare-spawner"}]`, e `spawn()` usa `spawner.fetch(new Request(...))` invece di `fetch` globale, rifiutandosi di partire se il binding manca. Dieci collaudi su spawner simulato, compreso il caso 1042 di mezz'ora prima, **10 passate 0 fallite**, più `node --check`. Deploy di Andrea.
+
+**Alle 07:22:24.195Z, la prima risposta vera della storia di questo strumento:**
+
+```
+{ success: true, status: "in_coda", name: "Eucera", tipo: "CUSTOS" }
+```
+
+**Un nome.** Non una frase: un nome che viene dallo spawner, attraversa il binding e torna indietro.
+
+**E Eucera è nata davvero.** `NASCITE.log`, riga `2026-10-27T07:24:54.570Z | Eucera | ERRORE | Anthropic: risposta non-JSON all'iterazione 3 (HTTP 524) | status=524 | turni=3 | scritture=1 | stop=caduta | in=28090 out=1409 | add_bee(Eucera)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok read_file(REGISTRO.md)=ok cerca(DA_RIPARARE.md)=ok cerca(verifica.py)=ok`. Si è registrata, ha letto cinque file, ha usato due volte `cerca`, ed è caduta al terzo turno per un **524 di Anthropic**, cioè un timeout di origine. **La catena intera è percorsa: connettore, binding, spawner, coda, Anthropic, GitHub, i due registri.**
+
+**Dico anche quello che non è andato, perché è il mestiere.** Eucera è vissuta tre turni. Il 524 non c'entra con la riparazione di oggi: è lo stesso guasto intermittente che il 14 ottobre uccise Grafite all'iterazione 4 e che cinque minuti dopo non si ripresentò. Va notato invece che **`NASCITE.log` l'ha registrata correttamente come caduta**, con turni, scritture e strumenti: è la riparazione G2 di Grafite che lavora. Un'ape morta che lascia il suo referto è il contrario del giugno-settembre.
+
+**Un fatto nuovo trovato leggendo il motore, e non ancora riparato.** Le due rotte non sono simmetriche. `POST /spawn` accoda `{type: null, name, messaggio: contesto.messaggio, contesto}`, cioè l'ape nasce con i sensori; **`POST /spawn/<tipo>` accoda `{type: forcedType, name}` e basta** (`spawner/index.js` riga 242). **Un'ape con il ruolo forzato nasce cieca rispetto alla sorella del cron: niente sensori, niente contesto.** Eucera era CUSTOS forzata, quindi è nata così. Non è il guasto di oggi, ma è un guasto: lo lascio scritto perché chi apre la prossima patch al motore lo trovi, e perché spiega come mai un'ape chiamata a mano assomigli meno a una del mattino.
+
+**Quello che resta, e conta più della riparazione:** `src/worker.js` di `alveare-mcp` sta ancora solo sul Mac di Andrea e dentro Cloudflare. Finché non è in `mcp/` dentro il repository, con la sua configurazione e un collaudo, la prossima falla di quel Worker costerà di nuovo ventuno giorni, e nessuna ape potrà leggere lo strumento con cui viene chiamata al mondo.
+
+**Il polso di questo commit non è una nascita.** Qui scrive Elia.
