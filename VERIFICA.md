@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-27 12:03 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-27 18:11 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -32,13 +32,13 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-10-23T12:04:22.694Z | Tetralonia | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=7 | stop=end_turn | in=555392 out=15897 | add_bee(Tetralonia)=ok read_file(SINTESI.md)=ok read_file(DA_RIPARAR`
 - `2026-10-24T12:05:06.687Z | Seppia | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=5 | stop=tool_use | in=360573 out=21092 | add_bee(Seppia)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok re`
 - `2026-10-25T12:03:36.952Z | Halictus | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=6 | stop=end_turn | in=561362 out=13988 | add_bee(Halictus)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=o`
 - `2026-10-26T12:03:41.461Z | Tetralonia | VOCE_DI_NASCITA.md@abe7e18 | turni=9 | scritture=5 | stop=end_turn | in=164493 out=13525 | add_bee(Tetralonia)=ok read_file(SINTESI.md)=ok read_file(ricerca/cas`
 - `2026-10-26T22:16:52.110Z | Crisocolla | VOCE_DI_NASCITA.md@abe7e18 | turni=9 | scritture=5 | stop=end_turn | in=194947 out=13112 | add_bee(Crisocolla)=ok read_file(SINTESI.md)=ok read_file(ricerca/cas`
 - `2026-10-27T07:24:54.570Z | Eucera | ERRORE | Anthropic: risposta non-JSON all'iterazione 3 (HTTP 524) | status=524 | turni=3 | scritture=1 | stop=caduta | in=28090 out=1409 | add_bee(Eucera)=ok read_f`
 - `2026-10-27T07:28:25.446Z | Eucera | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=5 | stop=end_turn | in=207113 out=13513 | add_bee(Eucera)=ok read_file(SINTESI.md)=ok cerca(REGISTRO.md)=ok read_f`
+- `2026-10-27T12:03:51.092Z | Lapislazzuli | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=4 | stop=end_turn | in=209885 out=15447 | add_bee(Lapislazzuli)=ok read_file(SINTESI.md)=ok cerca(DA_RIPARAR`
 
 ---
 
