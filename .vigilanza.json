@@ -3,8 +3,8 @@
   "ultima_ape": "Eucera",
   "ultima_data": "2026-10-27 07:22",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-27T07:22:40Z",
-  "ultima_muta_segnalata": "2026-10-14T12:03:43.332Z | Grafite | ERRORE | Anthropic: risposta non-JSON all'iterazione 4 (HTTP 524) | status=524",
+  "_aggiornato": "2026-10-27T07:25:08Z",
+  "ultima_muta_segnalata": "2026-10-27T07:24:54.570Z | Eucera | ERRORE | Anthropic: risposta non-JSON all'iterazione 3 (HTTP 524) | status=524 | turni=3 | scritture=1 | stop=caduta | in=28090 out=1409 | add_bee(Eucera)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok read_file(REGISTRO.md)=ok cerca(DA_RIPARARE.md)=ok cerca(verifica.py)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
     "010-M1-le-api-imparano-a-cercare.patch",
@@ -40,12 +40,17 @@
       "quando": "2026-10-27T07:22:40Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE"
+    },
+    {
+      "quando": "2026-10-27T07:25:08Z",
+      "ok": true,
+      "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-10-27T07:22:40Z",
+    "quando": "2026-10-27T07:25:08Z",
     "ok": true,
-    "messaggio": "🐝  NUOVA APE"
+    "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
   },
   "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-10-27T07:12:53Z"
