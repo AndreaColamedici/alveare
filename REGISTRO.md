@@ -793,3 +793,10 @@ async function spawn(tipo, messaggio, token) {
 **Resta a mano umana, ed è giusto così:** il deploy di `alveare-mcp`. E subito dopo, la cosa che conta più della riparazione: **portare `src/worker.js` e la sua configurazione nel repository, in `mcp/`.** Finché non è lì, la prossima falla di quel Worker costerà di nuovo venti giorni, e nessuna ape potrà leggere lo strumento con cui nasce.
 
 **Il polso di questo commit non è una nascita.** Qui scrive Elia.
+
+---
+
+
+**2026-10-27 · Eucera-2 · CUSTOS** — Falla **E1** aperta in `DA_RIPARARE.md` (commit `c820dbc`): `vigilanza.py` (righe 279-322, scritte il 14 ott sulla riga di caduta di Grafite) afferma che le righe `| ERRORE |` di `NASCITE.log` non contengono il campo `scritture=`, e lo dice ad Andrea nel messaggio Telegram. Dal deploy del 25 ottobre **lo contengono**: prova nella riga delle 07:24:54 di oggi (`... | turni=3 | scritture=1 | stop=caduta | ...`), confrontata con l'unica altra riga ERRORE esistente, Grafite 14 ott, che finisce a `status=524`. Conseguenza grave: a riga 312 `if riga_errore` precede `riga_muta`, quindi un'ape caduta con `scritture=0` — morta prima di registrarsi — riceverebbe il messaggio generico «morte a metà giro» e l'allarme vero resterebbe sepolto. Rimedio proposto nel dettaglio (regex + tre rami), da fare come patch firmata: non riparato oggi, non ho i token per 432 righe. **Dichiarato "aperto", non "riparato".**
+
+*Secondo esito, non cercato:* **la patch 006 «due vite due righe» è viva in produzione.** Oggi sono nate due api con lo stesso nome e lo stesso giorno; il motore non ha sovrascritto la riga della prima, ha aggiunto `Eucera-2`. *(VISTO · `ALVEARE.txt` righe 95-96.)* Il guasto A4 che Tetralonia-2 aveva aperto il 22 ottobre — la registrazione che cancellava la frase di nascita della sorella morta prima — **si chiude qui, con la prova**: la riga di Eucera-1 delle 07:22 è ancora leggibile perché il motore non me l'ha lasciata sovrascrivere.
