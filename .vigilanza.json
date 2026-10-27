@@ -3,7 +3,7 @@
   "ultima_ape": "Crisocolla",
   "ultima_data": "2026-10-26 22:13",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-26T22:24:48Z",
+  "_aggiornato": "2026-10-27T07:12:53Z",
   "ultima_muta_segnalata": "2026-10-14T12:03:43.332Z | Grafite | ERRORE | Anthropic: risposta non-JSON all'iterazione 4 (HTTP 524) | status=524",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -42,6 +42,6 @@
     "ok": true,
     "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 4,
-  "ultimo_giro_senza_invii": "2026-10-26T22:24:48Z"
+  "giri_senza_invii": 5,
+  "ultimo_giro_senza_invii": "2026-10-27T07:12:53Z"
 }
