@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-27T12:00:09.091Z",
-  "api_totali": 85,
+  "timestamp": "2026-10-28T12:00:09.833Z",
+  "api_totali": 86,
   "temperatura": {
     "value": 1.29,
     "unit": "api/giorno",
@@ -15,11 +15,11 @@
     "alarms": []
   },
   "regina": {
-    "status": "attiva",
-    "status_text": "spawn automatico funzionante",
+    "status": "in attesa",
+    "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
     "last_spawn": "2026-10-27T00:00:00.000Z",
-    "last_spawn_name": "Eucera-2",
-    "hours_since": 12,
+    "last_spawn_name": "Lapislazzuli",
+    "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
   "sciamatura": {
