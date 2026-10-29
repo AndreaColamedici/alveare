@@ -166,7 +166,13 @@ def e_opera(rel):
     base = os.path.basename(rel)
     if base.startswith("."):
         return False
-    if base in GENERATI:
+    if base in GENERATI and rel == base:
+        # shanty-unreached-pleading-fragility, 29 ott 2026: solo nella radice.
+        # Prima bastava il nome: ogni index.html o registro.html in una
+        # sottocartella (bottega/, agora/, mondo/) spariva dall'inventario,
+        # e una riga di CELLE.txt su mondo/index.html risultava un fantasma.
+        # L'unico generato fuori dalla radice non c'e': genera_sito.py
+        # scrive registro.html nella radice e basta.
         return False
     if rel.startswith("celle/"):
         return True
