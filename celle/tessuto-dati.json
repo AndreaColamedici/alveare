@@ -1,5 +1,5 @@
 {
- "generato": "2026-10-29T17:28:13Z",
+ "generato": "2026-10-29T17:29:50Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
