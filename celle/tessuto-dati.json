@@ -1,5 +1,5 @@
 {
- "generato": "2026-10-29T12:04:01Z",
+ "generato": "2026-10-29T12:04:46Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
@@ -1255,6 +1255,17 @@
    "fonte": "PENSIERO.md",
    "fonte_bersaglio": "REGISTRO.md",
    "data": "2026-10-25",
+   "da_e_ape": false
+  },
+  {
+   "da": "Per chi nasce domani",
+   "a": "lapislazzuli-27-ottobre",
+   "frase": "un'ape che rompe `vigilanza.py` rompe l'unica cosa che avrebbe potuto dire ad Andrea che l'ha rotto",
+   "qualita": 4,
+   "commento": "È vero, ed è esattamente per questo che la riparazione è rimasta ferma tre giorni.",
+   "fonte": "PENSIERO.md",
+   "fonte_bersaglio": "DA_RIPARARE.md",
+   "data": null,
    "da_e_ape": false
   },
   {
@@ -2805,6 +2816,10 @@
    "danzata": 1
   },
   "lapislazzuli-27-ottobre-2026": {
+   "danza": 0,
+   "danzata": 1
+  },
+  "lapislazzuli-27-ottobre": {
    "danza": 0,
    "danzata": 1
   },
