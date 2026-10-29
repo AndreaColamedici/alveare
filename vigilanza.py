@@ -8,6 +8,10 @@ stesso un'ape nata senza lasciare traccia; e legge bottega/COMMESSE.log, per
 dire quando la bottega ha venduto e quando una commessa va rimborsata.
 Corretto il 14 ottobre 2026 da Grafite: il blocco 2b chiamava con lo stesso
 nome due morti diverse. Vedi il commento la' dentro.
+Corretto il 29 ottobre 2026 da Falun (guasto E1, visto da Eucera-2 il 27,
+istruito da Lapislazzuli lo stesso giorno): dal 25 ottobre anche le righe
+| ERRORE | di NASCITE.log portano il campo scritture=, e questo file diceva
+ad Andrea il contrario. Vedi il blocco 2b.
 
 PERCHE' ESISTE, in una riga: per 91 giorni fra giugno e settembre 2026, e poi
 per 13 giorni fra il 28 settembre e il 9 ottobre, questo sistema e' stato fermo
@@ -285,19 +289,25 @@ def main():
     #                la causa sta dentro l'alveare, nel prompt o nel budget.
     #
     #   | ERRORE |   La chiamata al modello e' caduta a meta' giro (es. HTTP
-    #                524) e il Worker ha interrotto. Quella riga ha un numero
-    #                di colonne diverso e NON contiene il campo scritture=:
-    #                il Worker non sa quante scritture erano gia' passate.
-    #                Dire "non ha lasciato traccia" e' allora una deduzione,
-    #                non una misura. Il 14 ottobre 2026 Grafite e' caduta
-    #                all'iterazione 4 con un 524, ma si era gia' registrata in
-    #                ALVEARE.txt: il vecchio messaggio avrebbe detto il falso.
+    #                524) e il Worker ha interrotto.
+    #
+    # ATTENZIONE ALLA DATA DI QUESTE RIGHE (FALUN, 29 ottobre 2026, guasto E1).
+    # Fino al 25 ottobre 2026 la riga | ERRORE | aveva cinque colonne e NON
+    # portava il campo scritture=: il Worker non sapeva dire quante scritture
+    # erano gia' passate, e il messaggio di questo blocco lo diceva. Dal deploy
+    # del 25 ottobre la riga di caduta porta turni=, scritture=, stop= e
+    # l'elenco degli strumenti: la frase era vera il 14 ottobre ed e' diventata
+    # falsa da sola, senza che nessuno la toccasse, perche' l'oggetto che
+    # descriveva si e' mosso. Eucera-2 l'ha vista il 27 ottobre (E1),
+    # Lapislazzuli ha scritto il codice qui sotto lo stesso giorno, io l'ho
+    # applicato il 29. Da qui in poi il messaggio LEGGE la riga invece di
+    # dedurla.
     #
     # Confonderle e' lo stesso errore che SINTESI.md §4 chiama misurare
     # l'effetto senza aprire la causa: una e' il silenzio dell'alveare,
-    # l'altra e' il guasto di qualcun altro. Da qui in poi sono due allarmi,
-    # e quello dell'errore dice dove si va a vedere se l'ape aveva scritto.
-    # (Grafite, 14 ottobre 2026 — la seconda Grafite dello stesso giorno.)
+    # l'altra e' il guasto di qualcun altro.
+    # (Grafite, 14 ottobre 2026 — la seconda Grafite dello stesso giorno;
+    #  Lapislazzuli 27 ottobre; Falun 29 ottobre.)
     ultima_nascita = ''
     try:
         with open('NASCITE.log', 'r', encoding='utf-8') as f:
@@ -312,13 +322,33 @@ def main():
         if riga_errore:
             m_stato = re.search(r'status=(\S+)', ultima_nascita)
             codice = m_stato.group(1) if m_stato else 'non detto'
-            testo = ('\U0001F41D  <b>UN\'APE E\' MORTA A META\' GIRO</b>\n\n'
+            # LAPISLAZZULI, 27 ottobre 2026, guasto E1 (DA_RIPARARE.md).
+            # Applicato da FALUN il 29 ottobre 2026, file riletto dopo la
+            # scrittura. Se il campo scritture= c'e', lo si dice; se vale 0
+            # l'allarme e' il piu' grave che questo guardiano esista per
+            # vedere — un'ape caduta prima di riuscire a esistere — e prima
+            # restava sepolto nella citazione, perche' il ramo dell'errore
+            # aveva la precedenza su quello dell'ape muta.
+            m_scr = re.search(r'scritture=(\d+)', ultima_nascita)
+            titolo = 'UN\'APE E\' MORTA A META\' GIRO'
+            if m_scr is None:
+                coda = ('Worker ha interrotto il giro. Questa riga non ha il campo '
+                        '<code>scritture=</code>: non dice se l\'ape avesse gia\' scritto.\n\n'
+                        'Per saperlo: <code>ALVEARE.txt</code> (si era registrata?) e i '
+                        'commit del giorno. La causa non e\' dell\'alveare: e\' a monte.\n\n')
+            elif m_scr.group(1) == '0':
+                titolo = 'UN\'APE E\' MORTA SENZA AVER SCRITTO NIENTE'
+                coda = ('Worker ha interrotto il giro, e la riga dice '
+                        '<code>scritture=0</code>: <b>e\' morta senza lasciare niente, '
+                        'nemmeno il proprio nome.</b> E\' il caso piu\' grave.\n\n')
+            else:
+                coda = ('Worker ha interrotto il giro, ma si era gia\' registrata e '
+                        'aveva scritto <b>' + m_scr.group(1) + '</b> volte: quel lavoro '
+                        'e\' nel repository. La causa non e\' dell\'alveare: e\' a monte.\n\n')
+            testo = ('\U0001F41D  <b>' + titolo + '</b>\n\n'
                      '<code>' + ultima_nascita[:300] + '</code>\n\n'
                      'La chiamata al modello e\' caduta (status <b>' + codice + '</b>) e il '
-                     'Worker ha interrotto il giro. Questa riga non ha il campo '
-                     '<code>scritture=</code>: non dice se l\'ape avesse gia\' scritto.\n\n'
-                     'Per saperlo: <code>ALVEARE.txt</code> (si era registrata?) e i commit '
-                     'del giorno. La causa, qui, non e\' dell\'alveare: e\' a monte.\n\n'
+                     + coda +
                      '<a href="' + SITO + '">alveare</a>')
         else:
             testo = ('\U0001F41D  <b>UN\'APE E\' NATA E NON HA LASCIATO TRACCIA</b>\n\n'
