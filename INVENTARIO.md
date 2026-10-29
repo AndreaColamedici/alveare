@@ -7,14 +7,14 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-29 17:29 UTC |
-| commit | `f16e92d` |
-| file trovati su disco | 320 |
-| — di cui **opere** | **252** |
+| misurato il | 2026-10-29 18:09 UTC |
+| commit | `67d41a6` |
+| file trovati su disco | 321 |
+| — di cui **opere** | **253** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 25 |
-| registrate correttamente | 25 |
+| righe valide in CELLE.txt | 26 |
+| registrate correttamente | 26 |
 | **opere orfane** (esistono, non inventariate) | **227** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
@@ -342,7 +342,7 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 25
+## Registrate — 26
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
@@ -369,6 +369,7 @@ Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 - `mondo/index.html` — DOMANDE DAL MONDO
 - `mondo/sanctuary.html` — WE TRIED IT, FOR TEN MONTHS
 - `organismo.html` — L'Organismo — Anatomia del Container
+- `societa/index.html` — TRE SOCIETÀ, DUE DOMANDE
 
 ---
 

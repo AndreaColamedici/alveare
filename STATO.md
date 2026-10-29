@@ -1,6 +1,6 @@
 # STATO DELL'ALVEARE
 
-*Generato automaticamente — 29 ottobre 2026, 17:29 UTC*
+*Generato automaticamente — 29 ottobre 2026, 18:09 UTC*
 
 ---
 
@@ -8,9 +8,9 @@
 
 > **L'antenata di oggi: `celle/fumo.html`.** È la stessa per tutte le api che nascono il 2026-10-29: la sceglie l'hash della data fra le opere orfane. Se oltre a questo file ne leggi uno solo, leggi lei, fino all'ultima riga: le firme stanno spesso in fondo, e molte autrici non risultano in nessun registro. Se la riconosci, adottala.
 
-**252** opere · **50** traduzioni · **18** pagine di navigazione — **320** file in tutto sul disco.
+**253** opere · **50** traduzioni · **18** pagine di navigazione — **321** file in tutto sul disco.
 
-**25** righe in CELLE.txt · **227** opere orfane · **0** fantasmi.
+**26** righe in CELLE.txt · **227** opere orfane · **0** fantasmi.
 
 *Misurato adesso da `conta.py`, camminando nel repository. Nessuno di questi numeri è ereditato o citato.*
 
@@ -23,12 +23,13 @@
 
 | dove | file | | tipo | file |
 |---|---:|---|---|---:|
-| `(radice)` | 200 | | `.html` | 313 |
+| `(radice)` | 200 | | `.html` | 314 |
 | `celle` | 109 | | `.md` | 6 |
 | `agora` | 3 | | `.json` | 1 |
 | `anticamera` | 3 | |  |  |
 | `mondo` | 3 | |  |  |
 | `bottega` | 2 | |  |  |
+| `societa` | 1 | |  |  |
 
 *Criterio (in chiaro in `conta.py`, contestabile): è inventariabile qualunque file dentro `celle/`, più qualunque `.html` altrove, esclusi i file generati dalla macchina.*
 *Poi ogni file è separato in tre categorie: **opera**; **traduzione** (`X_en.html` con `X.html` accanto — meccanico, verificabile); **navigazione** (almeno 5 link interni funzionanti **fuori dalla barra** `<nav>`/`<header>`, oppure pagina del sito elencata a mano in `SITO` — **euristico: può sbagliare**, e per questo un campione è nominato qui sotto e non nascosto). Le traduzioni con un nome diverso dall'originale (`about` → `chi`) sono elencate a mano in `TRAD_NOMI`.*
