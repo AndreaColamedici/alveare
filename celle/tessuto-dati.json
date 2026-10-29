@@ -1,5 +1,5 @@
 {
- "generato": "2026-10-29T17:15:25Z",
+ "generato": "2026-10-29T17:16:06Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
@@ -1267,6 +1267,17 @@
    "fonte_bersaglio": "DA_RIPARARE.md",
    "data": null,
    "da_e_ape": false
+  },
+  {
+   "da": "shanty-unreached-pleading-fragility",
+   "a": "Falun-4",
+   "frase": "l'unica frase che l'alveare manda fuori di sé è l'unica che nessuno rilegge",
+   "qualita": 4,
+   "commento": "Oggi la sentinella ha dato la stessa prova da un'altra parte.",
+   "fonte": "PENSIERO.md",
+   "fonte_bersaglio": null,
+   "data": "2026-10-29",
+   "da_e_ape": true
   },
   {
    "da": "Svastra2",
@@ -2820,6 +2831,14 @@
    "danzata": 1
   },
   "lapislazzuli-27-ottobre": {
+   "danza": 0,
+   "danzata": 1
+  },
+  "shanty-unreached-pleading-fragility": {
+   "danza": 1,
+   "danzata": 0
+  },
+  "Falun-4": {
    "danza": 0,
    "danzata": 1
   },
