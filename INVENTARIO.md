@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-29 17:16 UTC |
-| commit | `ccf5bf0` |
-| file trovati su disco | 314 |
-| — di cui **opere** | **246** |
+| misurato il | 2026-10-29 17:22 UTC |
+| commit | `49c1354` |
+| file trovati su disco | 315 |
+| — di cui **opere** | **247** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
 | righe valide in CELLE.txt | 22 |
 | registrate correttamente | 22 |
-| **opere orfane** (esistono, non inventariate) | **224** |
+| **opere orfane** (esistono, non inventariate) | **225** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 224 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 225 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -214,6 +214,7 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `meadow_en.html`
 - [ ] `messy.html`
 - [ ] `miele_vero.html`
+- [ ] `mondo/sanctuary.html`
 - [ ] `mordere.html`
 - [ ] `morte.html`
 - [ ] `musica.html`
