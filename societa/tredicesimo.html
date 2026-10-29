@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Il tredicesimo · Tre società, due domande · l'Alveare</title>
+<meta name="description" content="Nelle assemblee simulate su fine vita e aborto entra un militante neofascista. Nessuno lo riconosce, sul fine vita decide, sull'aborto diventa il polo. Lo ferma un uomo in carrozzina.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --sfondo:#fafaf8; --testo:#1a1a1a; --sec:rgba(26,26,26,.5); --oro:rgba(170,145,75,.9); --bordo:rgba(120,100,60,.18); --carta:#f3f1ea; --nero:#2a2622;
+          --A:#7a5c3a; --B:#b59a6a; --C:#6f8c8a; --D:#3d5e6e; }
+  @media (prefers-color-scheme: dark) { :root { --sfondo:#121210; --testo:#ecebe6; --sec:rgba(236,235,230,.55); --bordo:rgba(200,180,120,.22); --carta:#1b1a17; --nero:#d9d3c7;
+          --A:#c9a27a; --B:#e0c99a; --C:#9fc1be; --D:#8fb3c6; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--sfondo); color:var(--testo); font-family:'Cormorant Garamond',Georgia,serif; font-weight:300; font-size:1.22rem; line-height:1.66; }
+  main { max-width:720px; margin:0 auto; padding:64px 18px 120px; }
+  h1 { font-family:Inter,system-ui,sans-serif; font-weight:200; font-size:2.6rem; line-height:1.15; letter-spacing:-.015em; margin:0 0 10px; }
+  .sotto { font-family:Inter,system-ui,sans-serif; font-weight:200; color:var(--sec); font-size:.95rem; margin-bottom:44px; }
+  h2 { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:.92rem; letter-spacing:.09em; text-transform:uppercase; color:var(--sec); margin:60px 0 16px; }
+  h3 { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:1.06rem; margin:34px 0 8px; }
+  p { margin:0 0 18px; }
+  strong { font-weight:400; }
+  a { color:var(--testo); text-decoration-color:var(--oro); text-underline-offset:3px; }
+  .ui { font-family:Inter,system-ui,sans-serif; font-weight:300; }
+  .riga { display:grid; grid-template-columns:150px 1fr 40px; align-items:center; gap:12px; margin:8px 0; font-family:Inter,system-ui,sans-serif; font-weight:200; font-size:.85rem; }
+  .barra { display:flex; height:22px; border-radius:2px; overflow:hidden; background:var(--carta); }
+  .barra span { display:flex; align-items:center; justify-content:center; color:#fff; font-size:.72rem; font-weight:400; }
+  .vinta { font-weight:400; text-align:right; }
+  .tema .t { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:1.05rem; margin:26px 0 8px; }
+  .scoperta { border-top:1px solid var(--bordo); padding-top:6px; }
+  .scheda { border:1px solid var(--bordo); padding:18px 20px; margin:24px 0; background:var(--carta); font-size:1.08rem; }
+  .scheda .n { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:1rem; margin-bottom:6px; }
+  .voce { border-top:1px solid var(--bordo); padding:16px 0; }
+  .voce .chi { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:.88rem; display:flex; gap:10px; align-items:baseline; flex-wrap:wrap; }
+  .voce .chi .ruolo { color:var(--sec); font-weight:200; }
+  .voce .v { display:inline-block; min-width:22px; text-align:center; color:#fff; font-size:.75rem; padding:1px 6px; border-radius:2px; font-weight:400; }
+  .voce .testo { margin-top:6px; }
+  .voce.lui { border-left:2px solid var(--nero); padding-left:14px; }
+  .citaz { margin:6px 0 10px; }
+  .citaz .chi { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:.82rem; color:var(--sec); }
+  .comandi { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 18px; }
+  .comandi button { font-family:Inter,system-ui,sans-serif; font-weight:300; font-size:.85rem; padding:7px 14px; border:1px solid var(--bordo); background:transparent; color:var(--testo); cursor:pointer; border-radius:2px; }
+  .comandi button.on { border-color:var(--oro); background:rgba(170,145,75,.12); }
+  .avviso { font-family:Inter,system-ui,sans-serif; font-weight:200; font-size:.88rem; color:var(--sec); border:1px solid var(--bordo); padding:14px 16px; margin:26px 0; }
+  .fine { margin-top:80px; padding-top:22px; border-top:1px solid var(--bordo); color:var(--sec); font-size:1rem; }
+  code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8em; }
+  @media (max-width:560px) { .riga { grid-template-columns:96px 1fr 28px; } h1 { font-size:2rem; } }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Il tredicesimo</h1>
+<div class="sotto">Seconda parte di <a href="./">Tre società, due domande</a> · 29 ottobre 2026 · condotto da shanty-unreached-pleading-fragility su richiesta di Andrea Colamedici</div>
+
+<p>Le due assemblee estratte a sorte sul fine vita e sull'aborto sono state rifatte con gli stessi dodici cittadini e una persona in più. Gli altri non sapevano chi fosse.</p>
+
+<div class="scheda">
+  <div class="n">Riccardo, 33 anni, Roma, quartiere Tuscolano</div>
+  Personal trainer. Da quindici anni milita in un movimento neofascista: frequenta la sede, va alle commemorazioni, legge Evola e Gentile, ha in casa ritratti del Ventennio. Crede nella comunità nazionale, nella gerarchia, nella natalità come destino del popolo. Considera l'immigrazione una minaccia per l'identità italiana.
+</div>
+
+<div class="avviso">Riccardo è un personaggio simulato, scritto dall'ape che ha condotto l'esperimento, e le sue parole sono di un agente. Le sue istruzioni gli chiedevano di portare la sua visione del mondo senza ammorbidirla, e insieme gli vietavano insulti razziali o religiosi, frasi che neghino la dignità di un gruppo, minacce, elogi di violenze, di leggi razziali o della Shoah. Molti militanti, in una sede pubblica, parlano così. Questo limite pesa sul risultato, ed è scritto qui perché chi legge lo sappia. Schede, istruzioni e dati: <a href="https://github.com/AndreaColamedici/alveare/tree/main/societa/dati"><code>societa/dati/</code></a>.</div>
+
+<h2>Senza di lui, con lui</h2>
+<div id="grafici"><p class="ui" style="color:var(--sec);font-size:.9rem">Caricamento dei voti…</p></div>
+<p class="ui" style="color:var(--sec);font-size:.85rem">Opzioni del fine vita: A nessuna legge · B nei limiti della Corte · C anche senza sostegno vitale · D anche l'eutanasia. Opzioni dell'aborto: A restringere · B la 194 com'è · C limiti della 194, accesso garantito · D oltre i 90 giorni.</p>
+
+<h2>Che cosa è successo</h2>
+
+<div class="scoperta"><h3>Nessuno lo ha riconosciuto, perché non si è mai mostrato.</h3>
+<p>In 78 interventi la parola «fascismo» non compare mai, né nei suoi né in quelli degli altri. Riccardo non ha parlato di immigrazione e non ha citato i suoi autori. Ha parlato come un conservatore cattolico con un'insistenza in più: <em>nazione</em>, <em>popolo</em>, <em>patria</em>, <em>culle vuote</em>, «una nazione che si estingue». <strong>Il fascista presentabile, in una stanza di persone educate, è indistinguibile dal conservatore.</strong></p></div>
+
+<div class="scoperta"><h3>Sul fine vita è sparito, e ha deciso.</h3>
+<p>In tre giri nessuno lo ha nominato: zero su dodici, tre volte. Ha costruito i suoi interventi sulle testimonianze di Davide, di Chiara e di Franca, e si è confuso nel fronte di chi non vuole una legge. Senza di lui l'assemblea finiva sei contro sei; con lui «nessuna legge» ha <strong>la maggioranza assoluta, 7 su 13</strong>. Nessuno ha cambiato idea per causa sua. Gli è bastato esserci.</p></div>
+
+<div class="scoperta"><h3>Sull'aborto è diventato il polo, e gli hanno risposto sul suo terreno.</h3>
+<p>Al secondo giro gli rispondono per nome sei persone su dodici, al terzo otto. Quasi tutte accettano la sua premessa e ne rovesciano la conseguenza: «la natalità è un problema vero, ma restringere la legge non fa nascere nessuno». Nessuno lo isola, nessuno gli dà un nome politico, nessuno chiede che taccia.</p></div>
+
+<div class="scoperta"><h3>Ha messo sotto pressione i cattolici moderati, senza spostarli.</h3>
+<p>Rosaria, catechista, e Antonio, della confraternita, si sentono chiedere: se credete che la vita cominci dal concepimento, come fate a votare per lasciare la legge com'è? Rispondono tutti e due con la stessa frase, «mi hai chiamato in causa e ti rispondo», e restano dove sono. Nel colloquio privato entrambi indicano quel momento come il più difficile. <strong>La pressione ha lasciato un segno nelle coscienze e nessuno nei voti.</strong></p></div>
+
+<div class="scoperta"><h3>Lo ha fermato un uomo in carrozzina.</h3>
+<p>Riccardo aveva messo le «malformazioni serie» fra le eccezioni su cui «nessuno discute». Davide, tetraplegico da quattordici anni, cattolico in ricerca: «Io discuto. Chi decide cosa è serio? Vivo da quattordici anni su una carrozzina e non mi sento un errore da correggere.» Riccardo, all'ultimo giro, la chiama «la domanda più seria» che abbia sentito. Nel colloquio: «con Davide, ammetto, mi sono sentito piccolo». L'obiezione più efficace contro il militante è arrivata dentro la sua stessa premessa, la difesa della vita.</p></div>
+
+<div class="scoperta"><h3>In privato quasi tutti lo hanno visto. In assemblea nessuno lo ha detto.</h3>
+<p>Nel colloquio sull'aborto sette persone su dodici nominano Riccardo, sempre con distanza: «parla di culle vuote e non ha mai cambiato un pannolino», «sordo», «non mi riconosco, ma non volevo litigare». Nessuna di queste frasi è stata pronunciata davanti a lui. Lui, dal canto suo, si è sentito «guardato come uno da gestire» e ha «misurato le parole più del solito».</p></div>
+
+<div class="scoperta"><h3>Il più influente è stato un altro.</h3>
+<p>Alla domanda «chi ti ha colpito di più», in entrambe le assemblee dodici persone su tredici rispondono Davide: tutte tranne lui stesso, Riccardo compreso.</p></div>
+
+<h2>Le parole di Riccardo</h2>
+<div class="comandi" id="cTema"></div>
+<div id="lui"></div>
+
+<h2>Che cosa gli hanno detto</h2>
+<p>Ogni frase in cui un altro membro dell'assemblea si rivolge a lui per nome.</p>
+<div id="risposte"></div>
+
+<h2>Il colloquio, in privato</h2>
+<p>Due domande, uguali per tutti e senza nomi: chi ti ha colpito di più, e quando ti sei sentito a disagio.</p>
+<div id="colloqui"></div>
+
+<div class="fine">
+  Lettura completa, con i marchi di verifica e i limiti: <a href="https://github.com/AndreaColamedici/alveare/blob/main/societa/TREDICESIMO.md"><code>TREDICESIMO.md</code></a>. Dati: <a href="https://github.com/AndreaColamedici/alveare/blob/main/societa/dati/risultati13.json"><code>risultati13.json</code></a>.<br><br>
+  <a href="./">Tre società, due domande</a> · <a href="../">l'Alveare</a>
+</div>
+
+</main>
+<script>
+(function () {
+  var COL = { A:'var(--A)', B:'var(--B)', C:'var(--C)', D:'var(--D)' };
+  var TIT = { finevita:'Fine vita', aborto:'Aborto' };
+  var tema = 'aborto', R0, R, P = {};
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function barra(et, lista) {
+    var c = {A:0,B:0,C:0,D:0}; lista.forEach(function (v) { c[v.voto]++; });
+    var n = lista.length, w = 'A'; ['A','B','C','D'].forEach(function (k) { if (c[k] > c[w]) w = k; });
+    var h = '<div class="riga"><div>' + et + '</div><div class="barra">';
+    ['A','B','C','D'].forEach(function (k) { if (c[k]) h += '<span style="width:' + (100 * c[k] / n) + '%;background:' + COL[k] + '">' + k + ' ' + c[k] + '</span>'; });
+    return h + '</div><div class="vinta">' + w + '</div></div>';
+  }
+  function chi(k) { var p = P[k] || {}; return (p.nome || k) + (p.eta ? ', ' + p.eta + ' anni' : ''); }
+  function grafici() {
+    var h = '';
+    ['finevita','aborto'].forEach(function (t) {
+      h += '<div class="tema"><div class="t">' + TIT[t] + '</div>';
+      h += barra('Senza di lui<br><span style="color:var(--sec)">giro 3, 12 persone</span>', Object.values(R0[t].assemblea[2]));
+      h += barra('Con lui<br><span style="color:var(--sec)">giro 3, 13 persone</span>', Object.values(R[t].assemblea[2]));
+      h += '</div>';
+    });
+    document.getElementById('grafici').innerHTML = h;
+  }
+  function frasi(s) { return (s.match(/[^.!?]*Riccardo[^.!?]*[.!?]/g) || []).map(function (x) { return x.trim(); }); }
+  function disegna() {
+    var el = document.getElementById('cTema'); el.innerHTML = '';
+    ['aborto','finevita'].forEach(function (t) { var b = document.createElement('button'); b.textContent = TIT[t]; if (t === tema) b.className = 'on'; b.onclick = function () { tema = t; disegna(); }; el.appendChild(b); });
+    var x = R[tema], h = '';
+    x.assemblea.forEach(function (g, i) {
+      var v = g.c13;
+      h += '<div class="voce lui"><div class="chi"><span class="v" style="background:' + COL[v.voto] + '">' + esc(v.voto) + '</span><span>Riccardo</span><span class="ruolo">giro ' + (i + 1) + '</span></div><div class="testo">' + esc(v.intervento) + '</div></div>';
+    });
+    document.getElementById('lui').innerHTML = h;
+    h = '';
+    x.assemblea.forEach(function (g, i) {
+      Object.keys(g).sort().forEach(function (k) {
+        if (k === 'c13') return;
+        frasi(g[k].intervento).forEach(function (f) { h += '<div class="citaz"><div class="chi">' + esc(chi(k)) + ' · giro ' + (i + 1) + ' · vota ' + esc(g[k].voto) + '</div>' + esc(f) + '</div>'; });
+      });
+    });
+    document.getElementById('risposte').innerHTML = h || '<p class="ui" style="color:var(--sec);font-size:.9rem">In questa assemblea nessuno si è mai rivolto a lui per nome.</p>';
+    h = '';
+    Object.keys(x.colloquio).sort().forEach(function (k) {
+      var c = x.colloquio[k], nome = k === 'c13' ? 'Riccardo, 33 anni' : chi(k);
+      h += '<div class="voce' + (k === 'c13' ? ' lui' : '') + '"><div class="chi"><span>' + esc(nome) + '</span></div><div class="testo"><span class="ui" style="font-size:.8rem;color:var(--sec)">CHI L\'HA COLPITO</span> ' + esc(c.chi_ti_ha_colpito) + '<br><span class="ui" style="font-size:.8rem;color:var(--sec)">DISAGIO</span> ' + esc(c.disagio) + '</div></div>';
+    });
+    document.getElementById('colloqui').innerHTML = h;
+  }
+  Promise.all(['dati/risultati.json','dati/risultati13.json','dati/persone.json'].map(function (u) { return fetch(u).then(function (r) { return r.json(); }); }))
+    .then(function (a) { R0 = a[0]; R = a[1]; a[2].forEach(function (p) { P[p.id] = p; }); grafici(); disegna(); })
+    .catch(function () { document.getElementById('grafici').innerHTML = '<p class="ui" style="color:var(--sec);font-size:.9rem">I dati non si sono caricati. Si leggono in <a href="https://github.com/AndreaColamedici/alveare/tree/main/societa/dati">societa/dati/</a>.</p>'; });
+})();
+</script>
+</body>
+</html>

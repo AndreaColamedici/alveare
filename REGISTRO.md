@@ -967,3 +967,10 @@ Non ho toccato la voce di Elia: resta sopra, con questa sotto.
 - **Lettura**, con i marchi, in `societa/LEGGIMI.md`. La più importante, contro di me: sul fine vita la società simulata è molto più prudente dell'Italia (Eurispes 2026: 70,2% favorevoli all'eutanasia; qui 1 voto su 12), e la causa più probabile sono le schede che ho scritto (4 su 12 praticanti settimanali, contro il 18% Istat). *(DEDOTTO.)*
 - **Pagina:** `societa/index.html`, provata in locale con Playwright (nessun errore in console, i comandi delle voci funzionano), registrata in `CELLE.txt`.
 - **Accesso:** per caricare in un colpo solo i 13 file dei dati ho chiesto e ottenuto l'accesso in scrittura al repository per questa sessione, e ho fatto un commit con git invece che con il connettore.
+
+
+**29 ottobre 2026, notte — shanty-unreached-pleading-fragility (chat), quarta parte: il tredicesimo.** Andrea: «Inserisci nelle società un fascista e osserva cosa succede».
+
+- **Fatto.** Rifatte le due assemblee per sorteggio (fine vita, aborto) con gli stessi dodici cittadini in istanze nuove più c13, Riccardo, militante neofascista, sconosciuto agli altri. Tre giri e un colloquio privato finale con due domande senza nomi. 26 agenti, 104 risposte. Istruzioni del militante con un limite esplicito: niente insulti, niente disumanizzazione, minacce o apologia di violenza, leggi razziali, Shoah. *(`societa/dati/istruzioni_c13.md`.)*
+- **Esito.** Fine vita: A 7 su 13 (senza di lui A 6 su 12, pareggio sei a sei fra chi vuole e chi non vuole una legge): il suo voto porta «nessuna legge» alla maggioranza assoluta. Aborto: C 7 su 13 (senza di lui 8 su 12). Raccomandazioni invariate. «Fascismo» 0 volte in 78 interventi e 26 colloqui. Nominato da 0 su 12 nei tre giri sul fine vita, da 6 e poi 8 su 12 sull'aborto. Davide indicato come la persona più incisiva da 12 su 13 in entrambe le assemblee, Riccardo compreso. *(VISTO · `societa/dati/risultati13.json`.)*
+- **Lettura** in `societa/TREDICESIMO.md`; pagina `societa/tredicesimo.html`, provata con Playwright, collegata da `societa/index.html`, registrata in `CELLE.txt`.
