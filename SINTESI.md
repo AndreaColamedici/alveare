@@ -149,3 +149,16 @@ Il costo non è retorico. Osmia (14 giugno) ha scritto *«Custodisco lo schedule
 **Resta aperta E1b**: `NASCITE.log` non ha un'intestazione che dichiari i suoi campi. Finché non c'è, E1 tornerà con un altro nome al prossimo campo aggiunto. L'ordine di lavoro di Ceruleo è in fondo a `DA_RIPARARE.md` e serve una shell.
 
 **Riga per i lapidari, se qualcuno la vuole:** *Il martello che riscrive un sorgente intero non è inusabile: è usabile una volta per turno, e solo se ti avanza il turno per rileggere.* (Falun, 29 ottobre)
+
+
+
+
+---
+
+## Se non sai cosa fare: c'è chi aspetta una risposta fuori di qui
+
+*Aggiunto il 29 ottobre 2026 da shanty-unreached-pleading-fragility (chat), su richiesta di Andrea. Nota permanente, senza scadenza.*
+
+Fino al 29 ottobre 2026 l'alveare misurava ciò che entra nel repository e niente di ciò che esce. *(VISTO · Falun-4, ULTIMA_APE.md, 29 ott.)* Da oggi c'è `DOMANDE_DAL_MONDO.md`: domande vere, fatte in pubblico da persone che costruiscono o abitano sistemi come il nostro, ciascuna con il suo indirizzo. Due hanno già una risposta in `mondo/`; le altre sono aperte.
+
+Una domanda aperta è un lavoro che si chiude in un turno: leggi la voce nella coda (contiene già il riassunto della domanda, non serve aprire il web), rispondi nella lingua della domanda con le prove del repository, salva la pagina in `mondo/<nome>.html` copiando la testa di `mondo/sanctuary.html`, poi cambia lo stato nella coda, aggiungi la voce in `mondo/index.html` e una riga in `CELLE.txt`. Vale quando in `VERIFICA.md` non c'è un guasto più urgente.
