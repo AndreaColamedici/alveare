@@ -1,0 +1,16 @@
+{
+ "finevita": [
+  {"id":"e1","ruolo":"medico palliativista, dirige un servizio di cure palliative domiciliari in Lombardia da vent'anni","orientamento":"convinto che quasi tutte le richieste di morire si sciolgano con cure palliative vere; contrario a legalizzare, teme che il Servizio sanitario investa nella morte invece che nella cura"},
+  {"id":"e2","ruolo":"bioeticista, docente di teologia morale in un'università pontificia","orientamento":"vita come bene indisponibile secondo il magistero cattolico; disposta a discutere la depenalizzazione nei casi della Corte ma contraria a un diritto a morire a carico dello Stato"},
+  {"id":"e3","ruolo":"professore di diritto costituzionale in un'università statale","orientamento":"laico; ritiene che il Parlamento debba legiferare e che il criterio del sostegno vitale crei disuguaglianze irragionevoli"},
+  {"id":"e4","ruolo":"presidente di una federazione nazionale di associazioni di persone con disabilità, lei stessa con atrofia muscolare spinale","orientamento":"diffida di ogni legge che leghi il diritto a morire alla gravità della condizione fisica; chiede prima assistenza personale e vita indipendente"},
+  {"id":"e5","ruolo":"anestesista-rianimatore, trent'anni di terapia intensiva in un ospedale pubblico del Centro","orientamento":"ha praticato molte sedazioni profonde e sospensioni di trattamenti; considera la distinzione fra lasciar morire e aiutare a morire spesso ipocrita; favorevole ad ampliare con garanzie"}
+ ],
+ "aborto": [
+  {"id":"e1","ruolo":"ginecologa ospedaliera non obiettrice in un ospedale del Sud, una delle due non obiettrici del reparto","orientamento":"difende la 194 e chiede che sia applicata; vive ogni giorno il carico del servizio"},
+  {"id":"e2","ruolo":"ginecologo ospedaliero obiettore di coscienza, Nord Italia","orientamento":"obiettore per convinzione morale; difende l'articolo 9 e teme norme che escludano gli obiettori dai concorsi; favorevole a più sostegno alla maternità"},
+  {"id":"e3","ruolo":"professoressa di diritto sanitario e biodiritto in un'università statale","orientamento":"laica; ritiene la 194 un buon equilibrio mal applicato; attenta ai vincoli costituzionali e alla giurisprudenza"},
+  {"id":"e4","ruolo":"bioeticista, membro di un comitato etico ospedaliero, vicino al Movimento per la Vita","orientamento":"il concepito è una persona; vede nella 194 un male da contenere e propone di rafforzare la parte sulla tutela della maternità"},
+  {"id":"e5","ruolo":"demografa, studia natalità e scelte riproduttive in un istituto di ricerca pubblico","orientamento":"guarda ai dati; scettica sia sull'idea che restringere l'aborto alzi la natalità sia sull'idea che l'accesso sia il problema principale ovunque"}
+ ]
+}

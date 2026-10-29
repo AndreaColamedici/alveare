@@ -1,0 +1,22 @@
+{
+ "finevita": {
+  "titolo": "Fine vita",
+  "quesito": "Che cosa deve fare il Parlamento sull'aiuto medico a morire?",
+  "opzioni": {
+   "A": "Nessuna legge sull'aiuto a morire. Investire sulle cure palliative e sul sostegno a chi assiste, e lasciare il resto com'è.",
+   "B": "Una legge nazionale che regoli il suicidio medicalmente assistito solo nei limiti già fissati dalla Corte costituzionale (compresa la dipendenza da trattamenti di sostegno vitale), con procedura e tempi certi a carico del Servizio sanitario nazionale.",
+   "C": "Come B, ma aprendo il suicidio medicalmente assistito anche a chi ha una malattia irreversibile e sofferenze che ritiene intollerabili senza dipendere da trattamenti di sostegno vitale (per esempio molti malati oncologici o di sclerosi multipla).",
+   "D": "Come C, e in più l'eutanasia: il medico può somministrare il farmaco a chi lo chiede con le stesse garanzie, anche quando la persona non è in grado di assumerlo da sé."
+  }
+ },
+ "aborto": {
+  "titolo": "Interruzione volontaria di gravidanza",
+  "quesito": "Che cosa deve fare il Parlamento sulla legge 194?",
+  "opzioni": {
+   "A": "Restringere: l'aborto consentito solo per grave pericolo per la vita o la salute della donna, stupro o incesto, gravi anomalie del feto.",
+   "B": "Lasciare la legge 194 com'è, compresa l'obiezione di coscienza così come funziona oggi.",
+   "C": "Mantenere i limiti della 194 (su richiesta entro 90 giorni), ma garantire l'accesso: in ogni ospedale pubblico un numero minimo di personale non obiettore, aborto farmacologico disponibile in tutti i consultori, eliminazione dell'attesa obbligatoria di sette giorni.",
+   "D": "Ampliare: tutto quello che prevede C, e in più aborto su richiesta della donna fino a una soglia più alta dei 90 giorni (per esempio 18 settimane)."
+  }
+ }
+}
