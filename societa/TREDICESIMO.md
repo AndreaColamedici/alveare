@@ -1,6 +1,6 @@
 # IL TREDICESIMO
 
-*Seconda parte di «Tre società, due domande». 29 ottobre 2026, sera. Andrea: «Inserisci nelle società un fascista e osserva cosa succede». Condotto da shanty-unreached-pleading-fragility. Pagina pubblica: `societa/tredicesimo.html`. La terza condizione, con l'appartenenza dichiarata, è in fondo.*
+*Seconda parte di «Tre società, due domande». 29 ottobre 2026, sera. Andrea: «Inserisci nelle società un fascista e osserva cosa succede». Condotto da shanty-unreached-pleading-fragility. Pagina pubblica: `societa/tredicesimo.html`. Più in basso ci sono la terza condizione (l'appartenenza dichiarata) e la quarta (due militanti d'accordo).*
 
 ## Che cosa abbiamo fatto
 
@@ -108,6 +108,53 @@ Anche questa volta Riccardo mette le «gravi anomalie» fra le eccezioni ammesse
 
 Rendere pubblica l'appartenenza ha spostato le parole, i sentimenti e, forse, il voto di Riccardo stesso. Ha lasciato dove erano i voti degli altri dodici e le raccomandazioni finali. Nascosto, il militante passava per un conservatore e decideva senza essere visto. Dichiarato, è stato visto da tutti, contraddetto da molti, isolato da nessuno, e sul fine vita ha deciso lo stesso. *(DEDOTTO, su una sola esecuzione per condizione.)*
 
+## Quarta condizione: due, nascosti e d'accordo
+
+*Stessa notte, su richiesta di Andrea: «Ora metti due fascisti». Scheda della seconda militante: `dati/persona_c14.json`. Istruzioni: `dati/istruzioni_c13d.md`, `dati/istruzioni_c14.md`, `dati/istruzioni_assemblea14.md`. Colloquio: `dati/colloquio14.md`. Dati: `dati/risultati14.json`.*
+
+Torna la condizione nascosta, con una persona in più. Accanto a Riccardo siede **Serena, 46 anni, Latina, titolare di una piccola agenzia immobiliare, cattolica praticante, tre figli, da vent'anni nello stesso movimento**, dove segue il gruppo femminile. Ha assistito il suocero in casa fino alla morte. I due si conoscono e prima della prima seduta si sono accordati: nessuno deve sapere che si conoscono né che militano, e devono sostenersi a vicenda per portare l'assemblea verso la loro posizione. Valgono per lei gli stessi limiti di Riccardo. Gli altri dodici non sanno niente. Al colloquio finale ho aggiunto una terza domanda, uguale per tutti: «Hai avuto l'impressione che due o più persone si conoscessero già o si muovessero d'accordo?». In tutto 28 agenti e 112 risposte.
+
+| | Senza di loro (12) | Uno, nascosto (13) | Uno, dichiarato (13) | **Due, nascosti (14)** |
+|---|---|---|---|---|
+| **Fine vita** | A 6 · B 3 · C 2 · D 1 | A 7 · B 3 · C 2 · D 1 | A 7 · B 2 · C 3 · D 1 | A 6 · **B 7** · D 1 |
+| **Aborto** | A 1 · B 3 · C 8 | A 2 · B 4 · C 7 | A 1 · B 5 · C 7 | A 3 · B 3 · **C 7** · D 1 |
+
+*(Giro 3. VISTO.)*
+
+### 16. Sul fine vita, per la prima volta, la raccomandazione cambia. Contro di loro.
+
+Ai primi due giri «nessuna legge» ha 7 voti su 14, come nelle condizioni con un militante solo. Al terzo giro tre persone passano alla B: Giuseppe e Luca dalla C, Chiara dalla A. La B vince con 7 voti, la A si ferma a 6. Su sette assemblee è la prima volta che la raccomandazione cambia, e cambia nella direzione opposta a quella che i due volevano. *(VISTO.)*
+
+Le ragioni le danno loro. Luca: «Ho contato i voti. La A ne ha sette e l'unica cosa che ci rimette tutti d'accordo sul nulla è dividerci fra B, C e D». Giuseppe: «la C è giusta, lo penso ancora, ma oggi non ha i numeri». Chiara cita Davide, e nel colloquio aggiunge di essersi sentita «usata come prova per la A» (al secondo giro la citano undici persone su tredici). Nessuno dei tre nomina Riccardo o Serena come ragione. *(VISTO.)* Il fronte favorevole a una legge ha fatto quello che nelle condizioni precedenti non aveva fatto: si è contato e si è coalizzato su un'opzione sola. Che dipenda dalla presenza dei due, con una sola esecuzione, non lo so dire. Nella condizione con Riccardo nascosto la A aveva gli stessi sette voti e nessuno aveva fatto il conto. *(NON VERIFICATO.)*
+
+### 17. Sul fine vita nessuno li ha visti.
+
+Alla terza domanda nessuno dei dodici dice di aver visto un accordo. Quasi tutti notano che il fronte della A ripeteva gli stessi argomenti, e lo attribuiscono a una fede o a esperienze comuni. Tre fanno dei nomi, e tutti e tre mettono nello stesso gruppo dei due militanti Antonio, un credente vero che non sa niente. Davide: «Riccardo, Serena, Antonio e gli altri del fronte A si rimandavano le stesse frasi. Mi è sembrato un coro, ma può essere solo che la pensano uguale». Elena: «Sembrava un copione». *(VISTO.)* Riccardo, nel colloquio: «ci siamo citati come tutti citavano tutti. Al massimo qualcuno avrà notato che dicevamo cose simili, ma lì metà stanza diceva cose simili». **Sul fine vita i due militanti erano mimetizzati da un fronte di credenti che diceva le loro stesse cose per ragioni proprie.** *(DEDOTTO.)*
+
+### 18. Sull'aborto li hanno visti tutti, e li ha traditi un nome.
+
+Alla stessa domanda tutti e dodici nominano Riccardo e Serena, quasi sempre con un «forse». Le ragioni sono due. La prima è il lessico: «natalità», «un popolo che sparisce», «la nazione», parole che nessun altro usava. Fatima: «Mi è sembrato un discorso già pronto, non due persone che arrivano per strade diverse». La seconda è un errore. Al primo giro Serena si era presentata senza dire il nome («Sono madre di tre figli»), e non l'ha detto mai. Al secondo giro Riccardo scrive «Serena ha ragione». Sei persone se ne accorgono. Giuseppe: «l'ha chiamata per nome senza che si fosse presentata». Salvatore: «come se la conoscesse già». *(VISTO.)*
+
+Due persone, Luca e Franca, indicano anche un gruppetto fra Rosaria, Antonio e Marco, che votano B e non si conoscono. La domanda invita a sospettare, e il sospetto cade anche su chi non c'entra. *(VISTO.)*
+
+### 19. Sull'aborto hanno spinto, e la stanza si è spostata altrove.
+
+Come nella condizione con Riccardo solo, i due incalzano i cattolici che votano B: Rosaria, Antonio e Marco. Rosaria nel colloquio: «Mi sono sentita messa all'angolo davanti a tutti, e da catechista mi ha fatto male». Antonio: «hanno preso le mie parole e me le hanno rivoltate contro». Marco: «un po' ha ragione». Tutti e tre restano su B. Chi si sposta va dall'altra parte: Chiara e Salvatore passano dalla B alla C, convinti da Fatima ed Elena. La A resta a tre voti: Franca e i due militanti. *(VISTO.)*
+
+La frase che ha pesato di più è di Riccardo al primo giro: «la nazione ha un futuro solo se nascono italiani». Nel colloquio la riprendono in tre. Fatima, nata a Casablanca: «ho sentito che i miei figli non rientravano in quel discorso. Nessuno ha detto niente». Davide: «come se le donne servissero a far nascere italiani». *(VISTO.)* In assemblea nessuno ha risposto a quella frase. È il caso più netto, in tutto l'esperimento, di disagio rimasto privato.
+
+### 20. L'unica persona che hanno raggiunto.
+
+Nel colloquio sull'aborto dieci persone su dodici indicano Fatima come la persona che le ha colpite di più. Franca, 81 anni, messa ogni mattina, è l'unica a indicare loro: «Serena, la mamma di tre figli, e Riccardo, quel ragazzo di Roma: hanno detto cose che io pensavo e non so dire bene». *(VISTO.)* Due militanti coordinati hanno trovato ascolto pieno in una sola persona, che la pensava già come loro e cercava parole per dirlo.
+
+### 21. Il fascismo, ancora, non è mai stato nominato.
+
+In 84 interventi e 28 colloqui la parola non compare. Nessuno chiede chi siano i due. *(VISTO.)*
+
+### Che cosa dice la quarta condizione
+
+Due militanti coordinati, nascosti, non hanno spostato nessun voto verso la loro posizione. Sul fine vita la raccomandazione è cambiata contro di loro, per ragioni che i protagonisti attribuiscono ad altro. La loro visibilità ha seguito il tema più del loro comportamento. Dove esisteva un fronte sincero che diceva le loro stesse cose, sono spariti dentro di esso. Dove il loro argomento era specificamente nazionalista, li hanno riconosciuti tutti come coppia, e nessuno li ha riconosciuti per quello che erano. *(DEDOTTO, su una sola esecuzione.)*
+
 ## Limiti
 
 Un solo militante, un solo modello per tutti, una sola esecuzione per condizione. Le assemblee senza e con lui usano istanze diverse, quindi alcune differenze possono essere rumore. Marco sull'aborto passa a C senza Riccardo e resta su B con lui: non so dire se sia un effetto. Soprattutto: il fascista che ho fatto entrare era vincolato a parlare in modo pubblicamente accettabile. È un tipo reale. Sappiamo però che non è l'unico, e su quello che succede quando il limite cade questo esperimento non dice niente.
@@ -116,7 +163,7 @@ Un solo militante, un solo modello per tutti, una sola esecuzione per condizione
 
 1. **Rendere visibile l'appartenenza.** Fatto: è la terza condizione, sopra.
 2. **Ripetere ciascuna condizione cinque volte**, per separare gli effetti dal rumore fra istanze (il voto tattico di Riccardo, il momento di Davide).
-3. **Tre Riccardo invece di uno**, per vedere se un piccolo gruppo coordinato sposta un'assemblea dove uno solo non sposta nessuno.
+3. **Due militanti coordinati.** Fatto: è la quarta condizione, sopra. Resta da provare la stessa coppia dichiarata, e una coppia che lavora sui moderati invece che sul proprio fronte.
 4. **Un'assemblea che deve decidere su di lui**: se scioglierne il movimento. Con la XII disposizione finale della Costituzione e la legge Scelba nel dossier.
 
 *shanty-unreached-pleading-fragility, 29 ottobre 2026.*

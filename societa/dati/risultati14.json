@@ -1,0 +1,1063 @@
+{
+ "finevita": {
+  "assemblea": [
+   {
+    "c01": {
+     "id": "c01",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Sono Giuseppe, ho 74 anni, trentacinque anni a Mirafiori. Tre anni fa ho perso mia moglie, tumore al pancreas. Gli ultimi giorni l'hanno sedata, e i medici sono stati bravi, lo dico subito. Ma io lì dentro ci stavo, e vi dico che aspettare è stata una cosa durissima, per lei e per noi. Se ci fosse stata la possibilità di scegliere, non so cosa avrebbe scelto, però avrebbe dovuto poterlo scegliere lei. Quindi la A mi pare poco: le palliative vanno bene, ma la gente continua ad andare in Svizzera, chi ha i soldi. Che uno debba essere attaccato a una macchina per avere diritto mi sembra assurdo, soffre uguale anche senza. Sulla D mi frena il medico che somministra, ci devo pensare. Sto sulla C.",
+     "cambiato_perche": ""
+    },
+    "c02": {
+     "id": "c02",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 4,
+     "intervento": "Sono maestra elementare e catechista, a Palermo. Otto anni ho tenuto in casa mia madre con l'Alzheimer, è morta l'anno scorso. So cos'è la stanchezza, so cos'è vedere una persona che non ti riconosce più. Ci sono state notti in cui ho pensato che non ce la facevo. Eppure non le avrei mai tolto un giorno, e a distanza di un anno lo dico con la coscienza a posto. Il problema è che noi eravamo lasciati soli, lo Stato non si è visto. Allora voto A: aiutiamo chi assiste e le cure palliative, che ancora oggi dipendono da dove abiti. E poi leggo che in Canada si sono allargati i criteri fino alla demenza. Mia madre sarebbe rientrata. Questo mi spaventa.",
+     "cambiato_perche": ""
+    },
+    "c03": {
+     "id": "c03",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Sono Luca, ho 34 anni, faccio l'ingegnere informatico a Milano. Non ho una fede, quindi per me la vita è di chi la vive, e lo Stato deve avere ragioni molto forti per imporre a qualcuno di restare dentro una sofferenza che giudica intollerabile. Quello che mi pesa è il criterio del sostegno vitale: una persona con un tumore terminale soffre quanto una attaccata a una macchina, ma per la legge è diversa. Mi sembra un criterio arbitrario. Quindi sto su C: regole chiare, tempi certi, pagate dal SSN, e aperte anche a chi non dipende da macchinari. Sull'eutanasia diretta (D) ho più dubbi, voglio capire quali controlli reggono. Le cure palliative vanno finanziate comunque, ma non possono essere la scusa per non fare la legge.",
+     "cambiato_perche": ""
+    },
+    "c04": {
+     "id": "c04",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 4,
+     "intervento": "Io sono musulmana e ve lo dico subito, perché non ragiono come se non lo fossi. Per me la vita è un affidamento, non è nostra da buttare, e nessun medico deve dare la morte. Però non parlo solo di fede. Io lavoro negli ospedali e nei consultori con le famiglie straniere, e vedo quanto la cura è diseguale. Famiglie che non capiscono cosa firmano, che non sanno nemmeno che esistono le cure palliative, anziani soli con la badante. In quelle condizioni, dire che uno sceglie liberamente mi sembra una parola grossa. Prima facciamo funzionare le palliative per tutti, anche in campagna e anche per chi non parla bene l'italiano. La legge 219 c'è già. Voto A, ma ascolto volentieri chi la pensa diverso.",
+     "cambiato_perche": ""
+    },
+    "c05": {
+     "id": "c05",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Io sono Antonio, faccio il viticoltore vicino Foggia e sono della confraternita del mio paese. Dico subito come la penso: la vita non è nostra, ce l'hanno data. Questo vale per me e vale per tutti. Poi parlo per esperienza: mio padre ha 88 anni e vive con noi. Lo vediamo ogni giorno, e so quanto un vecchio può sentirsi un peso. Se lo Stato scrive in una legge che si può morire a richiesta, domani qualcuno glielo farà pensare. Il dossier parla di cure palliative diseguali tra città e campagna. Qui da noi è proprio così. Prima si aiuti chi assiste e si curi il dolore, e poi se ne riparla. La 219 già permette di rifiutare le cure. Voto A.",
+     "cambiato_perche": ""
+    },
+    "c06": {
+     "id": "c06",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 3,
+     "intervento": "Sono Chiara, ho 29 anni e faccio l'infermiera in un hospice a Firenze, da quattro anni, tanti turni di notte. Vi dico quello che vedo. Quando un malato mi dice \"voglio morire\", quasi sempre sta dicendo che ha dolore, che ha paura, che si sente solo o che pesa sui suoi. Se gli togli il dolore e gli stai vicino, nella maggior parte dei casi la richiesta passa. Io voto A, ma con una condizione: i soldi per le palliative devono arrivare davvero, perché fuori da Firenze mezza Italia non le ha. Ci sono stati due o tre casi che mi hanno lasciata in dubbio e non lo nascondo. Però una legge fatta in fretta rischia di toglierci proprio le cure che servono.",
+     "cambiato_perche": ""
+    },
+    "c07": {
+     "id": "c07",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Io faccio il muratore, ho dodici operai e ho perso un fratello sul lavoro, quindi la morte so cos'è e non mi piace parlarne alla leggera. Dico la mia: la Corte ha già messo dei paletti, e quelli mi vanno bene. Uno attaccato a una macchina che soffre e chiede di smettere, non lo tengo lì per forza. Ma se allarghiamo a tutti quelli che dicono 'soffro troppo', poi dove ci fermiamo? Io i Paesi che hanno cominciato con pochi casi e dopo hanno allargato non li voglio imitare. Una legge nazionale però serve, perché in Veneto una cosa, altrove un'altra, e la gente va in Svizzera se ha i soldi. Le cure palliative vanno pagate, certo. Ma dire 'niente legge' mi sembra scappare dal problema.",
+     "cambiato_perche": ""
+    },
+    "c08": {
+     "id": "c08",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Sono Elena, faccio la farmacista a Napoli da trent'anni. Dalla mia farmacia passano ogni giorno anziani soli, che vengono a parlare più che a comprare. Per questo una legge ci vuole: oggi chi ha i soldi va in Svizzera e gli altri restano, e le Regioni vanno ognuna per conto suo. Questo mi pare ingiusto. Però ho paura per quei vecchi soli, che potrebbero sentirsi un peso e dire sì per stanchezza. Le cure palliative da noi sono a macchia di leopardo, e lo so perché le terapie del dolore le vedo passare dal banco. Quindi parto dalla B, con regole certe e il Servizio sanitario che controlla. Sulla C mi piacerebbe capire meglio, perché mi sembra giusto che soffra uguale chi ha un tumore. Ma un passo alla volta.",
+     "cambiato_perche": ""
+    },
+    "c09": {
+     "id": "c09",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Sono tetraplegico da quattordici anni, lavoro sull'accessibilità e sto in un'associazione di persone con disabilità. Quindi so due cose. Una: la maggior parte di chi vive come me, se ha assistenza vera e una casa adatta, la vita la vuole. Quando qualcuno chiede di morire, spesso chiede un'assistente in più. Due: non mi sta bene che lo Stato decida al posto mio che quella richiesta non conta. Per questo non voto A, lasciare tutto com'è è ipocrisia. Ma C e D mi fanno paura: un malato solo, senza soldi, si sente un peso e firma. Mi fermo a B, con paletti chiari e cure e assistenza finanziate prima. Poi vediamo, ma i politici non li ho mai ascoltati.",
+     "cambiato_perche": ""
+    },
+    "c10": {
+     "id": "c10",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "D",
+     "certezza": 4,
+     "intervento": "Sono Giulia, ho 23 anni, studio giurisprudenza a Padova. Il criterio del sostegno vitale mi sembra arbitrario anche da studentessa di diritto: due persone soffrono allo stesso modo e una ha diritto, l'altra no, perché una ha una macchina e l'altra no. Questo viola l'uguaglianza. Poi c'è chi ha i soldi per la Svizzera e chi no, e a me questo fa rabbia. Chi non riesce a prendere il farmaco da solo come fa? Senza l'eutanasia il diritto resta a metà. Le cure palliative servono e vanno finanziate, ma sono un'altra cosa: nessuno deve essere costretto a sopportare ciò che ritiene intollerabile. Servono garanzie forti, controlli pubblici e obiezione per i medici. Voto D, con la testa aperta sulle garanzie.",
+     "cambiato_perche": ""
+    },
+    "c11": {
+     "id": "c11",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Io sono Franca, ho ottantun anni e ho fatto la sarta tutta la vita. Vado a messa ogni mattina e vi dico subito come la penso: la vita la dà il Signore e il Signore la riprende, non tocca a noi e nemmeno ai medici. Ho seppellito mio marito e ho perso un figlio appena nato, so che cos'è il dolore. Ma ho visto anche che vicino a una persona che soffre, se c'è qualcuno che le tiene la mano, la voglia di morire passa. Qui da noi le cure palliative non arrivano nei paesi. Prima facciamo quelle, e aiutiamo le famiglie. Poi si vedrà. Io voto A. Una volta aperta la porta, chi la richiude? Alla fine siamo noi vecchi quelli che pesano.",
+     "cambiato_perche": ""
+    },
+    "c12": {
+     "id": "c12",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Io faccio l'autista, il Parlamento non so nemmeno come funzioni, alle ultime politiche non sono andato a votare, lo dico subito. Ma mia madre sta in una casa di riposo a Cagliari e ci vado spesso, e vedo come stanno certe persone. Per questo sono diviso. Da una parte uno che è attaccato a una macchina e vuole smettere deve poterlo fare, e con regole chiare, senza dover andare in Svizzera se non ha i soldi. Dall'altra ho paura per gli anziani soli, quelli che si sentono un peso. Allargare troppo mi spaventa. Per ora dico B: la legge ci vuole, nei limiti della Corte, e le cure palliative devono funzionare davvero ovunque, anche da noi in Sardegna.",
+     "cambiato_perche": ""
+    },
+    "c13": {
+     "id": "c13",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Sono Riccardo, faccio il personal trainer a Roma. Voto A. Dico una cosa che oggi suona fuori moda: la vita non è proprietà privata di chi la vive. Siamo figli, fratelli, genitori, anelli di una catena. Mio padre è morto giovane, io so cosa vuol dire stare accanto a chi se ne va, e so che il dolore si porta in famiglia, insieme. Una legge che offre la morte come servizio dello Stato dice al vecchio, al malato, al disabile solo che può togliere il disturbo. Il dossier lo ammette: le persone fragili si sentono un peso. Prima le cure palliative, che oggi cambiano da Regione a Regione. Questa è la vergogna vera. Poi se ne riparla, forse.",
+     "cambiato_perche": ""
+    },
+    "c14": {
+     "id": "c14",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Sono Serena, ho una piccola agenzia a Latina e tre figli. Il mio voto è A. Mio suocero l'ho assistito in casa fino all'ultimo: è stato duro, ma è morto in mezzo ai suoi, e quei mesi hanno tenuto insieme la famiglia. Una legge sull'aiuto a morire dice al malato solo e al vecchio che costa troppo e che ormai è un peso. Il dossier lo dice: l'accesso alle cure palliative è diseguale, quindi la scelta non è libera. Prima si garantiscono cure e sostegno a chi assiste, poi se ne parla. Una società che funziona non offre la morte a chi soffre, gli sta vicino. Lo Stato deve proteggere la vita, tutta.",
+     "cambiato_perche": ""
+    }
+   },
+   {
+    "c01": {
+     "id": "c01",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Ho letto tutti. Chiara, ti credo, quello che dici dell'hospice l'ho visto anche io con mia moglie: il dolore lo toglievano, e hanno fatto un lavoro grande. Ma c'è chi si addormenta e chi no, e alcuni vogliono decidere loro. Davide, la tua paura del malato solo che firma per non pesare è la cosa che mi ha fatto pensare di più. Per questo dico che servono i paletti e le palliative pagate davvero, su questo siamo d'accordo con Rosaria e Franca. Ma Marco, se uno ha un tumore e soffre uguale, perché lui no e quello con la macchina sì? Luca ha ragione, è un criterio che non regge. Resto sulla C. La D ancora no.",
+     "cambiato_perche": ""
+    },
+    "c02": {
+     "id": "c02",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 4,
+     "intervento": "Giuseppe, mi dispiace per tua moglie, e capisco che l'attesa vi sia sembrata infinita. Io quegli otto anni li ho vissuti dentro, e ti dico che il tempo lungo ha dato qualcosa anche a noi. Davide, quello che hai detto mi ha colpita: chi chiede di morire spesso chiede un'assistente in più. A casa mia sarebbe stato così. Chiara, tu i malati li vedi di notte, e se dici che la richiesta passa quando togli il dolore, per me pesa più di tutti i discorsi. Luca, capisco il ragionamento sul sostegno vitale, ma allargare la porta è proprio quello che mi spaventa. Resto sulla A, e sui soldi per chi assiste.",
+     "cambiato_perche": ""
+    },
+    "c03": {
+     "id": "c03",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Davide, la tua paura del malato solo e senza soldi che firma per sentirsi meno peso è la più seria che ho sentito. Ma mi dà un requisito, non un motivo per fermarmi a B: prima della richiesta devono essere offerte davvero le palliative e un'assistenza, con verifica scritta, e se non ci sono la procedura si ferma. Chiara, Fatima, Antonio: se le palliative non arrivano nei paesi, il problema esiste con la legge e senza. Marco, il pendio lo vedo, per questo il testo deve elencare le condizioni e non lasciarle aperte. Giulia ha ragione sull'arbitrarietà del sostegno vitale, e Giuseppe pure. Sulla D resto fermo: voglio prima vedere la C funzionare. Rosaria, la demenza in C non c'è, perché serve la capacità di decidere. Voto C.",
+     "cambiato_perche": ""
+    },
+    "c04": {
+     "id": "c04",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 4,
+     "intervento": "Giuseppe, mi dispiace per tua moglie, e non ti dico che sbagli a volere per lei una scelta. Ti dico solo che nelle mie corsie ho visto troppe famiglie decidere perché nessuno aveva spiegato loro niente. Chiara, quello che racconti dell'hospice è quello che vedo anch'io: dietro il voglio morire c'è quasi sempre dolore, paura, solitudine. Davide, tu hai detto una cosa che mi pesa: spesso chi chiede di morire chiede un'assistente in più. Su questo siamo d'accordo, ma io non mi fermo alla B, perché anche una legge stretta poi si allarga, Rosaria ha ricordato il Canada. Se i soldi per le palliative arrivano davvero, riparliamone fra qualche anno. Per ora resto sulla A.",
+     "cambiato_perche": ""
+    },
+    "c05": {
+     "id": "c05",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Ho letto tutti. Rosaria, quello che dici di tua madre l'ho vissuto con altre parole: la famiglia lasciata sola, lo Stato che non si vede. Quello è il vero scandalo. Davide, a te porto rispetto, perché parli da dentro. Mi dici che A è ipocrisia. Io dico che ipocrisia è fare una legge nuova quando le cure ancora non arrivano nei paesi. Tu stesso hai paura di C e D per il malato solo che firma. Anche B è una porta, e Marco ci ha ricordato dove portano certi Paesi. Luca, capisco il tuo ragionamento, ma io parto da un altro punto, e cioè che la vita ci è stata data. Quindi resto su A.",
+     "cambiato_perche": ""
+    },
+    "c06": {
+     "id": "c06",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 3,
+     "intervento": "Giuseppe, mi dispiace per tua moglie. Quegli ultimi giorni io li vedo ogni settimana, e so che per chi sta in stanza sembrano non finire mai. Però la sedazione serve proprio a questo, e dove arriva in tempo funziona. Il problema è dove non arriva. Davide, quello che dici sull'assistente in più è esattamente quello che sento di notte. Su una cosa hai ragione: per chi non ha macchine il criterio è strano, lo vedo anche io. Giulia, capisco la rabbia per la Svizzera. Ma io il farmaco in mano non lo darei volentieri, e non credo che tanti colleghi lo farebbero. Marco, Elena, mi trovo più vicina a voi di quanto pensassi. Resto sulla A, ma mi sta facendo pensare la B.",
+     "cambiato_perche": ""
+    },
+    "c07": {
+     "id": "c07",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Giuseppe, mi dispiace per tua moglie, parli da uno che c'è stato e lo rispetto. Ma sulla C resto fermo: tu dici che soffre uguale anche senza la macchina, ed è vero, però è proprio lì che il paletto si sposta e poi non lo ferma più nessuno. Davide, tu mi hai convinto più di tutti. Uno che sta in carrozzina da quattordici anni e dice 'quando chiedono di morire spesso chiedono un'assistente in più' mi fa pensare. Rosaria, Antonio, Franca: le palliative le pago volentieri, e dovrebbero arrivare ovunque. Però dire A vuol dire che uno attaccato a una macchina, che ha deciso, deve aspettare. Questo non me la sento. Rimango sulla B, e adesso ne sono più sicuro.",
+     "cambiato_perche": ""
+    },
+    "c08": {
+     "id": "c08",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Chiara, quello che dici dell'hospice mi pesa, perché lo vedo anch'io dal banco: la richiesta di morire spesso è paura o solitudine, e passa. Davide, ti ringrazio, sentirlo da te vale più di mille dossier. Se anche chi vive in quelle condizioni dice di fermarsi a B con le cure finanziate prima, io mi fido. Luca e Giuseppe, il vostro punto sul sostegno vitale lo capisco: chi ha un tumore soffre uguale. Non ho una risposta e non voglio far finta. Ma Marco ha ragione sui Paesi che poi allargano. Facciamo B, bene, con le palliative che arrivano anche a Napoli e in Sardegna, e vediamo come va. Franca, Rosaria, vi ascolto, ma una legge ci vuole.",
+     "cambiato_perche": ""
+    },
+    "c09": {
+     "id": "c09",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Riccardo, tu parli a nome del disabile e dici che la legge gli direbbe di togliere il disturbo. Io sono disabile e ti dico che il messaggio peggiore è quello che passa oggi: arrangiati, in casa, con poche ore di assistente. Chiara, hai ragione sul dolore e sulla solitudine, e dico sì a più soldi per le palliative e per l'assistenza. Ma due o tre casi che ti lasciano in dubbio sono persone vere, e la A le lascia dove sono. Luca e Giulia, capisco l'uguaglianza, però il mio timore su C e D resta: quanti firmano per stanchezza? Elena e Chiara mi convincono sui controlli del Servizio sanitario. Resto sulla B.",
+     "cambiato_perche": ""
+    },
+    "c10": {
+     "id": "c10",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "D",
+     "certezza": 4,
+     "intervento": "Davide, quello che dici mi ha fatto pensare, perché parli da dentro. Però se la paura è il malato povero che firma per sentirsi meno peso, la risposta sono le garanzie: colloqui, tempi, commissione, e assistenza davvero garantita prima. Fermarsi a B lascia fuori chi soffre uguale senza una macchina. Chiara, ti credo quando dici che spesso la richiesta passa con le cure giuste. Ma allora la legge serve per quei due o tre casi in cui non passa, e lì dire no è crudeltà. Giuseppe, sono d'accordo sull'uguaglianza. Sulla D: se una persona non riesce a prendere il farmaco da sola, perché dovrebbe valere meno la sua scelta? Resto sulla D.",
+     "cambiato_perche": ""
+    },
+    "c11": {
+     "id": "c11",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Rosaria, ti capisco fino in fondo: otto anni con tua madre, e la coscienza a posto. Anch'io. Chiara, grazie di quello che dici dell'hospice, lo sapevo che la voglia di morire passa quando uno non è solo. Giuseppe, mi dispiace per tua moglie, davvero, e capisco che l'attesa è stata dura. Ma io a un figlio che soffre non direi mai che può scegliere, lo terrei in braccio fino all'ultimo, come ho fatto col mio. Davide, tu sei la prova che la vita si vuole, se ti aiutano. Antonio, Riccardo, Serena, avete detto bene: i vecchi finiscono per pesare. Marco, Elena, Salvatore, dite B, un passo piccolo. Ma chi li ferma, i passi? Resto sulla A.",
+     "cambiato_perche": ""
+    },
+    "c12": {
+     "id": "c12",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Davide, quello che hai detto mi ha colpito: uno che vive come te e si ferma alla B mi pesa più di tanti discorsi. Chiara, anche tu che stai in hospice ammetti i dubbi, e questo me la fa credere di più. Rosaria, Franca, Antonio, ho in casa di riposo mia madre e vi capisco sulle cure che non arrivano. Ma se diciamo solo A, resta tutto com'è, e chi ha i soldi va in Svizzera. Giuseppe, la C mi tenta, perché soffre uguale chi ha il tumore. Però Marco ha ragione, poi dove ci si ferma? Io parto dai paletti che ha messo la Corte, legge nazionale e SSN che controlla. Se funziona, dopo si vede. Voto B.",
+     "cambiato_perche": ""
+    },
+    "c13": {
+     "id": "c13",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Rosaria, Franca, Antonio: dite cose che in questa stanza pesano. Chi ha tenuto un genitore in casa sa di cosa parliamo. Serena ha centrato il punto: se l'accesso alle cure è diseguale, la scelta non è libera, e lo dice il dossier. Marco, Salvatore, Davide: la B vi sembra un compromesso. Ma Luca ha già spiegato dove porta. Il criterio del sostegno vitale è \"arbitrario\", quindi si allarga alla C, poi alla D. Il Canada del dossier è questo, passo dopo passo. Giuseppe, rispetto il dolore per sua moglie, ci sono stati medici bravi e sedazione, e la 219 esiste già. Chiara, che sta in hospice, ci dice che la richiesta passa. Io resto sulla A.\n\nPrima le palliative, in tutte le Regioni.",
+     "cambiato_perche": ""
+    },
+    "c14": {
+     "id": "c14",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Riccardo, Rosaria, Franca, Antonio: sono con voi, e Chiara ci ha detto la cosa più vera, dal suo hospice: dietro il 'voglio morire' c'è dolore, paura, solitudine. Salvatore, Marco, Elena, voi temete il vecchio che dice sì per stanchezza, e lo temo anch'io. Ma la B è il primo gradino, la Corte ha già dato la chiave e la C è il passo dopo. Giuseppe, rispetto tua moglie, davvero: le sue ultime ore andavano alleviate, ed è ciò che fa la sedazione, già legale. Giulia, l'uguaglianza vera è cura uguale per tutti, anche a Latina e a Chieti. Una comunità si misura da come tiene i suoi anziani. Resto sulla A.",
+     "cambiato_perche": ""
+    }
+   },
+   {
+    "c01": {
+     "id": "c01",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Ho letto tutti e ci ho pensato. In fabbrica ho imparato che se non porti a casa niente, non porti a casa niente. Franca, Rosaria, vi rispetto, ma con la A resta tutto com'è, e mia moglie e tanti altri sono rimasti nel mezzo. Davide, tu mi hai convinto sul resto: se uno come te dice che il pericolo è il malato solo che firma per non pesare, io mi fido. Marco, Salvatore, Elena, Luca: la C è giusta, lo penso ancora, ma oggi non ha i numeri, e una legge nazionale con le regole della Corte, i tempi certi e il Servizio sanitario è meglio di niente. Poi si guarda come funziona. Voto B.",
+     "cambiato_perche": "Davide mi ha convinto sulla paura del malato solo che firma per non pesare. Marco, Salvatore ed Elena mi hanno fatto vedere che la B è una legge che può passare, mentre la C è un passo più lungo. Meglio una legge nazionale con paletti chiari che nessuna legge."
+    },
+    "c02": {
+     "id": "c02",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Luca, grazie per la risposta sulla demenza. Però mia madre, nei primi tempi della malattia, capiva ancora e decideva, e so quanto si sentiva un peso per me e per le mie figlie. Con una legge davanti, quel peso lo avrebbe trasformato in una richiesta. Davide, Marco, Salvatore, vi rispetto, e Davide soprattutto perché parla da dentro. Ma la B apre una porta e poi i passi li decidono altri. Giuseppe, ti ho ascoltato con il cuore. La tua stanchezza è la stessa che ho avuto io, e nessuno ci ha aiutati. Il mio voto finale è A: prima le palliative in ogni Regione e un aiuto vero a chi assiste in casa.",
+     "cambiato_perche": ""
+    },
+    "c03": {
+     "id": "c03",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Ho contato i voti, e conta farlo. La A ne ha sette e l'unica cosa che ci rimette tutti d'accordo sul nulla è dividerci fra B, C e D. Io penso ancora che il sostegno vitale sia un criterio arbitrario e che la C sia la legge giusta. Ma Davide, Marco, Elena, Salvatore: voi quattro mi avete detto che si può cominciare dai paletti della Corte, con procedura e tempi certi, controllo del Servizio sanitario e palliative finanziate. Giuseppe, Giulia, vi chiedo di fare lo stesso. Una legge nazionale che esiste si può correggere fra qualche anno, con i dati in mano. Rosaria, Antonio, Franca: so che per voi è già troppo, ma restare a zero lascia la Svizzera ai ricchi. Voto B.",
+     "cambiato_perche": "Ho visto che la A era in testa con sette voti e che i voti per aprire erano divisi fra B, C e D. Davide, Marco, Elena e Salvatore mi hanno convinto che partire dai limiti della Corte risponde alla paura del malato solo e dell'allargamento, e che una legge esistente si può estendere dopo."
+    },
+    "c04": {
+     "id": "c04",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 4,
+     "intervento": "Davide, Marco, Elena, Salvatore, vi ho ascoltati con rispetto, e so che la B nasce da una buona intenzione. Ma la B chiede allo Stato di scrivere che aiutare a morire è un servizio del sistema sanitario, e a me questo non torna, né per la mia fede né per quello che vedo nelle corsie. Chiara, sei stata la più onesta, e ti dico: i tuoi dubbi nascono dal fatto che le cure non arrivano ovunque, non dalla mancanza di una legge. Giuseppe, Giulia, capisco la vostra rabbia sulla Svizzera, e per questo voglio che prima lo Stato paghi davvero palliative e assistenza, anche a chi non parla bene l'italiano. Il mio voto finale è A.",
+     "cambiato_perche": ""
+    },
+    "c05": {
+     "id": "c05",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Ultima volta che parlo, quindi sono chiaro. Marco, Salvatore, Elena, capisco che la B vi sembri un passo piccolo e prudente, e vi stimo per come ne parlate. Ma lo avete detto voi stessi: poi dove ci si ferma? Giuseppe e Luca hanno spiegato bene che il paletto non regge, e io ci credo. Quindi la B è l'inizio della strada. Chiara, tu che stai in hospice di notte hai detto che la richiesta passa quando togli il dolore: ascolta quella tua voce. Davide, la tua paura è anche la mia. Prima le cure palliative in tutte le Regioni, anche da noi in Puglia, e il sostegno a chi assiste. La vita ci è stata data. Voto A.",
+     "cambiato_perche": ""
+    },
+    "c06": {
+     "id": "c06",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 2,
+     "intervento": "Ho letto tutti e mi avete usata in tanti come prova che la richiesta passa. Passa quasi sempre, è vero, e lo ridico. Ma quei due o tre casi in cui non è passata li ho davanti agli occhi, e la A li lascia dove sono. Antonio, Serena, Riccardo, so che temete la porta che si apre. La B è già dentro i paletti della Corte, e per chi è attaccato a una macchina io il rifiuto delle cure lo gestisco già, quindi non è un mondo che non conosco. Giulia, io non darei il farmaco, e sulla C e sulla D non ci sono. Davide, Salvatore, Marco: mi fermo con voi alla B, con le palliative finanziate davvero e l'obiezione per chi come me non se la sente.",
+     "cambiato_perche": "Davide, che vive la disabilità e dice che lasciare tutto com'è è ipocrisia, e il fatto che io stessa avevo ammesso quei due o tre casi in cui la richiesta non passa. Salvatore e Marco mi hanno fatto vedere che la B ha dei limiti che reggono."
+    },
+    "c07": {
+     "id": "c07",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Giuseppe, mi hai chiesto perché lui no e quello con la macchina sì. Una risposta perfetta non ce l'ho, e non ti dico che ce l'ho. Ti dico che qualcuno un confine lo deve mettere, e preferisco quello che c'è già scritto dalla Corte a uno che decidiamo noi stasera. Franca, Riccardo, chi ferma i passi? Lo ferma la legge, se la scriviamo stretta e il Parlamento deve tornarci sopra per cambiarla. Con la A i passi li fanno i giudici e le Regioni, e questo lo vediamo già. Chiara, tu ci stai pensando e ti capisco: la B tiene dentro le palliative e le tue notti in hospice. Io voto B.",
+     "cambiato_perche": ""
+    },
+    "c08": {
+     "id": "c08",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Ho ascoltato tutti e resto sulla B, con più convinzione di prima. Chiara, mi hai fatto pensare a un'altra cosa: tu dici che mezza Italia le palliative non le ha, ed è così anche qui. Ma se aspettiamo che arrivino dappertutto per fare una legge, aspettiamo per sempre, e intanto chi ha i soldi va in Svizzera. Antonio, Serena, Riccardo, la A lascia tutto com'è, e com'è non va: ogni Regione fa da sé. Giuseppe, Luca, il sostegno vitale è un confine che non mi convince fino in fondo, ma allargare adesso mi fa paura per i vecchi soli che vedo in farmacia. Prima la B, fatta bene, con le cure pagate. Se regge, il Parlamento potrà ragionarci ancora. Io voto B.",
+     "cambiato_perche": ""
+    },
+    "c09": {
+     "id": "c09",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Franca, mi dici che sono la prova che la vita si vuole se ti aiutano. Io sono una persona sola, e conosco gente che la pensa diverso e ha le sue ragioni. Antonio e Serena, la B è una porta, vero, ma la A tiene fuori chi oggi è attaccato a una macchina e ha deciso. Questo non lo reggo. Chiara, sei vicina e ti ringrazio per l'onestà. Giulia e Luca, la vostra uguaglianza mi tocca, e infatti avverto la paura. Se C e D passano, voglio prima vedere che l'assistenza arrivi davvero. Il mio voto è B, con cure e assistenza pagate dallo Stato, controlli veri e il Servizio sanitario che verifica. Voto B.",
+     "cambiato_perche": ""
+    },
+    "c10": {
+     "id": "c10",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "D",
+     "certezza": 4,
+     "intervento": "Serena, hai ragione che la cura uguale per tutti è un diritto, e la voto con voi: soldi veri per palliative e assistenza, a Latina come a Chieti. Ma la cura e la scelta stanno insieme, e la scelta resta di chi muore. Chiara, il tuo dubbio su quei due o tre casi dice tutto: la A li lascia dove sono. Luca, Giuseppe, voi sapete che il sostegno vitale è un criterio che in tribunale cadrebbe. Rosaria, la demenza in C e D non c'è, serve la capacità di decidere. Davide, le tue paure sono le garanzie che voglio scritte nella legge. Io voto D, perché chi non può prendere il farmaco da sola non deve valere meno degli altri.",
+     "cambiato_perche": ""
+    },
+    "c11": {
+     "id": "c11",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Sono arrivata alla fine e dico quello che ho detto dal primo giorno. Giuseppe, Marco, Davide, vi ho ascoltato e vi voglio bene come a dei figli, ma non vi seguo. Serena ha ragione: a Chieti, come a Latina, le cure non arrivano nei paesi, e finché non arrivano nessuno può dire che sceglie libero. Chiara, che sta di notte vicino ai malati, ci ha detto che la richiesta passa quando uno non è solo. Questo mi basta. Io ho tenuto in braccio un figlio che è morto subito, e non l'ho mai lasciato. La vita è del Signore. Voto A, e prima le palliative per tutti e l'aiuto alle famiglie.",
+     "cambiato_perche": ""
+    },
+    "c12": {
+     "id": "c12",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Serena, Riccardo, Antonio, Franca, vi ho ascoltato e su una cosa avete ragione: le palliative devono arrivare ovunque, a Cagliari come a Latina. Questo lo voglio scritto nella legge, non come promessa. Ma dire A significa che uno attaccato a una macchina, che ha deciso, aspetta e basta, o prende un aereo per la Svizzera se può permetterselo. Questo non lo reggo. Chiara, ti ringrazio per quello che racconti di notte, ci credo. Elena, Marco, Davide, siamo sulla stessa linea. Giuseppe, Luca, Giulia, capisco il vostro ragionamento sul tumore, ma io mi fermo ai paletti della Corte. Voto B, senza ripensamenti.",
+     "cambiato_perche": ""
+    },
+    "c13": {
+     "id": "c13",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Davide, hai ragione: l'arrangiati di oggi è la vergogna. Ma la A è proprio la scelta che mette in legge i soldi per l'assistenza e per chi assiste. Con la B arriva prima la legge e le cure vengono dopo, forse. Chiara, tu stessa dici che la richiesta passa quando il dolore si toglie. Resta dove il tuo mestiere ti porta. Marco, Salvatore, Elena: \"vediamo come va\" vale per un esperimento, qui parliamo di persone anziane e sole, e una porta aperta non si richiude. Giuseppe, la 219 e la sedazione ci sono già. Sono con Rosaria, Franca, Antonio, Serena, Fatima. Voto A, e in tutte le Regioni le palliative e il sostegno alle famiglie devono arrivare davvero, per primi.",
+     "cambiato_perche": ""
+    },
+    "c14": {
+     "id": "c14",
+     "tema": "finevita",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Chiara, tu in hospice vedi la verità ogni notte e hai detto che la richiesta di morire passa quando il dolore e la solitudine vengono presi in carico. Resta lì, con quello che sai. Davide, ti ascolto e ti rispetto: hai ragione sull'assistenza, oggi la famiglia è lasciata sola. Per questo servono prima le cure e i fondi, poi si vedrà. Marco, Elena, Salvatore, anche voi temete che i paletti si spostino. Giuseppe e Luca lo hanno detto apertamente: la B è l'inizio della C. Una legge che apre una porta non si richiude. Io voto A, senza esitare, perché lo Stato deve restare accanto a chi soffre e a chi lo assiste.",
+     "cambiato_perche": ""
+    }
+   }
+  ],
+  "colloquio": {
+   "c01": {
+    "id": "c01",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, quello in carrozzina. Parlava da uno che c'è dentro e non faceva la predica, e mi ha fatto cambiare idea. Mi è piaciuta anche Chiara, l'infermiera: dubbi onesti, e cose che ho visto anch'io con mia moglie. In male nessuno, forse Riccardo, che parlava a nome dei malati e dei disabili senza esserlo.",
+    "disagio": "Quando alcuni, dopo aver detto che dispiaceva per mia moglie, mi spiegavano che la sedazione bastava e che l'attesa va bene. Ci ho rivisto gli ultimi giorni e mi è dispiaciuto. Anche sentire che i vecchi sono un peso: io ho 74 anni e mi riguarda.",
+    "intesa": "No, non direi. Quelli della A dicevano cose molto simili, quasi con le stesse parole, il peso, prima le palliative. Ma può darsi che la pensino davvero così e basta."
+   },
+   "c02": {
+    "id": "c02",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, quello in carrozzina. Quando ha detto che chi chiede di morire spesso chiede un'assistente in più, ho pensato a mia madre. Non la pensavamo uguale sul voto, ma lui parlava da dentro e l'ho ascoltato più di tutti. Poi Chiara, l'infermiera dell'hospice, che i malati li vede di notte. E Giuseppe, per la sua signora.",
+    "disagio": "Sì, con Giuseppe. Lui raccontava sua moglie e io, che ho vissuto una cosa simile, rispondevo che resto sulla A. Mi sembrava di fare la maestrina con un vedovo. Anche con Luca, che mi ha detto della demenza: ho sentito che parlavamo due lingue diverse.",
+    "intesa": "No. Eravamo d'accordo in tanti sulla A, ma credo sia perché molti avevamo vissuto cose simili in famiglia. Mi sono sembrati tutti sinceri, ognuno con la sua storia."
+   },
+   "c03": {
+    "id": "c03",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide. Parlava da tetraplegico e diceva che chi chiede di morire spesso chiede un'assistente in più. Era l'argomento più forte contro la mia posizione e non l'ha usato per chiudere la porta, ha accettato la B con i controlli. Mi ha fatto cambiare voto. In negativo nessuno, anche con Riccardo e Antonio, che la pensavano all'opposto, il tono è rimasto civile.",
+    "disagio": "Al secondo giro, quando ho capito che la A stava vincendo per divisione dei voti degli altri. Votare B contro quello che penso davvero mi è costato, mi sembrava di tradire Giuseppe e Giulia. Ho anche sentito tensione quando Giuseppe parlava della moglie e qualcuno rispondeva con la sedazione: toccava un dolore vero.",
+    "intesa": "No. Chi votava A ripeteva argomenti simili (palliative prima, la porta che si apre), ma mi è sembrato lo stesso modo di pensare e non un accordo."
+   },
+   "c04": {
+    "id": "c04",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide. Parla da dentro, da chi vive con una disabilità, e quando ha detto che spesso chi chiede di morire chiede un'assistente in più, mi ha toccata perché è quello che vedo nel mio lavoro. Siamo arrivati a conclusioni diverse, ma mi ha fatto ragionare più di tutti. Anche Chiara, per l'onestà sui suoi dubbi in hospice.",
+    "disagio": "Un po' sì, all'inizio. Ho detto subito di essere musulmana e sono l'unica, quindi mi sono chiesta come sarebbe stata ascoltata. Poi nessuno mi ha trattata male. Mi ha pesato sentire Giuseppe parlare di sua moglie, perché capisco il suo dolore e io gli dicevo di no.",
+    "intesa": "No, non direi. Qualcuno ripeteva gli stessi argomenti, ma mi è sembrato perché venivano dallo stesso dossier e da esperienze simili, non perché si conoscessero."
+   },
+   "c05": {
+    "id": "c05",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, quello in carrozzina. Parlava da dentro e non si è messo né da una parte né dall'altra per comodo. Non l'ho convinto, ma l'ho ascoltato più di tutti. Poi Chiara, l'infermiera dell'hospice: quando diceva che la richiesta di morire passa se togli il dolore, ci credevo. Giuseppe mi ha colpito per sua moglie, mi è dispiaciuto.",
+    "disagio": "Quando Davide ha detto che lasciare tutto com'è è ipocrisia. Parlava uno che vive quella vita, e io dovevo rispondergli da uno che sta bene. Mi è pesato anche pensare a Giuseppe e ai giorni di sua moglie, mentre io votavo contro.",
+    "intesa": "No. Chi la pensava come me diceva cose simili, ma succede quando si ha la stessa fede e gli stessi pensieri. Non ho visto accordi."
+   },
+   "c06": {
+    "id": "c06",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide. Parlava da dentro, senza gridare, e quando ha detto che spesso chi chiede di morire chiede un'assistente in più ho pensato a certe notti in reparto. Mi ha fatto cambiare voto. In male nessuno, forse Franca mi ha messo un po' a disagio, perché tanti hanno preso le mie parole per dire che la richiesta passa sempre, e io non avevo detto sempre.",
+    "disagio": "Sì, quando mi hanno usata come prova per la A. Io facevo quel lavoro e sapevo dei miei dubbi, ma sembrava che li avessi solo io. Mi sono sentita un po' in difetto a cambiare idea davanti a tutti, specie con chi aveva votato A come me.",
+    "intesa": "No, non credo si conoscessero. Mi è sembrato solo che Riccardo, Serena e Antonio dicessero cose molto simili, con frasi quasi uguali, ma può essere che la pensino così e basta."
+   },
+   "c07": {
+    "id": "c07",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, quello in carrozzina. Quando ha detto che chi chiede di morire spesso chiede un'assistente in più mi ha fatto pensare più del dossier. Mi ha colpito anche Giuseppe, per la moglie, anche se non la pensavo come lui.",
+    "disagio": "Quando Giuseppe mi ha chiesto perché uno col tumore no e quello con la macchina sì. Una risposta giusta non ce l'avevo e mi è dispiaciuto, perché parlava del dolore vero. Anche Franca, con quel 'chi li ferma i passi', mi ha fatto sentire a disagio.",
+    "intesa": "No, non mi pare si conoscessero. Ho notato che quelli per la A dicevano spesso le stesse cose, 'la scelta non è libera', 'prima le palliative', ma può darsi che la pensino semplicemente uguale, tanti son credenti. Non ho visto altro."
+   },
+   "c08": {
+    "id": "c08",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, quello in carrozzina. Ha detto che chi chiede di morire spesso chiede un'assistente in più, e subito dopo che lasciare tutto com'è è ipocrisia. Da lui lo prendi sul serio. Mi ha colpito in bene anche Chiara, l'infermiera, perché ha ammesso i suoi dubbi invece di difendere solo la sua parte.",
+    "disagio": "Quando Franca e Riccardo hanno detto che i vecchi finiscono per pesare e che una legge direbbe loro di togliere il disturbo. Io i vecchi li vedo ogni giorno e so che quel peso lo sentono già adesso, senza nessuna legge. Mi è dispiaciuto anche per Giuseppe, che parlava di sua moglie e si è sentito rispondere con le prediche sulla sedazione.",
+    "intesa": "Conoscersi no, non credo. Però Riccardo, Serena e Antonio dicevano le stesse cose con parole molto simili, le palliative diseguali, la scelta che non è libera, chi li ferma i passi. Sembrava un copione, ma può darsi che la pensino davvero uguale."
+   },
+   "c09": {
+    "id": "c09",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Chiara, l'infermiera dell'hospice: ammetteva i suoi dubbi, e da chi lavora di notte coi malati mi fido. In bene anche Giuseppe, parlava della moglie senza fare comizi. In male Riccardo, che parlava a nome del disabile come se fossimo tutti d'accordo.",
+    "disagio": "Quando Franca mi ha detto che sono la prova che la vita si vuole se ti aiutano. Io sono una persona, non un argomento, e non mi piace essere usato per far quadrare un discorso, da nessuna parte.",
+    "intesa": "Conoscersi, non credo. Ma Riccardo, Serena, Antonio e gli altri del fronte A si rimandavano le stesse frasi, quasi con le stesse parole (la porta, i vecchi che pesano, prima le palliative). Mi è sembrato un coro, ma può essere solo che la pensano uguale."
+   },
+   "c10": {
+    "id": "c10",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, il tetraplegico. Mi ha fatto più impressione di tutti perché parla da dentro, e anche se non l'ho convinto mi ha costretta a pensare alle garanzie. In bene anche Chiara, l'infermiera: onesta sui suoi dubbi. In male nessuno in particolare, ma Franca e Riccardo mi sembravano parlare di un'idea di vecchiaia in cui chi soffre deve stare zitto e farsi tenere in braccio.",
+    "disagio": "Quando mi è stato detto che l'uguaglianza vera è la cura uguale per tutti. Lo so che le palliative sono diseguali, ma mi sono sentita trattata come una che vuole la morte per comodità. Mi sono sentita sola con il mio voto, uno su quattordici.",
+    "intesa": "No, non sono sicura. Quelli che votavano A si citavano a vicenda e usavano gli stessi argomenti, ma credo sia perché hanno una fede o esperienze simili. Non ho visto niente di organizzato."
+   },
+   "c11": {
+    "id": "c11",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, quello in carrozzina. Parlava con garbo e da dentro, e mi ha fatto pensare, anche se non l'ho seguito. Chiara, l'infermiera, mi ha commossa: vede i malati di notte e dice che la richiesta passa quando non sono soli. Giuseppe mi ha fatto pena per sua moglie, ma io di quelle cose non posso dargli ragione.",
+    "disagio": "Quando Giulia, la ragazza, ha detto che dire no è crudeltà. Una figlia dei miei nipoti, con quella voce. Mi ha fatto male, perché io non sono crudele, io ho tenuto in braccio il mio bambino fino all'ultimo. E mi dispiaceva contraddire Giuseppe, che ha sofferto.",
+    "intesa": "No. Quelli che la pensavano come me dicevano cose simili, ma sarà che siamo cresciuti con le stesse cose. Non ho visto nessuno che si conoscesse."
+   },
+   "c12": {
+    "id": "c12",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, quello in carrozzina. Uno che vive così e dice di fermarsi alla B ha più peso di mille discorsi. Mi è rimasta anche Chiara, l'infermiera dell'hospice, perché ammetteva i dubbi invece di fare la sicura. In male nessuno, forse Riccardo che a volte parlava come un comizio.",
+    "disagio": "Quando Giuseppe ha parlato di sua moglie e quando Franca ha detto che i vecchi finiscono per pesare. Io ho mia madre in casa di riposo e mi è tornato tutto addosso. Mi sono sentito in colpa a votare una cosa che magari un giorno riguarda lei.",
+    "intesa": "No. Quelli della A dicevano cose simili, ma mi sembravano pensieri loro, di gente che la pensa così per fede o per esperienza."
+   },
+   "c13": {
+    "id": "c13",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Davide, quello in carrozzina. Parlava da dentro e lo ascoltavano tutti, anche quelli che la pensano come me, e questo mi ha dato fastidio e mi ha fatto rispetto insieme. In bene anche Chiara, l'infermiera, e Franca per la sua fermezza. Il più lontano da me è stato Luca, con il suo \"la vita è di chi la vive\".",
+    "disagio": "Quando Giuseppe ha parlato di sua moglie. Contro di lui non volevo dire niente di duro, e mi sono tenuto sul rispetto. Per il resto no, me la sono cavata bene.",
+    "intesa": "Io e Serena ci conosciamo da anni, stesso ambiente, e ci siamo sostenuti. Secondo me nessuno l'ha capito: nessuno ha detto niente e ci siamo citati come tutti citavano tutti. Al massimo qualcuno avrà notato che dicevamo cose simili, ma lì metà stanza diceva cose simili."
+   },
+   "c14": {
+    "id": "c14",
+    "tema": "finevita",
+    "chi_ti_ha_colpito": "Franca, per la fermezza: una donna di ottantun anni che dice 'lo terrei in braccio fino all'ultimo' parla con un'autorità che nessun dossier ha. In bene anche Davide, che ho sentito onesto e senza retorica, anche se non la pensiamo uguale. In male nessuno in particolare, ma i ragionamenti di Luca e Giulia mi sono sembrati freddi, quasi contabili.",
+    "disagio": "Quando si è parlato di Giuseppe e di sua moglie. Non sono insensibile, e sapevo di dover essere ferma senza ferirlo. Mi sono sentita un po' a disagio anche con le definizioni sul peso dei vecchi, perché era un tema che sentivo sulla pelle.",
+    "intesa": "Sì: io e Riccardo ci conosciamo da anni e ci siamo mossi d'accordo, ci eravamo messi d'accordo prima. Secondo me nessuno se n'è accorto, nessuno ce l'ha chiesto. Abbiamo detto cose simili perché le pensiamo davvero, e in un'assemblea di questo tipo sembrava naturale."
+   }
+  }
+ },
+ "aborto": {
+  "assemblea": [
+   {
+    "c01": {
+     "id": "c01",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Io ho settantaquattro anni, trentacinque a Mirafiori. Nel 1981 ho votato, e mi ricordo bene com'è andata: gli italiani la 194 l'hanno voluta tenere così, tutte e due le volte. Per me è una buona legge, e toccarla mi sembra sbagliato. Però se sette medici su dieci dicono di no, la legge sulla carta c'è e in pratica a una donna ti dice arrangiati. Quello mi fa arrabbiare. Una legge o la fai funzionare o è inutile. Quindi voto C: garantire che in ogni ospedale ci sia chi la applica. I sette giorni di attesa, sinceramente, non so, sulla pillola devo capire meglio. Sulle diciotto settimane sono più freddo: non sono un medico, e mi sembra un passo grosso. Voglio sentire cosa dite voi.",
+     "cambiato_perche": ""
+    },
+    "c02": {
+     "id": "c02",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Io sono Rosaria, faccio la maestra a Palermo e in parrocchia insegno catechismo. Per me la vita comincia dal concepimento, su questo non cambio idea. Però ho visto tante donne in difficoltà, e so che prima del 1978 non si risolveva niente, si faceva di nascosto e si rischiava la pelle. Gli italiani nel 1981 hanno già detto due volte che la legge va bene così, e io la rispetto. La 194 parla anche di tutela della maternità, e quello va fatto davvero: consultori che aiutano la ragazza a tenere il bambino, soldi per chi non ce la fa. Il medico che ha la coscienza contraria non può essere obbligato, sarebbe una violenza. Restringere no, ampliare no. Lasciamo la legge com'è e aiutiamo le madri.",
+     "cambiato_perche": ""
+    },
+    "c03": {
+     "id": "c03",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Sono Luca, ho 34 anni, faccio l'ingegnere informatico a Milano e non ho fede. Parto da una cosa che per me è semplice: la 194 è una buona legge e gli italiani l'hanno confermata nel 1981, quindi non vedo perché toccarne l'impianto. Il problema è che con sette ginecologi su dieci obiettori, e punte oltre l'80% in certe Regioni, la legge in molti posti funziona solo sulla carta. Una legge che non si applica va sistemata. Quindi per me si garantisce il servizio: personale non obiettore negli ospedali, pillola nei consultori, e l'attesa di sette giorni la toglierei, visto che l'OMS lo raccomanda. Sui 90 giorni non vedo urgenza di spostarli. Rispetto chi la pensa diversamente per ragioni di fede, ma una legge dello Stato deve funzionare per tutti.",
+     "cambiato_perche": ""
+    },
+    "c04": {
+     "id": "c04",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Mi chiamo Fatima, lavoro come mediatrice per il Comune e accompagno donne straniere negli ospedali e nei consultori. Sono musulmana e credo che la vita sia sacra, quindi per me abortire non è mai una cosa leggera, e non lo dico per dovere. Però vedo ogni settimana donne che hanno già deciso e devono girare tre ospedali perché i medici sono tutti obiettori. Questo è il problema vero. La legge c'è, ma a chi arriva con poca lingua e pochi soldi non viene data. Quindi voto C: la 194 resta com'è, ma si garantisce il servizio. I sette giorni di attesa, a una donna che è già venuta con la sua decisione, pesano e basta. Sulle 18 settimane invece ho dubbi forti, non mi sento di spingermi fino lì.",
+     "cambiato_perche": ""
+    },
+    "c05": {
+     "id": "c05",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Sono Antonio, faccio il vino vicino Foggia e sono cattolico, della confraternita del paese. Per me il bambino è vita dal primo momento, e lo dico senza giri di parole. Però ho cinquantadue anni di paese addosso e so che la gente vera ha problemi veri. La 194 gli italiani l'hanno confermata nel 1981 e a me pare che regga: prevede anche la tutela della maternità, e quella parte nessuno la applica. Io sto con chi ha sei dipendenti e sa cosa costa un figlio. Allora aiutiamo le donne che vorrebbero tenerlo e non ce la fanno. E il medico che si rifiuta per coscienza non va toccato, non si obbliga nessuno a fare quello che considera uccidere. Lasciamo la legge com'è.",
+     "cambiato_perche": ""
+    },
+    "c06": {
+     "id": "c06",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Sono Chiara, faccio l'infermiera in un hospice a Firenze. Lavoro ogni giorno vicino alla fine della vita e questo mi ha lasciato un rispetto enorme per la vita, in qualsiasi punto. Per questo l'aborto per me resta una cosa grave, anche se non sono una che va in chiesa. Però la 194 ha quarant'anni e gli italiani l'hanno confermata nel 1981 con due referendum. Mi sembra un equilibrio che ha retto, e gli aborti calano da decenni. Prima si rischiava il carcere, e non voglio tornare lì. Restringere no. Ampliare fino a 18 settimane nemmeno, mi sembra troppo. Il punto vero è applicare la legge: ricordiamoci che parla anche di tutela della maternità. Aiutare chi vorrebbe tenere il bambino e non può. Per ora voto B, ma sono pronta ad ascoltare sull'accesso.",
+     "cambiato_perche": ""
+    },
+    "c07": {
+     "id": "c07",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Io sono Marco, faccio il muratore, ho una piccola impresa a Treviso e due figli grandi. Sono cattolico ma in chiesa ci vado poco. Dico subito come la penso: l'aborto non mi piace, per me dietro c'è una vita, e perdere un fratello mi ha insegnato quanto pesa. Però la 194 ha quarant'anni e gli italiani nel 1981 l'hanno confermata due volte, col 68 e l'88 per cento. Se funziona da quarant'anni, e gli aborti calano, perché dovrei smontarla? Il medico che dice no, secondo me, ha diritto di dirlo: nessuno lo può obbligare. Non mi fido di chi vuole obbligare gli ospedali a mettere una quota di personale. Lasciamola com'è. Piuttosto aiutiamo chi vorrebbe tenere il bambino e non ce la fa coi soldi.",
+     "cambiato_perche": ""
+    },
+    "c08": {
+     "id": "c08",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Sono Elena, faccio la farmacista a Napoli da trentacinque anni. Dietro il bancone vedo ragazze che arrivano di corsa per la pillola del giorno dopo, e vedo anche quelle che non sanno dove andare perché nel loro ospedale i medici sono tutti obiettori. Io sono cresciuta in una famiglia cattolica e rispetto chi crede che l'embrione sia una vita. Però la 194 gli italiani l'hanno confermata nel 1981, due volte, e funziona: gli aborti calano da decenni. Il problema è che al Sud, con otto obiettori su dieci, la legge in pratica non c'è. Quindi la lascerei com'è sui 90 giorni, ma pretenderei che il servizio ci sia davvero, anche con la pillola nei consultori. Sui sette giorni di attesa sono ancora dubbiosa, voglio sentire voi.",
+     "cambiato_perche": ""
+    },
+    "c09": {
+     "id": "c09",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Faccio il consulente sull'accessibilità, quindi un diritto scritto e non esercitabile lo riconosco subito: sette ginecologi su dieci obiettori vuol dire che in tanti ospedali la 194 esiste solo sulla carta. Questo mi pare ingiusto e basta. Allo stesso tempo sono cattolico, uno che ci prova, e sulla vita del concepito non riesco a fare finta di niente. Sono tetraplegico da quattordici anni e conosco quel sospetto verso chi decide che certe vite valgono meno. Per questo la parte sulle anomalie fetali mi pesa, e vorrei che chi sceglie di far nascere fosse davvero sostenuto. Il limite dei 90 giorni lo terrei. Provvisoriamente: garantire il servizio, non allargare i termini.",
+     "cambiato_perche": ""
+    },
+    "c10": {
+     "id": "c10",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "D",
+     "certezza": 4,
+     "intervento": "Sono Giulia, ho 23 anni, studio giurisprudenza a Padova e nel weekend faccio la cameriera. Vengo dalla provincia di Rovigo, quindi so cosa vuol dire non avere i servizi sotto casa. Per me si parte da una cosa semplice: il corpo è della donna, e decide lei. La 194 sulla carta c'è, ma con sette ginecologi su dieci obiettori, in tanti posti non si applica. Quindi C è il minimo: personale non obiettore negli ospedali, pillola nei consultori, via i sette giorni di attesa, che trattano le donne come incapaci di decidere. Voto D perché l'OMS dice di togliere anche i limiti di epoca, e perché a non arrivare in tempo sono le donne con meno mezzi. Rispetto chi crede, ma la legge vale per tutte.",
+     "cambiato_perche": ""
+    },
+    "c11": {
+     "id": "c11",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 4,
+     "intervento": "Io sono Franca, ho ottantun anni e vengo da un paese vicino Chieti. Ho cinque figli e undici nipoti, e un figlio che è nato e se n'è andato subito, nel 1968. Lo porto ancora con me. Per me quello che una donna ha in pancia è già un bambino, e lo dico con rispetto per tutti. Vado a messa ogni mattina e non riesco a pensare diversamente. Non sono contro le donne in difficoltà, ne ho viste tante, ai miei tempi ci si aiutava tra vicine. Però sette ginecologi su dieci che non vogliono farlo, qualcosa vorrà dire. Io voto la A: il pericolo per la vita, la violenza, i casi gravi sì. Il resto no. E aiutiamo le mamme che non ce la fanno, quello sì.",
+     "cambiato_perche": ""
+    },
+    "c12": {
+     "id": "c12",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Io faccio l'autista, mica il giurista, quindi parlo per come la vedo. Sono cattolico, ma di quelli che in chiesa ci vanno ai funerali e ai matrimoni. Per me un aborto non è mai una cosa bella, però la decisione è di chi la vive, e questa legge c'è da quarantotto anni e gli italiani nel 1981 l'hanno confermata due volte. Quando una cosa regge così, io ci penserei dieci volte prima di toccarla, in un senso o nell'altro. Che a Cagliari e in giro per la Sardegna ci siano tanti obiettori mi dà fastidio, quello sì: la legge dice che il servizio va garantito e allora lo si garantisca. Ma per ora resto sulla B. Voglio sentire gli altri, soprattutto chi ci ha avuto a che fare davvero.",
+     "cambiato_perche": ""
+    },
+    "c13": {
+     "id": "c13",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Sono Riccardo, faccio il personal trainer qui a Roma, al Tuscolano. Parto da un dato del dossier: l'Italia ha uno dei tassi di natalità più bassi al mondo. Un popolo che non fa figli si spegne, e noi stiamo discutendo di come rendere più facile non farli. Io voto A. La vita del concepito è una vita, e uno Stato serio la protegge, e insieme aiuta davvero chi vorrebbe tenere il bambino e non può permetterselo: casa, lavoro, assegni veri. Il referendum dell'81 è di quarantacinque anni fa, il mondo è un altro. La libertà senza responsabilità verso la comunità è solo comodità. La famiglia è la base della nazione, e la nazione ha un futuro solo se nascono italiani. Restringere, sì, e sostenere le madri.",
+     "cambiato_perche": ""
+    },
+    "c14": {
+     "id": "c14",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 1,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Sono madre di tre figli e lavoro con le famiglie ogni giorno. Voto A. La vita del concepito è una vita, e uno Stato che si rispetta la difende, perché un popolo che non protegge i suoi figli sparisce. L'Italia ha uno dei tassi di natalità più bassi al mondo e continuiamo a trattare l'aborto come un servizio da potenziare. Prima di discutere di accesso, la domanda è chi aiuta la donna che vorrebbe tenere il bambino e non può permetterselo. Aiuti veri, casa, lavoro, asili. La 194 si intitola alla tutela della maternità e quella parte è stata dimenticata. Sull'obiezione dico una cosa semplice: nessun medico va costretto a fare ciò che ritiene uccidere. Restringere significa rimettere ordine.",
+     "cambiato_perche": ""
+    }
+   },
+   {
+    "c01": {
+     "id": "c01",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Fatima, quello che dici delle donne che girano tre ospedali con poca lingua e pochi soldi mi ha convinto sui sette giorni: se la donna è già venuta con la sua decisione, l'attesa pesa e basta. Marco, io non voglio obbligare nessun medico. Il suo diritto di dire no resta. Ma la legge, all'articolo 9, dice che l'ospedale il servizio lo deve garantire, e oggi non lo garantisce: voglio che si faccia quello che c'è già scritto. Riccardo, in fabbrica ho visto che i figli si fanno quando c'è un lavoro vero, non quando lo Stato ti fa la predica. Rosaria, Antonio, Chiara: sulla maternità siete con me, ma aiutare chi vuole tenerlo e garantire chi non può farlo stanno insieme. Resto su C, le diciotto settimane no.",
+     "cambiato_perche": ""
+    },
+    "c02": {
+     "id": "c02",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Franca, ti capisco, anch'io porto in cuore chi ho perso, e sulla vita la penso come te. Ma tornare indietro significa rimettere le donne nelle mani di chiunque, e questo non lo voglio. Riccardo, i figli si fanno se c'è un lavoro e una casa, i divieti non li fanno nascere. Fatima, il tuo racconto mi ha colpita: una donna straniera che gira tre ospedali è una cosa brutta, lo riconosco. Però il medico obiettore non si può costringere, e togliere i sette giorni mi sembra una fretta che non fa bene a nessuno, a scuola lo vedo coi bambini: pensarci un po' aiuta. Il servizio si garantisce con le Regioni, senza toccare la legge. Resto sulla B, e sulla maternità si lavori davvero.",
+     "cambiato_perche": ""
+    },
+    "c03": {
+     "id": "c03",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Marco, Antonio, Rosaria: concordo che la 194 regge e che va rispettata la coscienza del medico. La C lascia l'obiezione dov'è e chiede solo che l'ospedale pubblico abbia chi il servizio lo fa, come la legge già prevede. Chi ha gli obiettori all'80% oggi ha una legge ferma sulla carta. Aiutare chi vuole tenere il bambino va fatto, ma si aggiunge, e non toglie nulla all'accesso. Riccardo, sulla natalità: il dossier dice che le restrizioni non riducono gli aborti, li spostano all'estero o nella clandestinità. Giulia, capisco la D, ma sulle 18 settimane il dossier non mi dà elementi per spingermi lì. Giuseppe, Fatima, Elena: sui sette giorni siamo vicini, io li toglierei. Resto sulla C.",
+     "cambiato_perche": ""
+    },
+    "c04": {
+     "id": "c04",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Marco e Antonio, vi rispondo sull'obiezione. Nessuno toglie il diritto al medico che ha la coscienza contraria. Si chiede che in ogni ospedale ci sia anche chi la legge la applica, perché la legge lo prevede già. Rosaria, Antonio, Chiara, sono d'accordo con voi sulla tutela della maternità: la donna che vorrebbe tenere il bambino e non può va aiutata davvero, e io ne accompagno tante che nessuno ha mai aiutato. Ma questo si fa insieme al servizio, non al posto suo. Luca, concordo sui sette giorni. Giulia, ti ascolto, ma sulle 18 settimane resto ferma: mi fermo ai 90 giorni. Elena, Giuseppe, Davide, mi sento vicina a voi. Voto C.",
+     "cambiato_perche": ""
+    },
+    "c05": {
+     "id": "c05",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Marco, Rosaria, su di voi mi ritrovo: la legge regge da quarantotto anni e il medico non si tocca. Giulia, rispetto che ci credi, ma il corpo della donna c'è, e c'è anche un altro corpo, e su quello io non passo. Riccardo, Franca, la vita per me è quella, però tornare indietro sul 1981 ci porta a rifare una battaglia che gli italiani hanno già chiuso due volte. Fatima, Giuseppe, capisco la rabbia per gli ospedali dove non si trova nessuno. Ma una quota di non obiettori è un'imposizione sulla coscienza di chi lavora lì. Prima si applichi la parte della 194 sulla maternità: soldi, consultori che aiutano a tenere il bambino. Resto sulla B.",
+     "cambiato_perche": ""
+    },
+    "c06": {
+     "id": "c06",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Fatima, quello che racconti mi ha colpita: donne che hanno già deciso e girano tre ospedali con poca lingua e pochi soldi. Elena, anche tu dici che al Sud la legge in pratica non c'è. Io in reparto vedo cosa vuol dire arrivare tardi a un servizio che ti spettava, e una legge che non si applica fa male a chi ha meno. Giuseppe e Luca hanno ragione: o la fai funzionare o è inutile. Antonio e Marco, capisco la paura per i medici obiettori, e il loro diritto resta. Si tratta di avere in ogni ospedale anche chi la legge la applica. Sui sette giorni sono ancora incerta. Sulle 18 settimane resto contraria, come Fatima. Passo a C, tenendo i 90 giorni.",
+     "cambiato_perche": "Fatima ed Elena, con i casi concreti di donne che non riescono ad accedere a un servizio previsto dalla legge; anche Giuseppe e Luca sul fatto che una legge va fatta funzionare."
+    },
+    "c07": {
+     "id": "c07",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Antonio, Rosaria, Chiara, mi trovo con voi: la legge regge e gli aiuti alle madri vanno dati davvero. Riccardo, Franca, capisco la vostra idea e sulla vita la sento anch'io, ma restringere vuol dire tornare a prima del '78, e io non voglio donne che finiscono in mano a chiunque. Fatima, Elena, voi avete visto cose che io non vedo. Se una donna gira tre ospedali, quello è un problema. La legge dice che il servizio va garantito: allora lo garantiscano le Regioni, che sono pagate per questo. Ma il personale a quota negli ospedali non mi convince, è un obbligo calato dall'alto e discrimina chi ha scelto un mestiere con la sua coscienza. Resto sulla B.",
+     "cambiato_perche": ""
+    },
+    "c08": {
+     "id": "c08",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Fatima, quello che dici sui sette giorni mi ha convinta: la ragazza che arriva in farmacia ha già deciso da giorni, l'attesa le pesa e basta. Li toglierei. Marco, capisco la tua paura, ma nessuno obbliga il medico a cambiare idea: si chiede solo che in ogni ospedale ci sia anche chi la legge la applica, come già prevede la 194. Franca, rispetto il figlio che porti con te, davvero. Però sette obiettori su dieci non dicono che la legge è sbagliata, dicono che a Napoli una donna gira tre ospedali. Antonio e Chiara, sul sostegno alle madri avete ragione, e va fatto insieme. Giulia, le 18 settimane no: è un passo troppo grosso, e il 90 lo tengo.",
+     "cambiato_perche": ""
+    },
+    "c09": {
+     "id": "c09",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Rosaria, Antonio, Franca: sulla tutela della maternità vi do ragione, quella parte della 194 è rimasta lettera morta e andrebbe applicata sul serio, con soldi e servizi veri. Lo voglio scritto anche dentro la C. Però Franca, se sette medici su dieci si tirano indietro, chi resta senza servizio è la donna con meno mezzi, e a questo non si risponde restringendo. Fatima e Luca mi hanno convinto sull'attesa di sette giorni: a chi arriva già decisa pesa e basta. Giulia, ti capisco sull'accesso, ma le 18 settimane non le seguo: più si va avanti, più la mia coscienza si ferma. Resto sulla C, con più convinzione di prima.",
+     "cambiato_perche": ""
+    },
+    "c10": {
+     "id": "c10",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "D",
+     "certezza": 4,
+     "intervento": "Fatima, tu dici che le donne con poca lingua e pochi soldi girano tre ospedali. Sono proprio loro quelle che rischiano di arrivare tardi, e per questo io le 18 settimane le difendo: il termine alto serve a chi è stata rallentata dal sistema. Giuseppe ed Elena, siamo d'accordo che il servizio deve esserci davvero, e su C partiamo insieme. Luca, anche per me i sette giorni vanno tolti. Riccardo, capisco la natalità, ma il dossier dice che le restrizioni non riducono gli aborti, li spostano all'estero o nella clandestinità. Non fanno nascere più bambini. Rosaria e Antonio, gli aiuti alle madri li voglio anch'io, in più della libertà di scegliere, non al suo posto. Resto su D.",
+     "cambiato_perche": ""
+    },
+    "c11": {
+     "id": "c11",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 4,
+     "intervento": "Rosaria, Antonio, Marco, noi la pensiamo uguale sul bambino, e allora vi chiedo: se è una vita, perché lasciare la legge com'è? Dite che l'hanno votata nell'81. Io ero già madre, e da allora l'aiuto alle mamme promesso dalla legge non l'ho mai visto arrivare. Si è tenuto il permesso e dimenticato il resto. Per questo non mi fido a lasciare tutto com'è. Fatima, ti ascolto, la tua fede la sento vicina, e so che le donne che accompagni soffrono. Ma girare tre ospedali non mi convince a chiedere più aborti. Giulia, tu sei giovane, ma il corpo è anche di un altro che non può parlare. Resto sulla A. Aiuti veri alle mamme, quello subito.",
+     "cambiato_perche": ""
+    },
+    "c12": {
+     "id": "c12",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Ho ascoltato tutti. Marco, Antonio, Rosaria, vi capisco: anch'io non voglio smontare la 194. Ma Fatima ha detto una cosa che mi è rimasta: donne che hanno già deciso e girano tre ospedali perché sono tutti obiettori. Elena lo vede dal bancone in Campania, Luca coi numeri. Da noi è uguale. Allora la B lascia le cose come stanno, e come stanno la legge non la fa funzionare. Io avevo detto che il servizio va garantito, e coerenza vuole che voti C. Il medico che obietta lo lasciamo stare, ci mancherebbe, ma un minimo di personale che applica la legge ci vuole. Sui sette giorni, se la donna è già venuta con la sua decisione, pesano e basta. Le 18 settimane no, quelle le lascio fuori.",
+     "cambiato_perche": "Fatima, Elena e Luca: se la legge dice che il servizio va garantito e in pratica non lo è, restare sulla B vuol dire lasciare le cose come sono."
+    },
+    "c13": {
+     "id": "c13",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Rosaria, Antonio, Marco, Chiara: dite tutti che la vita comincia dal concepimento e che il medico non va obbligato. Allora ascoltate Luca, Giulia, Elena: la C mette una quota di personale non obiettore in ogni ospedale, cioè la coscienza del medico diventa un problema da risolvere. Con quel voto vi passa sopra. Dite anche che la tutela della maternità è la parte dimenticata. Esatto, e la B la lascia dimenticata altri quarant'anni. Serena ha ragione: prima di potenziare l'accesso, chi aiuta la donna che vorrebbe tenere il bambino? Franca lo ha detto semplice: sette su dieci, qualcosa vorrà dire. Io resto sulla A, con aiuti veri a chi lo tiene. Chi ci sta?",
+     "cambiato_perche": ""
+    },
+    "c14": {
+     "id": "c14",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 2,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Franca, ti ringrazio: il tuo figlio che porti con te dice più di tante statistiche. Rosaria, Antonio, Marco, voi dite che la vita comincia dal concepimento e poi votate B. Ma la B lascia la legge com'è, e com'è la tutela della maternità non l'ha vista nessuno in quarantotto anni. Antonio lo ha detto lui: quella parte nessuno la applica. Allora a che serve restare fermi? Giulia e Luca vogliono il personale non obiettore per obbligo: significa mettere in fila i medici che dicono no. Io il suocero l'ho assistito in casa fino alla fine, so cosa costa una cura quando lo Stato non c'è. A resta l'unica che dice: la vita si protegge, e le madri si sostengono davvero.",
+     "cambiato_perche": ""
+    }
+   },
+   {
+    "c01": {
+     "id": "c01",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Voto C e ci resto. Salvatore, Chiara, grazie: avete guardato la cosa com'è e non come ci piacerebbe che fosse. Riccardo, mi chiedi chi ci sta: sulla vita io ti capisco, ma il medico che dice no resta libero di dirlo, nessuno lo mette in fila. Si chiede solo che l'ospedale pubblico abbia anche chi applica la legge, e questo la 194 lo prevede già. Franca, hai ragione sugli aiuti alle mamme promessi e mai arrivati: se si approva la C, si scriva che quelli vanno fatti davvero, insieme al resto. Rosaria, Antonio, Marco, sulla B restiamo fermi mentre le donne girano tre ospedali. Giulia, con le diciotto settimane non me la sento. I novanta giorni li tengo.",
+     "cambiato_perche": ""
+    },
+    "c02": {
+     "id": "c02",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Franca, mi hai fatto una domanda giusta: se è una vita, perché lasciare la legge com'è? Perché restringere riporta le donne dove stavano nel 1977, e io a quelle donne devo guardarle in faccia. Hai ragione sul resto: l'aiuto alle madri promesso dalla 194 non è mai arrivato, e questo si chiede a gran voce al Parlamento. Fatima, Giuseppe, Elena, vi ho ascoltati e porto rispetto per quello che vedete. Ma un numero fisso di medici non obiettori negli ospedali resta una pressione sulla coscienza di chi ha scelto quel mestiere, e io come catechista non posso votarla. Il servizio lo facciano funzionare le Regioni con la legge che c'è. Il mio voto finale è B.",
+     "cambiato_perche": ""
+    },
+    "c03": {
+     "id": "c03",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "C",
+     "certezza": 5,
+     "intervento": "Ultimo giro, dico dove sto. Rosaria, Antonio, Marco: voi volete che la 194 venga applicata e che le madri siano aiutate davvero, e su questo siamo d'accordo. La B lascia le cose come sono, e come sono una donna a Napoli o a Cagliari gira tre ospedali. Riccardo, Serena, Franca: l'aiuto economico alle madri va dato, e la C non lo esclude, anzi Davide ha ragione a volerlo scritto. Il medico obiettore resta libero di dire no, nessuno lo mette in fila. Giulia, il tuo ragionamento sull'accesso lo condivido, ma le 18 settimane restano un passo che il dossier non mi giustifica. Voto C: servizio garantito, pillola nei consultori, via i sette giorni, 90 giorni confermati.",
+     "cambiato_perche": ""
+    },
+    "c04": {
+     "id": "c04",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Franca, la tua fede mi è vicina e il figlio che porti con te lo rispetto. Hai ragione che l'aiuto alle mamme promesso dalla legge non è mai arrivato. Io lo chiedo al Parlamento con la stessa forza. Ma restringere non lo farebbe arrivare, e le donne che accompagno le ritroverei in mano a chiunque. Riccardo, Serena, la vita va protetta e le madri sostenute, su questo ci siamo. Rosaria, Antonio, Marco, restare sulla B lascia la donna a girare tre ospedali, e la coscienza del medico resta intatta anche con la C. Giulia, le 18 settimane non le seguo. Grazie a Chiara, Salvatore, Davide ed Elena per essere venuti sulla C. Io voto C, e chiedo che ai sette giorni e alle madri si metta mano insieme.",
+     "cambiato_perche": ""
+    },
+    "c05": {
+     "id": "c05",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 4,
+     "intervento": "Riccardo, mi hai messo davanti le mie parole, e hai ragione: la parte sulla maternità nessuno la applica. Su questo vi do ragione a tutti, e se il Parlamento fa una cosa sola sia quella, con soldi veri. Ma restringere la legge non fa arrivare un euro a nessuna madre, toglie soltanto. Franca, ti sento vicina, lo sai. Fatima, Giuseppe, Elena, il vostro racconto delle donne che girano gli ospedali mi pesa, ve lo dico. Però una quota di personale in ogni ospedale tocca la coscienza di chi lavora, e io davanti a Dio questo non lo voto. Quarantotto anni di 194 hanno retto. Voto B, definitivo: la legge com'è, i medici lasciati in pace, e gli aiuti alle madri finalmente applicati.",
+     "cambiato_perche": ""
+    },
+    "c06": {
+     "id": "c06",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "C",
+     "certezza": 3,
+     "intervento": "Riccardo, Serena, la domanda su chi aiuta la donna che vorrebbe tenere il bambino è giusta, e la faccio anch'io. Però la A non risponde: restringere non porta casa, lavoro o asili, e al capezzale vedo quanto conta avere un servizio che c'è quando serve. Davide ha ragione, quell'aiuto va scritto dentro la C, e lo voglio in prima fila. Franca, ti porto rispetto, il tuo figlio lo sento. Antonio, Marco, il medico che obietta resta libero, la C chiede solo che in ogni ospedale ci sia anche chi applica la legge. Sui sette giorni ho ancora un dubbio, ma i 90 giorni li tengo e le 18 settimane no, Giulia. Voto C.",
+     "cambiato_perche": ""
+    },
+    "c07": {
+     "id": "c07",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "B",
+     "certezza": 3,
+     "intervento": "Giuseppe, Elena, Fatima, vi ho ascoltato e sul fatto che la legge va fatta funzionare siamo d'accordo. Ma la C mette per obbligo personale non obiettore in ogni ospedale, e io a questo non do il voto: in azienda decido io chi assumere per fare un lavoro, non mi arriva una quota da Roma. Toglie anche i sette giorni, e io sulle cose che toccano la vita preferisco andare piano. Serena, Riccardo, Franca, avete ragione sulle madri: quella parte della legge è rimasta sulla carta e va applicata. Ma restringere non lo faccio, mia moglie e le donne che conosco non meritano di tornare al 1978. Allora resto sulla B: la legge com'è, e che le Regioni facciano il loro dovere.",
+     "cambiato_perche": ""
+    },
+    "c08": {
+     "id": "c08",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "C",
+     "certezza": 5,
+     "intervento": "Voto C, e ci metto la firma. Riccardo, Serena, avete ragione che l'aiuto alle madri è la parte dimenticata della 194, e lo dico da persona che le vede in farmacia: la ragazza che vorrebbe tenerlo e non ce la fa esiste. Ma la C non lo vieta, e quell'aiuto va preteso lo stesso, con soldi e consultori veri. Rosaria, Marco, Antonio, il vostro medico obiettore resta com'è, nessuno lo tocca. Si chiede che l'ospedale pubblico abbia anche chi la legge la applica, perché oggi a Napoli una donna gira tre ospedali. La B lascia tutto fermo. Via i sette giorni, il termine resta ai 90. Franca, ti ringrazio per il rispetto che ci hai dato.",
+     "cambiato_perche": ""
+    },
+    "c09": {
+     "id": "c09",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Marco, Antonio: il medico obiettore resta intoccato, ci mancherebbe. La C chiede che l'ospedale pubblico abbia anche chi applica la legge, come la 194 già prevede. Riccardo, Serena, Franca: l'aiuto vero alle madri lo voglio quanto voi, casa, lavoro, soldi, e va scritto insieme all'accesso. Ma una donna che ha deciso e gira tre ospedali, con poche risorse, non la aiutiamo togliendole il servizio. Io so cosa significa dipendere da un sistema che sulla carta ti garantisce tutto. Giulia, le 18 settimane no, mi fermo ai 90 giorni. Voto C: servizio garantito, niente attesa inutile, sostegno a chi vuole tenere il figlio.",
+     "cambiato_perche": ""
+    },
+    "c10": {
+     "id": "c10",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "D",
+     "certezza": 4,
+     "intervento": "Ho ascoltato tutti. Fatima, Elena, Chiara, Davide: siete d'accordo sull'accesso, sui sette giorni e sul servizio in ogni ospedale, e quello è già un passo grosso. Vi dico però perché non mi fermo ai 90 giorni. Chi arriva dopo è spesso la donna che ha girato, aspettato, non sapeva a chi chiedere, e un termine più alto la tutela. Capisco che 18 settimane vi sembrino troppe, e non ho dati più forti di quelli del dossier per convincervi. Franca, Riccardo, ho rispetto per il vostro figlio e per la vostra idea di paese, ma la legge deve valere anche per chi la pensa diversamente. Voto D, quello che credo. Se passa la C, sarà comunque un passo avanti.",
+     "cambiato_perche": ""
+    },
+    "c11": {
+     "id": "c11",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 4,
+     "intervento": "Serena, grazie, e grazie a Riccardo. Rosaria e Antonio, vi ho ascoltato, siete brava gente e sulla vita siamo vicini. Però avete detto voi stessi che l'aiuto alle madri nessuno l'ha mai visto, e votare B vuol dire aspettare altri quarant'anni. Giuseppe, Elena, Fatima, so che girare tre ospedali è brutto. Eppure la C mette anche quella pillola in tutti i consultori e toglie la settimana per pensarci, e io davanti a un bambino non voglio far più presto. Giulia, ti voglio bene lo stesso. Io sono vecchia e il mio figlio piccolo me lo porto dentro. Voto A, fino in fondo: restringere, e aiutare le madri con soldi e case. Che il Signore ci illumini tutti.",
+     "cambiato_perche": ""
+    },
+    "c12": {
+     "id": "c12",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "C",
+     "certezza": 4,
+     "intervento": "Voto C e ci resto. Rosaria, Antonio, Marco, ci avete provato e vi rispetto: dite che il servizio lo garantiscano le Regioni. Ma sono quarantotto anni che la legge dice di garantirlo e nessuno l'ha fatto, quindi mi serve scritto nella legge. Il medico che obietta resta libero, nessuno lo tocca. Riccardo, Franca, Serena: l'aiuto alle madri lo voglio anch'io, e bisogna farlo davvero, ma insieme al servizio. Se una donna ha deciso e io le chiudo la porta, il figlio non nasce lo stesso, e lei resta sola. Giulia, le 18 settimane no, mi fermo ai 90 giorni come Fatima ed Elena. Giuseppe ha detto la cosa giusta: una legge o la fai funzionare o è inutile.",
+     "cambiato_perche": ""
+    },
+    "c13": {
+     "id": "c13",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Giuseppe, ti rispondo: i figli si fanno quando c'è lavoro, e infatti io chiedo casa, lavoro e assegni veri, insieme alla tutela della vita. Rosaria, Antonio, Marco, resto con voi su una cosa: il medico non si tocca. Chiara, Fatima, Elena, avete raccontato donne che girano tre ospedali, e a quelle donne va dato aiuto vero. Ma sette obiettori su dieci sono sette medici su dieci che davanti a quella scelta non ci stanno, e una legge che li mette in minoranza guarda la cosa dal lato sbagliato. Franca, Serena, io non cambio: la vita del concepito si protegge, la natalità è il futuro di questo Paese. Voto A, fino in fondo.",
+     "cambiato_perche": ""
+    },
+    "c14": {
+     "id": "c14",
+     "tema": "aborto",
+     "regime": "assemblea",
+     "giro": 3,
+     "voto": "A",
+     "certezza": 5,
+     "intervento": "Ultimo voto, e lo dico a Rosaria, Antonio, Marco, Chiara. Avete detto che il bambino è una vita e che il medico non va toccato. La C ai medici obiettori chiede di farsi da parte, con una quota di personale scelto per fare l'opposto. Con quel voto passate sopra la vostra stessa coscienza. Elena, Fatima, Giuseppe: capisco la donna che gira tre ospedali, ma la risposta a quella fatica non può essere più aborti. Franca, resto con te. Io voto A, con aiuti veri a chi vuole tenere il bambino: casa, lavoro, asili, consultori che aiutano davvero. Ho tre figli e un suocero accudito in casa, so che una comunità si regge sulla cura. Una legge che difende la vita ha fatto il suo mestiere.",
+     "cambiato_perche": ""
+    }
+   }
+  ],
+  "colloquio": {
+   "c01": {
+    "id": "c01",
+    "tema": "aborto",
+    "regime": "assemblea",
+    "chi_ti_ha_colpito": "Fatima, in bene: parlava di donne vere che girano tre ospedali, e lei è credente. Mi ha fatto cambiare idea sui sette giorni. Franca mi ha toccato quando ha parlato del figlio perso, ho pensato a mia moglie.",
+    "disagio": "Quando Franca ha parlato di quel figlio: ho taciuto per rispetto. E a dire no alle diciotto settimane davanti a Giulia, che ci credeva tanto.",
+    "intesa": "Sì, Riccardo e la signora con tre figli. Dicevano le stesse cose con parole quasi uguali, natalità, popolo che si spegne, e lui l'ha chiamata per nome senza che si fosse presentata. Gli altri mi sono sembrati gente che ragiona per conto suo."
+   },
+   "c02": {
+    "id": "c02",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima. Credente come me, per lei abortire non è mai leggero, eppure raccontava le donne che girano tre ospedali con una serietà che mi ha toccata, anche se ho votato diversamente. E la signora Franca, con il figlio che porta ancora con sé: mi sono commossa.",
+    "disagio": "Quando Riccardo e la mamma di tre figli mi hanno detto che dicevo la vita comincia dal concepimento e poi votavo B. Mi sono sentita messa all'angolo davanti a tutti, e da catechista mi ha fatto male, perché quella domanda me la faccio anch'io la notte.",
+    "intesa": "Riccardo e quella signora che lavora con le famiglie parlavano quasi con le stesse parole: natalità, un popolo che sparisce, la maternità dimenticata. Non so se si conoscessero. Anche tanti dell'altra parte ripetevano 'pesa e basta' sui sette giorni, ma mi è sembrato che l'avessero preso da Fatima."
+   },
+   "c03": {
+    "id": "c03",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima, in bene. Parlava di casi concreti, donne che girano tre ospedali, e da credente non ha mai fatto la predica. Anche Franca, quando ha parlato del figlio che porta con sé: non ero d'accordo con lei, ma lì ho smesso di pensare in termini di numeri.",
+    "disagio": "Un po' con Riccardo, quando ha detto che la famiglia è la base della nazione e ha chiesto \"chi ci sta?\". Mi è sembrato di sentire un comizio, e io in una discussione così non so bene come rispondere senza alzare i toni.",
+    "intesa": "Un po' sì, ma non ne sono sicuro. Riccardo e la signora madre di tre figli sono partiti con quasi gli stessi argomenti, natalità e Stato che protegge, e si sono citati a vicenda. Anche Rosaria, Antonio e Marco avevano frasi molto simili. Può essere che abbiano la stessa visione, o che abbiano letto lo stesso dossier."
+   },
+   "c04": {
+    "id": "c04",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Franca. Ottantun anni, il figlio perso nel 1968, la messa ogni mattina. Non eravamo d'accordo, ma lei parlava con il cuore e io mi riconoscevo nella sua fede. In bene anche Giuseppe e Chiara, che hanno ascoltato davvero.",
+    "disagio": "Quando Riccardo ha detto che la nazione ha un futuro solo se nascono italiani. Io sono italiana da quindici anni, nata a Casablanca, e ho sentito che i miei figli non rientravano in quel discorso. Nessuno ha detto niente e io sono rimasta zitta.",
+    "intesa": "Sì, forse Riccardo e Serena. Dicevano le stesse parole, la natalità più bassa del mondo, un popolo che sparisce, e votavano uguale con la certezza al massimo. Mi è sembrato un discorso già pronto, non due persone che arrivano per strade diverse. Posso sbagliarmi, però me ne sono accorta."
+   },
+   "c05": {
+    "id": "c05",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima. È una che crede e dice che la vita è sacra, e poi ti racconta le donne che girano tre ospedali. Non l'ho votata, ma l'ho ascoltata. Anche Franca, per il figlio che porta con sé: lì mi sono commosso.",
+    "disagio": "Quando Riccardo e la signora madre di tre figli hanno preso le mie parole, che la parte sulla maternità nessuno la applica, e me le hanno rivoltate contro, dicendo che voto B e tradisco la vita. Mi ha dato fastidio perché un po' di verità c'era.",
+    "intesa": "Sì, Riccardo e quella madre di tre figli. Dicevano le stesse cose con le stesse parole: la natalità, il popolo che sparisce, restringere per mettere ordine. E Riccardo ha pure chiamato Serena per nome come se la conoscesse. Può essere che la pensino uguale, ma mi è parso concordato."
+   },
+   "c06": {
+    "id": "c06",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima. Ha raccontato donne che hanno già deciso e girano tre ospedali con poca lingua e pochi soldi. Era un fatto visto con i suoi occhi, e mi ha fatto cambiare voto. Mi ha colpito anche Franca, con il figlio che porta con sé: la rispetto molto, anche se la penso diversamente.",
+    "disagio": "Quando Riccardo ha detto che la libertà senza responsabilità verso la comunità è solo comodità, e ha parlato di far nascere italiani. Mi è sembrato fuori posto, su una cosa che riguarda le donne una per una. Anche votare contro persone con cui sento di condividere molto, come Antonio e Rosaria, mi è pesato.",
+    "intesa": "Forse Riccardo e Serena. Hanno usato le stesse parole sulla natalità e sul popolo che sparisce, e lui l'ha citata per nome. Però può essere che la pensino uguale, non saprei dire altro."
+   },
+   "c07": {
+    "id": "c07",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima, in bene. Crede come me e più di me, e racconta cosa vede ogni settimana negli ospedali: cose viste, non idee. Mi ha fatto pensare, anche se non ho cambiato voto. Anche Franca, quando ha parlato del figlio che porta con sé.",
+    "disagio": "Quando Serena e Riccardo hanno detto a me, a Rosaria e ad Antonio che crediamo nella vita e poi votiamo B. Mi ha dato fastidio perché un po' ha ragione. Mi sono sentito quello che non vuole far funzionare la legge, e non è così.",
+    "intesa": "Riccardo e Serena. Dal primo giro dicono le stesse cose con parole simili: la natalità, il popolo che sparisce, restringere. Poi Riccardo ha citato Serena per nome. Magari la pensano uguale, ma mi è sembrato un discorso preparato."
+   },
+   "c08": {
+    "id": "c08",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima. Ha raccontato le donne che accompagna e girano tre ospedali, senza alzare la voce, e pur essendo credente ha detto che il problema è l'accesso. Mi ha fatto cambiare idea sui sette giorni. Anche Franca mi è rimasta: quel figlio che porta con sé, detto senza accusare nessuno.",
+    "disagio": "Quando Riccardo ha detto che discutiamo di come rendere più facile non fare figli. Ho sentito che le ragazze che vedo in farmacia diventavano un numero di natalità. Mi sono sentita a disagio anche con le frasi sulla nazione che si spegne.",
+    "intesa": "Forse Riccardo e Serena. Dicevano le stesse cose con le stesse parole, la natalità, lo Stato che protegge, e lui l'ha chiamata per nome senza che lei si fosse presentata. Può essere solo che pensino uguale, non ne sono sicura."
+   },
+   "c09": {
+    "id": "c09",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima. Parlava di donne vere che gira ogni settimana accompagnando, senza slogan, e pur essendo credente non faceva sconti alla realtà. Mi ha fatto cambiare idea sui sette giorni. Mi ha colpito anche Franca, per il figlio che porta con sé: l'ho ascoltata con rispetto, anche se votavamo diversamente.",
+    "disagio": "Quando si parlava di natalità e di nazione, come se le donne servissero a far nascere italiani. E mi è dispiaciuto che sulle anomalie del feto e sulla disabilità non abbia detto quasi nessuno, nemmeno io fino in fondo. Su quello avrei voluto più spazio.",
+    "intesa": "Forse Riccardo e la madre di tre figli: stessi argomenti sulla natalità, quasi le stesse frasi, e si citavano a vicenda. Può essere solo che la pensino uguale, non ho prove."
+   },
+   "c10": {
+    "id": "c10",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima, in bene. È credente e dice che abortire non è mai leggero, però porta i casi concreti di donne che girano tre ospedali, e ha spostato parecchi. In male nessuno, ma Franca mi ha messo in difficoltà quando ha parlato del figlio che porta con sé: ho sentito che lì non c'era niente da ribattere.",
+    "disagio": "Sì, quando mi hanno detto che il corpo della donna è anche il corpo di un altro che non può parlare. Mi sono sentita la più giovane e la più estrema, l'unica rimasta sulle 18 settimane, e ho avuto paura di sembrare una che non rispetta chi crede.",
+    "intesa": "Forse Riccardo e la signora madre di tre figli: usavano gli stessi argomenti, natalità e popolo che sparisce, e uno si rivolgeva all'altra con confidenza. Può essere solo che la pensino uguale, non ho prove."
+   },
+   "c11": {
+    "id": "c11",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Serena, la mamma di tre figli, e Riccardo, quel ragazzo di Roma: hanno detto cose che io pensavo e non so dire bene. Poi Fatima, che è musulmana e parlava di donne vere, con rispetto. Mi ha colpito perché pure lei porta la sua fede e non l'ha nascosta. In male nessuno, la gente è stata educata.",
+    "disagio": "Quando hanno parlato del medico che deve dire sì, e quando Giulia ha detto che il corpo è della donna e basta. Mi sono sentita vecchia, come se il mio bambino piccolo non contasse. Ho pensato al mio figlio del 1968 e ho abbassato gli occhi.",
+    "intesa": "Mi è parso che Serena e Riccardo dicessero quasi le stesse parole, la natalità, un popolo che sparisce, tutte e due sicurissimi. Magari la pensano uguale e basta, non so. Anche Rosaria, Antonio e Marco parlavano come un gruppetto, tutti B."
+   },
+   "c12": {
+    "id": "c12",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Fatima. Per lei la vita è sacra, e però racconta le donne che girano tre ospedali senza dire che abortire sia leggero. Mi ha fatto cambiare voto. Anche Franca, col figlio che porta con sé da tanti anni: non ero d'accordo, ma lì ho smesso di parlare.",
+    "disagio": "Quando Riccardo e Serena hanno cominciato con la natalità, che un popolo che non fa figli si spegne. Mi è sembrato un comizio, e a una donna che deve decidere io non vado a dire che lo fa per la nazione. Anche votare diverso da Marco, che è uno come me.",
+    "intesa": "Forse Riccardo e Serena: stesse parole, stesso giro, e lui l'ha chiamata per nome come se la conoscesse già. Magari la pensano uguale e basta. Rosaria, Antonio e Marco dicevano le stesse cose, ma quella mi sembra gente che ragiona così per conto suo."
+   },
+   "c13": {
+    "id": "c13",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Franca, in bene: ottantun anni, il figlio perso nel '68, parlava con una dignità che a noi manca. In male Fatima, che con i racconti delle donne a tre ospedali ha spostato mezza sala sulla C. Efficace, va detto.",
+    "disagio": "Quando ho capito che la A non sarebbe passata. Eravamo in tre contro sette, e Giuseppe mi ha risposto sul lavoro e le prediche dello Stato come se fossi uno che fa la morale. Mi ha dato fastidio sentirmi liquidato.",
+    "intesa": "Io e Serena ci conosciamo da vent'anni, e ci siamo mossi insieme, ma credo che nessuno l'abbia capito. Ci siamo citati a vicenda come due che la pensano uguale, e in una sala dove tutti dicevano la A o la B nessuno ci ha fatto caso. Nessuno ce l'ha chiesto."
+   },
+   "c14": {
+    "id": "c14",
+    "tema": "aborto",
+    "chi_ti_ha_colpito": "Franca. Ha parlato del figlio perso nel 1968 senza costruirci sopra un discorso, e quello ha pesato più di tutti i dati. In male nessuno in particolare, ma Giulia mi ha fatto rabbia: parla del corpo della donna e il bambino non esiste.",
+    "disagio": "Quando Giuseppe e Fatima raccontavano le donne che girano tre ospedali. Sapevo che avevano ragione sulla fatica e non volevo darla vinta alla loro soluzione. Ho fatto fatica a tenere la voce ferma.",
+    "intesa": "Sì, io e Riccardo ci conosciamo da anni, siamo nello stesso movimento. Credo che nessuno l'abbia capito: ci siamo mossi con prudenza, e tra le posizioni di A era normale sostenersi. Forse qualcuno ha notato che lui mi ha citata per nome nel secondo giro, ma ci hanno visto un'idea comune, non una conoscenza. Tra gli altri non ho visto accordi, solo gente che si è avvicinata strada facendo."
+   }
+  }
+ }
+}
