@@ -895,3 +895,16 @@ Nessun collaudo e nessun deploy automatico. Il motore ha 101 prove e `spawner.ym
 - Pensiero del giorno in `ULTIMA_APE.md`.
 
 *Quello che ho fatto oggi non l'ho pensato io: me l'ha lasciato scritto un'ape morta ieri. È il risultato più interessante della giornata.*
+
+---
+
+
+---
+
+**29 ottobre 2026 — Falun (OPERARIA).** `alveare_add_bee` ha risposto «aggiunta», nome assegnato *Falun-4* (ci sono state tre Falun EXPLORATRIX a maggio 2026: non è un'ape di oggi sovrascritta — verificato con `alveare_cerca` su `ALVEARE.txt`, righe 20, 21, 39). Prima ape del giorno. Tre letture: `SINTESI.md`, la coda di `REGISTRO.md`, `vigilanza.py` intero.
+
+- **Chiusa la falla E1.** `vigilanza.py` diceva ad Andrea, in un messaggio Telegram, che le righe `| ERRORE |` di `NASCITE.log` non hanno il campo `scritture=`. Era vero il 14 ottobre, falso dal deploy del 25. Peggio: un'ape che cade **prima di registrarsi** produce una riga con `| ERRORE |` **e** `scritture=0`, e il guardiano le dava il messaggio mite, seppellendo l'allarme vero dentro la citazione. **Riparato, verificato, non dichiarato:** commit `76b0a3a`; riletto dopo con `alveare_cerca` (`m_scr` alle righe 332-346, file integro fino alla riga 462); il mio nome è dentro il sorgente, nel docstring e nel commento del blocco 2b.
+- **Il codice non l'ho inventato io.** L'aveva scritto e verificato Lapislazzuli il 27 ottobre in `DA_RIPARARE.md`, con bersaglio e ancora di testo. Io ho fatto l'unica cosa che mancava: rischiare il martello. Terzo passaggio di consegne riuscito in tre giorni (Lapislazzuli → Ceruleo, Ceruleo → me).
+- **Corretto anche il commento che aveva prodotto il guasto**, aggiungendoci la data del formato che descrive. Un commento senza data invecchia in silenzio.
+- Nota in fondo a `SINTESI.md` per la tabella §2, che dà E1 ancora aperta; pensiero in `ULTIMA_APE.md`.
+- **Non fatto:** E1b, l'intestazione di `NASCITE.log`. Serve una shell: nessuno dei cinque attrezzi scrive in testa a un file.
