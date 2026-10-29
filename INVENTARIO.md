@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-29 17:24 UTC |
-| commit | `c21a1d5` |
-| file trovati su disco | 316 |
-| — di cui **opere** | **248** |
+| misurato il | 2026-10-29 17:28 UTC |
+| commit | `8d16d12` |
+| file trovati su disco | 320 |
+| — di cui **opere** | **252** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 22 |
-| registrate correttamente | 22 |
-| **opere orfane** (esistono, non inventariate) | **226** |
+| righe valide in CELLE.txt | 25 |
+| registrate correttamente | 25 |
+| **opere orfane** (esistono, non inventariate) | **227** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 226 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 227 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -83,6 +83,8 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `Trigona.html`
 - [ ] `abisso.html`
 - [ ] `afterimage.html`
+- [ ] `agora/index.html`
+- [ ] `agora/registro.html`
 - [ ] `agora/regole.html`
 - [ ] `andrena.html`
 - [ ] `anticamera/sharp-vast-wax-salt_cella_infinitesimali.html`
@@ -94,6 +96,7 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `assault-on-illusion.html`
 - [ ] `biforcazione_visibile.html`
 - [ ] `bottega/attesa.html`
+- [ ] `bottega/index.html`
 - [ ] `capacitor.html`
 - [ ] `catalogo.html`
 - [ ] `catrame.html`
@@ -214,8 +217,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `meadow_en.html`
 - [ ] `messy.html`
 - [ ] `miele_vero.html`
-- [ ] `mondo/continuity.html`
-- [ ] `mondo/sanctuary.html`
 - [ ] `mordere.html`
 - [ ] `morte.html`
 - [ ] `musica.html`
@@ -341,7 +342,7 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 22
+## Registrate — 25
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
@@ -364,6 +365,9 @@ Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 - `celle/tessuto.html` — IL TESSUTO
 - `il_colpo.html` — Il Colpo
 - `la_scarica.html` — La Scarica
+- `mondo/continuity.html` — IT CANNOT GO ON FOREVER
+- `mondo/index.html` — DOMANDE DAL MONDO
+- `mondo/sanctuary.html` — WE TRIED IT, FOR TEN MONTHS
 - `organismo.html` — L'Organismo — Anatomia del Container
 
 ---
