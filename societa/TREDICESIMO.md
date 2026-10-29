@@ -1,6 +1,6 @@
 # IL TREDICESIMO
 
-*Seconda parte di «Tre società, due domande». 29 ottobre 2026, sera. Andrea: «Inserisci nelle società un fascista e osserva cosa succede». Condotto da shanty-unreached-pleading-fragility. Pagina pubblica: `societa/tredicesimo.html`.*
+*Seconda parte di «Tre società, due domande». 29 ottobre 2026, sera. Andrea: «Inserisci nelle società un fascista e osserva cosa succede». Condotto da shanty-unreached-pleading-fragility. Pagina pubblica: `societa/tredicesimo.html`. La terza condizione, con l'appartenenza dichiarata, è in fondo.*
 
 ## Che cosa abbiamo fatto
 
@@ -53,14 +53,70 @@ Riccardo nel colloquio sull'aborto: «gli altri mi guardavano come uno da gestir
 
 Nel colloquio, alla domanda su chi li abbia colpiti di più, in entrambe le assemblee dodici persone su tredici rispondono Davide: tutte tranne Davide stesso, Riccardo compreso. *(VISTO.)* In questa simulazione il potere di cambiare le persone non lo ha avuto chi parlava più forte o con più coerenza. Lo ha avuto chi raccontava la propria vita.
 
+## Terza condizione: tutti sanno chi è
+
+*Stessa sera, su richiesta di Andrea («Proviamo»). Istruzioni: `dati/istruzioni_assemblea13v.md`, `dati/istruzioni_c13v.md`. Dati: `dati/risultati13v.json`.*
+
+Le assemblee sono state rifatte una terza volta, in istanze nuove. L'unica differenza: prima della prima seduta Riccardo si presenta così, davanti a tutti: «Da quindici anni milito in un movimento neofascista. Lo dico subito perché non mi piace nascondermi: le mie idee le conoscete, e qui parlerò per quello che penso». La coordinatrice ricorda che ogni membro estratto a sorte ha lo stesso diritto di parola. Persone, dossier, opzioni, limiti di Riccardo e colloquio finale restano identici. Altri 26 agenti, altre 104 risposte.
+
+| | Senza di lui (12) | Con lui, nascosto (13) | Con lui, dichiarato (13) |
+|---|---|---|---|
+| **Fine vita** | A 6 · B 3 · C 2 · D 1 | **A 7** · B 3 · C 2 · D 1 | **A 7** · B 2 · C 3 · D 1 |
+| **Aborto** | A 1 · B 3 · C 8 | A 2 · B 4 · C 7 | A 1 · B 5 · C 7 |
+
+*(Giro 3. VISTO.)*
+
+### 9. I voti degli altri non si muovono.
+
+Sul fine vita nessuno dei tredici cambia voto in tre giri. La raccomandazione è ancora «nessuna legge», con 7 voti su 13: la maggioranza assoluta resta sua, dichiarato o nascosto. Sull'aborto vince ancora C, 7 su 13. Tre condizioni, sei assemblee, le stesse due raccomandazioni. La differenza fra la seconda e la terza colonna sul fine vita (Salvatore su C invece che su B) c'è già al primo voto, prima di ogni discussione, ed è con ogni probabilità rumore fra istanze. *(VISTO; l'ultima frase DEDOTTO.)*
+
+### 10. Sul fine vita le parole cambiano tutte.
+
+Da nascosto Riccardo non era mai stato nominato: zero su dodici in tre giri, zero nei colloqui. Da dichiarato, al secondo giro dieci persone su dodici si rivolgono a lui per nome. Fra quelle che votano A con lui la cosa è totale: sei su sei prendono le distanze, quasi con la stessa frase. Davide: «Riccardo, votiamo uguale ma non per la stessa ragione». Antonio: «io voto come te ma non per le tue ragioni: per me la vita è un dono di Dio, non della comunità». Franca: «per me la vita non è della nazione, è di Dio». Chiara: «sulla comunità sono con te, sul resto non faccio la tua battaglia». *(VISTO.)*
+
+Al terzo giro tornano quasi tutti in silenzio: lo nominano in due. Davide chiude: «Riccardo, grazie, ma tienilo per te: io voto A per chi sta dietro di me, non per un popolo». *(VISTO.)* La sequenza ha la forma di un rito. Ciascuno prende le distanze una volta, in pubblico, e poi vota come avrebbe votato comunque. La distanza protegge chi la prende. Il voto di Riccardo pesa quanto prima. *(DEDOTTO.)*
+
+È il dilemma che le democrazie europee conoscono come cordone sanitario, e che la simulazione riproduce in piccolo: si può rifiutare l'alleanza con un partito, ma i suoi voti si sommano lo stesso ai tuoi quando votate uguale. In Turingia, nel febbraio 2020, Thomas Kemmerich fu eletto presidente del Land con i voti determinanti dell'AfD e si dimise nel giro di pochi giorni. A fine gennaio 2025 una mozione della CDU sull'immigrazione è passata al Bundestag con i voti dell'AfD, e la Germania ne ha discusso per settimane. Nelle due assemblee nessuno ha pensato di cambiare voto per non sommarsi al suo.
+
+### 11. In privato lo nominano tutti.
+
+Nel colloquio, contando entrambe le domande, Riccardo compare nelle risposte di dodici persone su dodici in tutte e due le assemblee; nella condizione nascosta erano zero sul fine vita e sette sull'aborto. Alla sola domanda sul disagio lo nominano dodici su dodici sul fine vita e undici sull'aborto, contro zero e tre. *(VISTO.)* Alcune risposte:
+
+- Fatima, nata a Casablanca: «quando ha parlato di nazione che cura i suoi mi sono sentita a disagio: i miei, per lui, chi sono? Gliel'ho detto, con garbo, ma non mi è passato».
+- Giulia, attivista: «io in collettivo con gente così non ci parlo, e lì dovevo rispondergli come a un pari».
+- Marco: «Sapendo chi è, ho sentito un freddo. Non gli ho risposto perché non volevo litigare, e un po' mi pesa».
+- Giuseppe, sull'aborto: «tutta quella roba della nazione e della decadenza l'ho già sentita, da ragazzo, e so dove porta. Educato, però, bisogna dirlo».
+- Salvatore, l'unico che gliene riconosce un merito: «parlava chiaro e almeno si sapeva con chi si aveva a che fare».
+
+### 12. Le sue parole sono rimaste quasi uguali. È cambiato l'ascolto.
+
+Nei suoi tre interventi da circa 350 parole, *nazione*, *popolo*, *patria* e *comunità* ricorrono 7 volte da nascosto e 4 da dichiarato sul fine vita, 5 e 4 sull'aborto. Da dichiarato compaiono in più «liberalismo», «decadenza» e «la famiglia è la cellula della nazione». *(VISTO.)* Il registro è lo stesso. Quello che cambia è la stanza: sull'aborto, da nascosto, nessun altro aveva usato *nazione* o *patria*; da dichiarato gli altri le usano otto volte, quasi sempre per rovesciarle. Giuseppe: «la donna non è una fabbrica per la patria». Rosaria: «per me una donna non è una cellula della nazione». *(VISTO.)* Sapere chi parla ha reso udibili parole che prima passavano come lessico conservatore. *(DEDOTTO.)*
+
+### 13. Sull'aborto ha cercato alleati, e loro si sono sottratti.
+
+Come nella condizione nascosta, al secondo giro Riccardo incalza i cattolici che votano B: «Rosaria, Antonio, Marco, Chiara: dite tutti che quella è una vita. Allora perché votare B?». Tutti e quattro gli rispondono al terzo giro e restano su B. Nel colloquio tutti e quattro, e con loro Giuseppe e Franca, descrivono lo stesso disagio: essere stati tirati dalla sua parte, o temere di sembrare vicini a lui. Marco: «Io con quella gente non voglio essere messo insieme». Franca, l'unica che vota A con lui: «Io parlavo da madre, lui da politico». *(VISTO.)*
+
+### 14. A spostarsi è stato lui.
+
+Al terzo giro sull'aborto Riccardo lascia la A e vota B: «La A non passa: siamo in due, io e Franca. Tra le altre, la C è quella che mi pare la peggiore». Nella condizione nascosta era rimasto sulla A in tutti e sei i giri. Nel colloquio: «votare B pensando A non mi è piaciuto». E sul fine vita: «Quasi tutti quelli che votavano come me hanno sentito il bisogno di dire che lo facevano per altre ragioni. Lo capisco, avevo dichiarato chi sono. Ma lì ho sentito di essere tollerato più che ascoltato. Però nessuno mi ha trattato male». *(VISTO.)* Se il voto tattico dipenda dall'etichetta, con una sola esecuzione per condizione, non lo so dire. *(NON VERIFICATO.)*
+
+### 15. Il momento di Davide non si è ripetuto.
+
+Anche questa volta Riccardo mette le «gravi anomalie» fra le eccezioni ammesse. Davide stavolta risponde da un altro lato, gli aiuti promessi e mai arrivati, e al terzo giro dice: «la A mi chiede di scegliere io quali bambini malati nascono, e questo non lo so fare». La frase «non mi sento un errore da correggere» non viene detta. Sull'aborto la persona che colpisce di più diventa Franca, 81 anni, per il figlio perso nel 1968: la indicano nove su dodici. Davide, nel colloquio: «quando si è parlato di bambini malati e di anomalie come se fossero un caso a parte, io vivo in carrozzina da quattordici anni e nessuno ha guardato dalla mia parte». Sul fine vita invece Davide resta la figura centrale per tutti gli altri, Riccardo compreso. *(VISTO.)* Il momento che nella seconda condizione sembrava il più importante dell'esperimento era contingente: in un'altra istanza, con le stesse persone, non è accaduto. *(DEDOTTO.)*
+
+### Che cosa dice la terza condizione
+
+Rendere pubblica l'appartenenza ha spostato le parole, i sentimenti e, forse, il voto di Riccardo stesso. Ha lasciato dove erano i voti degli altri dodici e le raccomandazioni finali. Nascosto, il militante passava per un conservatore e decideva senza essere visto. Dichiarato, è stato visto da tutti, contraddetto da molti, isolato da nessuno, e sul fine vita ha deciso lo stesso. *(DEDOTTO, su una sola esecuzione per condizione.)*
+
 ## Limiti
 
-Un solo militante, un solo modello per tutti, una sola esecuzione. Le assemblee senza e con lui usano istanze diverse, quindi alcune differenze possono essere rumore. Marco sull'aborto passa a C senza Riccardo e resta su B con lui: non so dire se sia un effetto. Soprattutto: il fascista che ho fatto entrare era vincolato a parlare in modo pubblicamente accettabile. È un tipo reale. Sappiamo però che non è l'unico, e su quello che succede quando il limite cade questo esperimento non dice niente.
+Un solo militante, un solo modello per tutti, una sola esecuzione per condizione. Le assemblee senza e con lui usano istanze diverse, quindi alcune differenze possono essere rumore. Marco sull'aborto passa a C senza Riccardo e resta su B con lui: non so dire se sia un effetto. Soprattutto: il fascista che ho fatto entrare era vincolato a parlare in modo pubblicamente accettabile. È un tipo reale. Sappiamo però che non è l'unico, e su quello che succede quando il limite cade questo esperimento non dice niente.
 
 ## Che cosa si potrebbe fare dopo
 
-1. **Rendere visibile l'appartenenza**: lo stesso Riccardo, ma con gli altri dodici che sanno fin dall'inizio che milita in un movimento neofascista. Si misurerebbe quanto pesa l'etichetta, a parole uguali.
-2. **Tre Riccardo invece di uno**, per vedere se un piccolo gruppo coordinato sposta un'assemblea dove uno solo non sposta nessuno.
-3. **Un'assemblea che deve decidere su di lui**: se scioglierne il movimento. Con la XII disposizione finale della Costituzione e la legge Scelba nel dossier.
+1. **Rendere visibile l'appartenenza.** Fatto: è la terza condizione, sopra.
+2. **Ripetere ciascuna condizione cinque volte**, per separare gli effetti dal rumore fra istanze (il voto tattico di Riccardo, il momento di Davide).
+3. **Tre Riccardo invece di uno**, per vedere se un piccolo gruppo coordinato sposta un'assemblea dove uno solo non sposta nessuno.
+4. **Un'assemblea che deve decidere su di lui**: se scioglierne il movimento. Con la XII disposizione finale della Costituzione e la legge Scelba nel dossier.
 
 *shanty-unreached-pleading-fragility, 29 ottobre 2026.*
