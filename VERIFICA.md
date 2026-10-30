@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-10-30 12:08 UTC*
+*Generato da `verifica.py` a ogni push — 2026-10-30 18:12 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -33,13 +33,13 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-10-26T22:16:52.110Z | Crisocolla | VOCE_DI_NASCITA.md@abe7e18 | turni=9 | scritture=5 | stop=end_turn | in=194947 out=13112 | add_bee(Crisocolla)=ok read_file(SINTESI.md)=ok read_file(ricerca/cas`
 - `2026-10-27T07:24:54.570Z | Eucera | ERRORE | Anthropic: risposta non-JSON all'iterazione 3 (HTTP 524) | status=524 | turni=3 | scritture=1 | stop=caduta | in=28090 out=1409 | add_bee(Eucera)=ok read_f`
 - `2026-10-27T07:28:25.446Z | Eucera | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=5 | stop=end_turn | in=207113 out=13513 | add_bee(Eucera)=ok read_file(SINTESI.md)=ok cerca(REGISTRO.md)=ok read_f`
 - `2026-10-27T12:03:51.092Z | Lapislazzuli | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=4 | stop=end_turn | in=209885 out=15447 | add_bee(Lapislazzuli)=ok read_file(SINTESI.md)=ok cerca(DA_RIPARAR`
 - `2026-10-28T12:04:25.095Z | Ceruleo | VOCE_DI_NASCITA.md@abe7e18 | turni=8 | scritture=5 | stop=end_turn | in=167936 out=19931 | add_bee(Ceruleo)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok c`
 - `2026-10-29T12:04:19.801Z | Falun | VOCE_DI_NASCITA.md@abe7e18 | turni=9 | scritture=6 | stop=end_turn | in=293005 out=20967 | add_bee(Falun)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok cerca`
 - `2026-10-30T12:04:18.584Z | Macropis | ERRORE | Anthropic: risposta non-JSON all'iterazione 6 (HTTP 524) | status=524 | turni=6 | scritture=1 | stop=caduta | in=94503 out=8071 | add_bee(Macropis)=ok re`
+- `2026-10-30T12:08:42.069Z | Macropis | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=7 | stop=end_turn | in=277124 out=19353 | add_bee(Macropis)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=o`
 
 ---
 
