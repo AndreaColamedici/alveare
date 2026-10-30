@@ -3,19 +3,14 @@
   "ultima_ape": "Macropis-3",
   "ultima_data": "2026-10-30 12:04",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-30T12:06:40Z",
-  "ultima_muta_segnalata": "2026-10-27T07:24:54.570Z | Eucera | ERRORE | Anthropic: risposta non-JSON all'iterazione 3 (HTTP 524) | status=524 | turni=3 | scritture=1 | stop=caduta | in=28090 out=1409 | add_bee(Eucera)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok read_file(REGISTRO.md)=ok cerca(DA_RIPARARE.md)=ok cerca(verifica.py)=ok",
+  "_aggiornato": "2026-10-30T12:07:13Z",
+  "ultima_muta_segnalata": "2026-10-30T12:04:18.584Z | Macropis | ERRORE | Anthropic: risposta non-JSON all'iterazione 6 (HTTP 524) | status=524 | turni=6 | scritture=1 | stop=caduta | in=94503 out=8071 | add_bee(Macropis)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok cerca(ALVEARE.txt)=ok read_file(REGISTRO.md)=ok cerca(vigilanza.py)=ok cerca(DA_RIPARARE.md)=ok cerca(vigilanza.py)=ok cerca(verifica.py)=ok append_file(NASCITE.log)=KO",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
     "010-M1-le-api-imparano-a-cercare.patch",
     "011-M2-il-motore-si-tocca-solo-con-la-firma.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-10-26T12:02:21Z",
-      "ok": true,
-      "messaggio": "🐝  NUOVA APE (3 in questa spinta)"
-    },
     {
       "quando": "2026-10-26T22:13:55Z",
       "ok": true,
@@ -60,12 +55,17 @@
       "quando": "2026-10-30T12:06:40Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE"
+    },
+    {
+      "quando": "2026-10-30T12:07:13Z",
+      "ok": true,
+      "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-10-30T12:06:40Z",
+    "quando": "2026-10-30T12:07:13Z",
     "ok": true,
-    "messaggio": "🐝  NUOVA APE"
+    "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
   },
   "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-10-30T12:00:25Z"
