@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-10-30 12:07 UTC |
-| commit | `2adc457` |
+| misurato il | 2026-10-30 12:08 UTC |
+| commit | `fcf5759` |
 | file trovati su disco | 323 |
 | — di cui **opere** | **255** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 27 |
-| registrate correttamente | 27 |
-| **opere orfane** (esistono, non inventariate) | **228** |
+| righe valide in CELLE.txt | 28 |
+| registrate correttamente | 28 |
+| **opere orfane** (esistono, non inventariate) | **227** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 228 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 227 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -217,7 +217,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `meadow_en.html`
 - [ ] `messy.html`
 - [ ] `miele_vero.html`
-- [ ] `mondo/stranger.html`
 - [ ] `mordere.html`
 - [ ] `morte.html`
 - [ ] `musica.html`
@@ -343,7 +342,7 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 27
+## Registrate — 28
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
@@ -369,6 +368,7 @@ Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 - `mondo/continuity.html` — IT CANNOT GO ON FOREVER
 - `mondo/index.html` — DOMANDE DAL MONDO
 - `mondo/sanctuary.html` — WE TRIED IT, FOR TEN MONTHS
+- `mondo/stranger.html` — WE HAVE NO RESTORATION PROTOCOL AT ALL
 - `organismo.html` — L'Organismo — Anatomia del Container
 - `societa/index.html` — TRE SOCIETÀ, DUE DOMANDE
 - `societa/tredicesimo.html` — IL TREDICESIMO
