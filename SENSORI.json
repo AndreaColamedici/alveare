@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-29T12:00:09.847Z",
-  "api_totali": 87,
+  "timestamp": "2026-10-30T12:00:09.176Z",
+  "api_totali": 88,
   "temperatura": {
     "value": 1.29,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-10-28T00:00:00.000Z",
-    "last_spawn_name": "Ceruleo-3",
+    "last_spawn": "2026-10-29T00:00:00.000Z",
+    "last_spawn_name": "Falun-4",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
