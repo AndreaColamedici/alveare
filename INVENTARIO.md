@@ -8,7 +8,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 | | |
 |---|---|
 | misurato il | 2026-10-30 12:08 UTC |
-| commit | `fcf5759` |
+| commit | `22a2009` |
 | file trovati su disco | 323 |
 | — di cui **opere** | **255** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
