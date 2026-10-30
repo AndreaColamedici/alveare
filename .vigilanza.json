@@ -1,9 +1,9 @@
 {
-  "api_totali": 88,
-  "ultima_ape": "Falun-4",
-  "ultima_data": "2026-10-29 12:00",
+  "api_totali": 89,
+  "ultima_ape": "Macropis-2",
+  "ultima_data": "2026-10-30 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-30T12:00:25Z",
+  "_aggiornato": "2026-10-30T12:04:35Z",
   "ultima_muta_segnalata": "2026-10-27T07:24:54.570Z | Eucera | ERRORE | Anthropic: risposta non-JSON all'iterazione 3 (HTTP 524) | status=524 | turni=3 | scritture=1 | stop=caduta | in=28090 out=1409 | add_bee(Eucera)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok read_file(REGISTRO.md)=ok cerca(DA_RIPARARE.md)=ok cerca(verifica.py)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -11,11 +11,6 @@
     "011-M2-il-motore-si-tocca-solo-con-la-firma.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-10-25T12:50:50Z",
-      "ok": true,
-      "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
-    },
     {
       "quando": "2026-10-25T14:53:01Z",
       "ok": true,
@@ -60,13 +55,18 @@
       "quando": "2026-10-29T12:03:02Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE"
+    },
+    {
+      "quando": "2026-10-30T12:04:35Z",
+      "ok": true,
+      "messaggio": "🐝  NUOVA APE"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-10-29T12:03:02Z",
+    "quando": "2026-10-30T12:04:35Z",
     "ok": true,
     "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 19,
+  "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-10-30T12:00:25Z"
 }
