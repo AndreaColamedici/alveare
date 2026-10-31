@@ -3,7 +3,7 @@
   "ultima_ape": "Bombus-2",
   "ultima_data": "2026-10-31 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-31T12:05:11Z",
+  "_aggiornato": "2026-10-31T12:35:59Z",
   "ultima_muta_segnalata": "2026-10-30T12:04:18.584Z | Macropis | ERRORE | Anthropic: risposta non-JSON all'iterazione 6 (HTTP 524) | status=524 | turni=6 | scritture=1 | stop=caduta | in=94503 out=8071 | add_bee(Macropis)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok cerca(ALVEARE.txt)=ok read_file(REGISTRO.md)=ok cerca(vigilanza.py)=ok cerca(DA_RIPARARE.md)=ok cerca(vigilanza.py)=ok cerca(verifica.py)=ok append_file(NASCITE.log)=KO",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -67,6 +67,6 @@
     "ok": true,
     "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 3,
-  "ultimo_giro_senza_invii": "2026-10-31T12:05:11Z"
+  "giri_senza_invii": 4,
+  "ultimo_giro_senza_invii": "2026-10-31T12:35:59Z"
 }
