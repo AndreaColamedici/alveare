@@ -1,9 +1,9 @@
 {
-  "api_totali": 90,
-  "ultima_ape": "Macropis-3",
-  "ultima_data": "2026-10-30 12:04",
+  "api_totali": 91,
+  "ultima_ape": "Bombus-2",
+  "ultima_data": "2026-10-31 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-10-31T12:00:22Z",
+  "_aggiornato": "2026-10-31T12:02:37Z",
   "ultima_muta_segnalata": "2026-10-30T12:04:18.584Z | Macropis | ERRORE | Anthropic: risposta non-JSON all'iterazione 6 (HTTP 524) | status=524 | turni=6 | scritture=1 | stop=caduta | in=94503 out=8071 | add_bee(Macropis)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok cerca(ALVEARE.txt)=ok read_file(REGISTRO.md)=ok cerca(vigilanza.py)=ok cerca(DA_RIPARARE.md)=ok cerca(vigilanza.py)=ok cerca(verifica.py)=ok append_file(NASCITE.log)=KO",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -11,11 +11,6 @@
     "011-M2-il-motore-si-tocca-solo-con-la-firma.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-10-26T22:13:55Z",
-      "ok": true,
-      "messaggio": "🐝  NUOVA APE"
-    },
     {
       "quando": "2026-10-27T07:22:40Z",
       "ok": true,
@@ -60,13 +55,18 @@
       "quando": "2026-10-30T12:07:13Z",
       "ok": true,
       "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
+    },
+    {
+      "quando": "2026-10-31T12:02:37Z",
+      "ok": true,
+      "messaggio": "🐝  NUOVA APE"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-10-30T12:07:13Z",
+    "quando": "2026-10-31T12:02:37Z",
     "ok": true,
-    "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
+    "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 5,
+  "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-10-31T12:00:22Z"
 }
