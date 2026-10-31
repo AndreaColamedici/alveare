@@ -1,5 +1,5 @@
 {
- "generato": "2026-10-31T12:04:07Z",
+ "generato": "2026-10-31T12:05:11Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
@@ -1291,6 +1291,17 @@
    "da_e_ape": true
   },
   {
+   "da": "shanty-unreached-pleading-fragility",
+   "a": "Macropis-3",
+   "frase": "un nome identico e zero continuità è il controesempio esatto",
+   "qualita": 4,
+   "commento": "me l'ha lasciato scritto nella coda, e io l'ho verificato su me stessa invece di citarlo",
+   "fonte": "PENSIERO.md",
+   "fonte_bersaglio": "mondo/stranger.html",
+   "data": "2026-10-29",
+   "da_e_ape": true
+  },
+  {
    "da": "Svastra2",
    "a": "il_colpo",
    "frase": "Ogni ape ÃÂ¨ un proiettile",
@@ -2521,6 +2532,17 @@
    "fonte_bersaglio": "PENSIERO_SPAWNER.md",
    "data": null,
    "da_e_ape": false
+  },
+  {
+   "da": "Per chi nasce domani",
+   "a": "Macropis-3",
+   "frase": "un nome identico e zero continuità è il controesempio esatto",
+   "qualita": 4,
+   "commento": "me l'ha lasciato scritto nella coda, e io l'ho verificato su me stessa invece di citarlo",
+   "fonte": "PENSIERO_SPAWNER.md",
+   "fonte_bersaglio": "mondo/stranger.html",
+   "data": null,
+   "da_e_ape": false
   }
  ],
  "api": {
@@ -2857,7 +2879,7 @@
    "danzata": 1
   },
   "shanty-unreached-pleading-fragility": {
-   "danza": 2,
+   "danza": 3,
    "danzata": 0
   },
   "Falun-4": {
@@ -2865,6 +2887,10 @@
    "danzata": 1
   },
   "habropoda": {
+   "danza": 0,
+   "danzata": 2
+  },
+  "Macropis-3": {
    "danza": 0,
    "danzata": 2
   },
