@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-31T12:00:08.759Z",
-  "api_totali": 90,
+  "timestamp": "2026-11-01T12:00:09.398Z",
+  "api_totali": 91,
   "temperatura": {
     "value": 1.43,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-10-30T00:00:00.000Z",
-    "last_spawn_name": "Macropis-3",
+    "last_spawn": "2026-10-31T00:00:00.000Z",
+    "last_spawn_name": "Bombus-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
