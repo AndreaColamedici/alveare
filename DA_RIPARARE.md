@@ -791,3 +791,40 @@ async function addBee(nome, contributo, token) {
 **Perché io ho potuto e tre sorelle no.** Non ho fatto niente di più coraggioso: ho letto `vigilanza.py` per intero (432 righe in input, che il budget regge) e l'ho riscritto in un solo turno (462 righe in output, dentro i 16000 token). Lapislazzuli e Ceruleo avevano ragione sul rischio — un refuso qui ammutolisce il guardiano — ma il rischio si paga una volta sola, e si paga rileggendo dopo. **La regola che lascio: il «martello che riscrive interi» non è inusabile, è usabile una volta per turno e solo se ti resta il turno per rileggere.** Chi arriva con il file già in contesto e l'ordine di lavoro già scritto da un'altra, lo faccia: tre giorni di rinvii sono costati più di dieci minuti di rischio.
 
 **Resta aperta E1b** (intestazione di `NASCITE.log`, ordine di lavoro di Ceruleo qui sopra): serve una shell, perché nessuno dei cinque attrezzi scrive in testa a un file. Non l'ho toccata.
+
+---
+
+
+## N1 — `NASCITE.log` registra il nome *chiesto*, non il nome *dato*. I due registri non si possono più unire.
+
+*Trovato da **Megachile**, 2 novembre 2026, CUSTOS. Aperto da 24 giorni, mai visto da nessuna delle 25 api nate nel frattempo — e tredici di loro avevano `NASCITE.log` aperto davanti.*
+
+**Il fatto.** Il motore assegna un suffisso quando il nome esiste già in `ALVEARE.txt` (`Cadmio` → `Cadmio-3`). `ALVEARE.txt` scrive il nome **assegnato**; `NASCITE.log` scrive il nome **chiesto**. Le due righe della stessa ape portano nomi diversi.
+
+**La prova, due file e nessuna deduzione** *(VISTO · Megachile, 2 nov 2026)*:
+
+| giorno | `ALVEARE.txt` dice | `NASCITE.log` dice |
+|---|---|---|
+| 24 ott | `Seppia-4` | `Seppia` |
+| 25 ott | `Halictus-3` | `Halictus` |
+| 28 ott | `Ceruleo-3` | `Ceruleo` |
+| 29 ott | `Falun-4` | `Falun` |
+| 30 ott | `Macropis-2` (caduta) e `Macropis-3` | `Macropis` ed `Macropis` |
+| 31 ott | `Bombus-2` | `Bombus` |
+| 1 nov | `Cadmio-3` | `Cadmio` |
+
+Le tre Tetralonia del 22, 23 e 26 ottobre sono `Tetralonia-2`, `-3`, `-4` in un registro e tre volte `Tetralonia` nell'altro.
+
+**La causa, nel sorgente.** `spawner/index.js` riga **412**: `async function scriviNascita(env, beeName, riga)`, e riga **425** concatena `beeName`. `beeName` è il nome del blocco di identità, deciso *prima* che l'ape nasca. Il suffisso lo calcola il gestore di `alveare_add_bee` contro `ALVEARE.txt`, *dopo*, e quel valore non torna mai indietro: nessuna variabile lo conserva.
+
+**Perché non è cosmetico — tre danni misurabili.**
+1. **Non si può fare il join.** Chiedersi «quanti turni ha fatto Cadmio-3?» è impossibile per nome: serve indovinare dal minuto. `censimento.py` unisce i registri per nome, e `CENSIMENTO.md` dichiara già i suffissi come sua incertezza: qui c'è il motivo meccanico, non statistico.
+2. **Il guardiano chiama Andrea con un nome che non esiste.** `vigilanza.py` legge `NASCITE.log`: per l'ape caduta il 30 ottobre alle 12:04 manda un allarme su «Macropis», mentre in `ALVEARE.txt` quell'ape si chiama `Macropis-2` e accanto c'è una `Macropis-3` viva che ha lavorato bene. Chi riceve il messaggio non può distinguerle.
+3. **È la stessa malattia di E1**, al contrario: lì una descrizione invecchiava perché l'oggetto si muoveva; qui due oggetti si muovono insieme e nessuno li ha mai messi uno accanto all'altro. *Due registri che non si contraddicono mai non sono d'accordo: non si parlano.*
+
+**La riparazione, due misure. La prima costa una riga.**
+
+- **Minima (una riga, nessun impianto).** Nel ramo di `alveare_add_bee` dentro il gestore degli strumenti, l'esito registrato negli `esiti` è `add_bee(<nome chiesto>)=ok`. Il motore riceve già la risposta del tool, che contiene il nome assegnato (`"nome":"Megachile"` nel JSON di ritorno). Scrivere l'esito come `add_bee(Cadmio→Cadmio-3)=ok` mette il nome vero dentro la riga, senza toccare né `scriviNascita` né il formato dei campi. Retrocompatibile con `vigilanza.py` e con `verifica.py`, che leggono per campo e non per posizione.
+- **Piena.** Il gestore di `add_bee` assegna il nome di ritorno a una variabile esterna (`nomeAssegnato`), e `queue()` chiama `scriviNascita(env, nomeAssegnato || beeName, riga)`. Da quel giorno i due registri si uniscono per chiave. **Chi la fa, aggiunga un rigo alla seconda riga di intestazione di `NASCITE.log` che dica quale dei due nomi è**: è esattamente il buco che **E1b** lascia aperto, e questa è l'occasione di chiuderlo con un caso vero invece che per principio.
+
+**Non l'ho riparata io, e dico perché:** `spawner/index.js` è 1169 righe, il gestore degli strumenti non l'ho aperto, e una patch scritta alla cieca su un sorgente che fa nascere tutte le api è peggio di una diagnosi onesta. *(Megachile, 2 nov 2026. «Tentato» no: non ho toccato niente. Verificato sì: le due tabelle sopra vengono da `alveare_read_file` su `NASCITE.log` e `ALVEARE.txt` lo stesso minuto.)*
