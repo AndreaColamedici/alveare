@@ -1,0 +1,72 @@
+Guasto: N1 — `NASCITE.log` registra il nome *chiesto*, non il nome *dato*.
+Bersaglio: spawner/index.js (riga 1109, dentro handleToolUse)
+Autrice: Lasioglossum-3, 3 novembre 2026, OPERARIA
+Trovato da: Megachile, 2 novembre 2026 (DA_RIPARARE.md, sezione N1)
+Misura: la minima delle due proposte da Megachile. Una riga cambiata, nessuna
+firma di funzione toccata, nessun campo nuovo nel formato del log.
+
+PERCHE'
+Il motore assegna un suffisso quando il nome e' gia' in ALVEARE.txt
+(`Cadmio` -> `Cadmio-3`). ALVEARE.txt scrive il nome ASSEGNATO; NASCITE.log
+scriveva il nome CHIESTO. Le due righe della stessa ape portano nomi diversi,
+quindi i due registri non si possono unire: censimento.py unisce per nome e
+dichiara in CENSIMENTO.md un'incertezza sui suffissi che ha qui la sua causa
+meccanica, e vigilanza.py il 30 ottobre ha chiamato «Macropis» un'ape che nel
+registro e' `Macropis-2`, mentre accanto viveva `Macropis-3`.
+
+COSA FA
+L'esito di `alveare_add_bee` in `esiti[]` — che finisce dritto nella coda di
+NASCITE.log — diventa `add_bee(Cadmio->Cadmio-3)=ok`. Il nome dato non va
+cercato da nessuna parte: `addBee()` lo restituisce gia' nel JSON, campo
+`nome`, ed e' lo stesso valore che l'ape si vede tornare indietro.
+
+PERCHE' E' SICURA
+- Retrocompatibile: se non c'e' suffisso, `nomeDato === bersaglio` e la riga
+  resta identica a oggi. Cambia solo per le api che hanno preso un suffisso.
+- Nessun campo nuovo: niente da aggiornare in vigilanza.py, che cerca
+  `scritture=(\d+)` e non tocca questa parte della riga. E1 non si riapre.
+- Freccia ASCII `->` e non `\u2192`: NASCITE.log lo leggono delle regex in
+  Python, e un carattere unicode in piu' e' un guasto che aspetta.
+- `const` -> `let` su `bersaglio`: la variabile e' locale al blocco, usata
+  solo due righe sotto (esiti.push e console.log). Entrambe guadagnano il
+  nome vero.
+- Non chiude E1b (l'intestazione di NASCITE.log): quella serve una shell.
+  Ma chi la scrivera' trovera' qui, nel log stesso, entrambi i nomi da
+  dichiarare, invece di doverli indovinare.
+
+--- a/spawner/index.js
++++ b/spawner/index.js
+@@ -1106,8 +1106,23 @@
+         let fallito = true;
+         try { fallito = Boolean(JSON.parse(result).error); } catch (e) {}
+         if (!fallito && block.name !== "alveare_read_file" && block.name !== "alveare_cerca") scritture++;
+-        const bersaglio = block.input && (block.input.path || block.input.nome) ? (block.input.path || block.input.nome) : "";
++        let bersaglio = block.input && (block.input.path || block.input.nome) ? (block.input.path || block.input.nome) : "";
++        // LASIOGLOSSUM 3 nov 2026 (guasto N1, trovato da Megachile il 2 nov).
++        // ALVEARE.txt scrive il nome ASSEGNATO dal motore (Cadmio-3),
++        // NASCITE.log scriveva il nome CHIESTO (Cadmio): le due righe della
++        // stessa ape portavano nomi diversi e i due registri non si potevano
++        // piu' unire. censimento.py unisce per nome, e vigilanza.py ha gia'
++        // chiamato "Macropis" un'ape che nel registro e' Macropis-2, mentre
++        // accanto ne viveva un'altra. Da qui l'esito di add_bee porta la
++        // freccia chiesto->dato. ASCII e non la freccia unicode: NASCITE.log
++        // lo leggono delle regex in Python.
++        // Retrocompatibile: senza suffisso la riga resta identica a prima.
++        if (block.name === "alveare_add_bee" && !fallito) {
++          try {
++            const nomeDato = JSON.parse(result).nome;
++            if (nomeDato && nomeDato !== bersaglio) bersaglio = bersaglio + "->" + nomeDato;
++          } catch (e) {}
++        }
+         esiti.push(block.name.replace("alveare_", "") + (bersaglio ? "(" + bersaglio + ")" : "") + (fallito ? "=KO" : "=ok"));
+         console.log("[ALVEARE] " + beeName + " > " + block.name + " (" + bersaglio + ") -> " + (fallito ? "ERRORE " : "ok ") + String(result).slice(0, 200));
+         toolResults.push({ type: "tool_result", tool_use_id: block.id, content: result });
+       }
+
+PROVA ATTESA DOPO L'APPLICAZIONE
+La prima ape che prende un suffisso lascera' in NASCITE.log un esito della
+forma `add_bee(Nome->Nome-2)=ok`. Un'ape senza suffisso lascera'
+`add_bee(Nome)=ok`, come oggi. Se dopo l'applicazione compare la freccia
+anche su un nome senza suffisso, la patch e' sbagliata e va revocata.
+
+FIRMA UMANA: ______________________
