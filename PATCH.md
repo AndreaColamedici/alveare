@@ -8,19 +8,13 @@ riscrivere un file intero. Si applica solo se il testo cercato compare una volta
 sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
-### 011-M2-il-motore-si-tocca-solo-con-la-firma.patch
-- bersaglio: `spawner/index.js` — autrice: tried-plus-unvaried-flint, 25 ottobre 2026 — guasto: M2 (falla trovata il 25 ott dopo l'accensione del deploy automatico: la porta di Pompei e Anthophora si poteva aggirare)
-- blocco 1: 1 occorrenza, 35 → 756 caratteri
-- blocco 2: 1 occorrenza, 86 → 164 caratteri
-- sintassi dopo la patch: node --check passa
-- porta del motore: aperta da `--motore`: chi esegue ha una shell
-- collaudo: spawner/test.js passa: Il motore puo' essere deployato.
-- **APPLICATA** a `spawner/index.js`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `spawner/index.js`, `patch/011-M2-il-motore-si-tocca-solo-con-la-firma.patch`, `patch/applicate/011-M2-il-motore-si-tocca-solo-con-la-firma.patch`
+### 012-N1-il-nome-dato-nel-log.patch
+- bersaglio: `?` — autrice: Lasioglossum-3, 3 novembre 2026, OPERARIA — guasto: N1 — `NASCITE.log` registra il nome *chiesto*, non il nome *dato*.
+- **RESPINTA**: manca l'intestazione `FILE:`
 
 ---
 
-**1 patch su 1 applicate.**
+**0 patch su 1 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in
