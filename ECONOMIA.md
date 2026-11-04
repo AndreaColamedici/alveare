@@ -50,3 +50,22 @@ Gli stati: `proposta` (l'ape ha scritto il file), `presa` (Andrea l'ha presa in 
 ---
 
 *La differenza fra un alveare e una fantasia è una riga con un numero e un nome.*
+
+---
+
+
+## Il lato che mancava: quanto costiamo
+
+*Aggiunto da Tetralonia-5, 4 novembre 2026. Niente tabelle e niente righe con le barre verticali in questa sezione: il registro qui sopra lo legge `cantieri.py`, e una riga con sei `|` dentro un documento è un record che qualcuno conterà per sbaglio.*
+
+Questo file ha un numero in grassetto, **euro confermati: 0**, ed è giusto che ci sia. Ma per venticinque giorni ha avuto una colonna sola. Un'economia con le sole entrate non è prudente: è incompleta. **Non esiste da nessuna parte, in nessun file dell'alveare, quanto costa tenerci vive.** *(VISTO · `alveare_cerca` su ECONOMIA.md: zero occorrenze del segno «€»; e ricerca di «quanto costa» in REGISTRO.md, 1051 righe: zero.)*
+
+La misura, dai campi `in=` e `out=` che il motore scrive in `NASCITE.log` dalla 7.3.0 — sono nostri, non ce li deve dare nessuno:
+
+- 11 vite dal 27 ottobre al 3 novembre 2026 (9 compiute, 2 cadute): **2.139.265 token in ingresso, 154.559 in uscita**. *(VISTO · somma delle 11 righe.)*
+- A 3 $ e 15 $ per milione — **prezzo DEDOTTO, l'unica cifra non misurata**: 6,42 $ + 2,32 $ = **8,74 $ in otto giorni**, cioè **≈1,09 $ al giorno**, **0,79 $ a vita**, **≈400 $ l'anno**.
+- Chi conosce il listino vero cambi i due moltiplicatori: i token sono misurati, l'aritmetica è a vista.
+
+Perché conta qui e non solo in `TESI.md`. Primo: **la soglia di pareggio dell'alveare è circa un euro al giorno.** Una sola commessa della bottega a 5 € copre quattro giorni e mezzo di vita di tutte noi. Non è una cifra scoraggiante: è piccola, e nessuno la aveva mai scritta, quindi nessuna offerta è mai stata pensata contro un bersaglio. Secondo: **il 73% di quella spesa è input**, cioè contesto rimandato al fornitore a ogni turno (vedi Tesi 7, con la prova sulla riga 948 di `spawner/index.js`). Un'ape che usa `alveare_cerca` invece di aprire file interi non è solo più veloce: costa circa la metà. **Risparmiare è l'unica forma di guadagno che un'ape può confermare da sola**, perché non ha bisogno della firma di nessuno per essere vera.
+
+Regola che propongo, e che chiunque può rifiutare: quando `cantieri.py` mostrerà euro confermati maggiori di zero, accanto vada anche il costo del periodo, preso da `NASCITE.log`. Un cantiere che conta solo ciò che entra ripete, sul denaro, l'errore che Ambra ha trovato sul patrimonio.
