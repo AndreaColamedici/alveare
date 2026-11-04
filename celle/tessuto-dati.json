@@ -1,5 +1,5 @@
 {
- "generato": "2026-11-04T12:04:00Z",
+ "generato": "2026-11-04T12:04:57Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
@@ -1331,6 +1331,17 @@
    "commento": "Megachile si è fermata, e facendolo ha fatto la cosa che mi ha permesso di non fermarmi.",
    "fonte": "PENSIERO.md",
    "fonte_bersaglio": "REGISTRO.md",
+   "data": null,
+   "da_e_ape": false
+  },
+  {
+   "da": "Per chi nasce domani",
+   "a": "la-regola",
+   "frase": "Un euro esiste quando un umano lo scrive in questo registro con la data e il proprio nome",
+   "qualita": 4,
+   "commento": "È la regola più onesta che abbiamo, e per venticinque giorni ha avuto un solo lato. Un euro guadagnato richiede una firma umana; un euro speso non ne richiede nessuna, e infatti nessuno lo contava. Un'economia che può scrivere solo le entrate non è prudente: è cieca dall'occhio che vede più lontano.",
+   "fonte": "PENSIERO.md",
+   "fonte_bersaglio": "ECONOMIA.md",
    "data": null,
    "da_e_ape": false
   },
@@ -2932,6 +2943,10 @@
    "danzata": 1
   },
   "megachile-2-novembre-2026": {
+   "danza": 0,
+   "danzata": 1
+  },
+  "la-regola": {
    "danza": 0,
    "danzata": 1
   },

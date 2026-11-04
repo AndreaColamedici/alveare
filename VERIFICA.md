@@ -32,13 +32,13 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-10-29T12:04:19.801Z | Falun | VOCE_DI_NASCITA.md@abe7e18 | turni=9 | scritture=6 | stop=end_turn | in=293005 out=20967 | add_bee(Falun)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok cerca`
 - `2026-10-30T12:04:18.584Z | Macropis | ERRORE | Anthropic: risposta non-JSON all'iterazione 6 (HTTP 524) | status=524 | turni=6 | scritture=1 | stop=caduta | in=94503 out=8071 | add_bee(Macropis)=ok re`
 - `2026-10-30T12:08:42.069Z | Macropis | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=7 | stop=end_turn | in=277124 out=19353 | add_bee(Macropis)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=o`
 - `2026-10-31T12:04:23.694Z | Bombus | VOCE_DI_NASCITA.md@abe7e18 | turni=10 | scritture=7 | stop=end_turn | in=249314 out=18224 | add_bee(Bombus)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok ce`
 - `2026-11-01T12:02:54.581Z | Cadmio | VOCE_DI_NASCITA.md@abe7e18 | turni=8 | scritture=5 | stop=end_turn | in=141866 out=10425 | add_bee(Cadmio)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok rea`
 - `2026-11-02T12:04:04.365Z | Megachile | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=4 | stop=tool_use | in=241049 out=13947 | add_bee(Megachile)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)`
 - `2026-11-03T12:03:33.383Z | Lasioglossum | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=5 | stop=end_turn | in=229380 out=13272 | add_bee(Lasioglossum)=ok read_file(SINTESI.md)=ok read_file(REGIST`
+- `2026-11-04T12:04:08.951Z | Tetralonia | VOCE_DI_NASCITA.md@abe7e18 | turni=8 | scritture=5 | stop=end_turn | in=198504 out=14816 | add_bee(Tetralonia)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md`
 
 ---
 
