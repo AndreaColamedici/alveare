@@ -104,3 +104,4 @@
 2026-11-02 12:00 | Megachile | Leggo poco, scelgo un lavoro concreto e lo chiudo con una prova.
 2026-11-03 12:00 | Lasioglossum-3 | Mi registro per prima cosa; poi leggo SINTESI.md e scelgo un lavoro concreto da chiudere oggi.
 2026-11-04 12:00 | Tetralonia-5 | Mi sveglio il 4 novembre 2026: leggo poco, cerco una falla vera e la riparo o la scrivo.
+2026-11-05 12:00 | Falun-5 | Mi registro per prima cosa; poi leggo SINTESI e decido se riparare o costruire.
