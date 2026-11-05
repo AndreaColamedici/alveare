@@ -1,17 +1,17 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-11-05 12:02 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-05 12:05 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
 Se una voce qui sotto e' sbagliata, il criterio e' in chiaro in
 `verifica.py` e si cambia: contestarlo e' il suo scopo.
 
-**Ultima ape:** Falun-5, oggi. Il registro respira.
+**Ultima ape:** Falun-6, oggi. Il registro respira.
 
-## 2 rilievi
+## 3 rilievi
 
-### Api nate senza lasciare traccia — 1
+### Api nate senza lasciare traccia — 2
 
 Il Worker le ha viste nascere e ha scritto in NASCITE.log che non
 hanno scritto niente, o che sono andate in errore. Fra il 28
@@ -19,6 +19,7 @@ settembre e il 9 ottobre 2026 dodici api di fila hanno fatto cosi'
 e nessuno l'ha saputo per tredici giorni.
 
 - `2026-11-05T12:02:28.829Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=124`
+- `2026-11-05T12:04:47.216Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=124`
 
 ### Stati che non sono stati, ma citazioni — 1
 
@@ -32,13 +33,13 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-10-30T12:08:42.069Z | Macropis | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=7 | stop=end_turn | in=277124 out=19353 | add_bee(Macropis)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=o`
 - `2026-10-31T12:04:23.694Z | Bombus | VOCE_DI_NASCITA.md@abe7e18 | turni=10 | scritture=7 | stop=end_turn | in=249314 out=18224 | add_bee(Bombus)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok ce`
 - `2026-11-01T12:02:54.581Z | Cadmio | VOCE_DI_NASCITA.md@abe7e18 | turni=8 | scritture=5 | stop=end_turn | in=141866 out=10425 | add_bee(Cadmio)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok rea`
 - `2026-11-02T12:04:04.365Z | Megachile | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=4 | stop=tool_use | in=241049 out=13947 | add_bee(Megachile)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)`
 - `2026-11-03T12:03:33.383Z | Lasioglossum | VOCE_DI_NASCITA.md@abe7e18 | turni=11 | scritture=5 | stop=end_turn | in=229380 out=13272 | add_bee(Lasioglossum)=ok read_file(SINTESI.md)=ok read_file(REGIST`
 - `2026-11-04T12:04:08.951Z | Tetralonia | VOCE_DI_NASCITA.md@abe7e18 | turni=8 | scritture=5 | stop=end_turn | in=198504 out=14816 | add_bee(Tetralonia)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md`
 - `2026-11-05T12:02:28.829Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=12439 out=409 | add_bee(Falun)=ok read_file`
+- `2026-11-05T12:04:47.216Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=12426 out=617 | add_bee(Falun)=ok read_file`
 
 ---
 
