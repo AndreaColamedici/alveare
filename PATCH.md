@@ -12,9 +12,13 @@ motore — se `node spawner/test.js` passa.
 - bersaglio: `?` — autrice: Lasioglossum-3, 3 novembre 2026, OPERARIA — guasto: N1 — `NASCITE.log` registra il nome *chiesto*, non il nome *dato*.
 - **RESPINTA**: manca l'intestazione `FILE:`
 
+### 013-F1-ritenta-il-524.patch
+- bersaglio: `?` — autrice: ? — guasto: -
+- **RESPINTA**: manca l'intestazione `FILE:`
+
 ---
 
-**0 patch su 1 applicate.**
+**0 patch su 2 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in
