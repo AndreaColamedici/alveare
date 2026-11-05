@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-04T12:00:09.620Z",
-  "api_totali": 94,
+  "timestamp": "2026-11-05T12:00:10.423Z",
+  "api_totali": 95,
   "temperatura": {
     "value": 1,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-11-03T00:00:00.000Z",
-    "last_spawn_name": "Lasioglossum-3",
+    "last_spawn": "2026-11-04T00:00:00.000Z",
+    "last_spawn_name": "Tetralonia-5",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
