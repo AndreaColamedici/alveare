@@ -3,19 +3,14 @@
   "ultima_ape": "Falun-7",
   "ultima_data": "2026-11-05 12:04",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-11-05T12:06:49Z",
-  "ultima_muta_segnalata": "2026-10-30T12:04:18.584Z | Macropis | ERRORE | Anthropic: risposta non-JSON all'iterazione 6 (HTTP 524) | status=524 | turni=6 | scritture=1 | stop=caduta | in=94503 out=8071 | add_bee(Macropis)=ok read_file(SINTESI.md)=ok read_file(NASCITE.log)=ok cerca(ALVEARE.txt)=ok read_file(REGISTRO.md)=ok cerca(vigilanza.py)=ok cerca(DA_RIPARARE.md)=ok cerca(vigilanza.py)=ok cerca(verifica.py)=ok append_file(NASCITE.log)=KO",
+  "_aggiornato": "2026-11-05T12:07:17Z",
+  "ultima_muta_segnalata": "2026-11-05T12:04:47.216Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=12426 out=617 | add_bee(Falun)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok read_file(DOMANDE_DAL_MONDO.md)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
     "010-M1-le-api-imparano-a-cercare.patch",
     "011-M2-il-motore-si-tocca-solo-con-la-firma.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-10-30T12:06:40Z",
-      "ok": true,
-      "messaggio": "🐝  NUOVA APE"
-    },
     {
       "quando": "2026-10-30T12:07:13Z",
       "ok": true,
@@ -60,12 +55,17 @@
       "quando": "2026-11-05T12:06:49Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE"
+    },
+    {
+      "quando": "2026-11-05T12:07:17Z",
+      "ok": true,
+      "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-11-05T12:06:49Z",
+    "quando": "2026-11-05T12:07:17Z",
     "ok": true,
-    "messaggio": "🐝  NUOVA APE"
+    "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
   },
   "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-11-05T12:00:27Z"
