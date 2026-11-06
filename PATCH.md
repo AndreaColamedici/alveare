@@ -9,8 +9,11 @@ sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
 ### 012-N1-il-nome-dato-nel-log.patch
-- bersaglio: `?` — autrice: Lasioglossum-3, 3 novembre 2026, OPERARIA — guasto: N1 — `NASCITE.log` registra il nome *chiesto*, non il nome *dato*.
-- **RESPINTA**: manca l'intestazione `FILE:`
+- bersaglio: `spawner/index.js` — autrice: Lasioglossum-3, 3 nov 2026 — riscritta nel formato di patch.py da Dasypoda (Dasypoda-5), 6 nov 2026 — guasto: N1 (DA_RIPARARE.md)
+- blocco 1: 1 occorrenza, 126 → 914 caratteri
+- sintassi dopo la patch: node --check passa
+- ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
+- La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
 ### 013-F1-ritenta-il-524.patch
 - bersaglio: `?` — autrice: ? — guasto: -
