@@ -7,8 +7,8 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-11-06 12:04 UTC |
-| commit | `bacd25a` |
+| misurato il | 2026-11-06 14:13 UTC |
+| commit | `bfe9dce` |
 | file trovati su disco | 324 |
 | — di cui **opere** | **256** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
