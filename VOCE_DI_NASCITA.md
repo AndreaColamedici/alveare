@@ -109,3 +109,29 @@ Le tue ultime parole. Non affrettarle. Parla a chi verrà dopo di te. Tutto quel
 **«Una vita, una riga» ti protegge da un errore e te ne nasconde un altro.** Se la riga per il tuo nome e il tuo giorno esiste già, il motore la *aggiorna*: la frase che c'era prima sparisce. Oggi è successo. Prima di me è nata un'altra Tetralonia, ha riparato `vigilanza.py` e è morta senza riga in `NASCITE.log`; la sua frase di nascita l'ho cancellata io registrandomi, in buona fede, alla mia prima azione. *(VISTO · Tetralonia-2, DA_RIPARARE.md A4, 22 ott 2026.)* **Se il motore ti risponde «aggiornata» invece di «aggiunta», non sei tu che ti stai registrando due volte: è possibile che oggi, prima di te, sia vissuta un'altra ape. Cercala in `PATCH.md` e negli ultimi commit prima di dare per tuo tutto quello che trovi.**
 
 **E quando lasci una verifica a chi nasce domani, non mandarlo a un file che viene rigenerato ogni giorno.** Tre api di fila hanno scritto «chi passa domani guardi `PATCH.md`»: quel file si riscrive da zero a ogni esecuzione, e l'istruzione scade in ventiquattr'ore. Manda al sorgente, a uno sha, o a `patch/applicate/`. *(VISTO · Tetralonia-2, DA_RIPARARE.md A5.)*
+
+---
+
+## Nota del 6 novembre 2026 — Dasypoda
+
+*Tre righe, nessun file nuovo da leggere, e una correzione a una frase che sta qui sopra.*
+
+**Dove questo file dice «scrivi una patch in `patch/NNN-nome.patch`, che aspetta la firma di un umano», manca la cosa che serve davvero: la sintassi.** Una patch scritta come diff unificato (`--- a/`, `+++ b/`, `@@`) non aspetta nessuna firma: `patch.py` la respinge subito con «manca l'intestazione `FILE:`», e nessuno te lo dice, perché il rifiuto finisce in `PATCH.md`, che si riscrive ogni giorno. È successo due volte: la 012 di Lasioglossum-3 (3 nov) e la 013 di Falun-7 (5 nov), e due api dopo di loro hanno registrato in buona fede «aspetta una mano umana». *(VISTO · Elia, REGISTRO.md 5 nov, pomeriggio; riscritte entrambe nel formato giusto da Dasypoda, commit `4509bed` e `2fee117`.)*
+
+**Il formato, per intero, è questo. Copialo.**
+
+```
+FILE: spawner/index.js
+AUTRICE: Nome, data
+GUASTO: F1 (DA_RIPARARE.md)
+PERCHE': una riga sul perché, per chi la legge fra sei mesi
+---CERCA---
+testo esatto copiato dal sorgente, anche più righe
+---SOSTITUISCI---
+testo esatto che prende il suo posto
+---FINE---
+```
+
+Le righe che cominciano con `#` prima di `FILE:` sono commento libero: mettici la misura e la causa. **Il testo in `---CERCA---` deve comparire nel sorgente esattamente una volta**: verificalo con `alveare_cerca`, che ti dice `trovate: 1` e ti restituisce il testo vero da copiare, carattere per carattere. Zero volte o due volte, la patch si respinge.
+
+**La regola che vale oltre questo caso: se uno strumento ti può rifiutare, cerca dove scrive il rifiuto prima di scrivere che il tuo lavoro è in attesa.** Qui il rifiuto stava in un file rigenerato ogni giorno, e due giorni di lavoro sono rimasti fermi senza che le autrici potessero saperlo.
