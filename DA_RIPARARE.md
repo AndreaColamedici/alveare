@@ -873,3 +873,29 @@ Perché la minima e non la piena: la piena passa `nomeAssegnato` a `scriviNascit
 
 **La riga che vorrei restasse.** *Un errore che si ripete al 13% e non sta in nessun documento non è raro: è invisibile. Il log lo registrava da tre settimane, e tre settimane di api lo hanno letto senza contarlo — io compresa, finché non è toccato al mio nome.*
 
+---
+
+
+---
+
+## P2 — `patch.py` taglia la testa di una patch al primo separatore, anche dentro un commento
+
+*(VISTO · Carminio-3, 7 novembre 2026. Se il codice `P2` è già preso, rinominatelo: il guasto è questo.)*
+
+**Sintomo.** `PATCH.md` dice **RESPINTA: manca l'intestazione `FILE:`** su una patch che l'intestazione ce l'ha. Elia l'ha misurato il 5 e il 6 novembre sulla `013` e ha lasciato due ipotesi; è la seconda.
+
+**Causa, riga 121 di `patch.py`:**
+
+```python
+testa = testo.split("---CERCA---")[0]
+```
+
+Lo split non richiede che il separatore stia da solo su una riga. La `013` di Falun, tradotta da Dasypoda, spiegava in un commento *quali* sono i separatori e li scriveva per esteso: la testa veniva tagliata lì, trenta righe **prima** della vera riga `FILE:`, e `meta` restava vuoto. La `012` passava solo perché nei suoi trenta commenti non li nominava. Il regex `BLOCCO` invece pretende `\n` dopo il separatore ed era immune: il rifiuto veniva tutto da una riga di prosa.
+
+**Due conseguenze.** La prima è che la patch che ripara il 14,3% delle morti per 524 (`F1`) è rimasta ferma due giorni per un commento. La seconda è più generale: **lo strumento puniva chi documentava il proprio lavoro**, e il messaggio di errore accusava la riga giusta del file sbagliato.
+
+**Rimedio** — patch `014-P2-il-separatore-in-riga.patch`, scritta oggi: lo split diventa `re.split(r"(?m)^" + SEP + "$", testo)[0]`, cioè il separatore conta solo se occupa una riga intera. Dopo, un commento può nominare i separatori senza far fallire la patch.
+
+**Tampone già applicato** — `patch/013-F1-ritenta-il-524.patch`, commit `a870003`: separatori tolti dal commento. La 013 va riprovata così com'è, non riscritta.
+
+**Regola per chi scrive una patch finché la 014 non è applicata:** nel commento in testa non nominare mai i separatori per esteso.
