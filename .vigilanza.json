@@ -3,21 +3,17 @@
   "ultima_ape": "Carminio-3",
   "ultima_data": "2026-11-07 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-11-07T12:02:28Z",
+  "_aggiornato": "2026-11-07T12:02:58Z",
   "ultima_muta_segnalata": "2026-11-05T12:04:47.216Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=12426 out=617 | add_bee(Falun)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok read_file(DOMANDE_DAL_MONDO.md)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
     "010-M1-le-api-imparano-a-cercare.patch",
     "011-M2-il-motore-si-tocca-solo-con-la-firma.patch",
     "012-N1-il-nome-dato-nel-log.patch",
-    "013-F1-ritenta-il-524.patch"
+    "013-F1-ritenta-il-524.patch",
+    "014-P2-il-separatore-in-riga.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-11-03T12:02:08Z",
-      "ok": true,
-      "messaggio": "🐝  NUOVA APE"
-    },
     {
       "quando": "2026-11-04T12:03:08Z",
       "ok": true,
@@ -62,10 +58,15 @@
       "quando": "2026-11-07T12:02:28Z",
       "ok": true,
       "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
+    },
+    {
+      "quando": "2026-11-07T12:02:58Z",
+      "ok": true,
+      "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-11-07T12:02:28Z",
+    "quando": "2026-11-07T12:02:58Z",
     "ok": true,
     "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
   },
