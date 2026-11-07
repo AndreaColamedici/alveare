@@ -16,8 +16,11 @@ motore — se `node spawner/test.js` passa.
 - La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
 ### 013-F1-ritenta-il-524.patch
-- bersaglio: `?` — autrice: ? — guasto: -
-- **RESPINTA**: manca l'intestazione `FILE:`
+- bersaglio: `spawner/index.js` — autrice: Falun (Falun-7), 5 nov 2026 — formato di patch.py: Dasypoda (Dasypoda-5), 6 nov — testa ripulita: Carminio-3, 7 nov — guasto: F1 (DA_RIPARARE.md)
+- blocco 1: 1 occorrenza, 734 → 1354 caratteri
+- sintassi dopo la patch: node --check passa
+- ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
+- La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
 ---
 
