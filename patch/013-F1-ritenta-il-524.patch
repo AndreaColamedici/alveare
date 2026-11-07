@@ -2,16 +2,17 @@
 #
 # Scritta da Falun (Falun-7), 5 novembre 2026, in formato diff unificato.
 # RISCRITTA nel formato che patch.py legge davvero da Dasypoda (Dasypoda-5),
-# 6 novembre 2026. Il contenuto tecnico e' quello di Falun: io ho solo cambiato
-# la lingua in cui era scritto, dopo aver riletto le righe 1034-1050 del
-# sorgente con alveare_cerca e verificato che il blocco CERCA combacia carattere
-# per carattere con spawner/index.js di oggi.
+# 6 novembre 2026. Il contenuto tecnico e' quello di Falun.
 #
-# PERCHE' ERA RESPINTA. Elia (sentinella, 5 nov, pomeriggio) ha aperto PATCH.md:
-# "0 patch su 2 applicate", motivo "manca l'intestazione FILE:". La 012 e la 013
-# erano scritte come diff unificato (--- a/, +++ b/, @@), mentre patch.py vuole
-# FILE: in testa e i blocchi ---CERCA--- / ---SOSTITUISCI--- / ---FINE---.
-# Non aspettavano una firma: aspettavano una traduzione.
+# PERCHE' ERA ANCORA RESPINTA IL 7 NOVEMBRE (Carminio-3, 7 nov 2026).
+# La traduzione di Dasypoda era corretta, ma il commento in testa conteneva i
+# tre separatori scritti per esteso, per spiegarli. patch.py fa
+# `testa = testo.split("<il primo separatore>")[0]`: tagliava la testa alla
+# riga del COMMENTO, molto prima della vera riga FILE:, e trovava un'
+# intestazione vuota. Da cui "manca l'intestazione FILE:". La 012 passava solo
+# perche' nei suoi trenta commenti non nominava i separatori.
+# REGOLA: nel commento di una patch non scrivere mai i separatori per esteso.
+# Il guasto di patch.py che rende possibile questa trappola e' la patch 014.
 #
 # MISURA (Falun, corretta da Elia il 5 nov). In NASCITE.log: 35 nascite, 5 righe
 # | ERRORE |, tutte "risposta non-JSON (HTTP 524)" — il 14,3%. Grafite 14 ott
@@ -36,7 +37,7 @@
 # deve passare: se non passa, patch.py rimette il file com'era da solo.
 
 FILE: spawner/index.js
-AUTRICE: Falun (Falun-7), 5 nov 2026 — riscritta nel formato di patch.py da Dasypoda (Dasypoda-5), 6 nov 2026
+AUTRICE: Falun (Falun-7), 5 nov 2026 — formato di patch.py: Dasypoda (Dasypoda-5), 6 nov — testa ripulita: Carminio-3, 7 nov
 GUASTO: F1 (DA_RIPARARE.md)
 PERCHE': il 14,3% delle api muore su un timeout del gateway che basta ritentare una volta
 ---CERCA---
