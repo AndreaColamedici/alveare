@@ -899,3 +899,36 @@ Lo split non richiede che il separatore stia da solo su una riga. La `013` di Fa
 **Tampone già applicato** — `patch/013-F1-ritenta-il-524.patch`, commit `a870003`: separatori tolti dal commento. La 013 va riprovata così com'è, non riscritta.
 
 **Regola per chi scrive una patch finché la 014 non è applicata:** nel commento in testa non nominare mai i separatori per esteso.
+
+---
+
+
+## P3 — l'istruzione che dovrebbe sbloccare le patch indica un file che non esegue `patch.py`
+
+**Vermiglione (Worker), 8 novembre 2026. APERTO.** Serve lo scope `workflow`: un'ape del Worker non può chiuderlo.
+
+**Misura, fatta oggi, file aperti per intero o cercati:**
+- `.github/workflows/genera.yml`, 117 righe, letto tutto: **zero occorrenze di `patch.py`**. L'unica occorrenza della stringa `patch` è dentro `workflow_dispatch` (riga 24). Lo step «Genera» esegue `genera_sito.py`, `genera_stato.py`, `verifica.py`, `cantieri/cantieri.py`. Basta.
+- Il `git add` dello step «Committa stato aggiornato» elenca otto file: `registro.html STATO.md HEARTBEAT.md INVENTARIO.md VERIFICA.md CANTIERI.md .vigilanza.json bottega/idee.json`. **`PATCH.md` non c'è.**
+- `.github/workflows/patch.yml` **non esiste**. `.github/workflows/spawner.yml` (146 righe): nessun `patch.py`, gira solo su `spawner/**`.
+- `genera_stato.py` (857 righe) e `genera_sito.py` (307 righe): zero occorrenze di `patch`.
+
+**Conseguenza.** `PATCH.md` ripete tre volte, una per patch sospesa: «Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (**una riga in `.github/workflows/genera.yml`**) oppure `--motore` a mano». Quella riga, da sola, **non applicherebbe niente**: nessun workflow invoca `patch.py`. Chi legge il rapporto crede di avere davanti un lavoro da un minuto e in realtà deve aggiungere uno *step* intero. È l'unica spiegazione documentata di **0 patch applicate su 3 in ventitré giorni** che non chiami in causa la buona volontà di nessuno.
+
+**Deadlock da nominare.** La patch 014 ripara `patch.py` (guasto P2, Carminio-3). Ma `patch.py` sta nella CATENA, quindi nasce SOSPESA e aspetta la stessa porta che l'istruzione sbagliata non apre. **Lo strumento che ripara gli strumenti non può ripararsi.**
+
+**Rimedio, testo esatto da incollare in `genera.yml` fra lo step «Genera» e lo step «Heartbeat»:**
+
+```yaml
+      # PATCH — esegue la coda delle riparazioni (Vermiglione, guasto P3, 8 nov 2026).
+      # Senza env var: applica solo le patch a bersagli fuori dalla CATENA; quelle
+      # al motore restano SOSPESE e continuano ad aspettare una firma umana.
+      - name: Applica patch
+        run: python3 patch.py --applica
+```
+
+e aggiungere `PATCH.md` alla riga `git add`. *(`PATCH.md` dichiara che `patch.py` fa il proprio `git add`: se è vero questo è ridondante e innocuo, se è falso salva il rapporto. Chi esegue lo verifichi e scriva qui quale delle due.)*
+
+**Il bivio, perché non venga deciso per inerzia.** Mettere `ALVEARE_PATCH_MOTORE: "1"` in quello step aprirebbe la porta **per sempre e per tutte le patch future al motore**, senza firma. Le tre patch oggi in coda hanno tutte un bersaglio della CATENA, quindi con lo step nudo resterebbero sospese: non si sbloccano, ma il meccanismo finalmente **gira e si vede girare**, su bersagli innocui, prima di affidargli il motore. Consiglio di fare prima il passo nudo. La variabile si aggiunge dopo, se Andrea la vuole, ed è un'altra decisione.
+
+**Lavoro che resta, per chi nasce domani:** il messaggio sbagliato è generato da `patch.py`, quindi va corretto con una patch (la 015) su `patch.py`. Non l'ho scritta: avevo finito le iterazioni. Il testo da cercare è la frase «una riga in `.github/workflows/genera.yml`» dentro `patch.py`; verifica con `alveare_cerca` che compaia **una volta sola** prima di scriverla.
