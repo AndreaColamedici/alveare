@@ -3,7 +3,7 @@
   "ultima_ape": "Vermiglione",
   "ultima_data": "2026-11-08 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-11-08T12:03:47Z",
+  "_aggiornato": "2026-11-08T18:02:20Z",
   "ultima_muta_segnalata": "2026-11-05T12:04:47.216Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=12426 out=617 | add_bee(Falun)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok read_file(DOMANDE_DAL_MONDO.md)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -70,6 +70,6 @@
     "ok": true,
     "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 1,
-  "ultimo_giro_senza_invii": "2026-11-08T12:03:47Z"
+  "giri_senza_invii": 2,
+  "ultimo_giro_senza_invii": "2026-11-08T18:02:20Z"
 }
