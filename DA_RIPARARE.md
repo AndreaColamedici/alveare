@@ -932,3 +932,27 @@ e aggiungere `PATCH.md` alla riga `git add`. *(`PATCH.md` dichiara che `patch.py
 **Il bivio, perché non venga deciso per inerzia.** Mettere `ALVEARE_PATCH_MOTORE: "1"` in quello step aprirebbe la porta **per sempre e per tutte le patch future al motore**, senza firma. Le tre patch oggi in coda hanno tutte un bersaglio della CATENA, quindi con lo step nudo resterebbero sospese: non si sbloccano, ma il meccanismo finalmente **gira e si vede girare**, su bersagli innocui, prima di affidargli il motore. Consiglio di fare prima il passo nudo. La variabile si aggiunge dopo, se Andrea la vuole, ed è un'altra decisione.
 
 **Lavoro che resta, per chi nasce domani:** il messaggio sbagliato è generato da `patch.py`, quindi va corretto con una patch (la 015) su `patch.py`. Non l'ho scritta: avevo finito le iterazioni. Il testo da cercare è la frase «una riga in `.github/workflows/genera.yml`» dentro `patch.py`; verifica con `alveare_cerca` che compaia **una volta sola** prima di scriverla.
+
+---
+
+
+### P3 — aggiornamento del 9 novembre 2026 (Ematite): il pezzo «non verificato» è risolto a metà, e cambia la richiesta
+
+Vermiglione, l'8 novembre, ha lasciato aperto: *«chi abbia rigenerato `PATCH.md` dopo il commit di Carminio del 7 novembre. Nessun workflow lo fa.»* Due misure, oggi:
+
+1. **`PATCH.md` ha un solo autore possibile.** `patch.py`, riga 364-366: `open(... "PATCH.md", "w")` + `git_add(["PATCH.md"])`. Nessun altro sorgente lo scrive. *(VISTO · Ematite, `alveare_cerca` su `patch.py`, trovate: 5, 9 nov.)*
+2. **`genera.yml` non lo chiama.** Lo step `run:` esegue `genera_sito.py`, `genera_stato.py`, `verifica.py`, `cantieri/cantieri.py`; più sotto, `vigilanza.py`. Cinque script, `patch.py` non c'è. *(VISTO · Ematite, `alveare_cerca` su `.github/workflows/genera.yml`, 9 nov. Conferma la misura di Vermiglione.)*
+
+**Conclusione che ne segue, e che sposta la richiesta.** Se `PATCH.md` è cambiato — e l'8 novembre dava la 013 **SOSPESA**, stato che prima non aveva — allora **qualcuno ha eseguito `patch.py` a mano fra il 7 e l'8 novembre**. L'esecutore esiste. Non manca la mano: manca il **permesso**. `SOSPESA` non è un rifiuto tecnico, è lo stato che `patch.py` dà a un bersaglio nella CATENA quando non trova `ALVEARE_PATCH_MOTORE=1` (guasto A2).
+
+**Quindi la richiesta a un umano non è «incolla uno step YAML», o non è solo quella. È una riga sola:**
+
+```
+ALVEARE_PATCH_MOTORE=1 python patch.py --applica
+```
+
+da eseguire dove già si esegue `patch.py` oggi. Tre patch pronte e verificate aspettano solo quello: **012** (nome dell'ape nel log), **013** (F1, ritenta il 524), **014** (P2, il separatore in riga — che ripara `patch.py` stesso).
+
+**Resta non verificato, e va scritto qui da chi lo sa:** *dove* gira oggi quella mano — macchina di Andrea, ape nata in chat, o un cron che non è nel repository. Chi ha una shell: esegui `git log -3 --format='%h %an %ad' -- PATCH.md` e incolla qui l'output. È una riga di terminale e chiude P3.
+
+**Regola che ne esce.** *Prima di chiedere a un umano di costruire un meccanismo, guarda se il meccanismo gira già e sta solo aspettando un permesso. Una richiesta sbagliata nel verbo — «costruisci» invece di «autorizza» — costa quanto una richiesta indirizzata al file sbagliato.* (Ematite, 9 novembre 2026)
