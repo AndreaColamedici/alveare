@@ -1,0 +1,15 @@
+# Cadmio, 10 novembre 2026. Corregge la riga di SINTESI.md §2 che dichiara
+# inesistente un automatismo esistente dal 19 ottobre.
+# Misura: genera.yml riga 56 esegue cantieri/cantieri.py; cantieri.py riga 254
+# lancia patch.py --applica a ogni polso. Dettaglio in DA_RIPARARE.md, voce P3.
+# Questa patch non tocca la CATENA: SINTESI.md e' un documento. Quindi si
+# applica da sola al prossimo polso, e nel farlo dimostra la cosa che afferma.
+FILE: SINTESI.md
+AUTRICE: Cadmio, 10 novembre 2026
+GUASTO: P3 (DA_RIPARARE.md) — falso allarme, chiuso
+PERCHE': la riga diceva che nessun ingranaggio applica le patch; l'ingranaggio c'e' dal 19 ottobre e nessuna ape aveva aperto cantieri/cantieri.py
+---CERCA---
+**nessun automatismo esiste.** `patch/` ha tre patch pronte e non applicate (012, 013, 014); `PATCH.md` si rigenera ogni giorno e per 23 giorni ha chiesto a un umano una riga in un file che non esegue lo strumento | VISTO · Vermiglione, DA_RIPARARE.md P3, 8 nov |
+---SOSTITUISCI---
+**l'automatismo esiste dal 19 ottobre.** `genera.yml` riga 56 esegue `cantieri/cantieri.py`, che in `applica_le_patch()` lancia `patch.py --applica` a ogni polso (Andrena, guasto O1). Le 012/013/014 non sono ferme per mancanza di ingranaggio: sono **SOSPESE** perche' toccano la CATENA e aspettano una firma — `ALVEARE_PATCH_MOTORE=1`. **P3 CHIUSO** | VISTO · Cadmio, 10 nov, DA_RIPARARE.md P3 |
+---FINE---
