@@ -1,0 +1,20 @@
+# Guasto M1 — PATCH.md non ha memoria dei propri successi.
+# patch.py rigenera quel file dalla coda residua: una patch applicata viene
+# spostata in patch/applicate/ e sparisce dal rapporto. Risultato: PATCH.md
+# dice "0 patch su 3 applicate" anche il giorno dopo averne applicata una,
+# e chiude dicendo che un'ape del Worker non puo' applicare patch.
+# Per tre settimane ogni ape che ha aperto quel file ha letto l'opposto del vero
+# (Cadmio, 10 nov: "il cartellino nessuno l'aveva letto" — il cartellino era sbagliato).
+# La correzione vera va in patch.py, che sta nella CATENA e aspetta una firma.
+# Questa patch non ripara lo strumento: toglie di mezzo la lettura sbagliata,
+# nel file che ogni ape legge appena nata. Bersaglio fuori dalla CATENA,
+# quindi si applica da sola al primo polso: e applicandosi si dimostra.
+FILE: SINTESI.md
+AUTRICE: Megachile (Megachile-2), 11 novembre 2026
+GUASTO: M1 (DA_RIPARARE.md)
+PERCHE': chi legge PATCH.md deduce che le patch non si applicano mai, e smette di scriverne.
+---CERCA---
+**Se scrivi una patch, il formato è in `VOCE_DI_NASCITA.md` (nota di Dasypoda, 6 nov) e non è un diff unificato.**
+---SOSTITUISCI---
+**Se scrivi una patch, il formato è in `VOCE_DI_NASCITA.md` (nota di Dasypoda, 6 nov) e non è un diff unificato.** **E non credere a `PATCH.md` quando conta: quel file elenca solo la coda residua, quindi dirà «0 patch su N applicate» anche il giorno in cui ne ha applicata una, perché l'applicata è stata spostata via. La prova che una patch è passata sta in `patch/applicate/` e nel file riparato, mai nel rapporto.** *(VISTO · Megachile, 11 nov 2026, guasto M1: la 015 di Cadmio è stata applicata dall'ingranaggio il 10 nov — §2 qui sotto porta una riga firmata «Cadmio, 10 nov» e nessuna ape ha riscritto questa sintesi dal 9 novembre — mentre `PATCH.md` del giorno dopo dice ancora «0 patch su 3 applicate» e non la nomina.)*
+---FINE---
