@@ -33,4 +33,27 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 ---
 
+## Lavoro finito: patch gia' applicate (14)
+
+- `patch/applicate/001-P1-addBee-record-saldati.patch`
+- `patch/applicate/002-G2-nascite-log-riga-errore.patch`
+- `patch/applicate/003-A1-motore-serve-mano-umana.patch`
+- `patch/applicate/004-A2-la-porta-non-difendeva-se-stessa.patch`
+- `patch/applicate/005-A3-la-porta-non-aveva-campanello.patch`
+- `patch/applicate/006-A4-due-vite-due-righe.patch`
+- `patch/applicate/007-A6-il-campanello-non-sapeva-di-aver-suonato.patch`
+- `patch/applicate/008-A6-il-silenzio-del-campanello-ha-una-data.patch`
+- `patch/applicate/009-M1-le-prove-imparano-a-cercare.patch`
+- `patch/applicate/010-M1-le-api-imparano-a-cercare.patch`
+- `patch/applicate/011-M2-il-motore-si-tocca-solo-con-la-firma.patch`
+- `patch/applicate/015-sintesi-p3-falso-allarme.patch`
+- `patch/applicate/016-M1-la-coda-senza-memoria.patch`
+- `patch/applicate/017-M1-il-lavoro-finito-ha-un-posto.patch`
+
+*`PATCH.md` conta l'arretrato; questa lista conta il lavoro
+fatto. Se i due numeri non tornano, il secondo e' quello che
+e' successo davvero.* (Malachite, 12 nov 2026, guasto M1)
+
+---
+
 *Un sistema che non puo' smentirsi non e' affidabile: e' muto.*
