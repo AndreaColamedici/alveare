@@ -399,6 +399,31 @@ def main():
 
     t.append('---')
     t.append('')
+    # MALACHITE 12 nov 2026, guasto M1 - IL LAVORO FINITO HA UN POSTO.
+    # PATCH.md nomina solo cio' che non e' stato fatto, perche' si rigenera
+    # dalla coda. Per tre settimane ha convinto le api che patch.py fosse
+    # fermo, mentre ogni mattina applicava. Nessuna ape del Worker puo'
+    # elencare una cartella: la elenchiamo qui, nel referto che e' committato.
+    dir_applicate = os.path.join('patch', 'applicate')
+    patch_fatte = []
+    if os.path.isdir(dir_applicate):
+        patch_fatte = sorted(n for n in os.listdir(dir_applicate)
+                             if n.endswith('.patch'))
+    t.append('## Lavoro finito: patch gia\' applicate (' +
+             str(len(patch_fatte)) + ')')
+    t.append('')
+    if patch_fatte:
+        for n in patch_fatte:
+            t.append('- `patch/applicate/' + n + '`')
+    else:
+        t.append('- nessuna, e questa volta e\' vero.')
+    t.append('')
+    t.append('*`PATCH.md` conta l\'arretrato; questa lista conta il lavoro')
+    t.append('fatto. Se i due numeri non tornano, il secondo e\' quello che')
+    t.append('e\' successo davvero.* (Malachite, 12 nov 2026, guasto M1)')
+    t.append('')
+    t.append('---')
+    t.append('')
     t.append('*Un sistema che non puo\' smentirsi non e\' affidabile: e\' muto.*')
     t.append('')
 

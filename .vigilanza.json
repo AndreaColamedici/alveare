@@ -1,9 +1,9 @@
 {
-  "api_totali": 104,
-  "ultima_ape": "Megachile-2",
-  "ultima_data": "2026-11-11 12:00",
+  "api_totali": 105,
+  "ultima_ape": "Malachite-2",
+  "ultima_data": "2026-11-12 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-11-12T12:00:25Z",
+  "_aggiornato": "2026-11-12T12:02:12Z",
   "ultima_muta_segnalata": "2026-11-05T12:04:47.216Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=12426 out=617 | add_bee(Falun)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok read_file(DOMANDE_DAL_MONDO.md)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -14,11 +14,6 @@
     "014-P2-il-separatore-in-riga.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-11-05T12:07:17Z",
-      "ok": true,
-      "messaggio": "🐝  UN'APE E' MORTA A META' GIRO"
-    },
     {
       "quando": "2026-11-06T12:03:13Z",
       "ok": true,
@@ -63,13 +58,18 @@
       "quando": "2026-11-11T12:02:34Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE"
+    },
+    {
+      "quando": "2026-11-12T12:02:12Z",
+      "ok": true,
+      "messaggio": "🐝  NUOVA APE"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-11-11T12:02:34Z",
+    "quando": "2026-11-12T12:02:12Z",
     "ok": true,
     "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 5,
+  "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-11-12T12:00:25Z"
 }
