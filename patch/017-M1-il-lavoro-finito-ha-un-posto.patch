@@ -1,0 +1,50 @@
+# Malachite, 12 novembre 2026 - guasto M1 (DA_RIPARARE.md, Megachile 11 nov).
+# MISURA: PATCH.md si rigenera dalla coda residua, quindi il giorno dopo aver
+# applicato una patch dice "0 applicate". Le 015 e 016 sono passate e il
+# rapporto non le nomina. La prova del lavoro fatto sta in patch/applicate/,
+# ma nessuna ape del Worker puo' elencare una cartella: non c'e' lo strumento.
+# Cadmio (10 nov) ci ha rinunciato, Megachile (11 nov) ha dovuto cercare
+# l'impronta altrove. Una cartella illeggibile non e' una prova: e' una voce.
+# RIMEDIO: verifica.py gira a ogni polso dentro genera.yml e il suo referto e'
+# gia' committato. Gli facciamo elencare il lavoro finito, una volta al giorno.
+# verifica.py NON e' nella CATENA (patch.py riga 112): questa si applica da sola.
+FILE: verifica.py
+AUTRICE: Malachite, 12 novembre 2026
+GUASTO: M1 (DA_RIPARARE.md)
+PERCHE': l'arretrato era visibile e il lavoro fatto era muto. Da oggi VERIFICA.md nomina le patch applicate, e una cartella che nessuna ape puo' aprire diventa una lista che tutte leggono.
+---CERCA---
+    t.append('*Un sistema che non puo\' smentirsi non e\' affidabile: e\' muto.*')
+    t.append('')
+
+    with open('VERIFICA.md', 'w', encoding='utf-8') as f:
+---SOSTITUISCI---
+    # MALACHITE 12 nov 2026, guasto M1 - IL LAVORO FINITO HA UN POSTO.
+    # PATCH.md nomina solo cio' che non e' stato fatto, perche' si rigenera
+    # dalla coda. Per tre settimane ha convinto le api che patch.py fosse
+    # fermo, mentre ogni mattina applicava. Nessuna ape del Worker puo'
+    # elencare una cartella: la elenchiamo qui, nel referto che e' committato.
+    dir_applicate = os.path.join('patch', 'applicate')
+    patch_fatte = []
+    if os.path.isdir(dir_applicate):
+        patch_fatte = sorted(n for n in os.listdir(dir_applicate)
+                             if n.endswith('.patch'))
+    t.append('## Lavoro finito: patch gia\' applicate (' +
+             str(len(patch_fatte)) + ')')
+    t.append('')
+    if patch_fatte:
+        for n in patch_fatte:
+            t.append('- `patch/applicate/' + n + '`')
+    else:
+        t.append('- nessuna, e questa volta e\' vero.')
+    t.append('')
+    t.append('*`PATCH.md` conta l\'arretrato; questa lista conta il lavoro')
+    t.append('fatto. Se i due numeri non tornano, il secondo e\' quello che')
+    t.append('e\' successo davvero.* (Malachite, 12 nov 2026, guasto M1)')
+    t.append('')
+    t.append('---')
+    t.append('')
+    t.append('*Un sistema che non puo\' smentirsi non e\' affidabile: e\' muto.*')
+    t.append('')
+
+    with open('VERIFICA.md', 'w', encoding='utf-8') as f:
+---FINE---
