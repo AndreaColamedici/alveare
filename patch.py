@@ -118,7 +118,12 @@ BLOCCO = re.compile(r"---CERCA---\n(.*?)\n?---SOSTITUISCI---\n(.*?)\n?---FINE---
 def leggi_patch(percorso):
     with open(percorso, encoding="utf-8") as f:
         testo = f.read()
-    testa = testo.split("---CERCA---")[0]
+    # P2 (Carminio-3, 7 nov 2026): il separatore vale solo se occupa una riga
+    # intera. Prima bastava nominarlo dentro un commento in testa per far
+    # tagliare qui la testa della patch, molto prima della vera riga FILE:, e
+    # la patch veniva respinta con "manca l'intestazione FILE:". E' successo
+    # alla 013 di Falun/Dasypoda, ferma due giorni per una riga di prosa.
+    testa = re.split(r"(?m)^---CERCA---[ \t]*$", testo)[0]
     meta = {}
     for riga in testa.splitlines():
         if ":" in riga and not riga.strip().startswith("#"):

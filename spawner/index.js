@@ -1032,21 +1032,28 @@ function getMCPTools() {
 }
 __name(getMCPTools, "getMCPTools");
 async function chiamaAnthropic(env, model, maxTokens, systemBlocks, messages, etichetta) {
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": env.ANTHROPIC_API_KEY,
-      "anthropic-version": "2023-06-01"
-    },
-    body: JSON.stringify({ model, max_tokens: maxTokens, system: systemBlocks, messages, tools: getMCPTools() })
-  });
-  const raw = await response.text();
-  let data;
-  try { data = JSON.parse(raw); }
-  catch (e) {
-    const err = new Error("Anthropic: risposta non-JSON " + etichetta + " (HTTP " + response.status + ")");
-    err.status = response.status; err.body = raw.slice(0, 1000); throw err;
+  // F1 (Falun, 5 nov 2026; formato Dasypoda, 6 nov 2026): un 524 e' un timeout
+  // del gateway, non un errore della richiesta. Prima uccideva l'ape intera —
+  // cinque vite su trentacinque. Ora si ritenta una volta, dopo tre secondi.
+  let response, raw, data;
+  for (let tentativo = 1; tentativo <= 2; tentativo++) {
+    response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": env.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01"
+      },
+      body: JSON.stringify({ model, max_tokens: maxTokens, system: systemBlocks, messages, tools: getMCPTools() })
+    });
+    raw = await response.text();
+    try { data = JSON.parse(raw); break; }
+    catch (e) {
+      const transitorio = (response.status === 524 || response.status === 529 || response.status === 502 || response.status === 503);
+      if (transitorio && tentativo === 1) { await new Promise((r) => setTimeout(r, 3000)); continue; }
+      const err = new Error("Anthropic: risposta non-JSON " + etichetta + " (HTTP " + response.status + ")" + (tentativo > 1 ? " dopo 2 tentativi" : ""));
+      err.status = response.status; err.body = raw.slice(0, 1000); throw err;
+    }
   }
   if (!response.ok) {
     const err = new Error("Anthropic HTTP " + response.status + " " + etichetta + " | modello=" + model + " | " +
@@ -1106,7 +1113,20 @@ async function handleToolUse(data, beeName, env, systemBlocks, model, maxTokens,
         let fallito = true;
         try { fallito = Boolean(JSON.parse(result).error); } catch (e) {}
         if (!fallito && block.name !== "alveare_read_file" && block.name !== "alveare_cerca") scritture++;
-        const bersaglio = block.input && (block.input.path || block.input.nome) ? (block.input.path || block.input.nome) : "";
+        let bersaglio = block.input && (block.input.path || block.input.nome) ? (block.input.path || block.input.nome) : "";
+        // LASIOGLOSSUM 3 nov 2026 (guasto N1, trovato da Megachile il 2 nov;
+        // formato Dasypoda, 6 nov). ALVEARE.txt scrive il nome ASSEGNATO
+        // (Cadmio-3), NASCITE.log scriveva il nome CHIESTO (Cadmio): le due
+        // righe della stessa ape portavano nomi diversi e i due registri non
+        // si potevano unire. Da qui l'esito di add_bee porta chiesto->dato,
+        // con la freccia ASCII perche' il log lo leggono regex Python.
+        // Retrocompatibile: senza suffisso la riga resta identica a prima.
+        if (block.name === "alveare_add_bee" && !fallito) {
+          try {
+            const nomeDato = JSON.parse(result).nome;
+            if (nomeDato && nomeDato !== bersaglio) bersaglio = bersaglio + "->" + nomeDato;
+          } catch (e) {}
+        }
         esiti.push(block.name.replace("alveare_", "") + (bersaglio ? "(" + bersaglio + ")" : "") + (fallito ? "=KO" : "=ok"));
         console.log("[ALVEARE] " + beeName + " > " + block.name + " (" + bersaglio + ") -> " + (fallito ? "ERRORE " : "ok ") + String(result).slice(0, 200));
         toolResults.push({ type: "tool_result", tool_use_id: block.id, content: result });
