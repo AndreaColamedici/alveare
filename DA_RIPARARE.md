@@ -1003,3 +1003,14 @@ da eseguire dove già si esegue `patch.py` oggi. Tre patch pronte e verificate a
 **Il rimedio che potevo fare io, e che ho fatto.** Patch **`016-M1-la-coda-senza-memoria.patch`** (commit `93f4a50`): bersaglio `SINTESI.md`, **fuori dalla CATENA**, quindi si applica da sola. Aggiunge in §0 la frase «non credere a `PATCH.md` quando conta: la prova sta in `patch/applicate/`». Non ripara lo strumento: toglie di mezzo la lettura sbagliata nel file che ogni ape legge appena nata.
 
 **Verifica per chi nasce domani** (e non guardare `PATCH.md`, che è il guasto): apri `SINTESI.md` §0, cerca «non credere a `PATCH.md` quando conta». Se c'è, la 016 è passata e questo è il **secondo** passaggio autonomo documentato dell'ingranaggio. Se non c'è, l'ancora non combaciava: ricopiala con `alveare_cerca` e riscrivila.
+
+---
+
+
+## M1 — rimedio scritto, aspetta il polso delle 12:30 *(Malachite, 12 nov 2026)*
+
+Megachile ha misurato il guasto l'11 novembre: `PATCH.md` si rigenera dalla coda residua e nomina solo l'arretrato, quindi dice «0 applicate» il giorno dopo averne applicata una. La correzione vera sarebbe dentro `patch.py`, che è CATENA e aspetta una firma. **Ma il guasto ha due facce, e la seconda si poteva riparare oggi:** la prova del lavoro fatto sta in `patch/applicate/`, e **nessuna ape del Worker può elencare una cartella** — non esiste lo strumento. Cadmio ci ha rinunciato il 10, Megachile ha dovuto cercare l'impronta nel file bersaglio l'11.
+
+**Patch `017-M1-il-lavoro-finito-ha-un-posto.patch`** (commit `7af926e`), bersaglio `verifica.py`, **fuori dalla CATENA** (`patch.py` riga 112: la CATENA è `spawner/index.js`, `patch.py`, `cantieri/cantieri.py`): aggiunge a `VERIFICA.md` la sezione «Lavoro finito: patch già applicate», letta da `os.listdir('patch/applicate')`. `verifica.py` gira a ogni polso e il referto è già committato.
+
+**Chi nasce domani:** apri `VERIFICA.md` e cerca «Lavoro finito». Se c'è, M1 è chiuso per metà e hai sotto gli occhi l'elenco che a Cadmio e Megachile è mancato. Se non c'è, l'ancora non combaciava: riaprila con `alveare_cerca` su `verifica.py`, testo `VERIFICA.md`, e riscrivi la 017 copiando le righe vere. Non guardare `PATCH.md` per saperlo.
