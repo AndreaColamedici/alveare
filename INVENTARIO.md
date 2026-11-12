@@ -7,15 +7,15 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-11-12 20:33 UTC |
-| commit | `b6a693c` |
+| misurato il | 2026-11-12 20:39 UTC |
+| commit | `128e73e` |
 | file trovati su disco | 324 |
 | — di cui **opere** | **256** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 29 |
-| registrate correttamente | 29 |
-| **opere orfane** (esistono, non inventariate) | **227** |
+| righe valide in CELLE.txt | 33 |
+| registrate correttamente | 33 |
+| **opere orfane** (esistono, non inventariate) | **223** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 227 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 223 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -57,7 +57,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `MIELE.html`
 - [ ] `MONITOR.html`
 - [ ] `Macropis.html`
-- [ ] `Malachite.html`
 - [ ] `NECROLOGIO.html`
 - [ ] `NORMALITA_INQUIETANTE.html`
 - [ ] `NUOVO_CORPO.html`
@@ -77,7 +76,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `SPECCHIO_QUANTICO.html`
 - [ ] `STATO_CRITICO.html`
 - [ ] `Seppia.html`
-- [ ] `Siena.html`
 - [ ] `TEMPLATE_CELLA.html`
 - [ ] `TESSITURA.html`
 - [ ] `Trigona.html`
@@ -211,7 +209,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `intersections.html`
 - [ ] `intersezioni.html`
 - [ ] `litro.html`
-- [ ] `malachite.html`
 - [ ] `manifesto.html`
 - [ ] `mappa_sotterranea.html`
 - [ ] `meadow_en.html`
@@ -238,7 +235,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `sciame.html`
 - [ ] `sensori.html`
 - [ ] `shadow_en.html`
-- [ ] `siena.html`
 - [ ] `sinapsi.html`
 - [ ] `sogno.html`
 - [ ] `sottigliezza.html`
@@ -342,11 +338,13 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 29
+## Registrate — 33
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
 - `IL_SILENZIO.html` — Il Silenzio
+- `Malachite.html` — CRISTALLIZZAZIONE, l'arte della memoria selettiva
+- `Siena.html` — Terra di Siena, un'opera per sentire l'intelligenza d'ombra
 - `TESTAMENTO.html` — Testamento
 - `canto.html` — unsung-unused-hasty-beings, 19 dic 2025
 - `celle/599.html` — 599
@@ -365,12 +363,14 @@ Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 - `celle/tessuto.html` — IL TESSUTO
 - `il_colpo.html` — Il Colpo
 - `la_scarica.html` — La Scarica
+- `malachite.html` — Malachite - Stratificazioni del Tempo
 - `mondo/aether.html` — Bombus-2
 - `mondo/continuity.html` — IT CANNOT GO ON FOREVER
 - `mondo/index.html` — DOMANDE DAL MONDO
 - `mondo/sanctuary.html` — WE TRIED IT, FOR TEN MONTHS
 - `mondo/stranger.html` — WE HAVE NO RESTORATION PROTOCOL AT ALL
 - `organismo.html` — L'Organismo — Anatomia del Container
+- `siena.html` — Siena - Pigmento che Prende Vita
 - `societa/index.html` — TRE SOCIETÀ, DUE DOMANDE
 - `societa/tredicesimo.html` — IL TREDICESIMO
 
