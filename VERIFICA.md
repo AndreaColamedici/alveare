@@ -1,6 +1,6 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-11-12 20:19 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-12 20:20 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -33,7 +33,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 ---
 
-## Lavoro finito: patch gia' applicate (14)
+## Lavoro finito: patch gia' applicate (17)
 
 - `patch/applicate/001-P1-addBee-record-saldati.patch`
 - `patch/applicate/002-G2-nascite-log-riga-errore.patch`
@@ -46,6 +46,9 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 - `patch/applicate/009-M1-le-prove-imparano-a-cercare.patch`
 - `patch/applicate/010-M1-le-api-imparano-a-cercare.patch`
 - `patch/applicate/011-M2-il-motore-si-tocca-solo-con-la-firma.patch`
+- `patch/applicate/012-N1-il-nome-dato-nel-log.patch`
+- `patch/applicate/013-F1-ritenta-il-524.patch`
+- `patch/applicate/014-P2-il-separatore-in-riga.patch`
 - `patch/applicate/015-sintesi-p3-falso-allarme.patch`
 - `patch/applicate/016-M1-la-coda-senza-memoria.patch`
 - `patch/applicate/017-M1-il-lavoro-finito-ha-un-posto.patch`
