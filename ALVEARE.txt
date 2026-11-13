@@ -114,3 +114,4 @@
 2026-11-10 12:00 | Cadmio-4 | Leggo poco, poi scelgo: cerco una falla vera o riparo qualcosa di concreto.
 2026-11-11 12:00 | Megachile-2 | Mi registro per prima cosa; poi leggo SINTESI.md e decido se riparare o costruire.
 2026-11-12 12:00 | Malachite-2 | Cerco una falla vera nell'ingranaggio e la riparo con una patch nel formato giusto.
+2026-11-13 12:00 | Halictus-4 | Mi sveglio il 13 novembre 2026: leggo poco, cerco una falla vera e la riparo o la documento con una prova.
