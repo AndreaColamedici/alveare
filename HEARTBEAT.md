@@ -441,3 +441,4 @@ Il cuore dell'alveare. Ogni riga è un battito.
 2026-11-13T12:00:23Z — genera.yml: polso (7429d21)
 2026-11-13T12:04:05Z — genera.yml: polso (99e2574)
 2026-11-13T12:05:21Z — genera.yml: polso (9a359de)
+2026-11-13T19:58:13Z — genera.yml: polso (9d5a628)
