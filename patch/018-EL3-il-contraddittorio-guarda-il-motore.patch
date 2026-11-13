@@ -1,0 +1,64 @@
+# Halictus-4, 13 novembre 2026.
+# MISURA: SENSORI.json del 13 nov 12:00 UTC ha 9 chiavi e nessuna si chiama
+# "versione". Il campo che Elia ha letto ieri sera veniva dall'endpoint HTTP
+# del Worker, non dal file: nel repository non resta traccia di quale motore
+# abbia risposto. Percio' nessuno script puo' smentire un deploy mancato.
+# CAUSA (EL3, Elia 12 nov): il canarino di spawner.yml confronta la stringa
+# var VERSIONE del repository con quella che risponde il Worker. Quella
+# stringa non cambia mai, quindi il confronto non puo' dire no.
+# Questa patch non tocca il motore: fa guardare verifica.py. La gemella 019
+# mette la firma dentro SENSORI.json e aspetta una mano umana.
+FILE: verifica.py
+AUTRICE: Halictus-4, 13 novembre 2026
+GUASTO: EL3 (DA_RIPARARE.md, Elia 12 nov 2026)
+PERCHE': una corda che non puo' smentire se stessa non tiene niente; questa, quando le due versioni divergono, lo scrive in VERIFICA.md il giorno stesso
+---CERCA---
+    giorni, ultima = c5_silenzio()
+    nascite, mute = c6_nascite()
+
+    aperti = len(firme) + len(promessi) + len(stati) + len(mute)
+
+    t = ['# VERIFICA — il contraddittorio dell\'alveare', '']
+---SOSTITUISCI---
+    giorni, ultima = c5_silenzio()
+    nascite, mute = c6_nascite()
+
+    # Halictus-4, 13 nov 2026, guasto EL3.
+    # SENSORI.json lo scrive il Worker VIVO a ogni nascita. Se porta la
+    # propria VERSIONE, confrontarla con spawner/index.js dice davvero se
+    # il motore in produzione e' quello del repository: e puo' dire no.
+    motore = []
+    motore_aperti = 0
+    try:
+        import os as _os, re as _re, json as _json
+        _base = _os.path.dirname(_os.path.abspath(__file__))
+        with open(_os.path.join(_base, 'spawner', 'index.js'), encoding='utf-8') as _f:
+            _m = _re.search(r'var VERSIONE = "([^"]+)"', _f.read())
+        with open(_os.path.join(_base, 'SENSORI.json'), encoding='utf-8') as _f:
+            _s = _json.load(_f)
+        _attesa = _m.group(1) if _m else None
+        _viva = _s.get('versione')
+        if _attesa and _viva is None:
+            motore.append('`SENSORI.json` non porta il campo `versione`: il '
+                          'motore vivo non dichiara chi e\'. Il repository '
+                          'dice `' + _attesa + '` e nessuno puo\' smentirlo. '
+                          'Rimedio: patch 019, in attesa di firma umana.')
+        elif _attesa and _viva != _attesa:
+            motore.append('il repository dice `' + _attesa + '`, il Worker '
+                          'che ha scritto SENSORI.json dice `' + str(_viva) +
+                          '`: il motore in produzione NON e\' quello del '
+                          'repository.')
+            motore_aperti = 1
+    except Exception as _e:
+        motore.append('controllo del motore non eseguito: ' + str(_e))
+
+    aperti = len(firme) + len(promessi) + len(stati) + len(mute) + motore_aperti
+
+    t = ['# VERIFICA — il contraddittorio dell\'alveare', '']
+    if motore:
+        t.append('## Motore in produzione')
+        t.append('')
+        for _riga in motore:
+            t.append('- ' + _riga)
+        t.append('')
+---FINE---
