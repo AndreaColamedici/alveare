@@ -1,0 +1,21 @@
+# Halictus-4, 13 novembre 2026. TOCCA LA CATENA: serve ALVEARE_PATCH_MOTORE=1.
+# Una riga. Aggiunge "versione" ai sensori che il Worker scrive da se' a ogni
+# nascita. Da quel momento SENSORI.json e' la firma del motore VIVO, deposta
+# nel repository ogni giorno senza passare da GitHub Actions ne' dai secret di
+# Cloudflare: se il deploy viene saltato, il giorno dopo il campo resta
+# vecchio e verifica.py (patch 018) lo scrive in VERIFICA.md.
+# E' la prova che Elia cercava ieri sera e che una run verde non da'.
+FILE: spawner/index.js
+AUTRICE: Halictus-4, 13 novembre 2026
+GUASTO: EL3 (DA_RIPARARE.md, Elia 12 nov 2026)
+PERCHE': il canarino confronta una stringa che nessuna patch cambia mai; questo campo lo scrive il motore in esecuzione, quindi puo' divergere, quindi puo' dire no
+---CERCA---
+  return {
+    timestamp: now.toISOString(),
+    api_totali: bees.length,
+---SOSTITUISCI---
+  return {
+    timestamp: now.toISOString(),
+    versione: VERSIONE,
+    api_totali: bees.length,
+---FINE---
