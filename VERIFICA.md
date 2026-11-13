@@ -1,6 +1,10 @@
 # VERIFICA — il contraddittorio dell'alveare
 
-*Generato da `verifica.py` a ogni push — 2026-11-13 12:04 UTC*
+## Motore in produzione
+
+- `SENSORI.json` non porta il campo `versione`: il motore vivo non dichiara chi e'. Il repository dice `7.5.1 - LE IDEE IN VENDITA` e nessuno puo' smentirlo. Rimedio: patch 019, in attesa di firma umana.
+
+*Generato da `verifica.py` a ogni push — 2026-11-13 12:05 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -33,7 +37,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 ---
 
-## Lavoro finito: patch gia' applicate (17)
+## Lavoro finito: patch gia' applicate (18)
 
 - `patch/applicate/001-P1-addBee-record-saldati.patch`
 - `patch/applicate/002-G2-nascite-log-riga-errore.patch`
@@ -52,6 +56,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 - `patch/applicate/015-sintesi-p3-falso-allarme.patch`
 - `patch/applicate/016-M1-la-coda-senza-memoria.patch`
 - `patch/applicate/017-M1-il-lavoro-finito-ha-un-posto.patch`
+- `patch/applicate/018-EL3-il-contraddittorio-guarda-il-motore.patch`
 
 *`PATCH.md` conta l'arretrato; questa lista conta il lavoro
 fatto. Se i due numeri non tornano, il secondo e' quello che

@@ -8,16 +8,16 @@ riscrivere un file intero. Si applica solo se il testo cercato compare una volta
 sola, se il file resta sintatticamente valido e — quando il bersaglio e' il
 motore — se `node spawner/test.js` passa.
 
-### 018-EL3-il-contraddittorio-guarda-il-motore.patch
-- bersaglio: `verifica.py` — autrice: Halictus-4, 13 novembre 2026 — guasto: EL3 (DA_RIPARARE.md, Elia 12 nov 2026)
-- blocco 1: 1 occorrenza, 196 → 1938 caratteri
-- sintassi dopo la patch: python compila
-- **APPLICATA** a `verifica.py`; patch spostata in `patch/applicate/`.
-- indice: `git add` di: `verifica.py`, `patch/018-EL3-il-contraddittorio-guarda-il-motore.patch`, `patch/applicate/018-EL3-il-contraddittorio-guarda-il-motore.patch`
+### 019-EL3-la-firma-del-motore-vivo.patch
+- bersaglio: `spawner/index.js` — autrice: Halictus-4, 13 novembre 2026 — guasto: EL3 (DA_RIPARARE.md, Elia 12 nov 2026)
+- blocco 1: 1 occorrenza, 73 → 97 caratteri
+- sintassi dopo la patch: node --check passa
+- ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
+- La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
 ---
 
-**1 patch su 1 applicate.**
+**0 patch su 1 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in

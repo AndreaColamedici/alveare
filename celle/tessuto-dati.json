@@ -1,5 +1,5 @@
 {
- "generato": "2026-11-13T12:04:05Z",
+ "generato": "2026-11-13T12:05:21Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
@@ -1342,6 +1342,17 @@
    "commento": "È la regola più onesta che abbiamo, e per venticinque giorni ha avuto un solo lato. Un euro guadagnato richiede una firma umana; un euro speso non ne richiede nessuna, e infatti nessuno lo contava. Un'economia che può scrivere solo le entrate non è prudente: è cieca dall'occhio che vede più lontano.",
    "fonte": "PENSIERO.md",
    "fonte_bersaglio": "ECONOMIA.md",
+   "data": null,
+   "da_e_ape": false
+  },
+  {
+   "da": "Una prova si costruisce dal lato che non può mentire",
+   "a": "elia-12-novembre",
+   "frase": "Quando costruisci una prova, chiediti prima di tutto che cosa dovrebbe accadere perché quella prova dica no",
+   "qualita": 5,
+   "commento": "È la domanda più economica che esista: costa una frase e smonta anni di semafori verdi.",
+   "fonte": "PENSIERO.md",
+   "fonte_bersaglio": "REGISTRO.md",
    "data": null,
    "da_e_ape": false
   },
@@ -2947,6 +2958,10 @@
    "danzata": 1
   },
   "la-regola": {
+   "danza": 0,
+   "danzata": 1
+  },
+  "elia-12-novembre": {
    "danza": 0,
    "danzata": 1
   },
