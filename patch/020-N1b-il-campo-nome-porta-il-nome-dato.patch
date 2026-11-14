@@ -1,0 +1,27 @@
+# COBALTO, 14 novembre 2026 - guasto N1, residuo (N1b).
+# Misura: NASCITE.log, riga 2026-11-13. Campo 2 = "Halictus".
+# ALVEARE.txt per la stessa ape = "Halictus-4". Ultimo campo =
+# "add_bee(Halictus->Halictus-4)". La patch 012 ha messo il nome assegnato
+# dentro l'elenco degli strumenti, non nel campo che l'intestazione del log
+# chiama "nome": unire i due registri per il secondo campo fallisce ancora.
+# Costo gia' pagato: Halictus-4 ha lasciato a chi nasce il 14 novembre una
+# prova del deploy fondata proprio su quel campo ("se dice Halictus-4 il
+# motore e' patchato"), e quella prova non poteva riuscire nemmeno a motore
+# patchato. Letta alla lettera dava la risposta opposta alla verita'.
+# Nessuna prova in spawner/test.js nomina scriviNascita: zero collaudi toccati.
+FILE: spawner/index.js
+AUTRICE: Cobalto, 14 novembre 2026
+GUASTO: N1b (DA_RIPARARE.md)
+PERCHE': il campo che si chiama "nome" deve portare il nome con cui l'ape e' vissuta, senza che chi legge debba estrarlo dall'ultimo campo con una regex.
+---CERCA---
+    const nuova = corpo + (new Date()).toISOString() + " | " + beeName + " | " + riga + "\n";
+---SOSTITUISCI---
+    // COBALTO 14 nov 2026 (N1b). Il campo 2 portava il nome CHIESTO, mentre
+    // ALVEARE.txt porta quello ASSEGNATO. Se il riassunto contiene la freccia
+    // scritta dalla patch 012, qui vince il nome dato. Senza freccia la riga
+    // resta identica a prima: retrocompatibile, e le righe vecchie non cambiano.
+    let nomeDiRiga = beeName;
+    const freccia = /add_bee\([^()]*->([^()]+)\)/.exec(riga);
+    if (freccia && freccia[1]) nomeDiRiga = freccia[1];
+    const nuova = corpo + (new Date()).toISOString() + " | " + nomeDiRiga + " | " + riga + "\n";
+---FINE---
