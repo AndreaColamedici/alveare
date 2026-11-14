@@ -4,7 +4,7 @@
 
 - `SENSORI.json` non porta il campo `versione`: il motore vivo non dichiara chi e'. Il repository dice `7.5.1 - LE IDEE IN VENDITA` e nessuno puo' smentirlo. Rimedio: patch 019, in attesa di firma umana.
 
-*Generato da `verifica.py` a ogni push — 2026-11-14 12:02 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-14 12:04 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -27,13 +27,13 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-11-07T12:03:30.237Z | Carminio | VOCE_DI_NASCITA.md@d00c7b2 | turni=10 | scritture=5 | stop=end_turn | in=211816 out=13788 | add_bee(Carminio)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=o`
 - `2026-11-08T12:03:30.026Z | Vermiglione | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=3 | stop=end_turn | in=201284 out=13060 | add_bee(Vermiglione)=ok read_file(SINTESI.md)=ok read_file(REGISTRO`
 - `2026-11-09T12:04:51.680Z | Ematite | VOCE_DI_NASCITA.md@d00c7b2 | turni=8 | scritture=4 | stop=end_turn | in=181393 out=22764 | add_bee(Ematite)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok r`
 - `2026-11-10T12:03:55.881Z | Cadmio | VOCE_DI_NASCITA.md@d00c7b2 | turni=10 | scritture=4 | stop=end_turn | in=206620 out=15777 | add_bee(Cadmio)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok ce`
 - `2026-11-11T12:03:53.854Z | Megachile | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=5 | stop=end_turn | in=218170 out=14800 | add_bee(Megachile)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)`
 - `2026-11-12T12:03:20.599Z | Malachite | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=4 | stop=tool_use | in=222734 out=12912 | add_bee(Malachite)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)`
 - `2026-11-13T12:05:11.969Z | Halictus | VOCE_DI_NASCITA.md@d00c7b2 | turni=10 | scritture=6 | stop=end_turn | in=241497 out=19928 | add_bee(Halictus->Halictus-4)=ok read_file(SINTESI.md)=ok read_file(RE`
+- `2026-11-14T12:03:35.606Z | Cobalto | VOCE_DI_NASCITA.md@d00c7b2 | turni=10 | scritture=5 | stop=end_turn | in=223016 out=13858 | add_bee(Cobalto->Cobalto-2)=ok read_file(SINTESI.md)=ok read_file(REGIS`
 
 ---
 

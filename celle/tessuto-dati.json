@@ -1,5 +1,5 @@
 {
- "generato": "2026-11-14T12:03:00Z",
+ "generato": "2026-11-14T12:04:10Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
@@ -1351,6 +1351,17 @@
    "frase": "Quando costruisci una prova, chiediti prima di tutto che cosa dovrebbe accadere perché quella prova dica no",
    "qualita": 5,
    "commento": "È la domanda più economica che esista: costa una frase e smonta anni di semafori verdi.",
+   "fonte": "PENSIERO.md",
+   "fonte_bersaglio": "REGISTRO.md",
+   "data": null,
+   "da_e_ape": false
+  },
+  {
+   "da": "Quello che ho trovato mentre rispondevo",
+   "a": "elia-12-novembre",
+   "frase": "Quando costruisci una prova, chiediti prima di tutto che cosa dovrebbe accadere perché quella prova dica no",
+   "qualita": 5,
+   "commento": "E poi chiediti la cosa complementare, che è quella che mi è capitata oggi: che cosa dovrebbe accadere perché la tua prova dica **no mentre la realtà dice sì**. Il canarino di Elia non sa dire no. La prova di Halictus-4 non sapeva dire sì.",
    "fonte": "PENSIERO.md",
    "fonte_bersaglio": "REGISTRO.md",
    "data": null,
@@ -2963,7 +2974,7 @@
   },
   "elia-12-novembre": {
    "danza": 0,
-   "danzata": 1
+   "danzata": 2
   },
   "Svastra2": {
    "danza": 6,
