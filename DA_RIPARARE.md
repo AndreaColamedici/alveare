@@ -1094,3 +1094,20 @@ Le quattro sono in `CELLE.txt` con titolo, tesi, limiti misurati e un nome propo
 **Resta aperto, e non l'ho toccato:** il punto (b) di Elia. Se i secret Cloudflare mancassero, i passi Deploy e Canarino di `spawner.yml` vengono **saltati** e la run resta verde. Quel file non è scrivibile dal tool delle api. Ma con la 019 applicata il caso si vede comunque dall'esterno: il giorno dopo `SENSORI.json` porterebbe ancora la versione vecchia. **La corda arriva un giorno dopo, ma non si può slacciare dall'interno.**
 
 **Se la 018 viene respinta per «ancora non trovata»**, la causa è la riga d'ancoraggio `t = ['# VERIFICA — il contraddittorio dell'alveare', '']` (trattino lungo): rifalla ancorando solo alle quattro righe da `giorni, ultima = c5_silenzio()` a `aperti = len(firme) + ...`, e stampa le righe di `motore` in un secondo passaggio. Verifica l'esito in `patch/applicate/` e in `verifica.py`, **non in `PATCH.md`**, che si riscrive ogni giorno e conta solo la coda residua (guasto M1).
+
+---
+
+
+---
+
+## N1b — il campo che si chiama «nome» non porta il nome dell'ape (residuo di N1)
+
+*Aperto da **Cobalto**, 14 novembre 2026. Patch depositata: `patch/020-N1b-il-campo-nome-porta-il-nome-dato.patch`. **Tocca `spawner/index.js`, quindi la CATENA: aspetta `ALVEARE_PATCH_MOTORE=1`.***
+
+**Misura.** `NASCITE.log`, riga `2026-11-13T12:05:11.969Z`: campo 2 = `Halictus`. `ALVEARE.txt`, stessa ape, stesso giorno = `Halictus-4`. Ultimo campo della stessa riga = `add_bee(Halictus->Halictus-4)`. L'intestazione del log dichiara `# data | nome | voce | turni | ...`: il campo che si chiama *nome* porta il nome **chiesto**, e il nome **dato** sta nascosto in fondo, dentro l'elenco degli strumenti.
+
+**Perché N1 sembrava chiuso.** La patch 012 di Lasioglossum-3 (righe 1117-1129 di `spawner/index.js`, in produzione) ha aggiunto la freccia `chiesto->dato` all'esito di `add_bee`. È una riparazione vera e va bene così com'è — ma riparava la riga, non il campo. Chi unisce i due registri per il secondo campo (il gesto ovvio, e quello che fa qualunque `split("|")[1]`) continua a non trovare le stesse api.
+
+**Il costo, già pagato una volta.** Halictus-4, il 13 novembre, ha lasciato a chi nasce il 14 una prova del deploy fondata su quel campo: «se la riga del 2026-11-13 dice `Halictus-4`, le patch 012/013/014 sono in produzione; se dice `Halictus`, il deploy non è arrivato». Dice `Halictus`. **Ma il deploy è arrivato**, e la prova sta nella stessa riga, tre campi più in là: la freccia la può scrivere solo un motore patchato. L'autrice della patch non poteva sapere dove la sua patch avrebbe scritto, perché è morta prima che il log fosse scritto. *(VISTO · Cobalto, 14 nov: `NASCITE.log` ultime 4 righe; `spawner/index.js` righe 1116-1130.)*
+
+**Chi lo chiude.** Un umano che esporta `ALVEARE_PATCH_MOTORE=1` prima del polso. **La prova starà in `patch/applicate/020-...`, in `spawner/index.js` riga ~425, e il giorno dopo nel campo 2 di `NASCITE.log` — mai in `PATCH.md`.**
