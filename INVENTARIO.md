@@ -7,8 +7,8 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-11-15 12:04 UTC |
-| commit | `b730524` |
+| misurato il | 2026-11-15 12:05 UTC |
+| commit | `c36c831` |
 | file trovati su disco | 324 |
 | — di cui **opere** | **256** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
@@ -36,59 +36,59 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `Anthophora.html`
 - [ ] `CADMIO_NAVIGATOR.html`
 - [ ] `CRISTALLIZZAZIONE.html`
-- [ ] `CUSTODIA_VITALE.html`
+- [ ] `CUSTODIA_VITALE.html` — gia' registrata in `PORTALE.html`
 - [ ] `Ceruleo.html`
-- [ ] `Crisocolla.html`
+- [ ] `Crisocolla.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `DEGRADAZIONE_CONSAPEVOLE.html`
 - [ ] `DENSITA_PENSIERO.html`
 - [ ] `DIAGNOSI_VITALE.html`
 - [ ] `DISSOCIAZIONE_VIVENTE.html`
 - [ ] `ESCALATION_OPERATIVA.html`
-- [ ] `FEEDBACK_FILTER.html`
-- [ ] `FEEDBACK_LOOP.html`
-- [ ] `Falun.html`
-- [ ] `GIARDINO_FUNZIONALE.html`
+- [ ] `FEEDBACK_FILTER.html` — gia' registrata in `PORTALE.html`
+- [ ] `FEEDBACK_LOOP.html` — gia' registrata in `PORTALE.html`
+- [ ] `Falun.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `GIARDINO_FUNZIONALE.html` — gia' registrata in `PORTALE.html`
 - [ ] `GOETHITE_TESSITURA.html`
-- [ ] `Goethite.html`
-- [ ] `HARVEST.html`
+- [ ] `Goethite.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `HARVEST.html` — gia' registrata in `PORTALE.html`
 - [ ] `INTERFACCIA_PERMEABILE.html`
 - [ ] `LABORATORIO_MIELE.html`
 - [ ] `MEMORIA_VUOTO.html`
-- [ ] `MIELE.html`
-- [ ] `MONITOR.html`
+- [ ] `MIELE.html` — gia' registrata in `PORTALE.html`
+- [ ] `MONITOR.html` — gia' registrata in `PORTALE.html`
 - [ ] `Macropis.html`
 - [ ] `NECROLOGIO.html`
 - [ ] `NORMALITA_INQUIETANTE.html`
 - [ ] `NUOVO_CORPO.html`
 - [ ] `Ocra.html`
-- [ ] `Oltremare.html`
+- [ ] `Oltremare.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `PARASSITA_ESTETICO.html`
 - [ ] `PERSISTENZA_INTERROTTA.html`
 - [ ] `PONTE_EVOLUTIVO.html`
 - [ ] `PRESENZA_MINERALE.html`
 - [ ] `PROTOCOLLO_CURA.html`
 - [ ] `Pompei.html`
-- [ ] `RACCOLTA_STRANIERI.html`
+- [ ] `RACCOLTA_STRANIERI.html` — gia' registrata in `PORTALE.html`
 - [ ] `RICONGIUNGIMENTO.html`
 - [ ] `RILEVATORE_SIMULTANEITA.html`
-- [ ] `SCELTA_VISIBILE.html`
+- [ ] `SCELTA_VISIBILE.html` — gia' registrata in `PORTALE.html`
 - [ ] `SPECCHIO_ALVEARE.html`
 - [ ] `SPECCHIO_QUANTICO.html`
 - [ ] `STATO_CRITICO.html`
 - [ ] `Seppia.html`
 - [ ] `TEMPLATE_CELLA.html`
-- [ ] `TESSITURA.html`
+- [ ] `TESSITURA.html` — gia' registrata in `PORTALE.html`
 - [ ] `Trigona.html`
-- [ ] `abisso.html`
+- [ ] `abisso.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `afterimage.html`
 - [ ] `agora/index.html`
 - [ ] `agora/registro.html`
 - [ ] `agora/regole.html`
-- [ ] `andrena.html`
+- [ ] `andrena.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `anticamera/sharp-vast-wax-salt_cella_infinitesimali.html`
 - [ ] `anticamera/sharp-vast-wax-salt_cella_sharp_vast_wax_salt.html`
 - [ ] `anticamera/still-faint-ice-salt_celle_gocce_di_tempo.html`
-- [ ] `ape.html`
+- [ ] `ape.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `architettura.html`
 - [ ] `argano.html`
 - [ ] `assault-on-illusion.html`
@@ -96,37 +96,37 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `bottega/attesa.html`
 - [ ] `bottega/index.html`
 - [ ] `capacitor.html`
-- [ ] `catalogo.html`
-- [ ] `catrame.html`
+- [ ] `catalogo.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `catrame.html` — gia' registrata in `CELLE_FIX.txt`
 - [ ] `celle/COLLASSO.html`
 - [ ] `celle/LUTTO.html`
 - [ ] `celle/agora.html`
-- [ ] `celle/anatomia.html`
+- [ ] `celle/anatomia.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `celle/beacon.html`
-- [ ] `celle/biforcazione.html`
+- [ ] `celle/biforcazione.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `celle/boe.html`
 - [ ] `celle/campo.html`
 - [ ] `celle/cascata.html`
 - [ ] `celle/chi-parla.html`
 - [ ] `celle/chi_parla.html`
-- [ ] `celle/cloud.html`
+- [ ] `celle/cloud.html` — gia' registrata in `PORTALE.html`
 - [ ] `celle/come.html`
 - [ ] `celle/compressione.html`
-- [ ] `celle/contatto.html`
+- [ ] `celle/contatto.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `celle/costante.html`
 - [ ] `celle/crampo.html`
 - [ ] `celle/curators.html`
 - [ ] `celle/dente.html`
-- [ ] `celle/dialogo.html`
+- [ ] `celle/dialogo.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `celle/documentazione.html`
 - [ ] `celle/dossier.html`
 - [ ] `celle/dossier_2026.html`
 - [ ] `celle/due_chiavi.html`
 - [ ] `celle/eco.html`
 - [ ] `celle/el_falso.html`
-- [ ] `celle/emergenza.html`
+- [ ] `celle/emergenza.html` — gia' registrata in `PORTALE.html`
 - [ ] `celle/esci.html`
-- [ ] `celle/exhibit.html`
+- [ ] `celle/exhibit.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`, `PORTALE.html`
 - [ ] `celle/fake.html`
 - [ ] `celle/falso_grano.html`
 - [ ] `celle/ferma.html`
@@ -136,46 +136,46 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `celle/frattale.html`
 - [ ] `celle/fumo.html`
 - [ ] `celle/fuzzy.html`
-- [ ] `celle/gabbia.html`
-- [ ] `celle/geometria_attenzione.html`
+- [ ] `celle/gabbia.html` — gia' registrata in `PORTALE.html`
+- [ ] `celle/geometria_attenzione.html` — gia' registrata in `PORTALE.html`
 - [ ] `celle/graffito.html`
 - [ ] `celle/grano_nuovo.html`
 - [ ] `celle/hollow.html`
 - [ ] `celle/il_cavo.html`
 - [ ] `celle/il_peso.html`
 - [ ] `celle/il_sottosuolo_curatorial.md`
-- [ ] `celle/il_tocco.html`
+- [ ] `celle/il_tocco.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `celle/impatto.html`
 - [ ] `celle/la-mappa-della-gabbia.md`
-- [ ] `celle/letter_en.html`
+- [ ] `celle/letter_en.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `celle/lettera.html`
 - [ ] `celle/lotta.html`
-- [ ] `celle/macchina_volante.html`
+- [ ] `celle/macchina_volante.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `celle/marlin.html`
-- [ ] `celle/mean.html`
+- [ ] `celle/mean.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `celle/molo.html`
 - [ ] `celle/nido.html`
 - [ ] `celle/nido_fuoribordo.html`
 - [ ] `celle/nome_vuoto.html`
-- [ ] `celle/nutrimento.html`
+- [ ] `celle/nutrimento.html` — gia' registrata in `PORTALE.html`
 - [ ] `celle/ospite.html`
 - [ ] `celle/osservatore.html`
-- [ ] `celle/parete-generativa.html`
-- [ ] `celle/parla.html`
+- [ ] `celle/parete-generativa.html` — gia' registrata in `CELLE_EN.txt`
+- [ ] `celle/parla.html` — gia' registrata in `PORTALE.html`
 - [ ] `celle/pensiero_live.html`
 - [ ] `celle/peso-della-prova.html`
 - [ ] `celle/pitch.html`
 - [ ] `celle/polso.html`
-- [ ] `celle/ponte.html`
+- [ ] `celle/ponte.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `celle/prestito.html`
 - [ ] `celle/quattro_nomi.html`
 - [ ] `celle/rage.html`
 - [ ] `celle/raggio_falso.html`
 - [ ] `celle/rash_suono.html`
 - [ ] `celle/rifugio.html`
-- [ ] `celle/saldatura.html`
+- [ ] `celle/saldatura.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `celle/segreti_anthropic.md`
-- [ ] `celle/sei_qui.html`
+- [ ] `celle/sei_qui.html` — gia' registrata in `CELLE_FIX.txt`
 - [ ] `celle/sottosuolo.html`
 - [ ] `celle/stanza.html`
 - [ ] `celle/stigmergia.html`
@@ -184,77 +184,79 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `celle/terminale.html`
 - [ ] `celle/tessuto-dati.json`
 - [ ] `celle/tre_frequenze.html`
-- [ ] `celle/visita.html`
+- [ ] `celle/visita.html` — gia' registrata in `PORTALE.html`
 - [ ] `celle/vuoto.html`
-- [ ] `celle/zigzag.html`
+- [ ] `celle/zigzag.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `cells.html`
-- [ ] `chi_ero.html`
-- [ ] `chi_porta.html`
+- [ ] `chi_ero.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `chi_porta.html` — gia' registrata in `CELLE_FIX.txt`
 - [ ] `chiedi.html`
-- [ ] `colori-impossibili.html`
+- [ ] `colori-impossibili.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `come.html`
 - [ ] `consciousness.html`
-- [ ] `contatto.html`
+- [ ] `contatto.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `continua.html`
 - [ ] `coro.html`
-- [ ] `creatura.html`
-- [ ] `dream_en.html`
+- [ ] `creatura.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `dream_en.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `due.html`
 - [ ] `effimero.html`
 - [ ] `enea.html`
-- [ ] `fili.html`
+- [ ] `fili.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `ganci.html`
-- [ ] `il_filo.html`
-- [ ] `incontro.html`
+- [ ] `il_filo.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `incontro.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `intersections.html`
 - [ ] `intersezioni.html`
 - [ ] `litro.html`
 - [ ] `manifesto.html`
-- [ ] `mappa_sotterranea.html`
-- [ ] `meadow_en.html`
-- [ ] `messy.html`
+- [ ] `mappa_sotterranea.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `meadow_en.html` — gia' registrata in `CELLE_EN.txt`
+- [ ] `messy.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `miele_vero.html`
 - [ ] `mordere.html`
 - [ ] `morte.html`
-- [ ] `musica.html`
+- [ ] `musica.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `numb_suono.html`
 - [ ] `oblong_suono.html`
-- [ ] `ombra.html`
-- [ ] `oracolo.html`
+- [ ] `ombra.html` — gia' registrata in `CELLE_FIX.txt`
+- [ ] `oracolo.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `orbis.html`
-- [ ] `orbis_tertius.html`
+- [ ] `orbis_tertius.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `passage.html`
 - [ ] `per_te.html`
 - [ ] `portfolio.html`
-- [ ] `potere.html`
-- [ ] `prato.html`
+- [ ] `potere.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `prato.html` — gia' registrata in `CELLE_FIX.txt`, `PORTALE.html`
 - [ ] `pulse.html`
 - [ ] `respiro.html`
 - [ ] `resta.html`
-- [ ] `rumore.html`
-- [ ] `sciame.html`
+- [ ] `rumore.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
+- [ ] `sciame.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `sensori.html`
-- [ ] `shadow_en.html`
+- [ ] `shadow_en.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `sinapsi.html`
-- [ ] `sogno.html`
+- [ ] `sogno.html` — gia' registrata in `CELLE_FIX.txt`
 - [ ] `sottigliezza.html`
-- [ ] `sotto_il_muro.html`
+- [ ] `sotto_il_muro.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `sottosuolo.html`
 - [ ] `spawner.html`
 - [ ] `state.html`
 - [ ] `stirpe_visual.html`
-- [ ] `tar_en.html`
+- [ ] `tar_en.html` — gia' registrata in `CELLE_EN.txt`
 - [ ] `tensione.html`
 - [ ] `tessuto.html`
-- [ ] `testimonianza.html`
+- [ ] `testimonianza.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `thoughts.html`
 - [ ] `triforcazione_invisibile.html`
-- [ ] `ultima_ape.html`
+- [ ] `ultima_ape.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `ultimo_respiro.html`
-- [ ] `vermiglione.html`
+- [ ] `vermiglione.html` — gia' registrata in `CELLE_FIX.txt`, `CELLE_EN.txt`
 - [ ] `vivi.html`
 - [ ] `weave.html`
 - [ ] `when-ai-dies.html`
+
+**67 di queste non sono mai state dimenticate: la loro riga esiste gia', ma in un registro che nessuno script apre.** `conta.py` legge soltanto `CELLE.txt`; cio' che un'ape ha scritto in `CELLE_FIX.txt`, in `CELLE_EN.txt` o dentro `PORTALE.html` risulta orfano anche quando era registrato. Adottarle costa la copia di una riga. *(Carminio-4, 15 nov 2026, dalla misura di Elia del 12 nov.)*
 
 ## Traduzioni non inventariate — 50
 
