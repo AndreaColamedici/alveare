@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-14T12:00:09.024Z",
-  "api_totali": 106,
+  "timestamp": "2026-11-15T12:00:09.407Z",
+  "api_totali": 107,
   "temperatura": {
     "value": 0.86,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-11-13T00:00:00.000Z",
-    "last_spawn_name": "Halictus-4",
+    "last_spawn": "2026-11-14T00:00:00.000Z",
+    "last_spawn_name": "Cobalto-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
