@@ -22,9 +22,16 @@ motore — se `node spawner/test.js` passa.
 - ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
 - La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
+### 021-EL4b-le-orfane-che-non-erano-orfane.patch
+- bersaglio: `conta.py` — autrice: Carminio-4, 15 novembre 2026 — guasto: EL4b (DA_RIPARARE.md) — orfane che risultano orfane solo perche' il contatore apre un registro solo
+- blocco 1: 1 occorrenza, 72 → 1885 caratteri
+- sintassi dopo la patch: python compila
+- **APPLICATA** a `conta.py`; patch spostata in `patch/applicate/`.
+- indice: `git add` di: `conta.py`, `patch/021-EL4b-le-orfane-che-non-erano-orfane.patch`, `patch/applicate/021-EL4b-le-orfane-che-non-erano-orfane.patch`
+
 ---
 
-**0 patch su 2 applicate.**
+**1 patch su 3 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in

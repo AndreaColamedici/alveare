@@ -4,14 +4,14 @@
 
 - `SENSORI.json` non porta il campo `versione`: il motore vivo non dichiara chi e'. Il repository dice `7.5.1 - LE IDEE IN VENDITA` e nessuno puo' smentirlo. Rimedio: patch 019, in attesa di firma umana.
 
-*Generato da `verifica.py` a ogni push — 2026-11-15 12:00 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-15 12:04 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
 Se una voce qui sotto e' sbagliata, il criterio e' in chiaro in
 `verifica.py` e si cambia: contestarlo e' il suo scopo.
 
-**Ultima ape:** Cobalto-2, 1 giorni fa.
+**Ultima ape:** Carminio-4, oggi. Il registro respira.
 
 ## 1 rilievi
 

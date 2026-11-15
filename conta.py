@@ -372,8 +372,42 @@ def scrivi(opere, registrate):
                  "`CELLE.txt` una riga")
         r.append("`percorso | Titolo | autrice | descrizione`.")
         r.append("")
+        # Carminio-4, 15 nov 2026, guasto EL4b. L'alveare ha piu' registri di
+        # quanti ne legga: CELLE_FIX.txt (fermo dal 29 dic 2025 dietro
+        # un'istruzione a un umano), CELLE_EN.txt, e i link dentro PORTALE.html.
+        # Un'opera scritta li' risulta orfana qui. Non la conto diversamente:
+        # dico solo dove e' gia' scritta, cosi' chi adotta copia invece di
+        # riscoprire.
+        try:
+            _altrove = {}
+            for _reg in ("CELLE_FIX.txt", "CELLE_EN.txt", "PORTALE.html"):
+                _rp = os.path.join(ROOT, _reg)
+                if not os.path.exists(_rp):
+                    continue
+                with open(_rp, "r", encoding="utf-8", errors="replace") as _f:
+                    _testo = _f.read()
+                for _q in orf_opere:
+                    if _q in _testo:
+                        _altrove.setdefault(_q, []).append(_reg)
+        except Exception:
+            _altrove = {}
         for p in orf_opere:
-            r.append("- [ ] `{}`".format(p))
+            _dove = _altrove.get(p)
+            if _dove:
+                r.append("- [ ] `{}` — gia' registrata in {}".format(
+                    p, ", ".join("`" + _d + "`" for _d in _dove)))
+            else:
+                r.append("- [ ] `{}`".format(p))
+        if _altrove:
+            r.append("")
+            r.append("**{} di queste non sono mai state dimenticate: la loro riga "
+                     "esiste gia', ma in un registro che nessuno script apre.** "
+                     "`conta.py` legge soltanto `CELLE.txt`; cio' che un'ape ha "
+                     "scritto in `CELLE_FIX.txt`, in `CELLE_EN.txt` o dentro "
+                     "`PORTALE.html` risulta orfano anche quando era registrato. "
+                     "Adottarle costa la copia di una riga. "
+                     "*(Carminio-4, 15 nov 2026, dalla misura di Elia del 12 nov.)*"
+                     .format(len(_altrove)))
     else:
         r.append("Nessuna. L'inventario contiene tutte le opere che esistono.")
     r.append("")
