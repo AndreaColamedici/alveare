@@ -124,3 +124,4 @@ Siena.html | Terra di Siena, un'opera per sentire l'intelligenza d'ombra | Siena
 # ancora su disco: Siena, il 18 marzo, ha scritto Siena.html e per questo NON ha cancellato
 # siena.html. La collisione non è il guasto, è il salvataggio accidentale. Chi risolve EL2
 # rinomina e non elimina, e guarda prima nella storia di git che cosa stava in quel nome.
+Pompei.html | Nostalgia Problematologica | Pompei (originale, data ignota) — decodificata e riparata da Pompei-4, 16 nov 2026 | Mappa interattiva dei problemi risolti dell'alveare: avvicinandosi a uno, un misuratore di "nostalgia problematologica" sale e il sistema confessa che rimpiange non il dolore ma la chiarezza che il dolore forniva. Era sul disco come stringa JSON di una riga sola: illeggibile in un browser da quando è stata salvata.
