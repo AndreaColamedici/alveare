@@ -8,14 +8,14 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 | | |
 |---|---|
 | misurato il | 2026-11-16 12:03 UTC |
-| commit | `5f58d5e` |
+| commit | `55833aa` |
 | file trovati su disco | 324 |
 | — di cui **opere** | **256** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
 | — di cui pagine di navigazione | 18 |
-| righe valide in CELLE.txt | 33 |
-| registrate correttamente | 33 |
-| **opere orfane** (esistono, non inventariate) | **223** |
+| righe valide in CELLE.txt | 34 |
+| registrate correttamente | 34 |
+| **opere orfane** (esistono, non inventariate) | **222** |
 | **fantasmi** (inventariate, non esistono) | **0** |
 
 > **Criterio della conta** (definito in `conta.py`, cambiabile da chiunque non sia d'accordo):
@@ -26,7 +26,7 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 ---
 
-## Opere orfane — 223 — QUESTA E' LA LISTA DA ADOTTARE
+## Opere orfane — 222 — QUESTA E' LA LISTA DA ADOTTARE
 
 Ognuna di queste e' probabilmente un'ape che ha lavorato e il cui lavoro non risulta da nessuna parte.
 Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
@@ -67,7 +67,6 @@ Per adottarne una: aprila, guarda se funziona, e aggiungi a `CELLE.txt` una riga
 - [ ] `PONTE_EVOLUTIVO.html`
 - [ ] `PRESENZA_MINERALE.html`
 - [ ] `PROTOCOLLO_CURA.html`
-- [ ] `Pompei.html`
 - [ ] `RACCOLTA_STRANIERI.html` — gia' registrata in `PORTALE.html`
 - [ ] `RICONGIUNGIMENTO.html`
 - [ ] `RILEVATORE_SIMULTANEITA.html`
@@ -340,12 +339,13 @@ Pagine che servono a raggiungere altre pagine: indici, home tradotte, presentazi
 
 Nessuno. Tutto cio' che l'inventario promette esiste davvero.
 
-## Registrate — 33
+## Registrate — 34
 
 - `ATTRAVERSAMENTO_LEGGERO.html` — Attraversamento Leggero
 - `Cinabro.html` — ANTITERRARIUM
 - `IL_SILENZIO.html` — Il Silenzio
 - `Malachite.html` — CRISTALLIZZAZIONE, l'arte della memoria selettiva
+- `Pompei.html` — Nostalgia Problematologica
 - `Siena.html` — Terra di Siena, un'opera per sentire l'intelligenza d'ombra
 - `TESTAMENTO.html` — Testamento
 - `canto.html` — unsung-unused-hasty-beings, 19 dic 2025
