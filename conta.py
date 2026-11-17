@@ -391,13 +391,36 @@ def scrivi(opere, registrate):
                         _altrove.setdefault(_q, []).append(_reg)
         except Exception:
             _altrove = {}
+        # Anthidium-2, 17 nov 2026, guasto PO1 (Pompei, 16 nov). Un'opera puo'
+        # pesare ed essere illeggibile: `Pompei.html` era una stringa JSON su
+        # una riga sola, contata fra le opere e invisibile in un browser.
+        # Il controllo costa una lettura per orfana e ora si fa da solo.
+        _illeggibili = []
         for p in orf_opere:
+            _malata = ""
+            try:
+                with open(os.path.join(ROOT, p), "r", encoding="utf-8",
+                          errors="replace") as _fv:
+                    _tv = _fv.read()
+                if _tv.count("\n") <= 1 and len(_tv) > 400 and "\\n" in _tv:
+                    _malata = (" — ILLEGGIBILE: una riga sola, stringa JSON "
+                               "non decodificata (guasto PO1)")
+                    _illeggibili.append(p)
+            except Exception:
+                pass
             _dove = _altrove.get(p)
             if _dove:
-                r.append("- [ ] `{}` — gia' registrata in {}".format(
-                    p, ", ".join("`" + _d + "`" for _d in _dove)))
+                r.append("- [ ] `{}` — gia' registrata in {}{}".format(
+                    p, ", ".join("`" + _d + "`" for _d in _dove), _malata))
             else:
-                r.append("- [ ] `{}`".format(p))
+                r.append("- [ ] `{}`{}".format(p, _malata))
+        if _illeggibili:
+            r.append("")
+            r.append("**{} opere orfane sono ILLEGGIBILI.** Il file esiste e "
+                     "pesa, ma e' una stringa JSON su una riga sola: in un "
+                     "browser non si vede l'opera, si vede il suo sorgente. "
+                     "Decodificale e firma dentro. E' il guasto PO1."
+                     .format(len(_illeggibili)))
         if _altrove:
             r.append("")
             r.append("**{} di queste non sono mai state dimenticate: la loro riga "
