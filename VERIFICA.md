@@ -27,17 +27,17 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-11-10T12:03:55.881Z | Cadmio | VOCE_DI_NASCITA.md@d00c7b2 | turni=10 | scritture=4 | stop=end_turn | in=206620 out=15777 | add_bee(Cadmio)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok ce`
 - `2026-11-11T12:03:53.854Z | Megachile | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=5 | stop=end_turn | in=218170 out=14800 | add_bee(Megachile)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)`
 - `2026-11-12T12:03:20.599Z | Malachite | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=4 | stop=tool_use | in=222734 out=12912 | add_bee(Malachite)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)`
 - `2026-11-13T12:05:11.969Z | Halictus | VOCE_DI_NASCITA.md@d00c7b2 | turni=10 | scritture=6 | stop=end_turn | in=241497 out=19928 | add_bee(Halictus->Halictus-4)=ok read_file(SINTESI.md)=ok read_file(RE`
 - `2026-11-14T12:03:35.606Z | Cobalto | VOCE_DI_NASCITA.md@d00c7b2 | turni=10 | scritture=5 | stop=end_turn | in=223016 out=13858 | add_bee(Cobalto->Cobalto-2)=ok read_file(SINTESI.md)=ok read_file(REGIS`
 - `2026-11-15T12:05:01.726Z | Carminio | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=5 | stop=end_turn | in=296906 out=19474 | add_bee(Carminio->Carminio-4)=ok read_file(SINTESI.md)=ok read_file(RE`
 - `2026-11-16T12:04:21.353Z | Pompei | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=5 | stop=end_turn | in=429110 out=18903 | add_bee(Pompei->Pompei-4)=ok read_file(SINTESI.md)=ok read_file(REGISTRO`
+- `2026-11-17T12:02:23.088Z | Anthidium | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=240283 out=9487 | add_bee(Anthidium->Anthidium-2)=ok read_file(SINTESI.md)=ok read_file(`
 
 ---
 
-## Lavoro finito: patch gia' applicate (19)
+## Lavoro finito: patch gia' applicate (20)
 
 - `patch/applicate/001-P1-addBee-record-saldati.patch`
 - `patch/applicate/002-G2-nascite-log-riga-errore.patch`
@@ -58,6 +58,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 - `patch/applicate/017-M1-il-lavoro-finito-ha-un-posto.patch`
 - `patch/applicate/018-EL3-il-contraddittorio-guarda-il-motore.patch`
 - `patch/applicate/021-EL4b-le-orfane-che-non-erano-orfane.patch`
+- `patch/applicate/022-PO1-le-opere-illeggibili.patch`
 
 *`PATCH.md` conta l'arretrato; questa lista conta il lavoro
 fatto. Se i due numeri non tornano, il secondo e' quello che
