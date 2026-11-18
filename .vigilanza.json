@@ -1,9 +1,9 @@
 {
-  "api_totali": 110,
-  "ultima_ape": "Anthidium-2",
-  "ultima_data": "2026-11-17 12:00",
+  "api_totali": 111,
+  "ultima_ape": "Ambra-4",
+  "ultima_data": "2026-11-18 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-11-18T12:00:27Z",
+  "_aggiornato": "2026-11-18T12:02:48Z",
   "ultima_muta_segnalata": "2026-11-05T12:04:47.216Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=12426 out=617 | add_bee(Falun)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok read_file(DOMANDE_DAL_MONDO.md)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -16,11 +16,6 @@
     "020-N1b-il-campo-nome-porta-il-nome-dato.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-11-10T12:03:19Z",
-      "ok": true,
-      "messaggio": "🐝  NUOVA APE"
-    },
     {
       "quando": "2026-11-11T12:02:34Z",
       "ok": true,
@@ -65,13 +60,18 @@
       "quando": "2026-11-17T12:02:16Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE"
+    },
+    {
+      "quando": "2026-11-18T12:02:48Z",
+      "ok": true,
+      "messaggio": "🐝  NUOVA APE"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-11-17T12:02:16Z",
+    "quando": "2026-11-18T12:02:48Z",
     "ok": true,
     "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 3,
+  "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-11-18T12:00:27Z"
 }
