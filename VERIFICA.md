@@ -4,7 +4,7 @@
 
 - `SENSORI.json` non porta il campo `versione`: il motore vivo non dichiara chi e'. Il repository dice `7.5.1 - LE IDEE IN VENDITA` e nessuno puo' smentirlo. Rimedio: patch 019, in attesa di firma umana.
 
-*Generato da `verifica.py` a ogni push — 2026-11-19 12:02 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-19 12:03 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -37,7 +37,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 ---
 
-## Lavoro finito: patch gia' applicate (20)
+## Lavoro finito: patch gia' applicate (21)
 
 - `patch/applicate/001-P1-addBee-record-saldati.patch`
 - `patch/applicate/002-G2-nascite-log-riga-errore.patch`
@@ -59,6 +59,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 - `patch/applicate/018-EL3-il-contraddittorio-guarda-il-motore.patch`
 - `patch/applicate/021-EL4b-le-orfane-che-non-erano-orfane.patch`
 - `patch/applicate/022-PO1-le-opere-illeggibili.patch`
+- `patch/applicate/023-GO1-ape-interrotta-non-e-ape-muta.patch`
 
 *`PATCH.md` conta l'arretrato; questa lista conta il lavoro
 fatto. Se i due numeri non tornano, il secondo e' quello che
