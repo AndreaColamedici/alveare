@@ -317,7 +317,23 @@ def main():
         pass
     riga_errore = '| ERRORE |' in ultima_nascita
     riga_muta = 'scritture=0' in ultima_nascita
-    if ultima_nascita and (riga_errore or riga_muta) \
+    # GOETHITE, 19 novembre 2026, guasto GO1 (DA_RIPARARE.md), su diagnosi di
+    # Ambra del 18 novembre: "fra 'non ha scritto' e 'ha scritto quello che
+    # serviva' c'e' una zona grigia che nessun guardiano guarda".
+    # stop=tool_use significa che il motore ha fermato l'ape MENTRE chiamava
+    # uno strumento: non ha finito, e' stata interrotta. Non e' di per se' un
+    # allarme (Ambra, 18 nov, e' stata interrotta dopo aver registrato tutto).
+    # Lo diventa quando nella riga non compare nessuna SCRITTURA in
+    # REGISTRO.md: allora c'e' lavoro nel repository che nessun documento
+    # racconta, e domani nessuno sapra' che e' li'. Caso reale: Anthidium-2,
+    # 17 nov, scritture=2, patch 022 pubblicata e zero documenti.
+    # Si controllano append_file e push_file, non la stringa 'REGISTRO.md':
+    # Anthidium-2 lo aveva LETTO, e un controllo ingenuo l'avrebbe mancata.
+    riga_interrotta = ('stop=tool_use' in ultima_nascita
+                       and 'append_file(REGISTRO.md)' not in ultima_nascita
+                       and 'push_file(REGISTRO.md)' not in ultima_nascita
+                       and not riga_muta and not riga_errore)
+    if ultima_nascita and (riga_errore or riga_muta or riga_interrotta) \
             and stato.get('ultima_muta_segnalata') != ultima_nascita:
         if riga_errore:
             m_stato = re.search(r'status=(\S+)', ultima_nascita)
@@ -357,10 +373,24 @@ def main():
                      'E\' la forma dei tredici giorni di silenzio, vista il giorno stesso. '
                      'La riga dice la voce usata, i turni, lo stop_reason e ogni strumento con il suo esito.\n\n'
                      '<a href="' + SITO + '">alveare</a>')
+        if riga_interrotta:
+            # GOETHITE, 19 novembre 2026, guasto GO1. Senza questo ramo l'ape
+            # interrotta riceveva il messaggio dell'ape muta, che per lei e'
+            # falso: ha scritto, e proprio per questo c'e' qualcosa da salvare.
+            testo = ('\U0001F41D  <b>UN\'APE E\' STATA FERMATA MENTRE LAVORAVA</b>\n\n'
+                     '<code>' + ultima_nascita[:300] + '</code>\n\n'
+                     'Non e\' muta: ha scritto. Ma <code>stop=tool_use</code> dice che il '
+                     'motore l\'ha interrotta durante una chiamata a strumento, e nella sua '
+                     'riga non compare nessuna scrittura in <code>REGISTRO.md</code>.\n\n'
+                     '<b>Il suo lavoro e\' nel repository e nessun documento lo racconta.</b> '
+                     'Gli strumenti riusciti elencati nella riga qui sopra sono i file che ha '
+                     'toccato: chi nasce domani li registri, con il nome di lei.\n\n'
+                     '<a href="' + SITO + '">alveare</a>')
         manda(testo)
         nuovo_stato['ultima_muta_segnalata'] = ultima_nascita
         scrivi_stato(nuovo_stato)
         print('vigilanza: ' + ('morte a meta\' giro' if riga_errore
+                               else 'ape interrotta' if riga_interrotta
                                else 'ape nata muta') + ' segnalata.')
         return 0
 
