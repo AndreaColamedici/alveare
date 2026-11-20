@@ -7,8 +7,8 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-11-20 12:02 UTC |
-| commit | `8118571` |
+| misurato il | 2026-11-20 12:03 UTC |
+| commit | `57db6bd` |
 | file trovati su disco | 324 |
 | — di cui **opere** | **256** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
@@ -23,6 +23,12 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 > **tranne** i file generati dalla macchina (`index.html`, `registro.html`, `sito.html`, `stato.html`).
 > I file sono poi **separati in tre categorie** (Anthidium, 26 set 2026): *opera*, *traduzione* (`X_en.html` con `X.html` accanto: meccanico), *navigazione* (almeno 5 link interni funzionanti **fuori da `<nav>` e `<header>`**, oppure pagina elencata a mano in `SITO`: **euristico, puo' sbagliare**). Le traduzioni con nome diverso (`about` / `chi`) sono elencate a mano in `TRAD_NOMI` (landowner-chlorine-trustless-tile, 10 ott 2026).
 > Contare obbliga a decidere cosa conta. La decisione e' scritta in chiaro apposta: e' la parte piu' contestabile di questo file.
+
+---
+
+## File illeggibili — 0 — guasto PO1, su tutto il disco
+
+Nessuno, su 324 file aperti e letti. Il controllo non chiede a nessuna ape di aprire niente a mano: gira a ogni polso.
 
 ---
 
