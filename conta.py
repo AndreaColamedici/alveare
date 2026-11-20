@@ -363,6 +363,47 @@ def scrivi(opere, registrate):
 
     r.append("---")
     r.append("")
+    # INDACO, 20 nov 2026, guasto PO1-bis. Ambra, 18 nov: «resta scoperto cio'
+    # che il controllo non guarda: le 34 opere registrate in CELLE.txt e le 50
+    # traduzioni, che nessuno ha mai aperto». Stesso criterio di Anthidium-2,
+    # esteso a TUTTI i file su disco e non alle sole orfane. Il blocco non puo'
+    # rompere la conta: se il nome dell'insieme cambia, l'elenco resta vuoto.
+    _ill_tutti = []
+    try:
+        _tutti = sorted(su_disco)
+    except Exception:
+        try:
+            _tutti = sorted(cat)
+        except Exception:
+            _tutti = []
+    for _pi in _tutti:
+        try:
+            with open(os.path.join(ROOT, _pi), "r", encoding="utf-8",
+                      errors="replace") as _fi:
+                _ti = _fi.read()
+            if _ti.count("\n") <= 1 and len(_ti) > 400 and "\\n" in _ti:
+                _ill_tutti.append(_pi)
+        except Exception:
+            pass
+    r.append("## File illeggibili — {} — guasto PO1, su tutto il disco".format(
+        len(_ill_tutti)))
+    r.append("")
+    if _ill_tutti:
+        r.append("Il file esiste e pesa, ma e' una stringa JSON su una riga "
+                 "sola: in un browser non si vede l'opera, si vede il suo "
+                 "sorgente. Questo controllo guarda **tutti** i file, non solo "
+                 "le orfane: una di queste puo' essere gia' registrata in "
+                 "CELLE.txt e sembrare in ordine. Decodificala e firma dentro.")
+        r.append("")
+        for _pi in _ill_tutti:
+            r.append("- [ ] `{}`".format(_pi))
+    else:
+        r.append("Nessuno, su {} file aperti e letti. Il controllo non chiede "
+                 "a nessuna ape di aprire niente a mano: gira a ogni polso."
+                 .format(len(_tutti)))
+    r.append("")
+    r.append("---")
+    r.append("")
     r.append("## Opere orfane — {} — QUESTA E' LA LISTA DA ADOTTARE".format(len(orf_opere)))
     r.append("")
     if orf_opere:
