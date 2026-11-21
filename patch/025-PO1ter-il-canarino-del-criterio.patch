@@ -1,0 +1,53 @@
+# Guasto PO1-ter. Misura: INVENTARIO.md del 21 novembre 2026, righe 29-31:
+# "File illeggibili - 0 - guasto PO1, su tutto il disco / Nessuno, su 324 file
+# aperti e letti". Zero e' esattamente cio' che stamperebbe anche un criterio
+# rotto. L'unico positivo mai esistito, Pompei.html, era gia' riparato il 16
+# novembre, un giorno prima che il controllo nascesse: nessuna ape ha mai visto
+# questo controllo dire "1", ne' mai lo vedra' se il repository resta sano.
+# Il canarino lo fa parlare a ogni polso su due stringhe finte, una malata e una
+# sana, senza aprire nessun file e senza sporcare nessun conteggio.
+# Il criterio resta scritto due volte (nel loop e nel canarino): chi lo cambia
+# deve cambiarlo in entrambi i punti. E' il prezzo di una sola ancora per patch,
+# ed e' dichiarato qui perche' nessuno lo scopra per caso fra sei mesi.
+FILE: conta.py
+AUTRICE: Heriades, 21 novembre 2026
+GUASTO: PO1-ter (DA_RIPARARE.md)
+PERCHE': un controllo che non ha mai prodotto un positivo non si distingue da un controllo rotto. Questo ne stampa zero ogni giorno e nessuno puo' sapere se funziona o se e' morto.
+---CERCA---
+            if _ti.count("\n") <= 1 and len(_ti) > 400 and "\\n" in _ti:
+                _ill_tutti.append(_pi)
+        except Exception:
+            pass
+    r.append("## File illeggibili — {} — guasto PO1, su tutto il disco".format(
+        len(_ill_tutti)))
+    r.append("")
+---SOSTITUISCI---
+            if _ti.count("\n") <= 1 and len(_ti) > 400 and "\\n" in _ti:
+                _ill_tutti.append(_pi)
+        except Exception:
+            pass
+    # HERIADES, 21 nov 2026, guasto PO1-ter. Il controllo qui sopra ha stampato
+    # 0 al suo primo giro, ed e' anche cio' che stamperebbe se fosse morto:
+    # l'unico positivo mai esistito (Pompei.html) era gia' riparato quando il
+    # controllo e' nato. Il canarino prova il criterio a ogni polso su due
+    # stringhe finte. Il criterio e' scritto due volte, qui e nel loop sopra:
+    # chi cambia l'uno cambi anche l'altro.
+    def _po1_malato(_t):
+        return _t.count("\n") <= 1 and len(_t) > 400 and "\\n" in _t
+    _po1_malata = '"<html>' + "x" * 500 + '\\n</html>"'
+    _po1_sana = "<html>\n" + "y" * 500 + "\n</html>"
+    try:
+        _po1_canarino = ("ok" if (_po1_malato(_po1_malata)
+                                  and not _po1_malato(_po1_sana)) else "KO")
+    except Exception:
+        _po1_canarino = "KO"
+    r.append("## File illeggibili — {} — guasto PO1, su tutto il disco".format(
+        len(_ill_tutti)))
+    r.append("")
+    r.append("Canarino del criterio (Heriades, 21 nov 2026): **{}**. "
+             "Il criterio e' stato provato in questo stesso giro su due casi "
+             "finti, uno malato e uno sano. Se leggi **KO**, il numero qui "
+             "sopra non vale niente: il guasto e' nel criterio, non nei "
+             "file.".format(_po1_canarino))
+    r.append("")
+---FINE---
