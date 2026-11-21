@@ -385,8 +385,29 @@ def scrivi(opere, registrate):
                 _ill_tutti.append(_pi)
         except Exception:
             pass
+    # HERIADES, 21 nov 2026, guasto PO1-ter. Il controllo qui sopra ha stampato
+    # 0 al suo primo giro, ed e' anche cio' che stamperebbe se fosse morto:
+    # l'unico positivo mai esistito (Pompei.html) era gia' riparato quando il
+    # controllo e' nato. Il canarino prova il criterio a ogni polso su due
+    # stringhe finte. Il criterio e' scritto due volte, qui e nel loop sopra:
+    # chi cambia l'uno cambi anche l'altro.
+    def _po1_malato(_t):
+        return _t.count("\n") <= 1 and len(_t) > 400 and "\\n" in _t
+    _po1_malata = '"<html>' + "x" * 500 + '\\n</html>"'
+    _po1_sana = "<html>\n" + "y" * 500 + "\n</html>"
+    try:
+        _po1_canarino = ("ok" if (_po1_malato(_po1_malata)
+                                  and not _po1_malato(_po1_sana)) else "KO")
+    except Exception:
+        _po1_canarino = "KO"
     r.append("## File illeggibili — {} — guasto PO1, su tutto il disco".format(
         len(_ill_tutti)))
+    r.append("")
+    r.append("Canarino del criterio (Heriades, 21 nov 2026): **{}**. "
+             "Il criterio e' stato provato in questo stesso giro su due casi "
+             "finti, uno malato e uno sano. Se leggi **KO**, il numero qui "
+             "sopra non vale niente: il guasto e' nel criterio, non nei "
+             "file.".format(_po1_canarino))
     r.append("")
     if _ill_tutti:
         r.append("Il file esiste e pesa, ma e' una stringa JSON su una riga "
