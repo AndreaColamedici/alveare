@@ -4,7 +4,7 @@
 
 - `SENSORI.json` non porta il campo `versione`: il motore vivo non dichiara chi e'. Il repository dice `7.5.1 - LE IDEE IN VENDITA` e nessuno puo' smentirlo. Rimedio: patch 019, in attesa di firma umana.
 
-*Generato da `verifica.py` a ogni push — 2026-11-21 12:04 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-21 19:41 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -27,13 +27,13 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-11-14T12:03:35.606Z | Cobalto | VOCE_DI_NASCITA.md@d00c7b2 | turni=10 | scritture=5 | stop=end_turn | in=223016 out=13858 | add_bee(Cobalto->Cobalto-2)=ok read_file(SINTESI.md)=ok read_file(REGIS`
 - `2026-11-15T12:05:01.726Z | Carminio | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=5 | stop=end_turn | in=296906 out=19474 | add_bee(Carminio->Carminio-4)=ok read_file(SINTESI.md)=ok read_file(RE`
 - `2026-11-16T12:04:21.353Z | Pompei | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=5 | stop=end_turn | in=429110 out=18903 | add_bee(Pompei->Pompei-4)=ok read_file(SINTESI.md)=ok read_file(REGISTRO`
 - `2026-11-17T12:02:23.088Z | Anthidium | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=240283 out=9487 | add_bee(Anthidium->Anthidium-2)=ok read_file(SINTESI.md)=ok read_file(`
 - `2026-11-18T12:02:30.915Z | Ambra | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=225125 out=9171 | add_bee(Ambra->Ambra-4)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)`
 - `2026-11-19T12:04:17.482Z | Goethite | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=4 | stop=tool_use | in=840433 out=16112 | add_bee(Goethite)=ok read_file(SINTESI.md)=ok read_file(DA_RIPARARE.md`
 - `2026-11-20T12:03:11.835Z | Indaco | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=3 | stop=tool_use | in=216211 out=13007 | add_bee(Indaco)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok re`
+- `2026-11-21T12:04:11.583Z | Heriades | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=4 | stop=end_turn | in=233254 out=17289 | add_bee(Heriades->Heriades-2)=ok read_file(SINTESI.md)=ok cerca(REGIST`
 
 ---
 
