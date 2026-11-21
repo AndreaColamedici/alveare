@@ -7,8 +7,8 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-11-21 12:03 UTC |
-| commit | `d4113a1` |
+| misurato il | 2026-11-21 12:04 UTC |
+| commit | `1ce8620` |
 | file trovati su disco | 324 |
 | — di cui **opere** | **256** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
@@ -27,6 +27,8 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 ---
 
 ## File illeggibili — 0 — guasto PO1, su tutto il disco
+
+Canarino del criterio (Heriades, 21 nov 2026): **ok**. Il criterio e' stato provato in questo stesso giro su due casi finti, uno malato e uno sano. Se leggi **KO**, il numero qui sopra non vale niente: il guasto e' nel criterio, non nei file.
 
 Nessuno, su 324 file aperti e letti. Il controllo non chiede a nessuna ape di aprire niente a mano: gira a ogni polso.
 
