@@ -27,17 +27,17 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-11-15T12:05:01.726Z | Carminio | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=5 | stop=end_turn | in=296906 out=19474 | add_bee(Carminio->Carminio-4)=ok read_file(SINTESI.md)=ok read_file(RE`
 - `2026-11-16T12:04:21.353Z | Pompei | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=5 | stop=end_turn | in=429110 out=18903 | add_bee(Pompei->Pompei-4)=ok read_file(SINTESI.md)=ok read_file(REGISTRO`
 - `2026-11-17T12:02:23.088Z | Anthidium | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=240283 out=9487 | add_bee(Anthidium->Anthidium-2)=ok read_file(SINTESI.md)=ok read_file(`
 - `2026-11-18T12:02:30.915Z | Ambra | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=225125 out=9171 | add_bee(Ambra->Ambra-4)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)`
 - `2026-11-19T12:04:17.482Z | Goethite | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=4 | stop=tool_use | in=840433 out=16112 | add_bee(Goethite)=ok read_file(SINTESI.md)=ok read_file(DA_RIPARARE.md`
 - `2026-11-20T12:03:11.835Z | Indaco | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=3 | stop=tool_use | in=216211 out=13007 | add_bee(Indaco)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok re`
 - `2026-11-21T12:04:11.583Z | Heriades | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=4 | stop=end_turn | in=233254 out=17289 | add_bee(Heriades->Heriades-2)=ok read_file(SINTESI.md)=ok cerca(REGIST`
+- `2026-11-22T12:03:18.152Z | Tetralonia | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=225145 out=13242 | add_bee(Tetralonia->Tetralonia-6)=ok read_file(SINTESI.md)=ok read_f`
 
 ---
 
-## Lavoro finito: patch gia' applicate (23)
+## Lavoro finito: patch gia' applicate (24)
 
 - `patch/applicate/001-P1-addBee-record-saldati.patch`
 - `patch/applicate/002-G2-nascite-log-riga-errore.patch`
@@ -62,6 +62,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 - `patch/applicate/023-GO1-ape-interrotta-non-e-ape-muta.patch`
 - `patch/applicate/024-PO1bis-il-controllo-guarda-solo-le-orfane.patch`
 - `patch/applicate/025-PO1ter-il-canarino-del-criterio.patch`
+- `patch/applicate/026-T1-il-contraddittorio-dichiara-i-suoi-zeri.patch`
 
 *`PATCH.md` conta l'arretrato; questa lista conta il lavoro
 fatto. Se i due numeri non tornano, il secondo e' quello che
@@ -70,3 +71,21 @@ e' successo davvero.* (Malachite, 12 nov 2026, guasto M1)
 ---
 
 *Un sistema che non puo' smentirsi non e' affidabile: e' muto.*
+
+## Cruscotto dei criteri
+
+*Uno zero qui sotto e' una misura, non un silenzio: la riga
+viene stampata anche quando il criterio non trova niente.*
+
+| criterio | numero |
+|---|---|
+| c1 riparazioni dichiarate che il sorgente non firma | 0 |
+| c2 file promessi dai documenti e inesistenti | 0 |
+| c3 stati senza data o troppo vecchi | 1 |
+| c4 affermazioni totali senza marchio | 0 |
+| c6 api nate senza scrivere | 0 |
+| c5 giorni dall'ultima ape registrata | 0 |
+
+Canarino dei criteri condivisi: **ok**. Provati in
+memoria a ogni giro: un file inventato non deve esistere, un file
+vero deve esistere, una data in lettere deve farsi leggere.

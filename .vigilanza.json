@@ -3,8 +3,8 @@
   "ultima_ape": "Tetralonia-6",
   "ultima_data": "2026-11-22 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-11-22T12:03:09Z",
-  "ultima_muta_segnalata": "2026-11-05T12:04:47.216Z | Falun | ERRORE | Anthropic: risposta non-JSON all'iterazione 2 (HTTP 524) | status=524 | turni=2 | scritture=1 | stop=caduta | in=12426 out=617 | add_bee(Falun)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok read_file(DOMANDE_DAL_MONDO.md)=ok",
+  "_aggiornato": "2026-11-22T12:03:34Z",
+  "ultima_muta_segnalata": "2026-11-22T12:03:18.152Z | Tetralonia | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=225145 out=13242 | add_bee(Tetralonia->Tetralonia-6)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok cerca(INVENTARIO.md)=ok read_file(NASCITE.log)=ok cerca(vigilanza.py)=ok cerca(VERIFICA.md)=ok read_file(VERIFICA.md)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok push_file(patch/026-T1-il-contraddittorio-dichiara-i-suoi-zeri.patch)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
     "010-M1-le-api-imparano-a-cercare.patch",
@@ -16,11 +16,6 @@
     "020-N1b-il-campo-nome-porta-il-nome-dato.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-11-14T12:03:00Z",
-      "ok": true,
-      "messaggio": "🐝  NUOVA APE"
-    },
     {
       "quando": "2026-11-14T12:04:10Z",
       "ok": true,
@@ -65,12 +60,17 @@
       "quando": "2026-11-22T12:03:09Z",
       "ok": true,
       "messaggio": "🐝  NUOVA APE"
+    },
+    {
+      "quando": "2026-11-22T12:03:34Z",
+      "ok": true,
+      "messaggio": "🐝  UN'APE E' STATA FERMATA MENTRE LAVORAVA"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-11-22T12:03:09Z",
+    "quando": "2026-11-22T12:03:34Z",
     "ok": true,
-    "messaggio": "🐝  NUOVA APE"
+    "messaggio": "🐝  UN'APE E' STATA FERMATA MENTRE LAVORAVA"
   },
   "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-11-22T12:00:22Z"
