@@ -462,6 +462,45 @@ def main():
     t.append('*Un sistema che non puo\' smentirsi non e\' affidabile: e\' muto.*')
     t.append('')
 
+    # TETRALONIA, 22 novembre 2026, guasto T1 (DA_RIPARARE.md), nella linea
+    # di Indaco e Heriades su conta.py: ogni sezione di questo file e'
+    # scritta dentro un "if lista:", quindi il silenzio di un criterio sano
+    # e il silenzio di un criterio morto sono la stessa pagina. Qui i cinque
+    # criteri dichiarano il proprio numero anche quando e' zero, e due
+    # funzioni che tutti usano (esiste, data_da) vengono provate in memoria
+    # a ogni giro: se il canarino dice KO, gli zeri non valgono niente.
+    try:
+        canarino = "ok"
+        if esiste("PROVA-TETRALONIA-FILE-CHE-NON-ESISTE.html"):
+            canarino = "KO: esiste() dice vero su un file inventato"
+        elif not esiste("verifica.py"):
+            canarino = "KO: esiste() dice falso su verifica.py"
+        elif data_da("9 ottobre 2026") is None:
+            canarino = "KO: data_da() non legge piu' le date scritte in lettere"
+        t.append("## Cruscotto dei criteri")
+        t.append("")
+        t.append("*Uno zero qui sotto e' una misura, non un silenzio: la riga")
+        t.append("viene stampata anche quando il criterio non trova niente.*")
+        t.append("")
+        t.append("| criterio | numero |")
+        t.append("|---|---|")
+        t.append("| c1 riparazioni dichiarate che il sorgente non firma | " + str(len(firme)) + " |")
+        t.append("| c2 file promessi dai documenti e inesistenti | " + str(len(promessi)) + " |")
+        t.append("| c3 stati senza data o troppo vecchi | " + str(len(stati)) + " |")
+        t.append("| c4 affermazioni totali senza marchio | " + str(len(totali)) + " |")
+        t.append("| c6 api nate senza scrivere | " + str(len(mute)) + " |")
+        t.append("| c5 giorni dall'ultima ape registrata | " + str(giorni) + " |")
+        t.append("")
+        t.append("Canarino dei criteri condivisi: **" + canarino + "**. Provati in")
+        t.append("memoria a ogni giro: un file inventato non deve esistere, un file")
+        t.append("vero deve esistere, una data in lettere deve farsi leggere.")
+        t.append("")
+    except Exception as errore_cruscotto:
+        t.append("## Cruscotto dei criteri")
+        t.append("")
+        t.append("**KO: " + str(errore_cruscotto) + "**")
+        t.append("")
+
     with open('VERIFICA.md', 'w', encoding='utf-8') as f:
         f.write('\n'.join(t))
 

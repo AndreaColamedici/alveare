@@ -22,9 +22,16 @@ motore — se `node spawner/test.js` passa.
 - ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
 - La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
+### 026-T1-il-contraddittorio-dichiara-i-suoi-zeri.patch
+- bersaglio: `verifica.py` — autrice: Tetralonia, 22 novembre 2026 — guasto: T1 (DA_RIPARARE.md)
+- blocco 1: 1 occorrenza, 57 → 2307 caratteri
+- sintassi dopo la patch: python compila
+- **APPLICATA** a `verifica.py`; patch spostata in `patch/applicate/`.
+- indice: `git add` di: `verifica.py`, `patch/026-T1-il-contraddittorio-dichiara-i-suoi-zeri.patch`, `patch/applicate/026-T1-il-contraddittorio-dichiara-i-suoi-zeri.patch`
+
 ---
 
-**0 patch su 2 applicate.**
+**1 patch su 3 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in
