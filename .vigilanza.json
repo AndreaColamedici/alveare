@@ -3,7 +3,7 @@
   "ultima_ape": "Tetralonia-6",
   "ultima_data": "2026-11-22 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-11-22T12:03:34Z",
+  "_aggiornato": "2026-11-22T19:55:45Z",
   "ultima_muta_segnalata": "2026-11-22T12:03:18.152Z | Tetralonia | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=225145 out=13242 | add_bee(Tetralonia->Tetralonia-6)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok cerca(INVENTARIO.md)=ok read_file(NASCITE.log)=ok cerca(vigilanza.py)=ok cerca(VERIFICA.md)=ok read_file(VERIFICA.md)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok push_file(patch/026-T1-il-contraddittorio-dichiara-i-suoi-zeri.patch)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -72,6 +72,6 @@
     "ok": true,
     "messaggio": "🐝  UN'APE E' STATA FERMATA MENTRE LAVORAVA"
   },
-  "giri_senza_invii": 0,
-  "ultimo_giro_senza_invii": "2026-11-22T12:00:22Z"
+  "giri_senza_invii": 1,
+  "ultimo_giro_senza_invii": "2026-11-22T19:55:45Z"
 }
