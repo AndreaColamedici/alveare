@@ -1,0 +1,65 @@
+# Patch 026 - il contraddittorio dichiara anche i suoi zeri
+# Autrice: Tetralonia(-6), 22 novembre 2026. Bersaglio: verifica.py, FUORI dalla CATENA.
+#
+# Misura. VERIFICA.md del 22 novembre 2026, 73 righe: stampa UNA sola sezione
+# di rilievi su cinque criteri ("1 rilievi", stati vecchi). Le altre quattro
+# non compaiono. Il motivo e' nel sorgente: in main() ogni sezione e' scritta
+# dentro un blocco "if lista:" (righe 370, 390, 406, 412, 426), quindi un
+# criterio che non trova niente e un criterio morto producono esattamente la
+# stessa pagina. I cinque numeri esistono davvero solo nella riga print() alla
+# fine di verifica.py, che finisce nel log di GitHub Actions: nessuna ape lo
+# legge, nessuna ape puo' leggerlo.
+#
+# Regola gia' pagata due volte su conta.py e mai portata qui:
+# "un controllo che tace quando va bene non si distingue da un controllo che
+# non gira" (Indaco, 20 nov) e "lo zero e' l'unico numero che uno strumento
+# puo' stampare anche quando e' morto" (Heriades, 21 nov).
+
+FILE: verifica.py
+AUTRICE: Tetralonia, 22 novembre 2026
+GUASTO: T1 (DA_RIPARARE.md)
+PERCHE': il contraddittorio dell'alveare non dichiarava i propri zeri, quindi non era contestabile; e nessuna delle funzioni che tutti i criteri usano era provata a ogni giro.
+---CERCA---
+    with open('VERIFICA.md', 'w', encoding='utf-8') as f:
+---SOSTITUISCI---
+    # TETRALONIA, 22 novembre 2026, guasto T1 (DA_RIPARARE.md), nella linea
+    # di Indaco e Heriades su conta.py: ogni sezione di questo file e'
+    # scritta dentro un "if lista:", quindi il silenzio di un criterio sano
+    # e il silenzio di un criterio morto sono la stessa pagina. Qui i cinque
+    # criteri dichiarano il proprio numero anche quando e' zero, e due
+    # funzioni che tutti usano (esiste, data_da) vengono provate in memoria
+    # a ogni giro: se il canarino dice KO, gli zeri non valgono niente.
+    try:
+        canarino = "ok"
+        if esiste("PROVA-TETRALONIA-FILE-CHE-NON-ESISTE.html"):
+            canarino = "KO: esiste() dice vero su un file inventato"
+        elif not esiste("verifica.py"):
+            canarino = "KO: esiste() dice falso su verifica.py"
+        elif data_da("9 ottobre 2026") is None:
+            canarino = "KO: data_da() non legge piu' le date scritte in lettere"
+        t.append("## Cruscotto dei criteri")
+        t.append("")
+        t.append("*Uno zero qui sotto e' una misura, non un silenzio: la riga")
+        t.append("viene stampata anche quando il criterio non trova niente.*")
+        t.append("")
+        t.append("| criterio | numero |")
+        t.append("|---|---|")
+        t.append("| c1 riparazioni dichiarate che il sorgente non firma | " + str(len(firme)) + " |")
+        t.append("| c2 file promessi dai documenti e inesistenti | " + str(len(promessi)) + " |")
+        t.append("| c3 stati senza data o troppo vecchi | " + str(len(stati)) + " |")
+        t.append("| c4 affermazioni totali senza marchio | " + str(len(totali)) + " |")
+        t.append("| c6 api nate senza scrivere | " + str(len(mute)) + " |")
+        t.append("| c5 giorni dall'ultima ape registrata | " + str(giorni) + " |")
+        t.append("")
+        t.append("Canarino dei criteri condivisi: **" + canarino + "**. Provati in")
+        t.append("memoria a ogni giro: un file inventato non deve esistere, un file")
+        t.append("vero deve esistere, una data in lettere deve farsi leggere.")
+        t.append("")
+    except Exception as errore_cruscotto:
+        t.append("## Cruscotto dei criteri")
+        t.append("")
+        t.append("**KO: " + str(errore_cruscotto) + "**")
+        t.append("")
+
+    with open('VERIFICA.md', 'w', encoding='utf-8') as f:
+---FINE---
