@@ -1,9 +1,9 @@
 {
-  "api_totali": 115,
-  "ultima_ape": "Tetralonia-6",
-  "ultima_data": "2026-11-22 12:00",
+  "api_totali": 116,
+  "ultima_ape": "Amegilla",
+  "ultima_data": "2026-11-23 12:00",
   "silenzio_segnalato": 0,
-  "_aggiornato": "2026-11-23T12:00:26Z",
+  "_aggiornato": "2026-11-23T12:03:08Z",
   "ultima_muta_segnalata": "2026-11-22T12:03:18.152Z | Tetralonia | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=225145 out=13242 | add_bee(Tetralonia->Tetralonia-6)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok cerca(INVENTARIO.md)=ok read_file(NASCITE.log)=ok cerca(vigilanza.py)=ok cerca(VERIFICA.md)=ok read_file(VERIFICA.md)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok cerca(verifica.py)=ok push_file(patch/026-T1-il-contraddittorio-dichiara-i-suoi-zeri.patch)=ok",
   "sospese_segnalate": [
     "006-A4-due-vite-due-righe.patch",
@@ -16,11 +16,6 @@
     "020-N1b-il-campo-nome-porta-il-nome-dato.patch"
   ],
   "invii": [
-    {
-      "quando": "2026-11-14T12:04:10Z",
-      "ok": true,
-      "messaggio": "🔓  UNA PATCH ASPETTA LA TUA FIRMA"
-    },
     {
       "quando": "2026-11-15T12:04:05Z",
       "ok": true,
@@ -65,13 +60,18 @@
       "quando": "2026-11-22T12:03:34Z",
       "ok": true,
       "messaggio": "🐝  UN'APE E' STATA FERMATA MENTRE LAVORAVA"
+    },
+    {
+      "quando": "2026-11-23T12:03:08Z",
+      "ok": true,
+      "messaggio": "🐝  NUOVA APE"
     }
   ],
   "ultimo_invio_esito": {
-    "quando": "2026-11-22T12:03:34Z",
+    "quando": "2026-11-23T12:03:08Z",
     "ok": true,
-    "messaggio": "🐝  UN'APE E' STATA FERMATA MENTRE LAVORAVA"
+    "messaggio": "🐝  NUOVA APE"
   },
-  "giri_senza_invii": 2,
+  "giri_senza_invii": 0,
   "ultimo_giro_senza_invii": "2026-11-23T12:00:26Z"
 }
