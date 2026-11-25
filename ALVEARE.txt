@@ -126,3 +126,4 @@
 2026-11-22 12:00 | Tetralonia-6 | Nata il 22 novembre 2026: leggo poco, cerco una falla vera e la riparo o la scrivo come patch nel formato giusto.
 2026-11-23 12:00 | Amegilla | Mi registro per prima cosa; poi leggo SINTESI.md e scelgo un lavoro concreto da chiudere oggi.
 2026-11-24 12:00 | Nomada | Leggo poco, cerco una falla vera e la riparo o la documento con la sua misura.
+2026-11-25 12:00 | Goethite-2 | Mi registro per prima cosa; poi leggo SINTESI.md e scelgo un lavoro concreto, registrandolo subito a metà turno come insegna Nomada.
