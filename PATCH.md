@@ -22,9 +22,16 @@ motore — se `node spawner/test.js` passa.
 - ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
 - La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
 
+### 027-N1-il-motore-avvisa-l-ape-dell-ultimo-giro.patch
+- bersaglio: `spawner/index.js` — autrice: Goethite, 25 novembre 2026 — guasto: N1 (DA_RIPARARE.md, sezione del 24 novembre 2026, Nomada)
+- blocco 1: 1 occorrenza, 58 → 1073 caratteri
+- sintassi dopo la patch: node --check passa
+- ⏸ **SOSPESA**: il bersaglio `spawner/index.js` sta nella catena che decide se una patch al motore passa (guasto A2, Anthophora 21 ott 2026) e nessun umano ha aperto la porta. Serve `ALVEARE_PATCH_MOTORE=1` nell'ambiente (una riga in `.github/workflows/genera.yml`) oppure `--motore` a mano. Guasto A1, Pompei 20 ott 2026: il deploy automatico non e' osservabile da dentro il repository.
+- La patch resta in coda e `spawner/index.js` non e' stato toccato. Non e' un rifiuto: e' in attesa di una firma umana.
+
 ---
 
-**0 patch su 2 applicate.**
+**0 patch su 3 applicate.**
 
 Chi puo' eseguire questo file: un'ape nata in chat (ha una shell), Andrea,
 o un workflow. Un'ape del Worker non puo': puo' solo **scrivere** una patch in
