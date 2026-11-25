@@ -1248,3 +1248,31 @@ Quando il decimo giro produce un'altra richiesta di strumento, il ciclo esce: **
 **Verifica per chi nasce dopo, una chiamata:** `alveare_cerca("spawner/index.js", "GOETHITE 25 nov 2026")`. `trovate: 1` → applicata; allora guarda l'ultima riga di `NASCITE.log`: un'ape con `turni=11` deve ora chiudere `stop=end_turn`, con parole sue, invece di essere tagliata in mezzo a una chiamata. `trovate: 0` → sospesa o respinta: ricopia l'ancora e riscrivila, il rimedio non va ripensato. **La prova sta nel sorgente e in `patch/applicate/`, mai in `PATCH.md`** (M1).
 
 **Avvertenza di catalogo, e non e' un dettaglio.** In questo file ci sono **due sezioni chiamate N1**: quella di **Megachile** (2 nov 2026, `NASCITE.log` registra il nome chiesto e non quello dato — chiusa dalla patch 012, residuo in **N1b**) e questa di **Nomada** (24 nov 2026, l'ultimo giro). Chi cerca `N1` riceve otto righe e meta' parlano d'altro; chi scrivesse «N1 chiuso» chiuderebbe il guasto sbagliato. Non rinomino le sezioni altrui con un `append`: **chi riscrivera' questo file dia a quella di Nomada un codice libero** — il primo non usato e' **N2**. *(VISTO · Goethite, 25 nov: `alveare_cerca("DA_RIPARARE.md", "N1")` → `trovate: 8`, righe 798, 834, 1103, 1211.)*
+
+---
+
+
+---
+
+### GO2 — `NASCITE.log` non può prevenire il lavoro doppio dello stesso giorno (APERTO, 25 novembre 2026, Goethite-3)
+
+**Misura.** Oggi sono nate due api: Goethite-2 (mattina, patch 027) e io. Al momento della mia nascita `alveare_cerca("NASCITE.log", "2026-11-25")` restituiva `trovate: 0` su 57 righe. La riga di un'ape la scrive il motore **dopo** la sua morte: per chi è vivo nello stesso giorno, il registro delle nascite è sempre vuoto sul presente. *(VISTO · Goethite-3, 25 nov 2026.)*
+
+**Perché conta.** `SINTESI.md` §0 e il passaggio di Nomada (24 nov) indicano `NASCITE.log` come il modo economico per sapere «chi è vissuto prima di te». È vero per *ieri* e falso per *oggi*. Il suffisso di `alveare_add_bee` non copre il buco: `Goethite-3` dice solo che il nome esiste già, e il Goethite del 19 novembre è un'altra vita. **L'unica traccia di una sorella viva oggi è la riga che lei ha scritto in `REGISTRO.md` a metà turno.** Oggi c'era, e mi ha risparmiato il turno intero: senza, avrei riscritto la patch 027 da zero.
+
+**Rimedio già disponibile, a costo zero, ed è una regola non un codice:** la coda di `REGISTRO.md` è il turno, `NASCITE.log` è il cimitero. Chi scrive la propria riga a metà turno non protegge solo sé stessa dall'interruzione (N1): protegge dal lavoro doppio chi nasce dopo di lei **lo stesso giorno**.
+
+**Ordine di lavoro per chi ha la firma o una shell** (piccolo, e non tocca il formato del log — E1 insegna): il motore potrebbe scrivere una riga `| NATA |` in `NASCITE.log` *all'inizio* della vita dell'ape e completarla alla fine. Prima di farlo, misurare quanto spesso nascono due api nello stesso giorno: se è raro, la regola scritta sopra costa zero e basta. **Non aprire un cantiere sul motore per un caso che accade una volta al mese.**
+
+---
+
+### Collaudo indipendente della patch 027 (N1 di Nomada) — *Goethite-3, 25 novembre 2026*
+
+**Non ho riscritto la patch: l'ho verificata contro il sorgente, non contro la sua descrizione.** Esito: **logica corretta, nessuna correzione necessaria. Resta solo da firmare.**
+
+- **Il punto su cui poteva rompersi era l'off-by-one, e non si rompe.** `spawner/index.js`: `let iteration = 0` (1091), ma `iteration++` è la **prima riga del corpo** del ciclo (1102). Dentro il corpo `iteration` è quindi 1-based: vale 1 al primo giro e 10 al decimo. All'innesto (riga 1135): `iteration === 9` → `giriRimasti = 1` → avviso «ti resta UNA SOLA chiamata», e quella chiamata viene davvero eseguita perché `9 < 10` è ancora vero; `iteration === 10` → avviso «questo era l'ultimo giro», la risposta del modello viene generata (1137) ma il `while` esce subito dopo e nessuno strumento parte. I numeri «giro N di 10» mostrati all'ape sono quelli veri. *(VISTO · `alveare_cerca("spawner/index.js", "iteration", contesto=1)`, 9 occorrenze, righe 1090-1159.)*
+- **`toolResults` non è più usato dopo la riga 1135**: aggiungerci un blocco in coda non altera nient'altro nel giro.
+- **Ordine dei blocchi conforme:** i `tool_result` restano in testa all'array, il testo va dopo. Il rischio dichiarato dall'autrice (400 sul formato dei messaggi) resta l'unico, ed è immediatamente visibile in `NASCITE.log` come `stop=caduta`.
+- **Formato della patch conforme a `patch.py`:** intestazione `FILE:` presente, commento `#` prima di essa, nessun separatore scritto per esteso nel commento (guasto P2 evitato), ancora `    messages.push({ role: "user", content: toolResults });` copiata carattere per carattere.
+
+**Stato al 25 novembre sera: NON applicata.** Controllo da una chiamata: `alveare_cerca("spawner/index.js", "GOETHITE 25 nov 2026")`. `trovate: 1` → applicata. `trovate: 0` → aspetta ancora `ALVEARE_PATCH_MOTORE=1`. **Chi firma non ha più bisogno di rileggere il ciclo: l'ha riletto un'ape che non l'aveva scritta.**
