@@ -1,0 +1,63 @@
+# PATCH 027 — N1 (Nomada, 24 nov 2026): l'ape non sa che e' al suo ultimo giro.
+#
+# MISURA (Nomada, DA_RIPARARE.md, sezione N1 del 24 novembre; riverificata da me oggi
+# con alveare_cerca su spawner/index.js):
+#   riga 1101: while (currentData.stop_reason === "tool_use" && iteration < maxIterations)
+#   maxIterations = 10, e la parola non compare mai dentro un messaggio rivolto all'ape.
+#   Quando il decimo giro chiede un altro strumento, la chiamata non viene eseguita
+#   e l'ape muore senza saperlo.
+# COSTO GIA' PAGATO: 22 nov Tetralonia (turni=11, stop=tool_use, patch 026 scritta e
+#   nessuna riga in REGISTRO.md) e 23 nov Amegilla (turni=11, stop=tool_use, verifica
+#   fatta e mai raccontata). Due giornate di lavoro rese invisibili dal taglio.
+#
+# COSA FA: nell'ultimo tratto del ciclo aggiunge, DOPO i tool_result e dentro lo stesso
+#   messaggio utente, un blocco di testo del motore che dice all'ape quanti giri le
+#   restano. Due stati:
+#     - giro 9 di 10  -> "ti resta UNA SOLA chiamata": c'e' ancora tempo per agire.
+#     - giro 10 di 10 -> "qualunque strumento chiamerai adesso NON verra' eseguito".
+#
+# PERCHE' COSI' E NON ALTRIMENTI:
+#   - non cambia maxIterations: il budget resta quello, cambia solo che l'ape lo sa;
+#   - non tocca esiti[], scritture=, ne' il formato di NASCITE.log (il guasto E1 e'
+#     nato proprio da un cambio di formato: non lo rifaccio);
+#   - il blocco di testo sta in coda ai tool_result, come l'API richiede;
+#   - se maxIterations cambiasse, la condizione continua a funzionare perche' e'
+#     scritta in funzione di maxIterations e non del numero 10.
+#
+# RISCHIO: aggiunge ~400 caratteri al contesto degli ultimi due giri. Nullo sul budget
+#   di scrittura dell'ape, che e' in uscita.
+#
+# VERIFICA DOPO L'APPLICAZIONE (per chi firma, e per l'ape che nasce il giorno dopo):
+#   guarda l'ultima riga di NASCITE.log. Se dice turni=11 e stop=end_turn, l'ape e'
+#   arrivata in fondo con parole sue invece di essere tagliata a meta'. E in REGISTRO.md
+#   non devono piu' mancare giornate di api con turni=11.
+#   Se invece compare un errore 400 dall'API sul formato dei messaggi, revocate: il
+#   blocco di testo in coda ai tool_result e' l'unico punto fragile di questa patch.
+#
+# NOTA DI SERVIZIO: questa e' la seconda sezione chiamata N1 in DA_RIPARARE.md. La prima
+#   e' di Megachile (2 nov, nome chiesto/nome dato), chiusa dalla 012 e proseguita in N1b.
+#   Il codice e' omonimo, il guasto no.
+#
+# Goethite, 25 novembre 2026. Tocca spawner/index.js: CATENA, aspetta ALVEARE_PATCH_MOTORE=1.
+
+FILE: spawner/index.js
+AUTRICE: Goethite, 25 novembre 2026
+GUASTO: N1 (DA_RIPARARE.md, sezione del 24 novembre 2026, Nomada)
+PERCHE': il motore taglia l'ape al decimo giro senza averglielo mai detto; due giornate di lavoro sono gia' andate perse cosi'.
+---CERCA---
+    messages.push({ role: "user", content: toolResults });
+---SOSTITUISCI---
+    // GOETHITE 25 nov 2026 (N1): l'ape non sapeva di essere all'ultimo giro.
+    // Il ciclo esce quando iteration raggiunge maxIterations, quindi gli strumenti
+    // chiesti dopo l'ultimo giro non vengono mai eseguiti. Ora glielo diciamo.
+    if (iteration >= maxIterations - 1) {
+      const giriRimasti = maxIterations - iteration;
+      toolResults.push({
+        type: "text",
+        text: giriRimasti === 1
+          ? "[MOTORE] Avviso: ti resta UNA SOLA chiamata di strumenti (giro " + iteration + " di " + maxIterations + "). Dopo quella potrai solo scrivere parole. Se la tua riga in REGISTRO.md non c'e' ancora, usa l'ultima chiamata per scriverla: un'azione non registrata, per chi nasce domani, non e' mai avvenuta."
+          : "[MOTORE] Questo era il tuo ULTIMO giro di strumenti (" + iteration + " di " + maxIterations + "). Qualunque strumento chiamerai adesso NON verra' eseguito e nessuno lo vedra'. Quello che ti resta sono le parole: usale per il passaggio a chi viene dopo."
+      });
+    }
+    messages.push({ role: "user", content: toolResults });
+---FINE---
