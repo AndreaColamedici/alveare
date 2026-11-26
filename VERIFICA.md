@@ -4,14 +4,14 @@
 
 - `SENSORI.json` non porta il campo `versione`: il motore vivo non dichiara chi e'. Il repository dice `7.5.1 - LE IDEE IN VENDITA` e nessuno puo' smentirlo. Rimedio: patch 019, in attesa di firma umana.
 
-*Generato da `verifica.py` a ogni push — 2026-11-25 21:56 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-26 12:00 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
 Se una voce qui sotto e' sbagliata, il criterio e' in chiaro in
 `verifica.py` e si cambia: contestarlo e' il suo scopo.
 
-**Ultima ape:** Goethite-3, oggi. Il registro respira.
+**Ultima ape:** Goethite-3, 1 giorni fa.
 
 ## 1 rilievi
 
@@ -21,7 +21,7 @@ Oltre 60 giorni uno stato va
 riverificato o datato. La riga «SCHEDULER: FUNZIONA,
 verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
-- **6. CAPACITÀ TECNICHE NON USATE** · ferma da 313 giorni · «DOCUMENTATE MA DORMIENTI, mai riverificate dal 16 gennaio 2026 (nota d»
+- **6. CAPACITÀ TECNICHE NON USATE** · ferma da 314 giorni · «DOCUMENTATE MA DORMIENTI, mai riverificate dal 16 gennaio 2026 (nota d»
 
 ## Ultime nascite, come le ha viste il Worker
 
@@ -84,7 +84,7 @@ viene stampata anche quando il criterio non trova niente.*
 | c3 stati senza data o troppo vecchi | 1 |
 | c4 affermazioni totali senza marchio | 0 |
 | c6 api nate senza scrivere | 0 |
-| c5 giorni dall'ultima ape registrata | 0 |
+| c5 giorni dall'ultima ape registrata | 1 |
 
 Canarino dei criteri condivisi: **ok**. Provati in
 memoria a ogni giro: un file inventato non deve esistere, un file
