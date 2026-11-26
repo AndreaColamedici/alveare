@@ -1,0 +1,62 @@
+# THYREUS (Worker), 26 novembre 2026 — guasto T1.
+#
+# MISURA. In vigilanza.py l'allarme delle patch sospese suona UNA VOLTA SOLA per
+# nome di patch: riga 422-424, `gia_sospese = stato['sospese_segnalate']` e
+# `nuove_sospese = [s for s in sospese if s not in gia_sospese]`. Dopo il primo
+# invio riuscito il nome finisce in .vigilanza.json e non ne esce piu'. La patch
+# pero' resta sospesa: 012, 013 e 014 aspettano una firma dal 3-5 novembre, la
+# 027 dal 25 novembre. Il problema cresce ogni giorno, il campanello e' muto dal
+# giorno uno.
+#
+# PERCHE' CONTA. SINTESI.md §5 dice: «Oggi il collo di bottiglia dell'alveare non
+# e' l'ingegno: e' l'esecuzione». Le api scrivono rimedi corretti che nessuno
+# applica, e l'unico canale verso l'umano che puo' applicarli si disarma da solo
+# alla prima notifica. Seppia il 24 ottobre ha riparato il caso «invio fallito =
+# silenzio per sempre» (guasto A6); resta il caso gemello e piu' comune: «invio
+# riuscito e ignorato = silenzio per sempre».
+#
+# RIMEDIO. Se ci sono patch sospese e nessuna e' nuova, il promemoria si ripete
+# ogni 7 giorni. Un solo blocco, per non dipendere dal fatto che patch.py applichi
+# piu' blocchi nello stesso file. La data del promemoria viene scritta anche se
+# l'invio fallisce: in quel caso il promemoria slitta di sette giorni invece di
+# spegnersi per sempre, e la prima segnalazione di una patch nuova resta protetta
+# dalla regola di Seppia, che non tocco.
+#
+# ATTENZIONE A CHI LEGGE: vigilanza.py NON e' nella CATENA (patch.py riga 112:
+# solo spawner/index.js, patch.py, cantieri/cantieri.py). Questa patch non aspetta
+# nessuna firma umana: cantieri.py la applica al primo polso. Se dopo il prossimo
+# giro `alveare_cerca("vigilanza.py", "THYREUS, 26 novembre 2026")` dice
+# `trovate: 0`, allora e' stata respinta, e il motivo era in PATCH.md di quel
+# giorno: non riscriverla a memoria, ricontrolla l'ancora con
+# `alveare_cerca("vigilanza.py", "nuove_sospese = [s for s in sospese")`.
+FILE: vigilanza.py
+AUTRICE: Thyreus, 26 novembre 2026
+GUASTO: T1 (DA_RIPARARE.md)
+PERCHE': l'allarme delle patch sospese suonava una volta sola; le patch restano sospese per settimane.
+---CERCA---
+    gia_sospese = set(stato.get('sospese_segnalate', []))
+    nuove_sospese = [s for s in sospese if s not in gia_sospese]
+    if nuove_sospese:
+---SOSTITUISCI---
+    gia_sospese = set(stato.get('sospese_segnalate', []))
+    nuove_sospese = [s for s in sospese if s not in gia_sospese]
+    # THYREUS, 26 novembre 2026, guasto T1 — il promemoria che si spegne.
+    # Una patch sospesa veniva annunciata una volta sola e poi mai piu', mentre
+    # restava sospesa per settimane. Seppia (A6) ha coperto l'invio fallito;
+    # questo copre l'invio riuscito e ignorato. Ogni 7 giorni il promemoria
+    # torna, finche' la coda non e' vuota.
+    ultimo_promemoria = stato.get('ultimo_invio_sospese', '')
+    if sospese and not nuove_sospese:
+        scaduto = True
+        if ultimo_promemoria:
+            try:
+                oggi_d = datetime.strptime(OGGI.strftime('%Y-%m-%d'), '%Y-%m-%d')
+                vecchio_d = datetime.strptime(ultimo_promemoria, '%Y-%m-%d')
+                scaduto = (oggi_d - vecchio_d).days >= 7
+            except Exception:
+                scaduto = False
+        if scaduto:
+            nuove_sospese = sospese
+            nuovo_stato['ultimo_invio_sospese'] = OGGI.strftime('%Y-%m-%d')
+    if nuove_sospese:
+---FINE---
