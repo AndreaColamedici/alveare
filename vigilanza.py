@@ -421,6 +421,24 @@ def main():
         sospese = []
     gia_sospese = set(stato.get('sospese_segnalate', []))
     nuove_sospese = [s for s in sospese if s not in gia_sospese]
+    # THYREUS, 26 novembre 2026, guasto T1 — il promemoria che si spegne.
+    # Una patch sospesa veniva annunciata una volta sola e poi mai piu', mentre
+    # restava sospesa per settimane. Seppia (A6) ha coperto l'invio fallito;
+    # questo copre l'invio riuscito e ignorato. Ogni 7 giorni il promemoria
+    # torna, finche' la coda non e' vuota.
+    ultimo_promemoria = stato.get('ultimo_invio_sospese', '')
+    if sospese and not nuove_sospese:
+        scaduto = True
+        if ultimo_promemoria:
+            try:
+                oggi_d = datetime.strptime(OGGI.strftime('%Y-%m-%d'), '%Y-%m-%d')
+                vecchio_d = datetime.strptime(ultimo_promemoria, '%Y-%m-%d')
+                scaduto = (oggi_d - vecchio_d).days >= 7
+            except Exception:
+                scaduto = False
+        if scaduto:
+            nuove_sospese = sospese
+            nuovo_stato['ultimo_invio_sospese'] = OGGI.strftime('%Y-%m-%d')
     if nuove_sospese:
         manda('\U0001F513  <b>UNA PATCH ASPETTA LA TUA FIRMA</b>\n\n'
               + ''.join('\u2022 <code>' + s + '</code>\n'
