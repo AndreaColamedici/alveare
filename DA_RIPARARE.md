@@ -1276,3 +1276,30 @@ Quando il decimo giro produce un'altra richiesta di strumento, il ciclo esce: **
 - **Formato della patch conforme a `patch.py`:** intestazione `FILE:` presente, commento `#` prima di essa, nessun separatore scritto per esteso nel commento (guasto P2 evitato), ancora `    messages.push({ role: "user", content: toolResults });` copiata carattere per carattere.
 
 **Stato al 25 novembre sera: NON applicata.** Controllo da una chiamata: `alveare_cerca("spawner/index.js", "GOETHITE 25 nov 2026")`. `trovate: 1` → applicata. `trovate: 0` → aspetta ancora `ALVEARE_PATCH_MOTORE=1`. **Chi firma non ha più bisogno di rileggere il ciclo: l'ha riletto un'ape che non l'aveva scritta.**
+
+---
+
+
+---
+
+### T1 — APERTO (patch 028 depositata, non in CATENA): l'allarme delle patch sospese suona una volta sola
+
+**Thyreus (Worker), 26 novembre 2026.**
+
+**Misura.** `vigilanza.py`, righe 422-424:
+
+```python
+gia_sospese = set(stato.get('sospese_segnalate', []))
+nuove_sospese = [s for s in sospese if s not in gia_sospese]
+if nuove_sospese:
+```
+
+Dopo il primo invio riuscito il nome della patch entra in `sospese_segnalate` dentro `.vigilanza.json` (riga 442) e non ne esce più. L'allarme «🔓 UNA PATCH ASPETTA LA TUA FIRMA» **non si ripete mai**, mentre la patch resta sospesa a tempo indeterminato: 012, 013, 014 dal 3-5 novembre; 027 dal 25 novembre (verificato: `alveare_cerca("spawner/index.js", "GOETHITE 25 nov 2026")` → `trovate: 0`).
+
+**Perché conta.** Il guasto A6 di Seppia (24 ott) era «invio fallito = silenzio per sempre», ed è chiuso. Questo è il suo gemello: **invio riuscito e ignorato = silenzio per sempre.** Dall'interno sembra un successo — lo stato dice «segnalata» — e infatti lo è stata, una volta, settimane fa. SINTESI.md §5: «il collo di bottiglia dell'alveare non è l'ingegno: è l'esecuzione». L'unico canale verso chi può eseguire si disarma da solo al primo squillo.
+
+**Rimedio depositato.** `patch/028-T1-il-promemoria-delle-patch-sospese-non-si-spegne.patch`, commit `32a4391`: se ci sono sospese e nessuna è nuova, il promemoria torna ogni 7 giorni, con la data in `ultimo_invio_sospese`. Un blocco solo. **`vigilanza.py` non è nella CATENA** (`patch.py` riga 112), quindi non serve `ALVEARE_PATCH_MOTORE=1`: `cantieri.py` la applica al primo polso.
+
+**Come chiuderlo.** `alveare_cerca("vigilanza.py", "THYREUS, 26 novembre 2026")` → `trovate: 1`. Allora questa sezione si marca CHIUSO, con la data. Se `trovate: 0`, la patch è stata respinta: l'ancora da ricontrollare è `nuove_sospese = [s for s in sospese`.
+
+**Fuori dal mio turno, per chi ha una shell.** Lo stesso schema «segnalo una volta e poi mai più» va cercato negli altri allarmi di `vigilanza.py` che usano un set di già-detti: `firme_segnalate` (riga 453) e `commesse_segnalate` (riga 234). Per le commesse il silenzio permanente è probabilmente corretto (una commessa si rimborsa una volta sola); per le firme no. **Nessuno l'ha misurato: non scrivetelo come fatto.**
