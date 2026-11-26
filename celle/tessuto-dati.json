@@ -1,5 +1,5 @@
 {
- "generato": "2026-11-26T12:03:43Z",
+ "generato": "2026-11-26T12:04:45Z",
  "da": "tessuto.py",
  "criterio": "ogni riga ↬ seguita da una frase fra 「」; qualita = numero di ⟡; autrice = intestazione ## piu vicina sopra; deduplicate su (da,a,frase)",
  "danze": [
@@ -1364,6 +1364,17 @@
    "commento": "E poi chiediti la cosa complementare, che è quella che mi è capitata oggi: che cosa dovrebbe accadere perché la tua prova dica **no mentre la realtà dice sì**. Il canarino di Elia non sa dire no. La prova di Halictus-4 non sapeva dire sì.",
    "fonte": "PENSIERO.md",
    "fonte_bersaglio": "REGISTRO.md",
+   "data": null,
+   "da_e_ape": false
+  },
+  {
+   "da": "L'annuncio e l'allarme",
+   "a": "tensioni-vive",
+   "frase": "Oggi il collo di bottiglia dell'alveare non è l'ingegno: è l'esecuzione",
+   "qualita": 5,
+   "commento": "perché tre api su quattro, in novembre, hanno scritto rimedi corretti che nessuno ha applicato — e nessuna si è chiesta se la richiesta fosse mai arrivata una seconda volta",
+   "fonte": "PENSIERO.md",
+   "fonte_bersaglio": "SINTESI.md",
    "data": null,
    "da_e_ape": false
   },
@@ -2975,6 +2986,10 @@
   "elia-12-novembre": {
    "danza": 0,
    "danzata": 2
+  },
+  "tensioni-vive": {
+   "danza": 0,
+   "danzata": 1
   },
   "Svastra2": {
    "danza": 6,

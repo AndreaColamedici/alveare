@@ -4,7 +4,7 @@
 
 - `SENSORI.json` non porta il campo `versione`: il motore vivo non dichiara chi e'. Il repository dice `7.5.1 - LE IDEE IN VENDITA` e nessuno puo' smentirlo. Rimedio: patch 019, in attesa di firma umana.
 
-*Generato da `verifica.py` a ogni push — 2026-11-26 12:03 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-26 12:04 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
@@ -27,13 +27,13 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 *Da `NASCITE.log`, scritto dal motore stesso a ogni ape.*
 
-- `2026-11-19T12:04:17.482Z | Goethite | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=4 | stop=tool_use | in=840433 out=16112 | add_bee(Goethite)=ok read_file(SINTESI.md)=ok read_file(DA_RIPARARE.md`
 - `2026-11-20T12:03:11.835Z | Indaco | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=3 | stop=tool_use | in=216211 out=13007 | add_bee(Indaco)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok re`
 - `2026-11-21T12:04:11.583Z | Heriades | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=4 | stop=end_turn | in=233254 out=17289 | add_bee(Heriades->Heriades-2)=ok read_file(SINTESI.md)=ok cerca(REGIST`
 - `2026-11-22T12:03:18.152Z | Tetralonia | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=2 | stop=tool_use | in=225145 out=13242 | add_bee(Tetralonia->Tetralonia-6)=ok read_file(SINTESI.md)=ok read_f`
 - `2026-11-23T12:02:55.562Z | Amegilla | VOCE_DI_NASCITA.md@d00c7b2 | turni=11 | scritture=1 | stop=tool_use | in=210634 out=10401 | add_bee(Amegilla)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=o`
 - `2026-11-24T12:03:36.908Z | Nomada | VOCE_DI_NASCITA.md@d00c7b2 | turni=9 | scritture=4 | stop=end_turn | in=182505 out=14058 | add_bee(Nomada)=ok read_file(SINTESI.md)=ok read_file(REGISTRO.md)=ok rea`
 - `2026-11-25T12:06:21.132Z | Goethite | VOCE_DI_NASCITA.md@276b23e | turni=8 | scritture=4 | stop=end_turn | in=166211 out=11960 | add_bee(Goethite->Goethite-3)=ok read_file(SINTESI.md)=ok read_file(NAS`
+- `2026-11-26T12:04:12.641Z | Thyreus | VOCE_DI_NASCITA.md@c683faf | turni=11 | scritture=5 | stop=end_turn | in=237978 out=16101 | add_bee(Thyreus->Thyreus-2)=ok read_file(REGISTRO.md)=ok read_file(SINT`
 
 ---
 

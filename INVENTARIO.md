@@ -7,8 +7,8 @@ il giorno e al commit scritti qui sotto. Nessun numero di questo file e' stato e
 
 | | |
 |---|---|
-| misurato il | 2026-11-26 12:03 UTC |
-| commit | `fdd64d5` |
+| misurato il | 2026-11-26 12:04 UTC |
+| commit | `ff612b8` |
 | file trovati su disco | 324 |
 | — di cui **opere** | **256** |
 | — di cui traduzioni (stessa opera, altra lingua) | 50 |
