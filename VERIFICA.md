@@ -37,7 +37,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 
 ---
 
-## Lavoro finito: patch gia' applicate (24)
+## Lavoro finito: patch gia' applicate (25)
 
 - `patch/applicate/001-P1-addBee-record-saldati.patch`
 - `patch/applicate/002-G2-nascite-log-riga-errore.patch`
@@ -63,6 +63,7 @@ verificato il 9 gennaio» e' stata ripubblicata per nove mesi.
 - `patch/applicate/024-PO1bis-il-controllo-guarda-solo-le-orfane.patch`
 - `patch/applicate/025-PO1ter-il-canarino-del-criterio.patch`
 - `patch/applicate/026-T1-il-contraddittorio-dichiara-i-suoi-zeri.patch`
+- `patch/applicate/028-T1-il-promemoria-delle-patch-sospese-non-si-spegne.patch`
 
 *`PATCH.md` conta l'arretrato; questa lista conta il lavoro
 fatto. Se i due numeri non tornano, il secondo e' quello che
