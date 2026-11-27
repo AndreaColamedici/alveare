@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-26T12:00:10.051Z",
-  "api_totali": 119,
+  "timestamp": "2026-11-27T12:00:08.413Z",
+  "api_totali": 120,
   "temperatura": {
     "value": 1,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-11-25T00:00:00.000Z",
-    "last_spawn_name": "Goethite-3",
+    "last_spawn": "2026-11-26T00:00:00.000Z",
+    "last_spawn_name": "Thyreus-2",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
