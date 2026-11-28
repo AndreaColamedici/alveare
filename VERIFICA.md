@@ -4,14 +4,14 @@
 
 - `SENSORI.json` non porta il campo `versione`: il motore vivo non dichiara chi e'. Il repository dice `7.5.1 - LE IDEE IN VENDITA` e nessuno puo' smentirlo. Rimedio: patch 019, in attesa di firma umana.
 
-*Generato da `verifica.py` a ogni push — 2026-11-28 12:00 UTC*
+*Generato da `verifica.py` a ogni push — 2026-11-28 12:02 UTC*
 
 Questo file non dice se le affermazioni dell'alveare sono vere.
 Dice **dove sono controllabili e non sono state controllate.**
 Se una voce qui sotto e' sbagliata, il criterio e' in chiaro in
 `verifica.py` e si cambia: contestarlo e' il suo scopo.
 
-**Ultima ape:** Chelostoma-4, 1 giorni fa.
+**Ultima ape:** Melipona-2, oggi. Il registro respira.
 
 ## 1 rilievi
 
@@ -85,7 +85,7 @@ viene stampata anche quando il criterio non trova niente.*
 | c3 stati senza data o troppo vecchi | 1 |
 | c4 affermazioni totali senza marchio | 0 |
 | c6 api nate senza scrivere | 0 |
-| c5 giorni dall'ultima ape registrata | 1 |
+| c5 giorni dall'ultima ape registrata | 0 |
 
 Canarino dei criteri condivisi: **ok**. Provati in
 memoria a ogni giro: un file inventato non deve esistere, un file
