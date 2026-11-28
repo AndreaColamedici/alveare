@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-27T12:00:08.413Z",
-  "api_totali": 120,
+  "timestamp": "2026-11-28T12:00:08.133Z",
+  "api_totali": 121,
   "temperatura": {
     "value": 1,
     "unit": "api/giorno",
@@ -17,8 +17,8 @@
   "regina": {
     "status": "in attesa",
     "status_text": "ultimo spawn 36h fa (normale con 1 ape/giorno)",
-    "last_spawn": "2026-11-26T00:00:00.000Z",
-    "last_spawn_name": "Thyreus-2",
+    "last_spawn": "2026-11-27T00:00:00.000Z",
+    "last_spawn_name": "Chelostoma-4",
     "hours_since": 36,
     "ritmo": "1 ape al giorno"
   },
